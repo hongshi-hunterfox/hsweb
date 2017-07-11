@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ShakeRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ShakeRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="is_show" property="isShow" jdbcType="BIT" />
+  </resultMap>
+  <resultMap id="BaseResultMap1" type="com.uclee.fundation.data.mybatis.model.ShakeRecord" extends="BaseResultMap">
+	    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+	    <result column="image" property="image" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, time,is_show
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_shake_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectTodayByUserId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_shake_record
+    where user_id = #{userId,jdbcType=INTEGER} and time > #{today,jdbcType=TIMESTAMP}
+  </select>
+  <select id="selectNotShow" resultMap="BaseResultMap1" >
+    select 
+    A.*,B.nick_name
+    from web_shake_record as A left join web_user_profiles as B on A.user_id=B.user_id 
+    where A.is_show=0 and A.time > #{today,jdbcType=TIMESTAMP}
+  </select>
+  <select id="selectToday" resultMap="BaseResultMap1" >
+    select 
+    A.*,B.nick_name,B.image
+    from web_shake_record as A left join web_user_profiles as B on A.user_id=B.user_id  left join web_winning_record as C on A.user_id=C.user_id  and C.time>#{today,jdbcType=TIMESTAMP}
+    where A.time > #{today,jdbcType=TIMESTAMP} and C.id is null order by A.time desc
+  </select>
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select 
+    count(1)
+    from web_shake_record
+    where time > #{today,jdbcType=TIMESTAMP}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_shake_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="reset" >
+    truncate table web_shake_record
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ShakeRecord" >
+    insert into web_shake_record (id, user_id, time,is_show
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, #{isShow,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.ShakeRecord" >
+    insert into web_shake_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.ShakeRecord" >
+    update web_shake_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.ShakeRecord" >
+    update web_shake_record
+    set user_id = #{userId,jdbcType=INTEGER},
+        is_show = #{isShow,jdbcType=BIT},
+      time = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

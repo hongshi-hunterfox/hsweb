@@ -1,0 +1,33 @@
+package com.uclee.fundation.data.mybatis.mapping;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.uclee.fundation.data.mybatis.model.Order;
+
+public interface OrderMapper {
+    int deleteByPrimaryKey(Integer orderId);
+
+    int insert(Order record);
+
+    int insertSelective(Order record);
+
+    Order selectByPrimaryKey(Integer orderId);
+
+    int updateByPrimaryKeySelective(Order record);
+
+    int updateByPrimaryKey(Order record);
+
+	List<Order> getUnpayOrderListByUserId(Integer userId);
+
+	List<Order> getInvitationOrder(Integer userId);
+
+	List<Order> selectByPaymentSerialNum(@Param("userId")Integer userId, @Param("paymentSerialNum")String paymentSerialNum);
+
+	Order selectBySerialNum(String outerOrderCode);
+
+	List<Order> selectByVoucherCode(String voucherCode);
+
+	int deleteByOrderSerialNum(String orderSerialNum);
+}

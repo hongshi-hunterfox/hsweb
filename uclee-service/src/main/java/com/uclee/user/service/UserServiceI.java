@@ -1,0 +1,250 @@
+package com.uclee.user.service;
+import com.github.pagehelper.PageInfo;
+import com.uclee.fundation.config.links.WebConfig;
+import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.CartDto;
+import com.uclee.fundation.data.web.dto.OrderPost;
+import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.payment.exception.PaymentHandlerException;
+import com.uclee.user.model.PaymentStrategyResult;
+import com.uclee.user.model.UserForm;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author lm
+ *
+ */
+public interface UserServiceI {
+
+	/*
+	 * 验证用户密码
+	 */
+	boolean hasMatchUserPwd(User user, String inputPassword);
+
+	int  regUser(UserForm userForm);
+	
+	int regUserWithoutPassword(UserForm userForm);
+	
+	User getUserById(Integer userId);
+	
+	boolean isExistAccount(String account);
+	
+	OauthLogin getOauthLoginInfoByOauthId(String oauthId);
+	
+	int socialRegister(OauthLogin oauthLogin);
+
+	boolean updatePassword(User user);
+	
+	boolean addChiledUser(UserForm userForm);
+
+	boolean addPhoneUser(String name,String phone);
+
+	List<UserProfile> phoneUserList();
+	
+	List<UserProfile> getSubUserList(Integer parentInd);
+	
+	boolean isSettingPassword(Integer userId);
+	
+	int deleByUserId(Integer userId);
+	
+	int updateUser(User user);
+	int updateLoginUserMsg(UserProfile userProfile, String IP);
+	 
+	String getIp(HttpServletRequest request);
+	 
+	User getUserByChild(Integer userId);
+
+	List<Permission> getUserPermission(Integer userId);
+
+	UserProfile getBasicUserProfile(Integer userId);
+
+	String getRandomNum();
+
+	boolean createNewAccount(OauthLogin oauthLogin,String headimgurl);
+
+	List<Province> getAllProvince();
+
+	List<City> getCities(Integer stateId);
+
+	List<Region> getRegions(Integer cityId);
+
+	User getUserBySerialNum(String serialNum);
+
+	String getIpAddr(HttpServletRequest request);
+
+	PaymentStrategyResult getWCPayment(String openId, String paymentSerialNum, BigDecimal bigDecimal, String title) throws PaymentHandlerException;
+	
+	Map<String, String> WCScan(String string, HttpServletRequest request);
+
+	String getJSSDKAccessToken();
+
+	String getJSSDKTicket(String access_token);
+	
+	boolean isWC(HttpServletRequest request);
+
+	void updateWXInfo();
+
+	String getWeiXinUserInfo(String token, String openId);
+
+	OauthLogin getOauthLoginInfoByUserId(Integer userId);
+
+	void updateOauthLogin(OauthLogin oauthLogin);
+
+	boolean getIsSubScribe(Integer userId);
+	
+	FinancialAccount getFinancialAccount(Integer userId);
+	
+	PageInfo<UserInvitedLink> getInvitation(Integer userId, Integer pageNum, Integer pageSize);
+	
+	HashSet<Integer> getInvitationId(Integer userId);
+
+	String alipayNotifyHandle(HttpServletRequest request);
+	
+	boolean updateProfile(Integer userId, UserProfile userProfile);
+
+	List<Payment> selectPaymentForRecharge();
+
+	Payment getPaymentMethodById(Integer paymentId);
+
+	int insertPaymentOrder(PaymentOrder paymentOrder);
+
+	boolean WechatNotifyHandle(String out_trade_no, String transaction_id, String attach);
+	
+	String sendWXMessage(String openId,String templateId,String url ,String firstData,String[] key,String[] value,String remarkData);
+
+	ProductDto getProductDtoById(Integer productId);
+
+	Integer addToCart(Cart cart);
+
+	Product getProductById(Integer productId);
+
+	SpecificationValue getSpecificationValue(Integer productId, Integer specificationValueId);
+
+	List<CartDto> getUserCart(Integer userId, Integer selectedStoreId);
+
+	List<DeliverAddr> getDeliverAddrList(Integer userId);
+
+	String editAddrHandler(DeliverAddr deliverAddr);
+
+	String delAddrHandler(DeliverAddr deliverAddr);
+
+	String setDefaultAddr(DeliverAddr deliverAddr);
+
+	boolean getInvitationHandler(Integer userId, String serialNum);
+
+	List<UserInvitedLink> getInvitation(Integer userId);
+
+	DeliverAddr getDefaultAddrByUserId(Integer userId);
+
+	Map<String, Object> orderHandler(OrderPost orderPost, Integer userId);
+
+	List<Order> getUnpayOrderListByUserId(Integer userId);
+
+	List<UserInvitedLink> getInvitationList(Integer userId);
+
+	List<Order> getInvitationOrder(Integer userId);
+
+	List<ProductGroup> getTermGroups(String[] tags);
+
+	PageInfo<DeliverAddr> getAddrList(Integer userId, Integer pageNum, Integer pageSize);
+
+	List<CartDto> selectCartByIds(Integer userId, List<CartDto> cart);
+
+	DeliverAddr selectAddrById(Integer addrId);
+
+	List<Payment> selectAllPayment();
+
+	List<Order> selectOrderByPaymentSerialNum(Integer userId, String paymentSerialNum);
+
+	PaymentOrder selectPaymentOrderBySerialNum(String paymentSerialNum);
+
+	HongShiVip getHongShiVip(Integer userId);
+
+	int updatePaymentOrder(PaymentOrder paymentOrder);
+
+	List<HongShiOrder> getHongShiOrder(Integer userId,Boolean isEnd);
+
+	List<HongShiCoupon> selectCouponById(Integer userId);
+
+	Map<String,Object> signInHandler(Integer userId);
+
+	Integer getChoujiangResult(Integer userId);
+
+	String getVipImage(String getcVipCode, Integer userId);
+
+	Map<String, Object> distCenter(Integer userId);
+
+	Balance selectBalanceByUserId(Integer userId);
+
+	PaymentStrategyResult getAlipayForFastPay(PaymentOrder paymentOrder, String title, String string);
+
+	PaymentOrder getPaymentOrderBySerialNum(String paymentSerialNum);
+
+	List<LotteryDrawConfig> getLotteryConfig();
+
+	PaymentStrategyResult memberCardPaymentHandler(PaymentOrder paymentOrder);
+
+	List<Freight> getAllFreightConfig();
+
+	Map<String, Object> lotteryHandler(Integer userId, String configCode);
+
+	Config getLotteryWebConfig();
+
+	Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount);
+
+	Map<String, Object> cardDelHandler(Integer userId, Integer cartId);
+
+	Map<String, Object> tranferBalance(Integer userId);
+
+	DeliverAddr getAddrInfo(Integer userId, Integer deliverAddrId);
+
+	List<City> getCitiesByStr(String province);
+
+	List<Region> getRegionsByStr(String city);
+
+	String getVipJbarcode(String oauthId, Integer userId);
+
+	String getStoreAddr(Integer storeId);
+
+	NapaStore getNapaStore(Integer storeId);
+
+	List<Banner> selectAllBanner();
+
+	List<LotteryRecord> getUserLotteryRecord(Integer userId);
+
+	int delOrder(String orderSerialNum);
+
+	Boolean getNapaStoreByPhone(String phone);
+
+	Map<String,String> getWeixinConfig();
+	
+	Map<String, Object> getShakeRecord();
+
+	boolean shakeHandler(Integer userId);
+
+	List<Payment> selectMemberPayment();
+
+	Map<String, Object> getBossCenter(String phone, String hsCode);
+
+	Map<String, Object> getShakePageData();
+
+	Map<String, Object> firstDrawHandler();
+
+	Map<String, Object> secondDrawHandler();
+
+	Map<String, Object> thirdDrawHandler();
+
+	boolean alipayNotifyHandle(String out_trade_no, String transaction_id);
+
+	boolean resetDraw();
+
+	Map<String, String> getAlipayConfig();
+
+	Map<String, String> getSMSConfig();
+
+}

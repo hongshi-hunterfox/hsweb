@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.DataSourceInfoMapper" >
+    <resultMap id="DataSourceInfo" type="com.uclee.fundation.data.mybatis.model.DataSourceInfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="driver_class_name" property="driverClassName" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="merchant_code" property="merchantCode" jdbcType="VARCHAR" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, driver_class_name, url, username, password, merchant_code, merchant_name
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="DataSourceInfo" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from web_datasource_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectAllDataSourceInfo" resultMap="DataSourceInfo" >
+        select
+        <include refid="Base_Column_List" />
+        from web_datasource_info
+    </select>
+    <select id="selectByCode" resultMap="DataSourceInfo" >
+        select
+        <include refid="Base_Column_List" />
+        from web_datasource_info where merchant_code=#{mCode,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from web_datasource_info
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.DataSourceInfo" >
+        insert into web_datasource_info (id, driver_class_name, url,
+        username, password, merchant_code,
+        merchant_name)
+        values (#{id,jdbcType=INTEGER}, #{driverClassName,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+        #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{merchantCode,jdbcType=VARCHAR},
+        #{merchantName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.DataSourceInfo" >
+        insert into web_datasource_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="driverClassName != null" >
+                driver_class_name,
+            </if>
+            <if test="url != null" >
+                url,
+            </if>
+            <if test="username != null" >
+                username,
+            </if>
+            <if test="password != null" >
+                password,
+            </if>
+            <if test="merchantCode != null" >
+                merchant_code,
+            </if>
+            <if test="merchantName != null" >
+                merchant_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="driverClassName != null" >
+                #{driverClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null" >
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantCode != null" >
+                #{merchantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantName != null" >
+                #{merchantName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.DataSourceInfo" >
+        update web_datasource_info
+        <set >
+            <if test="driverClassName != null" >
+                driver_class_name = #{driverClassName,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null" >
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null" >
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantCode != null" >
+                merchant_code = #{merchantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantName != null" >
+                merchant_name = #{merchantName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.DataSourceInfo" >
+        update web_datasource_info
+        set driver_class_name = #{driverClassName,jdbcType=VARCHAR},
+        url = #{url,jdbcType=VARCHAR},
+        username = #{username,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        merchant_code = #{merchantCode,jdbcType=VARCHAR},
+        merchant_name = #{merchantName,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

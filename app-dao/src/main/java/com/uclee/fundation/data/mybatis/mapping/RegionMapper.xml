@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.RegionMapper" >
+  <resultMap id="Region" type="com.uclee.fundation.data.mybatis.model.Region" >
+    <id column="region_id" property="regionId" jdbcType="INTEGER" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="region" property="region" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    region_id, city_id, region
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="Region" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_regions
+    where region_id = #{regionId,jdbcType=INTEGER}
+  </select>
+   <select id="selectByRegionAndCityId" resultMap="Region" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_regions
+    where region = #{region,jdbcType=VARCHAR} and city_id=#{cityId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCityId" resultMap="Region" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_regions
+    where city_id = #{cityId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_regions
+    where region_id = #{regionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Region" >
+    insert into web_regions (region_id, city_id, region
+      )
+    values (#{regionId,jdbcType=INTEGER}, #{cityId,jdbcType=INTEGER}, #{region,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Region" >
+    insert into web_regions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="regionId != null" >
+        region_id,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="region != null" >
+        region,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="regionId != null" >
+        #{regionId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="region != null" >
+        #{region,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Region" >
+    update web_regions
+    <set >
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="region != null" >
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where region_id = #{regionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Region" >
+    update web_regions
+    set city_id = #{cityId,jdbcType=INTEGER},
+      region = #{region,jdbcType=VARCHAR}
+    where region_id = #{regionId,jdbcType=INTEGER}
+  </update>
+</mapper>

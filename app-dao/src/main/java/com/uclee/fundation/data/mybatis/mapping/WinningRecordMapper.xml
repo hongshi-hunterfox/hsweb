@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.WinningRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.WinningRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="winning_level" property="winningLevel" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BaseResultMap1" type="com.uclee.fundation.data.mybatis.model.WinningRecord" extends="BaseResultMap">
+	    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+	    <result column="image" property="image" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, winning_level, time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_winning_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectLevelOne" resultMap="BaseResultMap1">
+    select 
+   A.*,B.nick_name,B.image
+    from web_winning_record as A left join web_user_profiles as B on A.user_id=B.user_id
+    where A.winning_level=1 and A.time>#{today,jdbcType=TIMESTAMP}
+  </select>
+  <select id="selectLevelTwo" resultMap="BaseResultMap1">
+    select 
+   A.*,B.nick_name,B.image
+    from web_winning_record as A left join web_user_profiles as B on A.user_id=B.user_id
+    where A.winning_level=2 and A.time>#{today,jdbcType=TIMESTAMP}
+  </select>
+  <select id="selectLevelThree" resultMap="BaseResultMap1" >
+    select 
+   A.*,B.nick_name,B.image
+    from web_winning_record as A left join web_user_profiles as B on A.user_id=B.user_id
+    where A.winning_level=3 and A.time>#{today,jdbcType=TIMESTAMP}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_winning_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="reset" >
+    truncate table web_winning_record
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.WinningRecord" >
+    insert into web_winning_record (id, user_id, winning_level, 
+      time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{winningLevel,jdbcType=INTEGER}, 
+      #{time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.WinningRecord" >
+    insert into web_winning_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="winningLevel != null" >
+        winning_level,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="winningLevel != null" >
+        #{winningLevel,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.WinningRecord" >
+    update web_winning_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="winningLevel != null" >
+        winning_level = #{winningLevel,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.WinningRecord" >
+    update web_winning_record
+    set user_id = #{userId,jdbcType=INTEGER},
+      winning_level = #{winningLevel,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

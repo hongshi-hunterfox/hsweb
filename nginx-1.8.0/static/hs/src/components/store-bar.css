@@ -1,0 +1,17 @@
+.store-bar {
+  background-color: #333;
+  color: #bbb;
+  padding: 6px 10px;
+}
+.store-bar-icon {
+  display: inline-block;
+}
+.store-bar-name {
+  display: inline-block;
+  margin-left: 10px;
+}
+.store-bar-change {
+  color: white;
+  display: inline-block;
+  margin-left: 10px;
+}

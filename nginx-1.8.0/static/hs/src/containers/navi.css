@@ -1,0 +1,41 @@
+.navi {
+  position: fixed;
+  background-color: white;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  bottom: 0;
+  border-top: 1px solid #ddd;
+}
+.navi:before,
+.navi:after {
+  content: "";
+  display: table;
+}
+.navi:after {
+  clear: both;
+}
+.navi-item {
+  display: block;
+  padding-top: 6px;
+  float: left;
+  text-align: center;
+  width: 25%;
+  color: #333;
+  font-size: small;
+}
+.navi-item.active {
+  color: #ef473a !important;
+}
+.navi-item .fa {
+  display: block;
+  font-size: x-large;
+  margin-bottom: 2px;
+}
+.navi-item:hover,
+.navi-item:focus,
+.navi-item:active {
+  color: #333;
+  text-decoration: none;
+}

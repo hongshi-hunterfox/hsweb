@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper">
+	<resultMap id="HongShiVip"
+		type="com.uclee.fundation.data.mybatis.model.HongShiVip">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="cWeiXinCode" property="cWeiXinCode" jdbcType="VARCHAR" />
+		<result column="CallNumber" property="cMobileNumber" jdbcType="VARCHAR" />
+		<result column="Name" property="cName" jdbcType="VARCHAR" />
+		<result column="Birthday" property="cBirthday" jdbcType="VARCHAR" />
+		<result column="IsLunar" property="bIsLunar" jdbcType="BIT" />
+		<result column="VipCode" property="cVipCode" jdbcType="VARCHAR" />
+		<result column="Balance" property="balance" jdbcType="DECIMAL" />
+		<result column="BonusPoints" property="bonusPoints" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="HongShiRechargeRecord"
+		type="com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord">
+		<result column="DealTim" property="dealTim" jdbcType="VARCHAR" />
+		<result column="Source" property="source" jdbcType="VARCHAR" />
+		<result column="BillCode" property="billCode" jdbcType="VARCHAR" />
+		<result column="Amount" property="amount" jdbcType="DECIMAL" />
+		<result column="Balance" property="balance" jdbcType="DECIMAL" />
+		<result column="BonusPoints" property="bonusPoints" jdbcType="INTEGER" />
+		<result column="Integral" property="integral" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="HongShiVipInfo"
+		type="com.uclee.fundation.data.mybatis.model.HongShiVip">
+		<result column="电话" property="cMobileNumber" jdbcType="VARCHAR" />
+		<result column="名称" property="cName" jdbcType="VARCHAR" />
+		<result column="生日" property="cBirthday" jdbcType="VARCHAR" />
+		<result column="是否农历" property="bIsLunar" jdbcType="BIT" />
+		<result column="编号" property="cVipCode" jdbcType="VARCHAR" />
+		<result column="卡余额" property="balance" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, cWeiXinCode, cMobileNumber,cName ，cBirthday，bIsLunar，cVipCode
+	</sql>
+	<select id="addVipInfo" parameterType="com.uclee.fundation.data.mybatis.model.HongShiVip"
+		statementType="CALLABLE" resultType="INTEGER">
+		CALL WSC_AddVip(#{cWeiXinCode},#{cMobileNumber},#{cName},#{cBirthday},#{bIsLunar},#{cVipCode})
+	</select>
+	<select id="getVipInfo" parameterType="java.lang.String"
+		statementType="CALLABLE" resultMap="HongShiVip">
+		CALL WSC_GetVipInfo(#{cWeiXinCode})
+	</select>
+
+	<select id="getVipRechargeLog" parameterType="java.lang.Integer"
+		statementType="CALLABLE" resultMap="HongShiRechargeRecord">
+		CALL GetVipLog_ID(#{iVipID})
+	</select>
+	<select id="hongShiRecharge" parameterType="com.uclee.fundation.data.mybatis.model.HongShiRecharge"
+		statementType="CALLABLE" resultType="java.lang.Integer">
+		CALL WSC_VipReCharge(#{cWeiXinCode},#{nAddMoney},#{cWeiXinOrderCode})
+	</select>
+	
+
+
+
+
+</mapper>

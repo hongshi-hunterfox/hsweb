@@ -1,0 +1,51 @@
+.payment-alipay .count-down {
+  text-align: center;
+  color: grey;
+  padding: 15px;
+  font-size: 15px;
+}
+.payment-alipay-other {
+  background: #5cb85c;
+  color: #FFF;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+}
+.payment-alipay-countdown {
+  width: 100%;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+.payment-alipay-countdown-title {
+  color: #FF3300;
+  padding: 15px;
+  font-size: 20px;
+  width: 100%;
+  text-align: center;
+}
+.payment-alipay-countdown-remind {
+  color: #C2C2C2;
+  padding: 15px;
+  font-size: 15px;
+  width: 100%;
+  text-align: center;
+}
+.payment-alipay-detail {
+  background-color: #fff;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+.payment-alipay-detail-row {
+  margin-bottom: 10px;
+}
+.payment-alipay-detail-row-name {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+.payment-alipay-detail-row-info {
+  display: inline-block;
+  width: 70%;
+  text-align: left;
+  padding-left: 2%;
+}

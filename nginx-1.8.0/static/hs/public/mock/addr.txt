@@ -1,0 +1,273 @@
+
+
+/uclee-user-web/addrList
+/uclee-user-web/setDefaultAddr?deliveraddrId=1  return : success,failed(网络繁忙，请稍后重试)
+/uclee-user-web/delAddr?deliveraddrId=1  return : success,failed(网络繁忙，请稍后重试)
+/uclee-user-web/editAddr?deliveraddrId=1(没有id为新增)  return : dataError（参数错误）,success,failed(网络繁忙，请稍后重试)
+
+[
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 1,
+        "isDefault": true,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 22,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 21,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 20,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 19,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 18,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 17,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 16,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 15,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 14,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 13,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 12,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 11,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 10,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 9,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 8,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 7,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 6,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 5,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 4,
+        "isDefault": false,
+        "name": "骆喔嗬",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 3,
+        "isDefault": false,
+        "name": "骆文琪",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    },
+    {
+        "addrDetail": "惠联路天麓花园南区25栋702",
+        "city": "广州市",
+        "deliveraddrId": 2,
+        "isDefault": false,
+        "name": "何耀澎",
+        "phone": "15902023879",
+        "province": "广东省",
+        "region": "萝岗区",
+        "userId": 6,
+        "zipcode": ""
+    }
+]
