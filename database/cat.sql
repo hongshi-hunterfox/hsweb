@@ -1,4 +1,4 @@
-
+﻿--create data to start
 insert into `db_categories` (`category`,`parent_id`) values ('手机平板',0);
 insert into `db_categories` (`category`,`parent_id`) values ('汽车摩托',0);
 insert into `db_categories` (`category`,`parent_id`) values ('电脑办公',0);
