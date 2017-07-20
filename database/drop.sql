@@ -42,3 +42,4 @@ drop table web_winning_record;
 drop table web_store_info;
 drop table web_product_sale;
 drop table web_msg_record;
+--删除了所有商城使用的表
