@@ -1,7 +1,6 @@
 package com.uclee.sms.util;
 /**
  * Created by super13 on 6/1/17.
- * Maven>>taobao-sdk-java-auto_1455552377940-20160607.jar
  */
 
 import com.alibaba.fastjson.JSON;
@@ -32,13 +31,13 @@ public class SMSMessageUtil {
     private final static String TEMPLATE_CODE = "SMS_67316055";
 
 
-    public static Boolean send(String mobile, String code,String APP_KEY,String SECRET) throws ApiException {
+    public static Boolean send(String mobile, String code,String APP_KEY,String SECRET,String signName) throws ApiException {
         TaobaoClient client = new DefaultTaobaoClient(URL, APP_KEY, SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
         req.setSmsType(SMS_TYPE);
 
 
-        req.setSmsFreeSignName("洪石软件");
+        req.setSmsFreeSignName(signName);
         req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"个人\"}");
         req.setRecNum(mobile);
         req.setSmsTemplateCode(TEMPLATE_CODE);
@@ -68,7 +67,8 @@ public class SMSMessageUtil {
         //{"error_response":{"code":15,"msg":"Remote service error","sub_code":"isv.SMS_SIGNATURE_ILLEGAL","sub_msg":"短信签名不合法","request_id":"ej6ptuzf712n"}}
         //{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"104623880315^1106450643788","success":true},"request_id":"yf8dnp04zc0"}}
         //{"error_response":{"code":15,"msg":"Remote service error","sub_code":"isv.MOBILE_NUMBER_ILLEGAL","sub_msg":"号码格式错误","request_id":"eonxf1ynynaa"}}
-        //send("15902023897", "345345" );
+        send("15902023879", "345345","LTAIbl6n3zsUcEEJ","0Z0TLDfQ1HdsCpN2k4Cs9UZrWImUVC","邓彪");
+        send("15902023879", "345345","23887342","0db633205f62d240086ee62fe892380f","洪石软件");
 //        System.out.println(responseCode);
 
     }

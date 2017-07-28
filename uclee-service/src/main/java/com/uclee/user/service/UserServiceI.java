@@ -5,6 +5,7 @@ import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.payment.exception.PaymentHandlerException;
 import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.model.UserForm;
@@ -246,5 +247,9 @@ public interface UserServiceI {
 	Map<String, String> getAlipayConfig();
 
 	Map<String, String> getSMSConfig();
+
+	Map<String, Object> stockCheck(StockPost stockPost, Integer userId);
+
+	String getAppId(String merchantCode);
 
 }

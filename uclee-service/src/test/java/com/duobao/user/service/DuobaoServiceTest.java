@@ -8,6 +8,7 @@ import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.dynamicDatasource.DynamicDataSourceManager;
 import com.uclee.dynamicDatasource.DynamicDataSourceManagerHeyp;
 import com.uclee.fundation.config.links.TermGroupTag;
+import com.uclee.fundation.config.links.WechatMerchantInfo;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
@@ -26,6 +27,10 @@ import com.uclee.fundation.data.mybatis.mapping.VarMapper;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.hongshi.service.HongShiVipServiceI;
+import com.uclee.payment.strategy.wcPaymetnTools.PayImpl;
+import com.uclee.payment.strategy.wcPaymetnTools.PayMD5;
+import com.uclee.payment.strategy.wcPaymetnTools.PaymentTools;
+import com.uclee.payment.strategy.wcPaymetnTools.UniteOrder;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import org.junit.Test;
@@ -138,8 +143,26 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	@Test
 	public void testRechargePayment(){
-		dataSource.switchDataSource("druidDataSource1");
-		logger.info(JSON.toJSONString(userService.firstDrawHandler()));
+		UniteOrder order = new UniteOrder();
+		order.setAttach("tmnh");
+		order.setAppid("wx24d308bcbbb08914");
+		order.setMch_id("1296310801");
+		order.setOpenid("obBd-wrkoZkaP8ugkbYb9PwHqN2g");
+		order.setDevice_info("10.252.149.52");
+		order.setNonce_str("e056c27c053ada4288bf9e68066e6062");
+		
+			order.setBody("小蛋糕(款式：果果蛋糕);");
+		order.setDetail("小蛋糕(款式：果果蛋糕);");
+		order.setOut_trade_no("15005302297434391");
+		order.setFee_type("CNY");
+		
+		order.setTotal_fee("1");
+		order.setSpbill_create_ip("10.252.149.52");
+		order.setNotify_url("http://wsc1.in80s.com/seller/WCNotifyHandler");
+		order.setTrade_type("JSAPI");  
+		order.setProduct_id("15005302297434391");
+		String reqXML = PayImpl.generateXML(order,"5e4a73a681ac455e9cb5ce921c570071");
+		System.out.println(JSON.toJSONString(reqXML));
 	}
 	@Test
 	public void testHome(){

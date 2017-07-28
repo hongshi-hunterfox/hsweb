@@ -41,6 +41,7 @@ import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
 import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
 import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
 import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
+import com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMapper;
 import com.uclee.fundation.data.mybatis.mapping.StoreInfoMapper;
 import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
 import com.uclee.fundation.data.mybatis.mapping.VarMapper;
@@ -104,6 +105,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private StoreInfoMapper storeInfoMapper;
 	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
+	@Autowired
+	private SpecificationValueStoreLinkMapper specificationValueStoreLinkMapper;
 	@Autowired
 	private NapaStoreMapper napaStoreMapper;
 	@Autowired
@@ -170,6 +173,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.templateCode, configPost.getTemplateCode());
 		}else{
 			configMapper.updateByTag(WebConfig.templateCode, "");
+		}
+		if (configPost.getSignName()!=null) {
+			configMapper.updateByTag(WebConfig.signName, configPost.getSignName());
+		}else{
+			configMapper.updateByTag(WebConfig.signName, "");
 		}
 		return true;
 	}
@@ -420,6 +428,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setAliAppSecret(config.getValue());
 			}else if(config.getTag().equals(WebConfig.templateCode)){
 				configPost.setTemplateCode(config.getValue());
+			}else if(config.getTag().equals(WebConfig.signName)){
+				configPost.setSignName(config.getValue());
 			}
 			
 		}
@@ -485,6 +495,10 @@ public class BackendServiceImpl implements BackendServiceI {
 
 	@Override
 	public boolean editProductGroup(ProductGroupPost productGroupPost) {
+		ProductGroupLink isExisted = productGroupLinkMapper.selectByGroupIdAndProductId(productGroupPost.getGroupId(), productGroupPost.getProductId());
+		if(isExisted!=null){
+			return false;
+		}
 		productGroupLinkMapper.del(productGroupPost.getPreGroupId(),productGroupPost.getPreProductId());
 		ProductGroupLink linkTmp = new ProductGroupLink();
 		linkTmp.setGroupId(productGroupPost.getGroupId());
@@ -628,6 +642,8 @@ public class BackendServiceImpl implements BackendServiceI {
 
 	@Override
 	public boolean delStore(Integer storeId) {
-		return napaStoreMapper.deleteByPrimaryKey(storeId)>0;
+		napaStoreMapper.deleteByPrimaryKey(storeId);
+		specificationValueStoreLinkMapper.delByStoreId(storeId);
+		return true;
 	}
 }

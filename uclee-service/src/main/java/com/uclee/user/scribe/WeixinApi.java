@@ -1,5 +1,9 @@
 package com.uclee.user.scribe;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.scribe.builder.api.DefaultApi20;
 import org.scribe.exceptions.OAuthException;
@@ -12,10 +16,16 @@ import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuth20ServiceImpl;
 import org.scribe.oauth.OAuthService;
 import org.scribe.utils.OAuthEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONPath;
 import com.google.common.base.Strings;
+import com.uclee.fundation.config.links.WechatMerchantInfo;
+import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
+import com.uclee.fundation.data.mybatis.model.Config;
+import com.uclee.model.SpringContextUtil;
+import com.uclee.user.service.UserServiceI;
 
 public class WeixinApi extends DefaultApi20 {
     
@@ -62,9 +72,15 @@ public class WeixinApi extends DefaultApi20 {
 
 		@Override
 	    public Token getAccessToken(Token requestToken, Verifier verifier){
+			Map<String,String> map = new HashMap<String,String>();
+			ConfigMapper configMapper = (ConfigMapper)SpringContextUtil.getBean("configMapper");
+			List<Config> configs = configMapper.getWeixinConfig();
+			for(Config config:configs){
+				map.put(config.getTag(), config.getValue());
+			}
 	      OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint());
-	      request.addQuerystringParameter("appid", config.getApiKey());
-	      request.addQuerystringParameter("secret", config.getApiSecret());
+	      request.addQuerystringParameter("appid", map.get(WechatMerchantInfo.APPID_CONFIG));
+	      request.addQuerystringParameter("secret", map.get(WechatMerchantInfo.AppSecret_CONFIG));
 	      request.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
 	      if(config.hasScope()) 
 	    	  request.addQuerystringParameter(OAuthConstants.SCOPE, config.getScope());

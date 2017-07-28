@@ -11,13 +11,13 @@ public class VerifyCode {
 	
     private static final Logger logger = LoggerFactory.getLogger(VerifyCode.class);
 	
-	public static boolean sendVerifyCode(HttpSession session,String phone,String appkey,String secret){
+	public static boolean sendVerifyCode(HttpSession session,String phone,String appkey,String secret,String signName){
         String code = getCode();
         System.out.println("verifyCode:"+code);
 		System.out.println("phone:"+phone);
         try {
         	session.setAttribute("v_code",code);
-			boolean responseCode = SMSMessageUtil.send(phone, code,appkey,secret);
+			boolean responseCode = SMSMessageUtil.send(phone, code,appkey,secret,signName);
             return responseCode;
         } catch (ApiException e) {
             if (logger.isErrorEnabled()) {

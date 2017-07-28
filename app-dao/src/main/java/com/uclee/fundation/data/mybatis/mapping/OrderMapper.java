@@ -25,7 +25,7 @@ public interface OrderMapper {
 
 	List<Order> selectByPaymentSerialNum(@Param("userId")Integer userId, @Param("paymentSerialNum")String paymentSerialNum);
 
-	Order selectBySerialNum(String outerOrderCode);
+	Order selectBySerialNum(String orderSerialNum);
 
 	List<Order> selectByVoucherCode(String voucherCode);
 

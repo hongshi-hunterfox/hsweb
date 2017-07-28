@@ -147,7 +147,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String,String> config = userService.getSMSConfig();
-		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"));
+		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"));
 	}
 	/** 
 	* @Title: checkVerifyCode 
@@ -419,9 +419,12 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping(value = "/distCenter")
 	@ResponseBody
 	public Map<String, Object> distCenter(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		return userService.distCenter(userId);
+		map=userService.distCenter(userId);
+		logger.info(JSON.toJSONString(map));
+		return map;
 	}
 	/** 
 	* @Title: distUser 
@@ -571,6 +574,19 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/productDetail")
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
 		return userService.getProductDtoById(productId);
+	}
+	
+	/** 
+	* @Title:  
+	* @Description: 获取微信appid配置 
+	* @param @param request
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws 
+	*/
+	@RequestMapping("/getAppId")
+	public @ResponseBody String getAppId(HttpServletRequest request,String merchantCode){
+		return userService.getAppId(merchantCode);
 	}
 	
 	

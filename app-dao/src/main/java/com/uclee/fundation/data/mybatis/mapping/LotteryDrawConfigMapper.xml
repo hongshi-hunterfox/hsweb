@@ -142,9 +142,6 @@
       <if test="isEnd != null" >
         is_end = #{isEnd,jdbcType=BIT},
       </if>
-      <if test="isEnd != null" >
-        is_end = #{isEnd,jdbcType=BIT},
-      </if>
       <if test="count != null" >
         count = #{count,jdbcType=INTEGER},
       </if>

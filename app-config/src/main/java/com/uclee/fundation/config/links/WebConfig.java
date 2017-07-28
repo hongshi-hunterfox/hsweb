@@ -26,5 +26,6 @@ public interface WebConfig {
 	String aliAppkey = "aliAppkey";
 	String aliAppSecret = "aliAppSecret";
 	String templateCode = "templateCode";
+	String signName = "signName";
 	
 }                      

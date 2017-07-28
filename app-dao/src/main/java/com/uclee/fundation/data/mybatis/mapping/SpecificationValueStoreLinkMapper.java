@@ -12,4 +12,6 @@ public interface SpecificationValueStoreLinkMapper {
 	void delByProductId();
 
 	SpecificationValueStoreLink selectByValueAndStoreId(@Param("valueId")Integer valueId, @Param("storeId")Integer storeId);
+
+	void delByStoreId(Integer storeId);
 }

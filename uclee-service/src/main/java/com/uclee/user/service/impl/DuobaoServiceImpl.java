@@ -235,6 +235,7 @@ public class DuobaoServiceImpl implements DuobaoServiceI {
 	@Override
 	public  String getGolbalAccessToken(){
 		Map<String,String> weixinConfig = getWeixinConfig();
+		logger.info(JSON.toJSONString(weixinConfig));
 		String url_to_golbal_get_access_token = 
 					"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+ weixinConfig.get(WechatMerchantInfo.APPID_CONFIG) +
 			"&secret=" + weixinConfig.get(WechatMerchantInfo.AppSecret_CONFIG);

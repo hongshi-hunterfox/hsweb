@@ -34,7 +34,7 @@
   <select id="getSMSConfig" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from web_config where tag='aliAppkey' or tag='aliAppSecret' or tag='templateCode'
+    from web_config where tag='aliAppkey' or tag='aliAppSecret' or tag='templateCode' or tag='signName'
   </select>
   <select id="getAlipayConfig" resultMap="BaseResultMap" >
     select 

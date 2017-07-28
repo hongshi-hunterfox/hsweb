@@ -26,7 +26,14 @@ public class ConfigPost {
 	private String aliAppkey;
 	private String aliAppSecret;
 	private String templateCode;
+	private String signName;
 	
+	public String getSignName() {
+		return signName;
+	}
+	public void setSignName(String signName) {
+		this.signName = signName;
+	}
 	public String getAliAppkey() {
 		return aliAppkey;
 	}

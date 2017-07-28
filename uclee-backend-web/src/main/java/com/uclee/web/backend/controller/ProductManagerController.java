@@ -10,6 +10,7 @@ import com.uclee.fundation.data.mybatis.model.Category;
 import com.uclee.fundation.data.mybatis.model.HongShiProduct;
 import com.uclee.fundation.data.mybatis.model.HongShiStore;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
+import com.uclee.fundation.data.mybatis.model.Product;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.oss.OssUtil;
 import com.uclee.hongshi.service.HongShiServiceI;
@@ -76,9 +77,13 @@ public class ProductManagerController {
 	}
 	
 	@RequestMapping(value="productList")
-	public @ResponseBody Map<String,Object> productList(HttpSession session){
+	public @ResponseBody Map<String,Object> productList(HttpSession session,Integer productId){
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<ProductDto> productDto = backendService.selectAllProduct();
+		ProductDto product = productMapper.getProductById(productId);
+		if(product!=null){
+			map.put("text", product.getTitle());
+		}
 		map.put("products", productDto);
 		return map;
 	}

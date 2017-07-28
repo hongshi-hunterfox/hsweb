@@ -34,6 +34,7 @@ import com.uclee.fundation.data.mybatis.model.Specification;
 import com.uclee.fundation.data.mybatis.model.SpecificationValue;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.web.dto.OrderPost;
+import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.fundation.dfs.fastdfs.data.Result;
 import com.uclee.number.util.NumberUtil;
 import com.uclee.payment.exception.PaymentHandlerException;
@@ -66,6 +67,7 @@ public class UserHandler {
 	public @ResponseBody boolean invitation(HttpServletRequest request,String serialNum){
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		logger.info(serialNum);
 		return userService.getInvitationHandler(userId,serialNum);
 	}
 	/** 
@@ -116,6 +118,25 @@ public class UserHandler {
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		logger.info("orderPost: " + JSON.toJSONString(orderPost));
 		map = userService.orderHandler(orderPost,userId);
+		return map;
+	}
+	
+	/** 
+	* @Title: stockCheck 
+	* @Description: 库存检查
+	* @param @param request
+	* @param @param orderPost
+	* @param @return    设定文件 
+	* @return Map<String,Object>    返回类型 
+	* @throws 
+	*/
+	@RequestMapping("/stockCheck")
+	public @ResponseBody Map<String,Object> stockCheck(HttpServletRequest request,@RequestBody StockPost stockPost) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		logger.info("stockPost: " + JSON.toJSONString(stockPost));
+		map = userService.stockCheck(stockPost,userId);
 		return map;
 	}
 	

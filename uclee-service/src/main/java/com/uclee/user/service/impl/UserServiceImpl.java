@@ -99,6 +99,7 @@ import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.number.util.NumberUtil;
@@ -1059,6 +1060,7 @@ public class UserServiceImpl implements UserServiceI {
 		moneyPost = money.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_UP).toString();
 		Map<String,String> weixinConfig = getWeixinConfig();
 		UniteOrderResult result = getWCPayResult(openId, paymentSerialNum, moneyPost,new String(title.getBytes("UTF-8"), "UTF-8"),new String(title.getBytes("UTF-8"), "UTF-8"));
+		System.out.println("result:" + JSON.toJSONString(result));
 		if(result.getReturn_code().equals("SUCCESS")){
 			wcPaymentResult.setAppId(weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
 			wcPaymentResult.setTimeStamp(Long.toString(System.currentTimeMillis()));
@@ -1964,6 +1966,7 @@ public class UserServiceImpl implements UserServiceI {
 	*/
 	@Override
 	public List<CartDto> getUserCart(Integer userId,Integer selectedStoreId) {
+		List<CartDto> ret = new ArrayList<CartDto>();
 		List<CartDto> carts = cartMapper.selectUserCart(userId);
 		for(CartDto cart : carts){
 			SpecificationValueStoreLink link = specificationValueStoreLinkMapper.selectByValueAndStoreId(cart.getSpecificationValueId(), selectedStoreId);
@@ -1973,6 +1976,12 @@ public class UserServiceImpl implements UserServiceI {
 				cart.setIsDisabled(false);
 			}
 			String specifcationStr = "";
+			
+			List<ProductDto> products  = productMapper.selectOneImage(cart.getProductId());
+			if(products.size()>0){
+				cart.setTitle(products.get(0).getTitle());
+				cart.setImage(products.get(0).getImage());
+			}
 			SpecificationValue specificationValue = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
 			if(specificationValue!=null){
 				cart.setStock(specificationValue.getHsStock());
@@ -1983,14 +1992,12 @@ public class UserServiceImpl implements UserServiceI {
 					specifcationStr = specification.getSpecification() +  specifcationStr;
 				}
 				cart.setSpecification(specifcationStr);
-			}
-			List<ProductDto> products  = productMapper.selectOneImage(cart.getProductId());
-			if(products.size()>0){
-				cart.setTitle(products.get(0).getTitle());
-				cart.setImage(products.get(0).getImage());
+				ret.add(cart);
+			}else{
+				cartMapper.deleteByPrimaryKey(cart.getCartId());
 			}
 		}
-		return carts;
+		return ret;
 	}
 
 	/** 
@@ -2096,12 +2103,16 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public boolean getInvitationHandler(Integer userId, String serialNum) {
 		UserInvitedLink tmp = userInvitedLinkMapper.selectByInvitedId(userId);
+		logger.info(JSON.toJSONString(tmp));
 		if(tmp==null){
-			User user = userMapper.selectBySerialNum(serialNum);
+			User user = userMapper.selectByPrimaryKey(userId);
+			User invitor = userMapper.selectBySerialNum(serialNum);
+			logger.info(JSON.toJSONString(user));
 			if(user!=null&&!user.getSerialNum().equals(serialNum)){
 				UserInvitedLink link = new UserInvitedLink();
-				link.setUserId(user.getUserId());
+				link.setUserId(invitor.getUserId());
 				link.setInvitedId(userId);
+				logger.info(JSON.toJSONString(link));
 				if(userInvitedLinkMapper.insertSelective(link)>0){
 					return true;
 				}
@@ -2113,6 +2124,31 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public DeliverAddr getDefaultAddrByUserId(Integer userId) {
 		return deliverAddrMapper.selectDefaultByUserId(userId);
+	}
+	
+	@Override
+	public Map<String, Object> stockCheck(StockPost stockPost, Integer userId) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		for(Integer cartId : stockPost.getCartIds()){
+			Cart cart = cartMapper.selectByUserIdAndCartId(userId,Integer.valueOf(cartId));
+			if (cart!=null) {
+				SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
+				Product product = productMapper.selectByPrimaryKey(cart.getProductId());
+				if (product != null && value != null) {
+					if (cart.getAmount() > value.getHsStock()) {
+						map.put("result", false);
+						map.put("reason", product.getTitle() + "库存不足,剩余库存为：" + value.getHsStock());
+						return map;
+					} 
+				}else{
+					map.put("result", false);
+					map.put("reason", "产品"+product.getTitle() + "已失效，请重新加入购物车");
+					return map;
+				}
+			}
+		}
+		map.put("result", true);
+		return map;
 	}
 
 	/** 
@@ -2185,10 +2221,22 @@ public class UserServiceImpl implements UserServiceI {
 				map.put("reason", "非法数据，请返回购物车重新提交");
 				return map;
 			}
+			Product product = productMapper.selectByPrimaryKey(cart.getProductId());
 			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
 			if(value==null){
 				map.put("result", false);
 				map.put("reason", "非法数据，请返回购物车重新提交");
+				return map;
+			}
+			//TODO 改成购物车失效
+			if(product==null){
+				map.put("result", false);
+				map.put("reason", value.getValue() + "已被删除，请重新加入购物车");
+				return map;
+			}
+			if(cart.getAmount()>value.getHsStock()){
+				map.put("result", false);
+				map.put("reason", product.getTitle() + "库存不足,剩余库存为：" + value.getHsStock());
 				return map;
 			}
 			SpecificationValueStoreLink link = specificationValueStoreLinkMapper.selectByValueAndStoreId(value.getValueId(),orderPost.getStoreId());
@@ -2288,6 +2336,16 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		//删除购物车
 		for(String cartId : cartIds){
+			//减库存
+			Cart cart = cartMapper.selectByPrimaryKey(Integer.valueOf(cartId));
+			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
+			logger.info(JSON.toJSONString(cart));
+			logger.info(JSON.toJSONString(value));
+			if(cart!=null&&value!=null){
+				value.setHsStock(value.getHsStock()-cart.getAmount());
+				logger.info(JSON.toJSONString(value));
+				specificationValueMapper.updateByPrimaryKeySelective(value);
+			}
 			cartMapper.deleteByPrimaryKey(Integer.valueOf(cartId));
 		}
 		map.put("result", true);
@@ -2567,9 +2625,13 @@ public class UserServiceImpl implements UserServiceI {
 		List<HongShiCoupon> coupons = hongShiMapper.getHongShiCoupon(login.getOauthId());
 		List<HongShiCoupon> couponsRet = new ArrayList<HongShiCoupon>();
 		for(HongShiCoupon coupon:coupons){
-			List<Order> order = orderMapper.selectByVoucherCode(coupon.getVouchersCode());
-			if(order==null||order.size()==0){
-				couponsRet.add(coupon);
+			logger.info(JSON.toJSONString(orderMapper));
+			logger.info(JSON.toJSONString(coupon));
+			if (coupon!=null) {
+				List<Order> order = orderMapper.selectByVoucherCode(coupon.getVouchersCode());
+				if (order == null || order.size() == 0) {
+					couponsRet.add(coupon);
+				} 
 			}
 		}
 		return couponsRet;
@@ -3130,7 +3192,21 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public int delOrder(String orderSerialNum) {
-		return orderMapper.deleteByOrderSerialNum(orderSerialNum);
+		Order order = orderMapper.selectBySerialNum(orderSerialNum);
+		orderMapper.deleteByOrderSerialNum(orderSerialNum);
+		if(order!=null){
+			List<OrderItem> orderItems = orderItemMapper.selectByOrderId(order.getOrderId());
+			logger.info(JSON.toJSONString(orderItems));
+			for(OrderItem orderItem : orderItems){
+				SpecificationValue value = specificationValueMapper.selectByPrimaryKey(orderItem.getValueId());
+				if(value!=null){
+					value.setHsStock(value.getHsStock()+orderItem.getAmount());
+					logger.info(JSON.toJSONString(value));
+					specificationValueMapper.updateByPrimaryKeySelective(value);
+				}
+			}
+		}
+		return 1;
 	}
 
 	@Override
@@ -3516,6 +3592,15 @@ public class UserServiceImpl implements UserServiceI {
 		shakeRecordMapper.reset();
 		winningRecordMapper.reset();
 		return true;
+	}
+
+	@Override
+	public String getAppId(String merchantCode) {
+		if(merchantCode!=null&&merchantCode.isEmpty()){
+			datasource.switchDataSource(merchantCode); 
+		}
+		Map<String,String> config = getWeixinConfig();
+		return config.get(WebConfig.APPID);
 	}
 	 
 }

@@ -14,6 +14,9 @@
   <delete id="delByProductId" parameterType="java.lang.Integer" >
     delete from web_specification_value_store_link where value_id in (select value_id from web_products_specifications_values_link where product_id=#{productId,jdbcType=INTEGER})
   </delete>
+  <delete id="delByStoreId" parameterType="java.lang.Integer" >
+    delete from web_specification_value_store_link where store_id=#{storeId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValueStoreLink" >
     insert into web_specification_value_store_link (value_id, store_id)
     values (#{valueId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER})
