@@ -1,4 +1,4 @@
-package com.aliyun.test;
+package com.uclee.sms.util;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
