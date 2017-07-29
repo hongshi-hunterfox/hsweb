@@ -9,6 +9,8 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
+/*add by jp
+ * */
 public class TestWhyNotSendPhone {
 	
 	public static void main(String[] agrs) throws ServerException, ClientException {
