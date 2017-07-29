@@ -22,15 +22,27 @@ class EditProductGroup extends React.Component {
   componentDidMount() {
     this.setState({
       preGroupId:this.props.location.query.groupId,
-      preProductId:this.props.location.query.productId
+      preProductId:this.props.location.query.productId,
+      productId:this.props.location.query.productId,
+      groupId:this.props.location.query.groupId
     })
-    req.get('/uclee-product-web/productList').end((err, res) => {
-      if (err) {
-        return err
-      }
+    if(this.props.location.query.productId){
+      req.get('/uclee-product-web/productList?productId='+this.props.location.query.productId).end((err, res) => {
+        if (err) {
+          return err
+        }
 
-      this.setState(res.body)
-    })
+        this.setState(res.body)
+      })
+    }else{
+      req.get('/uclee-product-web/productList').end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        this.setState(res.body)
+      })
+    }
   }
 
   render() {
@@ -65,11 +77,15 @@ class EditProductGroup extends React.Component {
                     {this.state.products.filter((item) => {
                       return item.title.indexOf(this.state.filter) !== -1
                     }).map((item, index) => {
+                      console.log(this.state.productId)
+                      console.log(item.productId)
+                      console.log(this.state.productId===item.productId)
                       return (
                         <div
                           key={index}
                           style={{
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            color: parseInt(this.state.productId)===item.productId ? 'red' : 'initial'
                           }}
                           onClick={this._pick.bind(this, item.productId,item.title)}
                         >

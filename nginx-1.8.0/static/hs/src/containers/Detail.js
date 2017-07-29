@@ -357,7 +357,6 @@ class Detail extends React.Component {
   }
 
   _clickNext = () => {
-    this._closePick()
     // 加入购物车
     req
       .post('/uclee-user-web/cartHandler')

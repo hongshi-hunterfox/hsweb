@@ -14,7 +14,8 @@ class MemberCenter extends React.Component {
     super(props)
     this.state = {
       nickName: '',
-      point:0
+      point:0,
+      serialNum:''
     }
   }
 

@@ -20,21 +20,23 @@ class DistributionCenter extends React.Component {
 				return err
 			}
 			var resJson = JSON.parse(res.text);
+			console.log(resJson);
 			this.setState({
 				money:resJson.money,
 				serialNum:resJson.serialNum
+			},()=>{
+				if(this.props.location.query.serialNum!==null&&this.props.location.query.serialNum!==this.state.serialNum){
+			      request
+			        .get('/uclee-user-web/invitation?serialNum='+this.props.location.query.serialNum)
+			        .end((err, res) => {
+			          if (err) {
+			            return err
+			          }
+			          window.location='/distribution-center?serialNum=' + this.state.serialNum+'&merchantCode='+localStorage.getItem('merchantCode');
+			        })
+			    }
 			})
 		})
-		if(this.props.location.query.serialNum!==null){
-	      request
-	        .get('/uclee-user-web/invitation?serialNum='+this.props.location.query.serialNum)
-	        .end((err, res) => {
-	          if (err) {
-	            return err
-	          }
-	        })
-	    }
-		
 	}
 
 	render() {
@@ -117,7 +119,8 @@ class DistributionCenter extends React.Component {
 	}
 
 	_clickHandle = (b,serialNum) => {
-		if(serialNum!==null){
+		console.log(serialNum);
+		/*if(serialNum!==null){
 			var q = {}
 			q.url = window.location.href.split('#')[0]
 			request.get('/uclee-user-web/wxConfig').query(q).end(function(err, res) {
@@ -149,7 +152,7 @@ class DistributionCenter extends React.Component {
 					cancel: function() {}
 				})
 			})
-		}
+		}*/
 		this.setState({
 			isShareShow:b
 		})

@@ -81,90 +81,91 @@ class LotteryConfig extends React.Component {
           {/* 类名加上页面前缀防止冲突 */}
           <form onSubmit={this._submit} className="form-horizontal">
             <div className="lottery-line">
-              <div className="lottery-line-info">请输入优惠券商品号/会员卡金额</div> 
+              <div className="lottery-line-info">请选择类型</div> 
+              <div className="lottery-line-info">请输入优惠券号/金额</div> 
               <div className="lottery-line-info">请输入奖池数量</div> 
               <div className="lottery-line-info">请输入概率</div> 
-              <div className="lottery-line-info">请选择类型</div> 
             </div>
             <div  className="lottery-line">
-              <input className="lottery-line-item"  name="key[0]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>0?this.state.key[0]:null} onChange={this._keyChange.bind(this,'key',0)}/> 
-              <input className="lottery-line-item"  name="count[0]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>0?this.state.count[0]:null} onChange={this._countChange.bind(this,'count',0)}/> 
-              <input className="lottery-line-item"  name="rate[0]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>0?this.state.rate[0]:null} onChange={this._rateChange.bind(this,'rate',0)}/> 
               <select className="lottery-line-item"  name="value[0]" onChange={this._valueChange.bind(this,'value',0)}>
                   <option selected={!this.state.value.length>0?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>0?this.state.value[0]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>0?this.state.value[0]===2?'selected':null:null}>会员卡金额</option>
               </select>
+              <input className="lottery-line-item"  name="key[0]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>0?this.state.key[0]:null} onChange={this._keyChange.bind(this,'key',0)}/> 
+              <input className="lottery-line-item"  name="count[0]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>0?this.state.count[0]:null} onChange={this._countChange.bind(this,'count',0)}/> 
+              <input className="lottery-line-item"  name="rate[0]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>0?this.state.rate[0]:null} onChange={this._rateChange.bind(this,'rate',0)}/> 
+              
             </div>
              <div  className="lottery-line">
-               <input className="lottery-line-item"  name="key[1]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>1?this.state.key[1]:null} onChange={this._keyChange.bind(this,'key',1)}/> 
-              <input className="lottery-line-item"  name="count[1]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>1?this.state.count[1]:null} onChange={this._countChange.bind(this,'count',1)}/> 
-              <input className="lottery-line-item"  name="rate[1]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>1?this.state.rate[1]:null} onChange={this._rateChange.bind(this,'rate',1)}/> 
               <select className="lottery-line-item"  name="value[1]" onChange={this._valueChange.bind(this,'value',1)}>
                   <option selected={!this.state.value.length>1?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>1?this.state.value[1]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>1?this.state.value[1]===2?'selected':null:null}>会员卡金额</option>
               </select>
+               <input className="lottery-line-item"  name="key[1]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>1?this.state.key[1]:null} onChange={this._keyChange.bind(this,'key',1)}/> 
+              <input className="lottery-line-item"  name="count[1]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>1?this.state.count[1]:null} onChange={this._countChange.bind(this,'count',1)}/> 
+              <input className="lottery-line-item"  name="rate[1]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>1?this.state.rate[1]:null} onChange={this._rateChange.bind(this,'rate',1)}/> 
             </div>
              <div className="lottery-line">
-              <input className="lottery-line-item"  name="key[2]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>2?this.state.key[2]:null} onChange={this._keyChange.bind(this,'key',2)}/> 
-              <input className="lottery-line-item"  name="count[2]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>2?this.state.count[2]:null} onChange={this._countChange.bind(this,'count',2)}/> 
-              <input className="lottery-line-item"  name="rate[2]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>2?this.state.rate[2]:null} onChange={this._rateChange.bind(this,'rate',2)}/> 
               <select className="lottery-line-item"  name="value[2]" onChange={this._valueChange.bind(this,'value',2)}>
                   <option selected={!this.state.value.length>2?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>2?this.state.value[2]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>2?this.state.value[12]===2?'selected':null:null}>会员卡金额</option>
               </select>
+              <input className="lottery-line-item"  name="key[2]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>2?this.state.key[2]:null} onChange={this._keyChange.bind(this,'key',2)}/> 
+              <input className="lottery-line-item"  name="count[2]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>2?this.state.count[2]:null} onChange={this._countChange.bind(this,'count',2)}/> 
+              <input className="lottery-line-item"  name="rate[2]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>2?this.state.rate[2]:null} onChange={this._rateChange.bind(this,'rate',2)}/> 
             </div>
              <div  className="lottery-line">
-               <input className="lottery-line-item"  name="key[3]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>3?this.state.key[3]:null} onChange={this._keyChange.bind(this,'key',3)}/> 
-              <input className="lottery-line-item"  name="count[3]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>3?this.state.count[3]:null} onChange={this._countChange.bind(this,'count',3)}/> 
-              <input className="lottery-line-item"  name="rate[3]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>3?this.state.rate[3]:null} onChange={this._rateChange.bind(this,'rate',3)}/> 
               <select className="lottery-line-item"  name="value[3]" onChange={this._valueChange.bind(this,'value',3)}>
                   <option selected={!this.state.value.length>3?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>3?this.state.value[3]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>3?this.state.value[3]===2?'selected':null:null}>会员卡金额</option>
               </select>
+               <input className="lottery-line-item"  name="key[3]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>3?this.state.key[3]:null} onChange={this._keyChange.bind(this,'key',3)}/> 
+              <input className="lottery-line-item"  name="count[3]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>3?this.state.count[3]:null} onChange={this._countChange.bind(this,'count',3)}/> 
+              <input className="lottery-line-item"  name="rate[3]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>3?this.state.rate[3]:null} onChange={this._rateChange.bind(this,'rate',3)}/> 
             </div>
              <div  className="lottery-line">
-               <input className="lottery-line-item"  name="key[4]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>4?this.state.key[4]:null} onChange={this._keyChange.bind(this,'key',4)}/> 
-              <input className="lottery-line-item"  name="count[4]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>4?this.state.count[4]:null} onChange={this._countChange.bind(this,'count',4)}/> 
-              <input className="lottery-line-item"  name="rate[4]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>4?this.state.rate[4]:null} onChange={this._rateChange.bind(this,'rate',4)}/> 
               <select className="lottery-line-item"  name="value[4]" onChange={this._valueChange.bind(this,'value',4)}>
                   <option selected={!this.state.value.length>4?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>4?this.state.value[4]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>4?this.state.value[4]===2?'selected':null:null}>会员卡金额</option>
               </select>
+               <input className="lottery-line-item"  name="key[4]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>4?this.state.key[4]:null} onChange={this._keyChange.bind(this,'key',4)}/> 
+              <input className="lottery-line-item"  name="count[4]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>4?this.state.count[4]:null} onChange={this._countChange.bind(this,'count',4)}/> 
+              <input className="lottery-line-item"  name="rate[4]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>4?this.state.rate[4]:null} onChange={this._rateChange.bind(this,'rate',4)}/> 
             </div>
              <div className="lottery-line">
-               <input className="lottery-line-item"  name="key[5]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>5?this.state.key[5]:null} onChange={this._keyChange.bind(this,'key',5)}/> 
-              <input className="lottery-line-item"  name="count[5]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>5?this.state.count[5]:null} onChange={this._countChange.bind(this,'count',5)}/> 
-              <input className="lottery-line-item"  name="rate[5]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>5?this.state.rate[5]:null} onChange={this._rateChange.bind(this,'rate',5)}/> 
               <select className="lottery-line-item"  name="value[5]" onChange={this._valueChange.bind(this,'value',5)}>
                   <option selected={!this.state.value.length>5?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>5?this.state.value[5]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>5?this.state.value[5]===2?'selected':null:null}>会员卡金额</option>
               </select>
+               <input className="lottery-line-item"  name="key[5]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>5?this.state.key[5]:null} onChange={this._keyChange.bind(this,'key',5)}/> 
+              <input className="lottery-line-item"  name="count[5]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>5?this.state.count[5]:null} onChange={this._countChange.bind(this,'count',5)}/> 
+              <input className="lottery-line-item"  name="rate[5]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>5?this.state.rate[5]:null} onChange={this._rateChange.bind(this,'rate',5)}/> 
             </div>
              <div  className="lottery-line">
-              <input className="lottery-line-item"  name="key[6]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>6?this.state.key[6]:null} onChange={this._keyChange.bind(this,'key',6)}/> 
-              <input className="lottery-line-item"  name="count[6]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>6?this.state.count[6]:null} onChange={this._countChange.bind(this,'count',6)}/> 
-              <input className="lottery-line-item"  name="rate[6]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>6?this.state.rate[6]:null} onChange={this._rateChange.bind(this,'rate',6)}/> 
               <select className="lottery-line-item"  name="value[6]" onChange={this._valueChange.bind(this,'value',6)}>
                   <option selected={!this.state.value.length>6?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>6?this.state.value[6]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>6?this.state.value[6]===2?'selected':null:null}>会员卡金额</option>
               </select>
+              <input className="lottery-line-item"  name="key[6]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>6?this.state.key[6]:null} onChange={this._keyChange.bind(this,'key',6)}/> 
+              <input className="lottery-line-item"  name="count[6]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>6?this.state.count[6]:null} onChange={this._countChange.bind(this,'count',6)}/> 
+              <input className="lottery-line-item"  name="rate[6]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>6?this.state.rate[6]:null} onChange={this._rateChange.bind(this,'rate',6)}/> 
             </div>
              <div  className="lottery-line">
-              <input className="lottery-line-item"  name="key[7]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>7?this.state.key[7]:null} onChange={this._keyChange.bind(this,'key',7)}/> 
-              <input className="lottery-line-item"  name="count[7]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>7?this.state.count[7]:null} onChange={this._countChange.bind(this,'count',7)}/> 
-              <input className="lottery-line-item"  name="rate[7]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>7?this.state.rate[7]:null} onChange={this._rateChange.bind(this,'rate',7)}/> 
               <select className="lottery-line-item"  name="value[7]" onChange={this._valueChange.bind(this,'value',7)}>
                   <option selected={!this.state.value.length>7?'selected':null}>请选择</option>
                   <option value="1" selected={this.state.value.length>7?this.state.value[7]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>7?this.state.value[7]===2?'selected':null:null}>会员卡金额</option>
               </select>
+              <input className="lottery-line-item"  name="key[7]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>7?this.state.key[7]:null} onChange={this._keyChange.bind(this,'key',7)}/> 
+              <input className="lottery-line-item"  name="count[7]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>7?this.state.count[7]:null} onChange={this._countChange.bind(this,'count',7)}/> 
+              <input className="lottery-line-item"  name="rate[7]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>7?this.state.rate[7]:null} onChange={this._rateChange.bind(this,'rate',7)}/> 
             </div>
             <div>
               每人每天限抽次数：<input type='text' name='limits' value={this.state.limits} onChange={this._limitsChange.bind(this)} />

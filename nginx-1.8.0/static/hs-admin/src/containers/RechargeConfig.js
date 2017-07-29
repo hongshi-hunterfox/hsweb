@@ -71,7 +71,7 @@ class RechargeConfig extends React.Component {
                       condition={'='}
                       keyText={'充值金额'}
                       valueText={'赠送金额/优惠券商品号'}
-                      selectText={'类型'}
+                      selectText={'赠送类型'}
                       useSelect={true}
                       selectOptions={[
                         {

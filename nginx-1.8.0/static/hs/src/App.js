@@ -35,8 +35,13 @@ class App extends Component {
       })
     }
 
-
-    
+    var pathname = this.props.location.pathname
+    var noLogin = pathname === '/' || pathname.indexOf('/detail/') !== -1
+    if (noLogin) {
+      return this.setState({
+        loading: false
+      })
+    }
 
     this._sendMerchantCode((err, res) => {
       if (err) {
