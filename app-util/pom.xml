@@ -114,5 +114,16 @@
 			<artifactId>taobao-sdk-java-auto_1455552377940</artifactId>
 			<version>20160607</version>
 		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>3.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+			<version>1.0.0-SANPSHOT</version>	
+		</dependency>
+		
 	</dependencies>
 </project>
