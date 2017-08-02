@@ -2864,7 +2864,7 @@ public class UserServiceImpl implements UserServiceI {
 						createOrderItem.setGoodsCount(item.getAmount().intValue());
 						createOrderItem.setpId(createOrderResult.getOrderID());
 						createOrderItem.setPrice(item.getPrice());
-						createOrderItem.setTotalAmount(item.getPrice());
+						createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
 						hongShiMapper.createOrderItem(createOrderItem);
 					}
 				} catch (Exception e) {
