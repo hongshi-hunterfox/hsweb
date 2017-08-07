@@ -5,6 +5,7 @@ CREATE TABLE web_users (
    password varchar(255) not null, --密码，微商城暂时没用
    serial_num varchar(255) not null --用户序列号
  );
+ 
 CREATE TABLE web_user_invited_link (
   user_id int  NOT NULL,    --用户id
   invited_id int  NOT NULL, --受邀用户id
