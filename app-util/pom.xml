@@ -124,6 +124,5 @@
 			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
 			<version>1.0.0-SANPSHOT</version>	
 		</dependency>
-		
 	</dependencies>
 </project>
