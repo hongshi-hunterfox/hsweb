@@ -1680,6 +1680,7 @@ public class UserServiceImpl implements UserServiceI {
 					createOrderItem.setpId(createOrderResult.getOrderID());
 					createOrderItem.setPrice(item.getPrice());
 					createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
+					System.out.println(JSON.toJSONString(createOrderItem));
 					hongShiMapper.createOrderItem(createOrderItem);
 				}
 			} catch (Exception e) {
@@ -2864,7 +2865,8 @@ public class UserServiceImpl implements UserServiceI {
 						createOrderItem.setGoodsCount(item.getAmount().intValue());
 						createOrderItem.setpId(createOrderResult.getOrderID());
 						createOrderItem.setPrice(item.getPrice());
-						createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
+						createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));//dse
+						System.out.println(JSON.toJSONString(createOrderItem));
 						hongShiMapper.createOrderItem(createOrderItem);
 					}
 				} catch (Exception e) {

@@ -1,281 +1,293 @@
-ï»¿/*
-ä¸å¾®å•†åŸå¯¹æ¥çš„æ›´æ–°
-å…¬å¼€è¿‡ç¨‹:
-  GetVipInfo:å–ä¼šå‘˜ä¿¡æ¯
-  AddVip:æ·»åŠ ä¼šå‘˜(æœ‰åˆ™ä¸æ·»åŠ ),å¹¶ä¸æŒ‡å®šä¼šå‘˜ç»‘å®š
-  VipReCharge:ä¼šå‘˜å……å€¼
-  GetVipLog:è·å–æŒ‡å®šä¼šå‘˜(å¤–é”®)çš„æ¶ˆè´¹/å……å€¼è®°å½•
-  GetVipLog_ID:è·å–æŒ‡å®šä¼šå‘˜(ID)çš„æ¶ˆè´¹/å……å€¼è®°å½•
-  NewVipCode:ç”Ÿæˆä¸€ä¸ªæ–°çš„ä¼šå‘˜ç¼–å·
-  NewVip:ç”Ÿæˆä¼šå‘˜è®°å½•
-  GetVouchers:è·å–ç¤¼åˆ¸ä¿¡æ¯(æŒ‡å®šéƒ¨é—¨å¯å‘æ”¾çš„/æŒ‡å®šç¼–å·çš„)
-  Saleing:ç”Ÿæˆé”€å”®è®°å½•(å•ä¸ªå•†å“é”€å”®)
-  SaleingVoucher:é”€å”®ç¤¼åˆ¸
-  CreateOrder:ç”Ÿæˆä¸€å¼ è®¢å•(åªæ˜¯ä¸»è®°å½•)
-  AddOrderItem:æ·»åŠ ä¸€æ¡è®¢å•æ˜ç»†
-  GetOrdersList:è·å–è®¢å•åˆ—è¡¨
-  GetOrdersDetail:è·å–æŒ‡å®šè®¢å•çš„æ˜ç»†
-  RecoverVoucher:ç¤¼åˆ¸å›æ”¶
-  VipBonusPoints:å¯¹ä¼šå‘˜ç§¯åˆ†è¿›è¡Œå˜åŠ¨(é€šè¿‡å……å€¼0å®ç°)
-  QueryFormMObject:æ‰§è¡Œmobile_objectä¸­çš„æŸ¥è¯¢
+/*
+ÓëÎ¢ÉÌ³Ç¶Ô½ÓµÄ¸üĞÂ
+º¯Êı£º
+  Fun_Birthday: º¯Êı ×ª»»µ±ÄêÉúÈÕÎªÖ¸¶¨ÈÕÆÚºóµÄÉúÈÕÈÕÆÚ  
   
-  Get_BossTotal:è€æ¿å°åŠ©æ‰‹ ç»Ÿè®¡æ•°æ® ä»Šæ—¥é”€å”®ï¼Œæ˜¨æ—¥é”€å”®ï¼Œä»Šæ—¥è®¢å•æ•°ï¼Œæ˜¨æ—¥è®¢å•æ•°ï¼Œä»Šæ—¥ä¼šå‘˜æ¶ˆè´¹ï¼Œæ˜¨æ—¥ä¼šå‘˜æ¶ˆè´¹ï¼Œ
-  --              ä»Šæ—¥éä¼šå‘˜æ¶ˆè´¹ï¼Œæ˜¨æ—¥éä¼šå‘˜æ¶ˆè´¹ï¼Œä»Šæ—¥æ–°å¢ä¼šå‘˜ï¼Œæ˜¨æ—¥æ–°å¢ä¼šå‘˜ï¼Œä»Šæ—¥å……å€¼ï¼Œæ˜¨æ—¥å……å€¼
+¹«¿ª¹ı³Ì:
+  GetVipInfo:È¡»áÔ±ĞÅÏ¢
+  AddVip:Ìí¼Ó»áÔ±(ÓĞÔò²»Ìí¼Ó),²¢ÓëÖ¸¶¨»áÔ±°ó¶¨
+  VipReCharge:»áÔ±³äÖµ
+  GetVipLog:»ñÈ¡Ö¸¶¨»áÔ±(Íâ¼ü)µÄÏû·Ñ/³äÖµ¼ÇÂ¼
+  GetVipLog_ID:»ñÈ¡Ö¸¶¨»áÔ±(ID)µÄÏû·Ñ/³äÖµ¼ÇÂ¼
+  NewVipCode:Éú³ÉÒ»¸öĞÂµÄ»áÔ±±àºÅ
+  NewVip:Éú³É»áÔ±¼ÇÂ¼
+  GetVouchers:»ñÈ¡ÀñÈ¯ĞÅÏ¢(Ö¸¶¨²¿ÃÅ¿É·¢·ÅµÄ/Ö¸¶¨±àºÅµÄ)
+  Saleing:Éú³ÉÏúÊÛ¼ÇÂ¼(µ¥¸öÉÌÆ·ÏúÊÛ)
+  SaleingVoucher:ÏúÊÛÀñÈ¯
+  CreateOrder:Éú³ÉÒ»ÕÅ¶©µ¥(Ö»ÊÇÖ÷¼ÇÂ¼)
+  AddOrderItem:Ìí¼ÓÒ»Ìõ¶©µ¥Ã÷Ï¸
+  GetOrdersList:»ñÈ¡¶©µ¥ÁĞ±í
+  GetOrdersDetail:»ñÈ¡Ö¸¶¨¶©µ¥µÄÃ÷Ï¸
+  RecoverVoucher:ÀñÈ¯»ØÊÕ
+  VipBonusPoints:¶Ô»áÔ±»ı·Ö½øĞĞ±ä¶¯(Í¨¹ı³äÖµ0ÊµÏÖ)
+  QueryFormMObject:Ö´ĞĞmobile_objectÖĞµÄ²éÑ¯
   
-ä¸ºä¼˜åŠ¿åŠ›æä¾›çš„è°ƒç”¨å°è£…:
-  WSC_GetVipInfo:å–ä¼šå‘˜ä¿¡æ¯
-  WSC_AddVip:æ·»åŠ ä¼šå‘˜
-  WSC_VipReCharge:ä¼šå‘˜å……å€¼
-  WSC_GetVipLog:è·å–æŒ‡å®šä¼šå‘˜å¤–é”®çš„æ¶ˆè´¹/å……å€¼è®°å½•,å«ç§¯åˆ†ä¿¡æ¯
-  WSC_GetVouchers:å¾—åˆ°å¾®å•†åŸä¸­å¯ä»¥å‘æ”¾çš„ç”µå­åˆ¸åˆ—è¡¨/æŒ‡å®šç¼–å·çš„ç¤¼åˆ¸
-  WSC_SaleVoucher:ç”µå­åˆ¸é”€å”®
-  WSC_CreateOrder:ç”Ÿæˆè®¢å•ä¸»è®°å½•,å¾—åˆ°å•å·
-  WSC_AddOrderItem:æ·»åŠ è®¢å•æ˜ç»†
-  WSC_GetOrdersList:è·å–è®¢å•åˆ—è¡¨
-  WSC_GetOrdersDetail:è·å–æŒ‡å®šè®¢å•æ˜ç»†
-  WSC_RecoverVoucher:è®¢å•ä¸­å›æ”¶ç¤¼åˆ¸
-  WSC_VipBonusPoints:ç§¯åˆ†å˜åŠ¨
-  WSC_GetVipRelevance:ç¡®è®¤ä¸¤ä¸ªä¼šå‘˜æ˜¯å¦å¯ä»¥å»ºç«‹åˆ†é”€å…³ç³»
-      å…³äºè®¢å•çš„ä½¿ç”¨,è¯·å‚è€ƒæœ€åçš„è¯´æ˜
-  è·å–å¯ç”¨é—¨åº—åˆ—è¡¨çš„æŸ¥è¯¢è¯­å¥
-  è·å–æ‰€æœ‰å¯é”€å”®äº§å“çš„æŸ¥è¯¢è¯­å¥
+  Get_BossTotal:ÀÏ°åĞ¡ÖúÊÖ Í³¼ÆÏúÊÛÊı¾İ·Ç»áÔ±Ïû·Ñ£¬½ñÈÕĞÂÔö»áÔ±£¬×òÈÕĞÂÔö»áÔ±£¬½ñÈÕ³äÖµ£¬×òÈÕ³äÖµ
+  GetBirthday:»ñÈ¡Ö¸¶¨ÈÕÆÚºóXXÌìÄÚ¹ıÉúÈÕµÄ»áÔ±ĞÅÏ¢
+   
+ÎªÓÅÊÆÁ¦Ìá¹©µÄµ÷ÓÃ·â×°:
+  WSC_GetVipInfo:È¡»áÔ±ĞÅÏ¢
+  WSC_AddVip:Ìí¼Ó»áÔ±
+  WSC_VipReCharge:»áÔ±³äÖµ
+  WSC_GetVipLog:»ñÈ¡Ö¸¶¨»áÔ±Íâ¼üµÄÏû·Ñ/³äÖµ¼ÇÂ¼,º¬»ı·ÖĞÅÏ¢
+  WSC_GetVouchers:µÃµ½Î¢ÉÌ³ÇÖĞ¿ÉÒÔ·¢·ÅµÄµç×ÓÈ¯ÁĞ±í/Ö¸¶¨±àºÅµÄÀñÈ¯
+  WSC_SaleVoucher:µç×ÓÈ¯ÏúÊÛ
+  WSC_CreateOrder:Éú³É¶©µ¥Ö÷¼ÇÂ¼,µÃµ½µ¥ºÅ
+  WSC_AddOrderItem:Ìí¼Ó¶©µ¥Ã÷Ï¸
+  WSC_GetOrdersList:»ñÈ¡¶©µ¥ÁĞ±í
+  WSC_GetOrdersDetail:»ñÈ¡Ö¸¶¨¶©µ¥Ã÷Ï¸
+  WSC_RecoverVoucher:¶©µ¥ÖĞ»ØÊÕÀñÈ¯
+  WSC_VipBonusPoints:»ı·Ö±ä¶¯
+  WSC_GetVipRelevance:È·ÈÏÁ½¸ö»áÔ±ÊÇ·ñ¿ÉÒÔ½¨Á¢·ÖÏú¹ØÏµ
+      ¹ØÓÚ¶©µ¥µÄÊ¹ÓÃ,Çë²Î¿¼×îºóµÄËµÃ÷
+  »ñÈ¡¿ÉÓÃÃÅµêÁĞ±íµÄ²éÑ¯Óï¾ä
+  »ñÈ¡ËùÓĞ¿ÉÏúÊÛ²úÆ·µÄ²éÑ¯Óï¾ä
   
-  Wsc_Get_BossTotal:è€æ¿å°åŠ©æ‰‹ ç»Ÿè®¡æ•°æ® ä»Šæ—¥é”€å”®ï¼Œæ˜¨æ—¥é”€å”®ï¼Œä»Šæ—¥è®¢å•æ•°ï¼Œæ˜¨æ—¥è®¢å•æ•°ï¼Œä»Šæ—¥ä¼šå‘˜æ¶ˆè´¹ï¼Œæ˜¨æ—¥ä¼šå‘˜æ¶ˆè´¹ï¼Œ
-  --              ä»Šæ—¥éä¼šå‘˜æ¶ˆè´¹ï¼Œæ˜¨æ—¥éä¼šå‘˜æ¶ˆè´¹ï¼Œä»Šæ—¥æ–°å¢ä¼šå‘˜ï¼Œæ˜¨æ—¥æ–°å¢ä¼šå‘˜ï¼Œä»Šæ—¥å……å€¼ï¼Œæ˜¨æ—¥å……å€¼
+  Wsc_Get_BossTotal:ÀÏ°åĞ¡ÖúÊÖ Í³¼ÆÏúÊÛÊı¾İ 
+
   
 2016-12-06 hunter__fox
 
-ä¿®æ”¹
+ĞŞ¸Ä
 2016-12-10 hunter__fox
-  æ·»åŠ è¿‡ç¨‹GetVipLog_ID:è·å–æŒ‡å®šä¼šå‘˜IDçš„æ¶ˆè´¹/å……å€¼è®°å½•,ç®€åŒ–GetVipLogå®ç°
+  Ìí¼Ó¹ı³ÌGetVipLog_ID:»ñÈ¡Ö¸¶¨»áÔ±IDµÄÏû·Ñ/³äÖµ¼ÇÂ¼,¼ò»¯GetVipLogÊµÏÖ
 
 2016-12-10 hunter__fox
-  NewVipCode:ç”Ÿæˆä¸€ä¸ªæ–°çš„ä¼šå‘˜ç¼–å·
+  NewVipCode:Éú³ÉÒ»¸öĞÂµÄ»áÔ±±àºÅ
 
 2016-12-12 hunter__fox
-  NewVip:åœ¨[ä¼šå‘˜]è¡¨å»ºç«‹ä¸€æ¡è®°å½•,å¹¶è¿”å›ç›¸åº”çš„ID
+  NewVip:ÔÚ[»áÔ±]±í½¨Á¢Ò»Ìõ¼ÇÂ¼,²¢·µ»ØÏàÓ¦µÄID
 
 2016-12-26 hunter__fox
-  NewVip:æŒ‡å®š[ç§¯åˆ†æ¯”ä¾‹]é»˜è®¤å€¼ä¸º1
+  NewVip:Ö¸¶¨[»ı·Ö±ÈÀı]Ä¬ÈÏÖµÎª1
 
 2017-04-28
-  ä¿®æ­£:å…¬ä¼—å·éƒ¨é—¨çš„ç¼–å·ç”Ÿæˆæ—¶ä½¿ç”¨çš„å­æŸ¥è¯¢ä¸æ’é™¤departmentè¡¨ä¸­çš„ä»»ä½•è®°å½•,ä»¥é¿å…å¾—åˆ°ä¸€ä¸ªå·²ç»å­˜åœ¨çš„ç¼–å·
+  ĞŞÕı:¹«ÖÚºÅ²¿ÃÅµÄ±àºÅÉú³ÉÊ±Ê¹ÓÃµÄ×Ó²éÑ¯²»ÅÅ³ıdepartment±íÖĞµÄÈÎºÎ¼ÇÂ¼,ÒÔ±ÜÃâµÃµ½Ò»¸öÒÑ¾­´æÔÚµÄ±àºÅ
 
 2017-05-08 hunter__fox
-  ä¿®æ­£:GetVipLog_IDä¸­ä¿®æ­£BUG"å½“ä¼šå‘˜äº¤æ˜“è®°å½•ä¸­åªæœ‰å……å€¼è®°å½•æ—¶,ä½™é¢æ˜¾ç¤ºä¸ºNull"
-  æ·»åŠ äº†å°è£…æ€§è´¨çš„å­˜å‚¨è¿‡ç¨‹:WSC_GetVipInfo/WSC_AddVip/WSC_VipReCharge/WSC_GetVipLog
-  å…¶ä¸­WSC_AddVip/WSC_VipReCharge/WSC_GetVipLogå‡å¤šè¿”å›ä¸€ä¸ªç»“æœé›†,åªå«ä¸€ä¸ªå­—æ®µ'retcode',åªæœ‰ä¸€æ¡è®°å½•,å®ƒç›¸å½“äºåŸå§‹å­˜å‚¨è¿‡ç¨‹çš„è¿”å›å€¼
-  *è°ƒç”¨æ–¹æ³•ä¸åŸå§‹å­˜å‚¨è¿‡ç¨‹ä¸€è‡´.
+  ĞŞÕı:GetVipLog_IDÖĞĞŞÕıBUG"µ±»áÔ±½»Ò×¼ÇÂ¼ÖĞÖ»ÓĞ³äÖµ¼ÇÂ¼Ê±,Óà¶îÏÔÊ¾ÎªNull"
+  Ìí¼ÓÁË·â×°ĞÔÖÊµÄ´æ´¢¹ı³Ì:WSC_GetVipInfo/WSC_AddVip/WSC_VipReCharge/WSC_GetVipLog
+  ÆäÖĞWSC_AddVip/WSC_VipReCharge/WSC_GetVipLog¾ù¶à·µ»ØÒ»¸ö½á¹û¼¯,Ö»º¬Ò»¸ö×Ö¶Î'retcode',Ö»ÓĞÒ»Ìõ¼ÇÂ¼,ËüÏàµ±ÓÚÔ­Ê¼´æ´¢¹ı³ÌµÄ·µ»ØÖµ
+  *µ÷ÓÃ·½·¨ÓëÔ­Ê¼´æ´¢¹ı³ÌÒ»ÖÂ.
   
 2017-05-09
-  ä¿®æ­£GetVipLog:
-      å½“ä¼šå‘˜æ¶ˆè´¹/å……å€¼è®°å½•æœ€åä¸€æ¬¡äº¤æ˜“æ˜¯å……å€¼æ—¶,ä»¥ä¼šå‘˜å½“å‰ä½™é¢ä¸ºè°ƒå¹³è®¡ç®—çš„åŸºç‚¹
-      æ­¤ä¿®æ­£ç”¨äºé€‚åº”åˆå§‹åŒ–å¡é‡‘é¢ä¸ä¸º0çš„å¡,ä»¥åŠæ‰‹åŠ¨ä¿®æ”¹æ•°æ®åº“ä¸­ä¼šå‘˜å¡ä½™é¢çš„æƒ…å†µ
-      GetVipLogè¿”å›çš„ç»“æœé›†ä»¥æ—¶é—´å€’åºæ’åˆ—
+  ĞŞÕıGetVipLog:
+      µ±»áÔ±Ïû·Ñ/³äÖµ¼ÇÂ¼×îºóÒ»´Î½»Ò×ÊÇ³äÖµÊ±,ÒÔ»áÔ±µ±Ç°Óà¶îÎªµ÷Æ½¼ÆËãµÄ»ùµã
+      ´ËĞŞÕıÓÃÓÚÊÊÓ¦³õÊ¼»¯¿¨½ğ¶î²»Îª0µÄ¿¨,ÒÔ¼°ÊÖ¶¯ĞŞ¸ÄÊı¾İ¿âÖĞ»áÔ±¿¨Óà¶îµÄÇé¿ö
+      GetVipLog·µ»ØµÄ½á¹û¼¯ÒÔÊ±¼äµ¹ĞòÅÅÁĞ
 
 2017-05-10
-  WSC_AddVip:å‚æ•°@cMobileNumberç°åœ¨æ˜¯å¿…éœ€å‚æ•°
-             å‚æ•°@cVipCodeä¸å†ä½¿ç”¨,è¯¥å‚æ•°æœªä»å®šä¹‰ä¸­å»é™¤,ä½†å®ƒçš„å€¼å·²ç»ä¸¢å¼ƒ
-             çŠ¶æ€ç»“æœé›†æ·»åŠ ä¸€ä¸ªå­—æ®µMsg,åŒ…å«çŠ¶æ€çš„è¯´æ˜æ€§æ–‡å­—
-             çŠ¶æ€:0/-1/-2/-3/-201
-  WSC_VipReCharge:çŠ¶æ€ç»“æœé›†æ·»åŠ äº†å­—æ®µMsg
-  AddVip:æ·»åŠ è¿”å›å€¼-2(æ— å¡)/-3(åœç”¨)
-         ç»‘å®šåˆ°å·²æœ‰ä¼šå‘˜æ—¶,æ£€æŸ¥ä¼šå‘˜çš„çŠ¶æ€æ˜¯å¦æ˜¯åœç”¨çŠ¶æ€
-  VipReCharge:ç”Ÿæˆçš„å……å€¼è®°å½•åˆ¶å•äººä¸º'å…¬ä¼—å·'
-  GetVipLog_ID:æ¶ˆè´¹è®°å½•ä¸­åŒ…å«äº†ç§¯åˆ†ä¿¡æ¯,å¢åŠ äº†å­—æ®µ[Integral]
-               åŒ…å«äº†ç§¯åˆ†å……å€¼è®°å½•
-               åŒ…å«äº†é›¶å”®ä¸­ç§¯åˆ†å…‘æ¢ç¤¼å“è®°å½•
-               åŒ…å«äº†ç»Ÿä¸€ç»“ç®—ä¸­ä½¿ç”¨ç§¯åˆ†æ”¯ä»˜çš„è®°å½•
-               è¿™ä¸€æ”¹åŠ¨å½±å“è¿™äº›å­˜å‚¨è¿‡ç¨‹çš„è¾“å‡ºé›†ç»“æ„:GetVipLog,WSC_GetVipLog
-  æ·»åŠ å­˜å‚¨è¿‡ç¨‹GetVouchers
-  æ·»åŠ å­˜å‚¨è¿‡ç¨‹WSC_GetVouchers,è·å–å‡ºåº“åˆ°å¾®å•†åŸå¹¶ä¸”æœªé”€å”®çš„ç¤¼åˆ¸åˆ—è¡¨
+  WSC_AddVip:²ÎÊı@cMobileNumberÏÖÔÚÊÇ±ØĞè²ÎÊı
+             ²ÎÊı@cVipCode²»ÔÙÊ¹ÓÃ,¸Ã²ÎÊıÎ´´Ó¶¨ÒåÖĞÈ¥³ı,µ«ËüµÄÖµÒÑ¾­¶ªÆú
+             ×´Ì¬½á¹û¼¯Ìí¼ÓÒ»¸ö×Ö¶ÎMsg,°üº¬×´Ì¬µÄËµÃ÷ĞÔÎÄ×Ö
+             ×´Ì¬:0/-1/-2/-3/-201
+  WSC_VipReCharge:×´Ì¬½á¹û¼¯Ìí¼ÓÁË×Ö¶ÎMsg
+  AddVip:Ìí¼Ó·µ»ØÖµ-2(ÎŞ¿¨)/-3(Í£ÓÃ)
+         °ó¶¨µ½ÒÑÓĞ»áÔ±Ê±,¼ì²é»áÔ±µÄ×´Ì¬ÊÇ·ñÊÇÍ£ÓÃ×´Ì¬
+  VipReCharge:Éú³ÉµÄ³äÖµ¼ÇÂ¼ÖÆµ¥ÈËÎª'¹«ÖÚºÅ'
+  GetVipLog_ID:Ïû·Ñ¼ÇÂ¼ÖĞ°üº¬ÁË»ı·ÖĞÅÏ¢,Ôö¼ÓÁË×Ö¶Î[Integral]
+               °üº¬ÁË»ı·Ö³äÖµ¼ÇÂ¼
+               °üº¬ÁËÁãÊÛÖĞ»ı·Ö¶Ò»»ÀñÆ·¼ÇÂ¼
+               °üº¬ÁËÍ³Ò»½áËãÖĞÊ¹ÓÃ»ı·ÖÖ§¸¶µÄ¼ÇÂ¼
+               ÕâÒ»¸Ä¶¯Ó°ÏìÕâĞ©´æ´¢¹ı³ÌµÄÊä³ö¼¯½á¹¹:GetVipLog,WSC_GetVipLog
+  Ìí¼Ó´æ´¢¹ı³ÌGetVouchers
+  Ìí¼Ó´æ´¢¹ı³ÌWSC_GetVouchers,»ñÈ¡³ö¿âµ½Î¢ÉÌ³Ç²¢ÇÒÎ´ÏúÊÛµÄÀñÈ¯ÁĞ±í
 
 2017-05-11
-  WSC_SaleVoucher:ç”µå­åˆ¸é”€å”®
-  Saleing:ç”Ÿæˆé”€å”®å•(å•ä¸ªç‰©å“çš„),å¹¶ç”Ÿæˆç›¸åº”çš„é”€å”®æ˜ç»†
-  SaleingVoucher:ç¤¼åˆ¸é”€å”®/èµ é€
-  CreateOrder:ç”Ÿæˆè®¢å•ä¸»è¡¨è®°å½•
+  WSC_SaleVoucher:µç×ÓÈ¯ÏúÊÛ
+  Saleing:Éú³ÉÏúÊÛµ¥(µ¥¸öÎïÆ·µÄ),²¢Éú³ÉÏàÓ¦µÄÏúÊÛÃ÷Ï¸
+  SaleingVoucher:ÀñÈ¯ÏúÊÛ/ÔùËÍ
+  CreateOrder:Éú³É¶©µ¥Ö÷±í¼ÇÂ¼
 
 2017-05-12
-  GetOrdersList:è·å–è®¢å•åˆ—è¡¨
-  GetOrdersDetail:è·å–æŒ‡å®šè®¢å•æ˜ç»†
-  WSC_CreateOrder:ç”Ÿæˆè®¢å•çš„å°è£…
-  WSC_GetOrdersList:è·å–è®¢å•åˆ—è¡¨
-  WSC_GetOrdersDetail:è·å–æŒ‡å®šè®¢å•æ˜ç»†
+  GetOrdersList:»ñÈ¡¶©µ¥ÁĞ±í
+  GetOrdersDetail:»ñÈ¡Ö¸¶¨¶©µ¥Ã÷Ï¸
+  WSC_CreateOrder:Éú³É¶©µ¥µÄ·â×°
+  WSC_GetOrdersList:»ñÈ¡¶©µ¥ÁĞ±í
+  WSC_GetOrdersDetail:»ñÈ¡Ö¸¶¨¶©µ¥Ã÷Ï¸
 
 2017-05-14
-  AddOrderItem:å†™è®¢å•æ˜ç»†
-  WSC_AddOrderItem:æ·»åŠ è®¢å•æ˜ç»†
-  RecoverVoucherç¤¼åˆ¸å›æ”¶
-  WSC_RecoverVoucher:ä¸ºè®¢å•å›æ”¶ç¤¼åˆ¸
+  AddOrderItem:Ğ´¶©µ¥Ã÷Ï¸
+  WSC_AddOrderItem:Ìí¼Ó¶©µ¥Ã÷Ï¸
+  RecoverVoucherÀñÈ¯»ØÊÕ
+  WSC_RecoverVoucher:Îª¶©µ¥»ØÊÕÀñÈ¯
 
 2017-05-15
-  ä¿®æ­£:åœ¨WSC_AddVipä¸­åˆ¤æ–­æŒ‡å®šçš„ç”µè¯å·ç æ˜¯å¦å·²æ³¨å†Œä¸ºä¼šå‘˜
-  åœ¨è„šæœ¬æœ€åè¡¥å……äº†è·å–å¯ç”¨é—¨åº—åˆ—è¡¨ä¸å¯é”€å”®äº§å“åˆ—è¡¨çš„æŸ¥è¯¢è¯­å¥
+  ĞŞÕı:ÔÚWSC_AddVipÖĞÅĞ¶ÏÖ¸¶¨µÄµç»°ºÅÂëÊÇ·ñÒÑ×¢²áÎª»áÔ±
+  ÔÚ½Å±¾×îºó²¹³äÁË»ñÈ¡¿ÉÓÃÃÅµêÁĞ±íÓë¿ÉÏúÊÛ²úÆ·ÁĞ±íµÄ²éÑ¯Óï¾ä
 
 2017-05-17
-  GetOrdersListæ·»åŠ äº†ä¸€ä¸ªå¯é€‰å‚æ•°@authcode,ç”¨äºé…åˆå¤šå±‚åˆ†é”€
-  WSC_GetOrdersListæ·»åŠ äº†ä¸€ä¸ªå¯é€‰å‚æ•°@oauth_code,ç”¨äºå–å¤šå±‚åˆ†é”€è®¢å•æ•°æ®
+  GetOrdersListÌí¼ÓÁËÒ»¸ö¿ÉÑ¡²ÎÊı@authcode,ÓÃÓÚÅäºÏ¶à²ã·ÖÏú
+  WSC_GetOrdersListÌí¼ÓÁËÒ»¸ö¿ÉÑ¡²ÎÊı@oauth_code,ÓÃÓÚÈ¡¶à²ã·ÖÏú¶©µ¥Êı¾İ
 
 2017-05-18
-  GetVoucherså¢åŠ äº†å‚æ•°,ç”¨äºè·å–æŒ‡å®šä¼šå‘˜å¯ä½¿ç”¨çš„åˆ¸
-             ä¸€äº›æŸ¥è¯¢è¯­å¥æ·»åŠ äº†å¯¹æˆªæ­¢æ—¥æœŸçš„åˆ¤æ–­
-             æ·»åŠ äº†ä¸€åˆ—,æŒ‡å‡ºåˆ¸æ˜¯é”€å”®åˆ°å“ªä¸ªä¼šå‘˜,å¯¹äºæœªé”€å”®çš„åˆ¸,å®ƒçš„å€¼ä¸º''
-  WSC_GetVoucherså¢åŠ äº†ä¸€ä¸ªå‚æ•°,ç”¨äºè·å–æŒ‡å®šä¼šå‘˜å¯ä½¿ç”¨çš„åˆ¸
-  WSC_GetVipLogå¢åŠ ä¸€åˆ—[BonusPoints],è®°å½•æ¯ç¬”äº¤æ˜“ä¸­ç§¯åˆ†çš„å¢å‡æ•°é‡
-  GetVipLog_IDåœ¨è¾“å‡ºé›†ä¸­æ·»åŠ äº†ç§¯åˆ†å˜åŠ¨åˆ—
-              åœ¨è·å–æ•°æ®æºä¸­æ·»åŠ å¯¹å¯¹ç§¯åˆ†ä½¿ç”¨çš„ä¸€äº›å­æŸ¥è¯¢
+  GetVouchersÔö¼ÓÁË²ÎÊı,ÓÃÓÚ»ñÈ¡Ö¸¶¨»áÔ±¿ÉÊ¹ÓÃµÄÈ¯
+             Ò»Ğ©²éÑ¯Óï¾äÌí¼ÓÁË¶Ô½ØÖ¹ÈÕÆÚµÄÅĞ¶Ï
+             Ìí¼ÓÁËÒ»ÁĞ,Ö¸³öÈ¯ÊÇÏúÊÛµ½ÄÄ¸ö»áÔ±,¶ÔÓÚÎ´ÏúÊÛµÄÈ¯,ËüµÄÖµÎª''
+  WSC_GetVouchersÔö¼ÓÁËÒ»¸ö²ÎÊı,ÓÃÓÚ»ñÈ¡Ö¸¶¨»áÔ±¿ÉÊ¹ÓÃµÄÈ¯
+  WSC_GetVipLogÔö¼ÓÒ»ÁĞ[BonusPoints],¼ÇÂ¼Ã¿±Ê½»Ò×ÖĞ»ı·ÖµÄÔö¼õÊıÁ¿
+  GetVipLog_IDÔÚÊä³ö¼¯ÖĞÌí¼ÓÁË»ı·Ö±ä¶¯ÁĞ
+              ÔÚ»ñÈ¡Êı¾İÔ´ÖĞÌí¼Ó¶Ô¶Ô»ı·ÖÊ¹ÓÃµÄÒ»Ğ©×Ó²éÑ¯
 
 2017-05-19
-  GetVipLog_ID:ä¿®æ­£äº†é›¶å”®è®°å½•ä¸­æœªæå–é€€è´§è®°å½•çš„é”™è¯¯
+  GetVipLog_ID:ĞŞÕıÁËÁãÊÛ¼ÇÂ¼ÖĞÎ´ÌáÈ¡ÍË»õ¼ÇÂ¼µÄ´íÎó
 
 2017-05-24
-  GetVouchers:åœ¨æ— å‚æ•°çš„æƒ…å†µä¸‹è¿”å›ä¸€ä¸ªç©ºç»“æœé›†
-  WSC_GetVipLog:å»é™¤äº†è¿”å›çš„çŠ¶æ€ç»“æœé›†
-  WSC_GetVouchers:å»é™¤äº†è¿”å›çš„çŠ¶æ€ç»“æœé›†
-  WSC_CreateOrder:å»é™¤äº†è¿”å›çš„çŠ¶æ€ç»“æœé›†
-  WSC_GetOrdersList:å»é™¤äº†è¿”å›çš„çŠ¶æ€ç»“æœé›†
-  WSC_GetOrdersDetail:å»é™¤äº†è¿”å›çš„çŠ¶æ€ç»“æœé›†
-  WSC_GetVipInfoç»“æœé›†å­—æ®µåæ”¹ä¸ºè‹±æ–‡
-  WSC_GetVouchersç»“æœé›†å­—æ®µåæ”¹ä¸ºè‹±æ–‡
-  WSC_CreateOrderç»“æœé›†å­—æ®µåæ”¹ä¸ºè‹±æ–‡
-  WSC_GetOrdersListç»“æœé›†å­—æ®µåæ”¹ä¸ºè‹±æ–‡
-  WSC_GetOrdersDetailç»“æœé›†å­—æ®µåæ”¹ä¸ºè‹±æ–‡
+  GetVouchers:ÔÚÎŞ²ÎÊıµÄÇé¿öÏÂ·µ»ØÒ»¸ö¿Õ½á¹û¼¯
+  WSC_GetVipLog:È¥³ıÁË·µ»ØµÄ×´Ì¬½á¹û¼¯
+  WSC_GetVouchers:È¥³ıÁË·µ»ØµÄ×´Ì¬½á¹û¼¯
+  WSC_CreateOrder:È¥³ıÁË·µ»ØµÄ×´Ì¬½á¹û¼¯
+  WSC_GetOrdersList:È¥³ıÁË·µ»ØµÄ×´Ì¬½á¹û¼¯
+  WSC_GetOrdersDetail:È¥³ıÁË·µ»ØµÄ×´Ì¬½á¹û¼¯
+  WSC_GetVipInfo½á¹û¼¯×Ö¶ÎÃû¸ÄÎªÓ¢ÎÄ
+  WSC_GetVouchers½á¹û¼¯×Ö¶ÎÃû¸ÄÎªÓ¢ÎÄ
+  WSC_CreateOrder½á¹û¼¯×Ö¶ÎÃû¸ÄÎªÓ¢ÎÄ
+  WSC_GetOrdersList½á¹û¼¯×Ö¶ÎÃû¸ÄÎªÓ¢ÎÄ
+  WSC_GetOrdersDetail½á¹û¼¯×Ö¶ÎÃû¸ÄÎªÓ¢ÎÄ
   
 2017-05-26
-  CreateOrderæ·»åŠ äº†ä¸€ä¸ªå‚æ•°"@é”€å”®ç±»åˆ«",å¯¹åº”å­—æ®µ[é”€å”®ç±»åˆ«],ä»…åœ¨åˆ›å»ºè®¢å•æ—¶å¯ä»¥æŒ‡å®šå€¼
-  WSC_CreateOrderæ·»åŠ äº†ä¸€ä¸ªå‚æ•°,ç”¨äºæŒ‡å‡ºè®¢å•å°†ä¸‹åˆ°å“ªä¸ªåº—
-            è¯¥æ¥å£ç”Ÿæˆçš„è®¢å•,é”€å”®ç±»åˆ«ä¸º'å…¬ä¼—å·'
-  GetOrdersList:é‡æ–°å®šä¹‰äº†åˆ†æ”¯é€»è¾‘,ç°åœ¨,éƒ¨é—¨/å•å·/ä¼šå‘˜ç¼–å·/åˆ†é”€æ ¹ä¼šå‘˜å·æ˜¯äº’æ–¥çš„
-  WSC_GetOrdersList:æŒ‰GetOrdersListçš„ä¿®æ”¹é‡æ–°å®ç°äº†æ¥å£é€»è¾‘
-  WSC_GetOrdersList:æ·»åŠ äº†ä¸€ä¸ªå‚æ•°@IsEndç”¨äºè¿›ä¸€æ­¥è¿‡æ»¤è®¢å•çš„ç»“å•çŠ¶æ€
-     ä½¿ç”¨æ³•æ³•çš„æ”¹å˜è¯·çœ‹è¯¥è¿‡ç¨‹åé™„çš„ç¤ºä¾‹
+  CreateOrderÌí¼ÓÁËÒ»¸ö²ÎÊı"@ÏúÊÛÀà±ğ",¶ÔÓ¦×Ö¶Î[ÏúÊÛÀà±ğ],½öÔÚ´´½¨¶©µ¥Ê±¿ÉÒÔÖ¸¶¨Öµ
+  WSC_CreateOrderÌí¼ÓÁËÒ»¸ö²ÎÊı,ÓÃÓÚÖ¸³ö¶©µ¥½«ÏÂµ½ÄÄ¸öµê
+            ¸Ã½Ó¿ÚÉú³ÉµÄ¶©µ¥,ÏúÊÛÀà±ğÎª'¹«ÖÚºÅ'
+  GetOrdersList:ÖØĞÂ¶¨ÒåÁË·ÖÖ§Âß¼­,ÏÖÔÚ,²¿ÃÅ/µ¥ºÅ/»áÔ±±àºÅ/·ÖÏú¸ù»áÔ±ºÅÊÇ»¥³âµÄ
+  WSC_GetOrdersList:°´GetOrdersListµÄĞŞ¸ÄÖØĞÂÊµÏÖÁË½Ó¿ÚÂß¼­
+  WSC_GetOrdersList:Ìí¼ÓÁËÒ»¸ö²ÎÊı@IsEndÓÃÓÚ½øÒ»²½¹ıÂË¶©µ¥µÄ½áµ¥×´Ì¬
+     Ê¹ÓÃ·¨·¨µÄ¸Ä±äÇë¿´¸Ã¹ı³Ìºó¸½µÄÊ¾Àı
 
 2017-06-06
-  GetVouchers:ç¤¼åˆ¸å‡ºåº“è¡¨ä¸­æ”¹ä¸ºæ£€æŸ¥å¾€æ¥ç¼–å·ä»¥è¯†åˆ«ç¤¼åˆ¸å‡ºåº“çš„ç›®æ ‡éƒ¨é—¨(åŸä¸ºéƒ¨é—¨ç¼–å·)
-  SaleingVoucher:è°ƒç”¨Saleingæ—¶å¢—åŠ äº†ä¸¤ä¸ªå‚æ•°@PayByCash,@PayByCard,ä¸Saleingä¿æŒä¸€è‡´
-  WSC_SaleVoucher:æ·»åŠ äº†è‡ªåŠ¨åŒ¹é…ç¤¼åˆ¸çš„äº§å“ç¼–å·åŠŸèƒ½
-  WSC_SaleVoucher:è¿”å›çš„çŠ¶æ€é›†å¢—åŠ äº†ä¸€åˆ—,ç”¨äºè¿”å›ç›¸åº”çš„é›¶å”®å•å·,å¤±è´¥æ—¶ä¸ºNull
+  GetVouchers:ÀñÈ¯³ö¿â±íÖĞ¸ÄÎª¼ì²éÍùÀ´±àºÅÒÔÊ¶±ğÀñÈ¯³ö¿âµÄÄ¿±ê²¿ÃÅ(Ô­Îª²¿ÃÅ±àºÅ)
+  SaleingVoucher:µ÷ÓÃSaleingÊ±‰ˆ¼ÓÁËÁ½¸ö²ÎÊı@PayByCash,@PayByCard,ÓëSaleing±£³ÖÒ»ÖÂ
+  WSC_SaleVoucher:Ìí¼ÓÁË×Ô¶¯Æ¥ÅäÀñÈ¯µÄ²úÆ·±àºÅ¹¦ÄÜ
+  WSC_SaleVoucher:·µ»ØµÄ×´Ì¬¼¯‰ˆ¼ÓÁËÒ»ÁĞ,ÓÃÓÚ·µ»ØÏàÓ¦µÄÁãÊÛµ¥ºÅ,Ê§°ÜÊ±ÎªNull
 
 2017-06-07
-  ç¤¼åˆ¸è¡¨æ·»åŠ äº†å­—æ®µ[äº§å“ç¼–å·],å¹¶ä¸ºå·²æœ‰æ•°æ®è‡ªåŠ¨åŒ¹é…äº†åˆé€‚çš„äº§å“ç¼–å·
-  GetVouchers:æ·»åŠ äº†è¾“å‡ºåˆ—[äº§å“ç¼–å·]
-  WSC_GetVouchers:æ·»åŠ äº†è¾“å‡ºåˆ—[GoodsCode],å®ƒæ˜¯ç¬¬ä¸€åˆ—
-  WSC_GetOrdersList:è¾“å‡ºé›†ä»¥CreateTimeåˆ—å€’åºæ’åˆ—
-  WSC_GetVipRelevance:æ–°å¢—åŠ è¿‡ç¨‹,ç”¨äºåˆ¤æ–­ä¸¤ä¸ªä¼šå‘˜å¤–é”®æ˜¯å¦å¯ä»¥å»ºç«‹åˆ†é”€å…³ç³»,ç”¨æ³•å‚è§ç›¸å…³è¿‡ç¨‹å¤´éƒ¨æ³¨é‡Š
+  ÀñÈ¯±íÌí¼ÓÁË×Ö¶Î[²úÆ·±àºÅ],²¢ÎªÒÑÓĞÊı¾İ×Ô¶¯Æ¥ÅäÁËºÏÊÊµÄ²úÆ·±àºÅ
+  GetVouchers:Ìí¼ÓÁËÊä³öÁĞ[²úÆ·±àºÅ]
+  WSC_GetVouchers:Ìí¼ÓÁËÊä³öÁĞ[GoodsCode],ËüÊÇµÚÒ»ÁĞ
+  WSC_GetOrdersList:Êä³ö¼¯ÒÔCreateTimeÁĞµ¹ĞòÅÅÁĞ
+  WSC_GetVipRelevance:ĞÂ‰ˆ¼Ó¹ı³Ì,ÓÃÓÚÅĞ¶ÏÁ½¸ö»áÔ±Íâ¼üÊÇ·ñ¿ÉÒÔ½¨Á¢·ÖÏú¹ØÏµ,ÓÃ·¨²Î¼ûÏà¹Ø¹ı³ÌÍ·²¿×¢ÊÍ
 
 2017-06-09
-  GetVouchers:æ·»åŠ äº†ä¸€ä¸ªå‚æ•°@GoodsCodeç”¨äºé€šè¿‡äº§å“ç¼–å·è¿‡æ»¤åˆ¸,ä»…åœ¨æŒ‡å®šéƒ¨é—¨æ—¶è¯¥å‚æ•°æœ‰æ•ˆ
-  WSC_GetVouchers:æ·»åŠ äº†ä¸€ä¸ªå‚æ•°@GoodsCodeç”¨äºè·å–æœ¬éƒ¨é—¨(å…¬ä¼—å·)å¯å‘æ”¾çš„åˆ¸
+  GetVouchers:Ìí¼ÓÁËÒ»¸ö²ÎÊı@GoodsCodeÓÃÓÚÍ¨¹ı²úÆ·±àºÅ¹ıÂËÈ¯,½öÔÚÖ¸¶¨²¿ÃÅÊ±¸Ã²ÎÊıÓĞĞ§
+  WSC_GetVouchers:Ìí¼ÓÁËÒ»¸ö²ÎÊı@GoodsCodeÓÃÓÚ»ñÈ¡±¾²¿ÃÅ(¹«ÖÚºÅ)¿É·¢·ÅµÄÈ¯
 
 2017-06-12
-  æ·»åŠ å­˜å‚¨è¿‡ç¨‹:QueryFormMObject
+  Ìí¼Ó´æ´¢¹ı³Ì:QueryFormMObject
 
 2017-06-15 
-  æ·»åŠ å­˜å‚¨è¿‡ç¨‹Get_BossTotalè¿”å›è€æ¿å°åŠ©æ‰‹ç»Ÿè®¡æ•°æ®
-  æ·»åŠ å­˜å‚¨è¿‡ç¨‹Wsc_Get_BossTotalå¯¹Get_BossTotalè°ƒç”¨çš„å°è£…
+  Ìí¼Ó´æ´¢¹ı³ÌGet_BossTotal·µ»ØÀÏ°åĞ¡ÖúÊÖÍ³¼ÆÊı¾İ
+  Ìí¼Ó´æ´¢¹ı³ÌWsc_Get_BossTotal¶ÔGet_BossTotalµ÷ÓÃµÄ·â×°
 
 2017-6-19
-  ä¿®æ”¹ å­˜å‚¨è¿‡ç¨‹Get_BossTotal @Boss å˜é‡ç±»å‹ä¸º int
-  ä¿®æ”¹ å­˜å‚¨è¿‡ç¨‹WSC_Get_BossTotal @Boss å˜é‡ç±»å‹ä¸º int
-  å¢åŠ  WSC_Get_BossTotal è°ƒç”¨è¯´æ˜ç¤ºä¾‹
+  ĞŞ¸Ä ´æ´¢¹ı³ÌGet_BossTotal @Boss ±äÁ¿ÀàĞÍÎª int
+  ĞŞ¸Ä ´æ´¢¹ı³ÌWSC_Get_BossTotal @Boss ±äÁ¿ÀàĞÍÎª int
+  Ôö¼Ó WSC_Get_BossTotal µ÷ÓÃËµÃ÷Ê¾Àı
+  
+2017-6-20
+  Ôö¼Ó º¯Êı dbo.Fun_Birthday ¼ÆËãÖ¸¶¨ÈÕÆÚºóµÄÉúÈÕ
+  Ôö¼Ó ¹ı³Ì GetBirthday È¡Ö¸¶¨ÈÕÆÚÄÚ¹ıÉúÈÕµÄ»áÔ±ĞÅÏ¢
+  ĞŞ¸Ä ¹ı³Ì WSC_GetVipInfo Ôö¼Ó 2¸ö¿É´ø²ÎÊı ÌìÊı£¬Ö¸¶¨ÈÕÆÚ
+
+2017-6-28
+  »Ö¸´Get_BossTotal Êä³ö Xtype ÄÚ×Ö·ûÎªĞ¡Ğ´
+      
 */
 
 /******************************************************************************/
---å…¬ä¼—å·å¯¹æ¥éœ€è¦æ·»åŠ ç›¸åº”çš„éƒ¨é—¨,æ“ä½œå‘˜,ç»“ç®—æ–¹å¼
---éƒ¨é—¨
---ä¸ºå…¬ä¼—å·/å¾®å•†åŸå»ºç«‹ç›¸åº”çš„éƒ¨é—¨ä¸æ“ä½œå‘˜,ä»¥åŒºåˆ†æ•°æ®æ¥æº
---ç”Ÿæˆçš„éƒ¨é—¨ç¼–å·æ˜¯ä»1å¼€å§‹æœ€å°çš„æœªä½¿ç”¨å·,æœ€å¤§ä¸è¶…è¿‡255
---ç”Ÿæˆçš„æ“ä½œå‘˜ç¼–å·ä¸º'éƒ¨é—¨01'
+--¹«ÖÚºÅ¶Ô½ÓĞèÒªÌí¼ÓÏàÓ¦µÄ²¿ÃÅ,²Ù×÷Ô±,½áËã·½Ê½
+--²¿ÃÅ
+--Îª¹«ÖÚºÅ/Î¢ÉÌ³Ç½¨Á¢ÏàÓ¦µÄ²¿ÃÅÓë²Ù×÷Ô±,ÒÔÇø·ÖÊı¾İÀ´Ô´
+--Éú³ÉµÄ²¿ÃÅ±àºÅÊÇ´Ó1¿ªÊ¼×îĞ¡µÄÎ´Ê¹ÓÃºÅ,×î´ó²»³¬¹ı255
+--Éú³ÉµÄ²Ù×÷Ô±±àºÅÎª'²¿ÃÅ01'
 
 
 
 Declare @cDepartCode varchar(10)
-Select @cDepartCode=ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
+Select @cDepartCode=±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
 If @cDepartCode Is Null
 Begin
   Select @cDepartCode=Min(number) 
          From master..spt_values 
          Where type='P' And number>0 
-           And number Not In(Select ç¼–å· 
+           And number Not In(Select ±àºÅ 
                              From department)
-  Insert Into department(ç¼–å·,ç®€ç§°,å…¨ç§°,ç±»åˆ«ç¼–å·)
-         Values(@cDepartCode,'å…¬ä¼—å·','å…¬ä¼—å·','102')
+  Insert Into department(±àºÅ,¼ò³Æ,È«³Æ,Àà±ğ±àºÅ)
+         Values(@cDepartCode,'¹«ÖÚºÅ','¹«ÖÚºÅ','102')
 End
---æ“ä½œå‘˜
+--²Ù×÷Ô±
 Declare @cUserCode varchar(10)
-Select @cUserCode=ç¼–å· From pub_user Where å§“å='å…¬ä¼—å·'
+Select @cUserCode=±àºÅ From pub_user Where ĞÕÃû='¹«ÖÚºÅ'
 If @cUserCode Is Null
 Begin
   Set @cUserCode = @cDepartCode + '01'
-  Insert Into pub_user(ç¼–å·,å§“å,éƒ¨é—¨ç¼–å·,å¯†ç ,æƒé™,Limit)
+  Insert Into pub_user(±àºÅ,ĞÕÃû,²¿ÃÅ±àºÅ,ÃÜÂë,È¨ÏŞ,Limit)
          Values(@cUserCode,
-                'å…¬ä¼—å·',
+                '¹«ÖÚºÅ',
                 @cDepartCode,
                 Replicate(Reverse(@cDepartCode),2),
                 0,
                 Replicate('A',32))
 End
---ç»“ç®—æ–¹å¼
-If Not Exists(Select * From ç»“ç®—æ–¹å¼è¡¨ Where åç§°='å…¬ä¼—å·')
-  Insert Into ç»“ç®—æ–¹å¼è¡¨(åç§°,ç»“ç®—ç±»å‹,ç»“ç®—æŠ˜æ‰£ç‡,ç¬¬ä¸‰æ–¹æ”¯ä»˜,æ˜¯å¦å¯ç”¨)
-         Values('å…¬ä¼—å·','ç°é‡‘',1,1,0)
+--½áËã·½Ê½
+If Not Exists(Select * From ½áËã·½Ê½±í Where Ãû³Æ='¹«ÖÚºÅ')
+  Insert Into ½áËã·½Ê½±í(Ãû³Æ,½áËãÀàĞÍ,½áËãÕÛ¿ÛÂÊ,µÚÈı·½Ö§¸¶,ÊÇ·ñÆôÓÃ)
+         Values('¹«ÖÚºÅ','ÏÖ½ğ',1,1,0)
 Go
---ç¤¼åˆ¸è¡¨æ·»åŠ å­—æ®µ[äº§å“ç¼–å·]
---  å˜é•¿10,å…è®¸ç©º
---ä¸ºä»£é‡‘åˆ¸åŒ¹é…ç›¸åº”çš„äº§å“ç¼–å·
-If Not Exists(Select * From syscolumns where name='äº§å“ç¼–å·' And id=object_id('ç¤¼åˆ¸è¡¨','U'))
+--ÀñÈ¯±íÌí¼Ó×Ö¶Î[²úÆ·±àºÅ]
+--  ±ä³¤10,ÔÊĞí¿Õ
+--Îª´ú½ğÈ¯Æ¥ÅäÏàÓ¦µÄ²úÆ·±àºÅ
+If Not Exists(Select * From syscolumns where name='²úÆ·±àºÅ' And id=object_id('ÀñÈ¯±í','U'))
 Begin
-  Alter Table ç¤¼åˆ¸è¡¨ Add [äº§å“ç¼–å·] varchar(10) Null
+  Alter Table ÀñÈ¯±í Add [²úÆ·±àºÅ] varchar(10) Null
 End
 Go
-Update ç¤¼åˆ¸è¡¨ 
-   Set äº§å“ç¼–å·=(Select Top 1 ç¼–å· 
+Update ÀñÈ¯±í 
+   Set ²úÆ·±àºÅ=(Select Top 1 ±àºÅ 
                  From goods 
-                 Where å­˜è´§å±æ€§='ç°é‡‘åˆ¸' 
-                 Order By Abs(é”€å”®ä¸»ä»·-é¢é¢)) 
- Where ç¤¼åˆ¸ç±»åˆ«='ä»£é‡‘åˆ¸'
-   And äº§å“ç¼–å· Is Null 
+                 Where ´æ»õÊôĞÔ='ÏÖ½ğÈ¯' 
+                 Order By Abs(ÏúÊÛÖ÷¼Û-Ãæ¶î)) 
+ Where ÀñÈ¯Àà±ğ='´ú½ğÈ¯'
+   And ²úÆ·±àºÅ Is Null 
 Go
 /******************************************************************************/
---ç¡®ä¿[ä¼šå‘˜èº«ä»½]è¡¨æœ‰æ•ˆå¯ç”¨
-If object_id('ä¼šå‘˜èº«ä»½','U') Is Null
+--È·±£[»áÔ±Éí·İ]±íÓĞĞ§¿ÉÓÃ
+If object_id('»áÔ±Éí·İ','U') Is Null
 Begin
-  Create Table [ä¼šå‘˜èº«ä»½](
-     ä¼šå‘˜ID int not null
-    ,å¤–é”® varchar(50) not null
+  Create Table [»áÔ±Éí·İ](
+     »áÔ±ID int not null
+    ,Íâ¼ü varchar(50) not null
     )
-  Create Index IX_ä¼šå‘˜èº«ä»½_ä¼šå‘˜ID On ä¼šå‘˜èº«ä»½(ä¼šå‘˜ID)
-  Create Index IX_ä¼šå‘˜èº«ä»½_å¤–é”® On ä¼šå‘˜èº«ä»½(å¤–é”®)
+  Create Index IX_»áÔ±Éí·İ_»áÔ±ID On »áÔ±Éí·İ(»áÔ±ID)
+  Create Index IX_»áÔ±Éí·İ_Íâ¼ü On »áÔ±Éí·İ(Íâ¼ü)
 End
 Go
-If col_length('ä¼šå‘˜èº«ä»½','éªŒè¯æ–¹å¼') Is Null
+If col_length('»áÔ±Éí·İ','ÑéÖ¤·½Ê½') Is Null
 Begin
-  Alter Table [ä¼šå‘˜èº«ä»½] Add éªŒè¯æ–¹å¼ varchar(20) not null default 'WeiXinOpenid'
-  Create Index IX_ä¼šå‘˜èº«ä»½_éªŒè¯æ–¹å¼ On ä¼šå‘˜èº«ä»½(éªŒè¯æ–¹å¼)
+  Alter Table [»áÔ±Éí·İ] Add ÑéÖ¤·½Ê½ varchar(20) not null default 'WeiXinOpenid'
+  Create Index IX_»áÔ±Éí·İ_ÑéÖ¤·½Ê½ On »áÔ±Éí·İ(ÑéÖ¤·½Ê½)
 End
 Go
-If col_length('ä¼šå‘˜èº«ä»½','å»ºç«‹æ—¶é—´') Is Null
+If col_length('»áÔ±Éí·İ','½¨Á¢Ê±¼ä') Is Null
 Begin
-  Alter Table [ä¼šå‘˜èº«ä»½] Add å»ºç«‹æ—¶é—´ datetime not null default getdate()
+  Alter Table [»áÔ±Éí·İ] Add ½¨Á¢Ê±¼ä datetime not null default getdate()
 End
 Go
 
 /*******************************************************************************
 Procedure GetVipLog_ID
-åŠŸèƒ½:è·å–æŒ‡å®šä¼šå‘˜çš„æ¶ˆè´¹/å……å€¼è®°å½•
-å‚æ•°:
-  @iVipID:ä¼šå‘˜è¡¨ID
-  @cDateStart:å¯é€‰,æŸ¥è¯¢å¼€å§‹æ—¥æœŸ(å«æ­¤æ—¥)
-  @cDateStart:å¯é€‰,æŸ¥è¯¢æˆªæ­¢æ—¥æœŸ(å«æ­¤æ—¥)
+¹¦ÄÜ:»ñÈ¡Ö¸¶¨»áÔ±µÄÏû·Ñ/³äÖµ¼ÇÂ¼
+²ÎÊı:
+  @iVipID:»áÔ±±íID
+  @cDateStart:¿ÉÑ¡,²éÑ¯¿ªÊ¼ÈÕÆÚ(º¬´ËÈÕ)
+  @cDateStart:¿ÉÑ¡,²éÑ¯½ØÖ¹ÈÕÆÚ(º¬´ËÈÕ)
 */
 If Object_ID('[GetVipLog_ID]','P') Is Not Null
   Drop Procedure [GetVipLog_ID]
 Go
 Create Procedure [GetVipLog_ID]
-       @iVipID     int                     ,--ä¼šå‘˜è¡¨ID
-       @cDateStart varchar(10)='1900-01-01',--æŸ¥è¯¢å¼€å§‹æ—¥æœŸ(å«æ­¤æ—¥)
-       @cDateEnd   varchar(10)=''           --æŸ¥è¯¢æˆªæ­¢æ—¥æœŸ(å«æ­¤æ—¥)
+       @iVipID     int                     ,--»áÔ±±íID
+       @cDateStart varchar(10)='1900-01-01',--²éÑ¯¿ªÊ¼ÈÕÆÚ(º¬´ËÈÕ)
+       @cDateEnd   varchar(10)=''           --²éÑ¯½ØÖ¹ÈÕÆÚ(º¬´ËÈÕ)
 As
 Begin
   Declare @dStart datetime
@@ -285,99 +297,99 @@ Begin
   Set @dStart = Convert(datetime,@cDateStart)
   Set @dEnd = Convert(datetime,@cDateEnd) + 1
  
-  --å–ä¼šå‘˜æ ¸å¿ƒä¿¡æ¯
+  --È¡»áÔ±ºËĞÄĞÅÏ¢
   Declare @cVipCode varchar(20),@Tmp_Balance money,@Tmp_Integral int
-  Select @cVipCode=ç¼–å·,@Tmp_Balance=å¡ä½™é¢,@Tmp_Integral=ç§¯åˆ† From ä¼šå‘˜ Where id =@iVipID
+  Select @cVipCode=±àºÅ,@Tmp_Balance=¿¨Óà¶î,@Tmp_Integral=»ı·Ö From »áÔ± Where id =@iVipID
 
-  --æ¸¸æ ‡:æŒ‡å®šä¼šå‘˜æŒ‡å®šæ—¶é—´ä¹‹åæ‰€æœ‰äº¤æ˜“è®°å½•
-  Declare @t_opt table(æ¥æº varchar(10),id int,å•å· varchar(20),å»ºç«‹æ—¥æœŸ datetime,å……å€¼ money,åˆ·å¡é‡‘é¢ money,ç§¯åˆ†å˜åŒ– int,å½“å‰ä½™é¢ money ,è®¡ç®—ä½™é¢ money,å½“å‰ç§¯åˆ† int)
-  Declare @æ¥æº varchar(10),@id int,@å•å· varchar(20),@å»ºç«‹æ—¥æœŸ datetime,@å……å€¼ money,@åˆ·å¡é‡‘é¢ money,@ç§¯åˆ†å˜åŒ– int,@å½“å‰ä½™é¢ money ,@ä½™é¢ money,@å½“å‰ç§¯åˆ† int
+  --ÓÎ±ê:Ö¸¶¨»áÔ±Ö¸¶¨Ê±¼äÖ®ºóËùÓĞ½»Ò×¼ÇÂ¼
+  Declare @t_opt table(À´Ô´ varchar(10),id int,µ¥ºÅ varchar(20),½¨Á¢ÈÕÆÚ datetime,³äÖµ money,Ë¢¿¨½ğ¶î money,»ı·Ö±ä»¯ int,µ±Ç°Óà¶î money ,¼ÆËãÓà¶î money,µ±Ç°»ı·Ö int)
+  Declare @À´Ô´ varchar(10),@id int,@µ¥ºÅ varchar(20),@½¨Á¢ÈÕÆÚ datetime,@³äÖµ money,@Ë¢¿¨½ğ¶î money,@»ı·Ö±ä»¯ int,@µ±Ç°Óà¶î money ,@Óà¶î money,@µ±Ç°»ı·Ö int
   Declare cur_Tmp Cursor
-    For --é›¶å”®è®°å½•
-        Select 'é›¶å”®'as æ¥æº,id,å•å·,å»ºç«‹æ—¥æœŸ,Null As å……å€¼,åˆ·å¡é‡‘é¢,0 as ç§¯åˆ†å˜åŒ–,å½“å‰ä½™é¢,0 As ä½™é¢,å½“å‰ç§¯åˆ† 
+    For --ÁãÊÛ¼ÇÂ¼
+        Select 'ÁãÊÛ'as À´Ô´,id,µ¥ºÅ,½¨Á¢ÈÕÆÚ,Null As ³äÖµ,Ë¢¿¨½ğ¶î,0 as »ı·Ö±ä»¯,µ±Ç°Óà¶î,0 As Óà¶î,µ±Ç°»ı·Ö 
         From sales 
-        Where å»ºç«‹æ—¥æœŸ >= @dStart And å¾€æ¥ç¼–å·=@cVipCode And åˆ·å¡é‡‘é¢<>0
+        Where ½¨Á¢ÈÕÆÚ >= @dStart And ÍùÀ´±àºÅ=@cVipCode And Ë¢¿¨½ğ¶î<>0
         Union All
-        --è®¢å•è®°å½•
-        Select 'è®¢å•',id,å•å·,å»ºç«‹æ—¥æœŸ,Null,åˆ·å¡é‡‘é¢,0,å½“å‰ä½™é¢,0 ,å½“å‰ç§¯åˆ†
+        --¶©µ¥¼ÇÂ¼
+        Select '¶©µ¥',id,µ¥ºÅ,½¨Á¢ÈÕÆÚ,Null,Ë¢¿¨½ğ¶î,0,µ±Ç°Óà¶î,0 ,µ±Ç°»ı·Ö
         From orders 
-        Where å»ºç«‹æ—¥æœŸ >= @dStart And æ˜¯å¦åºŸæ­¢=0 And å¾€æ¥ç¼–å·=@cVipCode
+        Where ½¨Á¢ÈÕÆÚ >= @dStart And ÊÇ·ñ·ÏÖ¹=0 And ÍùÀ´±àºÅ=@cVipCode
         Union All 
-        --å……å€¼è®°å½•(å«ç§¯åˆ†å……å€¼)
-        Select 'å……å€¼',b.id,b.å•å·,b.å»ºç«‹æ—¥æœŸ,a.é‡‘é¢,0,0,Null,0 ,Null
-        From å……å€¼æ˜ç»†è¡¨ a 
-        Left Join å……å€¼è¡¨ b On a.pid=b.id 
-        Where b.å»ºç«‹æ—¥æœŸ >= @dStart And a.ç¼–å·=@cVipCode
-          And a.é‡‘é¢<>0 And IsNull(a.å¤‡æ³¨,'')=''
+        --³äÖµ¼ÇÂ¼(º¬»ı·Ö³äÖµ)
+        Select '³äÖµ',b.id,b.µ¥ºÅ,b.½¨Á¢ÈÕÆÚ,a.½ğ¶î,0,0,Null,0 ,Null
+        From ³äÖµÃ÷Ï¸±í a 
+        Left Join ³äÖµ±í b On a.pid=b.id 
+        Where b.½¨Á¢ÈÕÆÚ >= @dStart And a.±àºÅ=@cVipCode
+          And a.½ğ¶î<>0 And IsNull(a.±¸×¢,'')=''
         Union All
-        --ç§¯åˆ†å……å€¼
-        Select 'ç§¯åˆ†å……å€¼',b.id,b.å•å·,b.å»ºç«‹æ—¥æœŸ,a.é‡‘é¢,0,0-a.å¤‡æ³¨,Null,0 ,Null
-        From å……å€¼æ˜ç»†è¡¨ a 
-        Left Join å……å€¼è¡¨ b On a.pid=b.id 
-        Where b.å»ºç«‹æ—¥æœŸ >= @dStart And a.ç¼–å·=@cVipCode
-          And a.é‡‘é¢<>0 And Isnull(a.å¤‡æ³¨,'')<>''
-          And a.å¤‡æ³¨ Like '[0-9][0-9][0-9]%'
-          And DataLength(rtrim(a.å¤‡æ³¨))<6
+        --»ı·Ö³äÖµ
+        Select '»ı·Ö³äÖµ',b.id,b.µ¥ºÅ,b.½¨Á¢ÈÕÆÚ,a.½ğ¶î,0,0-a.±¸×¢,Null,0 ,Null
+        From ³äÖµÃ÷Ï¸±í a 
+        Left Join ³äÖµ±í b On a.pid=b.id 
+        Where b.½¨Á¢ÈÕÆÚ >= @dStart And a.±àºÅ=@cVipCode
+          And a.½ğ¶î<>0 And Isnull(a.±¸×¢,'')<>''
+          And a.±¸×¢ Like '[0-9][0-9][0-9]%'
+          And DataLength(rtrim(a.±¸×¢))<6
         Union All
-        --ç»Ÿä¸€ç»“ç®—ä¸­ä¼šå‘˜ç§¯åˆ†æ”¯ä»˜(é›¶å”®ä¸è®¢å•)
-        Select Case æ¥æº When 0 Then'é›¶å”®' Else'è®¢å•' End,ä¸šåŠ¡ID
-              ,Case æ¥æº When 0 Then c.å•å· Else d.å•å· End
-              ,å»ºç«‹æ—¶é—´,Null,0,-ç»“ç®—é‡‘é¢ * B.ç»“ç®—æŠ˜æ‰£ç‡,Null,0,Null
-        From ç»“ç®—æ˜ç»†è¡¨ As A
-        Inner Join ç»“ç®—æ–¹å¼è¡¨ As B On A.ç»“ç®—ID=B.ID
-        Left Join sales As c On A.ä¸šåŠ¡ID=c.id
-        Left Join orders As d On A.ä¸šåŠ¡ID=d.id
-        Where B.æ˜¯å¦å¯ç”¨=1 And B.åç§°='ä¼šå‘˜ç§¯åˆ†' And A.æ¥æº In (0,1,2) 
-          And A.å¤‡æ³¨=@cVipCode And A.å»ºç«‹æ—¶é—´>= @dStart
+        --Í³Ò»½áËãÖĞ»áÔ±»ı·ÖÖ§¸¶(ÁãÊÛÓë¶©µ¥)
+        Select Case À´Ô´ When 0 Then'ÁãÊÛ' Else'¶©µ¥' End,ÒµÎñID
+              ,Case À´Ô´ When 0 Then c.µ¥ºÅ Else d.µ¥ºÅ End
+              ,½¨Á¢Ê±¼ä,Null,0,-½áËã½ğ¶î * B.½áËãÕÛ¿ÛÂÊ,Null,0,Null
+        From ½áËãÃ÷Ï¸±í As A
+        Inner Join ½áËã·½Ê½±í As B On A.½áËãID=B.ID
+        Left Join sales As c On A.ÒµÎñID=c.id
+        Left Join orders As d On A.ÒµÎñID=d.id
+        Where B.ÊÇ·ñÆôÓÃ=1 And B.Ãû³Æ='»áÔ±»ı·Ö' And A.À´Ô´ In (0,1,2) 
+          And A.±¸×¢=@cVipCode And A.½¨Á¢Ê±¼ä>= @dStart
         Union All
-        --æ—§çš„é›¶å”®ä¸­ç§¯åˆ†å…‘æ¢è®°å½•
-        Select 'é›¶å”®',A.id,A.å•å·,A.å»ºç«‹æ—¥æœŸ,Null,0,0-substring(B.å¤‡æ³¨,5,10),å½“å‰ä½™é¢,0 As ä½™é¢,å½“å‰ç§¯åˆ†
+        --¾ÉµÄÁãÊÛÖĞ»ı·Ö¶Ò»»¼ÇÂ¼
+        Select 'ÁãÊÛ',A.id,A.µ¥ºÅ,A.½¨Á¢ÈÕÆÚ,Null,0,0-substring(B.±¸×¢,5,10),µ±Ç°Óà¶î,0 As Óà¶î,µ±Ç°»ı·Ö
         From sales As A
-        Inner Join sales_detail As b On A.ID=B.é”€å”®ID
-        Where A.å»ºç«‹æ—¥æœŸ >= @dStart And A.å¾€æ¥ç¼–å·=@cVipCode And B.å¤‡æ³¨ Like 'å‡ç§¯åˆ†:%'
+        Inner Join sales_detail As b On A.ID=B.ÏúÊÛID
+        Where A.½¨Á¢ÈÕÆÚ >= @dStart And A.ÍùÀ´±àºÅ=@cVipCode And B.±¸×¢ Like '¼õ»ı·Ö:%'
         Union All
-        --ç§¯åˆ†å˜åŠ¨
-        Select b.å¤‡æ³¨,b.id,b.å•å·,b.å»ºç«‹æ—¥æœŸ,0,0,ç§¯åˆ†,Null,0 ,Null
-        From å……å€¼æ˜ç»†è¡¨ a 
-        Left Join å……å€¼è¡¨ b On a.pid=b.id 
-        Where b.å»ºç«‹æ—¥æœŸ >= @dStart And a.ç¼–å·=@cVipCode
-          And a.ç§¯åˆ†<>0 And é‡‘é¢=0
-        Order By å»ºç«‹æ—¥æœŸ Desc,æ¥æº
-  --éå†:è¿˜åŸä½™é¢ä¸ç§¯åˆ†åœ¨æ¯ç¬”äº¤æ˜“å‘ç”Ÿåçš„å³æ—¶å€¼,ç”Ÿæˆè¾“å‡ºé›†
+        --»ı·Ö±ä¶¯
+        Select b.±¸×¢,b.id,b.µ¥ºÅ,b.½¨Á¢ÈÕÆÚ,0,0,»ı·Ö,Null,0 ,Null
+        From ³äÖµÃ÷Ï¸±í a 
+        Left Join ³äÖµ±í b On a.pid=b.id 
+        Where b.½¨Á¢ÈÕÆÚ >= @dStart And a.±àºÅ=@cVipCode
+          And a.»ı·Ö<>0 And ½ğ¶î=0
+        Order By ½¨Á¢ÈÕÆÚ Desc,À´Ô´
+  --±éÀú:»¹Ô­Óà¶îÓë»ı·ÖÔÚÃ¿±Ê½»Ò×·¢ÉúºóµÄ¼´Ê±Öµ,Éú³ÉÊä³ö¼¯
   Open cur_Tmp
-  Fetch Next From cur_Tmp Into @æ¥æº,@id,@å•å·,@å»ºç«‹æ—¥æœŸ,@å……å€¼,@åˆ·å¡é‡‘é¢,@ç§¯åˆ†å˜åŒ–,@å½“å‰ä½™é¢,@ä½™é¢,@å½“å‰ç§¯åˆ†
+  Fetch Next From cur_Tmp Into @À´Ô´,@id,@µ¥ºÅ,@½¨Á¢ÈÕÆÚ,@³äÖµ,@Ë¢¿¨½ğ¶î,@»ı·Ö±ä»¯,@µ±Ç°Óà¶î,@Óà¶î,@µ±Ç°»ı·Ö
   While @@Fetch_status=0
   Begin
-    If @å½“å‰ç§¯åˆ† Is Null Set @å½“å‰ç§¯åˆ† = @Tmp_Integral
-    Insert Into @t_opt Values(@æ¥æº,@id,@å•å·,@å»ºç«‹æ—¥æœŸ,@å……å€¼,@åˆ·å¡é‡‘é¢,@ç§¯åˆ†å˜åŒ–,@å½“å‰ä½™é¢,@Tmp_Balance,@Tmp_Integral)
-    Set @Tmp_Balance = @Tmp_Balance + isnull(@åˆ·å¡é‡‘é¢,0) - isnull(@å……å€¼,0)
-    Set @Tmp_Integral = @å½“å‰ç§¯åˆ† - @ç§¯åˆ†å˜åŒ–
-    Fetch Next From cur_Tmp Into @æ¥æº,@id,@å•å·,@å»ºç«‹æ—¥æœŸ,@å……å€¼,@åˆ·å¡é‡‘é¢,@ç§¯åˆ†å˜åŒ–,@å½“å‰ä½™é¢,@ä½™é¢,@å½“å‰ç§¯åˆ†
+    If @µ±Ç°»ı·Ö Is Null Set @µ±Ç°»ı·Ö = @Tmp_Integral
+    Insert Into @t_opt Values(@À´Ô´,@id,@µ¥ºÅ,@½¨Á¢ÈÕÆÚ,@³äÖµ,@Ë¢¿¨½ğ¶î,@»ı·Ö±ä»¯,@µ±Ç°Óà¶î,@Tmp_Balance,@Tmp_Integral)
+    Set @Tmp_Balance = @Tmp_Balance + isnull(@Ë¢¿¨½ğ¶î,0) - isnull(@³äÖµ,0)
+    Set @Tmp_Integral = @µ±Ç°»ı·Ö - @»ı·Ö±ä»¯
+    Fetch Next From cur_Tmp Into @À´Ô´,@id,@µ¥ºÅ,@½¨Á¢ÈÕÆÚ,@³äÖµ,@Ë¢¿¨½ğ¶î,@»ı·Ö±ä»¯,@µ±Ç°Óà¶î,@Óà¶î,@µ±Ç°»ı·Ö
   End
   Close cur_Tmp
   Deallocate cur_Tmp
-  --è¾“å‡ºé›†æ•´ç†
-  Select å»ºç«‹æ—¥æœŸ As [DealTim],
-         æ¥æº     As [Source],
-         å•å·     As [BillCode],
-         Case When æ¥æº In('å……å€¼','ç§¯åˆ†å……å€¼') Then å……å€¼ Else åˆ·å¡é‡‘é¢ End As [Amount],/*äº¤æ˜“é‡‘é¢*/
-         è®¡ç®—ä½™é¢ As [Balance],    /*ä½™é¢*/
-         ç§¯åˆ†å˜åŒ– As [BonusPoints],/*ç§¯åˆ†å˜åŒ–*/
-         å½“å‰ç§¯åˆ† As [Integral]    /*ç§¯åˆ†*/
+  --Êä³ö¼¯ÕûÀí
+  Select ½¨Á¢ÈÕÆÚ As [DealTim],
+         À´Ô´     As [Source],
+         µ¥ºÅ     As [BillCode],
+         Case When À´Ô´ In('³äÖµ','»ı·Ö³äÖµ') Then ³äÖµ Else Ë¢¿¨½ğ¶î End As [Amount],/*½»Ò×½ğ¶î*/
+         ¼ÆËãÓà¶î As [Balance],    /*Óà¶î*/
+         »ı·Ö±ä»¯ As [BonusPoints],/*»ı·Ö±ä»¯*/
+         µ±Ç°»ı·Ö As [Integral]    /*»ı·Ö*/
   From @t_opt
-  Where å»ºç«‹æ—¥æœŸ < @dEnd
-  Order By å»ºç«‹æ—¥æœŸ Desc
+  Where ½¨Á¢ÈÕÆÚ < @dEnd
+  Order By ½¨Á¢ÈÕÆÚ Desc
 End
 Go
-----æµ‹è¯•
+----²âÊÔ
 --exec GetVipLog_ID 82915
 
 /*******************************************************************************
 Procedure NewVipCode
-åŠŸèƒ½:ç”Ÿæˆä¸€ä¸ªæ–°çš„ä¼šå‘˜ç¼–å·
-     æ— è®ºæ˜¯å¦ä½¿ç”¨,ç”Ÿæˆçš„ç¼–å·å‡èƒ½å†æ¬¡é€šè¿‡è¯¥è¿‡ç¨‹å¾—åˆ°
-å‚æ•°:
-  @RetCode:ç”¨äºè¿”å›ç”Ÿæˆçš„ç¼–å·,éœ€è¦ä¸€ä¸ªvarchar(20)ç±»å‹
+¹¦ÄÜ:Éú³ÉÒ»¸öĞÂµÄ»áÔ±±àºÅ
+     ÎŞÂÛÊÇ·ñÊ¹ÓÃ,Éú³ÉµÄ±àºÅ¾ùÄÜÔÙ´ÎÍ¨¹ı¸Ã¹ı³ÌµÃµ½
+²ÎÊı:
+  @RetCode:ÓÃÓÚ·µ»ØÉú³ÉµÄ±àºÅ,ĞèÒªÒ»¸övarchar(20)ÀàĞÍ
 */
 If Object_ID('[NewVipCode]','P') Is Not Null
   Drop Procedure [NewVipCode]
@@ -386,15 +398,15 @@ Create Procedure [NewVipCode]
        @RetCode varchar(20) Output
 As
 Begin
-  --ç”Ÿæˆä¼šå‘˜ç¼–å·,ç‹¬ç«‹äº‹åŠ¡
+  --Éú³É»áÔ±±àºÅ,¶ÀÁ¢ÊÂÎñ
   Declare @iBillMax int
   Begin Tran
-    Select @iBillMax=IsNull(æœ€å¤§å•å·, 0) + 1 From bills Where è¡¨å = 'å¾®å•†åŸä¼šå‘˜' And ä¼šè®¡æœŸé—´ = 'WX'
+    Select @iBillMax=IsNull(×î´óµ¥ºÅ, 0) + 1 From bills Where ±íÃû = 'Î¢ÉÌ³Ç»áÔ±' And »á¼ÆÆÚ¼ä = 'WX'
     If @iBillMax Is Null Set @iBillMax = 1
     If @iBillMax=1
-      Insert Into bills(è¡¨å, ä¼šè®¡æœŸé—´, æœ€å¤§å•å·)Values('å¾®å•†åŸä¼šå‘˜', 'WX', @iBillMax)
+      Insert Into bills(±íÃû, »á¼ÆÆÚ¼ä, ×î´óµ¥ºÅ)Values('Î¢ÉÌ³Ç»áÔ±', 'WX', @iBillMax)
     Else
-      Update bills Set æœ€å¤§å•å· = @iBillMax Where è¡¨å = 'å¾®å•†åŸä¼šå‘˜' And ä¼šè®¡æœŸé—´ = 'WX'
+      Update bills Set ×î´óµ¥ºÅ = @iBillMax Where ±íÃû = 'Î¢ÉÌ³Ç»áÔ±' And »á¼ÆÆÚ¼ä = 'WX'
   Commit Tran
   If @@Error<>0 
   Begin
@@ -404,16 +416,16 @@ Begin
   Set @RetCode= 'WX' + Replace(Str(@iBillMax, 8), ' ', '0')
 End
 Go
-----æµ‹è¯•
+----²âÊÔ
 --Declare @Newcode varchar(20)
 --Exec NewVipCode @Newcode output
 --Select @Newcode
 
 /*******************************************************************************
 Procedure NewVip()
-åŠŸèƒ½:åœ¨[ä¼šå‘˜]è¡¨å»ºç«‹ä¸€æ¡è®°å½•,å¹¶è¿”å›ç›¸åº”çš„ID
-å‚æ•°
-  @iVipID:è¿”å›æ–°å»ºè®°å½•çš„IDå€¼,å¦‚æœå¤±è´¥è¿”å›-1
+¹¦ÄÜ:ÔÚ[»áÔ±]±í½¨Á¢Ò»Ìõ¼ÇÂ¼,²¢·µ»ØÏàÓ¦µÄID
+²ÎÊı
+  @iVipID:·µ»ØĞÂ½¨¼ÇÂ¼µÄIDÖµ,Èç¹ûÊ§°Ü·µ»Ø-1
 */
 If Object_ID('[NewVip]','P') Is Not Null
   Drop Procedure [NewVip]
@@ -428,9 +440,9 @@ Begin
   While @LastError<>0
   Begin
     Exec NewVipCode @cVipCode Output
-    Insert Into ä¼šå‘˜(ç¼–å·,å†…ç ,åç§°,ç”µè¯,ç”Ÿæ—¥,æ˜¯å¦å†œå†,
-                     ç§¯åˆ†,æŠ˜æ‰£,çŠ¶æ€,æˆªæ­¢æ—¥æœŸ,æ˜¯å¦å……å€¼,å¡é‡‘é¢,å¡ä½™é¢,
-                     ç§¯åˆ†æ¯”ä¾‹,æ˜¯å¦ç§¯åˆ†,ä¼šå‘˜ç”Ÿæ—¥,ä¼šå‘˜å¡ç±»å‹,ä¼šå‘˜ç­‰çº§ç±»å‹)
+    Insert Into »áÔ±(±àºÅ,ÄÚÂë,Ãû³Æ,µç»°,ÉúÈÕ,ÊÇ·ñÅ©Àú,
+                     »ı·Ö,ÕÛ¿Û,×´Ì¬,½ØÖ¹ÈÕÆÚ,ÊÇ·ñ³äÖµ,¿¨½ğ¶î,¿¨Óà¶î,
+                     »ı·Ö±ÈÀı,ÊÇ·ñ»ı·Ö,»áÔ±ÉúÈÕ,»áÔ±¿¨ÀàĞÍ,»áÔ±µÈ¼¶ÀàĞÍ)
              Values(@cVipCode,@cVipCode,'','','',0,
                     0,1,1,GetDate()+3650,0,0,0,
                     1,0,'',1,1)
@@ -438,181 +450,181 @@ Begin
   End
 End
 Go
-----æµ‹è¯•
+----²âÊÔ
 --Declare @NewID int
 --Exec NewVip @NewID Output
---Select * From ä¼šå‘˜ Where id=@NewID
+--Select * From »áÔ± Where id=@NewID
 
 
 
 /*******************************************************************************
 Procedure GetVipInfo
-åŠŸèƒ½:å–ä¼šå‘˜ä¿¡æ¯
-å‚æ•°
-  @cWeiXinCode:ä¼šå‘˜èº«ä»½å¤–é”®
-  ä¸æŒ‡å®šåˆ™è¿”å›æ‰€æœ‰æœªç»‘å®šçš„ä¼šå‘˜åˆ—è¡¨
+¹¦ÄÜ:È¡»áÔ±ĞÅÏ¢
+²ÎÊı
+  @cWeiXinCode:»áÔ±Éí·İÍâ¼ü
+  ²»Ö¸¶¨Ôò·µ»ØËùÓĞÎ´°ó¶¨µÄ»áÔ±ÁĞ±í
 */
 If Object_ID('[GetVipInfo]','P') Is Not Null
   Drop Procedure [GetVipInfo]
 Go
 Create Procedure [GetVipInfo]
-       @cWeiXinCode varchar(50) = null --ä¼šå‘˜èº«ä»½å¤–é”®
+       @cWeiXinCode varchar(50) = null --»áÔ±Éí·İÍâ¼ü
 As
 Begin
   /*
-  é€šè¿‡å¤–é”®è·å–ä¼šå‘˜è®°å½•
-  å‚æ•° @cWeiXinCode ä¸ºç»‘å®šåˆ°ä¼šå‘˜çš„å¤–é”®
-       ä¸æŒ‡å®šåˆ™è¿”å›æ‰€æœ‰æ²¡æœ‰ç»‘å®šå¤–é”®çš„ä¼šå‘˜
+  Í¨¹ıÍâ¼ü»ñÈ¡»áÔ±¼ÇÂ¼
+  ²ÎÊı @cWeiXinCode Îª°ó¶¨µ½»áÔ±µÄÍâ¼ü
+       ²»Ö¸¶¨Ôò·µ»ØËùÓĞÃ»ÓĞ°ó¶¨Íâ¼üµÄ»áÔ±
   */
   If @cWeiXinCode Is Null Or len(@cWeiXinCode)=0
     Select * 
-    From ä¼šå‘˜ 
-    Where id Not In(Select Distinct ä¼šå‘˜ID 
-                    From ä¼šå‘˜èº«ä»½)
+    From »áÔ± 
+    Where id Not In(Select Distinct »áÔ±ID 
+                    From »áÔ±Éí·İ)
   Else
     Select * 
-    From ä¼šå‘˜ 
-    Where id In(Select ä¼šå‘˜ID 
-                From ä¼šå‘˜èº«ä»½ 
-                Where å¤–é”®=@cWeiXinCode)
+    From »áÔ± 
+    Where id In(Select »áÔ±ID 
+                From »áÔ±Éí·İ 
+                Where Íâ¼ü=@cWeiXinCode)
 End
 Go
-----æµ‹è¯•
+----²âÊÔ
 --Exec GetVipInfo 'hHzy6qbEQfs_reKJ9ymW'
 --Exec GetVipInfo
 --Go
 
 /*******************************************************************************
 Procedure AddVip
-åŠŸèƒ½:æ·»åŠ ä¼šå‘˜
-å‚æ•°
-  @cWeiXinCode:ä¼šå‘˜èº«ä»½å¤–é”®
-  @cMobileNumber:æ‰‹æœºå·
-  @cName:å§“å
-  @cBirthday:ç”Ÿæ—¥,yyyy-mm-ddæ ¼å¼
-  @bIsLunar:æ˜¯å†œå†,0è¡¨ç¤ºç”Ÿæ—¥æ˜¯å…¬å†
-  @cVipCode:ç»‘å®šåˆ°ä¼šå‘˜ç¼–å·
-  --@cVipCodeä¸æŒ‡å®šåˆ™æ–°å»ºä¼šå‘˜
-  --æŒ‡å®šåˆ™ç»‘å®šåˆ°å·²æœ‰ä¼šå‘˜
-  --æŒ‡å®šçš„ä¼šå‘˜ç¼–å·ä¸å­˜åœ¨åˆ™å¤±è´¥è¿”å›-1
-è¿”å›å€¼: 0---æˆåŠŸ
-       -1---å·²ç»‘å®šåˆ°å…¶å®ƒå¡
-       -2---æ— æ­¤ä¼šå‘˜
-       -3---ä¼šå‘˜å·²åœç”¨
-2016-12-12 hunter__fox                  è°ƒç”¨NewVipå®Œæˆæ–°ä¼šå‘˜è®°å½•å»ºç«‹
+¹¦ÄÜ:Ìí¼Ó»áÔ±
+²ÎÊı
+  @cWeiXinCode:»áÔ±Éí·İÍâ¼ü
+  @cMobileNumber:ÊÖ»úºÅ
+  @cName:ĞÕÃû
+  @cBirthday:ÉúÈÕ,yyyy-mm-dd¸ñÊ½
+  @bIsLunar:ÊÇÅ©Àú,0±íÊ¾ÉúÈÕÊÇ¹«Àú
+  @cVipCode:°ó¶¨µ½»áÔ±±àºÅ
+  --@cVipCode²»Ö¸¶¨ÔòĞÂ½¨»áÔ±
+  --Ö¸¶¨Ôò°ó¶¨µ½ÒÑÓĞ»áÔ±
+  --Ö¸¶¨µÄ»áÔ±±àºÅ²»´æÔÚÔòÊ§°Ü·µ»Ø-1
+·µ»ØÖµ: 0---³É¹¦
+       -1---ÒÑ°ó¶¨µ½ÆäËü¿¨
+       -2---ÎŞ´Ë»áÔ±
+       -3---»áÔ±ÒÑÍ£ÓÃ
+2016-12-12 hunter__fox                  µ÷ÓÃNewVipÍê³ÉĞÂ»áÔ±¼ÇÂ¼½¨Á¢
 */
 If Object_ID('[AddVip]','P') Is Not Null
   Drop Procedure [AddVip]
 Go
 Create Procedure [AddVip]
        @cWeiXinCode varchar(50)
-      ,@cMobileNumber varchar(20)= ''--æ‰‹æœºå·
-      ,@cName varchar(20)        = ''--å§“å
-      ,@cBirthday varchar(10)    = '1900-01-01'--ç”Ÿæ—¥,yyyy-mm-ddæ ¼å¼,èŒƒå›´1900-01-01åˆ°2079-06-06
-      ,@bIsLunar bit             = 0--æ˜¯å†œå†,0è¡¨ç¤ºç”Ÿæ—¥æ˜¯å…¬å†
-      ,@cVipCode varchar(20)     = ''--è¦ç»‘å®šçš„ä¼šå‘˜ç¼–å·
-                   --ä¸æŒ‡å®šåˆ™æ–°å»ºä¸€ä¸ªä¼šå‘˜,æŒ‡å®šåˆ™ç»‘å®šåˆ°å·²æœ‰ä¼šå‘˜
-                   --å¦‚æœæŒ‡å®šçš„ä¼šå‘˜ä¸å­˜åœ¨,åˆ™å¤±è´¥è¿”å›-1
+      ,@cMobileNumber varchar(20)= ''--ÊÖ»úºÅ
+      ,@cName varchar(20)        = ''--ĞÕÃû
+      ,@cBirthday varchar(10)    = '1900-01-01'--ÉúÈÕ,yyyy-mm-dd¸ñÊ½,·¶Î§1900-01-01µ½2079-06-06
+      ,@bIsLunar bit             = 0--ÊÇÅ©Àú,0±íÊ¾ÉúÈÕÊÇ¹«Àú
+      ,@cVipCode varchar(20)     = ''--Òª°ó¶¨µÄ»áÔ±±àºÅ
+                   --²»Ö¸¶¨ÔòĞÂ½¨Ò»¸ö»áÔ±,Ö¸¶¨Ôò°ó¶¨µ½ÒÑÓĞ»áÔ±
+                   --Èç¹ûÖ¸¶¨µÄ»áÔ±²»´æÔÚ,ÔòÊ§°Ü·µ»Ø-1
 As
 Begin
   Declare @iVipID int,@VipState int
   Declare @dBirthday datetime
-  --éªŒè¯:å¤–é”®å”¯ä¸€
-  If Exists(Select * From ä¼šå‘˜èº«ä»½ Where å¤–é”® = @cWeiXinCode)
+  --ÑéÖ¤:Íâ¼üÎ¨Ò»
+  If Exists(Select * From »áÔ±Éí·İ Where Íâ¼ü = @cWeiXinCode)
   Begin
-    Raiserror(N'å¤–é”®"%s"å·²ç»ä¸æŸä¼šå‘˜ç»‘å®š',16,1,@cWeiXinCode)
+    Raiserror(N'Íâ¼ü"%s"ÒÑ¾­ÓëÄ³»áÔ±°ó¶¨',16,1,@cWeiXinCode)
     Return -1
   End
   
   If @cVipCode='' Or @cVipCode Is Null
   Begin
-    --æ— ä¼šå‘˜,å»ºç«‹å®ƒ
+    --ÎŞ»áÔ±,½¨Á¢Ëü
     Exec NewVip @iVipID Output
     Set @VipState = 1
   End
   Else
-    --æœ‰ä¼šå‘˜,å–ID
-    Select @iVipID=id,@VipState=çŠ¶æ€ From ä¼šå‘˜ Where ç¼–å·=@cVipCode
-  If @iVipID Is Null Return -2 --æ— æ­¤ä¼šå‘˜
-  If @VipState = 0 Return -3 --ä¼šå‘˜å·²åœç”¨
+    --ÓĞ»áÔ±,È¡ID
+    Select @iVipID=id,@VipState=×´Ì¬ From »áÔ± Where ±àºÅ=@cVipCode
+  If @iVipID Is Null Return -2 --ÎŞ´Ë»áÔ±
+  If @VipState = 0 Return -3 --»áÔ±ÒÑÍ£ÓÃ
   
-  Update ä¼šå‘˜
-     Set ç”µè¯ = Case When IsNull(@cMobileNumber,'')=''
-                     Then ç”µè¯ Else @cMobileNumber End
-        ,åç§° = Case When IsNull(@cName,'')=''
-                     Then åç§° Else @cName End
-        ,ç”Ÿæ—¥ = Case When IsNull(@cBirthday,'')=''
-                     Then ç”Ÿæ—¥ Else Convert(datetime,@cBirthday) End
-        ,æ˜¯å¦å†œå† = Case When @bIsLunar Is Null 
-                         Then æ˜¯å¦å†œå† Else @bIsLunar End
-        ,ä¼šå‘˜ç”Ÿæ—¥ = Case When IsNull(@cBirthday,'')=''
-                         Then ä¼šå‘˜ç”Ÿæ—¥ Else Right(Replace(@cBirthday,'-',''),4) End
+  Update »áÔ±
+     Set µç»° = Case When IsNull(@cMobileNumber,'')=''
+                     Then µç»° Else @cMobileNumber End
+        ,Ãû³Æ = Case When IsNull(@cName,'')=''
+                     Then Ãû³Æ Else @cName End
+        ,ÉúÈÕ = Case When IsNull(@cBirthday,'')=''
+                     Then ÉúÈÕ Else Convert(datetime,@cBirthday) End
+        ,ÊÇ·ñÅ©Àú = Case When @bIsLunar Is Null 
+                         Then ÊÇ·ñÅ©Àú Else @bIsLunar End
+        ,»áÔ±ÉúÈÕ = Case When IsNull(@cBirthday,'')=''
+                         Then »áÔ±ÉúÈÕ Else Right(Replace(@cBirthday,'-',''),4) End
   Where ID=@iVipID
-  --è¿›è¡Œä¼šå‘˜ç»‘å®š
-  Insert Into ä¼šå‘˜èº«ä»½(ä¼šå‘˜ID,å¤–é”®)Values(@iVipID,@cWeiXinCode)
+  --½øĞĞ»áÔ±°ó¶¨
+  Insert Into »áÔ±Éí·İ(»áÔ±ID,Íâ¼ü)Values(@iVipID,@cWeiXinCode)
 End
 Go
---æµ‹è¯•
---ä¸‹è¿°æ‰€è¿°"ä¼šæˆåŠŸ"æ˜¯åœ¨ç›¸åº”å¤–é”®æ²¡æœ‰ä½¿ç”¨çš„æƒ…å†µä¸‹
---Delete From ä¼šå‘˜èº«ä»½ Where å¤–é”® In('{æµ‹è¯•ç»‘å®šç }','{æµ‹è¯•ç»‘å®šç 2}','{æµ‹è¯•ç»‘å®šç 3}')
---Exec AddVip '{æµ‹è¯•ç»‘å®šç 6}','{æ‰‹æœºå·}','{å¾®ä¿¡}'  --æ–°å¢ç”µå­ä¼šå‘˜å¹¶ç»‘å®šå¤–é”®,ç¬¬ä¸€æ¬¡ä¼šæˆåŠŸ
---Exec GetVipInfo '{æµ‹è¯•ç»‘å®šç 6}'
---Exec AddVip '{æµ‹è¯•ç»‘å®šç 2}','{æ‰‹æœºå·}','{å¾®ä¿¡}','1983-10-23',1,'999999999'  --ç»‘å®šåˆ°å·²æœ‰ä¼šå‘˜,ç¬¬ä¸€æ¬¡ä¼šæˆåŠŸ
---Exec GetVipInfo '{æµ‹è¯•ç»‘å®šç 2}'
---Exec AddVip '{æµ‹è¯•ç»‘å®šç 6}','{æ‰‹æœºå·}','{å¾®ä¿¡}',Null,Null,'000000' --ç»‘å®šå¤±è´¥:æŒ‡å®šçš„ä¼šå‘˜ä¸å­˜åœ¨
---Exec GetVipInfo '{æµ‹è¯•ç»‘å®šç 6}'
+--²âÊÔ
+--ÏÂÊöËùÊö"»á³É¹¦"ÊÇÔÚÏàÓ¦Íâ¼üÃ»ÓĞÊ¹ÓÃµÄÇé¿öÏÂ
+--Delete From »áÔ±Éí·İ Where Íâ¼ü In('{²âÊÔ°ó¶¨Âë}','{²âÊÔ°ó¶¨Âë2}','{²âÊÔ°ó¶¨Âë3}')
+--Exec AddVip '{²âÊÔ°ó¶¨Âë6}','{ÊÖ»úºÅ}','{Î¢ĞÅ}'  --ĞÂÔöµç×Ó»áÔ±²¢°ó¶¨Íâ¼ü,µÚÒ»´Î»á³É¹¦
+--Exec GetVipInfo '{²âÊÔ°ó¶¨Âë6}'
+--Exec AddVip '{²âÊÔ°ó¶¨Âë2}','{ÊÖ»úºÅ}','{Î¢ĞÅ}','1983-10-23',1,'999999999'  --°ó¶¨µ½ÒÑÓĞ»áÔ±,µÚÒ»´Î»á³É¹¦
+--Exec GetVipInfo '{²âÊÔ°ó¶¨Âë2}'
+--Exec AddVip '{²âÊÔ°ó¶¨Âë6}','{ÊÖ»úºÅ}','{Î¢ĞÅ}',Null,Null,'000000' --°ó¶¨Ê§°Ü:Ö¸¶¨µÄ»áÔ±²»´æÔÚ
+--Exec GetVipInfo '{²âÊÔ°ó¶¨Âë6}'
 --Go
 
 /*******************************************************************************
 Procedure VipReCharge
-åŠŸèƒ½:ä¼šå‘˜å……å€¼
-å‚æ•°:
-  @cWeiXinCode:ä¼šå‘˜ç»‘å®šçš„å¤–é”®
-  @nAddMoney:å……å€¼é‡‘é¢
-  @cWeiXinOrderCode:å¯¹åº”çš„å¾®å•†åŸæ”¯ä»˜è®¢å•å·
-è¿”å›å€¼
-    0 :æˆåŠŸ
-    -1:æ— æ­¤ä¼šå‘˜
-    -2:ç”Ÿæˆè®¢å•å·å¤±è´¥
-    -3:ç”Ÿæˆå……å€¼è®°å½•å¤±è´¥
+¹¦ÄÜ:»áÔ±³äÖµ
+²ÎÊı:
+  @cWeiXinCode:»áÔ±°ó¶¨µÄÍâ¼ü
+  @nAddMoney:³äÖµ½ğ¶î
+  @cWeiXinOrderCode:¶ÔÓ¦µÄÎ¢ÉÌ³ÇÖ§¸¶¶©µ¥ºÅ
+·µ»ØÖµ
+    0 :³É¹¦
+    -1:ÎŞ´Ë»áÔ±
+    -2:Éú³É¶©µ¥ºÅÊ§°Ü
+    -3:Éú³É³äÖµ¼ÇÂ¼Ê§°Ü
 */
 If Object_ID('[VipReCharge]','P') Is Not Null
   Drop Procedure [VipReCharge]
 Go
 Create Procedure [VipReCharge]
-       @cWeiXinCode varchar(50),     --ä¼šå‘˜èº«ä»½å¤–é”®
-       @nAddMoney money=0,           --å……å€¼é‡‘é¢
-       @cWeiXinOrderCode varchar(50) --å¾®å•†åŸæ”¯ä»˜è®¢å•å·
+       @cWeiXinCode varchar(50),     --»áÔ±Éí·İÍâ¼ü
+       @nAddMoney money=0,           --³äÖµ½ğ¶î
+       @cWeiXinOrderCode varchar(50) --Î¢ÉÌ³ÇÖ§¸¶¶©µ¥ºÅ
 As
 Begin
-  Declare @cDepart varchar(10) --éƒ¨é—¨ç¼–å·(å¾®å•†åŸ,æ— å¯ç™»å½•äººå‘˜)
-  Declare @cUser varchar(10)   --åˆ¶å•äºº(å¾®å•†åŸæ“ä½œå‘˜,ä¸å¯ç™»å½•)
-  Declare @iPayMode int        --ç»“ç®—æ–¹å¼(å¾®å•†åŸ,åœ¨ç»“ç®—æ–¹å¼è¡¨ä¸­ä¸ºç¬¬ä¸‰æ–¹æ”¯ä»˜,ä¸å¯ç”¨)
+  Declare @cDepart varchar(10) --²¿ÃÅ±àºÅ(Î¢ÉÌ³Ç,ÎŞ¿ÉµÇÂ¼ÈËÔ±)
+  Declare @cUser varchar(10)   --ÖÆµ¥ÈË(Î¢ÉÌ³Ç²Ù×÷Ô±,²»¿ÉµÇÂ¼)
+  Declare @iPayMode int        --½áËã·½Ê½(Î¢ÉÌ³Ç,ÔÚ½áËã·½Ê½±íÖĞÎªµÚÈı·½Ö§¸¶,²»ÆôÓÃ)
   Set @cDepart  = ''
   Set @cUser    = ''
-  Select @cDepart = ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
-  Select @cUser=ç¼–å· From pub_user Where å§“å='å…¬ä¼—å·'
-  Select @iPayMode = id From ç»“ç®—æ–¹å¼è¡¨ Where åç§°='å…¬ä¼—å·'
+  Select @cDepart = ±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
+  Select @cUser=±àºÅ From pub_user Where ĞÕÃû='¹«ÖÚºÅ'
+  Select @iPayMode = id From ½áËã·½Ê½±í Where Ãû³Æ='¹«ÖÚºÅ'
   If @iPayMode Is Null Set @iPayMode = -1 
-  --å–ä¼šå‘˜IDä¸ç¼–å·
+  --È¡»áÔ±IDÓë±àºÅ
   Declare @iVipID int, @cVipCode varchar(20)
-  Select @iVipID=id,@cVipCode=ç¼–å· From ä¼šå‘˜ Where id In(Select ä¼šå‘˜ID From ä¼šå‘˜èº«ä»½ Where å¤–é”® = @cWeiXinCode)
+  Select @iVipID=id,@cVipCode=±àºÅ From »áÔ± Where id In(Select »áÔ±ID From »áÔ±Éí·İ Where Íâ¼ü = @cWeiXinCode)
   If @iVipID Is Null
   Begin
-    Raiserror(N'å¤–é”®"%s"æ²¡æœ‰ä¸ä¼šå‘˜ç»‘å®š',16,1,@cWeiXinCode)
+    Raiserror(N'Íâ¼ü"%s"Ã»ÓĞÓë»áÔ±°ó¶¨',16,1,@cWeiXinCode)
     Return -1
   End
-  --ç”Ÿæˆå……å€¼å•å·,ç‹¬ç«‹äº‹åŠ¡
-  --å®ƒæ˜¯å……å€¼çš„å¿…è¦æ¡ä»¶,ä½†ç”Ÿæˆçš„å•å·å¯ä»¥ä¸¢å¼ƒ
+  --Éú³É³äÖµµ¥ºÅ,¶ÀÁ¢ÊÂÎñ
+  --ËüÊÇ³äÖµµÄ±ØÒªÌõ¼ş,µ«Éú³ÉµÄµ¥ºÅ¿ÉÒÔ¶ªÆú
   Declare @cOrderNo varchar(20), @cDate varchar(10), @iBillMax int
   Set @cDate=Convert(varchar(10), GetDate(), 120)
   Begin Tran tran_VipReCharge_1
-    Select @iBillMax=IsNull(æœ€å¤§å•å·, 0) + 1 From bills Where è¡¨å = 'å……å€¼ä¸šåŠ¡' And ä¼šè®¡æœŸé—´ = @cDate
+    Select @iBillMax=IsNull(×î´óµ¥ºÅ, 0) + 1 From bills Where ±íÃû = '³äÖµÒµÎñ' And »á¼ÆÆÚ¼ä = @cDate
     If @iBillMax Is Null Set @iBillMax = 1
     If @iBillMax=1
-      Insert Into bills(è¡¨å, ä¼šè®¡æœŸé—´, æœ€å¤§å•å·)Values('å……å€¼ä¸šåŠ¡', @cDate, @iBillMax)
+      Insert Into bills(±íÃû, »á¼ÆÆÚ¼ä, ×î´óµ¥ºÅ)Values('³äÖµÒµÎñ', @cDate, @iBillMax)
     Else
-      Update bills Set æœ€å¤§å•å· = @iBillMax Where è¡¨å = 'å……å€¼ä¸šåŠ¡' And ä¼šè®¡æœŸé—´ = @cDate
+      Update bills Set ×î´óµ¥ºÅ = @iBillMax Where ±íÃû = '³äÖµÒµÎñ' And »á¼ÆÆÚ¼ä = @cDate
   Commit Tran tran_VipReCharge_1
   If @@Error<>0 
   Begin
@@ -620,16 +632,16 @@ Begin
     Return -2
   End
   Set @cOrderNo = Replace(@cDate, '-', '') + '-' + Replace(Str(@iBillMax, 5), ' ', '0')
-  --å»ºç«‹å……å€¼è®°å½•,åœ¨äº‹åŠ¡ä¸­è¿›è¡Œ
-  --è¦æ±‚å››è¡¨åŒæ­¥
+  --½¨Á¢³äÖµ¼ÇÂ¼,ÔÚÊÂÎñÖĞ½øĞĞ
+  --ÒªÇóËÄ±íÍ¬²½
   Declare @iBusinessID int
   Begin Tran tran_VipReCharge_2
-    Insert Into å……å€¼è¡¨(å•å·, æ—¥æœŸ, éƒ¨é—¨ç¼–å·, åˆ¶å•äºº,é‡‘é¢åˆè®¡, ç°é‡‘åˆè®¡, çŠ¶æ€, å¤‡æ³¨)
-           Values(@cOrderNo, @cDate, @cDepart, @cUser, @nAddMoney, 0, 1, 'å¾®ä¿¡æ”¯ä»˜è®¢å•å·:' + @cWeiXinOrderCode)
+    Insert Into ³äÖµ±í(µ¥ºÅ, ÈÕÆÚ, ²¿ÃÅ±àºÅ, ÖÆµ¥ÈË,½ğ¶îºÏ¼Æ, ÏÖ½ğºÏ¼Æ, ×´Ì¬, ±¸×¢)
+           Values(@cOrderNo, @cDate, @cDepart, @cUser, @nAddMoney, 0, 1, 'Î¢ĞÅÖ§¸¶¶©µ¥ºÅ:' + @cWeiXinOrderCode)
     Set @iBusinessID = @@Identity
-    Insert Into å……å€¼æ˜ç»†è¡¨(PID, ç¼–å·, é‡‘é¢, ç°é‡‘)
+    Insert Into ³äÖµÃ÷Ï¸±í(PID, ±àºÅ, ½ğ¶î, ÏÖ½ğ)
            Values(@iBusinessID, @cVipCode, @nAddMoney, 0)
-    Insert Into ç»“ç®—æ˜ç»†è¡¨(ä¸šåŠ¡ID, æ¥æº, ç»“ç®—ID, ç»“ç®—é‡‘é¢,å¤‡æ³¨)
+    Insert Into ½áËãÃ÷Ï¸±í(ÒµÎñID, À´Ô´, ½áËãID, ½áËã½ğ¶î,±¸×¢)
            Values(@iBusinessID, 3, @iPayMode, @nAddMoney, @cWeiXinOrderCode)
   Commit Tran tran_VipReCharge_2
   If @@Error<>0 
@@ -640,69 +652,69 @@ Begin
   Return 0
 End
 Go
-----æµ‹è¯•
+----²âÊÔ
 --Exec GetVipInfo 'hHzy6qbEQfs_reKJ9ymW'
 --Exec VipReCharge 'hHzy6qbEQfs_reKJ9ymW',0.01,'1234567890'
 --Exec GetVipInfo 'hHzy6qbEQfs_reKJ9ymW'
 --declare @LasID int
---Select @LasID=max(ID) From å……å€¼è¡¨
---select * from å……å€¼è¡¨ where id=@LasID
---select * from å……å€¼æ˜ç»†è¡¨ where pid=@LasID
---select * from ç»“ç®—æ˜ç»†è¡¨ where ä¸šåŠ¡ID=@LasID and æ¥æº=3
+--Select @LasID=max(ID) From ³äÖµ±í
+--select * from ³äÖµ±í where id=@LasID
+--select * from ³äÖµÃ÷Ï¸±í where pid=@LasID
+--select * from ½áËãÃ÷Ï¸±í where ÒµÎñID=@LasID and À´Ô´=3
 /*******************************************************************************
 Procedure VipBonusPoints
-åŠŸèƒ½:ä¿®æ”¹ä¼šå‘˜ç§¯åˆ†
-å‚æ•°:
-     @cDepart:éƒ¨é—¨
-     @cUser:æ“ä½œå‘˜
-     @VipCode:ä¼šå‘˜å¡å·
-     @Add:tç§¯åˆ†å¢åŠ æ•°
-     @Description:ç§¯åˆ†å˜åŠ¨åŸå› 
+¹¦ÄÜ:ĞŞ¸Ä»áÔ±»ı·Ö
+²ÎÊı:
+     @cDepart:²¿ÃÅ
+     @cUser:²Ù×÷Ô±
+     @VipCode:»áÔ±¿¨ºÅ
+     @Add:t»ı·ÖÔö¼ÓÊı
+     @Description:»ı·Ö±ä¶¯Ô­Òò
 */
 If Object_ID('VipBonusPoints','P') Is Not Null
   Drop Procedure [VipBonusPoints]
 Go
 Create Procedure [VipBonusPoints]
-       @cDepart     varchar(10)   ,--éƒ¨é—¨
-       @cUser       varchar(10)   ,--æ“ä½œå‘˜
-       @VipCode     varchar(20)   ,--ä¼šå‘˜å¡ç¼–å·
-       @Add         money=0       ,--ç§¯åˆ†å¢åŠ å€¼(å‡å°‘ä¸ºè´Ÿæ•°,0ä¸ºä¸å˜)
-       @Description varchar(20)='' --ç§¯åˆ†å˜åŠ¨åŸå› 
+       @cDepart     varchar(10)   ,--²¿ÃÅ
+       @cUser       varchar(10)   ,--²Ù×÷Ô±
+       @VipCode     varchar(20)   ,--»áÔ±¿¨±àºÅ
+       @Add         money=0       ,--»ı·ÖÔö¼ÓÖµ(¼õÉÙÎª¸ºÊı,0Îª²»±ä)
+       @Description varchar(20)='' --»ı·Ö±ä¶¯Ô­Òò
 As
 Begin
-  Declare @çŠ¶æ€ int,@æ˜¯å¦å……å€¼ bit,@ç§¯åˆ† money,@æˆªæ­¢æ—¥æœŸ datetime
-  Select @çŠ¶æ€=çŠ¶æ€,@æ˜¯å¦å……å€¼=æ˜¯å¦å……å€¼,@ç§¯åˆ†=ç§¯åˆ†,@æˆªæ­¢æ—¥æœŸ=æˆªæ­¢æ—¥æœŸ From ä¼šå‘˜ Where ç¼–å·=@VipCode
-  If @çŠ¶æ€ Is Null
-    Return -1 --æ— æ­¤ä¼šå‘˜
-  Else If @çŠ¶æ€ = 0
-    Return -2 --å¡æœªå¯ç”¨
-  Else If @æ˜¯å¦å……å€¼=1
-    Return -3 --å¡å·²æŒ‚å¤±
-  Else If @æˆªæ­¢æ—¥æœŸ< getdate()
-    Return -4 --å¡å·²è¿‡æœŸ
+  Declare @×´Ì¬ int,@ÊÇ·ñ³äÖµ bit,@»ı·Ö money,@½ØÖ¹ÈÕÆÚ datetime
+  Select @×´Ì¬=×´Ì¬,@ÊÇ·ñ³äÖµ=ÊÇ·ñ³äÖµ,@»ı·Ö=»ı·Ö,@½ØÖ¹ÈÕÆÚ=½ØÖ¹ÈÕÆÚ From »áÔ± Where ±àºÅ=@VipCode
+  If @×´Ì¬ Is Null
+    Return -1 --ÎŞ´Ë»áÔ±
+  Else If @×´Ì¬ = 0
+    Return -2 --¿¨Î´ÆôÓÃ
+  Else If @ÊÇ·ñ³äÖµ=1
+    Return -3 --¿¨ÒÑ¹ÒÊ§
+  Else If @½ØÖ¹ÈÕÆÚ< getdate()
+    Return -4 --¿¨ÒÑ¹ıÆÚ
   
   If @Add <> 0
   Begin
-    --ç”Ÿæˆå……å€¼å•å·,ç‹¬ç«‹äº‹åŠ¡
-    --å®ƒæ˜¯å……å€¼çš„å¿…è¦æ¡ä»¶,ä½†ç”Ÿæˆçš„å•å·å¯ä»¥ä¸¢å¼ƒ
+    --Éú³É³äÖµµ¥ºÅ,¶ÀÁ¢ÊÂÎñ
+    --ËüÊÇ³äÖµµÄ±ØÒªÌõ¼ş,µ«Éú³ÉµÄµ¥ºÅ¿ÉÒÔ¶ªÆú
     Declare @cOrderNo varchar(20), @cDate varchar(10), @iBillMax int
     Set @cDate=Convert(varchar(10), GetDate(), 120)
-    Exec getbillmax 'å……å€¼ä¸šåŠ¡', @cDate, @iBillMax OUTPUT
+    Exec getbillmax '³äÖµÒµÎñ', @cDate, @iBillMax OUTPUT
     Set @cOrderNo = Replace(@cDate, '-', '') + '-' + Replace(Str(@iBillMax, 5), ' ', '0')
     
     Declare @iBusinessID int
     Begin Tran
-      Insert Into å……å€¼è¡¨(å•å·, æ—¥æœŸ, éƒ¨é—¨ç¼–å·, åˆ¶å•äºº,é‡‘é¢åˆè®¡, ç°é‡‘åˆè®¡, çŠ¶æ€, å¤‡æ³¨)
+      Insert Into ³äÖµ±í(µ¥ºÅ, ÈÕÆÚ, ²¿ÃÅ±àºÅ, ÖÆµ¥ÈË,½ğ¶îºÏ¼Æ, ÏÖ½ğºÏ¼Æ, ×´Ì¬, ±¸×¢)
              Values(@cOrderNo, @cDate, @cDepart, @cUser, 0, 0, 1, @Description)
       Set @iBusinessID = @@Identity
-      Insert Into å……å€¼æ˜ç»†è¡¨(PID, ç¼–å·, é‡‘é¢, ç°é‡‘,ç§¯åˆ†,å¤‡æ³¨)
+      Insert Into ³äÖµÃ÷Ï¸±í(PID, ±àºÅ, ½ğ¶î, ÏÖ½ğ,»ı·Ö,±¸×¢)
              Values(@iBusinessID, @VipCode, 0, 0, @Add, @Description)
-      Update ä¼šå‘˜ Set ç§¯åˆ† = @ç§¯åˆ† + @Add Where ç¼–å· = @VipCode
+      Update »áÔ± Set »ı·Ö = @»ı·Ö + @Add Where ±àºÅ = @VipCode
     Commit Tran  
     If @@Error<>0 
     Begin
       Rollback Tran
-      Return -5 --ç§¯åˆ†å˜åŠ¨å¤±è´¥
+      Return -5 --»ı·Ö±ä¶¯Ê§°Ü
     End
   End
   Return 0
@@ -710,179 +722,179 @@ End
 Go
 /*******************************************************************************
 Procedure GetVipLog
-åŠŸèƒ½:è·å–æŒ‡å®šä¼šå‘˜çš„æ¶ˆè´¹/å……å€¼è®°å½•
-å‚æ•°:
-  @cWeiXinCode:ä¼šå‘˜ç»‘å®šçš„å¤–é”®
-  @cDateStart:æŸ¥è¯¢å¼€å§‹æ—¥æœŸ(å«æ­¤æ—¥)
-  @cDateStart:æŸ¥è¯¢æˆªæ­¢æ—¥æœŸ(å«æ­¤æ—¥)
+¹¦ÄÜ:»ñÈ¡Ö¸¶¨»áÔ±µÄÏû·Ñ/³äÖµ¼ÇÂ¼
+²ÎÊı:
+  @cWeiXinCode:»áÔ±°ó¶¨µÄÍâ¼ü
+  @cDateStart:²éÑ¯¿ªÊ¼ÈÕÆÚ(º¬´ËÈÕ)
+  @cDateStart:²éÑ¯½ØÖ¹ÈÕÆÚ(º¬´ËÈÕ)
 */
 If Object_ID('[GetVipLog]','P') Is Not Null
   Drop Procedure [GetVipLog]
 Go
 Create Procedure [GetVipLog]
-       @cWeiXinCode varchar(50),--ä¼šå‘˜ç»‘å®šçš„å¤–é”®
-       @cDateStart varchar(10)='1900-01-01', --æŸ¥è¯¢å¼€å§‹æ—¥æœŸ(å«æ­¤æ—¥)
-       @cDateEnd varchar(10)=''  --æŸ¥è¯¢æˆªæ­¢æ—¥æœŸ(å«æ­¤æ—¥)
+       @cWeiXinCode varchar(50),--»áÔ±°ó¶¨µÄÍâ¼ü
+       @cDateStart varchar(10)='1900-01-01', --²éÑ¯¿ªÊ¼ÈÕÆÚ(º¬´ËÈÕ)
+       @cDateEnd varchar(10)=''  --²éÑ¯½ØÖ¹ÈÕÆÚ(º¬´ËÈÕ)
 As
 Begin
   If @cWeiXinCode='' Or @cWeiXinCode Is Null
   Begin
-    Raiserror(N'éœ€è¦æŒ‡å®šä¸€ä¸ªå¤–é”®',16,1)
+    Raiserror(N'ĞèÒªÖ¸¶¨Ò»¸öÍâ¼ü',16,1)
     Return -1
   End
   Declare @iVipID int
-  Select @iVipID=id From ä¼šå‘˜ Where id In(Select ä¼šå‘˜ID From ä¼šå‘˜èº«ä»½ Where å¤–é”® = @cWeiXinCode)
+  Select @iVipID=id From »áÔ± Where id In(Select »áÔ±ID From »áÔ±Éí·İ Where Íâ¼ü = @cWeiXinCode)
   If @iVipID Is Null
   Begin
-    Raiserror(N'å¤–é”®"%s"æ²¡æœ‰ä¸ä¼šå‘˜ç»‘å®š',16,2,@cWeiXinCode)
+    Raiserror(N'Íâ¼ü"%s"Ã»ÓĞÓë»áÔ±°ó¶¨',16,2,@cWeiXinCode)
     Return -2
   End
   Exec GetVipLog_ID @iVipID,@cDateStart,@cDateEnd
   Return 0
 End
 Go
-----æµ‹è¯•
-----æ³¨:æµ‹è¯•æ•°æ®åº“ä¸­æ•°æ®æœ‰æ‰‹åŠ¨ä¿®æ”¹,ä½™é¢ä¸èƒ½è‡ªæ°
---Delete From ä¼šå‘˜èº«ä»½ Where å¤–é”® = '{æµ‹è¯•ç»‘å®šç 2}'
---Exec AddVip '{æµ‹è¯•ç»‘å®šç 2}','{æ‰‹æœºå·}','{å¾®ä¿¡}','1983-10-23',1,'999999999'
---Exec GetVipLog '{æµ‹è¯•ç»‘å®šç 2}'
---Exec GetVipLog '{æµ‹è¯•ç»‘å®šç 2}','2016-10-12',''
---Exec GetVipLog '{æµ‹è¯•ç»‘å®šç 2}','2016-10-12','2016-10-30'
+----²âÊÔ
+----×¢:²âÊÔÊı¾İ¿âÖĞÊı¾İÓĞÊÖ¶¯ĞŞ¸Ä,Óà¶î²»ÄÜ×ÔÇ¡
+--Delete From »áÔ±Éí·İ Where Íâ¼ü = '{²âÊÔ°ó¶¨Âë2}'
+--Exec AddVip '{²âÊÔ°ó¶¨Âë2}','{ÊÖ»úºÅ}','{Î¢ĞÅ}','1983-10-23',1,'999999999'
+--Exec GetVipLog '{²âÊÔ°ó¶¨Âë2}'
+--Exec GetVipLog '{²âÊÔ°ó¶¨Âë2}','2016-10-12',''
+--Exec GetVipLog '{²âÊÔ°ó¶¨Âë2}','2016-10-12','2016-10-30'
 /*******************************************************************************
 Procedure GetVouchers
-åŠŸèƒ½:è·å–ç¤¼åˆ¸ä¿¡æ¯
-å‚æ•°:@DepartmentCode:éƒ¨é—¨ç¼–å·
-     @VipCode:ä¼šå‘˜ç¼–å·
-     @VoucherCode:ç¤¼åˆ¸ç¼–å·
-     @GoodsCode:åˆ¸çš„äº§å“ç¼–å·
-æ­¤ä¸‰ä¸ªå‚æ•°äº’æ–¥:
-  æŒ‡å®š@DepartmentCodeå°†è·å–å‡ºåº“åˆ°è¯¥éƒ¨é—¨ä¸”å‡ºé”€å”®çš„ç¤¼åˆ¸åˆ—è¡¨(æ­¤éƒ¨é—¨å¯é”€å”®çš„ç¤¼åˆ¸)
-  æŒ‡å®š@VipCodeåˆ™è·å–é”€å”®åˆ°æŒ‡å®šä¼šå‘˜å¹¶ä¸”æœªä½¿ç”¨çš„ç¤¼åˆ¸åˆ—è¡¨,ä¸é™å®šæ˜¯å“ªä¸ªéƒ¨é—¨é”€å”®çš„
-  æŒ‡å®š@VoucherCodeåˆ™è·å–æŒ‡å®šç¤¼åˆ¸çš„ä¿¡æ¯,ä¸é™å®šåˆ¸çŠ¶æ€ä¸é”€å”®éƒ¨é—¨å’Œå½’å±
-  æŒ‡å®šäº†@DepartmentCodeå°†å¿½ç•¥@VipCodeä¸@VoucherCode
-  æŒ‡å®šäº†@VipCodeå°†å¿½ç•¥@VoucherCode,@GoodsCode
-  æŒ‡å®šäº†@VoucherCodeå°†å¿½ç•¥@GoodsCode
+¹¦ÄÜ:»ñÈ¡ÀñÈ¯ĞÅÏ¢
+²ÎÊı:@DepartmentCode:²¿ÃÅ±àºÅ
+     @VipCode:»áÔ±±àºÅ
+     @VoucherCode:ÀñÈ¯±àºÅ
+     @GoodsCode:È¯µÄ²úÆ·±àºÅ
+´ËÈı¸ö²ÎÊı»¥³â:
+  Ö¸¶¨@DepartmentCode½«»ñÈ¡³ö¿âµ½¸Ã²¿ÃÅÇÒ³öÏúÊÛµÄÀñÈ¯ÁĞ±í(´Ë²¿ÃÅ¿ÉÏúÊÛµÄÀñÈ¯)
+  Ö¸¶¨@VipCodeÔò»ñÈ¡ÏúÊÛµ½Ö¸¶¨»áÔ±²¢ÇÒÎ´Ê¹ÓÃµÄÀñÈ¯ÁĞ±í,²»ÏŞ¶¨ÊÇÄÄ¸ö²¿ÃÅÏúÊÛµÄ
+  Ö¸¶¨@VoucherCodeÔò»ñÈ¡Ö¸¶¨ÀñÈ¯µÄĞÅÏ¢,²»ÏŞ¶¨È¯×´Ì¬ÓëÏúÊÛ²¿ÃÅºÍ¹éÊô
+  Ö¸¶¨ÁË@DepartmentCode½«ºöÂÔ@VipCodeÓë@VoucherCode
+  Ö¸¶¨ÁË@VipCode½«ºöÂÔ@VoucherCode,@GoodsCode
+  Ö¸¶¨ÁË@VoucherCode½«ºöÂÔ@GoodsCode
 */
 
 If Object_ID('[GetVouchers]','P') Is Not Null
   Drop Procedure [GetVouchers]
 Go
 Create Procedure [GetVouchers]
-       @DepartmentCode varchar(20)='',--è·å–å‡ºåº“åˆ°æŒ‡å®šéƒ¨é—¨å¹¶ä¸”å°šæœªé”€å”®çš„ç¤¼åˆ¸
-       @VipCode        varchar(20)='',--è·å–é”€å”®ç»™æŒ‡å®šä¼šå‘˜çš„ç¤¼åˆ¸
-       @VoucherCode    varchar(20)='',--è·å–æŒ‡å®šç¼–å·ç¤¼åˆ¸
-       @GoodsCode      varchar(10)='' --è·å–æŒ‡å®šäº§å“ç¼–å·çš„åˆ¸,ä»…åœ¨æŒ‡å®š@DepartmentCodeæ—¶æœ‰æ•ˆ
+       @DepartmentCode varchar(20)='',--»ñÈ¡³ö¿âµ½Ö¸¶¨²¿ÃÅ²¢ÇÒÉĞÎ´ÏúÊÛµÄÀñÈ¯
+       @VipCode        varchar(20)='',--»ñÈ¡ÏúÊÛ¸øÖ¸¶¨»áÔ±µÄÀñÈ¯
+       @VoucherCode    varchar(20)='',--»ñÈ¡Ö¸¶¨±àºÅÀñÈ¯
+       @GoodsCode      varchar(10)='' --»ñÈ¡Ö¸¶¨²úÆ·±àºÅµÄÈ¯,½öÔÚÖ¸¶¨@DepartmentCodeÊ±ÓĞĞ§
 As
 Begin
   If IsNull(@DepartmentCode, '') <> '' And IsNull(@GoodsCode, '') <> ''
-    Select A.äº§å“ç¼–å·,A.ç¼–å·,A.é¢é¢,'å·²å‡ºåº“' As çŠ¶æ€
-          ,Case When IsNull(A.å¾€æ¥ç¼–å·,'0')='0' Then '' Else A.å¾€æ¥ç¼–å· End As ä¼šå‘˜ç¼–å·
-          ,A.æˆªæ­¢æ—¥æœŸ,A.æ¡ç 
-    From ç¤¼åˆ¸è¡¨ As A
-    Left Join ç¤¼åˆ¸å‡ºåº“è¡¨ As B On A.ç¼–å·=B.ç¼–å·
-    Where A.çŠ¶æ€=1 And B.å¾€æ¥ç¼–å·=@DepartmentCode
-      And A.æˆªæ­¢æ—¥æœŸ>=getdate()
-      And A.äº§å“ç¼–å·=@GoodsCode
+    Select A.²úÆ·±àºÅ,A.±àºÅ,A.Ãæ¶î,'ÒÑ³ö¿â' As ×´Ì¬
+          ,Case When IsNull(A.ÍùÀ´±àºÅ,'0')='0' Then '' Else A.ÍùÀ´±àºÅ End As »áÔ±±àºÅ
+          ,A.½ØÖ¹ÈÕÆÚ,A.ÌõÂë
+    From ÀñÈ¯±í As A
+    Left Join ÀñÈ¯³ö¿â±í As B On A.±àºÅ=B.±àºÅ
+    Where A.×´Ì¬=1 And B.ÍùÀ´±àºÅ=@DepartmentCode
+      And A.½ØÖ¹ÈÕÆÚ>=getdate()
+      And A.²úÆ·±àºÅ=@GoodsCode
   Else If IsNull(@DepartmentCode, '') <> '' 
-    Select A.äº§å“ç¼–å·,A.ç¼–å·,A.é¢é¢,'å·²å‡ºåº“' As çŠ¶æ€
-          ,Case When IsNull(A.å¾€æ¥ç¼–å·,'0')='0' Then '' Else A.å¾€æ¥ç¼–å· End As ä¼šå‘˜ç¼–å·
-          ,A.æˆªæ­¢æ—¥æœŸ,A.æ¡ç 
-    From ç¤¼åˆ¸è¡¨ As A
-    Left Join ç¤¼åˆ¸å‡ºåº“è¡¨ As B On A.ç¼–å·=B.ç¼–å·
-    Where A.çŠ¶æ€=1 And B.å¾€æ¥ç¼–å·=@DepartmentCode
-      And A.æˆªæ­¢æ—¥æœŸ>=getdate()
+    Select A.²úÆ·±àºÅ,A.±àºÅ,A.Ãæ¶î,'ÒÑ³ö¿â' As ×´Ì¬
+          ,Case When IsNull(A.ÍùÀ´±àºÅ,'0')='0' Then '' Else A.ÍùÀ´±àºÅ End As »áÔ±±àºÅ
+          ,A.½ØÖ¹ÈÕÆÚ,A.ÌõÂë
+    From ÀñÈ¯±í As A
+    Left Join ÀñÈ¯³ö¿â±í As B On A.±àºÅ=B.±àºÅ
+    Where A.×´Ì¬=1 And B.ÍùÀ´±àºÅ=@DepartmentCode
+      And A.½ØÖ¹ÈÕÆÚ>=getdate()
   Else If IsNull(@VipCode, '') <> ''
-    Select A.äº§å“ç¼–å·,A.ç¼–å·,A.é¢é¢,'å·²é”€å”®' As çŠ¶æ€
-          ,@VipCode As ä¼šå‘˜ç¼–å·
-          ,A.æˆªæ­¢æ—¥æœŸ,A.æ¡ç 
-    From ç¤¼åˆ¸è¡¨ As a
-    Inner Join ç¤¼åˆ¸é”€å”®è¡¨ As b On a.ç¼–å·=b.ç¼–å·
-    Where b.å¾€æ¥ç¼–å·=@VipCode
-      And a.çŠ¶æ€=2 and a.æ˜¯å¦å›æ”¶=0
-      And a.æˆªæ­¢æ—¥æœŸ>=getdate()
+    Select A.²úÆ·±àºÅ,A.±àºÅ,A.Ãæ¶î,'ÒÑÏúÊÛ' As ×´Ì¬
+          ,@VipCode As »áÔ±±àºÅ
+          ,A.½ØÖ¹ÈÕÆÚ,A.ÌõÂë
+    From ÀñÈ¯±í As a
+    Inner Join ÀñÈ¯ÏúÊÛ±í As b On a.±àºÅ=b.±àºÅ
+    Where b.ÍùÀ´±àºÅ=@VipCode
+      And a.×´Ì¬=2 and a.ÊÇ·ñ»ØÊÕ=0
+      And a.½ØÖ¹ÈÕÆÚ>=getdate()
   Else If IsNull(@VoucherCode, '') <> ''
-    Select A.äº§å“ç¼–å·,A.ç¼–å·,A.é¢é¢
-          ,Case A.çŠ¶æ€+A.æ˜¯å¦å›æ”¶
-           When 0 Then 'æœªå‡ºåº“'
-           When 1 Then 'å·²å‡ºåº“'
-           When 2 Then 'å·²é”€å”®'
-           When 3 Then 'å·²ä½¿ç”¨'
-           Else 'æ— æ•ˆ'
-           End As çŠ¶æ€
-          ,Case When IsNull(A.å¾€æ¥ç¼–å·,'0')='0' Then IsNull(C.å¾€æ¥ç¼–å·,'') Else A.å¾€æ¥ç¼–å· End As ä¼šå‘˜ç¼–å·
-          ,A.æˆªæ­¢æ—¥æœŸ,A.æ¡ç 
-    From ç¤¼åˆ¸è¡¨ As A
-    Left Join ç¤¼åˆ¸å‡ºåº“è¡¨ As B On A.ç¼–å·=B.ç¼–å·
-    Left Join ç¤¼åˆ¸é”€å”®è¡¨ As C On A.ç¼–å·=C.ç¼–å·
-    Where A.ç¼–å·=@VoucherCode
+    Select A.²úÆ·±àºÅ,A.±àºÅ,A.Ãæ¶î
+          ,Case A.×´Ì¬+A.ÊÇ·ñ»ØÊÕ
+           When 0 Then 'Î´³ö¿â'
+           When 1 Then 'ÒÑ³ö¿â'
+           When 2 Then 'ÒÑÏúÊÛ'
+           When 3 Then 'ÒÑÊ¹ÓÃ'
+           Else 'ÎŞĞ§'
+           End As ×´Ì¬
+          ,Case When IsNull(A.ÍùÀ´±àºÅ,'0')='0' Then IsNull(C.ÍùÀ´±àºÅ,'') Else A.ÍùÀ´±àºÅ End As »áÔ±±àºÅ
+          ,A.½ØÖ¹ÈÕÆÚ,A.ÌõÂë
+    From ÀñÈ¯±í As A
+    Left Join ÀñÈ¯³ö¿â±í As B On A.±àºÅ=B.±àºÅ
+    Left Join ÀñÈ¯ÏúÊÛ±í As C On A.±àºÅ=C.±àºÅ
+    Where A.±àºÅ=@VoucherCode
   Else
   Begin
-    Select Top 0 äº§å“ç¼–å·,ç¼–å·,é¢é¢,'' As çŠ¶æ€,å¾€æ¥ç¼–å· As ä¼šå‘˜ç¼–å·,æˆªæ­¢æ—¥æœŸ,æ¡ç  From ç¤¼åˆ¸è¡¨
-    Return -1 --æ— å‚æ•°
+    Select Top 0 ²úÆ·±àºÅ,±àºÅ,Ãæ¶î,'' As ×´Ì¬,ÍùÀ´±àºÅ As »áÔ±±àºÅ,½ØÖ¹ÈÕÆÚ,ÌõÂë From ÀñÈ¯±í
+    Return -1 --ÎŞ²ÎÊı
   End
   Return 0
 End
 Go
 /*******************************************************************************
 Procedure Saleing
-åŠŸèƒ½:ç”Ÿæˆé”€å”®è®°å½•
-å‚æ•°:
-    @DepartmentCode:é”€å”®éƒ¨é—¨
-    @UserCode:æ“ä½œå‘˜
-    @CDate:åšå¸æ—¥æœŸ
-    @GoodsCode:å•†å“ç¼–å·
-    @GoodsCount:å•†å“æ•°é‡
-    @Price:é”€å”®å•ä»·
-    @VipCode:å¾€æ¥ç¼–å·
-    @Ret_BillCode:åˆ›å»ºçš„é”€å”®å•å•å·,OUTPUT
-è¯¥å­˜å‚¨è¿‡ç¨‹ä»…é€‚ç”¨äºå•ä¸€å•†å“çš„é”€å”®è¡Œä¸º
-å¤šç§å•†å“åº”å¾ªç¯è°ƒç”¨SaleingEx
+¹¦ÄÜ:Éú³ÉÏúÊÛ¼ÇÂ¼
+²ÎÊı:
+    @DepartmentCode:ÏúÊÛ²¿ÃÅ
+    @UserCode:²Ù×÷Ô±
+    @CDate:×öÕÊÈÕÆÚ
+    @GoodsCode:ÉÌÆ·±àºÅ
+    @GoodsCount:ÉÌÆ·ÊıÁ¿
+    @Price:ÏúÊÛµ¥¼Û
+    @VipCode:ÍùÀ´±àºÅ
+    @Ret_BillCode:´´½¨µÄÏúÊÛµ¥µ¥ºÅ,OUTPUT
+¸Ã´æ´¢¹ı³Ì½öÊÊÓÃÓÚµ¥Ò»ÉÌÆ·µÄÏúÊÛĞĞÎª
+¶àÖÖÉÌÆ·Ó¦Ñ­»·µ÷ÓÃSaleingEx
 */
 If Object_ID('[Saleing]','P') Is Not Null
   Drop Procedure [Saleing]
 Go
 Create Procedure [Saleing]
-    @DepartmentCode varchar(10)     ,--é”€å”®éƒ¨é—¨
-    @UserCode varchar(10)           ,--æ“ä½œå‘˜
-    @CDate varchar(10)              ,--åšå¸æ—¥æœŸ
-    @GoodsCode varchar(10)          ,--å•†å“ç¼–å·
-    @GoodsCount int                 ,--å•†å“æ•°é‡
-    @Price money                    ,--å•ä»·
-    @PayByCash money=0              ,--ç°é‡‘æ”¯ä»˜é‡‘é¢
-    @PayByCard money=0              ,--ä¼šå‘˜å¡æ”¯ä»˜é‡‘é¢    
-    @VipCode varchar(20)            ,--å¾€æ¥ç¼–å·
-    @Ret_BillCode varchar(20) OutPut --åˆ›å»ºçš„é”€å”®å•å•å·
+    @DepartmentCode varchar(10)     ,--ÏúÊÛ²¿ÃÅ
+    @UserCode varchar(10)           ,--²Ù×÷Ô±
+    @CDate varchar(10)              ,--×öÕÊÈÕÆÚ
+    @GoodsCode varchar(10)          ,--ÉÌÆ·±àºÅ
+    @GoodsCount int                 ,--ÉÌÆ·ÊıÁ¿
+    @Price money                    ,--µ¥¼Û
+    @PayByCash money=0              ,--ÏÖ½ğÖ§¸¶½ğ¶î
+    @PayByCard money=0              ,--»áÔ±¿¨Ö§¸¶½ğ¶î    
+    @VipCode varchar(20)            ,--ÍùÀ´±àºÅ
+    @Ret_BillCode varchar(20) OutPut --´´½¨µÄÏúÊÛµ¥µ¥ºÅ
 As
 Begin
-  --ç”Ÿæˆå•å·
+  --Éú³Éµ¥ºÅ
   Declare @BillMax int,@SalesID int
-  Exec getbillmax 'é”€å”®', @CDate, @BillMax Output
+  Exec getbillmax 'ÏúÊÛ', @CDate, @BillMax Output
   Set @Ret_BillCode = Convert(varchar(6),Convert(datetime, @CDate), 12) 
                     + '-' + Right('0000' + Convert(varchar(10), @BillMax), 5)
-  Declare @é”€å”®ç±»åˆ« varchar(20),@åŸä»· money,@å½“å‰ä½™é¢ money,@å½“å‰ç§¯åˆ† money
-  Set @é”€å”®ç±»åˆ«=Case When @VipCode='' Or @VipCode Is Null Then 'æ­£å¸¸é›¶é”€' Else 'ä¼šå‘˜é”€å”®' End
-  Select @åŸä»·=é”€å”®ä¸»ä»· From goods Where ç¼–å·=@GoodsCode And æ˜¯å¦é”€å”®=1
-  --åœ¨äº‹åŠ¡ä¸­æ·»åŠ è®°å½•
+  Declare @ÏúÊÛÀà±ğ varchar(20),@Ô­¼Û money,@µ±Ç°Óà¶î money,@µ±Ç°»ı·Ö money
+  Set @ÏúÊÛÀà±ğ=Case When @VipCode='' Or @VipCode Is Null Then 'Õı³£ÁãÏú' Else '»áÔ±ÏúÊÛ' End
+  Select @Ô­¼Û=ÏúÊÛÖ÷¼Û From goods Where ±àºÅ=@GoodsCode And ÊÇ·ñÏúÊÛ=1
+  --ÔÚÊÂÎñÖĞÌí¼Ó¼ÇÂ¼
   Begin Transaction tran_Saleing
-  Insert Into sales(å•å·,éƒ¨é—¨ç¼–å·,åˆ¶å•äºº,æ—¥æœŸ,é”€å”®ç±»åˆ«,ç»“å•,å¾€æ¥ç¼–å·,å½“å‰ä½™é¢,å½“å‰ç§¯åˆ†
-                   ,æ•°é‡åˆè®¡,é‡‘é¢åˆè®¡,æŠ˜æ‰£åˆè®¡
-                   ,ç°é‡‘é‡‘é¢,åˆ·å¡é‡‘é¢,ç¤¼åˆ¸é‡‘é¢)
-         Values(@Ret_BillCode,@DepartmentCode,@UserCode,@CDate,@é”€å”®ç±»åˆ«,1,@VipCode,0,0
-               ,@GoodsCount,@GoodsCount*@Price,@GoodsCount*(@åŸä»·-@Price)
+  Insert Into sales(µ¥ºÅ,²¿ÃÅ±àºÅ,ÖÆµ¥ÈË,ÈÕÆÚ,ÏúÊÛÀà±ğ,½áµ¥,ÍùÀ´±àºÅ,µ±Ç°Óà¶î,µ±Ç°»ı·Ö
+                   ,ÊıÁ¿ºÏ¼Æ,½ğ¶îºÏ¼Æ,ÕÛ¿ÛºÏ¼Æ
+                   ,ÏÖ½ğ½ğ¶î,Ë¢¿¨½ğ¶î,ÀñÈ¯½ğ¶î)
+         Values(@Ret_BillCode,@DepartmentCode,@UserCode,@CDate,@ÏúÊÛÀà±ğ,1,@VipCode,0,0
+               ,@GoodsCount,@GoodsCount*@Price,@GoodsCount*(@Ô­¼Û-@Price)
                ,@PayByCash,@PayByCard,@GoodsCount*@Price-@PayByCash-@PayByCard)
   If @@Rowcount > 0
   Begin
     Set @SalesID = SCOPE_IDENTITY()
-    Insert Into sales_detail(é”€å”®ID,ç¼–å·,å•ä»·,æ•°é‡,é‡‘é¢,åŸä»·,ä¿ƒé”€æ ‡è®°)
-           Values(@SalesID,@GoodsCode,@Price,@GoodsCount,@GoodsCount*@Price,@åŸä»·,Case When @åŸä»·=@Price Then 0 Else 1 End)
+    Insert Into sales_detail(ÏúÊÛID,±àºÅ,µ¥¼Û,ÊıÁ¿,½ğ¶î,Ô­¼Û,´ÙÏú±ê¼Ç)
+           Values(@SalesID,@GoodsCode,@Price,@GoodsCount,@GoodsCount*@Price,@Ô­¼Û,Case When @Ô­¼Û=@Price Then 0 Else 1 End)
   End
-  --æ›´æ–°é”€å”®ä¸»è¡¨ä¸­ä¼šå‘˜ä½™é¢ä¸ç§¯åˆ†ä¿¡æ¯
-  If @é”€å”®ç±»åˆ«='ä¼šå‘˜é”€å”®'
+  --¸üĞÂÏúÊÛÖ÷±íÖĞ»áÔ±Óà¶îÓë»ı·ÖĞÅÏ¢
+  If @ÏúÊÛÀà±ğ='»áÔ±ÏúÊÛ'
   Begin
-    Select @å½“å‰ä½™é¢=å¡ä½™é¢, @å½“å‰ç§¯åˆ†=ç§¯åˆ† From ä¼šå‘˜ where ç¼–å·=@VipCode
-    Update sales Set å½“å‰ä½™é¢=@å½“å‰ä½™é¢,å½“å‰ç§¯åˆ†=@å½“å‰ç§¯åˆ† Where ID=@SalesID
+    Select @µ±Ç°Óà¶î=¿¨Óà¶î, @µ±Ç°»ı·Ö=»ı·Ö From »áÔ± where ±àºÅ=@VipCode
+    Update sales Set µ±Ç°Óà¶î=@µ±Ç°Óà¶î,µ±Ç°»ı·Ö=@µ±Ç°»ı·Ö Where ID=@SalesID
   End
-  --æäº¤äº‹åŠ¡
+  --Ìá½»ÊÂÎñ
   Commit Transaction tran_Saleing
   If @@Error<>0
   Begin
@@ -894,177 +906,177 @@ End
 Go
 /*******************************************************************************
 Procedure SaleingVoucher
-åŠŸèƒ½:ç¤¼åˆ¸é”€å”®
-å‚æ•°:
-    --éƒ¨é—¨ä¿¡æ¯
-    @DepartmentCode:é”€å”®éƒ¨é—¨
-    @UserCode:æ“ä½œå‘˜
-    @CDate:åšè´¦æ—¥æœŸ
-    --å•†å“ä¿¡æ¯
-    @GoodsCode:å•†å“ç¼–å·
-    @Price:å”®ä»·
-    --æ”¯ä»˜ä¿¡æ¯
-    @PayByCash:ç°é‡‘æ”¯ä»˜é‡‘é¢
-    @PayByCard:ä¼šå‘˜å¡æ”¯ä»˜é‡‘é¢
-    @VipCode:ä¼šå‘˜ç¼–å·
-    --ç¤¼åˆ¸ä¿¡æ¯
-    @VoucherCode:ç¤¼åˆ¸ç¼–å·
-æ­¤è¿‡ç¨‹è°ƒç”¨Saleingå»ºç«‹ç›¸åº”çš„é”€å”®è®°å½•(åœ¨sales/sales_detailè¡¨),åœ¨[ç¤¼åˆ¸é”€å”®è¡¨]ç”Ÿæˆè®°å½•,æ›´æ”¹[ç¤¼åˆ¸è¡¨][çŠ¶æ€][æ˜¯å¦å›æ”¶]å­—æ®µ
-è¿”å›å€¼:
-  0:æˆåŠŸ
-  -1:ç”Ÿæˆé”€å”®å•å¤±è´¥
-  -100:åˆ¸å·æ— æ•ˆ
-  -101:åˆ¸å·²è¿‡æœŸ
-  -102:åˆ¸é”€å”®å¤±è´¥
-  -103:åˆ¸æœªå‡ºåº“
-  -105:åˆ¸å·²ç»é”€å”®
-  -106:åˆ¸å·²ä½¿ç”¨
+¹¦ÄÜ:ÀñÈ¯ÏúÊÛ
+²ÎÊı:
+    --²¿ÃÅĞÅÏ¢
+    @DepartmentCode:ÏúÊÛ²¿ÃÅ
+    @UserCode:²Ù×÷Ô±
+    @CDate:×öÕËÈÕÆÚ
+    --ÉÌÆ·ĞÅÏ¢
+    @GoodsCode:ÉÌÆ·±àºÅ
+    @Price:ÊÛ¼Û
+    --Ö§¸¶ĞÅÏ¢
+    @PayByCash:ÏÖ½ğÖ§¸¶½ğ¶î
+    @PayByCard:»áÔ±¿¨Ö§¸¶½ğ¶î
+    @VipCode:»áÔ±±àºÅ
+    --ÀñÈ¯ĞÅÏ¢
+    @VoucherCode:ÀñÈ¯±àºÅ
+´Ë¹ı³Ìµ÷ÓÃSaleing½¨Á¢ÏàÓ¦µÄÏúÊÛ¼ÇÂ¼(ÔÚsales/sales_detail±í),ÔÚ[ÀñÈ¯ÏúÊÛ±í]Éú³É¼ÇÂ¼,¸ü¸Ä[ÀñÈ¯±í][×´Ì¬][ÊÇ·ñ»ØÊÕ]×Ö¶Î
+·µ»ØÖµ:
+  0:³É¹¦
+  -1:Éú³ÉÏúÊÛµ¥Ê§°Ü
+  -100:È¯ºÅÎŞĞ§
+  -101:È¯ÒÑ¹ıÆÚ
+  -102:È¯ÏúÊÛÊ§°Ü
+  -103:È¯Î´³ö¿â
+  -105:È¯ÒÑ¾­ÏúÊÛ
+  -106:È¯ÒÑÊ¹ÓÃ
 */
 If Object_ID('[SaleingVoucher]','P') Is Not Null
   Drop Procedure [SaleingVoucher]
 Go
 Create Procedure [SaleingVoucher]
-       @DepartmentCode varchar(10)       ,--é”€å”®éƒ¨é—¨
-       @UserCode       varchar(10)       ,--åˆ¶å•äºº
-       @CDate          varchar(10)=''    ,--åšå¸æ—¥æœŸ
-       @GoodsCode      varchar(10)       ,--å•†å“ç¼–å·
-       @Price          money      =0     ,--å”®ä»·
-       @PayByCash      money      =0     ,--ç°é‡‘æ”¯ä»˜é‡‘é¢
-       @PayByCard      money      =0     ,--ä¼šå‘˜å¡æ”¯ä»˜é‡‘é¢
-       @VipCode        varchar(20)=''    ,--å¾€æ¥ç¼–å·
-       @VoucherCode    varchar(20)='0000',--åˆ¸ç¼–å·,ç¼–å·ä¸º0000çš„åˆ¸ä¸åšè®°å½•
-       @Ret_BillCode   varchar(20) Output--ç›¸åº”é”€å”®å•å·,è¿”å›å€¼
+       @DepartmentCode varchar(10)       ,--ÏúÊÛ²¿ÃÅ
+       @UserCode       varchar(10)       ,--ÖÆµ¥ÈË
+       @CDate          varchar(10)=''    ,--×öÕÊÈÕÆÚ
+       @GoodsCode      varchar(10)       ,--ÉÌÆ·±àºÅ
+       @Price          money      =0     ,--ÊÛ¼Û
+       @PayByCash      money      =0     ,--ÏÖ½ğÖ§¸¶½ğ¶î
+       @PayByCard      money      =0     ,--»áÔ±¿¨Ö§¸¶½ğ¶î
+       @VipCode        varchar(20)=''    ,--ÍùÀ´±àºÅ
+       @VoucherCode    varchar(20)='0000',--È¯±àºÅ,±àºÅÎª0000µÄÈ¯²»×ö¼ÇÂ¼
+       @Ret_BillCode   varchar(20) Output--ÏàÓ¦ÏúÊÛµ¥ºÅ,·µ»ØÖµ
 As
 Begin
   If @CDate='' Or @CDate Is Null 
-    Set @CDate = Convert(varchar(10), GetDate(), 120) --ä¸­åˆåäºŒç‚¹ä¹‹ååšå¸åˆ°åä¸€å¤©
+    Set @CDate = Convert(varchar(10), GetDate(), 120) --ÖĞÎçÊ®¶şµãÖ®ºó×öÕÊµ½ºóÒ»Ìì
   
   Declare @Ret int--,@Ret_BillCode varchar(20)
-  Declare @é¢é¢ money,@çŠ¶æ€ int,@æˆªæ­¢æ—¥æœŸ datetime
-  Select @é¢é¢=é¢é¢,@çŠ¶æ€=çŠ¶æ€+æ˜¯å¦å›æ”¶,@æˆªæ­¢æ—¥æœŸ=æˆªæ­¢æ—¥æœŸ From ç¤¼åˆ¸è¡¨ Where ç¼–å·=@VoucherCode
-  --æ£€æŸ¥:åˆ¸å¿…éœ€æ˜¯å·²é”€å”®å¹¶ä¸”æœªè¿‡æˆªæ­¢æ—¥æœŸçš„
+  Declare @Ãæ¶î money,@×´Ì¬ int,@½ØÖ¹ÈÕÆÚ datetime
+  Select @Ãæ¶î=Ãæ¶î,@×´Ì¬=×´Ì¬+ÊÇ·ñ»ØÊÕ,@½ØÖ¹ÈÕÆÚ=½ØÖ¹ÈÕÆÚ From ÀñÈ¯±í Where ±àºÅ=@VoucherCode
+  --¼ì²é:È¯±ØĞèÊÇÒÑÏúÊÛ²¢ÇÒÎ´¹ı½ØÖ¹ÈÕÆÚµÄ
   If @@RowCount = 0           Set @Ret = -100
-  Else If @æˆªæ­¢æ—¥æœŸ<getdate() Set @Ret = -101
-  Else If @çŠ¶æ€ <> 1          Set @Ret = -103 - @çŠ¶æ€ --(-103æœªå‡ºåº“/-105å·²é”€å”®/-106å·²ä½¿ç”¨)
+  Else If @½ØÖ¹ÈÕÆÚ<getdate() Set @Ret = -101
+  Else If @×´Ì¬ <> 1          Set @Ret = -103 - @×´Ì¬ --(-103Î´³ö¿â/-105ÒÑÏúÊÛ/-106ÒÑÊ¹ÓÃ)
   Else                        Set @Ret = 0
   If @Ret > 0 Return @Ret
-  --åœ¨äº‹åŠ¡ä¸­ä¿®æ”¹æ•°æ®
+  --ÔÚÊÂÎñÖĞĞŞ¸ÄÊı¾İ
   Begin Transaction tran_SaleingVoucher
-  --ç”Ÿæˆé”€å”®è®°å½•
+  --Éú³ÉÏúÊÛ¼ÇÂ¼
   Exec @Ret=Saleing @DepartmentCode,@UserCode,@CDate,@GoodsCode,1,@Price,@PayByCash,@PayByCard,@VipCode,@Ret_BillCode Output
   If @Ret<>0
   Begin
     Rollback Transaction tran_SaleingVoucher
-    Return @Ret --ç”Ÿæˆäº¤æ˜“å¤±è´¥
+    Return @Ret --Éú³É½»Ò×Ê§°Ü
   End
   If @VoucherCode<>'0000'
   Begin
-    --ç”Ÿæˆç¤¼åˆ¸é”€å”®è¡¨è®°å½•
-    Insert Into ç¤¼åˆ¸é”€å”®è¡¨(ç¼–å·,é¢é¢,é‡‘é¢,æ—¥æœŸ,éƒ¨é—¨ç¼–å·,å¾€æ¥ç¼–å·,é”€å”®æ—¶é—´,å•å·)
-           Values(@VoucherCode, @é¢é¢, @Price, @CDate, @DepartmentCode, @VipCode, getdate(), @Ret_BillCode)
-    --æ›´æ”¹ç¤¼åˆ¸è¡¨çŠ¶æ€
-    Update ç¤¼åˆ¸è¡¨ Set çŠ¶æ€=2,æ˜¯å¦å›æ”¶=0,å¾€æ¥ç¼–å·=@VipCode Where ç¼–å·=@VoucherCode
+    --Éú³ÉÀñÈ¯ÏúÊÛ±í¼ÇÂ¼
+    Insert Into ÀñÈ¯ÏúÊÛ±í(±àºÅ,Ãæ¶î,½ğ¶î,ÈÕÆÚ,²¿ÃÅ±àºÅ,ÍùÀ´±àºÅ,ÏúÊÛÊ±¼ä,µ¥ºÅ)
+           Values(@VoucherCode, @Ãæ¶î, @Price, @CDate, @DepartmentCode, @VipCode, getdate(), @Ret_BillCode)
+    --¸ü¸ÄÀñÈ¯±í×´Ì¬
+    Update ÀñÈ¯±í Set ×´Ì¬=2,ÊÇ·ñ»ØÊÕ=0,ÍùÀ´±àºÅ=@VipCode Where ±àºÅ=@VoucherCode
   End
-  --æäº¤äº‹åŠ¡
+  --Ìá½»ÊÂÎñ
   Commit Transaction tran_SaleingVoucher
   If @@ERROR<>0
   Begin
     Rollback Transaction tran_SaleingVoucher
-    Return -102 --äº‹åŠ¡å¤±è´¥
+    Return -102 --ÊÂÎñÊ§°Ü
   End
-  Return 0 --æˆåŠŸ
+  Return 0 --³É¹¦
 End
 Go
 /*******************************************************************************
 Procedure CreateOrder
-åŠŸèƒ½:ç”Ÿæˆä¸€å¼ è®¢å•
-å‚æ•°:
-    @å•å·:ä¸ºç©ºåˆ™æ–°å»ºå•,ä¸ä¸ºç©ºåˆ™ä¿®æ”¹å·²æœ‰å•
-    @éƒ¨é—¨ç¼–å·:é”€å”®éƒ¨é—¨
-    @åˆ¶å•äºº
-    å…¶å®ƒå‡ä¸ºå¯é€‰å‚æ•°
-è¿”å›å€¼:
-  è¿”å›å¯¹åº”çš„è®¢å•ID,å¦‚æœè¿”å›å€¼å°äº1åˆ™å¤±è´¥
+¹¦ÄÜ:Éú³ÉÒ»ÕÅ¶©µ¥
+²ÎÊı:
+    @µ¥ºÅ:Îª¿ÕÔòĞÂ½¨µ¥,²»Îª¿ÕÔòĞŞ¸ÄÒÑÓĞµ¥
+    @²¿ÃÅ±àºÅ:ÏúÊÛ²¿ÃÅ
+    @ÖÆµ¥ÈË
+    ÆäËü¾ùÎª¿ÉÑ¡²ÎÊı
+·µ»ØÖµ:
+  ·µ»Ø¶ÔÓ¦µÄ¶©µ¥ID,Èç¹û·µ»ØÖµĞ¡ÓÚ1ÔòÊ§°Ü
 */
 If Object_ID('[CreateOrder]','P') Is Not Null
   Drop Procedure [CreateOrder]
 Go
 Create Procedure [CreateOrder]
-       @å•å·       varchar(20)=NULL  OUTPUT,--ä¸ºç©ºåˆ™æ–°å»ºå•,ä¸ä¸ºç©ºåˆ™ä¿®æ”¹å·²æœ‰å•
-       @éƒ¨é—¨ç¼–å·   varchar(10)       ,--é”€å”®éƒ¨é—¨
-       @åˆ¶å•äºº     varchar(10)       ,--åˆ¶å•äºº
-       @å•†æˆ·è®¢å•å· varchar(32)=''    ,--å¤–éƒ¨è½¬å…¥çš„è®¢å•,å¯¹åº”çš„å¤–éƒ¨è®¢å•å·
-       @æ—¥æœŸ       varchar(10)=Null  ,--åšå¸æ—¥æœŸ
-       @ç”Ÿäº§å•ä½   varchar(10)=Null  ,--ç”Ÿäº§å•ä½
-       @å–è´§éƒ¨é—¨   varchar(10)=Null  ,--å–è´§éƒ¨é—¨
-       @å–è´§æ—¶é—´   datetime   =Null  ,--é¢„çº¦å–è´§æ—¶é—´
-       @å¾€æ¥ç¼–å·   varchar(20)=''    ,--ä¼šå‘˜å¡ç¼–å·
-       @è”ç³»æ–¹å¼   varchar(50)=Null  ,--è”ç³»æ–¹å¼
-       @å¤‡æ³¨       varchar(100)=Null ,--
-       @é€è´§åœ°å€   varchar(100)=Null ,--
-       @é‡‘é¢åˆè®¡   money      =0     ,--æœªæŠ˜æ‰£æ—¶åˆè®¡
-       @ä¼˜æƒ åˆè®¡   money      =0     ,--æŠ˜è®©éƒ¨åˆ†,é‡‘é¢åˆè®¡-ä¼˜æƒ åˆè®¡=å®æ”¶é‡‘é¢,å®æ”¶é‡‘é¢-è®©åˆ©-è®¢é‡‘-åˆ·å¡é‡‘é¢-ç¤¼åˆ¸=æ¬ æ¬¾
-       @è®©åˆ©       money      =0     ,--æ•´å•å…é™¤éƒ¨åˆ†(æŠ¹é›¶)
-       @è®¢é‡‘       money      =0     ,--ä¸‹å•æ—¶ç”¨ç°é‡‘æ”¯ä»˜çš„
-       @åˆ·å¡é‡‘é¢   money      =0     ,--ä¸‹å•æ—¶ç”¨ä¼šå‘˜å¡æ”¯ä»˜çš„
-       @ç¤¼åˆ¸       money      =0     ,--ä¸‹å•æ—¶ç”¨ç¤¼åˆ¸æŠµæ‰£çš„
-       @ç»“å•       bit        =Null  ,--æ˜¯å¦ç»“å•
-       @åºŸæ­¢       bit        =Null  ,--å¦‚æœåºŸæ­¢,@ç»“å•å°†å˜ä¸º0
-       @é”€å”®ç±»åˆ«   varchar(50)=''     --ç½‘ä¸Šå•†åŸç”Ÿæˆçš„è®¢å•ä¸º'å…¬ä¼—å·',ä¸å¯ä¿®æ”¹
+       @µ¥ºÅ       varchar(20)=NULL  OUTPUT,--Îª¿ÕÔòĞÂ½¨µ¥,²»Îª¿ÕÔòĞŞ¸ÄÒÑÓĞµ¥
+       @²¿ÃÅ±àºÅ   varchar(10)       ,--ÏúÊÛ²¿ÃÅ
+       @ÖÆµ¥ÈË     varchar(10)       ,--ÖÆµ¥ÈË
+       @ÉÌ»§¶©µ¥ºÅ varchar(32)=''    ,--Íâ²¿×ªÈëµÄ¶©µ¥,¶ÔÓ¦µÄÍâ²¿¶©µ¥ºÅ
+       @ÈÕÆÚ       varchar(10)=Null  ,--×öÕÊÈÕÆÚ
+       @Éú²úµ¥Î»   varchar(10)=Null  ,--Éú²úµ¥Î»
+       @È¡»õ²¿ÃÅ   varchar(10)=Null  ,--È¡»õ²¿ÃÅ
+       @È¡»õÊ±¼ä   datetime   =Null  ,--Ô¤Ô¼È¡»õÊ±¼ä
+       @ÍùÀ´±àºÅ   varchar(20)=''    ,--»áÔ±¿¨±àºÅ
+       @ÁªÏµ·½Ê½   varchar(50)=Null  ,--ÁªÏµ·½Ê½
+       @±¸×¢       varchar(100)=Null ,--
+       @ËÍ»õµØÖ·   varchar(100)=Null ,--
+       @½ğ¶îºÏ¼Æ   money      =0     ,--Î´ÕÛ¿ÛÊ±ºÏ¼Æ
+       @ÓÅ»İºÏ¼Æ   money      =0     ,--ÕÛÈÃ²¿·Ö,½ğ¶îºÏ¼Æ-ÓÅ»İºÏ¼Æ=ÊµÊÕ½ğ¶î,ÊµÊÕ½ğ¶î-ÈÃÀû-¶©½ğ-Ë¢¿¨½ğ¶î-ÀñÈ¯=Ç·¿î
+       @ÈÃÀû       money      =0     ,--Õûµ¥Ãâ³ı²¿·Ö(Ä¨Áã)
+       @¶©½ğ       money      =0     ,--ÏÂµ¥Ê±ÓÃÏÖ½ğÖ§¸¶µÄ
+       @Ë¢¿¨½ğ¶î   money      =0     ,--ÏÂµ¥Ê±ÓÃ»áÔ±¿¨Ö§¸¶µÄ
+       @ÀñÈ¯       money      =0     ,--ÏÂµ¥Ê±ÓÃÀñÈ¯µÖ¿ÛµÄ
+       @½áµ¥       bit        =Null  ,--ÊÇ·ñ½áµ¥
+       @·ÏÖ¹       bit        =Null  ,--Èç¹û·ÏÖ¹,@½áµ¥½«±äÎª0
+       @ÏúÊÛÀà±ğ   varchar(50)=''     --ÍøÉÏÉÌ³ÇÉú³ÉµÄ¶©µ¥Îª'¹«ÖÚºÅ',²»¿ÉĞŞ¸Ä
 As
 Begin
-  Declare @OrderID int--æˆåŠŸè¿”å›è®¢å•ID,å¤±è´¥è¿”å›0æˆ–è´Ÿå€¼
-  Declare @å•ä½åç§° varchar(50),@å½“å‰ä½™é¢ money,@å½“å‰ç§¯åˆ† money,@åº”æ”¶é‡‘é¢ money,@æ¬ æ¬¾ money,@äº¤è´§æ—¥æœŸ varchar(10)
-  Set @åºŸæ­¢=IsNull(@åºŸæ­¢,0)
-  If @åºŸæ­¢=1 Set @ç»“å•=0 Else Set @ç»“å•=IsNull(@ç»“å•,0)
-  If @ç”Ÿäº§å•ä½ Is Null Set @ç”Ÿäº§å•ä½=@éƒ¨é—¨ç¼–å·
-  If @å–è´§éƒ¨é—¨ Is Null Set @å–è´§éƒ¨é—¨=@ç”Ÿäº§å•ä½
-  If @å–è´§æ—¶é—´ Is Null Set @å–è´§æ—¶é—´=GetDate()
-  If @å¾€æ¥ç¼–å·=''
-    Set @å•ä½åç§°=''
+  Declare @OrderID int--³É¹¦·µ»Ø¶©µ¥ID,Ê§°Ü·µ»Ø0»ò¸ºÖµ
+  Declare @µ¥Î»Ãû³Æ varchar(50),@µ±Ç°Óà¶î money,@µ±Ç°»ı·Ö money,@Ó¦ÊÕ½ğ¶î money,@Ç·¿î money,@½»»õÈÕÆÚ varchar(10)
+  Set @·ÏÖ¹=IsNull(@·ÏÖ¹,0)
+  If @·ÏÖ¹=1 Set @½áµ¥=0 Else Set @½áµ¥=IsNull(@½áµ¥,0)
+  If @Éú²úµ¥Î» Is Null Set @Éú²úµ¥Î»=@²¿ÃÅ±àºÅ
+  If @È¡»õ²¿ÃÅ Is Null Set @È¡»õ²¿ÃÅ=@Éú²úµ¥Î»
+  If @È¡»õÊ±¼ä Is Null Set @È¡»õÊ±¼ä=GetDate()
+  If @ÍùÀ´±àºÅ=''
+    Set @µ¥Î»Ãû³Æ=''
   Else
-    Select @å•ä½åç§°=åç§° From ä¼šå‘˜ Where ç¼–å·=@å¾€æ¥ç¼–å·
-  Set @åº”æ”¶é‡‘é¢=@é‡‘é¢åˆè®¡-@ä¼˜æƒ åˆè®¡
-  Set @æ¬ æ¬¾= Case When @ç»“å•=1 Then 0 Else @åº”æ”¶é‡‘é¢-@è®©åˆ©-@è®¢é‡‘-@åˆ·å¡é‡‘é¢-@ç¤¼åˆ¸ End
-  Set @äº¤è´§æ—¥æœŸ=Case When @ç»“å•=1 Or @åºŸæ­¢=1 Then Convert(varchar(10),GetDate(),120) Else Null End
-  If @å•å· Is Null Or @å•å·=''
+    Select @µ¥Î»Ãû³Æ=Ãû³Æ From »áÔ± Where ±àºÅ=@ÍùÀ´±àºÅ
+  Set @Ó¦ÊÕ½ğ¶î=@½ğ¶îºÏ¼Æ-@ÓÅ»İºÏ¼Æ
+  Set @Ç·¿î= Case When @½áµ¥=1 Then 0 Else @Ó¦ÊÕ½ğ¶î-@ÈÃÀû-@¶©½ğ-@Ë¢¿¨½ğ¶î-@ÀñÈ¯ End
+  Set @½»»õÈÕÆÚ=Case When @½áµ¥=1 Or @·ÏÖ¹=1 Then Convert(varchar(10),GetDate(),120) Else Null End
+  If @µ¥ºÅ Is Null Or @µ¥ºÅ=''
   Begin
-    If @æ—¥æœŸ Is Null
-      Set @æ—¥æœŸ = Convert(varchar(10), GetDate(), 120)
+    If @ÈÕÆÚ Is Null
+      Set @ÈÕÆÚ = Convert(varchar(10), GetDate(), 120)
     Declare @BillMax int,@SalesID int
-    Exec getbillmax 'è®¢å•', @æ—¥æœŸ, @BillMax Output
-    Set @å•å· = Convert(varchar(6),Convert(datetime, @æ—¥æœŸ), 12) 
+    Exec getbillmax '¶©µ¥', @ÈÕÆÚ, @BillMax Output
+    Set @µ¥ºÅ = Convert(varchar(6),Convert(datetime, @ÈÕÆÚ), 12) 
               + '-' + Right('0000' + Convert(varchar(10), @BillMax), 5)
-    Insert orders(å•å·,æ—¥æœŸ,éƒ¨é—¨ç¼–å·,åˆ¶å•äºº,ç”Ÿäº§å•ä½,å–è´§éƒ¨é—¨,å–è´§æ—¶é—´,å•†æˆ·è®¢å•å·
-                 ,å¾€æ¥ç¼–å·,è”ç³»æ–¹å¼,å¤‡æ³¨,é€è´§åœ°å€,å•ä½åç§°,å½“å‰ä½™é¢,å½“å‰ç§¯åˆ†
-                 ,é‡‘é¢åˆè®¡,ä¼˜æƒ åˆè®¡,åº”æ”¶é‡‘é¢,è®©åˆ©,è®¢é‡‘,åˆ·å¡é‡‘é¢,ç¤¼åˆ¸,æ¬ æ¬¾
-                 ,ç»“å•,æ˜¯å¦åºŸæ­¢,äº¤è´§æ—¥æœŸ,é”€å”®ç±»åˆ«)
-           Values(@å•å·,@æ—¥æœŸ,@éƒ¨é—¨ç¼–å·,@åˆ¶å•äºº,@ç”Ÿäº§å•ä½,@å–è´§éƒ¨é—¨,@å–è´§æ—¶é—´,@å•†æˆ·è®¢å•å·
-                 ,@å¾€æ¥ç¼–å·,@è”ç³»æ–¹å¼,@å¤‡æ³¨,@é€è´§åœ°å€,@å•ä½åç§°,0,0
-                 ,@é‡‘é¢åˆè®¡,@ä¼˜æƒ åˆè®¡,@åº”æ”¶é‡‘é¢,@è®©åˆ©,@è®¢é‡‘,@åˆ·å¡é‡‘é¢,@ç¤¼åˆ¸,@æ¬ æ¬¾
-                 ,@ç»“å•,@åºŸæ­¢,@äº¤è´§æ—¥æœŸ,@é”€å”®ç±»åˆ«)
+    Insert orders(µ¥ºÅ,ÈÕÆÚ,²¿ÃÅ±àºÅ,ÖÆµ¥ÈË,Éú²úµ¥Î»,È¡»õ²¿ÃÅ,È¡»õÊ±¼ä,ÉÌ»§¶©µ¥ºÅ
+                 ,ÍùÀ´±àºÅ,ÁªÏµ·½Ê½,±¸×¢,ËÍ»õµØÖ·,µ¥Î»Ãû³Æ,µ±Ç°Óà¶î,µ±Ç°»ı·Ö
+                 ,½ğ¶îºÏ¼Æ,ÓÅ»İºÏ¼Æ,Ó¦ÊÕ½ğ¶î,ÈÃÀû,¶©½ğ,Ë¢¿¨½ğ¶î,ÀñÈ¯,Ç·¿î
+                 ,½áµ¥,ÊÇ·ñ·ÏÖ¹,½»»õÈÕÆÚ,ÏúÊÛÀà±ğ)
+           Values(@µ¥ºÅ,@ÈÕÆÚ,@²¿ÃÅ±àºÅ,@ÖÆµ¥ÈË,@Éú²úµ¥Î»,@È¡»õ²¿ÃÅ,@È¡»õÊ±¼ä,@ÉÌ»§¶©µ¥ºÅ
+                 ,@ÍùÀ´±àºÅ,@ÁªÏµ·½Ê½,@±¸×¢,@ËÍ»õµØÖ·,@µ¥Î»Ãû³Æ,0,0
+                 ,@½ğ¶îºÏ¼Æ,@ÓÅ»İºÏ¼Æ,@Ó¦ÊÕ½ğ¶î,@ÈÃÀû,@¶©½ğ,@Ë¢¿¨½ğ¶î,@ÀñÈ¯,@Ç·¿î
+                 ,@½áµ¥,@·ÏÖ¹,@½»»õÈÕÆÚ,@ÏúÊÛÀà±ğ)
     Select @OrderID=SCOPE_IDENTITY()
-    If @å¾€æ¥ç¼–å· <> ''
+    If @ÍùÀ´±àºÅ <> ''
     Begin
-      Select @å½“å‰ä½™é¢=å¡ä½™é¢, @å½“å‰ç§¯åˆ†=ç§¯åˆ† From ä¼šå‘˜ where ç¼–å·=@å¾€æ¥ç¼–å·
-      Update orders Set å½“å‰ä½™é¢=@å½“å‰ä½™é¢,å½“å‰ç§¯åˆ†=@å½“å‰ç§¯åˆ† Where ID=@OrderID
+      Select @µ±Ç°Óà¶î=¿¨Óà¶î, @µ±Ç°»ı·Ö=»ı·Ö From »áÔ± where ±àºÅ=@ÍùÀ´±àºÅ
+      Update orders Set µ±Ç°Óà¶î=@µ±Ç°Óà¶î,µ±Ç°»ı·Ö=@µ±Ç°»ı·Ö Where ID=@OrderID
     End
   End
   Else
   Begin
-    --è®¢å•åªèƒ½ä¿®æ”¹éƒ¨åˆ†å­—æ®µ
-    Select @OrderID=id From orders Where å•å·=@å•å·
+    --¶©µ¥Ö»ÄÜĞŞ¸Ä²¿·Ö×Ö¶Î
+    Select @OrderID=id From orders Where µ¥ºÅ=@µ¥ºÅ
     Update orders 
-       Set è”ç³»æ–¹å¼=IsNull(@è”ç³»æ–¹å¼,è”ç³»æ–¹å¼)
-          ,å–è´§æ—¶é—´=IsNull(@å–è´§æ—¶é—´,å–è´§æ—¶é—´)
-          ,ç”Ÿäº§å•ä½=IsNull(@ç”Ÿäº§å•ä½,ç”Ÿäº§å•ä½)
-          ,å¤‡æ³¨    =IsNull(@å¤‡æ³¨,å¤‡æ³¨)
-          ,é€è´§åœ°å€=IsNull(@é€è´§åœ°å€,é€è´§åœ°å€)
-          ,å–è´§éƒ¨é—¨=IsNull(@å–è´§éƒ¨é—¨,å–è´§éƒ¨é—¨)
-          ,äº¤è´§æ—¥æœŸ=IsNull(@äº¤è´§æ—¥æœŸ,äº¤è´§æ—¥æœŸ)
-          ,ç»“å•    =IsNull(@ç»“å•,ç»“å•)
-          ,æ˜¯å¦åºŸæ­¢=IsNull(@åºŸæ­¢,æ˜¯å¦åºŸæ­¢)
-          ,æ¬ æ¬¾    =IsNull(@æ¬ æ¬¾,æ¬ æ¬¾)
+       Set ÁªÏµ·½Ê½=IsNull(@ÁªÏµ·½Ê½,ÁªÏµ·½Ê½)
+          ,È¡»õÊ±¼ä=IsNull(@È¡»õÊ±¼ä,È¡»õÊ±¼ä)
+          ,Éú²úµ¥Î»=IsNull(@Éú²úµ¥Î»,Éú²úµ¥Î»)
+          ,±¸×¢    =IsNull(@±¸×¢,±¸×¢)
+          ,ËÍ»õµØÖ·=IsNull(@ËÍ»õµØÖ·,ËÍ»õµØÖ·)
+          ,È¡»õ²¿ÃÅ=IsNull(@È¡»õ²¿ÃÅ,È¡»õ²¿ÃÅ)
+          ,½»»õÈÕÆÚ=IsNull(@½»»õÈÕÆÚ,½»»õÈÕÆÚ)
+          ,½áµ¥    =IsNull(@½áµ¥,½áµ¥)
+          ,ÊÇ·ñ·ÏÖ¹=IsNull(@·ÏÖ¹,ÊÇ·ñ·ÏÖ¹)
+          ,Ç·¿î    =IsNull(@Ç·¿î,Ç·¿î)
      Where id=@OrderID
   End
   Return @OrderID
@@ -1072,108 +1084,108 @@ End
 Go
 /*******************************************************************************
 Procedure AddOrderItem
-åŠŸèƒ½:ç”Ÿæˆä¸€æ¡è®¢å•æ˜ç»†
+¹¦ÄÜ:Éú³ÉÒ»Ìõ¶©µ¥Ã÷Ï¸
 */
 If Object_ID('[AddOrderItem]','P') Is Not Null
   Drop Procedure [AddOrderItem]
 Go
 Create Procedure [AddOrderItem]
-       @PID         int        ,--è®¢å•ID
-       @GoodsCode   varchar(10),--å•†å“ç¼–å·
-       @GoodsCount  int        ,--å•†å“æ•°é‡
-       @Price       money      ,--å•ä»·,æœªæŠ˜æ‰£çš„å•ä»·
-       @TotalAmount money       --é‡‘é¢,æŠ˜æ‰£åæ€»é‡‘é¢
+       @PID         int        ,--¶©µ¥ID
+       @GoodsCode   varchar(10),--ÉÌÆ·±àºÅ
+       @GoodsCount  int        ,--ÉÌÆ·ÊıÁ¿
+       @Price       money      ,--µ¥¼Û,Î´ÕÛ¿ÛµÄµ¥¼Û
+       @TotalAmount money       --½ğ¶î,ÕÛ¿Ûºó×Ü½ğ¶î
 As       
 Begin
-  Declare @åç§° varchar(30),@è§„æ ¼ varchar(20),@æŠ˜æ‰£ money,@ä¼˜æƒ é‡‘é¢ money
-  Select @åç§°=åç§°,@è§„æ ¼=è§„æ ¼ From goods Where æ˜¯å¦é”€å”®=1 And ç¼–å·=@GoodsCode
-  Set @æŠ˜æ‰£ = @TotalAmount * 100 / @Price / @GoodsCount
-  Set @ä¼˜æƒ é‡‘é¢ = @Price * @GoodsCount - @TotalAmount
-  Insert Into orders_detail(è®¢å•ID,ç¼–å·,åç§°,è§„æ ¼,å•ä»·,æŠ˜æ‰£,æ•°é‡,é‡‘é¢,ä¼˜æƒ é‡‘é¢,ç»“å•)
-         Values(@PID,@GoodsCode,@åç§°,@è§„æ ¼,@Price,@æŠ˜æ‰£,@GoodsCount,@TotalAmount,@ä¼˜æƒ é‡‘é¢,0)
+  Declare @Ãû³Æ varchar(30),@¹æ¸ñ varchar(20),@ÕÛ¿Û money,@ÓÅ»İ½ğ¶î money
+  Select @Ãû³Æ=Ãû³Æ,@¹æ¸ñ=¹æ¸ñ From goods Where ÊÇ·ñÏúÊÛ=1 And ±àºÅ=@GoodsCode
+  Set @ÕÛ¿Û = @TotalAmount * 100 / @Price / @GoodsCount
+  Set @ÓÅ»İ½ğ¶î = @Price * @GoodsCount - @TotalAmount
+  Insert Into orders_detail(¶©µ¥ID,±àºÅ,Ãû³Æ,¹æ¸ñ,µ¥¼Û,ÕÛ¿Û,ÊıÁ¿,½ğ¶î,ÓÅ»İ½ğ¶î,½áµ¥)
+         Values(@PID,@GoodsCode,@Ãû³Æ,@¹æ¸ñ,@Price,@ÕÛ¿Û,@GoodsCount,@TotalAmount,@ÓÅ»İ½ğ¶î,0)
   If @@Error<>0 Return -1
   Return 0
 End
 Go
 /*******************************************************************************
 Procedure GetOrdersList
-åŠŸèƒ½:å¾—åˆ°è®¢å•åˆ—è¡¨
-å‚æ•°:
-     @Department:éƒ¨é—¨ç¼–å·
-     @StartDate:å¼€å§‹æ—¥æœŸ
-     @EndDate:ç»“æŸæ—¥æœŸ
-     @OrderCode:è®¢å•å·
-     @VipCode:ä¼šå‘˜ç¼–å·
-è¿”å›ç›¸åº”çš„è®¢å•åˆ—è¡¨
-å‚æ•°ä¸­:éƒ¨é—¨,å•å·,ä¼šå‘˜ä¸‰è€…äº’æ–¥,ä¼˜å…ˆçº§:å•å·>éƒ¨é—¨>ä¼šå‘˜
-       æ—¥æœŸæœ‰é»˜è®¤å€¼
+¹¦ÄÜ:µÃµ½¶©µ¥ÁĞ±í
+²ÎÊı:
+     @Department:²¿ÃÅ±àºÅ
+     @StartDate:¿ªÊ¼ÈÕÆÚ
+     @EndDate:½áÊøÈÕÆÚ
+     @OrderCode:¶©µ¥ºÅ
+     @VipCode:»áÔ±±àºÅ
+·µ»ØÏàÓ¦µÄ¶©µ¥ÁĞ±í
+²ÎÊıÖĞ:²¿ÃÅ,µ¥ºÅ,»áÔ±ÈıÕß»¥³â,ÓÅÏÈ¼¶:µ¥ºÅ>²¿ÃÅ>»áÔ±
+       ÈÕÆÚÓĞÄ¬ÈÏÖµ
 */
 If Object_ID('[GetOrdersList]','P') Is Not Null 
   Drop Procedure [GetOrdersList]
 Go
 Create Procedure [GetOrdersList]
-       @Department varchar(10)             ,--éƒ¨é—¨ç¼–å·
-       @StartDate  varchar(10)='1900-01-01',--æ—¥æœŸèŒƒå›´:å¼€å§‹æ—¥æœŸ
-       @EndDate    varchar(10)=''          ,--æ—¥æœŸèŒƒå›´:ç»“æŸæ—¥æœŸ
-       @OrderCode  varchar(20)=''          ,--è®¢å•å·
-       @VipCode    varchar(20)=''          ,--ä¼šå‘˜ç¼–å·
-       @authcode   varchar(50)=''           --å¯»æ‰¾æ­¤ä¼šå‘˜çš„ä¸‹çº§ä¼šå‘˜ç›¸å…³è®¢å•,ä»…åœ¨@VipCode=''æ—¶æœ‰æ•ˆ
+       @Department varchar(10)             ,--²¿ÃÅ±àºÅ
+       @StartDate  varchar(10)='1900-01-01',--ÈÕÆÚ·¶Î§:¿ªÊ¼ÈÕÆÚ
+       @EndDate    varchar(10)=''          ,--ÈÕÆÚ·¶Î§:½áÊøÈÕÆÚ
+       @OrderCode  varchar(20)=''          ,--¶©µ¥ºÅ
+       @VipCode    varchar(20)=''          ,--»áÔ±±àºÅ
+       @authcode   varchar(50)=''           --Ñ°ÕÒ´Ë»áÔ±µÄÏÂ¼¶»áÔ±Ïà¹Ø¶©µ¥,½öÔÚ@VipCode=''Ê±ÓĞĞ§
 As
 Begin
   If IsNull(@StartDate,'')='' Set @StartDate='1900-01-01'
   If IsNull(@EndDate,'')='' Set @EndDate=convert(varchar(10),getdate(),120)
   If @OrderCode<>''
-    Begin--æŸ¥è¯¢æŒ‡å®šå•å·çš„è®¢å•,ä¸å—æ—¥æœŸé™åˆ¶
+    Begin--²éÑ¯Ö¸¶¨µ¥ºÅµÄ¶©µ¥,²»ÊÜÈÕÆÚÏŞÖÆ
       Select * ,0 As Hierarchy From orders 
-      Where å•å·=@OrderCode
+      Where µ¥ºÅ=@OrderCode
     End
   Else If @Department Is Null
-    Begin--æŸ¥è¯¢å…¬ä¼—å·äº§ç”Ÿçš„è®¢å•
+    Begin--²éÑ¯¹«ÖÚºÅ²úÉúµÄ¶©µ¥
       Select * ,0 As Hierarchy From orders 
-      Where é”€å”®ç±»åˆ«='å…¬ä¼—å·' And æ—¥æœŸ Between @StartDate And @EndDate
+      Where ÏúÊÛÀà±ğ='¹«ÖÚºÅ' And ÈÕÆÚ Between @StartDate And @EndDate
     End
   Else If @Department <> ''
-    Begin--æŸ¥è¯¢æŒ‡å®šéƒ¨é—¨åˆ¶å•çš„è®¢å•
+    Begin--²éÑ¯Ö¸¶¨²¿ÃÅÖÆµ¥µÄ¶©µ¥
       Select * ,0 As Hierarchy From orders 
-      Where éƒ¨é—¨ç¼–å·=@Department And æ—¥æœŸ Between @StartDate And @EndDate
+      Where ²¿ÃÅ±àºÅ=@Department And ÈÕÆÚ Between @StartDate And @EndDate
     End
   Else If @VipCode<>''
-    Begin--æŸ¥è¯¢æŒ‡å®šä¼šå‘˜çš„è®¢å•
+    Begin--²éÑ¯Ö¸¶¨»áÔ±µÄ¶©µ¥
       Select * ,0 As Hierarchy From orders
-      Where æ—¥æœŸ Between @StartDate And @EndDate And å¾€æ¥ç¼–å·=@VipCode
+      Where ÈÕÆÚ Between @StartDate And @EndDate And ÍùÀ´±àºÅ=@VipCode
     End
   Else If @authcode<>''
-    Begin--æŸ¥è¯¢æŒ‡å®šä¼šå‘˜çš„ä¸‹çº§ä¼šå‘˜åˆ†é”€è®¢å•
-      --å°†éœ€è¦è¿›è¡Œè¿‡æ»¤çš„ä¼šå‘˜ç”Ÿæˆåˆ°è¡¨å˜é‡@VipCodesä¸­
+    Begin--²éÑ¯Ö¸¶¨»áÔ±µÄÏÂ¼¶»áÔ±·ÖÏú¶©µ¥
+      --½«ĞèÒª½øĞĞ¹ıÂËµÄ»áÔ±Éú³Éµ½±í±äÁ¿@VipCodesÖĞ
       Declare @VipCodes table(VipCode varchar(20),[Level] int)
-      Declare @tmp Table(id int,[level] int)--è¿™æ˜¯ä¸¤å±‚åˆ†é”€çš„web_user_id
-      --ç¬¬ä¸€å±‚åˆ†é”€è€…
+      Declare @tmp Table(id int,[level] int)--ÕâÊÇÁ½²ã·ÖÏúµÄweb_user_id
+      --µÚÒ»²ã·ÖÏúÕß
       Insert Into @tmp
              Select invited_id,1 
              From web_user_invited_link 
              Where [user_id] In (Select [user_id] 
                                  From web_oauth_login 
                                  Where oauth_id=@authcode)
-      --ç¬¬äºŒå±‚åˆ†é”€è€…
+      --µÚ¶ş²ã·ÖÏúÕß
       Insert Into @tmp 
              Select invited_id,2 
              From web_user_invited_link 
              Where [user_id] In (Select id From @tmp)
-      --å¾—åˆ°å¯¹åº”çš„ä¼šå‘˜ç¼–å·
+      --µÃµ½¶ÔÓ¦µÄ»áÔ±±àºÅ
       Insert Into @VipCodes 
-             Select d.ç¼–å·,a.[level]
+             Select d.±àºÅ,a.[level]
              From      @tmp                As a
              Left Join dbo.web_oauth_login As b On A.id      =b.[user_id]
-             Left Join ä¼šå‘˜èº«ä»½            As c On b.oauth_id=c.å¤–é”®
-             Left Join ä¼šå‘˜                As d On c.ä¼šå‘˜ID  =d.ID
+             Left Join »áÔ±Éí·İ            As c On b.oauth_id=c.Íâ¼ü
+             Left Join »áÔ±                As d On c.»áÔ±ID  =d.ID
 
       Select a.* ,b.[Level] As Hierarchy From orders As A
-      Inner Join @VipCodes As b On a.å¾€æ¥ç¼–å·=b.VipCode
-      Where æ—¥æœŸ Between @StartDate And @EndDate 
-        And å•å·=@OrderCode 
+      Inner Join @VipCodes As b On a.ÍùÀ´±àºÅ=b.VipCode
+      Where ÈÕÆÚ Between @StartDate And @EndDate 
+        And µ¥ºÅ=@OrderCode 
     End
   Else
-    Begin--æ²¡æœ‰ç»“å®šé™åˆ¶æ¡ä»¶
+    Begin--Ã»ÓĞ½á¶¨ÏŞÖÆÌõ¼ş
       Select Top 0 *,0 As Hierarchy From orders
     End
   If @@Error<>0
@@ -1183,9 +1195,9 @@ End
 Go
 /*******************************************************************************
 Procedure GetOrdersDetail
-åŠŸèƒ½:è·å–è®¢å•æ˜ç»†
-å‚æ•°:
-     @OrderID:è®¢å•ID
+¹¦ÄÜ:»ñÈ¡¶©µ¥Ã÷Ï¸
+²ÎÊı:
+     @OrderID:¶©µ¥ID
 */
 If Object_ID('[GetOrdersDetail]','P') Is Not Null
   Drop Procedure [GetOrdersDetail]
@@ -1194,60 +1206,60 @@ Create Procedure [GetOrdersDetail]
        @OrderID int
 As
 Begin
-  Select * From orders_detail Where è®¢å•ID=@OrderID
+  Select * From orders_detail Where ¶©µ¥ID=@OrderID
   Return 0
 End
 Go
 /*******************************************************************************
 Procedure RecoverVoucher
-åŠŸèƒ½:ç¤¼åˆ¸å›æ”¶
-å‚æ•°:
-     @Department:éƒ¨é—¨
-     @Source:æ¥æº,0ä¸ºé›¶å”®,1ä¸ºè®¢å•
-     @RecordID:å•æ®ID:ç›¸åº”é›¶å”®å•/è®¢å•çš„ä¸»è®°å½•ID
-     @VoucherCode:ç¤¼åˆ¸ç¼–å·
-     @Amount:é‡‘é¢:æŠµæ‰£é‡‘é¢
-     @Remark:å¤‡æ³¨
-è¿”å›å€¼:
-       0:æˆåŠŸ
-       -1:åˆ¸ç¼–å·æ— æ•ˆ
-       -2:åˆ¸æœªå‘æ”¾
-       -3:åˆ¸å·²å›æ”¶
-       -4:åˆ¸å·²è¿‡æœŸ
-       -5:å†™å›æ”¶è®°å½•å¤±è´¥
+¹¦ÄÜ:ÀñÈ¯»ØÊÕ
+²ÎÊı:
+     @Department:²¿ÃÅ
+     @Source:À´Ô´,0ÎªÁãÊÛ,1Îª¶©µ¥
+     @RecordID:µ¥¾İID:ÏàÓ¦ÁãÊÛµ¥/¶©µ¥µÄÖ÷¼ÇÂ¼ID
+     @VoucherCode:ÀñÈ¯±àºÅ
+     @Amount:½ğ¶î:µÖ¿Û½ğ¶î
+     @Remark:±¸×¢
+·µ»ØÖµ:
+       0:³É¹¦
+       -1:È¯±àºÅÎŞĞ§
+       -2:È¯Î´·¢·Å
+       -3:È¯ÒÑ»ØÊÕ
+       -4:È¯ÒÑ¹ıÆÚ
+       -5:Ğ´»ØÊÕ¼ÇÂ¼Ê§°Ü
 */
 If Object_ID('[RecoverVoucher]','P') Is Not Null
   Drop Procedure [RecoverVoucher]
 Go
 Create Procedure [RecoverVoucher]
-       @Department  varchar(10),--éƒ¨é—¨ç¼–å·
-       @Source      int        ,--æ¥æº,0ä¸ºé›¶å”®,1ä¸ºè®¢å•
-       @RecordID    int        ,--å•æ®ID:ç›¸åº”é›¶å”®å•/è®¢å•çš„ä¸»è®°å½•ID
-       @VoucherCode varchar(20),--ç¤¼åˆ¸ç¼–å·
-       @Amount      money      =0,--é‡‘é¢:æŠµæ‰£é‡‘é¢
-       @Remark      varchar(50)='' --å¤‡æ³¨
+       @Department  varchar(10),--²¿ÃÅ±àºÅ
+       @Source      int        ,--À´Ô´,0ÎªÁãÊÛ,1Îª¶©µ¥
+       @RecordID    int        ,--µ¥¾İID:ÏàÓ¦ÁãÊÛµ¥/¶©µ¥µÄÖ÷¼ÇÂ¼ID
+       @VoucherCode varchar(20),--ÀñÈ¯±àºÅ
+       @Amount      money      =0,--½ğ¶î:µÖ¿Û½ğ¶î
+       @Remark      varchar(50)='' --±¸×¢
 As
 Begin
-  --æ£€æŸ¥;ç¤¼åˆ¸çŠ¶æ€=2,æ˜¯å¦å›æ”¶=0,æˆªæ­¢æ—¥æœŸ<getdate(),@Amount<=é¢é¢
+  --¼ì²é;ÀñÈ¯×´Ì¬=2,ÊÇ·ñ»ØÊÕ=0,½ØÖ¹ÈÕÆÚ<getdate(),@Amount<=Ãæ¶î
   Declare @Return int,@msg varchar(100)
-  Declare @çŠ¶æ€ int,@æ˜¯å¦å›æ”¶ bit,@æˆªæ­¢æ—¥æœŸ datetime,@é¢é¢ money
-  Select @çŠ¶æ€=çŠ¶æ€,@æ˜¯å¦å›æ”¶=æ˜¯å¦å›æ”¶,@æˆªæ­¢æ—¥æœŸ=æˆªæ­¢æ—¥æœŸ,@é¢é¢=é¢é¢ From ç¤¼åˆ¸è¡¨ Where ç¼–å·=@VoucherCode
-  If @@RowCount < 1 Return -1 --åˆ¸ç¼–å·æ— æ•ˆ
-  Else If @çŠ¶æ€ <> 2 Return -2  --ä¸æ˜¯å·²å‘æ”¾çš„åˆ¸
-  Else If @æ˜¯å¦å›æ”¶ = 1 Return -3 --åˆ¸å·²å›æ”¶
-  Else If @æˆªæ­¢æ—¥æœŸ < GetDate() Return -4 --åˆ¸å·²è¿‡æœ‰æ•ˆæœŸ
-  If @Amount=0 Set @Amount=@é¢é¢
-  Insert Into ç¤¼åˆ¸å›æ”¶è¡¨(éƒ¨é—¨ç¼–å·,æ¥æº,PID,ç¼–å·,é¢é¢,é‡‘é¢,å¤‡æ³¨)
-         Values(@Department,@Source,@RecordID,@VoucherCode,@é¢é¢,@Amount,@Remark)
+  Declare @×´Ì¬ int,@ÊÇ·ñ»ØÊÕ bit,@½ØÖ¹ÈÕÆÚ datetime,@Ãæ¶î money
+  Select @×´Ì¬=×´Ì¬,@ÊÇ·ñ»ØÊÕ=ÊÇ·ñ»ØÊÕ,@½ØÖ¹ÈÕÆÚ=½ØÖ¹ÈÕÆÚ,@Ãæ¶î=Ãæ¶î From ÀñÈ¯±í Where ±àºÅ=@VoucherCode
+  If @@RowCount < 1 Return -1 --È¯±àºÅÎŞĞ§
+  Else If @×´Ì¬ <> 2 Return -2  --²»ÊÇÒÑ·¢·ÅµÄÈ¯
+  Else If @ÊÇ·ñ»ØÊÕ = 1 Return -3 --È¯ÒÑ»ØÊÕ
+  Else If @½ØÖ¹ÈÕÆÚ < GetDate() Return -4 --È¯ÒÑ¹ıÓĞĞ§ÆÚ
+  If @Amount=0 Set @Amount=@Ãæ¶î
+  Insert Into ÀñÈ¯»ØÊÕ±í(²¿ÃÅ±àºÅ,À´Ô´,PID,±àºÅ,Ãæ¶î,½ğ¶î,±¸×¢)
+         Values(@Department,@Source,@RecordID,@VoucherCode,@Ãæ¶î,@Amount,@Remark)
   If @@Error<>0 Return -5
   Return 0
 End
 Go
 /*******************************************************************************
 Procedure QueryFormMObject
-åŠŸèƒ½:æ‰§è¡Œmobile_objectä¸­çš„æŸ¥è¯¢
-å‚æ•°:@QueryNameæ˜¯æŸ¥è¯¢å,å¯¹åº”nameå­—æ®µ
-è¿”å›å€¼:æˆåŠŸè¿”å›0,å¤±è´¥è¿”å›-1
+¹¦ÄÜ:Ö´ĞĞmobile_objectÖĞµÄ²éÑ¯
+²ÎÊı:@QueryNameÊÇ²éÑ¯Ãû,¶ÔÓ¦name×Ö¶Î
+·µ»ØÖµ:³É¹¦·µ»Ø0,Ê§°Ü·µ»Ø-1
 */
 If Object_ID('[QueryFormMObject]','P') Is Not Null
   Drop Procedure [QueryFormMObject]
@@ -1265,84 +1277,163 @@ Begin
 End
 Go
 /*******************************************************************************
-Author:   <Author,,Name>
+Author:		<Author,,Name>
 Create date: 2017-06-15
-Description:ä¸ºè€æ¿åŠ©æ‰‹è¿”å›ç»Ÿè®¡æ•°æ®
-ç”¨æ³•
-   exec Get_BossTotal [éƒ¨é—¨],[è€æ¿],[æ—¥æœŸ]
-  éƒ¨é—¨å¯ä¸ºç©ºæˆ–null,æˆ–éƒ¨é—¨å·ï¼Œè€æ¿ å¯ä¸ºç©ºæˆ–null,æˆ–è€æ¿å·ï¼Œæ—¥æœŸå¯ä¸ºç©ºï¼Œæˆ–æ—¥æœŸ
-  ä¾‹å¦‚ 
-  --exec  Get_BossTotal        --å…¨éƒ¨æ±‡æ€»        ä¸å¸¦å‚æ•°åˆ™æ±‡æ€»å…¨éƒ¨
-  --exec  Get_BossTotal  '001'     --å•åº—æ±‡æ€»        ç¬¬ä¸€ä¸ªå‚æ•°å¯¹åº” è¡¨ web_napa_stores  ä¸­hs_code å­—æ®µ
-  --exec  Get_BossTotal  '',1       --æŒ‡å®šè€æ¿åº—æ±‡æ€»  ç¬¬äºŒä¸ªå‚æ•°å¯¹åº” è¡¨ web_napa_stores  ä¸­ID å­—æ®µ
-  --exec  Get_BossTotal  '','',â€˜2017-06-09â€™ --ç¬¬ä¸‰ä¸ªå‚æ•°ä¸æŒ‡å®šï¼Œå½“å‰æ—¥æœŸä¸ºä»Šå¤©ï¼Œä¹Ÿå¯æŒ‡å®šæŸä¸ªæ—¥æœŸä¸ºä»Šå¤©ï¼Œä¾‹å¦‚æ˜¨å¤©ä¸ºä»Šå¤©
+Description:ÎªÀÏ°åÖúÊÖ·µ»ØÍ³¼ÆÊı¾İ
+ÓÃ·¨
+   exec Get_BossTotal [²¿ÃÅ],[ÀÏ°å],[ÈÕÆÚ]
+  ²¿ÃÅ¿ÉÎª¿Õ»ònull,»ò²¿ÃÅºÅ£¬ÀÏ°å ¿ÉÎª¿Õ»ònull,»òÀÏ°åºÅ£¬ÈÕÆÚ¿ÉÎª¿Õ£¬»òÈÕÆÚ
+  ÀıÈç 
+  --exec  Get_BossTotal			   --È«²¿»ã×Ü        ²»´ø²ÎÊıÔò»ã×ÜÈ«²¿
+  --exec  Get_BossTotal  '001'	   --µ¥µê»ã×Ü        µÚÒ»¸ö²ÎÊı¶ÔÓ¦ ±í web_napa_stores  ÖĞhs_code ×Ö¶Î
+  --exec  Get_BossTotal  '',1       --Ö¸¶¨ÀÏ°åµê»ã×Ü  µÚ¶ş¸ö²ÎÊı¶ÔÓ¦ ±í web_napa_stores  ÖĞID ×Ö¶Î
+  --exec  Get_BossTotal  '','',¡®2017-06-09¡¯ --µÚÈı¸ö²ÎÊı²»Ö¸¶¨£¬µ±Ç°ÈÕÆÚÎª½ñÌì£¬Ò²¿ÉÖ¸¶¨Ä³¸öÈÕÆÚÎª½ñÌì£¬ÀıÈç×òÌìÎª½ñÌì
 
 */
 If Object_ID('[Get_BossTotal]','P') Is Not Null 
   Drop Procedure [Get_BossTotal]
 Go
 Create Procedure [Get_BossTotal]
-       @Department varchar(10)=null,--é€‰æ‹©åº—é“º å‚æ•°å¯¹åº” è¡¨ web_napa_stores  ä¸­hs_code å­—
-       @Boss       int        =null,--é€‰æ‹©è€æ¿ å‚æ•°å¯¹åº” è¡¨ web_napa_stores  ä¸­ID å­—æ®µ
-       @InDate     datetime   =null--ä»Šå¤©æ‰€æŒ‡æ—¥æœŸï¼Œä¸æŒ‡å®šç³»ç»Ÿé»˜è®¤å½“å‰æ—¥æœŸ
+       @Department varchar(10)=null,--Ñ¡ÔñµêÆÌ ²ÎÊı¶ÔÓ¦ ±í web_napa_stores  ÖĞhs_code ×Ö
+       @Boss       int        =null,--Ñ¡ÔñÀÏ°å ²ÎÊı¶ÔÓ¦ ±í web_napa_stores  ÖĞID ×Ö¶Î
+       @InDate     datetime		=null--½ñÌìËùÖ¸ÈÕÆÚ£¬²»Ö¸¶¨ÏµÍ³Ä¬ÈÏµ±Ç°ÈÕÆÚ
 AS
 -- =============================================
 -- =============================================
 Begin
-  If @InDate Is null Set @InDate=getdate()
-  Declare @Wsc varchar(10),@date0 varchar(10),@date1 varchar(10)
-  Declare @Dates    Table(cName varchar(10),Date varchar(10),iIndex int)
-  Declare @Depart   Table(Department varchar(10))
-  Declare @TmpTable Table(æ—¥æœŸ varchar(10),å¾€æ¥ç¼–å· varchar(20),åº”æ”¶é‡‘é¢ money)
-  Declare @TmpOut   Table(Caption varchar(20),Value money,ValueType varchar(10),Short int)
+ 
+    if object_id('tempdb..#tmp_Get_BossTotal') is not null  
+    drop table #tmp_Get_BossTotal
+	--declare @Department varchar(10),@Boss varchar(10)
+	Declare  @date datetime
+	--select  @date = convert(datetime,convert(varchar(10),getdate(),120),120) 
+		
+	Declare @date0 varchar(10),@date1 varchar(10)
+	Declare @Depart table(Department varchar(10))
+	Declare @Wsc table(Wsc varchar(10))
+	if @InDate is null 
+	   select @date=convert(varchar(10),getdate(),120) 
+	  else
+	   select @date=convert(varchar(10),@InDate,120) 	
+	select  @date0= convert(varchar(10),@date,120)   --½ñÈÕ
+	select  @date1= convert(varchar(10),@date-1,120)  --×òÈÕ
+	  
 
-  Select @Wsc=ç¼–å· From pub_user where å§“å ='å…¬ä¼—å·'
-  Select @date0=Convert(varchar(10),@InDate  ,120),@date1=Convert(varchar(10),@InDate-1,120)
-  Insert into @Dates Values('ä»Šæ—¥',@date0,1)
-  Insert into @Dates Values('æ˜¨æ—¥',@date1,2)
-  If IsNull(@Department,'')<>''
-    Insert Into @Depart Values(@Department)
-  Else If IsNull(@Boss,0)<>0
-    Insert Into @Depart Select Distinct hs_code From [web_napa_stores] Where [user_id]=@Boss
-  Else
-    Insert Into @Depart Select ç¼–å· From department Where ç±»åˆ«ç¼–å· in ('102','103')
-  Insert Into @TmpTable
-  Select æ—¥æœŸ,å¾€æ¥ç¼–å·,åº”æ”¶é‡‘é¢
-  From orders
-  Where æ—¥æœŸ BetWeen @date1 And @date0
-    And éƒ¨é—¨ç¼–å· In (Select * From @Depart)
-    And åˆ¶å•äºº=@Wsc
-  Insert Into @TmpOut 
-         Select A.cName+'é”€å”®',IsNull(Sum(åº”æ”¶é‡‘é¢),0),'money',A.iindex
-         From @Dates As A
-         Left Join @TmpTable As B On A.[Date]=B.æ—¥æœŸ
-         Group by A.cName+'é”€å”®',A.iindex
-  Insert Into @TmpOut
-         Select A.cName+'è®¢å•æ•°',Count(*),'int',A.iindex+10
-         From @Dates As A
-         Left Join @TmpTable As B On A.[Date]=B.æ—¥æœŸ
-         Group by A.cName + 'è®¢å•æ•°',A.iindex+10
-  Insert Into @TmpOut 
-         Select A.cName+'ä¼šå‘˜',Count(*),'int',A.iindex+20
-         From @Dates As A
-         Left Join ä¼šå‘˜ As B On A.[Date]=convert(varchar(10),B.å»ºç«‹æ—¶é—´,120)
-         Group By A.cName + 'ä¼šå‘˜',A.iindex+20
-  Select Caption,Value,ValueType,Short from @TmpOut Order By Short
+	Insert Into @Wsc select ±àºÅ from pub_user where ĞÕÃû ='¹«ÖÚºÅ'
+   
+   If  isnull(@Department,'')<>''
+	    Insert Into @Depart Values(@Department)--Ö¸¶¨µê
+   else If isnull(@Boss,0)<>0
+    	Insert Into @Depart Select distinct hs_code from [web_napa_stores] where [user_id]=@Boss --Ö¸¶¨ÀÏ°å
+   else
+		Insert Into @Depart Select ±àºÅ from department where Àà±ğ±àºÅ in ('102','103')--È«²¿µê
+		
+	
+  select *  into #tmp_Get_BossTotal from (
+		select  sum(case ÈÕÆÚ when @date0 then Ó¦ÊÕ½ğ¶î else 0 end) as ND_Saleing                           --½ñÈÕÏúÊÛ
+			   ,sum(case ÈÕÆÚ when @date1 then Ó¦ÊÕ½ğ¶î else 0 end) as LD_Saleing							--×òÈÕÏúÊÛ
+			   ,sum(case ÈÕÆÚ when @date0 then 1 else 0 end) as ND_Order									--½ñÈÕ¶©µ¥Êı
+			   ,sum(case ÈÕÆÚ when @date1 then 1 else 0 end) as LD_Order									--×òÈÕ¶©µ¥Êı
+			   ,sum(case when ÈÕÆÚ= @date0 and isnull(ÍùÀ´±àºÅ,'')<>'' then Ó¦ÊÕ½ğ¶î else 0 end) as ND_Vip   --½ñÈÕ»áÔ±Ïû·Ñ
+			   ,sum(case when ÈÕÆÚ= @date1 and isnull(ÍùÀ´±àºÅ,'')<>'' then Ó¦ÊÕ½ğ¶î else 0 end) as LD_Vip   --×òÈÕ»áÔ±Ïû·Ñ 
+			   ,sum(case when ÈÕÆÚ= @date0 and isnull(ÍùÀ´±àºÅ,'') ='' then Ó¦ÊÕ½ğ¶î else 0 end) as ND_NoVip --½ñÈÕ·Ç»áÔ±Ïû·Ñ
+			   ,sum(case when ÈÕÆÚ= @date1 and isnull(ÍùÀ´±àºÅ,'') ='' then Ó¦ÊÕ½ğ¶î else 0 end) as LD_NoVip --×òÈÕ·Ç»áÔ±Ïû·Ñ
+			 
+	 from orders where ÖÆµ¥ÈË in (select * from @Wsc )--(select ±àºÅ from pub_user where ĞÕÃû ='¹«ÖÚºÅ')
+		And ÈÕÆÚ     between @date1 and @date0
+		And ²¿ÃÅ±àºÅ in (Select * from @Depart)--ÕâĞ©µêÍøÉÏ¶©µ¥
+		 ) a
+		left join 
+			( select  sum(case convert(datetime,convert(varchar(10),½¨Á¢Ê±¼ä,120),120)  when @date0 then 1 else 0 end) as ND_count --½ñÈÕĞÂÔö»áÔ±
+					, sum(case convert(datetime,convert(varchar(10),½¨Á¢Ê±¼ä,120),120)  when @date1 then 1 else 0 end) as LD_count --×òÈÕĞÂÔö»áÔ±
+			  from »áÔ± where  convert(datetime,convert(varchar(10),½¨Á¢Ê±¼ä,120),120)  between @date1 and @date0 
+			) b on 1=1
+		left join
+			( select  sum(case ÈÕÆÚ when @date0 then ½ğ¶îºÏ¼Æ else 0 end) as ND_ReCharge  --½ñÈÕ³äÖµ
+					, sum(case ÈÕÆÚ when @date1 then ½ğ¶îºÏ¼Æ else 0 end) as FD_ReCharge  --×òÈÕ³äÖµ
+			  from ³äÖµ±í where ÖÆµ¥ÈË in (select  ±àºÅ from pub_user where ĞÕÃû ='¹«ÖÚºÅ')
+					And ÈÕÆÚ  between @date1 and @date0
+					And ²¿ÃÅ±àºÅ in (Select * from @Depart)
+			) c on 1=1
+		
+
+
+	select Caption= '½ñÈÕÏúÊÛ',		[Values]=ND_Saleing ,VType='money' ,sort='11' from #tmp_Get_BossTotal union
+	select Caption= '×òÈÕÏúÊÛ',		[Values]=LD_Saleing ,VType='money' ,sort='12' from #tmp_Get_BossTotal union
+	select Caption= '½ñÈÕ¶©µ¥Êı',	[Values]=ND_Order	,VType='int'	,sort='21' from #tmp_Get_BossTotal union
+	select Caption= '×òÈÕ¶©µ¥Êı',	[Values]=LD_Order	,VType='int'	,sort='22' from #tmp_Get_BossTotal union
+	select Caption= '½ñÈÕĞÂÔö»áÔ±',	[Values]=ND_count	,VType='int'	,sort='31' from #tmp_Get_BossTotal union
+	select Caption= '×òÈÕĞÂÔö»áÔ±',	[Values]=LD_count	,VType='int'	,sort='32' from #tmp_Get_BossTotal union
+	select Caption= '½ñÈÕ·Ç»áÔ±Ïû·Ñ',	[Values]=ND_NoVip ,VType='money' ,sort='41' from #tmp_Get_BossTotal union
+	select Caption= '×òÈÕ·Ç»áÔ±Ïû·Ñ',	[Values]=LD_NoVip ,VType='money' ,sort='42' from #tmp_Get_BossTotal union	 
+	select Caption= '½ñÈÕ»áÔ±Ïû·Ñ',	[Values]=ND_Vip ,VType='money' ,sort='51' from #tmp_Get_BossTotal union
+	select Caption= '×òÈÕ»áÔ±Ïû·Ñ',	[Values]=LD_Vip ,VType='money' ,sort='52' from #tmp_Get_BossTotal union
+	select Caption= '½ñÈÕ³äÖµ',[Values]=ND_count ,VType='money' ,sort='61' from #tmp_Get_BossTotal union
+	select Caption= '×òÈÕ³äÖµ',[Values]=LD_count ,VType='money' ,sort='62' from #tmp_Get_BossTotal
+	order by sort
+
+	drop table #tmp_Get_BossTotal
+
+  --If @InDate Is null Set @InDate=getdate()
+  --Declare @Wsc varchar(10),@date0 varchar(10),@date1 varchar(10)
+  --Declare @Dates    Table(cName varchar(10),Date varchar(10),iIndex int)
+  --Declare @Depart   Table(Department varchar(10))
+  --Declare @TmpTable Table(ÈÕÆÚ varchar(10),ÍùÀ´±àºÅ varchar(20),Ó¦ÊÕ½ğ¶î money)
+  --Declare @TmpOut   Table(Caption varchar(20),Value money,ValueType varchar(10),Short int)
+
+  --Select @Wsc=±àºÅ From pub_user where ĞÕÃû ='¹«ÖÚºÅ'
+  --Select @date0=Convert(varchar(10),@InDate  ,120),@date1=Convert(varchar(10),@InDate-1,120)
+  --Insert into @Dates Values('½ñÈÕ',@date0,1)
+  --Insert into @Dates Values('×òÈÕ',@date1,2)
+  --If IsNull(@Department,'')<>''
+  --  Insert Into @Depart Values(@Department)
+  --Else If IsNull(@Boss,0)<>0
+  --  Insert Into @Depart Select Distinct hs_code From [web_napa_stores] Where [user_id]=@Boss
+  --Else
+  --  Insert Into @Depart Select ±àºÅ From department Where Àà±ğ±àºÅ in ('102','103')
+  --Insert Into @TmpTable
+  --Select ÈÕÆÚ,ÍùÀ´±àºÅ,Ó¦ÊÕ½ğ¶î
+  --From orders
+  --Where ÈÕÆÚ BetWeen @date1 And @date0
+  --  And ²¿ÃÅ±àºÅ In (Select * From @Depart)
+  --  And ÖÆµ¥ÈË=@Wsc
+  --Insert Into @TmpOut	
+  --       Select A.cName+'ÏúÊÛ',IsNull(Sum(Ó¦ÊÕ½ğ¶î),0),'money',A.iindex
+  --       From @Dates As A
+  --       Left Join @TmpTable As B On A.[Date]=B.ÈÕÆÚ
+  --       Group by A.cName+'ÏúÊÛ',A.iindex
+  --Insert Into @TmpOut
+  --       Select A.cName+'¶©µ¥Êı',Count(*),'int',A.iindex+10
+  --       From @Dates As A
+  --       Left Join @TmpTable As B On A.[Date]=B.ÈÕÆÚ
+  --       Group by A.cName + '¶©µ¥Êı',A.iindex+10
+  --Insert Into @TmpOut 
+  --       Select A.cName+'»áÔ±',Count(*),'int',A.iindex+20
+  --       From @Dates As A
+  --       Left Join »áÔ± As B On A.[Date]=convert(varchar(10),B.½¨Á¢Ê±¼ä,120)
+  --       Group By A.cName + '»áÔ±',A.iindex+20
+  --Select Caption,Value,ValueType,Short from @TmpOut Order By Short
 End
 Go 
 /*******************************************************************************
-ä¸ºå¾®å•†åŸç³»ç»Ÿæä¾›çš„æ¥å£å°è£…
-  ä¸»è¦åŠŸèƒ½ä¸ºä¸€äº›å‚æ•°çš„è‡ªåŠ¨ç”Ÿæˆ,ä»¥åŠè¿”å›å€¼è½¬åŒ–ä¸ºç»“æœé›†
+ÎªÎ¢ÉÌ³ÇÏµÍ³Ìá¹©µÄ½Ó¿Ú·â×°
+  Ö÷Òª¹¦ÄÜÎªÒ»Ğ©²ÎÊıµÄ×Ô¶¯Éú³É,ÒÔ¼°·µ»ØÖµ×ª»¯Îª½á¹û¼¯
+  
+  ÓÃ·¨£º
+  exec WSC_GetVipInfo 'Y6GagnXEeygErTHh9-Rx3'  È¡Íâ¼ü»áÔ±ĞÅÏ¢
+  exec WSC_GetVipInfo '',10                    È¡µ±ÏÂÈÕÆÚÎ´À´10ÌìÄÚ¹ıÉúÈÕµÄ»áÔ±£¨º¬µ±ÈÕ£© 
+  exec WSC_GetVipInfo '',20,'2017-07-01'       È¡2017-07-01Î´À´20ÌìÄÚ¹ıÉúÈÕµÄ»áÔ±£¨º¬µ±ÈÕ£©
 */
 --------------------------------------------------------------------------------
---å–ä¼šå‘˜ä¿¡æ¯
---  @cWeiXinCodeå¤–é”®
+--È¡»áÔ±ĞÅÏ¢
+--  @cWeiXinCodeÍâ¼ü
 If Object_ID('[WSC_GetVipInfo]','P') Is Not Null
   Drop Procedure [WSC_GetVipInfo]
 Go
 Create Procedure [WSC_GetVipInfo]
        @cWeiXinCode varchar(50) = null,
-       @DayCount int=null
+       @DayCount int=null,
+       @NowDate datetime =null
 As
 Begin
   If Object_ID('tempdb..#tmp_WSC_GetVipInfo') Is Not Null Drop Table #tmp_WSC_GetVipInfo
@@ -1363,135 +1454,137 @@ Begin
   If @DayCount Is Null
     Insert Into #tmp_WSC_GetVipInfo Exec GetVipInfo @cWeiXinCode
   Else
-    Insert Into #tmp_WSC_GetVipInfo Exec GetBirthday @DayCount
-  Select * From #tmp_WSC_GetVipInfo  --ä»¥æ­¤è¾“å‡º,å¯ä»¥åœ¨æ­¤æ’é™¤ä¸éœ€è¦çš„å­—æ®µ
+    Insert Into #tmp_WSC_GetVipInfo Exec GetBirthday @DayCount,@NowDate
+  Select * From #tmp_WSC_GetVipInfo  --ÒÔ´ËÊä³ö,¿ÉÒÔÔÚ´ËÅÅ³ı²»ĞèÒªµÄ×Ö¶Î
   Drop Table #tmp_WSC_GetVipInfo
 End
 Go
 --exec WSC_GetVipInfo 'Y6GagnXEeygErTHh9-Rx3'
+--exec WSC_GetVipInfo '',10,'2017-07-01'
+
 --------------------------------------------------------------------------------
---æ·»åŠ ä¼šå‘˜
---  @cWeiXinCodeå¤–é”®
---  @cMobileNumberæ‰‹æœºå·
---  @cNameå§“å,å¯é€‰
---  @cBirthdayç”Ÿæ—¥,å¯é€‰
---  @bIsLuna,æ˜¯å†œå†,å¯é€‰
---WSC_AddVipçŠ¶æ€é›†:
--- 0   :æˆåŠŸ
--- -1  :å·²ç»‘å®šåˆ°å…¶å®ƒä¼šå‘˜
--- -2  :æ— æ­¤ä¼šå‘˜
--- -3  :ä¼šå‘˜å·²åœç”¨
--- -201:æ‰‹æœºå·é‡å¤(æœ‰å¤šå¼ å¡)
+--Ìí¼Ó»áÔ±
+--  @cWeiXinCodeÍâ¼ü
+--  @cMobileNumberÊÖ»úºÅ
+--  @cNameĞÕÃû,¿ÉÑ¡
+--  @cBirthdayÉúÈÕ,¿ÉÑ¡
+--  @bIsLuna,ÊÇÅ©Àú,¿ÉÑ¡
+--WSC_AddVip×´Ì¬¼¯:
+-- 0   :³É¹¦
+-- -1  :ÒÑ°ó¶¨µ½ÆäËü»áÔ±
+-- -2  :ÎŞ´Ë»áÔ±
+-- -3  :»áÔ±ÒÑÍ£ÓÃ
+-- -201:ÊÖ»úºÅÖØ¸´(ÓĞ¶àÕÅ¿¨)
 If Object_ID('[WSC_AddVip]','P') Is Not Null
   Drop Procedure [WSC_AddVip]
 Go
 Create Procedure [WSC_AddVip]
        @cWeiXinCode varchar(50)
-      ,@cMobileNumber varchar(20)--æ‰‹æœºå·
-      ,@cName varchar(20)        = ''--å§“å
-      ,@cBirthday varchar(10)    = '1900-01-01'--ç”Ÿæ—¥,yyyy-mm-ddæ ¼å¼,èŒƒå›´1900-01-01åˆ°2079-06-06
-      ,@bIsLunar bit             = 0--æ˜¯å†œå†,0è¡¨ç¤ºç”Ÿæ—¥ä¸æ˜¯å†œå†(æ˜¯å…¬å†)
-      ,@cVipCode varchar(20)     = ''--æ­¤å‚æ•°åœç”¨
+      ,@cMobileNumber varchar(20)--ÊÖ»úºÅ
+      ,@cName varchar(20)        = ''--ĞÕÃû
+      ,@cBirthday varchar(10)    = '1900-01-01'--ÉúÈÕ,yyyy-mm-dd¸ñÊ½,·¶Î§1900-01-01µ½2079-06-06
+      ,@bIsLunar bit             = 0--ÊÇÅ©Àú,0±íÊ¾ÉúÈÕ²»ÊÇÅ©Àú(ÊÇ¹«Àú)
+      ,@cVipCode varchar(20)     = ''--´Ë²ÎÊıÍ£ÓÃ
 As
 Begin
-  Set @cVipCode = null --è¯¥å‚æ•°çš„å€¼å·²ç»ä¸¢å¼ƒ,æœ¬å‡½æ•°ä½¿ç”¨æ‰‹æœºå·æ¥å®šä½çº¿ä¸‹èº«ä»½
+  Set @cVipCode = null --¸Ã²ÎÊıµÄÖµÒÑ¾­¶ªÆú,±¾º¯ÊıÊ¹ÓÃÊÖ»úºÅÀ´¶¨Î»ÏßÏÂÉí·İ
   Declare @Return int, @msg varchar(100)
-  --å®šä½ä¸‹çº¿ä¼šå‘˜èº«ä»½
+  --¶¨Î»ÏÂÏß»áÔ±Éí·İ
   Declare @Tally int
-  Select @cVipCode=ç¼–å· From ä¼šå‘˜ Where ç”µè¯=@cMobileNumber
+  Select @cVipCode=±àºÅ From »áÔ± Where µç»°=@cMobileNumber
   Set @Tally = @@RowCount
   If @Tally < 1 And IsNull(@cName,'')='' And IsNull(@cBirthday,'')=''
   Begin 
     Set @Return = -2
-    Set @msg = 'æ— æ­¤ä¼šå‘˜'
+    Set @msg = 'ÎŞ´Ë»áÔ±'
   End
   Else If @Tally < 2
   Begin
     If @Tally = 0 Set @cVipCode = ''
     Exec @Return=AddVip @cWeiXinCode,@cMobileNumber,@cName,@cBirthday,@bIsLunar,@cVipCode
     Set @msg = Case @Return 
-               When  0 Then 'æˆåŠŸ'
-               When -1 Then 'å¤–é”®''' + @cWeiXinCode + '''å·²ç»ä¸å…¶å®ƒçº¿ä¸‹ä¼šå‘˜å¡ç»‘å®š'
-               When -2 Then 'æ— æ­¤ä¼šå‘˜'
-               When -3 Then 'ä¼šå‘˜å¡å·²åœç”¨'
-               Else 'æœªçŸ¥é”™è¯¯'
+               When  0 Then '³É¹¦'
+               When -1 Then 'Íâ¼ü''' + @cWeiXinCode + '''ÒÑ¾­ÓëÆäËüÏßÏÂ»áÔ±¿¨°ó¶¨'
+               When -2 Then 'ÎŞ´Ë»áÔ±'
+               When -3 Then '»áÔ±¿¨ÒÑÍ£ÓÃ'
+               Else 'Î´Öª´íÎó'
                End
   End
   Else
   Begin
     Set @Return = -201
-    Set @msg = 'æ‰‹æœºå·''' + @cMobileNumber + '''é‡å¤æ³¨å†Œåˆ°å¤šä¸ªä¼šå‘˜,ä¸èƒ½ç»‘å®š.'
+    Set @msg = 'ÊÖ»úºÅ''' + @cMobileNumber + '''ÖØ¸´×¢²áµ½¶à¸ö»áÔ±,²»ÄÜ°ó¶¨.'
   End
   Select @Return As retcode,@msg As Msg
 End
 Go
 --exec WSC_AddVip 'AKnexiDEEH1vrWSl9-wa','12345678901','asdf'
 --------------------------------------------------------------------------------
---ä¼šå‘˜å……å€¼
---  @cWeiXinCodeä¼šå‘˜å¤–é”®
---  @nAddMoneyå……å€¼é‡‘é¢
---  @cWeiXinOrderCodeå¾®å•†åŸæ”¯ä»˜è®¢å•å·
+--»áÔ±³äÖµ
+--  @cWeiXinCode»áÔ±Íâ¼ü
+--  @nAddMoney³äÖµ½ğ¶î
+--  @cWeiXinOrderCodeÎ¢ÉÌ³ÇÖ§¸¶¶©µ¥ºÅ
 If Object_ID('[WSC_VipReCharge]','P') Is Not Null
   Drop Procedure [WSC_VipReCharge]
 Go
 Create Procedure [WSC_VipReCharge]
-       @cWeiXinCode varchar(50),     --ä¼šå‘˜èº«ä»½å¤–é”®
-       @nAddMoney money=0,           --å……å€¼é‡‘é¢
-       @cWeiXinOrderCode varchar(50) --å¾®å•†åŸæ”¯ä»˜è®¢å•å·
+       @cWeiXinCode varchar(50),     --»áÔ±Éí·İÍâ¼ü
+       @nAddMoney money=0,           --³äÖµ½ğ¶î
+       @cWeiXinOrderCode varchar(50) --Î¢ÉÌ³ÇÖ§¸¶¶©µ¥ºÅ
 As
 Begin
   Declare @Return int,@msg varchar(100)
   Exec @Return = VipReCharge @cWeiXinCode,@nAddMoney,@cWeiXinOrderCode
   Set @msg = Case @Return
-             When  0 Then 'æˆåŠŸ'
-             When -1 Then 'æ— æ­¤ä¼šå‘˜'
-             When -2 Then 'ç”Ÿæˆè®¢å•å·å¤±è´¥'
-             When -3 Then 'ç”Ÿæˆå……å€¼è®°å½•å¤±è´¥'
-             Else 'æœªçŸ¥é”™è¯¯'
+             When  0 Then '³É¹¦'
+             When -1 Then 'ÎŞ´Ë»áÔ±'
+             When -2 Then 'Éú³É¶©µ¥ºÅÊ§°Ü'
+             When -3 Then 'Éú³É³äÖµ¼ÇÂ¼Ê§°Ü'
+             Else 'Î´Öª´íÎó'
              End
   Select @Return As retcode,@msg As Msg
 End
 Go
 --------------------------------------------------------------------------------
---è·å–æŒ‡å®šä¼šå‘˜çš„æ¶ˆè´¹è®°å½•
+--»ñÈ¡Ö¸¶¨»áÔ±µÄÏû·Ñ¼ÇÂ¼
 If Object_ID('[WSC_GetVipLog]','P') Is Not Null
   Drop Procedure [WSC_GetVipLog]
 Go
 Create Procedure [WSC_GetVipLog]
-       @cWeiXinCode varchar(50),--ä¼šå‘˜ç»‘å®šçš„å¤–é”®
-       @cDateStart varchar(10)='1900-01-01', --æŸ¥è¯¢å¼€å§‹æ—¥æœŸ(å«æ­¤æ—¥)
-       @cDateEnd varchar(10)=''  --æŸ¥è¯¢æˆªæ­¢æ—¥æœŸ(å«æ­¤æ—¥)
+       @cWeiXinCode varchar(50),--»áÔ±°ó¶¨µÄÍâ¼ü
+       @cDateStart varchar(10)='1900-01-01', --²éÑ¯¿ªÊ¼ÈÕÆÚ(º¬´ËÈÕ)
+       @cDateEnd varchar(10)=''  --²éÑ¯½ØÖ¹ÈÕÆÚ(º¬´ËÈÕ)
 As
 Begin
   --Declare @Return int,@msg varchar(100)
   --Exec @Return=GetVipLog @cWeiXinCode,@cDateStart,@cDateEnd
   --Set @msg = Case @Return
-  --           When 0 Then 'æˆåŠŸ'
-  --           When -1 Then 'éœ€è¦å¤–é”®'
-  --           When -2 Then 'å¤–é”®æœªä¸çº¿ä¸‹ä¼šå‘˜ç»‘å®š'
-  --           Else 'æœªçŸ¥é”™è¯¯'
+  --           When 0 Then '³É¹¦'
+  --           When -1 Then 'ĞèÒªÍâ¼ü'
+  --           When -2 Then 'Íâ¼üÎ´ÓëÏßÏÂ»áÔ±°ó¶¨'
+  --           Else 'Î´Öª´íÎó'
   --           End
   --Select @Return As retcode,@msg As Msg
-  --ä¸éœ€è¦è¿”å›çŠ¶æ€é›†
+  --²»ĞèÒª·µ»Ø×´Ì¬¼¯
   Exec GetVipLog @cWeiXinCode,@cDateStart,@cDateEnd
 End
 Go
 --exec WSC_GetVipLog '4YSju0DE3B2jrQTY99Hz'
 --------------------------------------------------------------------------------
---å¾—åˆ°å¾®å•†åŸä¸­å¯ä»¥å‘æ”¾çš„ç”µå­åˆ¸åˆ—è¡¨/æŒ‡å®šç¼–å·çš„ç¤¼åˆ¸
---å‚æ•°
---  @WeiXinCode:è·å–æŒ‡å®šå¯ä½¿ç”¨çš„åˆ¸(å·²é”€å”®,æœªä½¿ç”¨,æœ‰æ•ˆæœŸå†…)
---  @VoucherCode:è·å–æŒ‡å®šåˆ¸çš„ä¿¡æ¯,ä¸é™çŠ¶æ€ä¸é”€å”®éƒ¨é—¨
---  @GoodsCode:è·å–æŒ‡å®šäº§å“ç¼–å·çš„åˆ¸,(å‡ºåº“åˆ°æœ¬éƒ¨é—¨,æœªé”€å”®)
---  æŒ‡å®šäº†@WeiXinCodeåˆ™å¿½ç•¥@VoucherCode
---  éƒ½ä¸æŒ‡å®šåˆ™è¿”å›ç½‘ä¸Šå•†åŸå¯ä»¥é”€å”®/èµ é€çš„åˆ¸
+--µÃµ½Î¢ÉÌ³ÇÖĞ¿ÉÒÔ·¢·ÅµÄµç×ÓÈ¯ÁĞ±í/Ö¸¶¨±àºÅµÄÀñÈ¯
+--²ÎÊı
+--  @WeiXinCode:»ñÈ¡Ö¸¶¨¿ÉÊ¹ÓÃµÄÈ¯(ÒÑÏúÊÛ,Î´Ê¹ÓÃ,ÓĞĞ§ÆÚÄÚ)
+--  @VoucherCode:»ñÈ¡Ö¸¶¨È¯µÄĞÅÏ¢,²»ÏŞ×´Ì¬ÓëÏúÊÛ²¿ÃÅ
+--  @GoodsCode:»ñÈ¡Ö¸¶¨²úÆ·±àºÅµÄÈ¯,(³ö¿âµ½±¾²¿ÃÅ,Î´ÏúÊÛ)
+--  Ö¸¶¨ÁË@WeiXinCodeÔòºöÂÔ@VoucherCode
+--  ¶¼²»Ö¸¶¨Ôò·µ»ØÍøÉÏÉÌ³Ç¿ÉÒÔÏúÊÛ/ÔùËÍµÄÈ¯
 If Object_ID('[WSC_GetVouchers]','P') Is Not Null
   Drop Procedure [WSC_GetVouchers]
 Go
 Create Procedure [WSC_GetVouchers]
-       @WeiXinCode  varchar(50)='',--ä¼šå‘˜å¤–é”®
-       @VoucherCode varchar(20)='',--åˆ¸ç¼–å·
-       @GoodsCode   varchar(10)='' --åˆ¸çš„äº§å“ç¼–å·
+       @WeiXinCode  varchar(50)='',--»áÔ±Íâ¼ü
+       @VoucherCode varchar(20)='',--È¯±àºÅ
+       @GoodsCode   varchar(10)='' --È¯µÄ²úÆ·±àºÅ
 As
 Begin
   If Object_ID('tempdb..#tmp_WSC_GetVouchers')Is Not Null
@@ -1501,15 +1594,15 @@ Begin
         ,VouchersCode varchar(20),PayQuota money,State varchar(10)
         ,VipCode varchar(20),EndTime datetime
         ,BarCode varchar(30))
-  --æŸ¥æ‰¾ç›¸åº”çš„ä¼šå‘˜ç¼–å·
+  --²éÕÒÏàÓ¦µÄ»áÔ±±àºÅ
   Declare @cDepart varchar(20)
   If IsNull(@WeiXinCode, '') <> ''
     Begin
       Declare @VipCode varchar(20)
-      Select @VipCode=ç¼–å· 
-      From ä¼šå‘˜ As a
-      Inner Join ä¼šå‘˜èº«ä»½ As b On a.id=b.ä¼šå‘˜id
-      Where b.å¤–é”®=@WeiXinCode
+      Select @VipCode=±àºÅ 
+      From »áÔ± As a
+      Inner Join »áÔ±Éí·İ As b On a.id=b.»áÔ±id
+      Where b.Íâ¼ü=@WeiXinCode
       Insert Into #tmp_WSC_GetVouchers Exec GetVouchers '', @VipCode
     End
   Else If IsNull(@VoucherCode, '') <> ''
@@ -1518,58 +1611,58 @@ Begin
     End
   Else If IsNull(@GoodsCode, '') <> ''
     Begin
-      Select @cDepart = ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
+      Select @cDepart = ±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
       Insert Into #tmp_WSC_GetVouchers Exec GetVouchers @cDepart,'','',@GoodsCode
     End
   Else
     Begin
-      Select @cDepart = ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
+      Select @cDepart = ±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
       Insert Into #tmp_WSC_GetVouchers Exec GetVouchers @cDepart
     End
   Select * From #tmp_WSC_GetVouchers
   Drop Table #tmp_WSC_GetVouchers 
 End
 Go
---exec WSC_GetVouchers --å•†åŸæ‰€æœ‰å¯ä»¥é”€å”®çš„åˆ¸
---exec WSC_GetVouchers '{æµ‹è¯•ç»‘å®šç 2}'--è¯¥ä¼šå‘˜æŒæœ‰ä½†æœªä½¿ç”¨çš„åˆ¸
---exec WSC_GetVouchers '','21009'--æŒ‡å®šç¼–å·çš„åˆ¸
---exec WSC_GetVouchers '','','83001'--å•†åŸå¯é”€å”®çš„æŒ‡å®šäº§å“ç¼–å·çš„åˆ¸
---exec WSC_GetVouchers '{æµ‹è¯•ç»‘å®šç 2}','21009' --ç­‰ä»·WSC_GetVouchers '','21009'
+--exec WSC_GetVouchers --ÉÌ³ÇËùÓĞ¿ÉÒÔÏúÊÛµÄÈ¯
+--exec WSC_GetVouchers '{²âÊÔ°ó¶¨Âë2}'--¸Ã»áÔ±³ÖÓĞµ«Î´Ê¹ÓÃµÄÈ¯
+--exec WSC_GetVouchers '','21009'--Ö¸¶¨±àºÅµÄÈ¯
+--exec WSC_GetVouchers '','','83001'--ÉÌ³Ç¿ÉÏúÊÛµÄÖ¸¶¨²úÆ·±àºÅµÄÈ¯
+--exec WSC_GetVouchers '{²âÊÔ°ó¶¨Âë2}','21009' --µÈ¼ÛWSC_GetVouchers '','21009'
 --------------------------------------------------------------------------------
---ç”µå­åˆ¸é”€å”®
+--µç×ÓÈ¯ÏúÊÛ
 --  @GoodsCode,@VoucherCode,@WeiXinCode,@Price
 If Object_ID('[WSC_SaleVoucher]','P') Is Not Null
   Drop Procedure [WSC_SaleVoucher]
 Go
 Create Procedure [WSC_SaleVoucher]
-       @GoodsCode varchar(10)  ,--ç¤¼åˆ¸äº§å“ç¼–å·
-       @VoucherCode varchar(20),--ç¤¼åˆ¸ç¼–å·
-       @WeiXinCode varchar(50) ,--ä¼šå‘˜å¤–é”®
-       @PayByCard money=0      ,--ä¼šå‘˜å¡æ”¯ä»˜é‡‘é¢,èµ é€åˆ™ä¸º0
-       @Price money = 0         --å®é™…å”®ä»·,èµ é€æ—¶ä¸º0
+       @GoodsCode varchar(10)  ,--ÀñÈ¯²úÆ·±àºÅ
+       @VoucherCode varchar(20),--ÀñÈ¯±àºÅ
+       @WeiXinCode varchar(50) ,--»áÔ±Íâ¼ü
+       @PayByCard money=0      ,--»áÔ±¿¨Ö§¸¶½ğ¶î,ÔùËÍÔòÎª0
+       @Price money = 0         --Êµ¼ÊÊÛ¼Û,ÔùËÍÊ±Îª0
 As
 Begin
   Declare @Return int,@msg varchar(100),@SalesCode varchar(20)
   Declare @Department varchar(10),@UserCode varchar(10),@VipCode varchar(20),@CDate varchar(10)
-  Select @Department=ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
-  Select @UserCode=ç¼–å· From pub_user Where å§“å='å…¬ä¼—å·'
-  Select @VipCode=ç¼–å· From ä¼šå‘˜ Where id in(Select ä¼šå‘˜ID From ä¼šå‘˜èº«ä»½ Where å¤–é”®=@WeiXinCode)
+  Select @Department=±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
+  Select @UserCode=±àºÅ From pub_user Where ĞÕÃû='¹«ÖÚºÅ'
+  Select @VipCode=±àºÅ From »áÔ± Where id in(Select »áÔ±ID From »áÔ±Éí·İ Where Íâ¼ü=@WeiXinCode)
   Set @CDate=Convert(varchar(10),getdate(),120)
   If IsNull(@GoodsCode,'')=''
   Begin
-    --å–ç¤¼åˆ¸é¢é¢
-    Declare @y_é¢é¢ money
-    Select @y_é¢é¢=é¢é¢ From ç¤¼åˆ¸è¡¨ Where ç¼–å·=@VoucherCode
-    If @y_é¢é¢ Is Null 
+    --È¡ÀñÈ¯Ãæ¶î
+    Declare @y_Ãæ¶î money
+    Select @y_Ãæ¶î=Ãæ¶î From ÀñÈ¯±í Where ±àºÅ=@VoucherCode
+    If @y_Ãæ¶î Is Null 
     Begin
-      Select -1 As retcode,'ç¤¼åˆ¸ç¼–å·æ— æ•ˆ' As Msg
+      Select -1 As retcode,'ÀñÈ¯±àºÅÎŞĞ§' As Msg
       Return -1
     End
-    --åœ¨Goodsä¸­å¯»æ‰¾é”€å”®ä»·æ ¼æœ€æ¥è¿‘çš„åˆ¸
-    Select Top 1 @GoodsCode=ç¼–å· From goods Where å­˜è´§å±æ€§='ç°é‡‘åˆ¸' Order By Abs(11-é”€å”®ä¸»ä»·)
+    --ÔÚGoodsÖĞÑ°ÕÒÏúÊÛ¼Û¸ñ×î½Ó½üµÄÈ¯
+    Select Top 1 @GoodsCode=±àºÅ From goods Where ´æ»õÊôĞÔ='ÏÖ½ğÈ¯' Order By Abs(11-ÏúÊÛÖ÷¼Û)
     If @GoodsCode Is Null
     Begin
-      Select -2 As retcode,'æ²¡æœ‰åŒ¹é…åˆ°å¯ä»¥é”€å”®/èµ é€çš„ç¤¼åˆ¸äº§å“' As Msg
+      Select -2 As retcode,'Ã»ÓĞÆ¥Åäµ½¿ÉÒÔÏúÊÛ/ÔùËÍµÄÀñÈ¯²úÆ·' As Msg
       Return -2
     End
   End
@@ -1579,114 +1672,114 @@ Begin
                             , @VipCode, @VoucherCode, @SalesCode Output
   
   Set @msg = Case @Return 
-             When 0    Then 'æˆåŠŸ'
-             When -1   Then 'ç”Ÿæˆé”€å”®å•å¤±è´¥'
-             When -100 Then 'åˆ¸ç¼–å·æ— æ•ˆ'
-             When -101 Then 'åˆ¸å·²è¿‡æœŸ'
-             When -102 Then 'åˆ¸é”€å”®å¤±è´¥'
-             When -103 Then 'åˆ¸æœªå‡ºåº“'
-             When -105 Then 'åˆ¸å·²ç»é”€å”®'
-             When -106 Then 'åˆ¸å·²ä½¿ç”¨'
-             Else 'æœªçŸ¥é”™è¯¯' 
+             When 0    Then '³É¹¦'
+             When -1   Then 'Éú³ÉÏúÊÛµ¥Ê§°Ü'
+             When -100 Then 'È¯±àºÅÎŞĞ§'
+             When -101 Then 'È¯ÒÑ¹ıÆÚ'
+             When -102 Then 'È¯ÏúÊÛÊ§°Ü'
+             When -103 Then 'È¯Î´³ö¿â'
+             When -105 Then 'È¯ÒÑ¾­ÏúÊÛ'
+             When -106 Then 'È¯ÒÑÊ¹ÓÃ'
+             Else 'Î´Öª´íÎó' 
              End
-  Select 0 As retcode,'æˆåŠŸ' As Msg,@SalesCode As SalesOrderNo
+  Select 0 As retcode,'³É¹¦' As Msg,@SalesCode As SalesOrderNo
 End
 Go
 --------------------------------------------------------------------------------
---å»ºç«‹è®¢å•
---@OrderCodeä¼ å…¥''æˆ–nullåˆ™ä¸ºæ–°å»ºè®¢å•
---@OrderCodeæœ‰å†…å®¹åˆ™ä¸ºä¿®æ”¹è®¢å•,å¯æäº¤æ–°çš„@CallNumber/@PickUpTime/@Remarks/@Destination/@EndOrder/@VoidOrder
---è¿”å›ç»“æœé›†:
---  ç»“æœé›†:è®¢å•ID int,è®¢å•å· varchar(20)
+--½¨Á¢¶©µ¥
+--@OrderCode´«Èë''»ònullÔòÎªĞÂ½¨¶©µ¥
+--@OrderCodeÓĞÄÚÈİÔòÎªĞŞ¸Ä¶©µ¥,¿ÉÌá½»ĞÂµÄ@CallNumber/@PickUpTime/@Remarks/@Destination/@EndOrder/@VoidOrder
+--·µ»Ø½á¹û¼¯:
+--  ½á¹û¼¯:¶©µ¥ID int,¶©µ¥ºÅ varchar(20)
 If Object_ID('[WSC_CreateOrder]','P') Is Not Null 
   Drop Procedure [WSC_CreateOrder]
 Go
 Create Procedure [WSC_CreateOrder]
-       @OrderCode   varchar(20) =NULL OUTPUT,--ä¸ºç©ºåˆ™æ–°å»ºå•,ä¸ä¸ºç©ºåˆ™ä¿®æ”¹å·²æœ‰å•
-       @WSC_TardNo  varchar(32) =''   ,--å¤–éƒ¨è½¬å…¥çš„è®¢å•,å¯¹åº”çš„å¤–éƒ¨è®¢å•å·
-       @PickUpTime  datetime    =Null ,--é¢„çº¦å–è´§æ—¶é—´
-       @WeiXinCode  varchar(50) =''   ,--ä¼šå‘˜å¤–é”®
-       @CallNumber  varchar(50) =Null ,--è”ç³»æ–¹å¼
-       @Remarks     varchar(100)=Null ,--é¡¾å®¢æ³¨æ˜çš„å†…å®¹
-       @Destination varchar(100)=Null ,--é€è´§åœ°å€éé€è´§è®¢å•ä¸å¡«
-       @TotalAmount money       =0    ,--æœªæŠ˜æ‰£æ—¶åˆè®¡,é‡‘é¢åˆè®¡
-       @Discount    money       =0    ,--å•†å“æŠ˜æ‰£é‡‘é¢,æŠ˜åé‡‘é¢,-æ•´å•å…é™¤-ä¼šå‘˜å¡æ”¯ä»˜-ç¤¼åˆ¸æ”¯ä»˜=æ¬ æ¬¾
-       @Deducted    money       =0    ,--æ•´å•å…é™¤é‡‘é¢
-       @Payment     money       =0    ,--ä¸‹å•æ—¶ç”¨ä¼šå‘˜å¡æ”¯ä»˜çš„é‡‘é¢
-       @Voucher     money       =0    ,--ä¸‹å•æ—¶ä½¿ç”¨ç¤¼åˆ¸æ”¯ä»˜çš„é‡‘é¢
-       @EndOrder    bit         =Null ,--æ˜¯å¦ç»“å•,æ¬ æ¬¾ä¸ä¸º0æ—¶ä¸å¯ç»“å•
-       @VoidOrder   bit         =Null ,--å¦‚æœåºŸæ­¢,åªå¯å¯¹ç»“å•=0çš„å•åºŸæ­¢
-       @Department varchar(20)  =''    --è®¢å•ä¸‹åˆ°å“ªä¸ªåº—
+       @OrderCode   varchar(20) =NULL OUTPUT,--Îª¿ÕÔòĞÂ½¨µ¥,²»Îª¿ÕÔòĞŞ¸ÄÒÑÓĞµ¥
+       @WSC_TardNo  varchar(32) =''   ,--Íâ²¿×ªÈëµÄ¶©µ¥,¶ÔÓ¦µÄÍâ²¿¶©µ¥ºÅ
+       @PickUpTime  datetime    =Null ,--Ô¤Ô¼È¡»õÊ±¼ä
+       @WeiXinCode  varchar(50) =''   ,--»áÔ±Íâ¼ü
+       @CallNumber  varchar(50) =Null ,--ÁªÏµ·½Ê½
+       @Remarks     varchar(100)=Null ,--¹Ë¿Í×¢Ã÷µÄÄÚÈİ
+       @Destination varchar(100)=Null ,--ËÍ»õµØÖ··ÇËÍ»õ¶©µ¥²»Ìî
+       @TotalAmount money       =0    ,--Î´ÕÛ¿ÛÊ±ºÏ¼Æ,½ğ¶îºÏ¼Æ
+       @Discount    money       =0    ,--ÉÌÆ·ÕÛ¿Û½ğ¶î,ÕÛºó½ğ¶î,-Õûµ¥Ãâ³ı-»áÔ±¿¨Ö§¸¶-ÀñÈ¯Ö§¸¶=Ç·¿î
+       @Deducted    money       =0    ,--Õûµ¥Ãâ³ı½ğ¶î
+       @Payment     money       =0    ,--ÏÂµ¥Ê±ÓÃ»áÔ±¿¨Ö§¸¶µÄ½ğ¶î
+       @Voucher     money       =0    ,--ÏÂµ¥Ê±Ê¹ÓÃÀñÈ¯Ö§¸¶µÄ½ğ¶î
+       @EndOrder    bit         =Null ,--ÊÇ·ñ½áµ¥,Ç·¿î²»Îª0Ê±²»¿É½áµ¥
+       @VoidOrder   bit         =Null ,--Èç¹û·ÏÖ¹,Ö»¿É¶Ô½áµ¥=0µÄµ¥·ÏÖ¹
+       @Department varchar(20)  =''    --¶©µ¥ÏÂµ½ÄÄ¸öµê
 As
 Begin
   Declare @Return int,@msg varchar(100)
   Declare @OrderID int,@Department_Web varchar(10),@UserCode varchar(10),@VipCode varchar(20),@cDate varchar(10)
-  Select @Department_Web='å…¬ä¼—å·'
-  Select @UserCode=ç¼–å· From pub_user Where å§“å='å…¬ä¼—å·'
-  Select @VipCode=ç¼–å· From ä¼šå‘˜ Where id in(Select ä¼šå‘˜ID From ä¼šå‘˜èº«ä»½ Where å¤–é”®=@WeiXinCode)
+  Select @Department_Web='¹«ÖÚºÅ'
+  Select @UserCode=±àºÅ From pub_user Where ĞÕÃû='¹«ÖÚºÅ'
+  Select @VipCode=±àºÅ From »áÔ± Where id in(Select »áÔ±ID From »áÔ±Éí·İ Where Íâ¼ü=@WeiXinCode)
   Set @cDate = Convert(varchar(10),getdate(),120)
-  Exec @OrderID=CreateOrder @å•å·=@OrderCode Output
-                           ,@éƒ¨é—¨ç¼–å·=@Department
-                           ,@åˆ¶å•äºº=@UserCode
-                           ,@å•†æˆ·è®¢å•å·=@WSC_TardNo
-                           ,@æ—¥æœŸ=@cDate
-                           ,@å–è´§æ—¶é—´=@PickUpTime
-                           ,@å¾€æ¥ç¼–å·=@VipCode
-                           ,@è”ç³»æ–¹å¼=@CallNumber
-                           ,@å¤‡æ³¨=@Remarks
-                           ,@é€è´§åœ°å€=@Destination
-                           ,@é‡‘é¢åˆè®¡=@TotalAmount
-                           ,@ä¼˜æƒ åˆè®¡=@Discount
-                           ,@è®©åˆ©=@Deducted
-                           ,@åˆ·å¡é‡‘é¢=@Payment
-                           ,@ç¤¼åˆ¸=@Voucher
-                           ,@ç»“å•=@EndOrder
-                           ,@åºŸæ­¢=@VoidOrder
-                           ,@é”€å”®ç±»åˆ«=@Department_Web
+  Exec @OrderID=CreateOrder @µ¥ºÅ=@OrderCode Output
+                           ,@²¿ÃÅ±àºÅ=@Department
+                           ,@ÖÆµ¥ÈË=@UserCode
+                           ,@ÉÌ»§¶©µ¥ºÅ=@WSC_TardNo
+                           ,@ÈÕÆÚ=@cDate
+                           ,@È¡»õÊ±¼ä=@PickUpTime
+                           ,@ÍùÀ´±àºÅ=@VipCode
+                           ,@ÁªÏµ·½Ê½=@CallNumber
+                           ,@±¸×¢=@Remarks
+                           ,@ËÍ»õµØÖ·=@Destination
+                           ,@½ğ¶îºÏ¼Æ=@TotalAmount
+                           ,@ÓÅ»İºÏ¼Æ=@Discount
+                           ,@ÈÃÀû=@Deducted
+                           ,@Ë¢¿¨½ğ¶î=@Payment
+                           ,@ÀñÈ¯=@Voucher
+                           ,@½áµ¥=@EndOrder
+                           ,@·ÏÖ¹=@VoidOrder
+                           ,@ÏúÊÛÀà±ğ=@Department_Web
   Select @OrderID As OrderID,@OrderCode As OrderCode
   --If @OrderID>0
-  --  Select  0 As retcode, 'æˆåŠŸ' As Msg
+  --  Select  0 As retcode, '³É¹¦' As Msg
   --Else
-  --  Select -1 As retcode, 'å¤±è´¥' As Msg
+  --  Select -1 As retcode, 'Ê§°Ü' As Msg
 EnD
 Go
 --------------------------------------------------------------------------------
---å†™å…¥è®¢å•æ˜ç»†
+--Ğ´Èë¶©µ¥Ã÷Ï¸
 If Object_ID('[WSC_AddOrderItem]','P') Is Not Null
   Drop Procedure [WSC_AddOrderItem]
 Go
 Create Procedure [WSC_AddOrderItem]
-       @PID         int        ,--è®¢å•ID
-       @GoodsCode   varchar(10),--å•†å“ç¼–å·
-       @GoodsCount  int        ,--å•†å“æ•°é‡
-       @Price       money      ,--å•ä»·,æœªæŠ˜æ‰£çš„å•ä»·
-       @TotalAmount money       --é‡‘é¢,æŠ˜æ‰£åæ€»é‡‘é¢
+       @PID         int        ,--¶©µ¥ID
+       @GoodsCode   varchar(10),--ÉÌÆ·±àºÅ
+       @GoodsCount  int        ,--ÉÌÆ·ÊıÁ¿
+       @Price       money      ,--µ¥¼Û,Î´ÕÛ¿ÛµÄµ¥¼Û
+       @TotalAmount money       --½ğ¶î,ÕÛ¿Ûºó×Ü½ğ¶î
 As
 Begin
   Declare @Return int,@msg varchar(100)
   Exec @Return=AddOrderItem @PID,@GoodsCode,@GoodsCount,@Price,@TotalAmount
   Set @msg = Case @Return
-             When 0 Then 'æˆåŠŸ'
-             When -1 Then 'å¤±è´¥'
-             Else 'æœªçŸ¥é”™è¯¯'
+             When 0 Then '³É¹¦'
+             When -1 Then 'Ê§°Ü'
+             Else 'Î´Öª´íÎó'
              End
   Select @Return As retcode, @msg As Msg
 End
 Go
 --------------------------------------------------------------------------------
---è·å–è®¢å•åˆ—è¡¨
+--»ñÈ¡¶©µ¥ÁĞ±í
 --  
 If Object_ID('[WSC_GetOrdersList]','P') Is Not Null 
   Drop Procedure [WSC_GetOrdersList]
 Go
 Create Procedure [WSC_GetOrdersList]
-       @StartDate  varchar(10)='1900-01-01',--æ—¥æœŸèŒƒå›´:å¼€å§‹æ—¥æœŸ
-       @EndDate    varchar(10)=''          ,--æ—¥æœŸèŒƒå›´:ç»“æŸæ—¥æœŸ
-       @OrderCode  varchar(20)=''          ,--è®¢å•å·
-       @VipCode    varchar(50)=''          ,--ä¼šå‘˜å¤–é”®
-       @oauth_code varchar(50)=''          ,--è¿”å›è¯¥ä¼šå‘˜ä¸‹çº§äº§ç”Ÿçš„è®¢å•,å±‚æ•°åœ¨GetOrdersListä¸­æ§åˆ¶
-                                            --ä¸å«è¯¥ä¼šå‘˜è‡ªå·±äº§ç”Ÿçš„è®¢å•
-       @IsEnd      bit        =null         --æŒ‡å®šæ­¤å‚æ•°,åˆ™åªè¿”å›ç»“å•çŠ¶æ€ä¸ä¹‹ä¸€è‡´çš„å•
+       @StartDate  varchar(10)='1900-01-01',--ÈÕÆÚ·¶Î§:¿ªÊ¼ÈÕÆÚ
+       @EndDate    varchar(10)=''          ,--ÈÕÆÚ·¶Î§:½áÊøÈÕÆÚ
+       @OrderCode  varchar(20)=''          ,--¶©µ¥ºÅ
+       @VipCode    varchar(50)=''          ,--»áÔ±Íâ¼ü
+       @oauth_code varchar(50)=''          ,--·µ»Ø¸Ã»áÔ±ÏÂ¼¶²úÉúµÄ¶©µ¥,²ãÊıÔÚGetOrdersListÖĞ¿ØÖÆ
+                                            --²»º¬¸Ã»áÔ±×Ô¼º²úÉúµÄ¶©µ¥
+       @IsEnd      bit        =null         --Ö¸¶¨´Ë²ÎÊı,ÔòÖ»·µ»Ø½áµ¥×´Ì¬ÓëÖ®Ò»ÖÂµÄµ¥
 As
 Begin
   --Declare @Return int,@msg varchar(100)
@@ -1707,22 +1800,22 @@ Begin
         ,Reserved2 money,Reserved3 money,Reserved4 money,Reserved5 varchar(50),Reserved6 varchar(50),Reserved7 varchar(50)
         ,Hierarchy int)
   If IsNull(@OrderCode,'')<>'' 
-    Begin--æŸ¥è¯¢æŒ‡å®šè®¢å•å·çš„è®¢å•
+    Begin--²éÑ¯Ö¸¶¨¶©µ¥ºÅµÄ¶©µ¥
       Insert Into #tmp_WSC_GetOrdersList 
       Exec GetOrdersList '',@StartDate,@EndDate,@OrderCode,'',''
     End
   Else If IsNull(@VipCode,'')<>''
-    Begin--æŸ¥è¯¢æŒ‡å®šä¼šå‘˜çš„è®¢å•
-      Select @CardCode=ç¼–å· From ä¼šå‘˜ Where id in(Select ä¼šå‘˜ID From ä¼šå‘˜èº«ä»½ Where å¤–é”®=@VipCode)
+    Begin--²éÑ¯Ö¸¶¨»áÔ±µÄ¶©µ¥
+      Select @CardCode=±àºÅ From »áÔ± Where id in(Select »áÔ±ID From »áÔ±Éí·İ Where Íâ¼ü=@VipCode)
       Insert Into #tmp_WSC_GetOrdersList Exec GetOrdersList '',@StartDate,@EndDate,'',@CardCode
     End
   Else If IsNull(@oauth_code,'')<>''
-    Begin--æŸ¥è¯¢æŒ‡å®šä¼šå‘˜çš„åˆ†é”€è®¢å•
-      Select @CardCode=ç¼–å· From ä¼šå‘˜ Where id in(Select ä¼šå‘˜ID From ä¼šå‘˜èº«ä»½ Where å¤–é”®=@VipCode)
+    Begin--²éÑ¯Ö¸¶¨»áÔ±µÄ·ÖÏú¶©µ¥
+      Select @CardCode=±àºÅ From »áÔ± Where id in(Select »áÔ±ID From »áÔ±Éí·İ Where Íâ¼ü=@VipCode)
       Insert Into #tmp_WSC_GetOrdersList Exec GetOrdersList '',@StartDate,@EndDate,'','',@CardCode
     End
   Else
-    Begin--æŸ¥è¯¢å…¬ä¼—å·äº§ç”Ÿçš„è®¢å•
+    Begin--²éÑ¯¹«ÖÚºÅ²úÉúµÄ¶©µ¥
       Insert Into #tmp_WSC_GetOrdersList Exec GetOrdersList Null,@StartDate,@EndDate
     End
   If @IsEnd Is Null
@@ -1732,26 +1825,26 @@ Begin
   Drop Table #tmp_WSC_GetOrdersList
 End
 Go
-----æŒ‡å®šå•å·æ¨¡å¼ä¸‹æ—¥æœŸèŒƒå›´æ— æ•ˆ
-----å…¶å®ƒæ¨¡å¼å‡å¯è‡ªç”±ç»„åˆ@StartDateä¸@EndDateæ¥é™å®šæ—¥æœŸèŒƒå›´
-----æ‰€æœ‰æ¨¡å¼ä¸‹,å‡å¯ä½¿ç”¨@IsEndæ¥é™å®šèŒƒå›´
---Exec WSC_GetOrdersList @Ordercode='170227-00002'  --æŸ¥æŒ‡å®šè®¢å•
-----æŒ‡å®šä¼šå‘˜æ¨¡å¼
+----Ö¸¶¨µ¥ºÅÄ£Ê½ÏÂÈÕÆÚ·¶Î§ÎŞĞ§
+----ÆäËüÄ£Ê½¾ù¿É×ÔÓÉ×éºÏ@StartDateÓë@EndDateÀ´ÏŞ¶¨ÈÕÆÚ·¶Î§
+----ËùÓĞÄ£Ê½ÏÂ,¾ù¿ÉÊ¹ÓÃ@IsEndÀ´ÏŞ¶¨·¶Î§
+--Exec WSC_GetOrdersList @Ordercode='170227-00002'  --²éÖ¸¶¨¶©µ¥
+----Ö¸¶¨»áÔ±Ä£Ê½
 --Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk'  
---Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@IsEnd=0--æŸ¥æ­¤ä¼šå‘˜æœªç»“çš„å•
---Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@StartDate='2017-01-01'  --æŸ¥æ­¤ä¼šå‘˜ä»Šå¹´(ä»1æœˆ1æ—¥è‡³ä»Š)
---Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@StartDate='2017-01-01',@EndDate='2017-01-31'  --æŸ¥æ­¤ä¼šå‘˜ä¸€æœˆçš„è®¢å•
---Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@EndDate='2017-04-31'  --æŸ¥æ­¤ä¼šå‘˜ä»Šå¹´äº”ä¸€å‰çš„æ‰€æœ‰è®¢å•
-----æŒ‡å®šåˆ†é”€ä¼šå‘˜æ¨¡å¼
---Exec WSC_GetOrdersList @oauth_code='MFfM3UC5WQQ5yRAfUh19hbk'--æŸ¥æ­¤ä¼šå‘˜åˆ†é”€ä¸‹çº§äº§ç”Ÿçš„è®¢å•(ä¸å«æ­¤ä¼šå‘˜çš„)
---Exec WSC_GetOrdersList @oauth_code='MFfM3UC5WQQ5yRAfUh19hbk'@EndDate='2017-05-01',@IsEnd=1 --æŸ¥æ­¤ä¼šå‘˜åˆ†é”€ä¸‹çº§äº§ç”Ÿçš„è®¢å•(ä¸å«æ­¤ä¼šå‘˜çš„),å·²ç»“çš„
-----å–å•†åŸç”Ÿæˆçš„è®¢å•æ¨¡å¼
---Exec WSC_GetOrdersList --æŸ¥ç½‘ä¸Šå•†åŸç”Ÿæˆçš„è®¢å•
---Exec WSC_GetOrdersList @StartDate='2017-01-01'--æŸ¥ç½‘ä¸Šå•†åŸç”Ÿæˆçš„è®¢å•
---Exec WSC_GetOrdersList @StartDate='2017-01-01',@EndDate='2017-04-19'--æŸ¥ç½‘ä¸Šå•†åŸç”Ÿæˆçš„è®¢å•
+--Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@IsEnd=0--²é´Ë»áÔ±Î´½áµÄµ¥
+--Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@StartDate='2017-01-01'  --²é´Ë»áÔ±½ñÄê(´Ó1ÔÂ1ÈÕÖÁ½ñ)
+--Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@StartDate='2017-01-01',@EndDate='2017-01-31'  --²é´Ë»áÔ±Ò»ÔÂµÄ¶©µ¥
+--Exec WSC_GetOrdersList @VipCode='MFfM3UC5WQQ5yRAfUh19hbk',@EndDate='2017-04-31'  --²é´Ë»áÔ±½ñÄêÎåÒ»Ç°µÄËùÓĞ¶©µ¥
+----Ö¸¶¨·ÖÏú»áÔ±Ä£Ê½
+--Exec WSC_GetOrdersList @oauth_code='MFfM3UC5WQQ5yRAfUh19hbk'--²é´Ë»áÔ±·ÖÏúÏÂ¼¶²úÉúµÄ¶©µ¥(²»º¬´Ë»áÔ±µÄ)
+--Exec WSC_GetOrdersList @oauth_code='MFfM3UC5WQQ5yRAfUh19hbk'@EndDate='2017-05-01',@IsEnd=1 --²é´Ë»áÔ±·ÖÏúÏÂ¼¶²úÉúµÄ¶©µ¥(²»º¬´Ë»áÔ±µÄ),ÒÑ½áµÄ
+----È¡ÉÌ³ÇÉú³ÉµÄ¶©µ¥Ä£Ê½
+--Exec WSC_GetOrdersList --²éÍøÉÏÉÌ³ÇÉú³ÉµÄ¶©µ¥
+--Exec WSC_GetOrdersList @StartDate='2017-01-01'--²éÍøÉÏÉÌ³ÇÉú³ÉµÄ¶©µ¥
+--Exec WSC_GetOrdersList @StartDate='2017-01-01',@EndDate='2017-04-19'--²éÍøÉÏÉÌ³ÇÉú³ÉµÄ¶©µ¥
 
 --------------------------------------------------------------------------------
---è·å–æŒ‡å®šè®¢å•ä¿¡æ¯
+--»ñÈ¡Ö¸¶¨¶©µ¥ĞÅÏ¢
 If Object_ID('[WSC_GetOrdersDetail]','P') Is Not Null 
   Drop Procedure [WSC_GetOrdersDetail]
 Go
@@ -1761,7 +1854,7 @@ As
 Begin
   --Declare @Return int,@msg varchar(100)
   --Exec @Return=GetOrdersDetail @OrderID
-  --Set @msg=Case @Return When 0 Then 'æˆåŠŸ' Else 'å¤±è´¥' End
+  --Set @msg=Case @Return When 0 Then '³É¹¦' Else 'Ê§°Ü' End
   --Select @Return As retcode, @msg As Msg
   --Exec GetOrdersDetail @OrderID
   If Object_ID('tempdb..#tmp_WSC_GetOrdersDetail') Is Not Null Drop Table #tmp_WSC_GetOrdersDetail
@@ -1775,75 +1868,75 @@ Begin
 End
 Go
 --------------------------------------------------------------------------------
---è®¢å•ä¸­å›æ”¶ç¤¼åˆ¸
+--¶©µ¥ÖĞ»ØÊÕÀñÈ¯
 If Object_ID('[WSC_RecoverVoucher]','P') Is Not Null
   Drop Procedure [WSC_RecoverVoucher]
 Go
 Create Procedure [WSC_RecoverVoucher]
-       @RecordID    int        ,--å•æ®ID:ç›¸åº”é›¶å”®å•/è®¢å•çš„ä¸»è®°å½•ID
-       @VoucherCode varchar(20),--ç¤¼åˆ¸ç¼–å·
-       @Amount      money      =0,--é‡‘é¢:æŠµæ‰£é‡‘é¢,ä¸º0åˆ™æŒ‰ç¤¼åˆ¸é¢é¢æŠµæ‰£
-       @Remark      varchar(50)='' --å¤‡æ³¨
+       @RecordID    int        ,--µ¥¾İID:ÏàÓ¦ÁãÊÛµ¥/¶©µ¥µÄÖ÷¼ÇÂ¼ID
+       @VoucherCode varchar(20),--ÀñÈ¯±àºÅ
+       @Amount      money      =0,--½ğ¶î:µÖ¿Û½ğ¶î,Îª0Ôò°´ÀñÈ¯Ãæ¶îµÖ¿Û
+       @Remark      varchar(50)='' --±¸×¢
 As
 Begin
   Declare @Return int,@msg varchar(100)
   Declare @Department varchar(10),@Source int
-  Select @Department=ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
-  Set @Source=1 --1ä¸ºè®¢å•,0ä¸ºé›¶å”®,ç½‘ä¸Šå•†åŸå‡ä¸ºè®¢å•
+  Select @Department=±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
+  Set @Source=1 --1Îª¶©µ¥,0ÎªÁãÊÛ,ÍøÉÏÉÌ³Ç¾ùÎª¶©µ¥
   Exec @Return=RecoverVoucher @Department,@Source,@RecordID,@VoucherCode,@Amount,@Remark
   Set @Msg = Case @Return
-             When 0  Then 'æˆåŠŸ'
-             When -1 Then 'åˆ¸ç¼–å·æ— æ•ˆ'
-             When -2 Then 'åˆ¸æœªå‘æ”¾'
-             When -3 Then 'åˆ¸å·²å›æ”¶'
-             When -4 Then 'åˆ¸å·²è¿‡æœŸ'
-             When -5 Then 'å†™å›æ”¶è®°å½•å¤±è´¥'
-             Else 'æœªçŸ¥é”™è¯¯'
+             When 0  Then '³É¹¦'
+             When -1 Then 'È¯±àºÅÎŞĞ§'
+             When -2 Then 'È¯Î´·¢·Å'
+             When -3 Then 'È¯ÒÑ»ØÊÕ'
+             When -4 Then 'È¯ÒÑ¹ıÆÚ'
+             When -5 Then 'Ğ´»ØÊÕ¼ÇÂ¼Ê§°Ü'
+             Else 'Î´Öª´íÎó'
              End
   Select @Return As retcode, @msg As Msg
 End
 Go
 --------------------------------------------------------------------------------
---ç§¯åˆ†å˜åŠ¨
+--»ı·Ö±ä¶¯
 If Object_ID('[WSC_VipBonusPoints]','P') Is Not Null
   Drop Procedure [WSC_VipBonusPoints]
 Go
 Create Procedure [WSC_VipBonusPoints]
-       @WeiXinCode  varchar(50),--ä¼šå‘˜å¤–é”®
-       @Add         money      ,--ç§¯åˆ†å¢åŠ å€¼(å‡å°‘ä¸ºè´Ÿæ•°,0ä¸ºä¸å˜)
-       @Description varchar(20) --ç§¯åˆ†å˜åŠ¨åŸå› 
+       @WeiXinCode  varchar(50),--»áÔ±Íâ¼ü
+       @Add         money      ,--»ı·ÖÔö¼ÓÖµ(¼õÉÙÎª¸ºÊı,0Îª²»±ä)
+       @Description varchar(20) --»ı·Ö±ä¶¯Ô­Òò
 As
 Begin
   Declare @Return int,@msg varchar(100)
   Declare @cDepart varchar(10),@cUser varchar(10),@VipCode varchar(20)
-  Select @cDepart=ç¼–å· From department Where ç®€ç§°='å…¬ä¼—å·'
-  Select @cUser=ç¼–å· From pub_user Where å§“å='å…¬ä¼—å·'
-  Select @VipCode=A.ç¼–å· From ä¼šå‘˜ As A Inner Join ä¼šå‘˜èº«ä»½ As B On A.ID=B.ä¼šå‘˜ID Where B.å¤–é”®=@WeiXinCode
+  Select @cDepart=±àºÅ From department Where ¼ò³Æ='¹«ÖÚºÅ'
+  Select @cUser=±àºÅ From pub_user Where ĞÕÃû='¹«ÖÚºÅ'
+  Select @VipCode=A.±àºÅ From »áÔ± As A Inner Join »áÔ±Éí·İ As B On A.ID=B.»áÔ±ID Where B.Íâ¼ü=@WeiXinCode
   Exec @Return=VipBonusPoints @cDepart,@cUser,@VipCode,@Add,@Description
   Set @msg = Case @Return
-             When  0 Then 'æˆåŠŸ'
-             When -1 Then 'æ— æ­¤ä¼šå‘˜'
-             When -2 Then 'å¡æœªå¯ç”¨'
-             When -3 Then 'å¡å·²æŒ‚å¤±'
-             When -4 Then 'å¡å·²è¿‡æœŸ'
-             When -5 Then 'ç§¯åˆ†å˜åŠ¨å¤±è´¥'
-             Else 'æœªçŸ¥é”™è¯¯'
+             When  0 Then '³É¹¦'
+             When -1 Then 'ÎŞ´Ë»áÔ±'
+             When -2 Then '¿¨Î´ÆôÓÃ'
+             When -3 Then '¿¨ÒÑ¹ÒÊ§'
+             When -4 Then '¿¨ÒÑ¹ıÆÚ'
+             When -5 Then '»ı·Ö±ä¶¯Ê§°Ü'
+             Else 'Î´Öª´íÎó'
              End
   Select @Return As retcode, @msg As Msg
 End
 Go
 --------------------------------------------------------------------------------
---æ£€æŸ¥åˆ†é”€æ ‘ä»¥ç¡®è®¤ä¸¤ä¸ªä¼šå‘˜å¯ä»¥å»ºç«‹åˆ†é”€çˆ¶å­å…³ç³»
---è¿”å›é›†0åˆ™å¯ä»¥å»ºç«‹åˆ†é”€å…³ç³»
---å¦‚æœä¸èƒ½å»ºç«‹åˆ†é”€å…³ç³»åˆ™åœ¨è¿”å›é›†msgä¸­åŒ…å«åŸå› 
-   ----åŸå§‹æ•°æ®æµ‹è¯•
+--¼ì²é·ÖÏúÊ÷ÒÔÈ·ÈÏÁ½¸ö»áÔ±¿ÉÒÔ½¨Á¢·ÖÏú¸¸×Ó¹ØÏµ
+--·µ»Ø¼¯0Ôò¿ÉÒÔ½¨Á¢·ÖÏú¹ØÏµ
+--Èç¹û²»ÄÜ½¨Á¢·ÖÏú¹ØÏµÔòÔÚ·µ»Ø¼¯msgÖĞ°üº¬Ô­Òò
+   ----Ô­Ê¼Êı¾İ²âÊÔ
   --Exec WSC_GetVipRelevance 'oH7hfuHST2w_VAqTw9dB4dnksHE0','oH7hfuJGShVdPEX7AeR50X3JuYVI'
-  ----æ¨¡æ‹Ÿæµ‹è¯•1:æ­£å¸¸
+  ----Ä£Äâ²âÊÔ1:Õı³£
   --Begin Tran
   --Update web_user_invited_link Set user_id=140,invited_id=150 where user_id=14
   --Exec WSC_GetVipRelevance 'oH7hfuHST2w_VAqTw9dB4dnksHE0','oH7hfuJGShVdPEX7AeR50X3JuYVI'
   --Rollback
-  ----æ¨¡æ‹Ÿæµ‹è¯•1:æ ‘äº¤å‰
+  ----Ä£Äâ²âÊÔ1:Ê÷½»²æ
   --Begin Tran
   --Update web_user_invited_link Set user_id=140,invited_id=150 where user_id=14
   --Update web_user_invited_link Set user_id=17 where user_id=13 and invited_id=14
@@ -1853,36 +1946,36 @@ If Object_ID('[WSC_GetVipRelevance]','P') Is Not Null
   Drop Procedure [WSC_GetVipRelevance]
 Go
 Create Procedure [WSC_GetVipRelevance]
-       @ParentVipoAuthCode varchar(50),--å‡†å¤‡ä½œä¸ºçˆ¶çš„ä¼šå‘˜å¤–é”®
-       @ChildVipoAuthCode varchar(50)  --å‡†å¤‡ä½œä¸ºå­çš„ä¼šå‘˜å¤–é”®
+       @ParentVipoAuthCode varchar(50),--×¼±¸×÷Îª¸¸µÄ»áÔ±Íâ¼ü
+       @ChildVipoAuthCode varchar(50)  --×¼±¸×÷Îª×ÓµÄ»áÔ±Íâ¼ü
 As
 Begin
   Declare @Tree Table(id int,level int)
   Declare @iLevel int
   Declare @ID int
   Declare @VipCode varchar(20)
-  --é™åˆ¶:å­é¡¹åº”å½“æ˜¯æ²¡æœ‰ä¸Šçº§çš„
-  Select Top 1 @VipCode = E.ç¼–å·
+  --ÏŞÖÆ:×ÓÏîÓ¦µ±ÊÇÃ»ÓĞÉÏ¼¶µÄ
+  Select Top 1 @VipCode = E.±àºÅ
          From web_oauth_login As A
          Left Join web_user_invited_link As B On A.user_id=B.invited_id
          Left Join web_oauth_login As C On B.user_id=C.user_id
-         Left Join ä¼šå‘˜èº«ä»½ As D On C.oauth_id=D.å¤–é”®
-         Left Join ä¼šå‘˜ As E On D.ä¼šå‘˜ID=E.ID
+         Left Join »áÔ±Éí·İ As D On C.oauth_id=D.Íâ¼ü
+         Left Join »áÔ± As E On D.»áÔ±ID=E.ID
          Where A.oauth_id=@ChildVipoAuthCode
   If @VipCode Is Not Null
   Begin
-    Select -1 As retcode,'å­é¡¹å·²ç»æ˜¯ä¼šå‘˜[' + @VipCode + ']çš„ä¸‹çº§' As Msg
+    Select -1 As retcode,'×ÓÏîÒÑ¾­ÊÇ»áÔ±[' + @VipCode + ']µÄÏÂ¼¶' As Msg
     Return
   End
-  --å­ç³»æ ‘
-  --  å› æ­¤é™åˆ¶æœ€é€’å½’å±‚æ•°ä¸º3
-  --  ä¸æ£€æŸ¥ä¸‹çº§ä¸­çš„å¾ªç¯å¼•ç”¨
+  --×ÓÏµÊ÷
+  --  Òò´ËÏŞÖÆ×îµİ¹é²ãÊıÎª3
+  --  ²»¼ì²éÏÂ¼¶ÖĞµÄÑ­»·ÒıÓÃ
   Insert Into @Tree
-         Select C.user_id,1 --A.ä¼šå‘˜ID,B.å¤–é”®,C.user_id
-         From ä¼šå‘˜èº«ä»½ As A
-         Left Join ä¼šå‘˜èº«ä»½ As B On A.ä¼šå‘˜ID=B.ä¼šå‘˜ID
-         Left Join web_oauth_login As C On B.å¤–é”®=C.oauth_id
-         Where A.å¤–é”®=@ChildVipoAuthCode
+         Select C.user_id,1 --A.»áÔ±ID,B.Íâ¼ü,C.user_id
+         From »áÔ±Éí·İ As A
+         Left Join »áÔ±Éí·İ As B On A.»áÔ±ID=B.»áÔ±ID
+         Left Join web_oauth_login As C On B.Íâ¼ü=C.oauth_id
+         Where A.Íâ¼ü=@ChildVipoAuthCode
   Set @iLevel = 1
   While @@RowCount > 0 And @iLevel < 4
   Begin
@@ -1893,16 +1986,16 @@ Begin
            Inner Join web_user_invited_link As B On A.id=B.user_id 
            Where A.level=@iLevel-1
   End
-  --çˆ¶çº§å¯¹åº”çš„ID
-  --  é™åˆ¶é€’å½’å±‚æ•°ä¸º3
-  --  ä¸æ£€æŸ¥ä¸Šçº§ä¸­çš„å¾ªç¯å¼•ç”¨
+  --¸¸¼¶¶ÔÓ¦µÄID
+  --  ÏŞÖÆµİ¹é²ãÊıÎª3
+  --  ²»¼ì²éÉÏ¼¶ÖĞµÄÑ­»·ÒıÓÃ
   Set @iLevel = 0
   Insert Into @Tree
          Select C.user_id,@iLevel
-         From ä¼šå‘˜èº«ä»½ As A
-         Left Join ä¼šå‘˜èº«ä»½ As B On A.ä¼šå‘˜ID=B.ä¼šå‘˜ID
-         Left Join web_oauth_login As C On B.å¤–é”®=C.oauth_id
-         Where A.å¤–é”®=@ParentVipoAuthCode
+         From »áÔ±Éí·İ As A
+         Left Join »áÔ±Éí·İ As B On A.»áÔ±ID=B.»áÔ±ID
+         Left Join web_oauth_login As C On B.Íâ¼ü=C.oauth_id
+         Where A.Íâ¼ü=@ParentVipoAuthCode
   While @@RowCount>0 And @iLevel > -3
   Begin
     Set @iLevel = @iLevel-1
@@ -1912,8 +2005,8 @@ Begin
            Inner Join web_user_invited_link As B On A.id=B.invited_id
            Where A.level=@iLevel+1
   End
-  --åˆ¤æ–­æ˜¯å¦å¯ä»¥å»ºç«‹ç›¸åº”çš„åˆ†é”€å…³ç³»
-  --  å¦‚æœçˆ¶ç³»æ ‘ä¸å­ç³»æ ‘æœ‰äº¤é›†,åˆ™ä¸å¯ç»„å»ºåˆ†é”€å…³ç³»
+  --ÅĞ¶ÏÊÇ·ñ¿ÉÒÔ½¨Á¢ÏàÓ¦µÄ·ÖÏú¹ØÏµ
+  --  Èç¹û¸¸ÏµÊ÷Óë×ÓÏµÊ÷ÓĞ½»¼¯,Ôò²»¿É×é½¨·ÖÏú¹ØÏµ
   Select Top 1 @ID=A.id
          From @Tree As A
          Inner Join @Tree As B On A.ID=B.ID
@@ -1921,39 +2014,39 @@ Begin
            And B.level>=0
   If @ID Is Not Null
   Begin
-    Select @VipCode=C.ç¼–å·
+    Select @VipCode=C.±àºÅ
            From web_oauth_login As A
-           Left Join ä¼šå‘˜èº«ä»½ As B On A.oauth_id = B.å¤–é”®
-           Left Join ä¼šå‘˜ As C On B.ä¼šå‘˜ID=C.ID
+           Left Join »áÔ±Éí·İ As B On A.oauth_id = B.Íâ¼ü
+           Left Join »áÔ± As C On B.»áÔ±ID=C.ID
            Where A.user_id=@ID
     Set @VipCode = IsNull(@VipCode,'')
-    Select -1 As retcode,'åˆ†é”€å…³ç³»äº¤å‰:' + @VipCode As Msg
+    Select -1 As retcode,'·ÖÏú¹ØÏµ½»²æ:' + @VipCode As Msg
   End
   Else
-    Select 0 As retcode,'å¯ä»¥å»ºç«‹åˆ†é”€å…³ç³»' As Msg
+    Select 0 As retcode,'¿ÉÒÔ½¨Á¢·ÖÏú¹ØÏµ' As Msg
 End
 Go
 --------------------------------------------------------------------------------
---è€æ¿å°åŠ©æ‰‹ ç»Ÿè®¡æ•°æ®
+--ÀÏ°åĞ¡ÖúÊÖ Í³¼ÆÊı¾İ
 
--- Author:    <Author,,Name>
+-- Author:		<Author,,Name>
 -- Create date: 2017-06-15
--- Description: è€æ¿å°åŠ©æ‰‹
---è°ƒç”¨ç¤ºä¾‹
-  --exec WSC_Get_BossTotal éƒ¨é—¨ï¼Œè€æ¿ ï¼Œæ—¥æœŸ
-  --éƒ¨é—¨å¯ä¸ºç©ºæˆ–null,æˆ–éƒ¨é—¨å·ï¼Œè€æ¿ å¯ä¸ºç©ºæˆ–null,æˆ–è€æ¿å·ï¼Œæ—¥æœŸå¯ä¸ºç©ºï¼Œæˆ–æ—¥æœŸ
-  --ä¾‹å¦‚ 
-  --exec WSC_Get_BossTotal         --å…¨éƒ¨æ±‡æ€»        ä¸å¸¦å‚æ•°åˆ™æ±‡æ€»å…¨éƒ¨
-  --exec WSC_Get_BossTotal  '001'    --å•åº—æ±‡æ€»        ç¬¬ä¸€ä¸ªå‚æ•°å¯¹åº” è¡¨ web_napa_stores  ä¸­hs_code å­—æ®µ
-  --exec WSC_Get_BossTotal  '',1       --æŒ‡å®šè€æ¿åº—æ±‡æ€»  ç¬¬äºŒä¸ªå‚æ•°å¯¹åº” è¡¨ web_napa_stores  ä¸­ID å­—æ®µ
-  --exec WSC_Get_BossTotal  '','',â€˜2017-06-09â€™ --ç¬¬ä¸‰ä¸ªå‚æ•°ä¸æŒ‡å®šï¼Œå½“å‰æ—¥æœŸä¸ºä»Šå¤©ï¼Œä¹Ÿå¯æŒ‡å®šæŸä¸ªæ—¥æœŸä¸ºä»Šå¤©ï¼Œä¾‹å¦‚æ˜¨å¤©ä¸ºä»Šå¤©
+-- Description:	ÀÏ°åĞ¡ÖúÊÖ
+--µ÷ÓÃÊ¾Àı
+  --exec WSC_Get_BossTotal ²¿ÃÅ£¬ÀÏ°å £¬ÈÕÆÚ
+  --²¿ÃÅ¿ÉÎª¿Õ»ònull,»ò²¿ÃÅºÅ£¬ÀÏ°å ¿ÉÎª¿Õ»ònull,»òÀÏ°åºÅ£¬ÈÕÆÚ¿ÉÎª¿Õ£¬»òÈÕÆÚ
+  --ÀıÈç 
+  --exec WSC_Get_BossTotal			   --È«²¿»ã×Ü        ²»´ø²ÎÊıÔò»ã×ÜÈ«²¿
+  --exec WSC_Get_BossTotal  '001'	   --µ¥µê»ã×Ü        µÚÒ»¸ö²ÎÊı¶ÔÓ¦ ±í web_napa_stores  ÖĞhs_code ×Ö¶Î
+  --exec WSC_Get_BossTotal  '',1       --Ö¸¶¨ÀÏ°åµê»ã×Ü  µÚ¶ş¸ö²ÎÊı¶ÔÓ¦ ±í web_napa_stores  ÖĞID ×Ö¶Î
+  --exec WSC_Get_BossTotal  '','',¡®2017-06-09¡¯ --µÚÈı¸ö²ÎÊı²»Ö¸¶¨£¬µ±Ç°ÈÕÆÚÎª½ñÌì£¬Ò²¿ÉÖ¸¶¨Ä³¸öÈÕÆÚÎª½ñÌì£¬ÀıÈç×òÌìÎª½ñÌì
 If Object_ID('[WSC_Get_BossTotal]','P') Is Not Null 
   Drop Procedure [WSC_Get_BossTotal]
 Go
  Create Procedure [WSC_Get_BossTotal]  
-       @Department  varchar(10)=null,--é€‰æ‹©åº—é“º  å¯¹åº” è¡¨ web_napa_stores  ä¸­hs_code å­—æ®µ
-       @Boss        int        =null,--é€‰æ‹©è€æ¿  å¯¹åº” è¡¨ web_napa_stores  ä¸­ID å­—æ®µ
-       @InDate      datetime   =null --ä»Šå¤©æ‰€æŒ‡æ—¥æœŸï¼Œä¸æŒ‡å®šç³»ç»Ÿé»˜è®¤å½“å‰æ—¥æœŸ
+       @Department  varchar(10)=null,--Ñ¡ÔñµêÆÌ  ¶ÔÓ¦ ±í web_napa_stores  ÖĞhs_code ×Ö¶Î
+       @Boss        int        =null,--Ñ¡ÔñÀÏ°å  ¶ÔÓ¦ ±í web_napa_stores  ÖĞID ×Ö¶Î
+       @InDate      datetime   =null --½ñÌìËùÖ¸ÈÕÆÚ£¬²»Ö¸¶¨ÏµÍ³Ä¬ÈÏµ±Ç°ÈÕÆÚ
      As  
 Begin  
  If Object_ID('tempdb..#tmp_WSC_GetBossTotal') Is Not Null Drop Table #tmp_WSC_GetBossTotal
@@ -1966,28 +2059,93 @@ End
 
  Go
 
+
+
+/*
+ È¡Ö¸¶¨ÈÕÆÚÎ´À´XXÌìÄÚ¹ıÉúÈÕµÄ»áÔ± 
+  ÒıÓÃ ÉúÈÕº¯Êı obo.Fun_Birthday(ÉúÈÕ,Ö¸¶¨ÈÕÆÚ)  
+
+ ÓÃ·¨£º
+-- exec GetBirthday 20              È¡µ±ÏÂ     Î´À´10ÌìÄÚ¹ıÉúÈÕµÄ»áÔ±
+-- exec GetBirthday 20,'2017-7-1'   È¡2017-7-1 Î´À´20ÌìÄÚ¹ıÉúÈÕµÄ»áÔ±
+*/
+
+If Object_ID('[GetBirthday]','P') Is Not Null 
+  Drop Procedure GetBirthday
+Go
+ Create Procedure GetBirthday  
+       @Days int =null ,
+       @NowDate datetime =null
+     As  
+begin
+    --Declare @NowDate datetime
+    if @NowDate is null
+    set @NowDate=getdate()
+      
+    if @Days is null 
+       set @days=0
+       
+	select * 
+	 from »áÔ± 
+		 where ×´Ì¬=1 and ÊÇ·ñ³äÖµ=0 and ½ØÖ¹ÈÕÆÚ>= @NowDate 
+		       and  dbo.Fun_Birthday( ÉúÈÕ,@NowDate) 
+		   between @NowDate and @NowDate+@Days
+  
+end
+Go
+
+-----------------------------Function------------------------------------------------ 
+
+If Object_Id('dbo.Fun_Birthday','FN') is not null Drop Function Fun_Birthday
+GO
+/*
+  Î´À´ÉúÈÕº¯Êı
+      Ğ¡ÓÚ Ö¸¶¨ÈÕÆÚµÄÉúÈÕÎªÏÂÒ»ÄêÉúÈÕ
+      ´óÓÚ Ö¸¶¨ÈÕÆÚµÄÎªµ±ÄêÉúÈÕ
+  ÓÃ·¨£º
+     obo.Fun_Birthday(ÉúÈÕ,Ö¸¶¨ÈÕÆÚ)    
+*/
+Create FUNCTION Fun_Birthday
+(@Birthday varchar(10) ,--ÉúÈÕ
+ @NowDate  datetime     --Ö¸¶¨ÈÕÆÚ
+)
+RETURNS varchar(10)
+AS
+BEGIN
+Declare @Birthday_t datetime
+  set @NowDate =  convert(varchar(10),@NowDate,120) 
  
+ If  @NowDate>dateadd(year , year(@NowDate)-year(@Birthday), @Birthday)  
+	set @Birthday_t=dateadd(year , year(@NowDate) -year(@Birthday)+1, @Birthday)
+  else  
+    set @Birthday_t=dateadd(year , year(@NowDate) -year(@Birthday),   @Birthday)
+    
+    Return convert(varchar,@Birthday_t,120)
+ END
+
+GO
+
 --   --------------------------------------------------------------------------------
 /*
-å…³äºè®¢å•æ¥å£çš„ä½¿ç”¨è¯´æ˜
-***å»ºç«‹ä¸€å¼ è®¢å•
-è°ƒç”¨WSC_CreateOrderå†™ä¸»è¡¨,å¾—åˆ°ç›¸åº”çš„IDä¸å•å·
-  ä½¿ç”¨ç¤¼åˆ¸æ”¯ä»˜çš„,å¦‚æ­¤å¤„ç†,åŒæ—¶è¦èµ‹å€¼"@ç¤¼åˆ¸"
-  ä¼šå‘˜æ¶ˆè´¹åªéœ€è¦èµ‹å€¼'@åˆ·å¡é‡‘é¢'å³å¯
-å¾ªç¯è°ƒç”¨WSC_AddOrderItemé€æ¡å†™å…¥æ˜ç»†
-å¦‚æœæ”¯ä»˜ä¸­ä½¿ç”¨äº†ç¤¼åˆ¸,è°ƒç”¨é€æ¡WSC_RecoverVoucheråšç¤¼åˆ¸å›æ”¶å¤„ç†
+¹ØÓÚ¶©µ¥½Ó¿ÚµÄÊ¹ÓÃËµÃ÷
+***½¨Á¢Ò»ÕÅ¶©µ¥
+µ÷ÓÃWSC_CreateOrderĞ´Ö÷±í,µÃµ½ÏàÓ¦µÄIDÓëµ¥ºÅ
+  Ê¹ÓÃÀñÈ¯Ö§¸¶µÄ,Èç´Ë´¦Àí,Í¬Ê±Òª¸³Öµ"@ÀñÈ¯"
+  »áÔ±Ïû·ÑÖ»ĞèÒª¸³Öµ'@Ë¢¿¨½ğ¶î'¼´¿É
+Ñ­»·µ÷ÓÃWSC_AddOrderItemÖğÌõĞ´ÈëÃ÷Ï¸
+Èç¹ûÖ§¸¶ÖĞÊ¹ÓÃÁËÀñÈ¯,µ÷ÓÃÖğÌõWSC_RecoverVoucher×öÀñÈ¯»ØÊÕ´¦Àí
 
-***ä¿®æ”¹è®¢å•
-è°ƒç”¨WSC_CreateOrder,ç»“å…¥@OrderCode(è®¢å•å·),åŒæ—¶ç»™å…¥@CallNumber/@PickUpTime/@Remarks/@Destination/@EndOrder/@VoidOrder
-  ä»…ä¸Šè¿°å†…å®¹å¯ä»¥ä¿®æ”¹.æœªç»™å…¥æˆ–ç»™å…¥Nullå€¼çš„ä¸è¢«ä¿®æ”¹.
+***ĞŞ¸Ä¶©µ¥
+µ÷ÓÃWSC_CreateOrder,½áÈë@OrderCode(¶©µ¥ºÅ),Í¬Ê±¸øÈë@CallNumber/@PickUpTime/@Remarks/@Destination/@EndOrder/@VoidOrder
+  ½öÉÏÊöÄÚÈİ¿ÉÒÔĞŞ¸Ä.Î´¸øÈë»ò¸øÈëNullÖµµÄ²»±»ĞŞ¸Ä.
   
 
---é—¨åº—åˆ—è¡¨
---select id,ç¼–å·,ç®€ç§°,å…¨ç§°,åœ°å€,è”ç³»ç”µè¯,ç±»åˆ«ç®€ç§°,å¾€æ¥å±æ€§ from department where æ˜¯å¦åœç”¨=0 and å¾€æ¥å±æ€§ in ('ç›´è¥åº—','åŠ ç›Ÿåº—')
---æ‰€æœ‰å¯é”€å”®äº§å“
---select ID,ç¼–å·,åç§°,è§„æ ¼,å•ä½,é”€å”®ä¸»ä»· from goods where æ˜¯å¦é”€å”®=1 and åœç”¨æ—¥æœŸ>convert(varchar(10),getdate(),120)
+--ÃÅµêÁĞ±í
+--select id,±àºÅ,¼ò³Æ,È«³Æ,µØÖ·,ÁªÏµµç»°,Àà±ğ¼ò³Æ,ÍùÀ´ÊôĞÔ from department where ÊÇ·ñÍ£ÓÃ=0 and ÍùÀ´ÊôĞÔ in ('Ö±Óªµê','¼ÓÃËµê')
+--ËùÓĞ¿ÉÏúÊÛ²úÆ·
+--select ID,±àºÅ,Ãû³Æ,¹æ¸ñ,µ¥Î»,ÏúÊÛÖ÷¼Û from goods where ÊÇ·ñÏúÊÛ=1 and Í£ÓÃÈÕÆÚ>convert(varchar(10),getdate(),120)
 */
-exec Get_BossTotal
+
 
 
 

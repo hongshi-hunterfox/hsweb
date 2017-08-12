@@ -147,7 +147,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String,String> config = userService.getSMSConfig();
-		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"));
+		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
 	}
 	/** 
 	* @Title: checkVerifyCode 

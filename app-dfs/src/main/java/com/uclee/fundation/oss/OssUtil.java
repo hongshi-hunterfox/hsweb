@@ -33,16 +33,16 @@ public class OssUtil {
     // public String endpointImg = "http://img-cn-hangzhou.aliyuncs.com";  
 
 
-    @Value(value="${oss.accessKeyId:S1ycE1xGoaQyao9K}")
-    public String accessKeyId = "S1ycE1xGoaQyao9K";
+    @Value(value="${oss.accessKeyId:LTAIb36ti4sJYhwY}")
+    public String accessKeyId = "LTAIb36ti4sJYhwY";
 
-    @Value(value="${oss.accessKeySecret:kOltVwNubj7W5J6qPY2XIROy4Y5qhL}")
+    @Value(value="${oss.accessKeySecret:wDkzuBidUH6oog7jvdxW9A4JNS42br}")
     public String accessKeySecret;
 
-    @Value(value = "${oss.backetName:uclee}")
+    @Value(value = "${oss.backetName:wschs}")
     public String bucketName;
     
-    @Value(value = "${oss.url.prefix:http://hs.uclee.com/file/}")
+    @Value(value = "${oss.url.prefix:http://wsc.in80s.com/file/}")
     public String ossUrlPrefix;
   
   
@@ -54,9 +54,9 @@ public class OssUtil {
   
     {  
         if (MINE) {  
-            accessKeyId = "S1ycE1xGoaQyao9K";
-            accessKeySecret = "kOltVwNubj7W5J6qPY2XIROy4Y5qhL";
-            bucketName = "uclee";
+            accessKeyId = "LTAIb36ti4sJYhwY";
+            accessKeySecret = "wDkzuBidUH6oog7jvdxW9A4JNS42br";
+            bucketName = "wschs";
             endpoint = "http://oss-cn-shenzhen.aliyuncs.com";
         }  
     }  
