@@ -263,7 +263,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		List<HongShiOrder> orders = userService.getHongShiOrder(userId,isEnd);
+		List<HongShiOrder> orders = userService.getHongShiOrder(3,isEnd);
 		map.put("orders", orders);
 		return map;
 	}

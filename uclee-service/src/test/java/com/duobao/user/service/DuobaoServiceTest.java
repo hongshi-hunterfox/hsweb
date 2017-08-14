@@ -90,12 +90,12 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	private BackendServiceI backendService;
 	@Autowired
 	private ProductSaleMapper productSaleMapper;
+	@Autowired
+	private DataSourceFacade datasource;
 	@Test
 	public void testFreight(){
-		/*String[] key = {"keyword1","keyword2","keyword3","keyword4"};
-		String paymentMethod="微信支付";
-		String[] value = {"1111",DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),1+"元".toString(),paymentMethod};
-		userService.sendWXMessage("oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");*/
+		datasource.switchDataSource("hs");
+		System.out.println(JSON.toJSONString(userService.getHongShiOrder(5, false)));
 	}
 
 	@Test

@@ -2584,7 +2584,7 @@ public class UserServiceImpl implements UserServiceI {
 				order.setOrderItems(orderItems);
 				Order tmp = orderMapper.selectBySerialNum(order.getOuterOrderCode());
 				if(tmp!=null){
-					if(tmp.getVoucherCode()!=null){
+					if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
 						try {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(tmp.getVoucherCode());
 							if(coupon!=null&&coupon.size()>0){
