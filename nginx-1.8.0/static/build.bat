@@ -1,1 +1,0 @@
-lessc less_frontend/frontend.less css/frontend.css && lessc less_backend/backend.less css/backend.css
