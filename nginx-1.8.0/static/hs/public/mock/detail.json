@@ -1,0 +1,52 @@
+{
+  "createTime": 1494421665523,
+  "description": "http://120.25.193.220/group1/M00/00/09/eBnB3FgWy7-AXxW2AAAA0IGmPZY12.file",
+  "images": [
+    {
+      "imageUrl": "http://m.uclee.com/images/hongshi/11-2.jpg",
+      "linkId": 1,
+      "productId": 1
+    },
+    {
+      "imageUrl": "http://m.uclee.com/images/hongshi/12-2.jpg",
+      "linkId": 2,
+      "productId": 1
+    },
+    {
+      "imageUrl": "http://m.uclee.com/images/hongshi/13-2.jpg",
+      "linkId": 3,
+      "productId": 1
+    }
+  ],
+  "isActive": true,
+  "lastModify": 1494421665523,
+  "productId": 1,
+  "salesAmount": 1000,
+  "specifications": [
+    {
+      "specification": "款式",
+      "specificationId": 1,
+      "values": [
+        {
+          "hsGoodsId": 1,
+          "hsGoodsPrice": 10.2,
+          "value": "一大半面包",
+          "valueId": 1
+        },
+        {
+          "hsGoodsId": 1,
+          "hsGoodsPrice": 11.2,
+          "value": "两大半面包",
+          "valueId": 2
+        },
+        {
+          "hsGoodsId": 1,
+          "hsGoodsPrice": 12.2,
+          "value": "三大半面包",
+          "valueId": 3
+        }
+      ]
+    }
+  ],
+  "title": "测试面包超豪华套餐"
+}

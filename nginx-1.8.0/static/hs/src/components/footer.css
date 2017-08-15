@@ -1,0 +1,12 @@
+.footer {
+  text-align: center;
+}
+
+.footer > a {
+  display: inline-block;
+  color: #333;
+}
+
+.footer > a + a {
+  margin-left: 15px;
+}

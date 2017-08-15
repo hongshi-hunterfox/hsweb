@@ -1,0 +1,31 @@
+.recharge-list {
+  padding-top: 15px;
+}
+
+.recharge-list-item {
+  background-color: white;
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.recharge-list-item:first-child {
+  border-top: 1px solid #e5e5e5;
+}
+
+.recharge-list-point{
+  margin-right: 5px;
+}
+.recharge-list-value {
+  font-size: 18px;
+  color: #27AE60;
+}
+
+.recharge-list-time {
+  color: #999;
+  display: inline-block;
+}
+
+.recharge-list-balance {
+  display: block;
+  float: right;
+}

@@ -1,0 +1,81 @@
+.distribution-order-top {
+  background-color: white;
+  padding: 20px;
+}
+.distribution-order-top:before,
+.distribution-order-top:after {
+  content: "";
+  display: table;
+}
+.distribution-order-top:after {
+  clear: both;
+}
+.distribution-order-top .left {
+  padding: 10px 0 0 10px;
+}
+.distribution-order-top .left .number {
+  font-size: 35px;
+  color: #f15f40;
+  text-align: center;
+}
+.distribution-order-top .transfer {
+  font-size: 18px;
+  float: right;
+  background-color: white;
+  color: #f15f40;
+  padding: 4px 10px;
+  border-radius: 10%;
+  border: 1px solid #f15f40;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+.distribution-order-item {
+  margin-top: 5px;
+  padding: 10px;
+  background-color: white;
+  border-bottom: 1px solid #d0d0d0;
+}
+.distribution-order-item .order-number {
+  border-bottom: 1px solid #d0d0d0;
+  padding: 0px 10px 10px 0px;
+  margin-bottom: 15px;
+}
+.distribution-order-item:before,
+.distribution-order-item:after {
+  content: "";
+  display: table;
+}
+.distribution-order-item:after {
+  clear: both;
+}
+.distribution-order-item .left {
+  float: left;
+}
+.distribution-order-item .left .top .image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.distribution-order-item .left .top .name {
+  margin-left: 5px;
+}
+.distribution-order-item .left .bottom {
+  padding: 10px 10px 10px 0px;
+}
+.distribution-order-item .right {
+  padding: 10px;
+  float: right;
+}
+.distribution-order-item .right .red {
+  color: #f15f40;
+}
+.distribution-order-item .right .bottom {
+  margin-top: 14px;
+  padding: 5px;
+}
+.distribution-order .bottom-text {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+  color: #afafaf;
+}

@@ -1,0 +1,132 @@
+.shake-monitor {
+  height: 100%;
+}
+.shake-monitor-body {
+  background-image: url(/images/background.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+.shake-monitor-body #root,
+.shake-monitor-body .app,
+.shake-monitor-body .main {
+  height: 100%;
+}
+.shake-monitor-title {
+  text-align: center;
+  color: white;
+  margin-top: 0;
+  padding-top: 15px;
+}
+.shake-monitor-total {
+  text-align: center;
+  color: #ffffff;
+}
+.shake-monitor-total:before,
+.shake-monitor-total:after {
+  content: "";
+  display: table;
+}
+.shake-monitor-total:after {
+  clear: both;
+}
+.shake-monitor-total .reset-button {
+  float: right;
+  margin-right: 50px;
+}
+.shake-monitor-items {
+  border: 3px solid white;
+  border-radius: 10px;
+  width: 90%;
+  height: 40%;
+  margin: auto;
+  overflow: auto;
+}
+.shake-monitor-item {
+  width: 5%;
+  float: left;
+  animation-name: shake;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+}
+.shake-monitor-item > img {
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: auto;
+}
+.shake-monitor-item > span {
+  display: block;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.shake-monitor-prize {
+  width: 90%;
+  margin: auto;
+}
+.shake-monitor-prize-title {
+  text-align: center;
+  font-size: 24px;
+  color: white;
+}
+.shake-monitor-prize-items {
+  border: 3px solid white;
+  border-radius: 10px;
+  margin: auto;
+  white-space: nowrap;
+  overflow: auto;
+  float: left;
+  width: 80%;
+  height: 85px;
+}
+.shake-monitor-prize-control {
+  float: left;
+  width: 20%;
+  padding: 0 15px;
+}
+.shake-monitor-prize-control:before,
+.shake-monitor-prize-control:after {
+  content: "";
+  display: table;
+}
+.shake-monitor-prize-control:after {
+  clear: both;
+}
+.shake-monitor-prize-control .button {
+  text-align: center;
+  margin-top: 10px;
+}
+.shake-monitor-prize-item {
+  width: 70px;
+  display: inline-block;
+  animation-name: shake;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+}
+.shake-monitor-prize-item > img {
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: auto;
+}
+.shake-monitor-prize-item > span {
+  display: block;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes shake {
+  from {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
