@@ -391,20 +391,25 @@ insert into web_freight (condition,money) values (10,8);
     insert into web_freight (condition,money) values (30,12);
 /*web_payments表初始数据*/
 insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('微信支付','WeChat','WAP',1,'WCJSAPIPaymentStrategy');
- insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('会员卡支付','VipCard','WAP',1,'MemberCardPaymentStrategy');
- insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('支付宝支付','Alipay','WAP',1,'AlipayPaymentStrategy');
+insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('会员卡支付','VipCard','WAP',1,'MemberCardPaymentStrategy');
+insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('支付宝支付','Alipay','WAP',1,'AlipayPaymentStrategy');
+
+/*支付方式与线下同步*/
+If Not Exists(Select * From 结算方式表 Where 名称='WSC_微信支付') Insert Into 结算方式表(名称,结算类型,第三方支付,是否启用)Values('WSC_微信支付','现金',1,0)
+If Not Exists(Select * From 结算方式表 Where 名称='WSC_支付宝支付') Insert Into 结算方式表(名称,结算类型,第三方支付,是否启用)Values('WSC_支付宝支付','现金',1,0)
 
 /*web_recharge_config*/
 insert into web_recharge_config (money,rewards) values (50,10);
-  insert into web_recharge_config (money,rewards) values (100,15);
-    insert into web_recharge_config (money,rewards) values (150,20);
-      insert into web_recharge_config (money,rewards) values (200,25);
-        insert into web_recharge_config (money,rewards) values (250,30);
-          insert into web_recharge_config (money,rewards) values (300,35);
-            insert into web_recharge_config (money,rewards) values (400,40);
-              insert into web_recharge_config (money,rewards) values (500,50);
-                insert into web_recharge_config (money,rewards) values (800,80);
-                  insert into web_recharge_config (money,rewards) values (1000,100);
+insert into web_recharge_config (money,rewards) values (100,15);
+insert into web_recharge_config (money,rewards) values (150,20);
+insert into web_recharge_config (money,rewards) values (200,25);
+insert into web_recharge_config (money,rewards) values (250,30);
+insert into web_recharge_config (money,rewards) values (300,35);
+insert into web_recharge_config (money,rewards) values (400,40);
+insert into web_recharge_config (money,rewards) values (500,50);
+insert into web_recharge_config (money,rewards) values (800,80);
+insert into web_recharge_config (money,rewards) values (1000,100);
+
 insert into web_categories (category,parent_id) values ('下午茶',0);
 insert into web_categories (category,parent_id) values ('面包',0);
 insert into web_categories (category,parent_id) values ('生日蛋糕',0);
