@@ -477,8 +477,8 @@ insert into web_payments (payment_name,unit,platform,is_active,strategy_class_na
 insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('支付宝支付','Alipay','WAP',1,'AlipayPaymentStrategy');
 
 /*支付方式与线下同步*/
-If Not Exists(Select * From 结算方式表 Where 名称='WSC_微信支付') Insert Into 结算方式表(名称,结算类型,第三方支付,是否启用）Values('WSC_微信支付','现金',1,0)
-If Not Exists(Select * From 结算方式表 Where 名称='WSC_支付宝支付') Insert Into 结算方式表(名称,结算类型,第三方支付,是否启用）Values('WSC_支付宝支付','现金',1,0)
+If Not Exists(Select * From 结算方式表 Where 名称='WSC_微信支付') Insert Into 结算方式表(名称,结算类型,第三方支付,是否启用)Values('WSC_微信支付','现金',1,0)
+If Not Exists(Select * From 结算方式表 Where 名称='WSC_支付宝支付') Insert Into 结算方式表(名称,结算类型,第三方支付,是否启用)Values('WSC_支付宝支付','现金',1,0)
 
 /*web_recharge_config*/
 insert into web_recharge_config (money,rewards) values (50,10);
