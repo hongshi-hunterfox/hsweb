@@ -1,4 +1,4 @@
-﻿use modeldb
+use modeldb
 go
 --select 'drop table '+name from sysobjects where xtype='u' and name like 'web%'
 drop table web_balance
