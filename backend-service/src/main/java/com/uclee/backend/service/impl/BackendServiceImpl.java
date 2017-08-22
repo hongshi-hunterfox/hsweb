@@ -179,6 +179,16 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.signName, "");
 		}
+		if (configPost.getBirthTemId()!=null) {
+			configMapper.updateByTag(WebConfig.birthTmpId, configPost.getBirthTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.birthTmpId, "");
+		}
+		if (configPost.getBuyTemId()!=null) {
+			configMapper.updateByTag(WebConfig.buyTmpId, configPost.getBuyTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.buyTmpId, "");
+		}
 		return true;
 	}
 
@@ -549,11 +559,15 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日祝福"};
-			sendWXMessage(login.getOauthId(), "EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew", "hs.uclee.com", "洪石商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
-			MsgRecord msgRecord = new MsgRecord();
-			msgRecord.setType(1);
-			msgRecord.setUserId(userId);
-			msgRecordMapper.insertSelective(msgRecord);
+			Config config = configMapper.getByTag("birthTmpId");
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), "hs.uclee.com", "洪石商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
 			return true;
 		}
 		return false;
@@ -569,11 +583,15 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"消费提醒"};
-			sendWXMessage(login.getOauthId(), "EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew", "hs.uclee.com", "洪石商城促销大优惠，赶紧来抢购吧", key,value, "");
-			MsgRecord msgRecord = new MsgRecord();
-			msgRecord.setType(2);
-			msgRecord.setUserId(userId);
-			msgRecordMapper.insertSelective(msgRecord);
+			Config config = configMapper.getByTag("buyTmpId");
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), "hs.uclee.com", "洪石商城促销大优惠，赶紧来抢购吧", key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(2);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
 			return true;
 		}
 		return false;

@@ -27,7 +27,25 @@ public class ConfigPost {
 	private String aliAppSecret;
 	private String templateCode;
 	private String signName;
-	
+	private String buyTemId;
+	private String birthTemId;
+
+	public String getBuyTemId() {
+		return buyTemId;
+	}
+
+	public void setBuyTemId(String buyTemId) {
+		this.buyTemId = buyTemId;
+	}
+
+	public String getBirthTemId() {
+		return birthTemId;
+	}
+
+	public void setBirthTemId(String birthTemId) {
+		this.birthTemId = birthTemId;
+	}
+
 	public String getSignName() {
 		return signName;
 	}
