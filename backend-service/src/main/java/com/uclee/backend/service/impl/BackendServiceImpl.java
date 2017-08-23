@@ -440,6 +440,10 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setTemplateCode(config.getValue());
 			}else if(config.getTag().equals(WebConfig.signName)){
 				configPost.setSignName(config.getValue());
+			}else if(config.getTag().equals(WebConfig.birthTmpId)){
+				configPost.setBirthTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.buyTmpId)){
+				configPost.setBuyTemId(config.getValue());
 			}
 			
 		}

@@ -132,7 +132,7 @@ class GlobalConfig extends React.Component {
               <div className="col-md-9">
                 <input type="text" value={this.state.config.aliAppSecret} name="aliAppSecret" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">阿里大于消息模板templateCode：</label>
+              <label className="control-label col-md-3">阿里大于templateCode：</label>
               <div className="col-md-9">
                 <input type="text" value={this.state.config.templateCode} name="templateCode" className="form-control" onChange={this._change}/>
               </div>
