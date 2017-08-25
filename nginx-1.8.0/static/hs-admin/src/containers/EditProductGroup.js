@@ -153,7 +153,7 @@ class EditProductGroup extends React.Component {
       if (res.body) {
         window.location = '/product-group-list'
       } else {
-        alert('网络繁忙，请稍后重试')
+        alert('该区域已存在此商品')
       }
     })
   }

@@ -659,7 +659,7 @@ class Product extends React.Component {
 
     var foundWrongPrice = false
     data.valuePost.every(item => {
-      if (!/^\d+(,\d{1,2})?$/.test(item.hsPrice)) {
+      if (!/^\d+(\.\d{1,2})?$/.test(item.hsPrice)) {
         foundWrongPrice = true
         return false
       }
