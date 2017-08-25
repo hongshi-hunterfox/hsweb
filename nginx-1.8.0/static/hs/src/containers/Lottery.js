@@ -112,6 +112,10 @@ class Lottery extends React.Component {
 			alert('还没到开放时间，敬请期待');
 			return ;
 		}
+		if(!this.state.point&&this.state.point!==0){
+			alert('请先绑定会员');
+			return ;
+		}
 		if(this.state.point<this.state.cost){
 			alert('积分不足');
 			return ;

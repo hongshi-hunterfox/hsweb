@@ -15,7 +15,8 @@ class MemberCenter extends React.Component {
     this.state = {
       nickName: '',
       point:0,
-      serialNum:''
+      serialNum:'',
+      cVipCode:null
     }
   }
 
@@ -28,6 +29,18 @@ class MemberCenter extends React.Component {
       .end((err, res) => {
         this.setState(res.body)
       })
+
+      req
+      .get('/uclee-user-web/getVipInfo')
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        if (res.text) {
+          this.setState(res.body)
+        }
+      })
   }
 
   render() {
@@ -36,6 +49,10 @@ class MemberCenter extends React.Component {
         <div className="member-center">
           <div className="member-center-hero">
             <span className="member-center-check-in" onClick={() => { 
+              if(this.state.cVipCode===null){
+                alert("请先绑定会员。");
+                return ;
+              }
               req
                 .get('/uclee-user-web/signInHandler')
                 .end((err, res) => {

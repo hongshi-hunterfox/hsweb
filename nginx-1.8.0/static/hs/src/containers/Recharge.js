@@ -165,10 +165,10 @@ class Recharge extends React.Component {
 			alert("请至少选择一种支付方式");
 			return;
 		}
-		if(this.state.rechargeMoney<=0){
+		/*if(this.state.rechargeMoney<=0){
 			alert("充值金额需大于0");
 			return;
-		}
+		}*/
 
 		var data={};
 		data.paymentId=this.state.paymentId;

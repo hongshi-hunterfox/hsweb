@@ -4,7 +4,7 @@ var React = require("react")
 var browserHistory = require("react-router").browserHistory
 var PaymentUtil = require("../utils/PaymentUtil.js")
 import DocumentTitle from "react-document-title"
-
+import req from 'superagent'
 class CountDownBlock extends React.Component {
 	render() {
 		return (
@@ -102,7 +102,8 @@ class Payment extends React.Component {
 			balance: 0,
 			timeCountDown: 60000,
 			submitting:false,
-			isWCCancel:false
+			isWCCancel:false,
+			cVipCode:null
 		}
 	}
 
@@ -118,6 +119,17 @@ class Payment extends React.Component {
 
 			}.bind(this)
 		)
+		req
+		  .get('/uclee-user-web/getVipInfo')
+		  .end((err, res) => {
+		    if (err) {
+		      return err
+		    }
+
+		    if (res.text) {
+		      this.setState(res.body)
+		    }
+		  })
 		console.log(this.state.paymentOrder.isCompleted);
 		if (!this.state.paymentOrder ||this.state.paymentOrder.isCompleted) {
 			alert("支付单过期或已失效")
@@ -204,6 +216,12 @@ class Payment extends React.Component {
 		}
 		if (this.state.paymentId === 0) {
 			alert("请至少选择一种支付方式")
+			return
+		}
+		if (
+			this.state.paymentId === 2 && this.state.cVipCode==null
+		) {
+			alert("请先绑定会员卡")
 			return
 		}
 		if (

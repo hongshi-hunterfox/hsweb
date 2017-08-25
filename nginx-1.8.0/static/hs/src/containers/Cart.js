@@ -368,9 +368,26 @@ class Cart extends React.Component {
     var checkedCartIds = chekedItem.map(item => {
       return item.cartId
     })
-    sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
-    sessionStorage.setItem('isFromCart', 1)
-    window.location = '/order'
+
+    var data = {};
+    data.cartIds = checkedCartIds;
+
+    req.post('/uclee-user-web/stockCheck').send(data).end((err, res) => {
+      if (err) {
+        return err
+      }
+      var resJson = JSON.parse(res.text)
+      if (!resJson.result) {
+        alert(resJson.reason);
+        return ;
+      }else{
+        sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
+        sessionStorage.setItem('isFromCart', 1)
+        window.location = '/order'
+      }
+    })
+
+    
   }
 }
 

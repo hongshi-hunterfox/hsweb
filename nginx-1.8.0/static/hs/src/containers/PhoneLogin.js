@@ -133,7 +133,7 @@ class PhoneLogin extends React.Component {
         }
         if(!res.body){
           return this.setState({
-            error: '改手机号未分配到加盟商'
+            error: '该手机号未分配到加盟商'
           })
         }else{
           this.setState({
