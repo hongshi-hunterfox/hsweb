@@ -1,6 +1,7 @@
 @active: #ff6600;
-
+@import '../public.less';
 .detail {
+	background-color: #f2f2f2;
 	.slick-dots {
 		padding: 0;
 		margin: 0;
@@ -47,8 +48,8 @@
 	}
 
 	&-info {
+		.clearfix();
 		background-color: white;
-		padding-left: 15px;
 		border-bottom: 1px solid #f2f2f2;
 		margin-bottom: 15px;
 
@@ -57,31 +58,65 @@
 			padding-bottom: 5px;
 			padding-right: 15px;
 			font-size: 16px;
+			padding-left: 15px;
 		}
 
 		&-price {
-			color: @active;
-			font-weight: bold;
-			font-size: 16px;
+			.clearfix();
+			padding-left: 15px;
 			border-bottom: 1px solid #f2f2f2;
-			&-pre{
-				color:#b5b5b5;
-				font-size: 14px;
-				text-decoration: line-through;
+			padding-bottom: 10px;
+			&-lprice{
+				float: left;
+				color: @active;
+				font-weight: bold;
+				font-size: 16px;
+				&-pre{
+					color:#b5b5b5;
+					font-size: 14px;
+					text-decoration: line-through;
+				}
+			}
+			&-rprice{
+				float: right;
+				color: @active;
+				font-weight: bold;
+				font-size: 16px;
+				margin-right: 15px;
+				&-pre{
+					color:#b5b5b5;
+					font-size: 14px;
+					text-decoration: line-through;
+				}
 			}
 		}
 
 		&-stat {
-			padding-top: 5px;
-			padding-bottom: 5px;
+			.clearfix();
+			padding-left: 15px;
+			padding-top: 8px;
+			padding-bottom: 8px;
 			color: #999;
 
 			&-item {
 				display: block;
 				float: left;
-				width: 100/3%
+				width: 100/3%;
+				.tag{
+					padding: 2px 5px;
+				    margin: 6px 3px 0 0;
+				    height: 18px;
+				    line-height: 12px;
+				    text-align: center;
+				    color: #FF2C29;
+				    background: #FFC1BF;
+				    border-radius: 2px;
+				    line-height: 18px;
+				}
 			}
+			
 		}
+
 	}
 
 	&-pick {

@@ -34,7 +34,8 @@ class Order extends React.Component {
       phone: '',
       pDate: '',
       pTime: '',
-      remark: ''
+      remark: '',
+      isShippingfree:false
     }
     this.lat = 23
     this.lng = 113
@@ -105,7 +106,8 @@ class Order extends React.Component {
       this.setState({
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
-        total: resJson.total
+        total: resJson.total,
+        isShippingfree:resJson.isShippingfree
       })
       if (sessionStorage.getItem('addr') != null) {
         this.setState({
@@ -124,7 +126,9 @@ class Order extends React.Component {
             this.state.defaultAddr.city +
             this.state.defaultAddr.region +
             this.state.defaultAddr.addrDetail
-          geocoder.getLocation(addr)
+          if(!this.state.isShippingfree){
+            geocoder.getLocation(addr)
+          }
         }
       }
       if (sessionStorage.getItem('voucher') != null) {
@@ -190,7 +194,9 @@ class Order extends React.Component {
                               this.state.defaultAddr.region +
                               this.state.defaultAddr.addrDetail
                             console.log('addr:' + addr)
-                            geocoder.getLocation(addr)
+                            if(!this.state.isShippingfree){
+                              geocoder.getLocation(addr)
+                            }
                           }
                         }
                     })
@@ -216,7 +222,9 @@ class Order extends React.Component {
                               this.state.defaultAddr.region +
                               this.state.defaultAddr.addrDetail
                             console.log('addr:' + addr)
-                            geocoder.getLocation(addr)
+                            if(!this.state.isShippingfree){
+                             geocoder.getLocation(addr)
+                            }
                           }
                         }
                     })

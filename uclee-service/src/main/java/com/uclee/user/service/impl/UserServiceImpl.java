@@ -224,7 +224,8 @@ public class UserServiceImpl implements UserServiceI {
 	private ProductGroupLinkMapper productGroupLinkMapper;
 	@Autowired
 	private SpecificationValueStoreLinkMapper specificationValueStoreLinkMapper;
-	
+	@Autowired
+	private HomeQuickNaviMapper homeQuickNaviMapper;
 	@Autowired
 	private CartMapper cartMapper;
 	@Autowired
@@ -1929,6 +1930,7 @@ public class UserServiceImpl implements UserServiceI {
 		}else{
 			productDto.setSalesAmount(0);
 		}
+		System.out.println(JSON.toJSONString(productDto));
 		return productDto;
 	}
 
@@ -2109,7 +2111,7 @@ public class UserServiceImpl implements UserServiceI {
 			User user = userMapper.selectByPrimaryKey(userId);
 			User invitor = userMapper.selectBySerialNum(serialNum);
 			logger.info(JSON.toJSONString(user));
-			if(user!=null&&!user.getSerialNum().equals(serialNum)){
+			if(user!=null&&!user.getSerialNum().equals(serialNum)&&invitor!=null){
 				UserInvitedLink link = new UserInvitedLink();
 				link.setUserId(invitor.getUserId());
 				link.setInvitedId(userId);
@@ -2714,7 +2716,7 @@ public class UserServiceImpl implements UserServiceI {
 		String vipImage = fDFSFileUpload.getFileId(file);
 		logger.info(vipImage);
 		if(profile!=null){
-			profile.setVipImage(vipImage);
+			profile.setVipJbarcode(vipImage);
 			userProfileMapper.updateByPrimaryKeySelective(profile);
 		}
 		file.delete();
@@ -3604,5 +3606,10 @@ public class UserServiceImpl implements UserServiceI {
 		Map<String,String> config = getWeixinConfig();
 		return config.get(WebConfig.APPID);
 	}
-	 
+
+	@Override
+	public List<HomeQuickNavi> getQuickNavis() {
+		return homeQuickNaviMapper.selectAll();
+	}
+
 }

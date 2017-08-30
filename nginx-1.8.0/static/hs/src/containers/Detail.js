@@ -37,16 +37,17 @@ const DetailInfo = (props) => {
       <div className="detail-info-title">
         {props.title}
       </div>
-      <div className="detail-info-price">
+      <div className='detail-info-price'>
+      <div className="detail-info-price-lprice">
         {
           props.preMinPrice!==null&&props.preMaxPrice!==null?
           props.preMinPrice === props.preMaxPrice ? 
-            props.preMinPrice>0?<span className="detail-info-price-pre">原价：¥ {props.preMinPrice}</span>:<span className="detail-info-price-pre">原价：¥ {props.preMaxPrice}</span>
+            props.preMinPrice>0?<span className="detail-info-price-rprice-pre">原价：¥ {props.preMinPrice}</span>:<span className="detail-info-price-rprice-pre">原价：¥ {props.preMaxPrice}</span>
             :
-            props.preMinPrice>0?<span className="detail-info-price-pre">原价：¥ {props.preMinPrice} - {props.preMaxPrice}</span>:<span className="detail-info-price-pre">原价：¥ {props.preMaxPrice}</span>:null
+            props.preMinPrice>0?<span className="detail-info-price-rprice-pre">原价：¥ {props.preMinPrice} - {props.preMaxPrice}</span>:<span className="detail-info-price-rprice-pre">原价：¥ {props.preMaxPrice}</span>:null
         }
       </div>
-      <div className="detail-info-price">
+      <div className="detail-info-price-rprice">
         {
           props.minPrice === props.maxPrice ? 
           <span>¥ {props.minPrice}</span>
@@ -55,8 +56,9 @@ const DetailInfo = (props) => {
         }
          
       </div>
-      <div className="detail-info-stat clearfix">
-        <div className="detail-info-stat-item">销量：{props.salesAmount}</div>
+      </div>
+      <div className="detail-info-stat">
+        <div className="detail-info-stat-item">{props.shippingFree?<span className="tag">免运费</span>:null}销量：{props.salesAmount}</div>
       </div>
     </div>
     )
@@ -191,7 +193,7 @@ class Detail extends React.Component {
       description: null,
       specifications: [],
       title: null,
-
+      shippingFree:false,
       loading: true,
       showPick: false,
       currentSpecValudId: null,
@@ -271,6 +273,7 @@ class Detail extends React.Component {
             <DetailCarousel images={this.state.images}/>
             <DetailInfo
               title={this.state.title}
+              shippingFree={this.state.shippingFree}
               salesAmount={this.state.salesAmount}
               minPrice={this.minPrice}
               maxPrice={this.maxPrice}

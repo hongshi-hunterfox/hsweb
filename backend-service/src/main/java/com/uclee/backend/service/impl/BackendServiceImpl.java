@@ -15,10 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.validator.Msg;
+import com.uclee.fundation.data.mybatis.mapping.*;
+import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
@@ -26,59 +27,14 @@ import com.backend.service.BackendServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.WebConfig;
-import com.uclee.fundation.data.mybatis.mapping.BannerMapper;
-import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.FreightMapper;
-import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
-import com.uclee.fundation.data.mybatis.mapping.LotteryDrawConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.MsgRecordMapper;
-import com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper;
-import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductCategoryLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductGroupLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductGroupMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
-import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.StoreInfoMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
-import com.uclee.fundation.data.mybatis.mapping.VarMapper;
-import com.uclee.fundation.data.mybatis.model.Banner;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.Freight;
-import com.uclee.fundation.data.mybatis.model.HongShiCoupon;
-import com.uclee.fundation.data.mybatis.model.HongShiGoods;
-import com.uclee.fundation.data.mybatis.model.HongShiOrder;
-import com.uclee.fundation.data.mybatis.model.HongShiOrderItem;
-import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
-import com.uclee.fundation.data.mybatis.model.MsgRecord;
-import com.uclee.fundation.data.mybatis.model.NapaStore;
-import com.uclee.fundation.data.mybatis.model.OauthLogin;
-import com.uclee.fundation.data.mybatis.model.Payment;
-import com.uclee.fundation.data.mybatis.model.Product;
-import com.uclee.fundation.data.mybatis.model.ProductCategoryLink;
-import com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey;
-import com.uclee.fundation.data.mybatis.model.ProductGroup;
-import com.uclee.fundation.data.mybatis.model.ProductGroupLink;
-import com.uclee.fundation.data.mybatis.model.ProductImageLink;
-import com.uclee.fundation.data.mybatis.model.RechargeConfig;
-import com.uclee.fundation.data.mybatis.model.SpecificationValue;
-import com.uclee.fundation.data.mybatis.model.StoreInfo;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
-import com.uclee.fundation.data.mybatis.model.Var;
-import com.uclee.fundation.data.web.dto.BannerPost;
-import com.uclee.fundation.data.web.dto.ConfigPost;
-import com.uclee.fundation.data.web.dto.FreightPost;
-import com.uclee.fundation.data.web.dto.LotteryConfigPost;
-import com.uclee.fundation.data.web.dto.ProductDto;
-import com.uclee.fundation.data.web.dto.ProductGroupPost;
-import com.uclee.fundation.data.web.dto.ValuePost;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.number.util.NumberUtil;
 
 public class BackendServiceImpl implements BackendServiceI {
+	@Autowired
+	private HomeQuickNaviMapper homeQuickNaviMapper;
+	@Autowired
+	private QuickNaviProductLinkMapper quickNaviProductLinkMapper;
 	@Autowired
 	private BannerMapper bannerMapper;
 	@Autowired
@@ -332,7 +288,7 @@ public class BackendServiceImpl implements BackendServiceI {
 
 	@Override
 	public List<ProductDto> selectAllProduct() {
-		List<ProductDto> product = productMapper.getAllProduct(null,null,null);
+		List<ProductDto> product = productMapper.getAllProduct(null,null,null,null, null);
 		for(ProductDto item:product){
 			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(link!=null){
@@ -667,5 +623,67 @@ public class BackendServiceImpl implements BackendServiceI {
 		napaStoreMapper.deleteByPrimaryKey(storeId);
 		specificationValueStoreLinkMapper.delByStoreId(storeId);
 		return true;
+	}
+
+	@Override
+	public boolean editQiuckNavi(HomeQuickNavi homeQuickNavi) {
+		if(homeQuickNavi.getNaviId()!=null){
+			HomeQuickNavi tmp = homeQuickNaviMapper.selectByPrimaryKey(homeQuickNavi.getNaviId());
+			tmp.setImageUrl(homeQuickNavi.getImageUrl());
+			tmp.setTitle(homeQuickNavi.getTitle());
+			homeQuickNaviMapper.updateByPrimaryKeySelective(tmp);
+		}else{
+			HomeQuickNavi tmp = new HomeQuickNavi();
+			tmp.setImageUrl(homeQuickNavi.getImageUrl());
+			tmp.setTitle(homeQuickNavi.getTitle());
+			homeQuickNaviMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+
+	@Override
+	public HomeQuickNavi getQuickNavi(Integer naviId) {
+		return homeQuickNaviMapper.selectByPrimaryKey(naviId);
+	}
+
+	@Override
+	public List<HomeQuickNavi> getQuickNaviList() {
+		return homeQuickNaviMapper.selectAll();
+	}
+
+	@Override
+	public int delQiuckNavi(Integer naviId) {
+		return homeQuickNaviMapper.deleteByPrimaryKey(naviId);
+	}
+
+	@Override
+	public boolean editQuickNaviProduct(QuickNaviProductPost quickNaviProductPost) {
+		System.out.println(JSON.toJSONString(quickNaviProductPost));
+		for(Integer productId:quickNaviProductPost.getProductIds()){
+			if(quickNaviProductLinkMapper.selectByNaviIdAndProductId(quickNaviProductPost.getNaviId(),productId)==null){
+				QuickNaviProductLink link = new QuickNaviProductLink();
+				link.setProductId(productId);
+				link.setNaviId(quickNaviProductPost.getNaviId());
+				quickNaviProductLinkMapper.insertSelective(link);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public List<ProductDto> selectQuickNaviProduct(Integer naviId) {
+		List<ProductDto> product = productMapper.selectQuickNaviProduct(naviId);
+		for(ProductDto item:product){
+			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
+			if(link!=null){
+				item.setImage(link.getImageUrl());
+			}
+		}
+		return product;
+	}
+
+	@Override
+	public int delQuickNaviProduct(Integer naviId, Integer productId) {
+		return quickNaviProductLinkMapper.deleteByNIdAndPId(naviId,productId);
 	}
 }

@@ -224,9 +224,11 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		String[] tags = {TermGroupTag.HOT_PRODUCT,TermGroupTag.RECOMMEND};
 		List<ProductGroup> groups = userService.getTermGroups(tags);
+		List<HomeQuickNavi> quickNavis = userService.getQuickNavis();
 		List<Banner> banner = userService.selectAllBanner();
 		map.put("groups", groups);
 		map.put("banner", banner);
+		map.put("quickNavis", quickNavis);
 		return map;
 	}
 	/** 
@@ -241,11 +243,14 @@ public class UserController extends CommonUserHandler{
 	* @throws 
 	*/
 	@RequestMapping("/getAllProduct")
-	public @ResponseBody Map<String,Object> getAllProduct(HttpServletRequest request,Integer categoryId,Boolean isSaleDesc,Boolean isPriceDesc) {
+	public @ResponseBody Map<String,Object> getAllProduct(HttpServletRequest request,Integer categoryId,Boolean isSaleDesc,Boolean isPriceDesc,String keyword,Integer naviId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		List<Category> cat = duobaoService.getAllCat();
 		map.put("cat", cat);
-		List<ProductDto> products = duobaoService.getAllProduct(categoryId,isSaleDesc,isPriceDesc);
+		if(keyword!=null){
+			keyword = "%"+keyword+"%";
+		}
+		List<ProductDto> products = duobaoService.getAllProduct(categoryId,isSaleDesc,isPriceDesc,keyword,naviId);
 		map.put("products", products);
 		return map;
 	}
@@ -331,10 +336,16 @@ public class UserController extends CommonUserHandler{
 		map.put("defaultAddr", defaultAddr);
 		List<CartDto> carts = userService.selectCartByIds(userId,cart);
 		BigDecimal total = new BigDecimal(0);
+		boolean isShippingFree=true;
 		for(CartDto item:carts){
 			total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+			Product product = userService.getProductById(item.getProductId());
+			if(product!=null||!product.getShippingFree()){
+				isShippingFree=false;
+			}
 		}
 		map.put("cartItems", carts);
+		map.put("isShippingFree", isShippingFree);
 		map.put("total", total);
 		return map;
 	}
@@ -573,7 +584,9 @@ public class UserController extends CommonUserHandler{
 	*/
 	@RequestMapping("/productDetail")
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
-		return userService.getProductDtoById(productId);
+		ProductDto productDto = userService.getProductDtoById(productId);
+		System.out.println(JSON.toJSONString(productDto));
+		return productDto;
 	}
 	
 	/** 

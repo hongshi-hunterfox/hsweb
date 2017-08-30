@@ -356,37 +356,54 @@ class Cart extends React.Component {
   }
 
   _go = () => {
-    var chekedItem = this.state.list.filter(item => {
-      return item.checked
-    })
 
-    if (!chekedItem.length) {
-      alert('请选择要结算的商品')
-      return
-    }
-
-    var checkedCartIds = chekedItem.map(item => {
-      return item.cartId
-    })
-
-    var data = {};
-    data.cartIds = checkedCartIds;
-
-    req.post('/uclee-user-web/stockCheck').send(data).end((err, res) => {
+    req
+    .get('/uclee-user-web/getVipInfo')
+    .end((err, res) => {
       if (err) {
         return err
       }
-      var resJson = JSON.parse(res.text)
-      if (!resJson.result) {
-        alert(resJson.reason);
-        return ;
-      }else{
-        sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
-        sessionStorage.setItem('isFromCart', 1)
-        window.location = '/order'
+
+      if (!res.body||!res.body.cVipCode) {
+        alert('请先绑定会员');
+        sessionStorage.setItem('isBackToCart', 1);
+        window.location="/member-setting";
+        return 
       }
+        var chekedItem = this.state.list.filter(item => {
+        return item.checked
+      })
+
+      if (!chekedItem.length) {
+        alert('请选择要结算的商品')
+        return
+      }
+
+      var checkedCartIds = chekedItem.map(item => {
+        return item.cartId
+      })
+
+      var data = {};
+      data.cartIds = checkedCartIds;
+
+      req.post('/uclee-user-web/stockCheck').send(data).end((err, res) => {
+        if (err) {
+          return err
+        }
+        var resJson = JSON.parse(res.text)
+        if (!resJson.result) {
+          alert(resJson.reason);
+          return ;
+        }else{
+          sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
+          sessionStorage.setItem('isFromCart', 1)
+          window.location = '/order'
+        }
+      })
+
     })
 
+    
     
   }
 }

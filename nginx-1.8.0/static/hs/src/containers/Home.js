@@ -9,6 +9,7 @@ var Link = require("react-router").Link
 import ProductGroup from "./ProductGroup"
 var HomeUtil = require('../utils/HomeUtil.js');
 import req from 'superagent'
+var fto = require('form_to_object')
 class HomeCarousel extends React.Component {
   render() {
     var slickSettings = {
@@ -53,55 +54,70 @@ class HomeCarousel extends React.Component {
     )
   }
 }
-
-class HomeNav extends React.Component {
+class SearchBar extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      keyword: ''
+    }
+  }
   render() {
     return (
+      <div className="home-search" onSubmit={this._handleSubmit}>
+        <form method="post" className="home-search-form" name="searchform">
+          <div className="home-search-div">
+            <i className="fa fa-search icon" />
+            <input
+              className="home-search-input"
+              id="keyword"
+              name="keyword"
+              value={this.state.keyword}
+              placeholder="搜索产品"
+              onChange={this._onChange}
+            />
+          </div>
+
+        </form>
+      </div>
+    )
+  }
+
+  _onChange =(e)=>{
+    this.setState({
+      keyword:e.target.value
+    })
+  }
+
+  _handleSubmit = e => {
+     e.preventDefault()
+    var data = fto(e.target);
+    console.log(data.keyword);
+    window.location="/all-product?keyword="+data.keyword;
+  }
+}
+class HomeNav extends React.Component {
+  _location=(url)=>{
+      window.location=url
+    }
+  render() {
+    var list = this.props.quickNavis.map((item,index)=>{
+        return (
+            <div
+              onClick={this._location.bind(this,"/all-product?naviId="+item.naviId)}
+              className="home-nav-item"
+              key={index}
+            >
+            <img src={item.imageUrl} className='home-nav-item-image' />
+              <span className="home-nav-item-text">
+                {item.title}
+              </span>
+            </div>
+        )
+    })
+
+    return (
       <div className="home-nav">
-        <Link
-          to="/all-product?filterType=process&isPk=1"
-          className="home-nav-item"
-        >
-          <span className="home-nav-item-icon">
-            精
-          </span>
-          <span className="home-nav-item-text">
-            精品
-          </span>
-        </Link>
-        <Link
-          to="/all-product?filterType=process&isQuick=1"
-          className="home-nav-item"
-        >
-          <span className="home-nav-item-icon">
-            热
-          </span>
-          <span className="home-nav-item-text">
-            热销
-          </span>
-        </Link>
-        <Link
-          to="/all-product?categoryId=3"
-          className="home-nav-item"
-        >
-          <span className="home-nav-item-icon">
-            生
-          </span>
-          <span className="home-nav-item-text">
-            生日蛋糕
-          </span>
-        </Link>
-        <Link
-          to="/all-product?categoryId=1"
-          className="home-nav-item"
-        >
-          <span className="home-nav-item-icon">
-            茶
-          </span>
-          <span className="home-nav-item-text">
-            下午茶
-          </span>
-        </Link>
+        {list}
       </div>
     )
   }
@@ -112,7 +128,8 @@ class Home extends React.Component {
     super(props)
     this.state = {
       groups: [],
-      banner:[]
+      banner:[],
+      quickNavis:[]
     }
   }
 
@@ -154,11 +171,12 @@ class Home extends React.Component {
     return (
       <DocumentTitle title="首页">
           <div className="home">
+          <SearchBar/>
             {
               this.state.banner.length ? 
               <HomeCarousel banner={this.state.banner}/> : null
             }
-            <HomeNav />
+            <HomeNav quickNavis={this.state.quickNavis}/>
             <Navi query={this.props.location.query}/>
             {groups}
             <CartBtn />

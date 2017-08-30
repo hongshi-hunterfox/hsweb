@@ -87,7 +87,14 @@ public class ProductManagerController {
 		map.put("products", productDto);
 		return map;
 	}
-	
+	@RequestMapping(value="quickNaviProduct")
+	public @ResponseBody Map<String,Object> quickNaviProduct(HttpSession session,Integer naviId){
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<ProductDto> productDto = backendService.selectQuickNaviProduct(naviId);
+		map.put("products", productDto);
+		return map;
+	}
+
 	@RequestMapping(value="getCategory")
 	public @ResponseBody List<Category>  getCategory(ModelMap model,HttpSession session,Integer parentId){
 		if(parentId==null){

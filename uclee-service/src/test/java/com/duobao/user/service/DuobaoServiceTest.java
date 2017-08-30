@@ -8,7 +8,6 @@ import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.dynamicDatasource.DynamicDataSourceManager;
 import com.uclee.dynamicDatasource.DynamicDataSourceManagerHeyp;
 import com.uclee.fundation.config.links.TermGroupTag;
-import com.uclee.fundation.config.links.WechatMerchantInfo;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
@@ -28,8 +27,6 @@ import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.payment.strategy.wcPaymetnTools.PayImpl;
-import com.uclee.payment.strategy.wcPaymetnTools.PayMD5;
-import com.uclee.payment.strategy.wcPaymetnTools.PaymentTools;
 import com.uclee.payment.strategy.wcPaymetnTools.UniteOrder;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
@@ -39,7 +36,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +96,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 
 	@Test
 	public void testGetCoupon(){
-		List<ProductDto> products = productMapper.getAllProduct(null,null,false);
+		List<ProductDto> products = productMapper.getAllProduct(null,null,false,null, null);
 		for(ProductDto item:products){
 			ProductImageLink productImageLink = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(productImageLink!=null){

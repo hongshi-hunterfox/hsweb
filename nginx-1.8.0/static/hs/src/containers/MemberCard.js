@@ -20,9 +20,14 @@ const MemberCardItem = (props) => {
     <div className="member-card-item">
       <div className="member-card-item-code">卡号：{props.code}</div>
       <div className="member-card-item-balance">余额：{props.balance} 元</div>
-      <div className="member-card-item-recharge">
+      {
+        props.allowRecharge?
+        <div className="member-card-item-recharge">
         <a href="/seller/recharge" className="btn btn-success">充值</a>
       </div>
+      :null
+      }
+      
     </div>
   )
 }
@@ -35,7 +40,9 @@ class MemberCard extends React.Component {
       cVipCode: null,
       image: '',
       nickName: '',
-      vipImage:''
+      vipImage:'',
+      allowRecharge:true,
+      vipJbarcode:''
     }
   }
 
@@ -85,7 +92,7 @@ class MemberCard extends React.Component {
           <div className="member-card-list">
             {
               this.state.cVipCode ?
-              <MemberCardItem balance={this.state.balance} code={this.state.cVipCode}/>
+              <MemberCardItem balance={this.state.balance} code={this.state.cVipCode} allowRecharge={this.state.allowRecharge}/>
               :
               <NoItem />
             }
@@ -97,6 +104,9 @@ class MemberCard extends React.Component {
               {
                 this.state.vipImage&&this.state.vipImage!==''?
                   <div className='member-card-image'><img src={this.state.vipImage} className="member-card-image-item" alt=""/></div>:null
+              }{
+                this.state.vipJbarcode&&this.state.vipJbarcode!==''?
+                  <div className='member-card-image'><img src={this.state.vipJbarcode} className="member-card-image-barcode" alt=""/></div>:null
               }
              
             </div>

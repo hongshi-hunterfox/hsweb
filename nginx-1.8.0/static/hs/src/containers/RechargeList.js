@@ -20,22 +20,8 @@ const RechargeListItem = (props) => {
     <div className="recharge-list-item">
 
       {
-        props.logType===1?
         <div className="recharge-list-value">
-          订单消费： - {props.value}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
-        </div>
-        :props.logType===2?
-        <div className="recharge-list-value">
-          充值金额： + {props.value}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
-        </div>:props.logType===3?
-         <div className="recharge-list-value">
-          签到积分： + {props.bonusPoints}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
-        </div>:
-        <div className="recharge-list-value">
-          抽奖扣积分：  {props.bonusPoints}
+          {props.source}：  {props.value}
           <span className="recharge-list-point pull-right">积分：{props.integral}</span>
         </div>
       }
@@ -78,7 +64,7 @@ class RechargeList extends React.Component {
           {
             this.state.list.length ?
             this.state.list.map((item, index) => {
-              return <RechargeListItem key={index} title={item.source} value={item.amount} time={item.dealTim} balance={item.balance} logType={item.logType} bonusPoints={item.bonusPoints} integral={item.integral}/>
+              return <RechargeListItem key={index} title={item.source} value={item.amount} time={item.dealTim} balance={item.balance} source={item.source} bonusPoints={item.bonusPoints} integral={item.integral}/>
             })
             : <NoItem />
           }

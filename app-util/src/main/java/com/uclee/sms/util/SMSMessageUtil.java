@@ -62,7 +62,7 @@ public class SMSMessageUtil {
 			System.out.println("DefaultProfile.addEndpoint is error");
 			e.printStackTrace();
 		}
-		
+
 		IAcsClient acsClient = new DefaultAcsClient(profile);
 		 SendSmsRequest request = new SendSmsRequest();
 		 request.setMethod(MethodType.POST);
@@ -93,7 +93,7 @@ public class SMSMessageUtil {
 				System.out.println("sendSmsResponse.getCode is "+sendSmsResponse.getCode());
 				return false;
 			}
-    	
+
     	//TaobaoClient client = new DefaultTaobaoClient(URL, APP_KEY, SECRET);
       //  AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 //        req.setSmsType(SMS_TYPE);

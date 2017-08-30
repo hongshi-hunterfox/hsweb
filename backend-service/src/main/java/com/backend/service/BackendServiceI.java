@@ -5,20 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.backend.model.ProductForm;
-import com.uclee.fundation.data.mybatis.model.Banner;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.Freight;
-import com.uclee.fundation.data.mybatis.model.HongShiOrder;
-import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
-import com.uclee.fundation.data.mybatis.model.ProductGroupLink;
-import com.uclee.fundation.data.mybatis.model.RechargeConfig;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
-import com.uclee.fundation.data.web.dto.BannerPost;
-import com.uclee.fundation.data.web.dto.ConfigPost;
-import com.uclee.fundation.data.web.dto.FreightPost;
-import com.uclee.fundation.data.web.dto.LotteryConfigPost;
-import com.uclee.fundation.data.web.dto.ProductDto;
-import com.uclee.fundation.data.web.dto.ProductGroupPost;
+import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.*;
 
 public interface BackendServiceI {
 
@@ -75,4 +63,17 @@ public interface BackendServiceI {
 	boolean delStore(Integer storeId);
 
 
+    boolean editQiuckNavi(HomeQuickNavi homeQuickNavi);
+
+	HomeQuickNavi getQuickNavi(Integer naviId);
+
+	List<HomeQuickNavi> getQuickNaviList();
+
+	int delQiuckNavi(Integer naviId);
+
+	boolean editQuickNaviProduct(QuickNaviProductPost quickNaviProductPost);
+
+	List<ProductDto> selectQuickNaviProduct(Integer naviId);
+
+	int delQuickNaviProduct(Integer naviId, Integer productId);
 }

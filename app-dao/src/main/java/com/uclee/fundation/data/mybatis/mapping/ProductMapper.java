@@ -24,5 +24,7 @@ public interface ProductMapper {
 
 	List<ProductDto> selectOneImage(Integer productId);
 
-	List<ProductDto> getAllProduct(@Param("categoryId")Integer categoryId, @Param("isSaleDesc")Boolean isSaleDesc, @Param("isPriceDesc")Boolean isPriceDesc);
+	List<ProductDto> getAllProduct(@Param("categoryId") Integer categoryId, @Param("isSaleDesc") Boolean isSaleDesc, @Param("isPriceDesc") Boolean isPriceDesc, @Param("keyword") String keyword, @Param("naviId")Integer naviId);
+
+    List<ProductDto> selectQuickNaviProduct(Integer naviId);
 }

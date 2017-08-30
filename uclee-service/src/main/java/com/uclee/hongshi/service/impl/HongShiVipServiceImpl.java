@@ -1,6 +1,7 @@
 package com.uclee.hongshi.service.impl;
 
 import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
+import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
 import com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord;
 import com.uclee.fundation.data.mybatis.model.HongShiVip;
@@ -15,7 +16,7 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	private HongShiVipMapper hongShiVipMapper;
 
 	@Override
-	public Integer addHongShiVipInfo(HongShiVip params) {
+	public AddVipResult addHongShiVipInfo(HongShiVip params) {
 		return hongShiVipMapper.addVipInfo(params);
 	}
 

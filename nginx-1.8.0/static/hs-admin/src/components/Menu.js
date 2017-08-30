@@ -34,6 +34,9 @@ class Menu extends React.Component {
           <Link to={'/banner-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             首页banner设置
           </Link>
+          <Link to={'/quick-navi-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            首页快捷导航设置
+          </Link>
           <Link to={'/product-group-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             首页产品设置
           </Link>

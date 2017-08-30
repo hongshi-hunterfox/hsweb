@@ -8,6 +8,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
+import com.uclee.fundation.data.mybatis.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -21,18 +23,6 @@ import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
 import com.uclee.fundation.data.mybatis.mapping.FreightMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
-import com.uclee.fundation.data.mybatis.model.Banner;
-import com.uclee.fundation.data.mybatis.model.Category;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.Freight;
-import com.uclee.fundation.data.mybatis.model.HongShiOrder;
-import com.uclee.fundation.data.mybatis.model.HongShiProduct;
-import com.uclee.fundation.data.mybatis.model.HongShiStore;
-import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
-import com.uclee.fundation.data.mybatis.model.ProductGroupLink;
-import com.uclee.fundation.data.mybatis.model.RechargeConfig;
-import com.uclee.fundation.data.mybatis.model.StoreInfo;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.web.dto.BannerPost;
 import com.uclee.fundation.data.web.dto.ConfigPost;
 import com.uclee.fundation.data.web.dto.MySelect;
@@ -92,6 +82,20 @@ public class BackendController {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		List<Banner> banner = backendService.getBannerList();
 		map.put("banner", banner);
+		return map;
+	}
+	@RequestMapping("/quickNavi")
+	public @ResponseBody
+	HomeQuickNavi quickNavi(HttpServletRequest request, Integer naviId) {
+		HomeQuickNavi tmp = backendService.getQuickNavi(naviId);
+		System.out.println(JSON.toJSONString(tmp));
+		return tmp;
+	}
+	@RequestMapping("/quickNaviList")
+	public @ResponseBody Map<String,Object> quickNaviList(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<HomeQuickNavi> quickNavi = backendService.getQuickNaviList();
+		map.put("quickNavi", quickNavi);
 		return map;
 	}
 	@RequestMapping("/config")

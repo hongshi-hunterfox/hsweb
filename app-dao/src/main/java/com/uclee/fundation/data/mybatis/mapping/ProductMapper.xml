@@ -9,6 +9,7 @@
     <result column="last_modify" property="lastModify" jdbcType="TIMESTAMP" />
     <result column="is_active" property="isActive" jdbcType="BIT" />
     <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="is_shipping_free" property="isShippingFree" jdbcType="BIT" />
   </resultMap>
   <resultMap id="ProductDto" type="com.uclee.fundation.data.web.dto.ProductDto" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -18,9 +19,10 @@
     <result column="last_modify" property="lastModify" jdbcType="TIMESTAMP" />
     <result column="is_active" property="isActive" jdbcType="BIT" />
     <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="is_shipping_free" property="isShippingFree" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    product_id, title, description, create_time, last_modify, is_active ,price
+    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -40,6 +42,11 @@
     from web_products
     where product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectQuickNaviProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
+    select
+    A.*
+    from web_products A left join web_quick_navi_product_link B on A.product_id=B.product_id where B.navi_id=#{naviId,jdbcType=INTEGER}
+  </select>
   <select id="getAllProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
     select 
     A.*
@@ -51,6 +58,13 @@
     <if test="categoryId != null" >
        left join web_products_categories_link as B on A.product_id = B.product_id where B.category_id=#{categoryId,jdbcType=INTEGER} 
      </if>
+    <if test="naviId != null" >
+       left join web_quick_navi_product_link as E on A.product_id = E.product_id where E.navi_id=#{naviId,jdbcType=INTEGER}
+     </if>
+    <if test="keyword != null" >
+      left join web_products_specifications_values_link as C on A.product_id = C.product_id
+      left join web_specification_values as D on C.value_id = D.value_id where D.value like  #{keyword,jdbcType=VARCHAR} or A.title like #{keyword,jdbcType=VARCHAR}
+    </if>
      <if test="isPriceDesc != null or isSaleDesc != null " >
     	order by 
     </if>
@@ -81,10 +95,10 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
-      create_time, last_modify, is_active ,price
+      create_time, last_modify, is_active ,price,is_shipping_free
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}
+      #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
@@ -112,6 +126,9 @@
       <if test="price != null" >
         price,
       </if>
+      <if test="isShippingFree != null" >
+        is_shipping_free,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -135,6 +152,9 @@
       <if test="price != null" >
         #{price,jdbcType=DECIMAL},
       </if>
+      <if test="isShippingFree != null" >
+        #{isShippingFree,jdbcType=BIT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" >
@@ -155,6 +175,9 @@
       <if test="isActive != null" >
         is_active = #{isActive,jdbcType=BIT},
       </if>
+      <if test="isShippingFree != null" >
+        is_shipping_free = #{isShippingFree,jdbcType=BIT},
+      </if>
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
       </if>
@@ -168,6 +191,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       last_modify = #{lastModify,jdbcType=TIMESTAMP},
       price = #{price,jdbcType=DECIMAL},
+      is_shipping_free = #{isShippingFree,jdbcType=BIT},
       is_active = #{isActive,jdbcType=BIT}
     where product_id = #{productId,jdbcType=INTEGER}
   </update>

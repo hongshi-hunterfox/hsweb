@@ -1,34 +1,20 @@
 package com.uclee.user.service.impl;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.collections.map.LinkedMap;
-import org.apache.commons.httpclient.util.DateUtil;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -36,17 +22,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.uclee.date.util.DateUtils;
-import com.uclee.file.util.FileUtil;
-import com.uclee.format.util.MoneyFormat;
 import com.uclee.fundation.config.links.WechatMerchantInfo;
-import com.uclee.fundation.config.links.WeiXinInfo;
 import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
 import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
 import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
@@ -62,27 +41,14 @@ import com.uclee.fundation.data.mybatis.mapping.VarMapper;
 import com.uclee.fundation.data.mybatis.model.Category;
 import com.uclee.fundation.data.mybatis.model.Config;
 import com.uclee.fundation.data.mybatis.model.OauthLogin;
-import com.uclee.fundation.data.mybatis.model.Product;
 import com.uclee.fundation.data.mybatis.model.ProductImageLink;
 import com.uclee.fundation.data.mybatis.model.ProductSale;
-import com.uclee.fundation.data.mybatis.model.Specification;
 import com.uclee.fundation.data.mybatis.model.SpecificationValue;
-import com.uclee.fundation.data.mybatis.model.User;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
-import com.uclee.fundation.data.mybatis.model.UserRoleLinkKey;
 import com.uclee.fundation.data.mybatis.model.Var;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
-import com.uclee.number.util.NumberUtil;
-import com.uclee.payment.strategy.alipay.util.AlipayNotify;
-import com.uclee.payment.strategy.alipay.util.AlipaySubmit;
-import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.service.DuobaoServiceI;
-import com.uclee.user.service.UserServiceI;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import scala.io.BytePickle.PU;
 
 public class DuobaoServiceImpl implements DuobaoServiceI {
 	private final static Logger logger = Logger.getLogger(DuobaoServiceImpl.class);
@@ -283,8 +249,8 @@ public class DuobaoServiceImpl implements DuobaoServiceI {
 	}
 
 	@Override
-	public List<ProductDto> getAllProduct(Integer categoryId,Boolean isSaleDesc,Boolean isPriceDesc) {
-		List<ProductDto> products = productMapper.getAllProduct(categoryId,isSaleDesc,isPriceDesc);
+	public List<ProductDto> getAllProduct(Integer categoryId, Boolean isSaleDesc, Boolean isPriceDesc, String keyword, Integer naviId) {
+		List<ProductDto> products = productMapper.getAllProduct(categoryId,isSaleDesc,isPriceDesc,keyword,naviId);
 		for(ProductDto item:products){
 			ProductImageLink productImageLink = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(productImageLink!=null){

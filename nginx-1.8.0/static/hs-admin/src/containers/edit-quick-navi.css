@@ -1,0 +1,18 @@
+.selected:before,
+.selected:after {
+  content: "";
+  display: table;
+}
+.selected:after {
+  clear: both;
+}
+.selected-item {
+  float: left;
+  padding: 2px 10px;
+  margin-right: 5px;
+  border: 1px solid #9a9a9a;
+  border-radius: 5px;
+}
+.selected .icon {
+  margin-left: 15px;
+}

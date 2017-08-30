@@ -351,12 +351,19 @@ class MemberSetting extends React.Component {
       this.setState({
         showNoti: true
       })
-
-      setTimeout(() => {
-        browserHistory.replace({
-          pathname: '/member-card'
-        })
-      }, 2500)
+      console.log(sessionStorage.getItem('isBackToCart'));
+      console.log(sessionStorage.getItem('isBackToCart')===1);
+      if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
+        sessionStorage.removeItem('isBackToCart');
+        window.location='/cart';
+      }else{
+        setTimeout(() => {
+          browserHistory.replace({
+            pathname: '/member-card'
+          })
+        }, 2500)
+      }
+      
     })
 
     this.setState({

@@ -296,7 +296,7 @@ public class WeiXinLogin extends CommonUserHandler{
  	        logger.info(weiXinUserInfo);
  	        String isSubcribe = weiXinUserInfoJsonData.getString("subscribe");
  	        String headimgurl;
-			if (isSubcribe.equals("1")) {
+			if (isSubcribe!=null&&isSubcribe.equals("1")) {
 				String weiXinNickName;
 				weiXinNickName = EmojiFilter.filterEmoji(weiXinUserInfoJsonData.getString("nickname"));
 				//headimgurl = headimgurl.replaceAll("\\", "");

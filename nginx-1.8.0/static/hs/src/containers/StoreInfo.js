@@ -57,7 +57,7 @@ class StoreInfo extends React.Component {
 
     return (
       <DocumentTitle title="公司介绍">
-          <div className="detail">
+          <div className="store">
             <DetailRich description={this.state.description}/>
             <Navi query={this.props.location.query}/>
           </div>

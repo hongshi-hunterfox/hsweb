@@ -9,6 +9,7 @@ import Demo from './containers/Demo'
 import Product from './containers/Product'
 import AddStore from './containers/AddStore'
 import EditStore from './containers/EditStore'
+import EditQuickNavi from './containers/EditQuickNavi'
 import EditBanner from './containers/EditBanner'
 import NapaStoreList from './containers/NapaStoreList'
 import UserList from './containers/UserList'
@@ -21,6 +22,9 @@ import GlobalConfig from './containers/GlobalConfig'
 import RechargeConfig from './containers/RechargeConfig'
 import Login from './containers/Login'
 import ProductList from './containers/ProductList'
+import QuickNaviList from './containers/QuickNaviList'
+import QuickNaviProduct from './containers/QuickNaviProduct'
+import EditQuickNaviProduct from './containers/EditQuickNaviProduct'
 import BannerList from './containers/BannerList'
 import ProductGroupList from './containers/ProductGroupList'
 import Freight from './containers/Freight'
@@ -48,12 +52,16 @@ ReactDOM.render(
       <Route path="user-list" component={UserList} />
       <Route path="user-unbuy-list" component={UserUnBuyList} />
       <Route path="user-birth-list" component={UserBirthList} />
+      <Route path="quick-navi-product" component={QuickNaviProduct} />
+      <Route path="edit-quick-navi-product" component={EditQuickNaviProduct} />
       <Route path="product-list" component={ProductList} />
       <Route path="banner-list" component={BannerList} />
       <Route path="product-group-list" component={ProductGroupList} />
+      <Route path="quick-navi-list" component={QuickNaviList} />
       <Route path="addStore" component={AddStore} />
       <Route path="editStore" component={EditStore} />
       <Route path="editBanner" component={EditBanner} />
+      <Route path="editQuickNavi" component={EditQuickNavi} />
       <Route path="napaStoreList" component={NapaStoreList} />
       <Route path="addUser" component={AddUser} />
       <Route path="editPhoneUser" component={EditPhoneUser} />
