@@ -42,12 +42,12 @@ class Navi extends React.Component {
 				</Link>
 				<Link
 					to={{
-						pathname: '/store-info',
+						pathname: '/cart',
 					}}
 					className={'navi-item' + this._cakeClass()}
 				>
-					<i className="fa fa-building" />
-					公司介绍
+					<i className="fa fa-shopping-cart" />
+					购物车
 				</Link>
 				<Link
 					to={{

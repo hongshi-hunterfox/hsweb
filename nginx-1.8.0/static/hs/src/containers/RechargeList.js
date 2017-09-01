@@ -2,7 +2,8 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './recharge-list.css'
 import req from 'superagent'
-
+var Link = require('react-router').Link;
+import Navi from "./Navi"
 const NoItem = () => {
   return (
     <div style={{
@@ -68,6 +69,10 @@ class RechargeList extends React.Component {
             })
             : <NoItem />
           }
+          {/*<Link to={"/member-center"} className='recharge-list-back'>
+                返回会员中心
+          </Link>*/}
+          <Navi query={'member-center'}/>
         </div>
       </DocumentTitle>
       )

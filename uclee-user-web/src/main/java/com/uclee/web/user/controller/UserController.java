@@ -7,6 +7,7 @@ import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
+import com.uclee.fundation.data.mybatis.mapping.SignRecordMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
@@ -56,6 +57,8 @@ public class UserController extends CommonUserHandler{
 	private DataSourceFacade datasource;
 	@Autowired
 	private DataSourceInfoServiceI dataSourceInfoService;
+	@Autowired
+	private SignRecordMapper signRecordMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -646,6 +649,7 @@ public class UserController extends CommonUserHandler{
 			}else{
 				result.put("isAllow", false);
 			}
+			result.put("rest", configs.get(0).getLimits()-records.size());
 			result.put("startTime", DateUtils.format(configs.get(0).getTimeStart(), DateUtils.FORMAT_LONG));
 			result.put("endTime", DateUtils.format(configs.get(0).getTimeEnd(), DateUtils.FORMAT_LONG));
 			Date now = new Date();
@@ -891,7 +895,16 @@ public class UserController extends CommonUserHandler{
 				map.put("couponAmount",0);
 			}
 		}
-		
+		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
+		SignRecord existed = signRecordMapper.selectToday(userId,today);
+		if(existed!=null){
+			map.put("isSigned", true);
+		}else{
+			map.put("isSigned", false);
+		}
+		int unPayCount  = userService.getUnpayOrderCountByUserId(userId);
+		map.put("unPayCount", unPayCount);
+
 		return map;
 	}
 

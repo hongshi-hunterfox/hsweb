@@ -253,4 +253,6 @@ public interface UserServiceI {
 	String getAppId(String merchantCode);
 
     List<HomeQuickNavi> getQuickNavis();
+
+    int getUnpayOrderCountByUserId(Integer userId);
 }

@@ -16,7 +16,10 @@ class MemberCenter extends React.Component {
       nickName: '',
       point:0,
       serialNum:'',
-      cVipCode:null
+      cVipCode:null,
+      isSigned:false,
+      unPayCount:0,
+      unCommentCount:0
     }
   }
 
@@ -44,10 +47,13 @@ class MemberCenter extends React.Component {
   }
 
   render() {
+    console.log(this.props.location.query)
     return (
       <DocumentTitle title="会员中心">
         <div className="member-center">
           <div className="member-center-hero">
+          {
+            !this.state.isSigned?
             <span className="member-center-check-in" onClick={() => { 
               if(this.state.cVipCode===null){
                 alert("请先绑定会员。");
@@ -63,7 +69,8 @@ class MemberCenter extends React.Component {
                   }
                   if(data.result){
                     this.setState({
-                      point : Number(this.state.point) + Number(data.point)
+                      point : Number(this.state.point) + Number(data.point),
+                      isSigned:true
                     })
                     alert("签到成功，积分+" + data.point)
                     return;
@@ -75,8 +82,9 @@ class MemberCenter extends React.Component {
                   
                 })
 
-            }}>签到获取积分</span>
-
+            }}>签到获取积分</span>:
+            <span className="member-center-check-in">已签到</span>
+          }
             <img src={hero} alt=""/>
             <div className="member-center-info">
               <div>尊贵的 {this.state.nickName}</div>
@@ -100,9 +108,9 @@ class MemberCenter extends React.Component {
                 <span>{this.state.couponAmount || '0'}</span>
             </div>
           </div>
-
           <div className="member-center-orders clearfix">
             <div className="member-center-order" onClick={() => { window.location='/unpay-order-list' }}>
+              {this.state.unPayCount&&this.state.unPayCount>0?<div className='member-center-order-count'>1</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>待付款</span>
@@ -115,6 +123,7 @@ class MemberCenter extends React.Component {
               </a>
             </div>
             <div className="member-center-order" onClick={() => { window.location='/order-list?isEnd=1'  }}>
+              {this.state.unCommentCount&&this.state.unCommentCount>0?<div className='member-center-order-count'>1</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>已结单</span>

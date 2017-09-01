@@ -3612,4 +3612,9 @@ public class UserServiceImpl implements UserServiceI {
 		return homeQuickNaviMapper.selectAll();
 	}
 
+	@Override
+	public int getUnpayOrderCountByUserId(Integer userId) {
+		return orderMapper.getUnpayOrderCountByUserId(userId);
+	}
+
 }
