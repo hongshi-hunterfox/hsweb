@@ -24,7 +24,7 @@ class Product extends React.Component {
       currentSpec: {
         storeIds: []
       },
-
+      shippingFree:false,
       text: '',
       title: '',
       categoryId: '',
@@ -85,7 +85,20 @@ class Product extends React.Component {
                 </select>
               </div>
             </div>
-
+            <div className="form-group">
+              <label className="control-label col-md-3">是否免运费：</label>
+              <div className="col-md-9">
+                <select
+                  name="shippingFree"
+                  className="form-control"
+                  value={this.state.shippingFree}
+                  onChange={this._simpleInputChange}
+                >
+                  <option value={false}>否</option>
+                  <option value={true}>是</option>
+                </select>
+              </div>
+            </div>
             <div className="form-group">
               <label className="control-label col-md-3">图片：</label>
               <div className="col-md-9">
@@ -399,6 +412,7 @@ class Product extends React.Component {
         })
 
         this.setState({
+          shippingFree:res.body.productForm.shippingFree,
           title: res.body.productForm.title,
           categoryId: res.body.productForm.categoryId,
           images: res.body.productForm.images,
@@ -407,7 +421,7 @@ class Product extends React.Component {
           store: res.body.store,
           text: res.body.productForm.description
         })
-
+        console.log(this.state.shippingFree)
         hongShiProduct.forEach(item => {
           this.hongShiProductById[item.id] = item
         })
