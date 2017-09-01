@@ -17,7 +17,7 @@ const NoItem = () => {
 
 const MemberCardItem = (props) => {
   return (
-    <div className="member-card-item">
+    <div className="member-card-item clearfix">
       <div className="member-card-item-code">卡号：{props.code}</div>
       <div className="member-card-item-balance">余额：{props.balance} 元</div>
       {
@@ -102,11 +102,12 @@ class MemberCard extends React.Component {
             <div className="member-card-item">
               <div className="member-card-item-code">电子会员卡</div>
               {
-                this.state.vipImage&&this.state.vipImage!==''?
-                  <div className='member-card-image'><img src={this.state.vipImage} className="member-card-image-item" alt=""/></div>:null
-              }{
                 this.state.vipJbarcode&&this.state.vipJbarcode!==''?
                   <div className='member-card-image'><img src={this.state.vipJbarcode} className="member-card-image-barcode" alt=""/></div>:null
+              }
+              {
+                this.state.vipImage&&this.state.vipImage!==''?
+                  <div className='member-card-image'><img src={this.state.vipImage} className="member-card-image-item" alt=""/></div>:null
               }
              
             </div>

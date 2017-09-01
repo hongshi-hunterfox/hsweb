@@ -36,6 +36,7 @@
 
 .member-card-image{
   text-align: center;
+   padding: 5px;
 }
 
 .member-card-image-item{
@@ -43,6 +44,7 @@
   height: 250px;
 }
 .member-card-image-barcode{
+
   width: 80%;
   height: 80px;
 }
@@ -52,7 +54,7 @@
 
 .member-card-item {
   background-color: white;
-  padding: 15px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #e5e5e5;
   box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5)
@@ -67,9 +69,11 @@
   padding: 15px;
   text-align: center;
   font-size: 24px;
+  float: left;
 }
 
 .member-card-item-recharge {
   text-align: center;
-  margin-top: 10px;
+  float: right;
+  padding: 15px;
 }
