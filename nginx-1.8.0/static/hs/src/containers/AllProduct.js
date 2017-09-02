@@ -41,11 +41,12 @@ class SearchBar extends React.Component {
   }
   render() {
     return (
-      <div className="all-prod-search" onSubmit={this._handleSubmit}>
-        <form method="post" className="all-prod-search-form" name="searchform">
+      <div className="all-prod-search" onSubmit={this._handleSubmit} >
+        <form method="post" className="all-prod-search-form" name="searchform" action="">
           <div className="all-prod-search-div">
             <i className="fa fa-search icon" />
             <input
+              type='search'
               className="all-prod-search-input"
               id="keyword"
               name="keyword"

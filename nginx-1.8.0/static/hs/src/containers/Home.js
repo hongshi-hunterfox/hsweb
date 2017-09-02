@@ -171,7 +171,7 @@ class Home extends React.Component {
     return (
       <DocumentTitle title="首页">
           <div className="home">
-          <SearchBar/>
+          {/*<SearchBar/>*/}
             {
               this.state.banner.length ? 
               <HomeCarousel banner={this.state.banner}/> : null

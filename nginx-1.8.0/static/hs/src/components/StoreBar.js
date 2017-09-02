@@ -48,6 +48,9 @@ class StoreBar extends React.Component {
         >
           <span className="store-bar-change">[切换]</span>
         </a>
+        <i className="fa fa-search icon pull-right" style={{fontSize:'18px'}}  onClick={e => {
+            window.location = '/all-product'
+          }}/>
       </div>
     )
   }
