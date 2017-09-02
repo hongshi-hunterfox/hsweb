@@ -2737,6 +2737,11 @@ public class UserServiceImpl implements UserServiceI {
 		if(user!=null){
 			ret.put("serialNum", user.getSerialNum());
 		}
+		UserInvitedLink link = userInvitedLinkMapper.selectByInvitedId(userId);
+		if(link!=null){
+			UserProfile invitator = userProfileMapper.selectByUserId(link.getUserId());
+			ret.put("invitator",invitator);
+		}
 		Balance balance = this.getBalance(userId);
 		if(balance!=null){
 			ret.put("money", balance.getBalance());

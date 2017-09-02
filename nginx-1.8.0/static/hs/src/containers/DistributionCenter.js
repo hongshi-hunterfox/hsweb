@@ -10,7 +10,8 @@ class DistributionCenter extends React.Component {
 		this.state = {
 			money: 0,
 			isShareShow: false,
-			serialNum: ''
+			serialNum: '',
+			invitator:{}
 		}
 	}
 
@@ -23,7 +24,8 @@ class DistributionCenter extends React.Component {
 			console.log(resJson);
 			this.setState({
 				money:resJson.money,
-				serialNum:resJson.serialNum
+				serialNum:resJson.serialNum,
+				invitator:resJson.invitator
 			},()=>{
 				if(this.props.location.query.serialNum!==null&&this.props.location.query.serialNum!==this.state.serialNum){
 			      request
@@ -50,7 +52,22 @@ class DistributionCenter extends React.Component {
 						</div>
 						<div className="transfer pull-right" onClick={this._transHandler}>转进会员卡</div>
 					</div>
+					<div className="distribution-text">
+						<div className="top">
+							分享=赚钱
+						</div>
+						<div className="bottom" >邀请好友赚取消费收益</div>
+					</div>
 					<div className="distribution-content">
+						{
+							this.state.invitator?
+							<div
+								className="item"
+							>
+								我的上级：<span className='invitator'>{this.state.invitator.name}</span>
+							</div>:
+							null
+						}
 						<div
 							className="item"
 							onClick={this._location.bind(this, '/distribution-user')}
