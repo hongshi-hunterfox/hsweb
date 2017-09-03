@@ -16,7 +16,7 @@
 }
 .distribution-top {
   background-color: white;
-  padding: 20px;
+  padding: 10px;
 }
 .distribution-top:before,
 .distribution-top:after {
@@ -40,13 +40,26 @@
   background-color: white;
   color: #f15f40;
   padding: 4px 10px;
-  border-radius: 10%;
+  border-radius: 15px;
   border: 1px solid #f15f40;
   margin-right: 10px;
   margin-top: 20px;
 }
-.distribution-content {
-  margin-top: 40px;
+.distribution-text {
+  background-color: white;
+  text-align: center;
+}
+.distribution-text .top {
+  color: #f15f40;
+  padding: 10px 0 0 0;
+  font-size: 30px;
+  font-weight: bold;
+}
+.distribution-text .bottom {
+  color: #f15f40;
+  font-size: 20px;
+  padding-bottom: 10px;
+  font-weight: bold;
 }
 .distribution-content .item {
   margin-top: 5px;

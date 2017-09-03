@@ -10,11 +10,28 @@ class DistributionCenter extends React.Component {
 		this.state = {
 			money: 0,
 			isShareShow: false,
-			serialNum: ''
+			serialNum: '',
+			invitator:{},
+			allowRecharge:true,
+			cVipCode:''
 		}
 	}
 
 	componentDidMount() {
+		request
+      .get('/uclee-user-web/getVipInfo')
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        if (res.body) {
+          this.setState({
+          	allowRecharge:res.body.allowRecharge,
+          	cVipCode:res.body.cVipCode,
+          })
+        }
+      })
 		request.get('/uclee-user-web/distCenter').end((err, res) => {
 			if (err) {
 				return err
@@ -23,7 +40,8 @@ class DistributionCenter extends React.Component {
 			console.log(resJson);
 			this.setState({
 				money:resJson.money,
-				serialNum:resJson.serialNum
+				serialNum:resJson.serialNum,
+				invitator:resJson.invitator
 			},()=>{
 				if(this.props.location.query.serialNum!==null&&this.props.location.query.serialNum!==this.state.serialNum){
 			      request
@@ -37,6 +55,7 @@ class DistributionCenter extends React.Component {
 			    }
 			})
 		})
+		
 	}
 
 	render() {
@@ -50,7 +69,22 @@ class DistributionCenter extends React.Component {
 						</div>
 						<div className="transfer pull-right" onClick={this._transHandler}>转进会员卡</div>
 					</div>
+					<div className="distribution-text">
+						<div className="top">
+							分享    =    赚钱
+						</div>
+						<div className="bottom" >邀请好友赚取消费收益</div>
+					</div>
 					<div className="distribution-content">
+						{
+							this.state.invitator?
+							<div
+								className="item"
+							>
+								我的推荐人：<span className='invitator'>{this.state.invitator.name}</span>
+							</div>:
+							null
+						}
 						<div
 							className="item"
 							onClick={this._location.bind(this, '/distribution-user')}
@@ -94,7 +128,20 @@ class DistributionCenter extends React.Component {
 		)
 	}
 	_transHandler = () => {
+		console.log(this.state)
 		var conf = confirm('确定要转入到会员卡？');
+		if(!this.state.cVipCode){
+			alert("请先绑定会员卡");
+			return;
+		}
+		if(!this.state.allowRecharge){
+			alert("非充值类型会员卡不允许转入");
+			return;
+		}
+		if(this.state.money<=0){
+			alert("无可转入余额");
+			return;
+		}
 		if(conf){
 			request
 		      .get('/uclee-user-web/tranferBalance')

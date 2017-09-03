@@ -2737,6 +2737,11 @@ public class UserServiceImpl implements UserServiceI {
 		if(user!=null){
 			ret.put("serialNum", user.getSerialNum());
 		}
+		UserInvitedLink link = userInvitedLinkMapper.selectByInvitedId(userId);
+		if(link!=null){
+			UserProfile invitator = userProfileMapper.selectByUserId(link.getUserId());
+			ret.put("invitator",invitator);
+		}
 		Balance balance = this.getBalance(userId);
 		if(balance!=null){
 			ret.put("money", balance.getBalance());
@@ -2765,11 +2770,11 @@ public class UserServiceImpl implements UserServiceI {
 		return paymentOrderMapper.selectByPaymentSerialNum(paymentSerialNum);
 	}
 
-	/** 
-	* @Title: getLotteryConfig 
-	* @Description: 获取抽奖配置类 
-	* @param @return    设定文件  
-	* @throws 
+	/**
+	* @Title: getLotteryConfig
+	* @Description: 获取抽奖配置类
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public List<LotteryDrawConfig> getLotteryConfig() {
@@ -2786,7 +2791,7 @@ public class UserServiceImpl implements UserServiceI {
 					}
 				} else {
 					config.setText(config.getMoney().toString() + "元会员卡余额");
-				} 
+				}
 			}else{
 				config.setText("再接再励");
 			}
@@ -2794,12 +2799,12 @@ public class UserServiceImpl implements UserServiceI {
 		return configs;
 	}
 
-	/** 
-	* @Title: memberCardPaymentHandler 
+	/**
+	* @Title: memberCardPaymentHandler
 	* @Description: 会员卡支付处理
 	* @param @param paymentOrder
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public PaymentStrategyResult memberCardPaymentHandler(PaymentOrder paymentOrder) {
@@ -2809,7 +2814,7 @@ public class UserServiceImpl implements UserServiceI {
 			//更新订单状态
 			List<Order> orders = this.selectOrderByPaymentSerialNum(paymentOrder.getUserId(), paymentOrder.getPaymentSerialNum());
 			for(Order order:orders){
-				
+
 				//调用存储过程插入洪石订单
 				int hongShiResult=0;
 				try {
@@ -2839,7 +2844,7 @@ public class UserServiceImpl implements UserServiceI {
 					}else{
 						createOrderData.setVoucher(new BigDecimal(0));
 					}
-					
+
 					total = total.add(order.getShippingCost());
 					createOrderData.setTotalAmount(total);
 					CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
@@ -2874,7 +2879,7 @@ public class UserServiceImpl implements UserServiceI {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				//处理分销
 				try {
 					Config firstDistConfig = configMapper.getByTag(WebConfig.firstDis);
@@ -2905,7 +2910,7 @@ public class UserServiceImpl implements UserServiceI {
 								order.setFirstDistMoney(firstMoney);
 							}
 						}
-						
+
 						//二级分销
 						User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
 						Balance secondBalance = this.getBalance(secondDist.getUserId());
@@ -2936,7 +2941,7 @@ public class UserServiceImpl implements UserServiceI {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				order.setSyncStatus(hongShiResult);
 				orderMapper.updateByPrimaryKeySelective(order);
 				//发送购买成功短信
@@ -2972,13 +2977,13 @@ public class UserServiceImpl implements UserServiceI {
 	public List<Freight> getAllFreightConfig() {
 		return freightMapper.selectAll();
 	}
-	
-	/** 
-	* @Title: tranferBalance 
-	* @Description: 微商城余额转进会员卡 
+
+	/**
+	* @Title: tranferBalance
+	* @Description: 微商城余额转进会员卡
 	* @param @param userId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> tranferBalance(Integer userId) {
@@ -3001,16 +3006,16 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return map;
 	}
-	
-	
 
-	/** 
-	* @Title: lotteryHandler 
-	* @Description: 抽奖结果处理 
+
+
+	/**
+	* @Title: lotteryHandler
+	* @Description: 抽奖结果处理
 	* @param @param userId
 	* @param @param configCode
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String,Object> lotteryHandler(Integer userId, String configCode) {
@@ -3069,7 +3074,7 @@ public class UserServiceImpl implements UserServiceI {
 					map.put("text", "恭喜抽中" + config.getMoney() + "会员卡余额，奖品已充值到账户中，请注意查看");
 					map.put("result", true);
 					return map;
-				} 
+				}
 				config.setCount(config.getCount()-1);
 				lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 			}else{
@@ -3086,14 +3091,14 @@ public class UserServiceImpl implements UserServiceI {
 		return configMapper.getByTag(WebConfig.drawPoint);
 	}
 
-	/** 
-	* @Title: cardAddHandler 
-	* @Description: 添加购物车处理 
+	/**
+	* @Title: cardAddHandler
+	* @Description: 添加购物车处理
 	* @param @param userId
 	* @param @param cartId
 	* @param @param amount
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount) {
@@ -3108,13 +3113,13 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return map;
 	}
-	/** 
-	* @Title: cardDelHandler 
-	* @Description: 删除购物车处理 
+	/**
+	* @Title: cardDelHandler
+	* @Description: 删除购物车处理
 	* @param @param userId
 	* @param @param cartId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> cardDelHandler(Integer userId,Integer cartId) {
@@ -3128,13 +3133,13 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return map;
 	}
-	/** 
-	* @Title: getAddrInfo 
-	* @Description: 取得地址相信信息 
+	/**
+	* @Title: getAddrInfo
+	* @Description: 取得地址相信信息
 	* @param @param userId
 	* @param @param deliverAddrId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public DeliverAddr getAddrInfo(Integer userId, Integer deliverAddrId) {
@@ -3249,13 +3254,13 @@ public class UserServiceImpl implements UserServiceI {
 		return map;
 	}
 
-	/** 
-	* @Title: getShakeRecord 
+	/**
+	* @Title: getShakeRecord
 	* @Description: 摇一摇记录
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
-	
+
 	@Override
 	public Map<String, Object> getShakeRecord() {
 		Map<String,Object> map = new TreeMap<String,Object>();
@@ -3265,19 +3270,19 @@ public class UserServiceImpl implements UserServiceI {
 		return map;
 	}
 
-	/** 
-	* @Title: shakeHandler 
-	* @Description: 摇一摇处理 
+	/**
+	* @Title: shakeHandler
+	* @Description: 摇一摇处理
 	* @param @param userId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public boolean shakeHandler(Integer userId) {
-		/*Calendar todayStart = Calendar.getInstance();  
-        todayStart.set(Calendar.HOUR, 0);  
-        todayStart.set(Calendar.MINUTE, 0);  
-        todayStart.set(Calendar.SECOND, 0);  
+		/*Calendar todayStart = Calendar.getInstance();
+        todayStart.set(Calendar.HOUR, 0);
+        todayStart.set(Calendar.MINUTE, 0);
+        todayStart.set(Calendar.SECOND, 0);
         todayStart.set(Calendar.MILLISECOND, 0);
         Date today = todayStart.getTime();*/
 		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
@@ -3298,13 +3303,13 @@ public class UserServiceImpl implements UserServiceI {
 		return paymentMapper.selectMemberPayment();
 	}
 
-	/** 
-	* @Title: getBossCenter 
+	/**
+	* @Title: getBossCenter
 	* @Description: 老板助手数据
 	* @param @param phone
 	* @param @param hsCode
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> getBossCenter(String phone, String hsCode) {
@@ -3332,7 +3337,7 @@ public class UserServiceImpl implements UserServiceI {
 				} else {
 					DecimalFormat df1 = new DecimalFormat("0");
 					item.setValue(new BigDecimal(df1.format(item.getValue())));
-				} 
+				}
 			}else{
 				item.setValue(new BigDecimal(0));
 			}
@@ -3569,26 +3574,26 @@ public class UserServiceImpl implements UserServiceI {
 		map.put("level3", level3);
 		return map;
 	}
-	/** 
-	  * Math.random()产生一个double型的随机数，判断一下 
-	  * 例如0出现的概率为%50，则介于0到0.50中间的返回0 
-	     * @return int 
-	     * 
-	     */ 
-	
-	 public int percentageRandom(double rate0,double rate1)  
-	 {  
-	  double randomNumber;  
-	  randomNumber = Math.random();  
-	  if (randomNumber >= 0 && randomNumber <= rate0)  
-	  {  
-	   return 0;  
-	  }  
-	  else if (randomNumber >= rate0 && randomNumber <= rate0 + rate1)  
-	  {  
-	   return 1;  
+	/**
+	  * Math.random()产生一个double型的随机数，判断一下
+	  * 例如0出现的概率为%50，则介于0到0.50中间的返回0
+	     * @return int
+	     *
+	     */
+
+	 public int percentageRandom(double rate0,double rate1)
+	 {
+	  double randomNumber;
+	  randomNumber = Math.random();
+	  if (randomNumber >= 0 && randomNumber <= rate0)
+	  {
+	   return 0;
 	  }
-	  return -1;  
+	  else if (randomNumber >= rate0 && randomNumber <= rate0 + rate1)
+	  {
+	   return 1;
+	  }
+	  return -1;
 	 }
 
 	@Override
@@ -3601,7 +3606,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public String getAppId(String merchantCode) {
 		if(merchantCode!=null&&merchantCode.isEmpty()){
-			datasource.switchDataSource(merchantCode); 
+			datasource.switchDataSource(merchantCode);
 		}
 		Map<String,String> config = getWeixinConfig();
 		return config.get(WebConfig.APPID);
