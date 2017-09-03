@@ -9,7 +9,10 @@
 	}
 
 	&-img {
-		width: 100%;
+		padding: 5px;
+		.image{
+			width: 100%;
+		}
 	}
 
 	&-tag {
@@ -45,6 +48,8 @@
 	}
 
 	&-info {
+		.clearfix();
+		width: 100%;
 		padding: 5px;
 		position: relative;
 		background-color: white;
@@ -62,15 +67,32 @@
 
 	&-title {
 		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		float: left;
+	    text-overflow: ellipsis;
+	    height: 40px;
+	    font-size: 14px;
+	    display: -webkit-box;
+	    -webkit-line-clamp: 2;
+	    -webkit-box-orient: vertical;
+	    word-break: break-all;
 	}
 	&-price {
+		.clearfix();
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		float: right;
+		color: rgb(245, 92, 57);	
+		padding-top: 5px;
+		padding-bottom: 2px;
+		.left{
+			float: left;
+		}
+		.right{
+			float: right;
+			padding: 0px 5px;
+		    background-color: rgb(245, 92, 57);
+		    color: white;
+		    border-radius: 9px;
+		}
 	}
 
 	&-percent {

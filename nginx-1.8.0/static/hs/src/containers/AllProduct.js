@@ -4,6 +4,7 @@ import React from 'react'
 // var Link = require('react-router').Link;
 import Navi from './Navi'
 var _ = require('lodash')
+var fto = require('form_to_object')
 var AllProductUtil = require('../utils/AllProductUtil.js');
 class AllProductsCats extends React.Component{
 	render() {
@@ -31,7 +32,48 @@ class AllProductsCats extends React.Component{
 			);
 	}
 };
+class SearchBar extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      keyword: ''
+    }
+  }
+  render() {
+    return (
+      <div className="all-prod-search" onSubmit={this._handleSubmit} >
+        <form method="post" className="all-prod-search-form" name="searchform" action="">
+          <div className="all-prod-search-div">
+            <i className="fa fa-search icon" />
+            <input
+              type='search'
+              className="all-prod-search-input"
+              id="keyword"
+              name="keyword"
+              value={this.state.keyword}
+              placeholder="搜索产品"
+              onChange={this._onChange}
+            />
+          </div>
 
+        </form>
+      </div>
+    )
+  }
+
+  _onChange =(e)=>{
+    this.setState({
+      keyword:e.target.value
+    })
+  }
+
+  _handleSubmit = e => {
+     e.preventDefault()
+    var data = fto(e.target);
+    console.log(data.keyword);
+    window.location="/all-product?keyword="+data.keyword;
+  }
+}
 class AllProductsTab extends React.Component{
 	constructor(props) {
 	    super(props)
@@ -158,6 +200,7 @@ class AllProduct extends React.Component{
 		return (
 			<DocumentTitle title="全部商品">
 				<div className="all-prod">
+					<SearchBar/>
 					<AllProductsTab query={this.props.location.query} cats={this.state.cat}/>
 
 					{/*<div className="all-prod-items">
