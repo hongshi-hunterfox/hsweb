@@ -273,7 +273,8 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testWxMessage(){
-		String[] key = {"OrderSn","OrderStatus"};
+		dataSource.switchDataSource("modeldb4");
+		String[] key = {"keyword1","keyword2"};
 		String[] value = {"2016年12月20日14:40:08","20元（账户余额30.50元）"};
  		userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "lPKTNYPlugdPDyRF_jNIB3dkL8ehDAT6SxSz3PlsUp0", "www.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
 	}

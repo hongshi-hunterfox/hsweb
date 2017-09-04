@@ -144,6 +144,14 @@ class GlobalConfig extends React.Component {
               <div className="col-md-9">
                 <input type="text" value={this.state.config.buyTemId} name="buyTemId" className="form-control" onChange={this._change}/>
               </div>
+               <label className="control-label col-md-3">支付成功短信id：</label>
+              <div className="col-md-9">
+                <input type="text" value={this.state.config.payTemId} name="payTemId" className="form-control" onChange={this._change}/>
+              </div>
+               <label className="control-label col-md-3">充值成功短信id：</label>
+              <div className="col-md-9">
+                <input type="text" value={this.state.config.rechargeTemId} name="rechargeTemId" className="form-control" onChange={this._change}/>
+              </div>
             </div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">

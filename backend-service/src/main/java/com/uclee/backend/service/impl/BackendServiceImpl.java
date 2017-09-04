@@ -146,6 +146,16 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.buyTmpId, "");
 		}
+		if (configPost.getPayTemId()!=null) {
+			configMapper.updateByTag(WebConfig.payTmpId, configPost.getPayTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.payTmpId, "");
+		}
+		if (configPost.getRechargeTemId()!=null) {
+			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.rechargeTmpId, "");
+		}
 		return true;
 	}
 
@@ -402,6 +412,10 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBirthTemId(config.getValue());
 			}else if(config.getTag().equals(WebConfig.buyTmpId)){
 				configPost.setBuyTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.payTmpId)){
+				configPost.setPayTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.rechargeTmpId)){
+				configPost.setRechargeTemId(config.getValue());
 			}
 			
 		}
