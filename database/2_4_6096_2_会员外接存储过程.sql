@@ -1,4 +1,4 @@
-use Modeldb
+--use Modeldb
 /*
 与微商城对接的更新
 函数：
@@ -24,8 +24,9 @@ use Modeldb
   Get_BossTotal:老板小助手 统计销售数据非会员消费，今日新增会员，昨日新增会员，今日充值，昨日充值
   GetBirthday:获取指定日期后XX天内过生日的会员信息
   Loger:写日志
-  AddParas2Json:向一个Json串添加一个名值对
   AddWebPay:在线下系统中生成线上支付对应的结算记录
+  fn_GetPickUpCode:根据网上商城订单号计算相应的提货码
+  fn_UnPickUpCode:根据提货码计算相应的网上商城订单号
    
 为优势力提供的调用封装:
   WSC_GetVipInfo:取会员信息
@@ -41,7 +42,8 @@ use Modeldb
   WSC_RecoverVoucher:订单中回收礼券
   WSC_VipBonusPoints:积分变动
   WSC_GetVipRelevance:确认两个会员是否可以建立分销关系
-  Wsc_Get_BossTotal:老板小助手 统计销售数据 
+  Wsc_Get_BossTotal:老板小助手 统计销售数据
+  WSC_GetPickUpCode:从web_orders.order_serial_num计算相应的提货码
 
   
 2016-12-06 hunter__fox
@@ -192,7 +194,6 @@ use Modeldb
 2017-08-15
   添加了建表Event_Log的脚本
   添加了产品类别【加收费】与产品【运费】
-  添加了函数AddParas2Json
   添加了存储过程Loger
   修改了存储过程CreateOrder,在其中添加了写日志的动作
   修改了存储过程AddOrderItem,在其中添加了写日志的动作
@@ -217,6 +218,14 @@ use Modeldb
 2017-08-22
   添加了日志相关的存储过程与函数/表
   为所有存储过程添加了写日志的代码
+
+2017-08-26
+  添加存储过程【AddWebPay】用于在线下系统中生成线上支付对应的结算记录
+
+2017-09-04  
+  添加函数【fn_GetPickUpCode】根据网上商城订单号计算相应的提货码
+  添加函数【fn_UnPickUpCode】:根据提货码计算相应的网上商城订单号
+  添加存储过程【WSC_GetPickUpCode】完成线上订单号到提货码的转换
 */
 /******************************************************************************/
 /*
@@ -368,8 +377,10 @@ Begin
   Select @cVipCode=编号,@Tmp_Balance=卡余额,@Tmp_Integral=积分 From 会员 Where id =@iVipID
 
   --游标:指定会员指定时间之后所有交易记录
-  Declare @t_opt table(来源 varchar(10),id int,单号 varchar(20),建立日期 datetime,充值 money,刷卡金额 money,积分变化 int,当前余额 money ,计算余额 money,当前积分 int)
-  Declare @来源 varchar(10),@id int,@单号 varchar(20),@建立日期 datetime,@充值 money,@刷卡金额 money,@积分变化 int,@当前余额 money ,@余额 money,@当前积分 int
+  Declare @t_opt table(来源 varchar(10), id int      , 单号 varchar(20), 建立日期 datetime, 充值 money
+                      ,刷卡金额 money  , 积分变化 int, 当前余额 money  , 计算余额 money   , 当前积分 int)
+  Declare @来源 varchar(10), @id int      , @单号 varchar(20), @建立日期 datetime, @充值 money
+         ,@刷卡金额 money  , @积分变化 int, @当前余额 money  , @余额 money       , @当前积分 int
   Declare cur_Tmp Cursor
       For --零售记录
         Select '零售'as 来源,id,单号,建立日期,Null As 充值,刷卡金额,0 as 积分变化,当前余额,0 As 余额,当前积分 
@@ -377,7 +388,8 @@ Begin
         Where 建立日期 >= @dStart And 往来编号=@cVipCode And 刷卡金额<>0
         Union All
         --订单记录
-        Select '订单',id,单号,建立日期,Null,刷卡金额,0,当前余额,0 ,当前积分
+        Select Case When 商户订单号 When '' Then '线下订单' Else '线上订单' End
+              ,id,单号,建立日期,Null,刷卡金额,0,当前余额,0 ,当前积分
         From orders 
         Where 建立日期 >= @dStart And 是否废止=0 And 往来编号=@cVipCode
         Union All 
@@ -517,7 +529,7 @@ Begin
                      积分,折扣,状态,截止日期,是否充值,卡金额,卡余额,
                      积分比例,是否积分,会员生日,会员卡类型,会员等级类型)
              Values(@cVipCode,@cVipCode,'','','',0,
-                    0,1,1,GetDate()+3650,0,3,0,
+                    0,1,1,GetDate()+3650,0,0,0,
                     1,0,'',3,1)
     Select @LastError=@@Error,@iVipID = @@Identity
   End
@@ -1310,7 +1322,8 @@ Create Procedure [CreateOrder]
        @礼券       money      =0     ,--下单时用礼券抵扣的
        @结单       bit        =Null  ,--是否结单
        @废止       bit        =Null  ,--如果废止,@结单将变为0
-       @销售类别   varchar(50)=''     --网上商城生成的订单为'公众号',不可修改
+       @销售类别   varchar(50)=''    ,--网上商城生成的订单为'公众号',不可修改
+       @礼券列表   varchar(300)=''   --顾客使用的礼券编号列表
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -1355,7 +1368,8 @@ Begin
   Else
     Select @单位名称=名称 From 会员 Where 编号=@往来编号
   Set @应收金额=@金额合计-@优惠合计
-  Set @欠款= Case When @结单=1 Then 0 Else @应收金额-@让利-@订金-@刷卡金额-@礼券 End
+  Set @欠款 = Case When @结单=1 Then 0 Else @应收金额-@让利-@订金-@刷卡金额-@礼券 End
+  Set @欠款 = IsNull(@欠款, 0)
   Set @交货日期=Case When @结单=1 Or @废止=1 Then Convert(varchar(10),GetDate(),120) Else Null End
   If @单号 Is Null Or @单号=''
   Begin
@@ -1390,6 +1404,13 @@ Begin
       Select @当前余额=卡余额, @当前积分=积分 From 会员 Where 编号=@往来编号
       Update orders Set 当前余额=@当前余额,当前积分=@当前积分 Where ID=@OrderID
     End
+    ----添加礼券回收表记录,更新礼券表状态
+    --If IsNull(@礼券列表,'')<>''
+    --Begin
+    --  Declare @SPT_UpdateVochers varchar(3000)
+    --  Set @SPT_UpdateVochers = 'Update '
+    --  execute 
+    --End
     --更新从微商城产生的第三方支付金额
     Exec Loger @LogID,@ExtendInfo='同步从微商城产生的第三方支付金额'
     Exec AddWebPay 1,@OrderID
@@ -1406,6 +1427,7 @@ Begin
                     Then 0 
                     Else @应收金额-@让利-@订金-@刷卡金额-@礼券-@第三方支付 
                End
+    Set @欠款 = IsNull(@欠款, 0)
     Update orders Set 欠款=@欠款 Where ID=@OrderID
   End
   Else
@@ -1877,9 +1899,7 @@ Begin
   Set @ParaInfo = dbo.NameValue('N','@BusinessID',@BusinessID)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@PaySerailNum',@PaySerailNum) Exec Loger @LogID,@Parameters=@ParaInfo
 
-  Declare @Paras varchar(3000),@RetCode int
-  Set @Paras = dbo.AddParas2Json(@Paras,'@BusinessType',@BusinessType,'N')
-  Set @Paras = dbo.AddParas2Json(@Paras,'@BusinessID'  ,@BusinessID  ,'N')
+  Declare @RetCode int
   Set @BusinessType = IsNull(@BusinessType, 0)
   Declare @Department varchar(10),@CDate varchar(10)
   If Exists(Select * 
@@ -1962,6 +1982,75 @@ Begin
     Set @Birthday_t=dateadd(year , year(@NowDate) - year(@Birthday),   @Birthday)
     
   Return convert(varchar,@Birthday_t,120)
+End
+Go
+/*******************************************************************************
+Function fn_GetPickUpCode
+计算提货码
+  根据传入的一串数字计算相应的36进制串
+  传入的数字串长度不超过19位(不大于9223372036854775807)
+  返回的串是一个长度不超过13位的字符串
+示例
+  Select dbo.fn_GetPickUpCode('9223372036854775807')
+  Select dbo.fn_GetPickUpCode('922337203685477580')
+  Select order_serial_num,dbo.fn_GetPickUpCode(web_orders.order_serial_num) From web_orders
+*/
+If Object_id('[fn_GetPickUpCode]','FN') Is Not Null
+  Drop Function [fn_GetPickUpCode]
+Go
+Create Function [fn_GetPickUpCode]
+      (@OrderSerialNum varchar(20))
+Returns varchar(20)
+As
+Begin
+  If Len(@OrderSerialNum) > 19 Or @OrderSerialNum > '9223372036854775807'
+    Return 'NumberTooLong'
+  Declare @Mod bigint, @BaseCode varchar(36)
+  Declare @BigVal bigint, @SubVal bigint
+  Declare @PickUpCode varchar(50)
+  Set @BaseCode   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  Set @Mod        = Len(@BaseCode)
+  Set @PickUpCode = ''
+  Set @BigVal     = Convert(bigint, @OrderSerialNum)
+  While @BigVal > 0
+  Begin
+    Set @SubVal     = @BigVal % @Mod
+    Set @PickUpCode = SubString(@BaseCode, @SubVal + 1, 1) + @PickUpCode
+    Set @BigVal     = (@BigVal - @SubVal) / @Mod
+  End
+  Return 'SN' + @PickUpCode
+End
+Go
+/*******************************************************************************
+Function fn_UnPickUpCode
+从提货码计算相应的网上商城订单号(web_orders.order_serial_num或orders.商户订单号)
+  这是函数【fn_GetPickUpCode】的逆运算
+  因此:dbo.fn_UnPickUpCode(dbo.fn_GetPickUpCode(a))=a
+它用于线下系统扫到提货码后计算相应的商户订单号以定位订单
+*/
+If Object_id('[fn_UnPickUpCode]','FN') Is Not Null
+  Drop Function [fn_UnPickUpCode]
+Go
+Create Function [fn_UnPickUpCode]
+      (@PickUpCode varchar(20))
+Returns varchar(20)
+As
+Begin
+  Declare @BaseCode varchar(36)
+  Declare @Mut bigint, @BigVal bigint
+  Declare @Index int, @At int
+  Set @BaseCode = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  Set @Mut      = Len(@BaseCode)
+  Set @BigVal   = 0
+  Set @Index = 2
+  While @Index < Len(@PickUpCode)
+  Begin
+    Set @Index = @Index + 1
+    Set @At = CharIndex(SubString(@PickUpCode, @Index, 1), @BaseCode)
+    If @At > 0
+      Set @BigVal = @BigVal * @Mut + @At - 1
+  End
+  Return Convert(varchar(20), @BigVal)
 End
 Go
 /*******************************************************************************
@@ -2315,7 +2404,8 @@ Create Procedure [WSC_CreateOrder]
        @Voucher     money       =0    ,--下单时使用礼券支付的金额
        @EndOrder    bit         =Null ,--是否结单,欠款不为0时不可结单
        @VoidOrder   bit         =Null ,--如果废止,只可对结单=0的单废止
-       @Department varchar(20)  =''    --订单下到哪个店
+       @Department  varchar(20) =''   ,--订单下到哪个店
+       @Vouchers    varchar(300)=''    --客户支付中使用的礼券的编号列表,使用逗号分隔
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2335,6 +2425,7 @@ Begin
   Set @ParaInfo = dbo.NameValue('L','@EndOrder',@EndOrder)       Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@VoidOrder',@VoidOrder)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@Department',@Department)   Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@Vouchers',@Vouchers)       Exec Loger @LogID,@Parameters=@ParaInfo
 
   Declare @Return int,@msg varchar(100)
   Declare @OrderID int,@Department_Web varchar(10),@UserCode varchar(10),@VipCode varchar(20),@cDate varchar(10)
@@ -2361,6 +2452,7 @@ Begin
                            ,@结单=@EndOrder
                            ,@废止=@VoidOrder
                            ,@销售类别=@Department_Web
+                           ,@礼券列表=@Vouchers
   Exec Loger @LogID,@Key=@OrderCode,@ExtendInfo='调用存储过程[CreateOrder]建立订单',@Result=0
   Select @OrderID As OrderID,@OrderCode As OrderCode
 EnD
@@ -2747,6 +2839,26 @@ Begin
   Drop Table #tmp_WSC_GetBossTotal
 End
 Go
+--------------------------------------------------------------------------------
+--得到指定网上订单对应的提货码
+--参数
+--  @OrderSerialNum:对应web_orders.order_serial_num
+--                  长度限制为19,并且不能以9开始
+--返回值 
+--  返回一个长度不超过13的字符串,由[0-9A-Z]构成
+--  它与传入值是一一对应的
+--示例
+--Exec WSC_GetPickUpCode '15041491594818464'
+If Object_id('[WSC_GetPickUpCode]','P') Is Not Null
+  Drop Procedure [WSC_GetPickUpCode]
+Go
+Create Procedure [WSC_GetPickUpCode]
+       @OrderSerialNum varchar(20)--一个不大于922 3372 0368 5477 5807的数
+As
+Begin
+  Select dbo.fn_GetPickUpCode(@OrderSerialNum) As PickUpCode
+End
+Go
 /*******************************************************************************
 日志相关函数与过程
 正式环境下使用下列脚本替代：
@@ -2823,7 +2935,7 @@ Begin
   If @Value Is Null
     Set @Value_C = '"<NULL>"'
   Else If @TypeName In ('char','nchar','varchar','nvarchar','text','ntext','sysname','C')
-    Set @Value_C = '"' + replace(replace(replace(convert(varchar(20),@Value),'''',''''''), '\', '\\'), '"', '\"') + '"'
+    Set @Value_C = '"' + replace(replace(replace(convert(varchar(1000),@Value),'''',''''''), '\', '\\'), '"', '\"') + '"'
   Else If @TypeName In ('money','smallmoney','Y')
     Set @Value_C = Convert(varchar(20),@Value)
   Else If @TypeName In ('int','smallint','tinyint','bigint','numeric','decimal','float','real','N')
