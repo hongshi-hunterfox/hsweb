@@ -16,6 +16,16 @@ public class ProductForm extends Product {
     
     private List<ValuePost> valuePost;
 
+    private Integer sale;
+
+	public Integer getSale() {
+		return sale;
+	}
+
+	public void setSale(Integer sale) {
+		this.sale = sale;
+	}
+
 	public Integer getCategoryId() {
 		return categoryId;
 	}

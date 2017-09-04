@@ -2,15 +2,8 @@ package com.uclee.web.backend.controller;
 
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
-import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
-import com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
-import com.uclee.fundation.data.mybatis.model.Category;
-import com.uclee.fundation.data.mybatis.model.HongShiProduct;
-import com.uclee.fundation.data.mybatis.model.HongShiStore;
-import com.uclee.fundation.data.mybatis.model.NapaStore;
-import com.uclee.fundation.data.mybatis.model.Product;
+import com.uclee.fundation.data.mybatis.mapping.*;
+import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.oss.OssUtil;
 import com.uclee.hongshi.service.HongShiServiceI;
@@ -55,6 +48,8 @@ public class ProductManagerController {
 
 	@Autowired
 	private OssUtil ossUtil;
+	@Autowired
+	private ProductSaleMapper productSaleMapper;
 	
 	@RequestMapping(value="addProduct")
 	public @ResponseBody Map<String,Object> addProduct(HttpSession session){
@@ -77,13 +72,20 @@ public class ProductManagerController {
 	}
 	
 	@RequestMapping(value="productList")
-	public @ResponseBody Map<String,Object> productList(HttpSession session,Integer productId){
+	public @ResponseBody Map<String,Object> productList(HttpSession session,Integer productId,Integer categoryId){
 		Map<String,Object> map = new HashMap<String,Object>();
-		List<ProductDto> productDto = backendService.selectAllProduct();
+		List<ProductDto> productDto = new ArrayList<>();
+		if(categoryId==null||categoryId==0) {
+			productDto = backendService.selectAllProduct();
+		}else{
+			productDto = backendService.selectAllProductByCatId(categoryId);
+		}
 		ProductDto product = productMapper.getProductById(productId);
 		if(product!=null){
 			map.put("text", product.getTitle());
 		}
+		List<Category> categories = categoryMapper.selectAll();
+		map.put("categories", categories);
 		map.put("products", productDto);
 		return map;
 	}
@@ -144,6 +146,12 @@ public class ProductManagerController {
     		}
     	}
 		map.put("store", ret);
+		ProductSale productSale = productSaleMapper.selectByProductId(productId);
+		if(productSale!=null){
+			map.put("sale",productSale.getCount());
+		}else{
+			map.put("sale",0);
+		}
 		ProductForm productForm = backendService.getProductForm(productId);
 		map.put("productForm", productForm);
 		return map;

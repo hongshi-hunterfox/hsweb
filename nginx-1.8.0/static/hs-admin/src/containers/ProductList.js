@@ -8,18 +8,20 @@ class ProductList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      products:[]
+      products:[],
+      categories:[]
     }
   }
 
   componentDidMount() {
-    req.get('/uclee-product-web/productList').end((err, res) => {
+    req.get('/uclee-product-web/productList?categoryId=' + (this.props.location.query.categoryId?this.props.location.query.categoryId:0)).end((err, res) => {
       if (err) {
         return err
       }
       var data = JSON.parse(res.text)
       this.setState({
-        products: data.products
+        products: data.products,
+        categories:data.categories
       })
     })
   }
@@ -33,6 +35,9 @@ class ProductList extends React.Component {
         window.location='/product-list'
       })
     }
+  }
+  _selectCat=(e)=>{
+    window.location='product-list?categoryId='+e.target.value;
   }
   render() {
     var list = this.state.products.map((item, index) => {
@@ -58,6 +63,18 @@ class ProductList extends React.Component {
               <Link to={'/product/'} className="btn btn-primary">
                添加产品
               </Link>
+            </div>
+            <div className='product-list-select'>
+              <select name="tag" className='tag' onChange={this._selectCat}>
+                <option value='0'>全部分类</option>
+                {
+                  this.state.categories.map((item,index)=>{
+                    return(
+                      <option value={item.categoryId} key={index}>{item.category}</option>
+                    )
+                  })
+                }
+              </select>
             </div>
             <table className="table table-bordered table-striped">
               <thead>

@@ -51,6 +51,13 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
+	@RequestMapping("/getHongShiStoreName")
+	public @ResponseBody Map<String,Object> getHongShiStoreName(HttpServletRequest request,String hsCode) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		map.put("storeName",backendService.getHongShiStoreName(hsCode));
+
+		return map;
+	}
 	@RequestMapping("/orderList")
 	public @ResponseBody Map<String,Object> orderList(HttpServletRequest request,Boolean isEnd) {
 		Map<String,Object> map = new TreeMap<String,Object>();

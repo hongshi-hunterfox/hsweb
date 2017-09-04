@@ -20,6 +20,9 @@
     insert into web_product_store_link (product_id, store_id)
     values (#{productId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER})
   </insert>
+  <insert id="insertAll" parameterType="java.lang.Integer" >
+   insert into web_specification_value_store_link (value_id,store_id) select value_id,#{storeId,jdbcType=INTEGER} from web_specification_values
+  </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.ProductStoreLinkKey" >
     insert into web_product_store_link
     <trim prefix="(" suffix=")" suffixOverrides="," >

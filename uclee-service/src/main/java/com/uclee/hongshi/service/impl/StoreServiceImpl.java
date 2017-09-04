@@ -1,12 +1,9 @@
 package com.uclee.hongshi.service.impl;
 
-import com.uclee.fundation.data.mybatis.mapping.CityMapper;
-import com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProvinceMapper;
-import com.uclee.fundation.data.mybatis.mapping.RegionMapper;
-import com.uclee.fundation.data.mybatis.model.City;
-import com.uclee.fundation.data.mybatis.model.NapaStore;
-import com.uclee.fundation.data.mybatis.model.Province;
+import com.uclee.fundation.data.mybatis.mapping.*;
+import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.data.web.dto.StoreDto;
 import com.uclee.hongshi.service.StoreServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,10 +28,20 @@ public class StoreServiceImpl implements StoreServiceI {
     private CityMapper cityMapper;
     @Autowired
     private RegionMapper regionMapper;
+    @Autowired
+    private ProductMapper productMapper;
+    @Autowired
+    private ProductStoreLinkMapper productStoreLinkMapper;
+    @Autowired
+    private SpecificationValueMapper specificationValueMapper;
 
     @Override
-    public boolean addNapaStore(NapaStore store) {
-        return napaStoreMapper.insertSelective(store)>0;
+    public boolean addNapaStore(StoreDto store) {
+        napaStoreMapper.insertSelective(store);
+        if(store.getLink()!=null&&store.getLink()){
+            productStoreLinkMapper.insertAll(store.getStoreId());
+        }
+        return true;
     }
 
     @Override

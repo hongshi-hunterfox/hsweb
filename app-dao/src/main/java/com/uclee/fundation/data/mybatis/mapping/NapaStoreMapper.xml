@@ -42,6 +42,12 @@
     from web_napa_stores 
     where hs_code = #{hsCode,jdbcType=VARCHAR} and user_id=#{userId,jdbcType=VARCHAR}
   </select>
+  <select id="selectByHsCode" resultMap="NapaStore"  >
+    select
+    *
+    from web_napa_stores
+    where hs_code = #{hsCode,jdbcType=VARCHAR}
+  </select>
   <select id="selectByUserId" resultMap="NapaStore" parameterType="java.lang.Integer" >
     select
     A.*,b.全称 as hs_name
@@ -56,7 +62,7 @@
     delete from web_napa_stores
     where store_id = #{storeId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.NapaStore" >
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.NapaStore" useGeneratedKeys="true" keyProperty="storeId">
     insert into web_napa_stores (store_id, user_id, store_name, 
       province, city, region, 
       longitude, latitude, hs_code, 
@@ -66,7 +72,7 @@
       #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{hsCode,jdbcType=VARCHAR}, 
       #{addrDetail,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.NapaStore" >
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.NapaStore" useGeneratedKeys="true" keyProperty="storeId">
     insert into web_napa_stores
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="storeId != null" >

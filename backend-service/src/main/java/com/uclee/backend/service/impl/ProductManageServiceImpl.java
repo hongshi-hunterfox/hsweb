@@ -52,6 +52,18 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		product.setIsActive(true);
 		descriptionHandler(product);
 		if(productMapper.insertSelective(product)>0){
+			if(product.getSale()!=null){
+				ProductSale productSale = productSaleMapper.selectByProductId(product.getProductId());
+				if(productSale!=null){
+					productSale.setCount(product.getSale());
+					productSaleMapper.updateByPrimaryKeySelective(productSale);
+				}else{
+					ProductSale tmp = new ProductSale();
+					tmp.setCount(product.getSale());
+					tmp.setProductId(product.getProductId());
+					productSaleMapper.insertSelective(tmp);
+				}
+			}
 			ProductSale tmp = productSaleMapper.selectByProductId(product.getProductId());
 			if(tmp==null){
 			ProductSale sale = new ProductSale();
@@ -282,6 +294,18 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		product.setIsActive(true);
 		descriptionHandler(product);
 		if(productMapper.updateByPrimaryKeySelective(product)>0){
+			if(product.getSale()!=null){
+				ProductSale productSale = productSaleMapper.selectByProductId(product.getProductId());
+				if(productSale!=null){
+					productSale.setCount(product.getSale());
+					productSaleMapper.updateByPrimaryKeySelective(productSale);
+				}else{
+					ProductSale tmp = new ProductSale();
+					tmp.setCount(product.getSale());
+					tmp.setProductId(product.getProductId());
+					productSaleMapper.insertSelective(tmp);
+				}
+			}
 			logger.info("productId:" + product.getProductId());
 			// 插入
 			updateCategoryHandler(product);

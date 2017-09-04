@@ -3,6 +3,7 @@ package com.uclee.web.backend.controller;
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
+import com.uclee.fundation.data.web.dto.StoreDto;
 import com.uclee.hongshi.service.HongShiServiceI;
 import com.uclee.hongshi.service.StoreServiceI;
 import com.uclee.user.service.UserServiceI;
@@ -43,7 +44,7 @@ public class AdminHandler {
 
     @RequestMapping("doAddStore")
     public @ResponseBody
-    Map<String,Object> doAddStore(@RequestBody NapaStore store, HttpServletRequest request){
+    Map<String,Object> doAddStore(@RequestBody StoreDto store, HttpServletRequest request){
 
         Map<String,Object> map = new TreeMap<String,Object>();
         HttpSession session = request.getSession();

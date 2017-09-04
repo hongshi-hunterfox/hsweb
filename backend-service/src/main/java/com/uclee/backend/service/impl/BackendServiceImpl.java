@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
+import org.apache.poi.hssf.record.formula.functions.Na;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 
@@ -686,5 +687,26 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public int delQuickNaviProduct(Integer naviId, Integer productId) {
 		return quickNaviProductLinkMapper.deleteByNIdAndPId(naviId,productId);
+	}
+
+	@Override
+	public String getHongShiStoreName(String hsCode) {
+		List<NapaStore> napaStores = napaStoreMapper.selectByHsCode(hsCode);
+		if(napaStores!=null&&napaStores.size()>=1){
+			return napaStores.get(0).getStoreName();
+		}
+		return null;
+	}
+
+	@Override
+	public List<ProductDto> selectAllProductByCatId(Integer categoryId) {
+		List<ProductDto> product =  productMapper.getAllProductByCatId(categoryId);
+		for(ProductDto item:product){
+			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
+			if(link!=null){
+				item.setImage(link.getImageUrl());
+			}
+		}
+		return product;
 	}
 }

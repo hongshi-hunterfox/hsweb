@@ -32,7 +32,9 @@ class AddStore extends React.Component {
       regionArr: [],
       province: '',
       city: '',
-      region: ''
+      region: '',
+      link:true,
+      storeName:''
     }
 
     this.lat=23.12463
@@ -57,7 +59,23 @@ class AddStore extends React.Component {
 
         
   }
+  _hsCodeChange = e =>{
+    var q = {
+      hsCode: e.target.value
+    }
+    req
+    .get('/uclee-backend-web/getHongShiStoreName')
+    .query(q)
+    .end((err, res) => {
+      if (err) {
+        return err
+      }
 
+      this.setState({
+        storeName: res.body.storeName
+      })
+    })
+  }
   render() {
     return (
       <DocumentTitle title="add-store Page">
@@ -70,13 +88,18 @@ class AddStore extends React.Component {
             <div className="form-group">
               <label className="control-label col-md-3">商店名称：</label>
               <div className="col-md-9">
-                <input type="text" name="storeName" className="form-control"/>
+                {
+                  this.state.storeName?
+                    <input type="text" name="storeName" value={this.state.storeName} className="form-control"/>
+                    :<input type="text" name="storeName" className="form-control"/>
+                }
               </div>
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">门店选择：</label>
               <div className="col-md-9">
-                <select name="hsCode" className="form-control">
+                <select name="hsCode" className="form-control" onChange={this._hsCodeChange}>
+                <option value=''>请选择</option>
                   {
                     this.state.hsStoreList.map((item, index) => {
                       return (
@@ -138,10 +161,23 @@ class AddStore extends React.Component {
               </div>
             </div>
             <div className="form-group">
+              <label className="control-label col-md-3">是否关联所有上架商品：</label>
+              <div className="col-md-9">
+                <select
+                  name="link"
+                  className="form-control"
+                >
+                  <option value={true}>是</option>
+                  <option value={false}>否</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
               <div className="col-md-9 col-md-offset-3 map-container" id="container">
                 
               </div>
             </div>
+            
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
@@ -223,7 +259,6 @@ _setCity = e => {
   _submit = (e) => {
     e.preventDefault()
     var data = fto(e.target)
-    console.log(data)
 
     data.longitude=this.lng
     data.latitude=this.lat
@@ -258,6 +293,7 @@ _setCity = e => {
     this.setState({
       err: null
     })
+    console.log(data)
 
     req
       .post('/uclee-backend-web/doAddStore')

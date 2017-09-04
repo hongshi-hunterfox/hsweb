@@ -76,4 +76,8 @@ public interface BackendServiceI {
 	List<ProductDto> selectQuickNaviProduct(Integer naviId);
 
 	int delQuickNaviProduct(Integer naviId, Integer productId);
+
+    String getHongShiStoreName(String hsCode);
+
+	List<ProductDto> selectAllProductByCatId(Integer categoryId);
 }

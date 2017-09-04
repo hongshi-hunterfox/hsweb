@@ -28,7 +28,8 @@ class Product extends React.Component {
       text: '',
       title: '',
       categoryId: '',
-      images: []
+      images: [],
+      sale:0
     }
 
     this.hongShiProductById = {}
@@ -83,6 +84,18 @@ class Product extends React.Component {
                     )
                   })}
                 </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">销量：</label>
+              <div className="col-md-9">
+                <input
+                  type="text"
+                  name="sale"
+                  className="form-control"
+                  value={this.state.sale}
+                  onChange={this._simpleInputChange}
+                />
               </div>
             </div>
             <div className="form-group">
@@ -419,7 +432,8 @@ class Product extends React.Component {
           cat: res.body.cat,
           hongShiProduct: hongShiProduct,
           store: res.body.store,
-          text: res.body.productForm.description
+          text: res.body.productForm.description,
+          sale:res.body.sale
         })
         console.log(this.state.shippingFree)
         hongShiProduct.forEach(item => {

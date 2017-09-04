@@ -27,4 +27,6 @@ public interface ProductMapper {
 	List<ProductDto> getAllProduct(@Param("categoryId") Integer categoryId, @Param("isSaleDesc") Boolean isSaleDesc, @Param("isPriceDesc") Boolean isPriceDesc, @Param("keyword") String keyword, @Param("naviId")Integer naviId);
 
     List<ProductDto> selectQuickNaviProduct(Integer naviId);
+
+    List<ProductDto> getAllProductByCatId(Integer categoryId);
 }
