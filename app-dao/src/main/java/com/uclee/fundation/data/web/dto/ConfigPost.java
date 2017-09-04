@@ -29,6 +29,24 @@ public class ConfigPost {
 	private String signName;
 	private String buyTemId;
 	private String birthTemId;
+	private String payTemId;
+	private String rechargeTemId;
+
+	public String getPayTemId() {
+		return payTemId;
+	}
+
+	public void setPayTemId(String payTemId) {
+		this.payTemId = payTemId;
+	}
+
+	public String getRechargeTemId() {
+		return rechargeTemId;
+	}
+
+	public void setRechargeTemId(String rechargeTemId) {
+		this.rechargeTemId = rechargeTemId;
+	}
 
 	public String getBuyTemId() {
 		return buyTemId;

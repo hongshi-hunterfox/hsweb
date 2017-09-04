@@ -29,5 +29,7 @@ public interface WebConfig {
 	String signName = "signName";
 	String birthTmpId = "birthTmpId";
 	String buyTmpId = "buyTmpId";
+	String payTmpId = "payTmpId";
+	String rechargeTmpId = "rechargeTmpId";
 
 }                      

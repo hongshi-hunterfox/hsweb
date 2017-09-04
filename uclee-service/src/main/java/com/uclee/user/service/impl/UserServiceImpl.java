@@ -1753,7 +1753,10 @@ public class UserServiceImpl implements UserServiceI {
 				}
 			}
 			String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
-			sendWXMessage(oauthLogin.getOauthId(), "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+			Config config = configMapper.getByTag("payTmpId");
+			if(config!=null) {
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key, value, "感谢您的惠顾");
+			}
 		}
 		return true;
 	}
@@ -1817,7 +1820,10 @@ public class UserServiceImpl implements UserServiceI {
 			paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder);
 			String[] key = {"keyword1","keyword2"};
 			String[] value = {DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString()};
-			sendWXMessage(oauthLogin.getOauthId(), "TBY-Wrn9sQuOoM_BUNZO2aEjX56AG6RRNxHrEH8k_pI", "hs.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
+			Config config = configMapper.getByTag("rechargeTmpId");
+			if(config!=null) {
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), "hs.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
+			}
 		}
 		return true;
 	}
@@ -1862,7 +1868,7 @@ public class UserServiceImpl implements UserServiceI {
 		logger.info(JSON.toJSONString(sendData));
 		try {
         Var var = varMapper.selectByPrimaryKey(new Integer(1));
-        URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + var.getValue());// 创建连接  
+        URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + var.getValue());// 创建连接
         HttpURLConnection connection = (HttpURLConnection) urlPost  
                 .openConnection();  
         connection.setDoOutput(true);  
