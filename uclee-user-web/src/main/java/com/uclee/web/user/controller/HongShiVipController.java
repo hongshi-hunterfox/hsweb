@@ -66,7 +66,7 @@ public class HongShiVipController {
 						if(userProfile.getVipJbarcode()!=null&&userProfile.getVipJbarcode().length()>2){
 							ret.get(0).setVipJbarcode(userProfile.getVipJbarcode());
 						}else{
-							ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getcVipCode(),userId));
+							ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
 						}
 						if(ret.get(0).getState()==0||ret.get(0).getDisable()==1||(ret.get(0).getVipType()&2)==0||ret.get(0).getIsVoucher()==1||ret.get(0).getEndTime().before(new Date())){
 							ret.get(0).setAllowRecharge(false);
