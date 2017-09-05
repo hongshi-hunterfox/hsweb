@@ -255,4 +255,6 @@ public interface UserServiceI {
     List<HomeQuickNavi> getQuickNavis();
 
     int getUnpayOrderCountByUserId(Integer userId);
+
+    List<Message> getUnSendMesg();
 }

@@ -152,6 +152,8 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private LotteryDrawConfigMapper lotteryDrawConfigMapper;
 	@Autowired
+	private MessageMapper messageMapper;
+	@Autowired
 	private FDFSFileUpload fDFSFileUpload;
 	@Autowired
 	private UserMapper userMapper;
@@ -3626,6 +3628,11 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public int getUnpayOrderCountByUserId(Integer userId) {
 		return orderMapper.getUnpayOrderCountByUserId(userId);
+	}
+
+	@Override
+	public List<Message> getUnSendMesg() {
+		return messageMapper.getUnSendMesg();
 	}
 
 }
