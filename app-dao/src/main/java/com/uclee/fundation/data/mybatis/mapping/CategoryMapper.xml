@@ -21,6 +21,12 @@
     from web_categories
     where parent_id = #{parentId,jdbcType=INTEGER}
   </select>
+  <select id="selectByPId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    A.*
+    from web_categories A left join web_products_categories_link B  on A.category_id=B.category_id
+    where B.product_id = #{productId,jdbcType=INTEGER}
+  </select>
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

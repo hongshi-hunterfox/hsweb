@@ -257,4 +257,6 @@ public interface UserServiceI {
     int getUnpayOrderCountByUserId(Integer userId);
 
     List<Message> getUnSendMesg();
+
+    Config getConfigByTag(String supportDeliver);
 }

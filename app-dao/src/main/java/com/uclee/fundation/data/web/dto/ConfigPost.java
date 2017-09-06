@@ -32,6 +32,23 @@ public class ConfigPost {
 	private String payTemId;
 	private String rechargeTemId;
 	private String bindText;
+	private String supportDeliver;
+
+	public String getBindText() {
+		return bindText;
+	}
+
+	public void setBindText(String bindText) {
+		this.bindText = bindText;
+	}
+
+	public String getSupportDeliver() {
+		return supportDeliver;
+	}
+
+	public void setSupportDeliver(String supportDeliver) {
+		this.supportDeliver = supportDeliver;
+	}
 
 	public String getPayTemId() {
 		return payTemId;

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.uclee.fundation.data.mybatis.model.Category;
 import com.uclee.fundation.data.mybatis.model.HomeQuickNavi;
 import com.uclee.fundation.data.web.dto.*;
 import org.apache.shiro.SecurityUtils;
@@ -41,6 +42,14 @@ public class BackendHandler {
 	@RequestMapping("/sendUnbuyMsg")
 	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId) {
 		return backendService.sendUnbuyMsg(userId);
+	}
+	@RequestMapping("/delCategory")
+	public @ResponseBody boolean delCategory(HttpServletRequest request,Integer categoryId) {
+		return backendService.delCategory(categoryId);
+	}
+	@RequestMapping("/editCategory")
+	public @ResponseBody boolean editCategory(HttpServletRequest request,@RequestBody Category category) {
+		return backendService.editCategory(category);
 	}
 	@RequestMapping("/freightHandler")
 	public @ResponseBody boolean freightHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {

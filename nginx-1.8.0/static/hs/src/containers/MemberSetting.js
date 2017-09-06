@@ -31,7 +31,8 @@ class MemberSetting extends React.Component {
       resultmsg: '保存成功',
 
       time: 60,
-      fetchingCode: false
+      fetchingCode: false,
+      bindText:''
     }
 
     this.tick = null
@@ -50,6 +51,16 @@ class MemberSetting extends React.Component {
         cBirthday: moment(d.cBirthday).format('YYYY-MM-DD'),
         bIsLunar: d.bIsLunar,
         cVipCode: d.cVipCode
+      })
+    })
+    req.get('/uclee-user-web/getBindText').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var d = res.body
+
+      this.setState({
+        bindText: d.bindText
       })
     })
   }
@@ -230,6 +241,9 @@ class MemberSetting extends React.Component {
               </button>
             </div>
           </form>
+          <div style={{padding:'10px',lineHeight:'25px',whiteSpace: 'pre-line'}}>
+             {this.state.bindText}
+          </div>
         </div>
       </DocumentTitle>
     )

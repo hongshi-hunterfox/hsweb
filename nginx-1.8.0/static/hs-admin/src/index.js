@@ -27,11 +27,13 @@ import QuickNaviProduct from './containers/QuickNaviProduct'
 import EditQuickNaviProduct from './containers/EditQuickNaviProduct'
 import BannerList from './containers/BannerList'
 import ProductGroupList from './containers/ProductGroupList'
+import CategoryList from './containers/CategoryList'
 import Freight from './containers/Freight'
 import StoreIntro from './containers/StoreIntro'
 import Lottery from './containers/LotteryConfig'
 import EditProductGroup from './containers/EditProductGroup'
 import ShakeMonitor from './containers/ShakeMonitor'
+import EditCategory from './containers/EditCategory'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -55,10 +57,12 @@ ReactDOM.render(
       <Route path="quick-navi-product" component={QuickNaviProduct} />
       <Route path="edit-quick-navi-product" component={EditQuickNaviProduct} />
       <Route path="product-list" component={ProductList} />
+      <Route path="category-list" component={CategoryList} />
       <Route path="banner-list" component={BannerList} />
       <Route path="product-group-list" component={ProductGroupList} />
       <Route path="quick-navi-list" component={QuickNaviList} />
       <Route path="addStore" component={AddStore} />
+      <Route path="editCategory" component={EditCategory} />
       <Route path="editStore" component={EditStore} />
       <Route path="editBanner" component={EditBanner} />
       <Route path="editQuickNavi" component={EditQuickNavi} />

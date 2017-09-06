@@ -44,117 +44,125 @@ class GlobalConfig extends React.Component {
 
           <form onSubmit={this._submit} className="form-horizontal">
             <div className="form-group">
-              <label className="control-label col-md-3">注册积分赠送数量：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>注册积分赠送数量：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.registPoint} name="registPoint" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">签到积分赠送数量：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>签到积分赠送数量：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.signInPoint} name="signInPoint" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">积分抽奖单次消耗数量：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>积分抽奖单次消耗数量：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.drawPoint} name="drawPoint" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">一级分销获利比例(百分比)：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>一级分销获利比例(百分比)：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.firstDis} name="firstDis" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">二级分销获利比例(百分比)：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>二级分销获利比例(百分比)：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.secondDis} name="secondDis" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">微信APPID：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>微信APPID：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.appId} name="appId" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">微信APPSECRET：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>微信APPSECRET：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.appSecret} name="appSecret" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">微信APPKEY：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>微信APPKEY：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.appKey} name="appKey" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">微信MERCHANTCODE：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>微信MERCHANTCODE：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.merchantCode} name="merchantCode" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">微信NOTIFYURL：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>微信NOTIFYURL：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.notifyUrl} name="notifyUrl" className="form-control" onChange={this._change}/>
               </div>
-               <label className="control-label col-md-3">支付宝商户号partnerid：</label>
-              <div className="col-md-9">
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>支付宝商户号partnerid：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.partner} name="partner" className="form-control" onChange={this._change}/>
               </div>
-               <label className="control-label col-md-3">支付宝NOTIFYURL：</label>
-              <div className="col-md-9">
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>支付宝NOTIFYURL：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.alipayNotifyUrl} name="alipayNotifyUrl" className="form-control" onChange={this._change}/>
               </div>
-               <label className="control-label col-md-3">支付宝sellerId：</label>
-              <div className="col-md-9">
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>支付宝sellerId：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.sellerId} name="sellerId" className="form-control" onChange={this._change}/>
               </div>
-               <label className="control-label col-md-3">支付宝密钥key：</label>
-              <div className="col-md-9">
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>支付宝密钥key：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.key} name="key" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">活动抽奖一等奖奖池数：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖一等奖奖池数：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.firstPrize} name="firstPrize" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">活动抽奖二等奖奖池数：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖二等奖奖池数：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.secondPrize} name="secondPrize" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">活动抽奖三等奖奖池数：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖三等奖奖池数：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdPrize} name="thirdPrize" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">活动抽奖一等奖单次抽奖人数：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖一等奖单次抽奖人数：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.firstCount} name="firstCount" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">活动抽奖二等奖单次抽奖人数：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖二等奖单次抽奖人数：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.secondCount} name="secondCount" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">活动抽奖三等奖单次抽奖人数：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖三等奖单次抽奖人数：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdCount} name="thirdCount" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">阿里大于appkey：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里大于appkey：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.aliAppkey} name="aliAppkey" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">阿里大于appSecret：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里大于appSecret：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.aliAppSecret} name="aliAppSecret" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">阿里templateCode：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里templateCode：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.templateCode} name="templateCode" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">生日短信模板id：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信模板id：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.birthTemId} name="birthTemId" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">消费提醒短信id：</label>
-              <div className="col-md-9">
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费提醒短信id：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.buyTemId} name="buyTemId" className="form-control" onChange={this._change}/>
               </div>
-               <label className="control-label col-md-3">支付成功短信id：</label>
-              <div className="col-md-9">
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>支付成功短信id：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.payTemId} name="payTemId" className="form-control" onChange={this._change}/>
               </div>
-               <label className="control-label col-md-3">充值成功短信id：</label>
-              <div className="col-md-9">
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>充值成功短信id：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.rechargeTemId} name="rechargeTemId" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">会员绑定页面内容：</label>
-              <div className="col-md-9">
-                <input type="textArea" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}/>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <textarea rows="3" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否支持配送：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="supportDeliver" value={this.state.config.supportDeliver?this.state.config.supportDeliver:'yes'} style={{padding:'5px'}}>
+                  <option value="no">不支持</option>
+                  <option value="yes">支持</option>
+                </select>
               </div>
             </div>
             <ErrorMsg msg={this.state.err} />

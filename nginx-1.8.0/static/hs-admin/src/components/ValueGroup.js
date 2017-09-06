@@ -101,7 +101,6 @@ class ValueGroup extends React.Component {
                     <button
                       type="button"
                       className="btn btn-danger"
-                      disabled={index === 0}
                       onClick={this._removeRow}
                     >
                       <span className="glyphicon glyphicon-minus" />

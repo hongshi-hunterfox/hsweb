@@ -35,7 +35,8 @@ class Order extends React.Component {
       pDate: '',
       pTime: '',
       remark: '',
-      isShippingfree:false
+      isShippingfree:false,
+      supportDeliver:true
     }
     this.lat = 23
     this.lng = 113
@@ -107,7 +108,9 @@ class Order extends React.Component {
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
         total: resJson.total,
-        isShippingfree:resJson.isShippingfree
+        isShippingfree:resJson.isShippingfree,
+        supportDeliver:resJson.supportDeliver,
+        isSelfPick:resJson.isSelfPick
       })
       if (sessionStorage.getItem('addr') != null) {
         this.setState({
@@ -176,6 +179,7 @@ class Order extends React.Component {
                   <option value="false">配送</option>
                   <option value="true">自提</option>
                 </select>*/}
+                {this.state.supportDeliver?
                 <span  className="radio-input"><input type='radio' id='no' name="isSelfPick" checked={this.state.isSelfPick==="false"?'checked':null} value="false" onClick={e => {
                     this.setState({
                       isSelfPick: e.target.value,
@@ -204,6 +208,9 @@ class Order extends React.Component {
                     console.log(this.state.isSelfPick);
                    
                   }}/> <label htmlFor="no">配送</label></span>
+                  :null
+                }
+                
                 <input type='radio' name="isSelfPick" id="yes" value="true" checked={this.state.isSelfPick==="true"?'checked':null} onClick={e => {
                     this.setState({
                       isSelfPick: e.target.value,

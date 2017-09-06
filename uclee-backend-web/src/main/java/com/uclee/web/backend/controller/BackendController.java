@@ -112,12 +112,24 @@ public class BackendController {
 		map.put("config", config);
 		return map;
 	}
+	@RequestMapping("/category")
+	public @ResponseBody Category category(HttpServletRequest request,Integer categoryId) {
+		Category category = backendService.getCategoryById(categoryId);
+		return category;
+	}
 	@RequestMapping("/userList")
 	public @ResponseBody Map<String,Object> userList(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		List<UserProfile> users = backendService.getUserList();
 		map.put("users", users);
 		map.put("size", users.size());
+		return map;
+	}
+	@RequestMapping("/categoryList")
+	public @ResponseBody Map<String,Object> categoryList(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<Category> categories = backendService.getCategoryList();
+		map.put("categories", categories);
 		return map;
 	}
 	@RequestMapping("/userBirthList")

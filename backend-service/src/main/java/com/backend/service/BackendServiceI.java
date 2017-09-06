@@ -80,4 +80,12 @@ public interface BackendServiceI {
     String getHongShiStoreName(String hsCode);
 
 	List<ProductDto> selectAllProductByCatId(Integer categoryId);
+
+	List<Category> getCategoryList();
+
+	boolean delCategory(Integer categoryId);
+
+	boolean editCategory(Category category);
+
+	Category getCategoryById(Integer categoryId);
 }

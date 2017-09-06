@@ -13,6 +13,8 @@ alter table web_products add is_shipping_free bit not null DEFAULT 0;
 
 insert into web_config (tag,value) values ('rechargeTmpId','');
 insert into web_config (tag,value) values ('buyTmpId','');
+insert into web_config (tag,value) values ('bindText','');
+insert into web_config (tag,value) values ('supportDeliver','');
 
 
 CREATE TABLE web_message (

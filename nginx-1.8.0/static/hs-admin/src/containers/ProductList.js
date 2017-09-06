@@ -45,6 +45,7 @@ class ProductList extends React.Component {
         <tr key={index}>
           <td><img src={item.image} alt="" width="50"/></td>
           <td>{item.title}</td>
+          <td>{item.category}</td>
           <td>
             <Link to={'/product/' + item.productId} className="btn btn-primary">
             编辑
@@ -81,6 +82,7 @@ class ProductList extends React.Component {
                 <tr>
                   <th>产品图片</th>
                   <th>产品标题</th>
+                  <th>产品分类</th>
                   <th>
                     <a href=""></a>编辑</th>
                 </tr>

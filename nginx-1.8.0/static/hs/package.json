@@ -35,5 +35,5 @@
     "watch-less": "autoless ./src",
     "build-less": "autoless ./src --no-watch"
   },
-  "proxy": "http://hs.uclee.com"
+  "proxy": "http://localhost:8092"
 }

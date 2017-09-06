@@ -20,4 +20,6 @@ public interface CategoryMapper {
 	List<Category> selectAll();
 
 	List<Category> selectByParentId(Integer parentId);
+
+    Category selectByPId(Integer productId);
 }

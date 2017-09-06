@@ -3639,4 +3639,9 @@ public class UserServiceImpl implements UserServiceI {
 		return messageMapper.getUnSendMesg();
 	}
 
+	@Override
+	public Config getConfigByTag(String supportDeliver) {
+		return configMapper.getByTag(supportDeliver);
+	}
+
 }

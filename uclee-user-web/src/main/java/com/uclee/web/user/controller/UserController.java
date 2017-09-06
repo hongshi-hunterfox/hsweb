@@ -7,6 +7,7 @@ import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
+import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.SignRecordMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.CartDto;
@@ -320,7 +321,25 @@ public class UserController extends CommonUserHandler{
 		map.put("coupons", coupons);
 		return map;
 	}
-	
+
+	/**
+	 * 获取会员绑定的配置文安
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getBindText")
+	public @ResponseBody Map<String,Object> getBindText(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Config config = userService.getConfigByTag(WebConfig.bindText);
+		if(config!=null){
+			map.put("bindText", config.getValue());
+		}else {
+			map.put("bindText", "");
+		}
+		return map;
+	}
+
 	/** 
 	* @Title: order 
 	* @Description: 提交订单页面的数据处理
@@ -350,6 +369,13 @@ public class UserController extends CommonUserHandler{
 		map.put("cartItems", carts);
 		map.put("isShippingFree", isShippingFree);
 		map.put("total", total);
+		Config config = userService.getConfigByTag(WebConfig.supportDeliver);
+		if(config!=null&&config.getValue().equals("yes")){
+			map.put("supportDeliver",true);
+		}else{
+			map.put("supportDeliver",false);
+			map.put("isSelfPick","true");
+		}
 		return map;
 	}
 	

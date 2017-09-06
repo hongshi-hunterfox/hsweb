@@ -32,6 +32,10 @@ import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.number.util.NumberUtil;
 
 public class BackendServiceImpl implements BackendServiceI {
+
+
+	@Autowired
+	private CategoryMapper categoryMapper;
 	@Autowired
 	private HomeQuickNaviMapper homeQuickNaviMapper;
 	@Autowired
@@ -155,6 +159,16 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
 		}else{
 			configMapper.updateByTag(WebConfig.rechargeTmpId, "");
+		}
+		if (configPost.getBindText()!=null) {
+			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
+		}else{
+			configMapper.updateByTag(WebConfig.bindText, "");
+		}
+		if (configPost.getSupportDeliver()!=null) {
+			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
+		}else{
+			configMapper.updateByTag(WebConfig.supportDeliver, "");
 		}
 		return true;
 	}
@@ -306,6 +320,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			if(link!=null){
 				item.setImage(link.getImageUrl());
 			}
+			Category category = categoryMapper.selectByPId(item.getProductId());
+			if(category!=null){
+				item.setCategory(category.getCategory());
+			}
 		}
 		return product;
 	}
@@ -419,8 +437,12 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setPayTemId(config.getValue());
 			}else if(config.getTag().equals(WebConfig.rechargeTmpId)){
 				configPost.setRechargeTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.bindText)){
+				configPost.setBindText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.supportDeliver)){
+				configPost.setSupportDeliver(config.getValue());
 			}
-			
+
 		}
 		return configPost;
 	}
@@ -723,7 +745,45 @@ public class BackendServiceImpl implements BackendServiceI {
 			if(link!=null){
 				item.setImage(link.getImageUrl());
 			}
+			Category category = categoryMapper.selectByPId(item.getProductId());
+			if(category!=null){
+				item.setCategory(category.getCategory());
+			}
 		}
 		return product;
+	}
+
+	@Override
+	public List<Category> getCategoryList() {
+		return categoryMapper.selectAll();
+	}
+
+	@Override
+	public boolean delCategory(Integer categoryId) {
+		return categoryMapper.deleteByPrimaryKey(categoryId)>0;
+	}
+
+	@Override
+	public boolean editCategory(Category category) {
+		if(category.getCategoryId()!=null){
+			Category tmp = categoryMapper.selectByPrimaryKey(category.getCategoryId());
+			if(tmp!=null){
+				tmp.setCategory(category.getCategory());
+				return categoryMapper.updateByPrimaryKeySelective(category)>0;
+			}else{
+				return false;
+			}
+		}else{
+			if(category.getCategory()!=null){
+				category.setParentId(0);
+				return categoryMapper.insertSelective(category)>0;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public Category getCategoryById(Integer categoryId) {
+		return categoryMapper.selectByPrimaryKey(categoryId);
 	}
 }
