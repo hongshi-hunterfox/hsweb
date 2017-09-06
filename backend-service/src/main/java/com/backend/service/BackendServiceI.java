@@ -52,7 +52,7 @@ public interface BackendServiceI {
 
 	int updateStoreInfo(String description);
 
-	List<UserProfile> getUserListForBirth(Integer day);
+	List<UserProfile> getUserListForBirth(String start,String end);
 
 	boolean sendBirthMsg(Integer userId);
 

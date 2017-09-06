@@ -121,12 +121,9 @@ public class BackendController {
 		return map;
 	}
 	@RequestMapping("/userBirthList")
-	public @ResponseBody Map<String,Object> userBirthList(HttpServletRequest request,Integer day) {
+	public @ResponseBody Map<String,Object> userBirthList(HttpServletRequest request,String start,String end) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		if(day==null){
-			day=0;
-		}
-		List<UserProfile> users = backendService.getUserListForBirth(day);
+		List<UserProfile> users = backendService.getUserListForBirth(start,end);
 		map.put("users", users);
 		map.put("size", users.size());
 		return map;

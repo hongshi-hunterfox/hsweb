@@ -152,6 +152,10 @@ class GlobalConfig extends React.Component {
               <div className="col-md-9">
                 <input type="text" value={this.state.config.rechargeTemId} name="rechargeTemId" className="form-control" onChange={this._change}/>
               </div>
+              <label className="control-label col-md-3">会员绑定页面内容：</label>
+              <div className="col-md-9">
+                <input type="textArea" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}/>
+              </div>
             </div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
@@ -182,6 +186,10 @@ class GlobalConfig extends React.Component {
     if (!data.registPoint) {
       return this.setState({
         err: '请填写 注册积分赠送数量'
+      })
+    }if (!data.bindText) {
+      return this.setState({
+        err: '请填写 会员绑定页面内容'
       })
     }
     if (!data.aliAppkey) {

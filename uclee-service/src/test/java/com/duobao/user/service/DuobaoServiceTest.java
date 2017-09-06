@@ -2,6 +2,7 @@ package com.duobao.user.service;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.service.BackendServiceI;
+import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.dynamicDatasource.DBContextHolder;
 import com.uclee.dynamicDatasource.DataSourceFacade;
@@ -34,12 +35,14 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 public class DuobaoServiceTest extends AbstractServiceTests {
 	
@@ -87,7 +90,11 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Autowired
 	private ProductSaleMapper productSaleMapper;
 	@Autowired
+	private DataSourceInfoServiceI dataSourceInfoService;
+	@Autowired
 	private DataSourceFacade datasource;
+	@Autowired
+	private UserProfileMapper userProfileMapper;
 	@Test
 	public void testFreight(){
 		datasource.switchDataSource("hs");
@@ -259,24 +266,85 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	@Test
 	public void test1() throws Exception{
-		DynamicDataSourceManagerHeyp.init();
-        //获取数据源连接池
-        System.out.println("------------------->数据源1");
-        
-        JdbcTemplate jdbcTemplate1 = DynamicDataSourceManagerHeyp.getDataSourcePoolBySourceID(1);
-        List<Map<String,Object>> users = jdbcTemplate1.queryForList("select * from db_users where serial_num=1480163164631119209");
-        System.err.println(JSON.toJSONString(users));
-		JdbcTemplate jdbcTemplate2 = DynamicDataSourceManagerHeyp.getDataSourcePoolBySourceID(2);
-		List<Map<String,Object>> users2 = jdbcTemplate2.queryForList("select * from db_users where serial_num=1480163164631119209");
-		System.err.println(JSON.toJSONString(users2));
+		datasource.switchDataSource("hs");
+		/*List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
+		logger.info("t: " + JSON.toJSONString(t));
+		for(DataSourceInfo info:t) {
+			if(!info.getMerchantCode().equals("master")) {
+				dataSource.switchDataSource(info.getMerchantCode());
+				Var var = varMapper.selectByPrimaryKey(new Integer(1));
+				logger.info(JSON.toJSONString(var));
+					duobaoService.getGolbalAccessToken();
+			}
+		}*/
+		System.out.println(JSON.toJSONString(userProfileMapper.getUserListForBirth("2017-08-23","2017-09-23")));
 	}
 	
 	@Test
 	public void testWxMessage(){
-		dataSource.switchDataSource("modeldb4");
+		dataSource.switchDataSource("modeldb");
 		String[] key = {"keyword1","keyword2"};
 		String[] value = {"2016年12月20日14:40:08","20元（账户余额30.50元）"};
- 		userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "lPKTNYPlugdPDyRF_jNIB3dkL8ehDAT6SxSz3PlsUp0", "www.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
+ 		//userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "lPKTNYPlugdPDyRF_jNIB3dkL8ehDAT6SxSz3PlsUp0", "www.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
+		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
+		sendData.put("touser", "oH7hfuEN8qnZjC7fr2_zUFK7eVl8");
+		sendData.put("template_id", "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok");
+		sendData.put("topcolor", "#FF0000");
+		sendData.put("url", null);
+		Map<String,Object> mainData = new TreeMap<String,Object>();
+
+		Map<String,Object> mapFirst = new TreeMap<String,Object>();
+		mapFirst.put("value", "尊敬的会员，您本次充值成功到账");
+		mainData.put("first", mapFirst);
+
+		for(int i=0;i<key.length;i++){
+			Map<String,Object> Keyword = new TreeMap<String,Object>();
+			Keyword.put("value", value[i]);
+			mainData.put(key[i], Keyword);
+		}
+
+		Map<String,Object> mapRemark = new TreeMap<String,Object>();
+		mapRemark.put("value", "如有疑问，请点击这里");
+		mapRemark.put("color", "#173177");
+		mainData.put("remark", mapRemark);
+
+		sendData.put("data", mainData);
+		logger.info(JSON.toJSONString(sendData));
+		try {
+			//Var var = varMapper.selectByPrimaryKey(new Integer(1));
+			URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=03wSxCvpheMe4VQRtY5_S8pBopX1C4jICCw7nOR3wzVW22FYnl-3mRR0d3g5694kaYkbXP4E9XI7PD6TN62Ab-UmU9w69-W-NfnrTTPOtRks2IETwZ3i2e6RW62BBp_0IEXjAHADZS");// 创建连接
+			HttpURLConnection connection = (HttpURLConnection) urlPost
+					.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setUseCaches(false);
+			connection.setInstanceFollowRedirects(true);
+			connection.setRequestMethod("POST"); // 设置请求方式
+			connection.setRequestProperty("Accept", "application/json"); // 设置接收数据的格式
+			connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
+			connection.connect();
+			OutputStreamWriter out = new OutputStreamWriter(
+					connection.getOutputStream(), "UTF-8"); // utf-8编码
+			out.append(JSON.toJSONString(sendData));
+			out.flush();
+			out.close();
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+			String lines;
+			StringBuffer sb = new StringBuffer("");
+			while ((lines = reader.readLine()) != null) {
+				lines = new String(lines.getBytes(), "utf-8");
+				sb.append(lines);
+			}
+			System.err.println(sb);
+			reader.close();
+			// 断开连接
+			connection.disconnect();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test

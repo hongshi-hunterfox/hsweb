@@ -1,0 +1,2 @@
+/*DATEDIFF(day,getdate(),'2017'+'-'+substring(convert(char(10),D.生日,120),6,5)) &gt;= 0
+ 		and DATEDIFF(day,getdate(),'2017'+'-'+substring(convert(char(10),D.生日,120),6,5)) &lt;= #{day,jdbcType=INTEGER} order by D.生日 desc*/

@@ -1843,7 +1843,7 @@ public class UserServiceImpl implements UserServiceI {
 	* @throws 
 	*/
 	@Override
-	public String sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
+	public Boolean sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
 		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
 		sendData.put("touser", openId);
 		sendData.put("template_id", templateId);
@@ -1899,11 +1899,15 @@ public class UserServiceImpl implements UserServiceI {
         reader.close();
         // 断开连接
         connection.disconnect();
+        String res = sb.toString();
+        if(res!=null&&res.contains("ok")){
+        	return true;
+		}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 	}
 
 	/** 

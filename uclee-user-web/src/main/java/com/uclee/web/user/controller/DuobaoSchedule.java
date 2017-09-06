@@ -80,10 +80,14 @@ public class DuobaoSchedule {
 					Config config = configMapper.getByTag(WebConfig.payTmpId);
 					for(Message item:messages){
 						String[] key = {"keyword1","keyword2","keyword3","keyword4"};
+						if(item.getPayType()==null){
+							item.setPayType("线下门店支付");
+						}
 						String[] value = {item.getOrderNum(),DateUtils.format(item.getTime(), DateUtils.FORMAT_LONG).toString(),item.getMoney()+"元".toString(),item.getPayType()};
-						userService.sendWXMessage(item.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临");
-						item.setIsSend(true);
-						messageMapper.updateByPrimaryKeySelective(item);
+						if(userService.sendWXMessage(item.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临")){
+							item.setIsSend(true);
+							messageMapper.updateByPrimaryKeySelective(item);
+						}
 					}
 				}catch (Exception e){
 

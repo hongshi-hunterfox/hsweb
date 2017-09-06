@@ -11,14 +11,16 @@ class UserBirthList extends React.Component {
       users: [],
       size: 10,
       day: this.props.location.query.day,
-      checked: []
+      checked: [],
+      start:'',
+      end:''
     }
   }
 
   componentDidMount() {
     req
       .get(
-        '/uclee-backend-web/userBirthList?day=' + this.props.location.query.day
+        '/uclee-backend-web/userBirthList?start=' + this.props.location.query.start+'&end='+this.props.location.query.end
       )
       .end((err, res) => {
         if (err) {
@@ -54,7 +56,11 @@ class UserBirthList extends React.Component {
   }
 
   _search = () => {
-    window.location = window.location = '/user-birth-list?day=' + this.state.day
+    if(!this.state.start||!this.state.end){
+      alert('请填写完整搜索时间');
+      return;
+    }
+    window.location = window.location = '/user-birth-list?start=' + this.state.start+'&end='+this.state.end
   }
   _sendAll=()=>{
     if(this.state.checked.length===0){
@@ -110,15 +116,28 @@ class UserBirthList extends React.Component {
     return (
       <DocumentTitle title="用户列表">
         <div className="user-list">
-          <div className="user-list-add">
-            <label className="control-label col-md-3">距今天数：</label>
+          <div className="clearfix" style={{margin:'30px 0'}}>
+            <label className="control-label col-md-3">起始时间：</label>
             <input
-              type="text"
-              name="day"
-              value={this.state.day}
-              onChange={this._change}
+              className="form-control"
+              type="date"
+              name="start"
+              value={this.state.pDate}
+              onChange={e => {
+                this.setState({ start: e.target.value })
+              }}
             />
-            <div className="btn btn-primary" onClick={this._search}>
+            <label className="control-label col-md-3">截止时间：</label>
+            <input
+              className="form-control"
+              type="date"
+              name="end"
+              value={this.state.pDate}
+              onChange={e => {
+                this.setState({ end: e.target.value })
+              }}
+            />
+            <div className="btn btn-primary" style={{marginTop:'10px',float:'right'}} onClick={this._search}>
               搜索
             </div>
           </div>

@@ -31,6 +31,7 @@ public class ConfigPost {
 	private String birthTemId;
 	private String payTemId;
 	private String rechargeTemId;
+	private String bindText;
 
 	public String getPayTemId() {
 		return payTemId;

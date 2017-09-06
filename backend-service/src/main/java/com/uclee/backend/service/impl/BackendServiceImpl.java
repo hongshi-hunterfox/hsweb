@@ -339,8 +339,11 @@ public class BackendServiceImpl implements BackendServiceI {
 		return userProfile;
 	}
 	@Override
-	public List<UserProfile> getUserListForBirth(Integer day) {
-		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(day);
+	public List<UserProfile> getUserListForBirth(String start,String end) {
+		if(start==null||end==null){
+			return new ArrayList<UserProfile>();
+		}
+		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(start,end);
 		for(UserProfile item : userProfile){
 			item.setBirthStr(DateUtils.format(item.getBirth(), DateUtils.FORMAT_SHORT));
 		}
