@@ -103,7 +103,9 @@ class Payment extends React.Component {
 			timeCountDown: 60000,
 			submitting:false,
 			isWCCancel:false,
-			cVipCode:null
+			cVipCode:null,
+			cardStatus:'',
+			allowPayment:true
 		}
 	}
 
@@ -222,6 +224,11 @@ class Payment extends React.Component {
 			this.state.paymentId === 2 && this.state.cVipCode==null
 		) {
 			alert("请先绑定会员卡")
+			window.location='/member-setting'
+			return
+		}
+		if(this.state.paymentId === 2 && !this.state.allowPayment){
+			alert(this.state.cardStatus)
 			return
 		}
 		if (

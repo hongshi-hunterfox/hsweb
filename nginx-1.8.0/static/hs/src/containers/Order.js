@@ -107,7 +107,7 @@ class Order extends React.Component {
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
         total: resJson.total,
-        isShippingfree:resJson.isShippingfree
+        isShippingfree:resJson.isShippingFree
       })
       if (sessionStorage.getItem('addr') != null) {
         this.setState({
@@ -181,6 +181,7 @@ class Order extends React.Component {
                       isSelfPick: e.target.value,
                       shippingFee: 0
                     }, () => {
+                      console.log(this.state)
                        if (
                           this.state.isSelfPick &&
                           this.state.isSelfPick === 'false' &&
@@ -194,6 +195,7 @@ class Order extends React.Component {
                               this.state.defaultAddr.region +
                               this.state.defaultAddr.addrDetail
                             console.log('addr:' + addr)
+                            console.log('this.state.isShippingfree:' + this.state.isShippingfree)
                             if(!this.state.isShippingfree){
                               geocoder.getLocation(addr)
                             }

@@ -2962,7 +2962,9 @@ public class UserServiceImpl implements UserServiceI {
 					}
 				}
 				String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
-				sendWXMessage(oauthLogin.getOauthId(), "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+				Config config = configMapper.getByTag("payTmpId");
+				//"S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok"
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
 				//改变支付单状态
 				paymentOrder.setCompleteTime(new Date());
 				paymentOrder.setIsCompleted(true);
