@@ -226,6 +226,9 @@
   添加函数【fn_GetPickUpCode】根据网上商城订单号计算相应的提货码
   添加函数【fn_UnPickUpCode】:根据提货码计算相应的网上商城订单号
   添加存储过程【WSC_GetPickUpCode】完成线上订单号到提货码的转换
+
+2017-09-07
+  存储过程【CreateOrder】中添加了对字段[刷卡日期]与[礼券日期]的赋值动作
 */
 /******************************************************************************/
 /*
@@ -388,7 +391,7 @@ Begin
         Where 建立日期 >= @dStart And 往来编号=@cVipCode And 刷卡金额<>0
         Union All
         --订单记录
-        Select Case When 商户订单号 When '' Then '线下订单' Else '线上订单' End
+        Select Case 商户订单号 When '' Then '线下订单' Else '线上订单' End
               ,id,单号,建立日期,Null,刷卡金额,0,当前余额,0 ,当前积分
         From orders 
         Where 建立日期 >= @dStart And 是否废止=0 And 往来编号=@cVipCode
@@ -1373,6 +1376,9 @@ Begin
   Set @交货日期=Case When @结单=1 Or @废止=1 Then Convert(varchar(10),GetDate(),120) Else Null End
   If @单号 Is Null Or @单号=''
   Begin
+    Declare @刷卡日期 varchar(10),@礼券日期 varchar(10)
+    If IsNull(@刷卡金额, 0) <> 0 Set @刷卡日期 = Convert(varchar(10), GetDate(), 120)
+    If IsNull(@礼券    , 0) <> 0 Set @礼券日期 = Convert(varchar(10), GetDate(), 120)
     Exec Loger @LogID,@ExtendInfo='新建订单'
     If @日期 Is Null
       Set @日期 = Convert(varchar(10), GetDate(), 120)
@@ -1383,11 +1389,11 @@ Begin
     Exec Loger @LogID,@Key=@单号,@ExtendInfo='建立订单(orders)记录'
     Insert orders(单号,日期,部门编号,制单人,生产单位,取货部门,取货时间,商户订单号
                  ,往来编号,联系方式,备注,送货地址,单位名称,当前余额,当前积分
-                 ,金额合计,优惠合计,应收金额,让利,订金,刷卡金额,礼券,欠款
+                 ,金额合计,优惠合计,应收金额,让利,订金,刷卡金额,刷卡日期,礼券,礼券日期,欠款
                  ,结单,是否废止,交货日期,销售类别)
            Values(@单号,@日期,@部门编号,@制单人,@生产单位,@取货部门,@取货时间,@商户订单号
                  ,@往来编号,@联系方式,@备注,@送货地址,@单位名称,0,0
-                 ,@金额合计,@优惠合计,@应收金额,@让利,@订金,@刷卡金额,@礼券,@欠款
+                 ,@金额合计,@优惠合计,@应收金额,@让利,@订金,@刷卡金额,@刷卡日期,@礼券,@礼券日期,@欠款
                  ,@结单,@废止,@交货日期,@销售类别)
     Set @ErrorID=@@Error
     Select @OrderID=SCOPE_IDENTITY()
