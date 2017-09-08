@@ -362,9 +362,9 @@ class Order extends React.Component {
                 this.state.voucherText +
                 this.state.shippingFee >
                 0
-                ? this.state.total -
+                ? (this.state.total -
                     this.state.voucherText +
-                    this.state.shippingFee
+                    this.state.shippingFee).toFixed(2)
                 : 0}
               <button type="submit" className="button">提交订单</button>
             </div>

@@ -2589,8 +2589,8 @@ public class UserServiceImpl implements UserServiceI {
 					item.setHongShiGoods(goods);
 					total = total.add(new BigDecimal(item.getPrice()).multiply(new BigDecimal(item.getCount())));
 				}
-				order.setOrderItems(orderItems);
 				Order tmp = orderMapper.selectBySerialNum(order.getOuterOrderCode());
+				order.setOrderItems(orderItems);
 				if(tmp!=null){
 					if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
 						try {

@@ -44,7 +44,7 @@
   </select>
   <select id="selectQuickNaviProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
     select
-    A.*
+    A.*,C.count
     from web_products A left join web_quick_navi_product_link B on A.product_id=B.product_id where B.navi_id=#{naviId,jdbcType=INTEGER}
   </select>
   <select id="getAllProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
