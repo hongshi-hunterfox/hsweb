@@ -189,8 +189,15 @@ class AllProduct extends React.Component{
 			this.setState({
 				cat:res.cat,
 				products:res.products
+			},()=>{
+				console.log(this.state.products.length);
+				if(!this.state.products.length>0){
+					alert("没有找到符合条件的商品，去商城首页逛逛吧...");
+					window.location='/'
+				}
 			});
 		}.bind(this));
+		
 	}
 	render() {
 		var products = this.state.products.map(function(item, index) {

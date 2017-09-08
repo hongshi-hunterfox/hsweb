@@ -20,13 +20,10 @@ const MemberCardItem = (props) => {
     <div className="member-card-item clearfix">
       <div className="member-card-item-code">卡号：{props.code}</div>
       <div className="member-card-item-balance">余额：{props.balance} 元</div>
-      {
-        props.allowRecharge?
+      
         <div className="member-card-item-recharge">
-        <a href="/seller/recharge" className="btn btn-success">充值</a>
+        <div onClick={props._clickHander.bind(this,"/seller/recharge",props.cardStatus)} className="btn btn-success">充值</div>
       </div>
-      :null
-      }
       
     </div>
   )
@@ -42,7 +39,8 @@ class MemberCard extends React.Component {
       nickName: '',
       vipImage:'',
       allowRecharge:true,
-      vipJbarcode:''
+      vipJbarcode:'',
+      cardStatus:''
     }
   }
 
@@ -68,7 +66,13 @@ class MemberCard extends React.Component {
         }
       })
   }
-
+  _clickHander=(url,cardStatus)=>{
+    if(this.state.allowRecharge){
+      window.location=url;
+    }else{
+      alert(cardStatus);
+    }
+  }
   render() {
     return (
       <DocumentTitle title="我的会员卡">
@@ -92,7 +96,7 @@ class MemberCard extends React.Component {
           <div className="member-card-list">
             {
               this.state.cVipCode ?
-              <MemberCardItem balance={this.state.balance} code={this.state.cVipCode} allowRecharge={this.state.allowRecharge}/>
+              <MemberCardItem balance={this.state.balance} code={this.state.cVipCode} _clickHander={this._clickHander} cardStatus={this.state.cardStatus} allowRecharge={this.state.allowRecharge}/>
               :
               <NoItem />
             }

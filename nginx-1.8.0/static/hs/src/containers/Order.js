@@ -185,6 +185,7 @@ class Order extends React.Component {
                       isSelfPick: e.target.value,
                       shippingFee: 0
                     }, () => {
+                      console.log(this.state)
                        if (
                           this.state.isSelfPick &&
                           this.state.isSelfPick === 'false' &&
@@ -198,6 +199,7 @@ class Order extends React.Component {
                               this.state.defaultAddr.region +
                               this.state.defaultAddr.addrDetail
                             console.log('addr:' + addr)
+                            console.log('this.state.isShippingfree:' + this.state.isShippingfree)
                             if(!this.state.isShippingfree){
                               geocoder.getLocation(addr)
                             }
@@ -367,9 +369,9 @@ class Order extends React.Component {
                 this.state.voucherText +
                 this.state.shippingFee >
                 0
-                ? this.state.total -
+                ? (this.state.total -
                     this.state.voucherText +
-                    this.state.shippingFee
+                    this.state.shippingFee).toFixed(2)
                 : 0}
               <button type="submit" className="button">提交订单</button>
             </div>

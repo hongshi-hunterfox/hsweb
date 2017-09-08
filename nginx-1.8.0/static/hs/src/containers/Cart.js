@@ -22,7 +22,8 @@ class Cart extends React.Component {
     this.state = {
       loading: true,
       list: [],
-      editMode: false
+      editMode: false,
+
     }
   }
 
@@ -357,20 +358,8 @@ class Cart extends React.Component {
 
   _go = () => {
 
-    req
-    .get('/uclee-user-web/getVipInfo')
-    .end((err, res) => {
-      if (err) {
-        return err
-      }
-
-      if (!res.body||!res.body.cVipCode) {
-        alert('请先绑定会员');
-        sessionStorage.setItem('isBackToCart', 1);
-        window.location="/member-setting";
-        return 
-      }
-        var chekedItem = this.state.list.filter(item => {
+    
+  var chekedItem = this.state.list.filter(item => {
         return item.checked
       })
 
@@ -397,12 +386,10 @@ class Cart extends React.Component {
         }else{
           sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
           sessionStorage.setItem('isFromCart', 1)
+          sessionStorage.removeItem('isSelfPick');
           window.location = '/order'
         }
       })
-
-    })
-
     
     
   }

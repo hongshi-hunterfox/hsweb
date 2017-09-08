@@ -16,6 +16,8 @@ public class HongShiVip {
 	private String code;
 	
 	private String cBirthday;
+
+	private String cardCode;
 	
 	private Integer bIsLunar;
 	
@@ -40,6 +42,34 @@ public class HongShiVip {
 	private Date endTime;
 
 	private Boolean isAllowRecharge;
+
+	private Boolean isAllowPayment;
+
+	private String cardStatus;
+
+	public String getCardStatus() {
+		return cardStatus;
+	}
+
+	public void setCardStatus(String cardStatus) {
+		this.cardStatus = cardStatus;
+	}
+
+	public Boolean getAllowPayment() {
+		return isAllowPayment;
+	}
+
+	public void setAllowPayment(Boolean allowPayment) {
+		isAllowPayment = allowPayment;
+	}
+
+	public String getCardCode() {
+		return cardCode;
+	}
+
+	public void setCardCode(String cardCode) {
+		this.cardCode = cardCode;
+	}
 
 	public Boolean getAllowRecharge() {
 		return isAllowRecharge;

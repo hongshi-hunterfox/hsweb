@@ -66,12 +66,32 @@ public class HongShiVipController {
 						if(userProfile.getVipJbarcode()!=null&&userProfile.getVipJbarcode().length()>2){
 							ret.get(0).setVipJbarcode(userProfile.getVipJbarcode());
 						}else{
-							ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getcVipCode(),userId));
+							ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
 						}
-						if(ret.get(0).getState()==0||ret.get(0).getDisable()==1||(ret.get(0).getVipType()&2)==0||ret.get(0).getIsVoucher()==1||ret.get(0).getEndTime().before(new Date())){
+						ret.get(0).setAllowRecharge(true);
+						ret.get(0).setAllowPayment(true);
+						if(ret.get(0).getState()==0){
 							ret.get(0).setAllowRecharge(false);
-						}else{
-							ret.get(0).setAllowRecharge(true);
+							ret.get(0).setAllowPayment(false);
+							ret.get(0).setCardStatus("会员卡未启用");
+						}
+						if(ret.get(0).getDisable()==1){
+							ret.get(0).setAllowRecharge(false);
+							ret.get(0).setAllowPayment(false);
+							ret.get(0).setCardStatus("会员卡已挂失");
+						}
+						if((ret.get(0).getVipType()&2)==0){
+							ret.get(0).setAllowRecharge(false);
+							ret.get(0).setCardStatus("会员卡不可充值");
+						}
+						if(ret.get(0).getIsVoucher()==1){
+							ret.get(0).setAllowRecharge(false);
+							ret.get(0).setCardStatus("会员卡是购物券");
+						}
+						if(ret.get(0).getEndTime().before(new Date())){
+							ret.get(0).setAllowRecharge(false);
+							ret.get(0).setAllowPayment(false);
+							ret.get(0).setCardStatus("会员卡已超过使用期限");
 						}
 					}
 					logger.info(JSON.toJSONString(ret.get(0)));

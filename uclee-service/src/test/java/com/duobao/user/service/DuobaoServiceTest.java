@@ -282,68 +282,16 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testWxMessage(){
-		dataSource.switchDataSource("modeldb");
-		String[] key = {"keyword1","keyword2"};
-		String[] value = {"2016年12月20日14:40:08","20元（账户余额30.50元）"};
- 		//userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "lPKTNYPlugdPDyRF_jNIB3dkL8ehDAT6SxSz3PlsUp0", "www.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
-		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
-		sendData.put("touser", "oH7hfuEN8qnZjC7fr2_zUFK7eVl8");
-		sendData.put("template_id", "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok");
-		sendData.put("topcolor", "#FF0000");
-		sendData.put("url", null);
-		Map<String,Object> mainData = new TreeMap<String,Object>();
-
-		Map<String,Object> mapFirst = new TreeMap<String,Object>();
-		mapFirst.put("value", "尊敬的会员，您本次充值成功到账");
-		mainData.put("first", mapFirst);
-
-		for(int i=0;i<key.length;i++){
-			Map<String,Object> Keyword = new TreeMap<String,Object>();
-			Keyword.put("value", value[i]);
-			mainData.put(key[i], Keyword);
-		}
-
-		Map<String,Object> mapRemark = new TreeMap<String,Object>();
-		mapRemark.put("value", "如有疑问，请点击这里");
-		mapRemark.put("color", "#173177");
-		mainData.put("remark", mapRemark);
-
-		sendData.put("data", mainData);
-		logger.info(JSON.toJSONString(sendData));
-		try {
-			//Var var = varMapper.selectByPrimaryKey(new Integer(1));
-			URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=03wSxCvpheMe4VQRtY5_S8pBopX1C4jICCw7nOR3wzVW22FYnl-3mRR0d3g5694kaYkbXP4E9XI7PD6TN62Ab-UmU9w69-W-NfnrTTPOtRks2IETwZ3i2e6RW62BBp_0IEXjAHADZS");// 创建连接
-			HttpURLConnection connection = (HttpURLConnection) urlPost
-					.openConnection();
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setUseCaches(false);
-			connection.setInstanceFollowRedirects(true);
-			connection.setRequestMethod("POST"); // 设置请求方式
-			connection.setRequestProperty("Accept", "application/json"); // 设置接收数据的格式
-			connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
-			connection.connect();
-			OutputStreamWriter out = new OutputStreamWriter(
-					connection.getOutputStream(), "UTF-8"); // utf-8编码
-			out.append(JSON.toJSONString(sendData));
-			out.flush();
-			out.close();
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
-			String lines;
-			StringBuffer sb = new StringBuffer("");
-			while ((lines = reader.readLine()) != null) {
-				lines = new String(lines.getBytes(), "utf-8");
-				sb.append(lines);
+		dataSource.switchDataSource("kf");
+		List<HongShiVip> ret= hongShiVipService.getVipInfo("ocydnwkicQdKQgz5x4Pedh5LpFUM");//openid 去拿信息
+		if(ret!=null&&ret.size()>0){
+			if(ret.get(0).getState()==0||ret.get(0).getDisable()==1||(ret.get(0).getVipType()&2)==0||ret.get(0).getIsVoucher()==1||ret.get(0).getEndTime().before(new Date())){
+				ret.get(0).setAllowRecharge(false);
+				System.out.println("不可用");
+			}else{
+				ret.get(0).setAllowRecharge(true);
+				System.out.println("可用");
 			}
-			System.err.println(sb);
-			reader.close();
-			// 断开连接
-			connection.disconnect();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	

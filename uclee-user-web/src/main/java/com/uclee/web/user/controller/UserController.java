@@ -362,7 +362,7 @@ public class UserController extends CommonUserHandler{
 		for(CartDto item:carts){
 			total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
 			Product product = userService.getProductById(item.getProductId());
-			if(product!=null||!product.getShippingFree()){
+			if(product!=null&&!product.getShippingFree()){
 				isShippingFree=false;
 			}
 		}

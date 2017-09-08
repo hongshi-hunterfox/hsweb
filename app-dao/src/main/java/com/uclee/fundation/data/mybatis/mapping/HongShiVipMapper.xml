@@ -10,6 +10,7 @@
 		<result column="Birthday" property="cBirthday" jdbcType="VARCHAR" />
 		<result column="IsLunar" property="bIsLunar" jdbcType="BIT" />
 		<result column="VipCode" property="cVipCode" jdbcType="VARCHAR" />
+		<result column="CardCode" property="cardCode" jdbcType="VARCHAR" />
 		<result column="Balance" property="balance" jdbcType="DECIMAL" />
 		<result column="BonusPoints" property="bonusPoints" jdbcType="DECIMAL" />
 		<result column="State" property="state" jdbcType="INTEGER" />
