@@ -65,9 +65,9 @@ public class BarcodeUtil {
         Code39Bean bean = new Code39Bean();
  
         // 精细度
-        final int dpi = 150;
+        final int dpi = 600;
         // module宽度
-        final double moduleWidth = UnitConv.in2mm(1.0f / dpi);
+        final double moduleWidth = UnitConv.in2mm(6.0f / dpi);
  
         // 配置对象
         bean.setModuleWidth(moduleWidth);
@@ -93,7 +93,7 @@ public class BarcodeUtil {
  
     public static void main(String[] args) {
         String msg = "123456789";
-        String path = "D:\\barcode.png";
+        String path = "D:\\barcode3.png";
         File file = generateFile(msg, path);
     }
 }
