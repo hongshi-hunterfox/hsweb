@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.sun.tools.javac.jvm.ByteCodes.ret;
+
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/uclee-product-web")
@@ -70,7 +72,22 @@ public class ProductManagerController {
 		map.put("store", ret);
 		return map;
 	}
-	
+	@RequestMapping(value="isTitleExisted")
+	public @ResponseBody Map<String,Object> isTitleExisted(HttpSession session,String title,Integer productId){
+		Map<String,Object> map = new HashMap<String,Object>();
+		Product product = productMapper.selectByTitle(title);
+		if(product!=null){
+			if(product.getProductId()==productId){
+				map.put("result", true);
+			}else{
+				map.put("result", false);
+			}
+		}else{
+			map.put("result", true);
+		}
+		return map;
+	}
+
 	@RequestMapping(value="productList")
 	public @ResponseBody Map<String,Object> productList(HttpSession session,Integer productId,Integer categoryId){
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -134,7 +151,7 @@ public class ProductManagerController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<Category> cat = categoryMapper.selectAll();
 		map.put("cat", cat);
-		List<HongShiProduct> hongShiProduct = hongShiService.getHongShiProduct();
+		List<HongShiProduct> hongShiProduct = hongShiService.getHongShiProduct(productId);
 		map.put("hongShiProduct", hongShiProduct);
 		List<NapaStore> tmp = napaStoreMapper.selectAllNapaStore();
     	HashSet<String> hsCode = new HashSet<String>();

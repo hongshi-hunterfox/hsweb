@@ -26,3 +26,14 @@ CREATE TABLE web_message (
   pay_type varchar(255) not null DEFAULT '',
   is_send bit NOT NULL DEFAULT 0
 );
+
+CREATE TABLE web_comment (
+  id int identity (1,1) primary key,
+  user_id int not null,
+  order_id int NOT NULL,
+  title varchar(1024) not null DEFAULT '',
+  deliver int NOT NULL DEFAULT 5,
+  service int NOT NULL DEFAULT 5,
+  quality int NOT NULL DEFAULT 5,
+  back_title varchar(1024) not null DEFAULT ''
+);

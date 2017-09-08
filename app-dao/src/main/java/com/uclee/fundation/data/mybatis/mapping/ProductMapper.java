@@ -29,4 +29,6 @@ public interface ProductMapper {
     List<ProductDto> selectQuickNaviProduct(Integer naviId);
 
     List<ProductDto> getAllProductByCatId(Integer categoryId);
+
+    Product selectByTitle(String title);
 }

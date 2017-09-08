@@ -30,6 +30,12 @@
     from web_products
     where product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectByTitle" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_products
+    where title = #{title,jdbcType=VARCHAR}
+  </select>
   <select id="selectOneImage" resultMap="ProductDto" parameterType="java.lang.Integer" >
     select 
     A.*,b.image_url as image

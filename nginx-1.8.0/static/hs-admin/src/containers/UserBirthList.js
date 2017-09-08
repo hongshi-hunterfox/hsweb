@@ -107,7 +107,7 @@ class UserBirthList extends React.Component {
               className="btn btn-primary"
               onClick={this._send.bind(this, item.userId)}
             >
-              发送短信
+              发送信息
             </button>
           </td>
         </tr>
