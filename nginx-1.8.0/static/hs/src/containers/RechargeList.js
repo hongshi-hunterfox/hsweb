@@ -17,17 +17,24 @@ const NoItem = () => {
 
 const RechargeListItem = (props) => {
   return (
-    <div className="recharge-list-item">
-
-      {
-        <div className="recharge-list-value">
-          <span style={{width:'80%'}}>{props.source}</span>：  <span style={{width:'20%'}}>{props.value}</span>
-          <span className="recharge-list-point pull-right" >余额：{props.balance}</span>
-          
+    <div className="recharge-list-item ">
+      <div className='top '>
+        <div className='left'>
+            <div className='tag'><span className='left'>{props.source}：  </span><span className='right'>{props.value}</span></div>
         </div>
-      }
-      <span className="recharge-list-time"><span style={{width:'80%'}}>{props.billCode}</span><span className='bonusPoints' style={{padding:'10px',marginLeft:'10px',color:'#27AE60',width:'20%'}}>{props.bonusPoints}</span></span>
-      <span className="recharge-list-balance">积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+        <div className='right'>
+            <span className="recharge-list-point pull-right" >余额：{props.balance}</span>
+        </div>
+      </div>
+      <div className='bottom '>
+         <div className='left'>
+            <span className="time"><span className='left'>{props.billCode}</span><span className='bonusPoints' className='right'>{props.bonusPoints}</span></span>
+          </div>
+        <div className='right'>
+            <span className="recharge-list-balance">积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+        </div>
+      </div>
+      
     </div>
     )
 }
