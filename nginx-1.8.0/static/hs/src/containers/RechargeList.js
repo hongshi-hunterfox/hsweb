@@ -21,13 +21,13 @@ const RechargeListItem = (props) => {
 
       {
         <div className="recharge-list-value">
-          {props.source}：  {props.value}
-          <span className="recharge-list-point pull-right">余额：{props.balance}</span>
+          <span style={{width:'80%'}}>{props.source}</span>：  <span style={{width:'20%'}}>{props.value}</span>
+          <span className="recharge-list-point pull-right" >余额：{props.balance}</span>
           
         </div>
       }
-      <span className="recharge-list-time">{props.billCode}<span className='bonusPoints' style={{padding:'10px',marginLeft:'10px;'}}>{props.bonusPoints}</span></span>
-      <span className="recharge-list-balance">积分：{props.integral}</span>
+      <span className="recharge-list-time"><span style={{width:'80%'}}>{props.billCode}</span><span className='bonusPoints' style={{padding:'10px',marginLeft:'10px',color:'#27AE60',width:'20%'}}>{props.bonusPoints}</span></span>
+      <span className="recharge-list-balance">积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
     </div>
     )
 }

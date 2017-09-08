@@ -26,6 +26,7 @@
 }
 
 .recharge-list-balance {
+  margin-right: 5px;
   display: block;
   float: right;
 }
