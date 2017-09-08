@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Comment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="deliver" property="deliver" jdbcType="INTEGER" />
+    <result column="service" property="service" jdbcType="INTEGER" />
+    <result column="quality" property="quality" jdbcType="INTEGER" />
+    <result column="back_title" property="backTitle" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, order_id, title, deliver, service, quality, back_title
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    insert into web_comment (id, user_id, order_id, 
+      title, deliver, service, 
+      quality, back_title)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{deliver,jdbcType=INTEGER}, #{service,jdbcType=INTEGER}, 
+      #{quality,jdbcType=INTEGER}, #{backTitle,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    insert into web_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="deliver != null" >
+        deliver,
+      </if>
+      <if test="service != null" >
+        service,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="backTitle != null" >
+        back_title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="deliver != null" >
+        #{deliver,jdbcType=INTEGER},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=INTEGER},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=INTEGER},
+      </if>
+      <if test="backTitle != null" >
+        #{backTitle,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    update web_comment
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="deliver != null" >
+        deliver = #{deliver,jdbcType=INTEGER},
+      </if>
+      <if test="service != null" >
+        service = #{service,jdbcType=INTEGER},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=INTEGER},
+      </if>
+      <if test="backTitle != null" >
+        back_title = #{backTitle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    update web_comment
+    set user_id = #{userId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      deliver = #{deliver,jdbcType=INTEGER},
+      service = #{service,jdbcType=INTEGER},
+      quality = #{quality,jdbcType=INTEGER},
+      back_title = #{backTitle,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
