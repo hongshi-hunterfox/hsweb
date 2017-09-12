@@ -229,6 +229,9 @@
 
 2017-09-07
   存储过程【CreateOrder】中添加了对字段[刷卡日期]与[礼券日期]的赋值动作
+
+2017-09-11
+  存储过程【NewVip】中,新添加的会员,不指定默认折扣值,直接依靠【会员】表【折扣】字段默认值【DF__会员__状态__4D7622B8】来定值
 */
 /******************************************************************************/
 /*
@@ -275,10 +278,17 @@ Begin
                 0,
                 Replicate('A',32))
 End
+/******************************************************************************/
 --结算方式
 If Not Exists(Select * From 结算方式表 Where 名称='公众号')
   Insert Into 结算方式表(名称,结算类型,结算折扣率,第三方支付,是否启用)
          Values('公众号','现金',1,1,0)
+If Not Exists(Select * From 结算方式表 Where 名称='WSC_微信支付')
+  Insert Into 结算方式表(名称,结算类型,结算折扣率,第三方支付,是否启用)
+         Values('WSC_微信支付','现金',1,1,0)
+If Not Exists(Select * From 结算方式表 Where 名称='WSC_支付宝支付')
+  Insert Into 结算方式表(名称,结算类型,结算折扣率,第三方支付,是否启用)
+         Values('WSC_支付宝支付','现金',1,1,0)
 Go
 /******************************************************************************/
 /*
@@ -442,8 +452,9 @@ Begin
   While @@Fetch_status=0
   Begin
     If @当前积分 Is Null Set @当前积分 = @Tmp_Integral
+                    --@t_opt ( 来源, id, 单号, 建立日期, 充值, 刷卡金额, 积分变化, 当前余额, 计算余额   , 当前积分)
     Insert Into @t_opt Values(@来源,@id,@单号,@建立日期,@充值,@刷卡金额,@积分变化,@当前余额,@Tmp_Balance,@Tmp_Integral)
-    Set @Tmp_Balance = @Tmp_Balance + isnull(@刷卡金额,0) - isnull(@充值,0)
+    Set @Tmp_Balance = @Tmp_Balance + IsNull(@刷卡金额, 0) - IsNull(@充值, 0)
     Set @Tmp_Integral = @当前积分 - @积分变化
     Fetch Next From cur_Tmp Into @来源,@id,@单号,@建立日期,@充值,@刷卡金额,@积分变化,@当前余额,@余额,@当前积分
   End
@@ -529,10 +540,10 @@ Begin
   Begin
     Exec NewVipCode @cVipCode Output
     Insert Into 会员(编号,内码,名称,电话,生日,是否农历,
-                     积分,折扣,状态,截止日期,是否充值,卡金额,卡余额,
+                     积分,状态,截止日期,是否充值,卡金额,卡余额,
                      积分比例,是否积分,会员生日,会员卡类型,会员等级类型)
              Values(@cVipCode,@cVipCode,'','','',0,
-                    0,1,1,GetDate()+3650,0,0,0,
+                    0,1,GetDate()+3650,0,0,0,
                     1,0,'',3,1)
     Select @LastError=@@Error,@iVipID = @@Identity
   End
@@ -2868,36 +2879,36 @@ Go
 /*******************************************************************************
 日志相关函数与过程
 正式环境下使用下列脚本替代：
-If Object_id('[EventLog]','U') Is Not Null 
-  Drop Table [EventLog]
-Go
-If Object_id('[NameValue]','FN') Is Not Null
-  Drop Function [NameValue]
-Go
-Create Function [NameValue]
-      (@TypeName varchar(218)='C',
-       @Name     varchar(128),
-       @Value    sql_variant)
-Returns varchar(3000)
-As
-Begin
-  Return ''
-End
-Go
-If Object_id('[Loger]','P') Is Not Null 
-  Drop Procedure [Loger]
-Go
-Create Procedure [Loger]
-       @ID         int         =null Output,
-       @Procedure  varchar(128)=null,
-       @Key        varchar(128)=null,
-       @Parameters varchar(128)=null,
-       @ExtendInfo varchar(999)=null,
-       @Result     int         =null
-As 
-Begin
-End
-Go
+--If Object_id('[EventLog]','U') Is Not Null 
+--  Drop Table [EventLog]
+--Go
+--If Object_id('[NameValue]','FN') Is Not Null
+--  Drop Function [NameValue]
+--Go
+--Create Function [NameValue]
+--      (@TypeName varchar(218)='C',
+--       @Name     varchar(128),
+--       @Value    sql_variant)
+--Returns varchar(3000)
+--As
+--Begin
+--  Return ''
+--End
+--Go
+--If Object_id('[Loger]','P') Is Not Null 
+--  Drop Procedure [Loger]
+--Go
+--Create Procedure [Loger]
+--       @ID         int         =null Output,
+--       @Procedure  varchar(128)=null,
+--       @Key        varchar(128)=null,
+--       @Parameters varchar(128)=null,
+--       @ExtendInfo varchar(999)=null,
+--       @Result     int         =null
+--As 
+--Begin
+--End
+--Go
 常用的写日志方式：
   Declare @LogID int,@ParaInfo varchar(128)
   Exec @LogID=Loger null,''--生成日志项,得到日志ID
