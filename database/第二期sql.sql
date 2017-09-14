@@ -88,4 +88,7 @@ CREATE TABLE web_binding_rewards (
   time DATETIME DEFAULT(GETDATE())
 );
 
-alter table web_orders add cut decimal(15,2) not null default 0 ; 
+alter table web_orders add cut decimal(15,2) not null default 0 ;
+
+alter table web_orders add pick_up_image varchar(255) not null default '';
+alter table web_orders add pick_up_barcode varchar(255) not null default ''; 
