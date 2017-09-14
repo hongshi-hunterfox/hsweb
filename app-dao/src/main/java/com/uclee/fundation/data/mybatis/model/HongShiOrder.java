@@ -34,6 +34,16 @@ public class HongShiOrder {
 
 	private String pickUpImageUrl;
 
+	private String barcode;
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+
 	public String getPickUpImageUrl() {
 		return pickUpImageUrl;
 	}

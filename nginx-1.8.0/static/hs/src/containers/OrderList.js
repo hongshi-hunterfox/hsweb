@@ -10,7 +10,8 @@ class OrderList extends React.Component {
 		this.state = {
 			orders: [],
 			showImage:false,
-			imageUrl:''
+			imageUrl:'',
+			barcode:''
 		}
 	}
 
@@ -29,10 +30,11 @@ class OrderList extends React.Component {
 		)
 
 	}
-	_showImage=(url)=>{
+	_showImage=(url,url2)=>{
 		this.setState({
 			showImage:!this.state.showImage,
-			imageUrl:url
+			imageUrl:url,
+			barcode:url2
 		})
 	}
 	render() {
@@ -91,7 +93,7 @@ class OrderList extends React.Component {
 
 						{!item.isEnd?
 							<div>
-							<span className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} onClick={this._showImage.bind(this,item.pickUpImageUrl)}>查看提货码</span>
+							<span className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} onClick={this._showImage.bind(this,item.pickUpImageUrl,item.barcode)}>查看提货码</span>
 							</div>
 						:null}
 					
@@ -113,8 +115,10 @@ class OrderList extends React.Component {
 							showImage:!this.state.showImage
 						})
 					}}>
-						<span className='fa fa-times-circle-o icon' ></span>
+						
+						<img className='barcode' src={this.state.barcode} width='95%' />
 						<img className='image' src={this.state.imageUrl} width='80%' /> 
+						<span className='fa fa-times-circle-o icon' ></span>
 					</div>
 					<div className="bottom-text">
 						O(∩_∩)O 啊哦，没有更多订单啦~~~

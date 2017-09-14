@@ -16,9 +16,14 @@
   margin-left: 10%;
 }
 .order-pick-up-image .icon {
-  margin-top: 40%;
-  margin-left: 90%;
+  margin-top: 10px;
+  margin-left: 48%;
   font-size: 25px;
+}
+.order-pick-up-image .barcode {
+  margin-top: 20%;
+  margin-left: 2.5%;
+  margin-bottom: 10px;
 }
 .order-top {
   width: 100%;

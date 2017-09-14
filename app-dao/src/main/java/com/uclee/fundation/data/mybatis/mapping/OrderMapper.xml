@@ -32,6 +32,7 @@
     <result column="sync_status" property="syncStatus" jdbcType="SMALLINT" />
     <result column="payment_serial_num" property="paymentSerialNum" jdbcType="VARCHAR" />
     <result column="pick_up_image" property="pickUpImage" jdbcType="VARCHAR" />
+    <result column="pick_up_barcode" property="pickUpBarcode" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap type="com.uclee.fundation.data.mybatis.model.Order" id="OrderWithItem" extends="BaseResultMap">
    <collection property="items" javaType="list" ofType="com.uclee.fundation.data.mybatis.model.OrderItem">
@@ -50,7 +51,7 @@
    </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_serial_num, user_id, store_id, payment_order_id, province, city, 
-    region, addr_detail,name ,phone ,zip_code, create_time, pay_time, shipping_cost, total_price,cut,voucher_price,voucher_code, status, remark,pick_time,is_self_pick,first_dist_id,first_dist_money,second_dist_id,second_dist_money,sync_status,pick_up_image
+    region, addr_detail,name ,phone ,zip_code, create_time, pay_time, shipping_cost, total_price,cut,voucher_price,voucher_code, status, remark,pick_time,is_self_pick,first_dist_id,first_dist_money,second_dist_id,second_dist_money,sync_status,pick_up_image,pick_up_barcode
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -121,14 +122,14 @@
       store_id, payment_order_id, province, 
       city, region, addr_detail,name ,phone ,zip_code, 
       create_time, pay_time, shipping_cost, 
-      total_price,cut,voucher_price,voucher_code, status, remark,pick_time,is_self_pick,first_dist_id,first_dist_money,second_dist_id,second_dist_money,sync_status,pick_up_image
+      total_price,cut,voucher_price,voucher_code, status, remark,pick_time,is_self_pick,first_dist_id,first_dist_money,second_dist_id,second_dist_money,sync_status,pick_up_image,pick_up_barcode
       )
     values (#{orderId,jdbcType=INTEGER}, #{orderSerialNum,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{storeId,jdbcType=INTEGER}, #{paymentOrderId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{addrDetail,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{zipCode,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}, #{shippingCost,jdbcType=DECIMAL}, 
       #{totalPrice,jdbcType=DECIMAL},#{cut,jdbcType=DECIMAL},#{voucherPrice,jdbcType=DECIMAL},#{voucherCode,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR},#{pickTime,jdbcType=TIMESTAMP}, #{isSelfPick,jdbcType=BIT}
-      , #{firstDistId,jdbcType=INTEGER}, #{firstDistMoney,jdbcType=DECIMAL}, #{secondDistId,jdbcType=INTEGER}, #{secondDistMoney,jdbcType=DECIMAL}, #{syncStatus,jdbcType=SMALLINT}, #{pickUpImage,jdbcType=VARCHAR}
+      , #{firstDistId,jdbcType=INTEGER}, #{firstDistMoney,jdbcType=DECIMAL}, #{secondDistId,jdbcType=INTEGER}, #{secondDistMoney,jdbcType=DECIMAL}, #{syncStatus,jdbcType=SMALLINT}, #{pickUpImage,jdbcType=VARCHAR}, #{pickUpBarcode,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Order" useGeneratedKeys="true"
@@ -222,6 +223,9 @@
       <if test="pickUpImage != null" >
         pick_up_image,
       </if>
+      <if test="pickUpBarcode != null" >
+        pick_up_barcode,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
@@ -310,6 +314,9 @@
       </if>
       <if test="pickUpImage != null" >
         #{pickUpImage,jdbcType=VARCHAR},
+      </if>
+      <if test="pickUpBarcode != null" >
+        #{pickUpBarcode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -400,6 +407,9 @@
       <if test="pickUpImage != null" >
         pick_up_image = #{pickUpImage,jdbcType=VARCHAR},
       </if>
+      <if test="pickUpBarcode != null" >
+        pick_up_barcode = #{pickUpBarcode,jdbcType=VARCHAR},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=INTEGER}
   </update>
@@ -432,6 +442,7 @@
       second_dist_id = #{secondDistId,jdbcType=INTEGER},
       second_dist_money = #{secondDistMoney,jdbcType=DECIMAL},
       pick_up_image = #{pickUpImage,jdbcType=VARCHAR},
+      pick_up_barcode = #{pickUpBarcode,jdbcType=VARCHAR},
        sync_status = #{syncStatus,jdbcType=SMALLINT}
     where order_id = #{orderId,jdbcType=INTEGER}
   </update>
