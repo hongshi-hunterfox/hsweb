@@ -103,13 +103,14 @@
 				float: left;
 				width: 100/3%;
 				.tag{
+					border-radius: 5px;
 					padding: 2px 5px;
 				    margin: 6px 3px 0 0;
 				    height: 18px;
 				    line-height: 12px;
 				    text-align: center;
 				    color: #FF2C29;
-				    background: #FFC1BF;
+				    border: 1px solid #FFC1BF;
 				    border-radius: 2px;
 				    line-height: 18px;
 				}
@@ -143,6 +144,45 @@
 			margin: auto;
 		}
 
+		
+	}
+
+	&-sales {
+		background-color: white;
+		padding: 10px 15px;
+		position: relative;
+		margin-bottom: 15px;
+		border-top: 1px solid #f2f2f2;
+		border-bottom: 1px solid #f2f2f2;
+		.clearfix();
+		&:hover,
+		&:active {
+			background-color: white;
+		}
+		.none{
+			display: none;
+		}
+		&-top{
+			margin-bottom: 10px;
+		}
+		&-tag{
+			color: #FF2C29;
+			border: 1px solid #FFC1BF;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+		&-text{
+			margin-left: 5px;
+		}
+		&-icon {
+			color: #999;
+			float: right;
+			margin-right: 5px;
+		}
+		&-item{
+			padding: 5px 0px;
+			border-bottom: 1px solid #f2f2f2;
+		}
 		
 	}
 

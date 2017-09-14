@@ -137,11 +137,11 @@ class GlobalConfig extends React.Component {
                 <input type="text" value={this.state.config.templateCode} name="templateCode" className="form-control" onChange={this._change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里消息签名：</label>
-              <div className="col-md-9">
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.signName} name="signName" className="form-control" onChange={this._change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信模板id：</label>
-              <div className="col-md-9">
+              <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.birthTemId} name="birthTemId" className="form-control" onChange={this._change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费提醒短信id：</label>
@@ -158,8 +158,16 @@ class GlobalConfig extends React.Component {
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
-                <textarea rows="3" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
+                <textarea rows="6" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
                 </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>域名地址：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input  value={this.state.config.domain} name="domain" className="form-control" onChange={this._change} />
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>数据库merchantCode：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input value={this.state.config.hsMerchantCode} name="hsMerchantCode" className="form-control" onChange={this._change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否支持配送：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
@@ -206,7 +214,15 @@ class GlobalConfig extends React.Component {
     }
     if (!data.aliAppkey) {
       return this.setState({
-        err: '请填写 阿里大于appkey：'
+        err: '请填写 阿里大于appkey'
+      })
+    }if (!data.hsMerchantCode) {
+      return this.setState({
+        err: '请填写 数据库merchantCode：'
+      })
+    }if (!data.domain) {
+      return this.setState({
+        err: '请填写 域名地址'
       })
     }
      if (!data.aliAppSecret) {

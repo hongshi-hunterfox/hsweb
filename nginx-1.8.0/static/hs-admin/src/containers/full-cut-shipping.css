@@ -1,0 +1,18 @@
+.full-cut-shipping:before,
+.full-cut-shipping:after {
+  content: "";
+  display: table;
+}
+.full-cut-shipping:after {
+  clear: both;
+}
+.full-cut-shipping-float {
+  float: left;
+  text-align: center;
+}
+.full-cut-shipping-button {
+  padding: 10px 5px;
+  background-color: #337ab7;
+  color: white;
+  border-color: #337ab7;
+}

@@ -29,13 +29,23 @@ class UserBirthList extends React.Component {
         var data = JSON.parse(res.text)
         this.setState({
           users: data.users,
-          size: data.users.length
+          size: data.users.length,
+          start:this.props.location.query.start,
+          end:this.props.location.query.end
         })
       })
   }
   _send = userId => {
-    req
-      .get('/uclee-backend-web/sendBirthMsg?userId=' + userId)
+    var conf = confirm('是否要联动送礼券？');
+    var url='';
+    if(conf){
+      url='/uclee-backend-web/sendBirthMsg?userId=' + userId+'&sendVoucher=1';
+    }else{
+      url='/uclee-backend-web/sendBirthMsg?userId=' + userId;
+    }
+    alert(url);
+    /*req
+      .get(url)
       .end((err, res) => {
         if (err) {
           return err
@@ -47,7 +57,7 @@ class UserBirthList extends React.Component {
         } else {
           alert('网络繁忙，请稍后重试')
         }
-      })
+      })*/
   }
   _change = e => {
     this.setState({
@@ -67,12 +77,20 @@ class UserBirthList extends React.Component {
       alert("请选择要批量发送的用户");
       return;
     }
+    var conf = confirm('是否要联动送礼券？');
+    
     var ret = true;
     for (var i in this.state.checked)
     {
       console.log(this.state.checked[i]);
+      var url='';
+    if(conf){
+      url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i]+'&sendVoucher=1';
+    }else{
+      url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i];
+    }
       req
-      .get('/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i])
+      .get(url)
       .end((err, res) => {
         if (err) {
           return err
@@ -122,7 +140,7 @@ class UserBirthList extends React.Component {
               className="form-control"
               type="date"
               name="start"
-              value={this.state.pDate}
+              value={this.state.start}
               onChange={e => {
                 this.setState({ start: e.target.value })
               }}
@@ -132,7 +150,7 @@ class UserBirthList extends React.Component {
               className="form-control"
               type="date"
               name="end"
-              value={this.state.pDate}
+              value={this.state.end}
               onChange={e => {
                 this.setState({ end: e.target.value })
               }}

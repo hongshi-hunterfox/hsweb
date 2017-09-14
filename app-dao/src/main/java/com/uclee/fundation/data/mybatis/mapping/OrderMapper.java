@@ -32,4 +32,8 @@ public interface OrderMapper {
 	int deleteByOrderSerialNum(String orderSerialNum);
 
     int getUnpayOrderCountByUserId(Integer userId);
+
+    Order getOrderListByOrderSerailNum(String orderSerialNum);
+
+    int getUnCommentCount(Integer userId);
 }

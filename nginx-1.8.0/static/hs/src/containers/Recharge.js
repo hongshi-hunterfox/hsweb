@@ -60,7 +60,8 @@ class Recharge extends React.Component {
 			config:[],
 			hongShiVip:{},
 			type:1,
-			voucherText:''
+			voucherText:'',
+			extraData:{}
 	    }
 	  }
 
@@ -70,7 +71,8 @@ class Recharge extends React.Component {
 				payment:res.payment,
 				isWC:res.isWC,
 				config:res.config,
-				hongShiVip:res.hongShiVip
+				hongShiVip:res.hongShiVip,
+				extraData:res.extraData
 			});
 		}.bind(this));
 	}
@@ -81,6 +83,9 @@ class Recharge extends React.Component {
 					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type)}>{item.money}</div>
 				);
 		});
+		console.log(this.state.extraData);
+		console.log(this.state.rechargeMoney);
+		console.log(this.state.extraData[this.state.rechargeMoney]);
 		return (
 			<DocumentTitle title="充值">
 				<div className='payment'>
@@ -92,10 +97,31 @@ class Recharge extends React.Component {
 						{money}
 
 					</div>
-					{this.state.rewards!==0||this.state.voucherText!==null?<div className='payment-note'>已选充值优惠： 充值<span className='gold'>{this.state.rechargeMoney}</span>，赠送<span className='gold'>{this.state.type===1?this.state.rewards:this.state.voucherText}</span></div>:null}
+					{this.state.rewards!==0?<div className='payment-note'>已选充值优惠： 充值<span className='gold'>{this.state.rechargeMoney}</span>，赠送<span className='gold'>{this.state.rewards}</span></div>:null}
 					{this.state.rewards!==0?<div className='payment-info'>
-						实际到账: <span className='gold'>{this.state.type===1?this.state.rechargeMoney+this.state.rewards:this.state.rechargeMoney}</span>，应付金额：<span className='gold'>{this.state.rechargeMoney}</span>
+						实际到账: <span className='gold'>{this.state.rechargeMoney+this.state.rewards}</span>，应付金额：<span className='gold'>{this.state.rechargeMoney}</span>
 					</div>:null}
+					{
+						this.state.extraData&&this.state.extraData[this.state.rechargeMoney*100]&&this.state.rechargeMoney!==0?
+						<div className='payment-extra'>
+						{
+							<div className='note'>
+								额外赠送：
+							</div>
+						}
+						{
+							this.state.extraData&&this.state.extraData[this.state.rechargeMoney*100]?this.state.extraData[this.state.rechargeMoney*100].map((item,index)=>{
+								return(
+									<div className='payment-extra-item'>
+										{item}
+									</div>
+								)
+							}):null
+						}
+						</div>
+						:null
+					}
+					
 					<PaymentMethod data={this.state} _paymentOnChange={this._paymentOnChange}/>
 					<div className='payment-bottom'>
 						<button type="button" className="btn btn-default payment-bottom-button" onClick={this._submitHandler}>马上支付</button>

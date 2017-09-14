@@ -1,6 +1,5 @@
 .recharge-list {
   padding-top: 15px;
-  padding-bottom: 55px;
 }
 .recharge-list-item {
   background-color: white;
@@ -81,26 +80,3 @@
   display: block;
   float: right;
 }
-<<<<<<< HEAD
-
-.recharge-list-back{
-    position: fixed;
-    padding: 10px;
-    background-color: #FF3300;
-    color: white;
-    text-align: center;
-    left: 5%;
-    right: 0;
-    width: 90%;
-    z-index: 999;
-    bottom: 60px;
-    border-radius : 15px;
-    &:hover,
-    &:focus,
-    &:active {
-      text-decoration: none;
-      color: white;
-    }
-}
-=======
->>>>>>> develop_8_31

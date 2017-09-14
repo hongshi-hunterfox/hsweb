@@ -9,6 +9,48 @@
 .order:after {
   clear: both;
 }
+.order-sales {
+  background-color: white;
+  margin: 10px;
+  position: relative;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ececec;
+}
+.order-sales:before,
+.order-sales:after {
+  content: "";
+  display: table;
+}
+.order-sales:after {
+  clear: both;
+}
+.order-sales:hover,
+.order-sales:active {
+  background-color: white;
+}
+.order-sales .none {
+  display: none;
+}
+.order-sales-top {
+  margin-bottom: 10px;
+}
+.order-sales-tag {
+  color: #FF2C29;
+  border: 1px solid #FFC1BF;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.order-sales-text {
+  margin-left: 5px;
+}
+.order-sales-icon {
+  float: right;
+  margin-right: 10px;
+}
+.order-sales-item {
+  padding: 5px 0px;
+  border-bottom: 1px solid #f2f2f2;
+}
 .order-addr {
   margin: 10px;
 }

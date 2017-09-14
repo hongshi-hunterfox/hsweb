@@ -95,6 +95,36 @@ const DetailPick = (props) => {
     )
 }
 
+const DetailSales = (props) => {
+  return (
+    <div className="detail-sales">
+       <div onClick={props.salesInfoShowClick} className='detail-sales-top'>
+        <span className='detail-sales-tag'>
+          优惠
+            
+        </span>
+        {
+          props.salesInfo.length>=1&&!props.salesInfoShow?
+          <span className='detail-sales-text'>
+              {props.salesInfo[0]}...
+          </span>:null
+        }
+        
+        <Icon className="detail-sales-icon" name={props.salesInfoShow?'chevron-down':'chevron-right'} />
+      </div>
+      <div className={'detail-sales-info ' +(!props.salesInfoShow?'none':'')}>
+        {props.salesInfo.map((item,index)=>{
+          return(
+            <div className='detail-sales-item' key={index}>
+              {item}
+            </div>
+          )
+        })}
+      </div>
+      
+    </div>
+    )
+}
 const DetailPicker = (props) => {
   if (props.showPick) {
     return (
@@ -199,7 +229,9 @@ class Detail extends React.Component {
       currentSpecValudId: null,
       currentAmount: 1,
       salesAmount:0,
-      pickType: 'add_to_cart' // 'add_to_cart' || 'buy_now'
+      pickType: 'add_to_cart', // 'add_to_cart' || 'buy_now'
+      salesInfo:[],
+      salesInfoShow:false
     }
 
     this.specPriceMap = {}
@@ -279,6 +311,7 @@ class Detail extends React.Component {
               maxPrice={this.maxPrice}
               preMinPrice={this.preMinPrice}
               preMaxPrice={this.preMaxPrice}/>
+            <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
             <DetailPick
               onClick={this._showPick}
               currentAmount={this.state.currentAmount}
@@ -307,7 +340,11 @@ class Detail extends React.Component {
       </DocumentTitle>
       )
   }
-
+  salesInfoShowClick=()=>{
+    this.setState({
+      salesInfoShow: !this.state.salesInfoShow
+    })
+  }
   _showPick = () => {
     this.setState({
       showPick: true

@@ -15,11 +15,13 @@ import NapaStoreList from './containers/NapaStoreList'
 import UserList from './containers/UserList'
 import UserBirthList from './containers/UserBirthList'
 import UserUnBuyList from './containers/UserUnBuyList'
+import FullCutShipping from './containers/FullCutShipping'
 import AddUser from './containers/AddUser'
 import EditPhoneUser from './containers/EditPhoneUser'
 import PhoneUserList from './containers/PhoneUserList'
 import GlobalConfig from './containers/GlobalConfig'
 import RechargeConfig from './containers/RechargeConfig'
+import RechargeConfigNew from './containers/RechargeConfigNew'
 import Login from './containers/Login'
 import ProductList from './containers/ProductList'
 import QuickNaviList from './containers/QuickNaviList'
@@ -28,12 +30,17 @@ import EditQuickNaviProduct from './containers/EditQuickNaviProduct'
 import BannerList from './containers/BannerList'
 import ProductGroupList from './containers/ProductGroupList'
 import CategoryList from './containers/CategoryList'
+import CommentList from './containers/CommentList'
 import Freight from './containers/Freight'
 import StoreIntro from './containers/StoreIntro'
 import Lottery from './containers/LotteryConfig'
 import EditProductGroup from './containers/EditProductGroup'
 import ShakeMonitor from './containers/ShakeMonitor'
 import EditCategory from './containers/EditCategory'
+import BirthVoucher from './containers/BirthVoucher'
+import FullCut from './containers/FullCut'
+import BindMemberSetting from './containers/BindMemberSetting'
+import RechargeConfigList from './containers/RechargeConfigList'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -48,10 +55,17 @@ ReactDOM.render(
       <Route path="product/:id" component={Product} />
       <Route path="global-config" component={GlobalConfig} />
       <Route path="recharge-config" component={RechargeConfig} />
+      <Route path="recharge-config-new" component={RechargeConfigNew} />
+      <Route path="recharge-config-list" component={RechargeConfigList} />
       <Route path="freight" component={Freight} />
       <Route path="store-intro" component={StoreIntro} />
       <Route path="lottery" component={Lottery} />
+      <Route path="birth-voucher" component={BirthVoucher} />
       <Route path="user-list" component={UserList} />
+      <Route path="comment-list" component={CommentList} />
+      <Route path="fullCutShipping" component={FullCutShipping} />
+      <Route path="bindMemberSetting" component={BindMemberSetting} />
+      <Route path="FullCut" component={FullCut} />
       <Route path="user-unbuy-list" component={UserUnBuyList} />
       <Route path="user-birth-list" component={UserBirthList} />
       <Route path="quick-navi-product" component={QuickNaviProduct} />

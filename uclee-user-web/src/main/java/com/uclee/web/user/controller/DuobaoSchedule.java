@@ -55,14 +55,11 @@ public class DuobaoSchedule {
 	private void refreshWXToken(){
 		dataSource.switchDataSource("master");
 		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
-		logger.info("t: " + JSON.toJSONString(t));
 		for(DataSourceInfo info:t) {
 			if(!info.getMerchantCode().equals("master")) {
 				dataSource.switchDataSource(info.getMerchantCode());
 				Var var = varMapper.selectByPrimaryKey(new Integer(1));
-				logger.info(JSON.toJSONString(var));
 				if (DateUtils.addSecond(var.getStorageTime(), 7200).before(new Date())) {
-					logger.info("更新微信Token");
 					duobaoService.getGolbalAccessToken();
 				}
 			}

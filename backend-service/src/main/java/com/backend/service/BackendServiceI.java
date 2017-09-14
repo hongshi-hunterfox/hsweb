@@ -54,7 +54,7 @@ public interface BackendServiceI {
 
 	List<UserProfile> getUserListForBirth(String start,String end);
 
-	boolean sendBirthMsg(Integer userId);
+	boolean sendBirthMsg(Integer userId,boolean sendVoucher);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
@@ -88,4 +88,30 @@ public interface BackendServiceI {
 	boolean editCategory(Category category);
 
 	Category getCategoryById(Integer categoryId);
+
+    List<Comment> getCommentList();
+
+	Map<String,Object> commentBackHandler(Comment comment);
+
+    boolean updateRechargeConfigNew(RechargeConfig rechargeConfig);
+
+	List<RechargeConfig> getRechargeConfigList();
+
+	boolean delRechargeConfig(Integer id);
+
+	List<BirthVoucher> selectAllBirthVoucher();
+
+	boolean updateBirthVoucher(FreightPost freightPost);
+
+    List<ShippingFullCut> selectAllShippingFullCut();
+
+	boolean updateFullCutShipping(FreightPost freightPost);
+
+	List<FullCut> selectAllFullCut();
+
+	boolean updateFullCut(FreightPost freightPost);
+
+	List<BindingRewards> selectAllBindingRewards();
+
+	boolean updateBindingRewards(FreightPost freightPost);
 }

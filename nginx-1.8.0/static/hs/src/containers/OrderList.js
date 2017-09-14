@@ -3,6 +3,7 @@ import React from "react"
 import DocumentTitle from "react-document-title"
 import Navi from './Navi'
 import OrderListUtil from "../utils/OrderListUtil"
+var Link = require("react-router").Link
 class OrderList extends React.Component {
 	constructor(props) {
 		super(props)
@@ -68,12 +69,22 @@ class OrderList extends React.Component {
 					<div className="order-list-bottom">
 						<span className="pull-right total">合计：{item.accounts>0?item.accounts:0}</span>
 					</div>
+					<div>
+						{item.isEnd&&!item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/comment?orderSerialNum='+item.outerOrderCode}>去评论</Link>:null}
+						{item.isEnd&&item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/commentDetail?orderSerialNum='+item.outerOrderCode}>查看评论</Link>:null}
+					</div>
 				</div>
 			)
 		})
 		return (
 			<DocumentTitle title="我的订单">
 				<div className="order">
+					<div className='order-top'>
+						<span onClick={()=>{window.location='/order-list'}} className={'order-top-item'+(!this.props.location.query.isEnd?' active':'')}>全部</span>
+						<span onClick={()=>{window.location='/unpay-order-list'}} className='order-top-item'>待支付</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=0'}} className={'order-top-item'+(this.props.location.query.isEnd&&this.props.location.query.isEnd==='0'?' active':'')}>制作配送中</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=1'}} className={'order-top-item'+(this.props.location.query.isEnd&&this.props.location.query.isEnd==='1'?' active':'')}>已完成</span>
+					</div>
 					{items}
 					<div className="bottom-text">
 						O(∩_∩)O 啊哦，没有更多订单啦~~~

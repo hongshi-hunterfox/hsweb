@@ -33,6 +33,25 @@ public class ConfigPost {
 	private String rechargeTemId;
 	private String bindText;
 	private String supportDeliver;
+	private String domain;
+
+	private String hsMerchantCode;
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public String getHsMerchantCode() {
+		return hsMerchantCode;
+	}
+
+	public void setHsMerchantCode(String hsMerchantCode) {
+		this.hsMerchantCode = hsMerchantCode;
+	}
 
 	public String getBindText() {
 		return bindText;

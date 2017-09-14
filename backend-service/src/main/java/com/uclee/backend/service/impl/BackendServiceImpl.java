@@ -35,6 +35,16 @@ public class BackendServiceImpl implements BackendServiceI {
 
 
 	@Autowired
+	private CommentMapper commentMapper;
+	@Autowired
+	private OrderMapper orderMapper;
+	@Autowired
+	private ShippingFullCutMapper shippingFullCutMapper;
+	@Autowired
+	private FullCutMapper fullCutMapper;
+	@Autowired
+	private BindingRewardsMapper bindingRewardsMapper;
+	@Autowired
 	private CategoryMapper categoryMapper;
 	@Autowired
 	private HomeQuickNaviMapper homeQuickNaviMapper;
@@ -48,6 +58,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private FDFSFileUpload fDFSFileUpload;
 	@Autowired
 	private ProductGroupLinkMapper productGroupLinkMapper;
+	@Autowired
+	private BirthVoucherMapper birthVoucherMapper;
 	@Autowired
 	private OauthLoginMapper oauthLoginMapper;
 	@Autowired
@@ -170,13 +182,33 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.supportDeliver, "");
 		}
+		if (configPost.getDomain()!=null) {
+			configMapper.updateByTag(WebConfig.domain, configPost.getDomain());
+		}else{
+			configMapper.updateByTag(WebConfig.domain, "");
+		}
+		if (configPost.getHsMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.hsMerchatCode, configPost.getHsMerchantCode());
+		}else{
+			configMapper.updateByTag(WebConfig.hsMerchatCode, "");
+		}
 		return true;
 	}
 
 	@Override
 	public List<Freight> selectAllFreight() {
-		
+
 		return freightMapper.selectAllAsc();
+	}
+	@Override
+	public List<FullCut> selectAllFullCut() {
+
+		return fullCutMapper.selectAll();
+	}
+	@Override
+	public List<BindingRewards> selectAllBindingRewards() {
+
+		return bindingRewardsMapper.selectOne();
 	}
 
 	@Override
@@ -198,6 +230,94 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return true;
 	}
+	@Override
+	public boolean updateFullCutShipping(FreightPost freightPost) {
+		int delAll = shippingFullCutMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			ShippingFullCut shippingFullCut1 = new ShippingFullCut();
+			shippingFullCut1.setsLimit(entry.getValue());
+			shippingFullCut1.setuLimit(Double.parseDouble(freightPost.getMyValue().get(entry.getKey())));
+			shippingFullCut1.setCondition(new BigDecimal(freightPost.getMyValue1().get(entry.getKey())));
+			shippingFullCut1.setStartTime(DateUtils.parse(freightPost.getStartTimeStr(),DateUtils.FORMAT_LONG));
+			shippingFullCut1.setEndTime(DateUtils.parse(freightPost.getEndTimeStr(),DateUtils.FORMAT_LONG));
+			shippingFullCutMapper.insertSelective(shippingFullCut1);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateBindingRewards(FreightPost freightPost) {
+		int delAll = bindingRewardsMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			BindingRewards bindingRewards = new BindingRewards();
+			bindingRewards.setPoint(entry.getValue().intValue());
+			bindingRewards.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			bindingRewards.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
+			bindingRewardsMapper.insertSelective(bindingRewards);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateFullCut(FreightPost freightPost) {
+		int delAll = fullCutMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			FullCut fullCut1 = new FullCut();
+			fullCut1.setCondition(new BigDecimal(entry.getValue()));
+			fullCut1.setCut(new BigDecimal(freightPost.getMyValue().get(entry.getKey())));
+			fullCut1.setStartTime(DateUtils.parse(freightPost.getStartTimeStr(),DateUtils.FORMAT_LONG));
+			fullCut1.setEndTime(DateUtils.parse(freightPost.getEndTimeStr(),DateUtils.FORMAT_LONG));
+			fullCutMapper.insertSelective(fullCut1);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateBirthVoucher(FreightPost freightPost) {
+		int delAll = birthVoucherMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			BirthVoucher tmp = new BirthVoucher();
+			tmp.setAmount(entry.getValue().intValue());
+			tmp.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			birthVoucherMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+
+	@Override
+	public List<ShippingFullCut> selectAllShippingFullCut() {
+		return shippingFullCutMapper.selectAllShippingFullCut();
+	}
+
 	@Override
 	@CacheEvict(value = "cookaCache", key = "'config'")
 	public boolean updateLottery(LotteryConfigPost post) {
@@ -298,12 +418,31 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public List<RechargeConfig> selectAllRechargeConfig() {
 		List<RechargeConfig> configs = rechargeConfigMapper.selectAll();
-		for(RechargeConfig config:configs){
+		/*for(RechargeConfig config:configs){
+			List<String> extra = new ArrayList<String>();
+			int i = 1;
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
 			if (coupon!=null&&coupon.size()>0) {
-				config.setVoucherText(coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券");
+				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
+				i++;
+				extra.add(tmp);
 			}
-		}
+			extra.add(config.getMoney() + "元优惠券1张");
+			extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
+			List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
+			if (coupon!=null&&coupon.size()>0) {
+				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
+				i++;
+				extra.add(tmp);
+			}
+			List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
+			if (coupon!=null&&coupon.size()>0) {
+				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
+				i++;
+				extra.add(tmp);
+			}
+			config.setExtra(extra);
+		}*/
 		return configs;
 	}
 
@@ -441,6 +580,10 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBindText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.supportDeliver)){
 				configPost.setSupportDeliver(config.getValue());
+			}else if(config.getTag().equals(WebConfig.domain)){
+				configPost.setDomain(config.getValue());
+			}else if(config.getTag().equals(WebConfig.hsMerchatCode)){
+				configPost.setHsMerchantCode(config.getValue());
 			}
 
 		}
@@ -550,7 +693,7 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
-	public boolean sendBirthMsg(Integer userId) {
+	public boolean sendBirthMsg(Integer userId,boolean sendVoucher) {
 		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
 		if(login!=null){
 			String nickName="";
@@ -561,13 +704,36 @@ public class BackendServiceImpl implements BackendServiceI {
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日祝福"};
 			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), "hs.uclee.com", "洪石商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2+"?merchantCode="+config1.getValue(), config3.getValue()+"商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(1);
 				msgRecord.setUserId(userId);
 				msgRecordMapper.insertSelective(msgRecord);
+			}
+			//联动送礼券
+			if(sendVoucher) {
+				try {
+					List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
+					for(BirthVoucher birthVoucher:birthVouchers) {
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
+						if (coupon != null && coupon.size() > 0) {
+							try {
+								for(int i=0;i<birthVoucher.getAmount();i++) {
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(0).getVouchersCode(), birthVoucher.getVoucherCode());
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 			return true;
 		}
@@ -585,9 +751,12 @@ public class BackendServiceImpl implements BackendServiceI {
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"消费提醒"};
 			Config config = configMapper.getByTag("buyTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), "hs.uclee.com", "洪石商城促销大优惠，赶紧来抢购吧", key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2+"?merchantCode="+config1.getValue(), config3.getValue()+"商城促销大优惠，赶紧来抢购吧", key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(2);
 				msgRecord.setUserId(userId);
@@ -785,5 +954,78 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public Category getCategoryById(Integer categoryId) {
 		return categoryMapper.selectByPrimaryKey(categoryId);
+	}
+
+	@Override
+	public List<Comment> getCommentList() {
+		List<Comment> comments = commentMapper.selectAll();
+		for (Comment comment:comments){
+			Order order  = orderMapper.getOrderListByOrderSerailNum(comment.getOrderSerialNum());
+			comment.setOrder(order);
+			UserProfile userProfile = userProfileMapper.selectByUserId(comment.getUserId());
+			comment.setUserProfile(userProfile);
+			comment.setTimeStr(DateUtils.format(comment.getTime(),DateUtils.FORMAT_LONG));
+			comment.setBackTimeStr(DateUtils.format(comment.getBackTime(),DateUtils.FORMAT_LONG));
+		}
+		return comments;
+	}
+
+	@Override
+	public Map<String,Object> commentBackHandler(Comment comment) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(comment.getId()==null||comment.getBackTitle()==null){
+			ret.put("result",false);
+			ret.put("reason","参数错误");
+		}
+		Comment tmp = commentMapper.selectByPrimaryKey(comment.getId());
+		if(tmp!=null){
+			tmp.setBackTime(new Date());
+			tmp.setBackTitle(comment.getBackTitle());
+			if(commentMapper.updateByPrimaryKeySelective(tmp)>0){
+				ret.put("result",true);
+			}else{
+				ret.put("result",false);
+				ret.put("reason","网络繁忙，请稍后重试");
+			}
+		}else{
+			ret.put("result",false);
+			ret.put("reason","参数错误");
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean updateRechargeConfigNew(RechargeConfig rechargeConfig) {
+		if(rechargeConfig.getStartTimeStr()!=null){
+			rechargeConfig.setStartTime(DateUtils.parse(rechargeConfig.getStartTimeStr(),DateUtils.FORMAT_LONG));
+		}
+		if(rechargeConfig.getEndTimeStr()!=null){
+			rechargeConfig.setEndTime(DateUtils.parse(rechargeConfig.getEndTimeStr(),DateUtils.FORMAT_LONG));
+		}
+		if(rechargeConfig.getId()!=null){
+			return rechargeConfigMapper.updateByPrimaryKeySelective(rechargeConfig)>0;
+		}else{
+			return rechargeConfigMapper.insertSelective(rechargeConfig)>0;
+		}
+	}
+
+	@Override
+	public List<RechargeConfig> getRechargeConfigList() {
+		List<RechargeConfig> rechargeConfigs = rechargeConfigMapper.selectAll();
+		for(RechargeConfig item:rechargeConfigs){
+			item.setEndTimeStr(DateUtils.format(item.getEndTime(),DateUtils.FORMAT_LONG));
+			item.setStartTimeStr(DateUtils.format(item.getStartTime(),DateUtils.FORMAT_LONG));
+		}
+		return rechargeConfigs;
+	}
+
+	@Override
+	public boolean delRechargeConfig(Integer id) {
+		return rechargeConfigMapper.deleteByPrimaryKey(id)>0;
+	}
+
+	@Override
+	public List<BirthVoucher> selectAllBirthVoucher() {
+		return birthVoucherMapper.selectAll();
 	}
 }

@@ -5,6 +5,7 @@ import './order.css'
 import req from 'superagent'
 var geocoder = null
 var qq = window.qq
+import Icon from '../components/Icon'
 import validator from 'validator'
 var fto = require('form_to_object')
 var errMap = {
@@ -36,7 +37,10 @@ class Order extends React.Component {
       pTime: '',
       remark: '',
       isShippingfree:false,
-      supportDeliver:true
+      supportDeliver:true,
+      salesInfoShow:false,
+      salesInfo:[],
+      cut:0
     }
     this.lat = 23
     this.lng = 113
@@ -110,7 +114,9 @@ class Order extends React.Component {
         total: resJson.total,
         isShippingfree:resJson.isShippingfree,
         supportDeliver:resJson.supportDeliver,
-        isSelfPick:resJson.isSelfPick
+        isSelfPick:resJson.isSelfPick,
+        salesInfo:resJson.salesInfo,
+        cut:resJson.cut
       })
       if (sessionStorage.getItem('addr') != null) {
         this.setState({
@@ -128,7 +134,7 @@ class Order extends React.Component {
             this.state.defaultAddr.province +
             this.state.defaultAddr.city +
             this.state.defaultAddr.region +
-            this.state.defaultAddr.addrDetail
+            this.state.defaultAddr.addrorder
           if(!this.state.isShippingfree){
             geocoder.getLocation(addr)
           }
@@ -197,7 +203,7 @@ class Order extends React.Component {
                               this.state.defaultAddr.province +
                               this.state.defaultAddr.city +
                               this.state.defaultAddr.region +
-                              this.state.defaultAddr.addrDetail
+                              this.state.defaultAddr.addrorder
                             console.log('addr:' + addr)
                             console.log('this.state.isShippingfree:' + this.state.isShippingfree)
                             if(!this.state.isShippingfree){
@@ -229,7 +235,7 @@ class Order extends React.Component {
                               this.state.defaultAddr.province +
                               this.state.defaultAddr.city +
                               this.state.defaultAddr.region +
-                              this.state.defaultAddr.addrDetail
+                              this.state.defaultAddr.addrorder
                             console.log('addr:' + addr)
                             if(!this.state.isShippingfree){
                              geocoder.getLocation(addr)
@@ -336,7 +342,7 @@ class Order extends React.Component {
               </div>
             </div>
             <div className="order-total">
-              商品小计：<span className="money">￥{this.state.total}</span>
+              商品小计：<span className="money">¥{this.state.total}</span>
             </div>
             <div className="order-total">
               <input
@@ -344,7 +350,7 @@ class Order extends React.Component {
                 name="shippingFee"
                 value={this.state.shippingFee}
               />
-              运费：<span className="money">￥{this.state.shippingFee}</span>
+              运费：<span className="money">¥{this.state.shippingFee}</span>
             </div>
             <div
               className="order-coupon"
@@ -352,7 +358,7 @@ class Order extends React.Component {
                 window.location = 'coupon?isFromOrder=1'
               }}
             >
-              优惠：
+              优惠券：
               {this.state.voucherText && this.state.voucherText !== ''
                 ? this.state.voucherText + ' 现金优惠券'
                 : null}
@@ -363,15 +369,46 @@ class Order extends React.Component {
               name="voucherCode"
               value={this.state.voucherCode}
             />
+            <div className="order-total">
+              满减：<span className="money">¥{this.state.cut}</span>
+            </div>
+             <div className="order-sales">
+               <div onClick={this.salesInfoShowClick} className='order-sales-top'>
+                <span className='order-sales-tag'>
+                  营销
+                    
+                </span>
+                {
+                  this.state.salesInfo.length>=1&&!this.state.salesInfoShow?
+                  <span className='order-sales-text'>
+                      {this.state.salesInfo[0]}...
+                  </span>:null
+                }
+                
+                <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
+              </div>
+              <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
+                {this.state.salesInfo.map((item,index)=>{
+                  return(
+                    <div className='order-sales-item' key={index}>
+                      {item}
+                    </div>
+                  )
+                })}
+              </div>
+              
+            </div>
             <div className="order-submit">
-              合计：￥
+              合计：¥
               {this.state.total -
                 this.state.voucherText +
-                this.state.shippingFee >
+                this.state.shippingFee -
+                this.state.cut >
                 0
                 ? (this.state.total -
                     this.state.voucherText +
-                    this.state.shippingFee).toFixed(2)
+                    this.state.shippingFee-
+                    this.state.cut).toFixed(2)
                 : 0}
               <button type="submit" className="button">提交订单</button>
             </div>
@@ -381,7 +418,11 @@ class Order extends React.Component {
       </DocumentTitle>
     )
   }
-
+salesInfoShowClick=()=>{
+    this.setState({
+      salesInfoShow: !this.state.salesInfoShow
+    })
+  }
   _remarkHandler = e => {
     this.setState({
       remark: e.target.value
@@ -412,7 +453,7 @@ class Order extends React.Component {
           this.state.defaultAddr.province +
           this.state.defaultAddr.city +
           this.state.defaultAddr.region +
-          this.state.defaultAddr.addrDetail
+          this.state.defaultAddr.addrorder
         console.log('addr:' + addr)
         geocoder.getLocation(addr)
       }
@@ -423,8 +464,8 @@ class Order extends React.Component {
     geocoder = new qq.maps.Geocoder({
       complete: result => {
         console.log('result:' + result)
-        this.lat = result.detail.location.lat
-        this.lng = result.detail.location.lng
+        this.lat = result.order.location.lat
+        this.lng = result.order.location.lng
         console.log('latlng:' + this.lat + ' ' + this.lng)
         console.log(
           Number(localStorage.getItem('latitude')) +
@@ -442,7 +483,7 @@ class Order extends React.Component {
           ) / 100
           )/10
         req
-          .get('/uclee-user-web/getShippingFee?distance=' + distance)
+          .get('/uclee-user-web/getShippingFee?distance=' + distance+'&total='+(this.state.total?this.state.total:0))
           .end((err, res) => {
             if (err) {
               return err
@@ -571,7 +612,7 @@ class Addr extends React.Component {
                       ? this.props.defaultAddr.phone
                       : null}
                   </span>
-                  <div className="addrDetail">
+                  <div className="addrorder">
                     收货地址：
                     {this.props.defaultAddr
                       ? this.props.defaultAddr.province
@@ -583,7 +624,7 @@ class Addr extends React.Component {
                       ? this.props.defaultAddr.region
                       : null}
                     {this.props.defaultAddr
-                      ? this.props.defaultAddr.addrDetail
+                      ? this.props.defaultAddr.addrorder
                       : null}
                   </div>
                 </div>
@@ -592,7 +633,7 @@ class Addr extends React.Component {
             : <div className="self">
                 <div className="left">
                   <span className="icon fa fa-map-marker" />
-                  <span className="addrDetail">
+                  <span className="addrorder">
                     取货地址：
                     {this.props.storeAddr
                       ? this.props.storeAddr.province
@@ -600,7 +641,7 @@ class Addr extends React.Component {
                     {this.props.storeAddr ? this.props.storeAddr.city : null}
                     {this.props.storeAddr ? this.props.storeAddr.region : null}
                     {this.props.storeAddr
-                      ? this.props.storeAddr.addrDetail
+                      ? this.props.storeAddr.addrorder
                       : null}
                   </span>
                 </div>
@@ -626,7 +667,7 @@ class OrderItem extends React.Component {
           <div className="title">{item.title}</div>
           <div className="sku-info">
             <span className="sku">{item.specification}</span>
-            <span className="count pull-right">单价：￥{item.money}</span>
+            <span className="count pull-right">单价：¥{item.money}</span>
           </div>
           <div className="other">
             <span className="price pull-right">数量：x {item.amount}</span>

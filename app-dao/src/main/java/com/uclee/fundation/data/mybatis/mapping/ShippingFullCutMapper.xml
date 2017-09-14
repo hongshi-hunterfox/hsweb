@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ShippingFullCutMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ShippingFullCut" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="s_limit" property="sLimit" jdbcType="DOUBLE" />
+    <result column="u_limit" property="uLimit" jdbcType="DOUBLE" />
+    <result column="condition" property="condition" jdbcType="DECIMAL" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, s_limit, u_limit, condition, time,start_time,end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_shipping_full_cut
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllShippingFullCut" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from web_shipping_full_cut order by s_limit asc
+  </select>
+  <select id="selectAllShippingFullCutActive" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from web_shipping_full_cut where start_time &lt;= #{date,jdbcType=TIMESTAMP} and end_time &gt;= #{date,jdbcType=TIMESTAMP} order by s_limit asc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_shipping_full_cut
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteAll" parameterType="java.lang.Integer" >
+    truncate table web_shipping_full_cut
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ShippingFullCut" >
+    insert into web_shipping_full_cut (id, s_limit, u_limit, 
+      condition, time,start_time,end_time)
+    values (#{id,jdbcType=INTEGER}, #{sLimit,jdbcType=DOUBLE}, #{uLimit,jdbcType=DOUBLE}, 
+      #{condition,jdbcType=DECIMAL}, #{time,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.ShippingFullCut" >
+    insert into web_shipping_full_cut
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sLimit != null" >
+        s_limit,
+      </if>
+      <if test="uLimit != null" >
+        u_limit,
+      </if>
+      <if test="condition != null" >
+        condition,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sLimit != null" >
+        #{sLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="uLimit != null" >
+        #{uLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="condition != null" >
+        #{condition,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.ShippingFullCut" >
+    update web_shipping_full_cut
+    <set >
+      <if test="sLimit != null" >
+        s_limit = #{sLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="uLimit != null" >
+        u_limit = #{uLimit,jdbcType=DOUBLE},
+      </if>
+      <if test="condition != null" >
+        condition = #{condition,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.ShippingFullCut" >
+    update web_shipping_full_cut
+    set s_limit = #{sLimit,jdbcType=DOUBLE},
+      u_limit = #{uLimit,jdbcType=DOUBLE},
+      condition = #{condition,jdbcType=DECIMAL},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      time = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

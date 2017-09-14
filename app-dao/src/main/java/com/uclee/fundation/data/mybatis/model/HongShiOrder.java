@@ -25,7 +25,17 @@ public class HongShiOrder {
 	private BigDecimal discount;
 	
 	private String pickAddr;
-	
+
+	private Boolean isComment;
+
+	public Boolean getIsComment() {
+		return isComment;
+	}
+
+	public void setIsComment(Boolean comment) {
+		isComment = comment;
+	}
+
 	public String getPickAddr() {
 		return pickAddr;
 	}

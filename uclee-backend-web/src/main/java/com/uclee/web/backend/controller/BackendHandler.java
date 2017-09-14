@@ -5,7 +5,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.uclee.fundation.data.mybatis.model.Category;
+import com.uclee.fundation.data.mybatis.model.Comment;
 import com.uclee.fundation.data.mybatis.model.HomeQuickNavi;
+import com.uclee.fundation.data.mybatis.model.RechargeConfig;
 import com.uclee.fundation.data.web.dto.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -14,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
@@ -36,8 +35,8 @@ public class BackendHandler {
 		return backendService.updateConfig(configPost);
 	}
 	@RequestMapping("/sendBirthMsg")
-	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId) {
-		return backendService.sendBirthMsg(userId);
+	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
+		return backendService.sendBirthMsg(userId,sendVoucher);
 	}
 	@RequestMapping("/sendUnbuyMsg")
 	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId) {
@@ -55,10 +54,34 @@ public class BackendHandler {
 	public @ResponseBody boolean freightHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateFreight(freightPost);
 	}
+	@RequestMapping("/fullCutShippingHandler")
+	public @ResponseBody boolean fullCutShippingHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateFullCutShipping(freightPost);
+	}
+	@RequestMapping("/fullCutHandler")
+	public @ResponseBody boolean fullCutHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateFullCut(freightPost);
+	}
+	@RequestMapping("/bindMemberHandler")
+	public @ResponseBody boolean bindMemberHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateBindingRewards(freightPost);
+	}
+	@RequestMapping("/birthVoucherHandler")
+	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateBirthVoucher(freightPost);
+	}
 	@RequestMapping("/lotteryHandler")
 	public @ResponseBody boolean lotteryHandler(HttpServletRequest request,@RequestBody LotteryConfigPost post) {
 		System.out.println(JSON.toJSONString(post));
 		return backendService.updateLottery(post);
+	}
+	@RequestMapping("/rechargeConfigNewHandler")
+	public @ResponseBody boolean rechargeConfigHandler(HttpServletRequest request,@RequestBody RechargeConfig rechargeConfig) {
+		return backendService.updateRechargeConfigNew(rechargeConfig);
+	}
+	@RequestMapping("/delRechargeConfig")
+	public @ResponseBody boolean delRechargeConfig(HttpServletRequest request,Integer id) {
+		return backendService.delRechargeConfig(id);
 	}
 	@RequestMapping("/rechargeConfigHandler")
 	public @ResponseBody boolean rechargeConfigHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
@@ -97,6 +120,10 @@ public class BackendHandler {
 	@RequestMapping("/delProductGroup")
 	public @ResponseBody int delProductGroup(HttpServletRequest request,Integer groupId,Integer productId) {
 		return backendService.delProductGroup(groupId,productId);
+	}
+	@RequestMapping(value="/commentBackHandler", method = RequestMethod.POST)
+	public @ResponseBody Map<String,Object> commentBackHandler(HttpServletRequest request,@RequestBody Comment comment) {
+		return backendService.commentBackHandler(comment);
 	}
 	@RequestMapping("/delQuickNaviProduct")
 	public @ResponseBody int delQuickNaviProduct(HttpServletRequest request,Integer naviId,Integer productId) {

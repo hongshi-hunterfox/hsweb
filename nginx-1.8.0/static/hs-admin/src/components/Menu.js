@@ -14,6 +14,9 @@ class Menu extends React.Component {
           <Link to={'/product-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             产品管理
           </Link>
+          <Link to={'/comment-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            评论管理
+          </Link>
           <Link to={'/category-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             分类管理
           </Link>
@@ -23,14 +26,26 @@ class Menu extends React.Component {
           <Link to={'/lottery?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             积分抽奖配置
           </Link>
+          <Link to={'/fullCutShipping?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            满减运费配置
+          </Link>
+          <Link to={'/fullCut?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            满减配置
+          </Link>
           <Link to={'/phoneUserList?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             加盟商管理
           </Link>
-          <Link to={'/recharge-config?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+          <Link to={'/recharge-config-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             充值赠送配置
+          </Link>
+          <Link to={'/bindMemberSetting?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            绑定会员赠送配置
           </Link>
            <Link to={'/user-birth-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             生日信息推送
+          </Link>
+          <Link to={'/birth-voucher?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            生日礼券赠送配置
           </Link>
           <Link to={'/user-unbuy-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             消费信息推送

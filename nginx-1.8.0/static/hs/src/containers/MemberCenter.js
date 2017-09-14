@@ -110,7 +110,7 @@ class MemberCenter extends React.Component {
           </div>
           <div className="member-center-orders clearfix">
             <div className="member-center-order" onClick={() => { window.location='/unpay-order-list' }}>
-              {this.state.unPayCount&&this.state.unPayCount>0?<div className='member-center-order-count'>1</div>:null}
+              {this.state.unPayCount&&this.state.unPayCount>0?<div className='member-center-order-count'>{this.state.unPayCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>待付款</span>
@@ -123,7 +123,7 @@ class MemberCenter extends React.Component {
               </a>
             </div>
             <div className="member-center-order" onClick={() => { window.location='/order-list?isEnd=1'  }}>
-              {this.state.unCommentCount&&this.state.unCommentCount>0?<div className='member-center-order-count'>1</div>:null}
+              {this.state.unCommentCount&&this.state.unCommentCount>0?<div className='member-center-order-count'>{this.state.unCommentCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>已结单</span>
@@ -132,7 +132,7 @@ class MemberCenter extends React.Component {
           </div>
 
           <LinkGroup>
-            <LinkGroupItem icon="smile-o" text="全部订单" onClick={() => { window.location='/order-list'  }}/>
+            <LinkGroupItem icon="smile-o" text="我的订单" onClick={() => { window.location='/order-list'  }}/>
             <LinkGroupItem icon="smile-o" text="我的购物车" onClick={() => { window.location='/cart'}}/>
           </LinkGroup>
 

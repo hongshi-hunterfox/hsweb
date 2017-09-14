@@ -2,6 +2,9 @@ package com.uclee.web.user.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
+import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
+import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
+import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.sms.util.VerifyCode;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -30,6 +34,15 @@ import java.util.*;
 public class HongShiVipController {
 	@Autowired
 	private UserServiceI userService;
+
+	@Autowired
+	private HongShiMapper hongShiMapper;
+
+	@Autowired
+	private OauthLoginMapper oauthLoginMapper;
+
+	@Autowired
+	private BindingRewardsMapper bindingRewardsMapper;
 	
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
@@ -153,6 +166,29 @@ public class HongShiVipController {
 					return ret;
 				}
 				ret.put("result", "success");
+				try{
+					//赠送积分处理
+					List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
+					OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
+					if(oauthLogin!=null&&bindingRewards!=null&&bindingRewards.size()>0){
+						hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),bindingRewards.get(0).getPoint());
+						for(int i=0;i<bindingRewards.get(0).getAmount();i++){
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),
+											bindingRewards.get(0).getVoucherCode());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+					//赠送优惠券
+				}catch (Exception e){
+
+					e.printStackTrace();
+				}
 			}
 		}
 		logger.info("rec:"+JSON.toJSONString(vip));

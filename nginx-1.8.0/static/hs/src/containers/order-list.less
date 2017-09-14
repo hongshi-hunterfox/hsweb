@@ -1,6 +1,26 @@
 @import "../public.less";
 .order{
 	margin-bottom: 51px;
+	&-top{
+		.clearfix();
+		width: 100%;
+		&-item{
+			color: black;
+			width:25%;
+			padding: 5px;
+			text-align: center;
+			display: block;
+			float: left;
+			border-right: 1px solid #C9C9C9;
+			border-bottom: 1px solid #C9C9C9;
+		}
+		.active{
+			color: #f15f40;
+			font-weight: bold;
+			border-bottom: 1px solid #f15f40;
+		}
+		
+	}
 	&-list{
 		.clearfix();
 		margin-top: 10px;

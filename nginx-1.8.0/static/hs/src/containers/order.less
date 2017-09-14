@@ -3,7 +3,42 @@
 .order {
 	.clearfix();
 	background-color: white;
-
+	&-sales {
+		background-color: white;
+		margin: 10px;
+		position: relative;
+		margin-bottom: 15px;
+		border-bottom: 1px solid #ececec;
+		.clearfix();
+		&:hover,
+		&:active {
+			background-color: white;
+		}
+		.none{
+			display: none;
+		}
+		&-top{
+			margin-bottom: 10px;
+		}
+		&-tag{
+			color: #FF2C29;
+			border: 1px solid #FFC1BF;
+			padding: 5px 10px;
+			border-radius: 5px;
+		}
+		&-text{
+			margin-left: 5px;
+		}
+		&-icon {
+			float: right;
+			margin-right: 10px;
+		}
+		&-item{
+			padding: 5px 0px;
+			border-bottom: 1px solid #f2f2f2;
+		}
+		
+	}
 	&-addr {
 		margin: 10px;
 

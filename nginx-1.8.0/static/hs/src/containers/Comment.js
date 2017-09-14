@@ -5,6 +5,8 @@ import './comment.css'
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import ErrorMessage from './ErrorMessage'
+var fto = require('form_to_object')
+import req from 'superagent'
 class Comment extends React.Component{
 
 	constructor(props) {
@@ -77,13 +79,16 @@ class Comment extends React.Component{
 								onSubmit={this._handleSubmit}
 								ref="f"
 							>
+							<input name="deliver" value={this.state.delStar} type='hidden'/>
+							<input name="service" value={this.state.serStar} type='hidden'/>
+							<input name="quality" value={this.state.quaStar} type='hidden'/>
 							<div className="form-group">
 								<textarea className="comment-textarea" rows="8" cols="20" placeholder="请写下对订单的宝贵意见" name='title' onChange={this._handleChange.bind(this, 'title')}>
 
 								</textarea>
 
 							</div>
-							<ErrorMessage error={this.state.error} />
+							<ErrorMessage error={this.state.err} />
 							<button
 								type="submit"
 								className="btn btn-primary btn-block comment-button"
@@ -104,6 +109,55 @@ class Comment extends React.Component{
 		this.setState({
 			comment: comment
 		})
+	}
+
+	_handleSubmit = e => {
+		e.preventDefault()
+		var data = fto(e.target)
+		data.orderSerialNum=this.props.location.query.orderSerialNum;
+		if (!data.orderSerialNum) {
+			alert("评论订单信息有误，请返回重新进入");
+			window.location='order-list'
+			return false
+		}
+		console.log(data);
+		if (!data.deliver||data.deliver==='0') {
+			this.setState({
+				err: '请为送货速度打分'
+			})
+			return false
+		}
+		if (!data.service||data.service==='0') {
+			this.setState({
+				err: '请为服务态度打分'
+			})
+			return false
+		}
+		if (!data.quality||data.quality==='0') {
+			this.setState({
+				err: '请为产品质量打分'
+			})
+			return false
+		}
+		if (!data.title) {
+			this.setState({
+				err: '请填写评论内容'
+			})
+			return false
+		}
+		req.post('/uclee-user-web/commentHandler').send(data).end((err, res) => {
+        if (err) {
+          return err
+        }
+        var resJson = JSON.parse(res.text)
+        if (!resJson.result) {
+          alert(resJson.reason);
+          return ;
+        }else{
+
+          window.location = '/order-list'
+        }
+      })
 	}
 }
 

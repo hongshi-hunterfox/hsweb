@@ -266,7 +266,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	@Test
 	public void test1() throws Exception{
-		datasource.switchDataSource("hs");
+		datasource.switchDataSource("kf");
 		/*List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
 		logger.info("t: " + JSON.toJSONString(t));
 		for(DataSourceInfo info:t) {
@@ -277,7 +277,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 					duobaoService.getGolbalAccessToken();
 			}
 		}*/
-		System.out.println(JSON.toJSONString(userProfileMapper.getUserListForBirth("2017-08-23","2017-09-23")));
+		System.out.println(JSON.toJSONString(userService.getProductDtoById(1)));
 	}
 	
 	@Test
@@ -302,25 +302,17 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testRecharge(){
-		HongShiRecharge dd = new HongShiRecharge().setcWeiXinCode("oH7hfuEN8qnZjC7fr2_zUFK7eVl8")
+		dataSource.switchDataSource("kf");
+		HongShiRecharge dd = new HongShiRecharge().setcWeiXinCode("ocydnwkicQdKQgz5x4Pedh5LpFUM")
 				.setcWeiXinOrderCode("微商城积分抽奖赠送余额").setnAddMoney(new BigDecimal(10));
 		Integer res = hongShiVipService.hongShiRecharge(dd);
 	}
 	@Test
 	public void testPaymentMessage(){
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("14966410295724564");
-		Payment payment = paymentMapper.selectByPrimaryKey(paymentOrder.getPaymentId());
-		String paymentMethod="微信支付";
-		if(payment!=null){
-			if(payment.getStrategyClassName().equals("MemberCardPaymentStrategy")){
-				paymentMethod="会员卡余额支付";
-			}else if(payment.getStrategyClassName().equals("AlipayPaymentStrategy")){
-				paymentMethod="支付宝支付";
-			}
-		}
+		dataSource.switchDataSource("kf");
 		String[] key = {"keyword1","keyword2","keyword3","keyword4"};
-		String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
-		userService.sendWXMessage("oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+		String[] value = {"test","2017-09-13","2元","微信支付"};
+		userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "XKZJz1iRLSDOZIbvjXs0CJekeW7UeEkxJWwDF395Evk", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
 	}
 	
 	@Test

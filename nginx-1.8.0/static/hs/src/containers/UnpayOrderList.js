@@ -59,6 +59,12 @@ class UnpayOrderList extends React.Component {
 		return (
 			<DocumentTitle title="我的订单">
 				<div className="order" >
+					<div className='order-top'>
+						<span onClick={()=>{window.location='/order-list'}} className='order-top-item'>全部</span>
+						<span onClick={()=>{window.location='/unpay-order-list'}} className='order-top-item active'>待支付</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=0'}} className={'order-top-item'}>制作配送中</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=1'}} className={'order-top-item'}>已完成</span>
+					</div>
 					{items}
 					<div className="bottom-text">
 						O(∩_∩)O 啊哦，没有更多订单啦~~~

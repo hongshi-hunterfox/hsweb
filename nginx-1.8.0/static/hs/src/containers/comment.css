@@ -40,6 +40,7 @@
 .comment-star .lable {
   float: left;
   line-height: 30px;
+  font-size: 15px;
 }
 .comment-star .starList {
   float: left;

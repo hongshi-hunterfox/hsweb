@@ -33,5 +33,7 @@ public interface WebConfig {
 	String rechargeTmpId = "rechargeTmpId";
 	String bindText = "bindText";
 	String supportDeliver = "supportDeliver";
+	String domain = "domain";
+	String hsMerchatCode = "hsMerchantCode";
 
 }                      

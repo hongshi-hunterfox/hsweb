@@ -24,7 +24,17 @@ public class ProductDto extends Product{
 	}
 
 	private List<ProductImageLink> images;
-	
+
+	private List<String> salesInfo;
+
+	public List<String> getSalesInfo() {
+		return salesInfo;
+	}
+
+	public void setSalesInfo(List<String> salesInfo) {
+		this.salesInfo = salesInfo;
+	}
+
 	private List<Specification> specifications;
 	
 	private BigDecimal price;

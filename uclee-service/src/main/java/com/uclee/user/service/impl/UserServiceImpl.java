@@ -233,11 +233,15 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private ConfigMapper configMapper;
 	@Autowired
+	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
+	@Autowired
 	private SignRecordMapper signRecordMapper;
 	@Autowired
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private BannerMapper bannerMapper;
+	@Autowired
+	private CommentMapper commentMapper;
 	
 	@Autowired
 	private LotteryRecordMapper lotteryRecordMapper;
@@ -245,6 +249,10 @@ public class UserServiceImpl implements UserServiceI {
 	private ShakeRecordMapper shakeRecordMapper;
 	@Autowired
 	private SpecificationMapper specificationMapper;
+	@Autowired
+	private FullCutMapper fullCutMapper;
+	@Autowired
+	private ShippingFullCutMapper shippingFullCutMapper;
 	@Autowired
 	private DataSourceFacade datasource;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
@@ -1348,8 +1356,7 @@ public class UserServiceImpl implements UserServiceI {
 	/** 
 	* @Title: updateWXInfo 
 	* @Description: 更新微信用户信息
-	* @param     设定文件  
-	* @throws 
+	* @throws
 	*/
 	@Override
 	public void updateWXInfo() {
@@ -1756,8 +1763,11 @@ public class UserServiceImpl implements UserServiceI {
 			}
 			String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
 			Config config = configMapper.getByTag("payTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
 			if(config!=null) {
-				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key, value, "感谢您的惠顾");
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), "尊敬的会员，您有一笔订单已经支付成功", key, value, "感谢您的惠顾");
 			}
 		}
 		return true;
@@ -1800,13 +1810,54 @@ public class UserServiceImpl implements UserServiceI {
 		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(paymentOrder.getMoney());
 		
 		BigDecimal realMoney = paymentOrder.getMoney();
-		if(rechargeConfig.getType().equals(2)){
-			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
-			if (coupon!=null&&coupon.size()>0) {
-				try {
-					hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),rechargeConfig.getVoucherCode());
-				} catch (Exception e) {
-					
+		if(rechargeConfig!=null){
+			RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),paymentOrder.getUserId());
+			boolean isSend=false;
+			if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
+				for(int i=0;i<rechargeConfig.getAmount();i++) {
+					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
+					if (coupon != null && coupon.size() > 0) {
+						try {
+							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+							isSend=true;
+						} catch (Exception e) {
+
+						}
+					}
+				}
+				for(int i=0;i<rechargeConfig.getAmountSecond();i++) {
+					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
+					if (coupon != null && coupon.size() > 0) {
+						try {
+							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+							isSend=true;
+						} catch (Exception e) {
+
+						}
+					}
+				}
+				for(int i=0;i<rechargeConfig.getAmountThird();i++) {
+					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
+					if (coupon != null && coupon.size() > 0) {
+						try {
+							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+							isSend=true;
+						} catch (Exception e) {
+
+						}
+					}
+				}
+				if(isSend){
+					if(record==null){
+						RechargeRewardsRecord tmp = new RechargeRewardsRecord();
+						tmp.setConfigId(rechargeConfig.getId());
+						tmp.setCount(1);
+						tmp.setUserId(paymentOrder.getUserId());
+						rechargeRewardsRecordMapper.insertSelective(tmp);
+					}else{
+						record.setCount(record.getCount()+1);
+						rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
+					}
 				}
 			}
 		}else{
@@ -1823,8 +1874,11 @@ public class UserServiceImpl implements UserServiceI {
 			String[] key = {"keyword1","keyword2"};
 			String[] value = {DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString()};
 			Config config = configMapper.getByTag("rechargeTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
 			if(config!=null) {
-				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), "hs.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/recharge-list?merchantCode="+config1.getValue(), "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
 			}
 		}
 		return true;
@@ -1942,7 +1996,24 @@ public class UserServiceImpl implements UserServiceI {
 		}else{
 			productDto.setSalesAmount(0);
 		}
-		System.out.println(JSON.toJSONString(productDto));
+		List<String> salesInfo = new ArrayList<String>();
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		Integer count = 1;
+		for(FullCut fullCut:fullCuts){
+			String tmp = "";
+			tmp = count + ". 整单满" + fullCut.getCondition()+"元减"+fullCut.getCut()+"元";
+			count++;
+			salesInfo.add(tmp);
+		}
+		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
+		for(ShippingFullCut shippingFullCut:shippingFullCuts){
+			String tmp = "";
+			tmp = count + ". "+shippingFullCut.getsLimit()+"-"+shippingFullCut.getuLimit()+"公里,"+"满"+shippingFullCut.getCondition()+"元免运费";
+			count++;
+			salesInfo.add(tmp);
+		}
+		productDto.setSalesInfo(salesInfo);
+		System.out.println(JSON.toJSONString(salesInfo));
 		return productDto;
 	}
 
@@ -2594,6 +2665,12 @@ public class UserServiceImpl implements UserServiceI {
 					}
 					item.setHongShiGoods(goods);
 					total = total.add(new BigDecimal(item.getPrice()).multiply(new BigDecimal(item.getCount())));
+				}
+				Comment comment = commentMapper.selectByOrderId(order.getOuterOrderCode());
+				if(comment==null){
+					order.setIsComment(false);
+				}else{
+					order.setIsComment(true);
 				}
 				Order tmp = orderMapper.selectBySerialNum(order.getOuterOrderCode());
 				order.setOrderItems(orderItems);
@@ -3644,6 +3721,11 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public Config getConfigByTag(String supportDeliver) {
 		return configMapper.getByTag(supportDeliver);
+	}
+
+	@Override
+	public int getUnCommentCount(Integer userId) {
+		return orderMapper.getUnCommentCount(userId);
 	}
 
 }

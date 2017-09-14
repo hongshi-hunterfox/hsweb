@@ -252,9 +252,7 @@ public class WeiXinLogin extends CommonUserHandler{
 			userProfile.setImage(headimgurl);
 			if(!weiXinNickName.equals("")){
 				userProfile.setName(weiXinNickName);
-				if(userProfile.getNickName()==null||userProfile.getNickName().equals("")){
-					userProfile.setNickName(weiXinNickName);
-				}
+				userProfile.setNickName(weiXinNickName);
 			}
 			userProfileServiceI.updateUserProfile(userProfile);
 			Integer userId = userProfile.getUserId();

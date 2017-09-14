@@ -259,4 +259,6 @@ public interface UserServiceI {
     List<Message> getUnSendMesg();
 
     Config getConfigByTag(String supportDeliver);
+
+    int getUnCommentCount(Integer userId);
 }

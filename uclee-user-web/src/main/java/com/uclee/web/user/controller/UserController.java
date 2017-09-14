@@ -8,7 +8,7 @@ import com.uclee.date.util.DateUtils;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
-import com.uclee.fundation.data.mybatis.mapping.SignRecordMapper;
+import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
@@ -27,17 +27,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Controller
 @EnableAutoConfiguration
@@ -60,6 +57,16 @@ public class UserController extends CommonUserHandler{
 	private DataSourceInfoServiceI dataSourceInfoService;
 	@Autowired
 	private SignRecordMapper signRecordMapper;
+	@Autowired
+	private CommentMapper commentMapper;
+	@Autowired
+	private HongShiMapper hongShiMapper;
+	@Autowired
+	private FullCutMapper fullCutMapper;
+	@Autowired
+	private ShippingFullCutMapper shippingFullCutMapper;
+	@Autowired
+	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -369,6 +376,7 @@ public class UserController extends CommonUserHandler{
 		map.put("cartItems", carts);
 		map.put("isShippingFree", isShippingFree);
 		map.put("total", total);
+
 		Config config = userService.getConfigByTag(WebConfig.supportDeliver);
 		if(config!=null&&config.getValue().equals("yes")){
 			map.put("supportDeliver",true);
@@ -376,6 +384,30 @@ public class UserController extends CommonUserHandler{
 			map.put("supportDeliver",false);
 			map.put("isSelfPick","true");
 		}
+		List<String> salesInfo = new ArrayList<String>();
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		BigDecimal cut = new BigDecimal(0);
+		for(FullCut fullCut:fullCuts){
+			if(total.compareTo(fullCut.getCondition())>=0){
+				cut = fullCut.getCut();
+			}
+		}
+		map.put("cut", cut);
+		Integer count = 1;
+		for(FullCut fullCut:fullCuts){
+			String tmp = "";
+			tmp = count + ". 整单满" + fullCut.getCondition()+"元减"+fullCut.getCut()+"元";
+			count++;
+			salesInfo.add(tmp);
+		}
+		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
+		for(ShippingFullCut shippingFullCut:shippingFullCuts){
+			String tmp = "";
+			tmp = count + ". "+shippingFullCut.getsLimit()+"-"+shippingFullCut.getuLimit()+"公里,"+"满"+shippingFullCut.getCondition()+"元免运费";
+			count++;
+			salesInfo.add(tmp);
+		}
+		map.put("salesInfo",salesInfo);
 		return map;
 	}
 	
@@ -650,7 +682,14 @@ public class UserController extends CommonUserHandler{
 		}
 		return userService.shakeHandler(userId);
 	}
-	
+	@RequestMapping(value="/comment")
+	public @ResponseBody Map<String,Object> comment(HttpServletRequest request,String orderSerialNum) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Comment tmp = commentMapper.selectByOrderId(orderSerialNum);
+		map.put("comment",tmp);
+		return map;
+	}
 	/** 
 	* @Title: getLotteryConfig 
 	* @Description: 积分抽奖页面数据接口，获得积分抽奖配置等信息 
@@ -726,8 +765,38 @@ public class UserController extends CommonUserHandler{
 		List<Payment> payments = userService.selectPaymentForRecharge();
 		map.put("payment", payments);
 		//获取充值配置
-		List<RechargeConfig> config = backendService.selectAllRechargeConfig();
-		map.put("config", config);
+		List<RechargeConfig> configs = backendService.selectAllRechargeConfig();
+		map.put("config", configs);
+		Map<String,List<String>> extraData = new HashMap<String,List<String>>();
+		for(RechargeConfig config:configs){
+			RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(config.getId(),userId);
+			if(record==null||(config.getLimit()!=null&&config.getLimit()>record.getCount())){
+				List<String> extra = new ArrayList<String>();
+				int i = 1;
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
+				if (coupon!=null&&coupon.size()>0) {
+					String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
+					i++;
+					extra.add(tmp);
+				}
+				extra.add(config.getMoney() + "元优惠券1张");
+				extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
+				List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
+				if (coupon!=null&&coupon.size()>0) {
+					String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
+					i++;
+					extra.add(tmp);
+				}
+				List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
+				if (coupon!=null&&coupon.size()>0) {
+					String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
+					i++;
+					extra.add(tmp);
+				}
+				extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()),extra);
+			}
+		}
+		map.put("extraData", extraData);
 		OauthLogin login = userService.getOauthLoginInfoByUserId(userId);
 		if(login!=null){
 			List<HongShiVip> ret= hongShiVipService.getVipInfo(login.getOauthId());//openid 去拿信息
@@ -767,18 +836,31 @@ public class UserController extends CommonUserHandler{
 	* @throws 
 	*/
 	@RequestMapping("/getShippingFee")
-	public @ResponseBody Map<String,Object> getShippingFee(HttpServletRequest request,double distance) {
+	public @ResponseBody Map<String,Object> getShippingFee(HttpServletRequest request,double distance,BigDecimal total) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		logger.info("distance: " + JSON.toJSONString(distance));
-		List<Freight> freights = userService.getAllFreightConfig();
 		Double money=null;
-		for(Freight freight:freights){
-			if(distance > freight.getCondition()){
-				logger.info(freight.getMoney());
-				money=freight.getMoney().doubleValue();
-				logger.info(money);
-				break;
+		boolean isFullCut=false;
+		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
+		for(ShippingFullCut shippingFullCut:shippingFullCuts){
+			if(shippingFullCut.getsLimit()<=distance&&shippingFullCut.getuLimit()>distance){
+				if(total.compareTo(shippingFullCut.getCondition())>=0){
+					money=0.0;
+					isFullCut=true;
+					break;
+				}
+			}
+		}
+		if(!isFullCut) {
+			List<Freight> freights = userService.getAllFreightConfig();
+			for (Freight freight : freights) {
+				if (distance > freight.getCondition()) {
+					logger.info(freight.getMoney());
+					money = freight.getMoney().doubleValue();
+					logger.info(money);
+					break;
+				}
 			}
 		}
 //		if(money==null&&freights!=null&&freights.size()>0){
@@ -930,7 +1012,8 @@ public class UserController extends CommonUserHandler{
 		}
 		int unPayCount  = userService.getUnpayOrderCountByUserId(userId);
 		map.put("unPayCount", unPayCount);
-
+		int unCommentCount = userService.getUnCommentCount(userId);
+		map.put("unCommentCount", unCommentCount);
 		return map;
 	}
 
