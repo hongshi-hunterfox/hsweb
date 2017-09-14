@@ -1811,57 +1811,65 @@ public class UserServiceImpl implements UserServiceI {
 		
 		BigDecimal realMoney = paymentOrder.getMoney();
 		if(rechargeConfig!=null){
-			RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),paymentOrder.getUserId());
-			boolean isSend=false;
-			if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
-				for(int i=0;i<rechargeConfig.getAmount();i++) {
-					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
-					if (coupon != null && coupon.size() > 0) {
-						try {
-							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
-							isSend=true;
-						} catch (Exception e) {
+			//优惠券处理
+			if(rechargeConfig.getStartTime()!=null&&rechargeConfig.getEndTime()!=null&&new Date().after(rechargeConfig.getStartTime())&&new Date().before(rechargeConfig.getEndTime())){
+				try{
+					RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),paymentOrder.getUserId());
+					boolean isSend=false;
+					if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
+						for(int i=0;i<rechargeConfig.getAmount();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+									isSend=true;
+								} catch (Exception e) {
 
+								}
+							}
+						}
+						for(int i=0;i<rechargeConfig.getAmountSecond();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						for(int i=0;i<rechargeConfig.getAmountThird();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						if(isSend){
+							if(record==null){
+								RechargeRewardsRecord tmp = new RechargeRewardsRecord();
+								tmp.setConfigId(rechargeConfig.getId());
+								tmp.setCount(1);
+								tmp.setUserId(paymentOrder.getUserId());
+								rechargeRewardsRecordMapper.insertSelective(tmp);
+							}else{
+								record.setCount(record.getCount()+1);
+								rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
+							}
 						}
 					}
+				}catch (Exception e){
+					e.printStackTrace();
 				}
-				for(int i=0;i<rechargeConfig.getAmountSecond();i++) {
-					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
-					if (coupon != null && coupon.size() > 0) {
-						try {
-							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
-							isSend=true;
-						} catch (Exception e) {
-
-						}
-					}
-				}
-				for(int i=0;i<rechargeConfig.getAmountThird();i++) {
-					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
-					if (coupon != null && coupon.size() > 0) {
-						try {
-							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
-							isSend=true;
-						} catch (Exception e) {
-
-						}
-					}
-				}
-				if(isSend){
-					if(record==null){
-						RechargeRewardsRecord tmp = new RechargeRewardsRecord();
-						tmp.setConfigId(rechargeConfig.getId());
-						tmp.setCount(1);
-						tmp.setUserId(paymentOrder.getUserId());
-						rechargeRewardsRecordMapper.insertSelective(tmp);
-					}else{
-						record.setCount(record.getCount()+1);
-						rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
-					}
-				}
+				realMoney = realMoney.add(rechargeConfig.getRewards());
+			}else{
+				logger.error("不在赠送时期");
 			}
-		}else{
-			realMoney = realMoney.add(rechargeConfig.getRewards());
 		}
 		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId())
 				.setcWeiXinOrderCode(paymentOrder.getPaymentSerialNum())
@@ -2363,6 +2371,15 @@ public class UserServiceImpl implements UserServiceI {
 			orderItem.add(item);
 		}
 		order.setTotalPrice(totalMoney);
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		BigDecimal cut = new BigDecimal(0);
+		for(FullCut fullCut:fullCuts){
+			if(totalMoney.compareTo(fullCut.getCondition())>=0){
+				cut = fullCut.getCut();
+			}
+		}
+		order.setCut(cut);
+		totalMoney = totalMoney.subtract(cut);
 		if(orderPost.getIsSelfPick()!=null&&orderPost.getIsSelfPick().equals("false")){
 			order.setShippingCost(orderPost.getShippingFee());
 			totalMoney = totalMoney.add(orderPost.getShippingFee());
@@ -2691,10 +2708,18 @@ public class UserServiceImpl implements UserServiceI {
 					if(napaStore!=null){
 						order.setPickAddr(napaStore.getProvince()+napaStore.getCity()+napaStore.getRegion()+napaStore.getAddrDetail());
 					}
+					order.setCut(tmp.getCut());
 				}
 				if(order.getShippingCost()==null){
 					order.setShippingCost(new BigDecimal(0));
 				}
+				if(tmp.getPickUpImage()==null||tmp.getPickUpImage().length()<2){
+					File file = MyQRCode.generateQRCode(600,600,order.getPickUpCode());
+					String pickUpImage = fDFSFileUpload.getFileId(file);
+					tmp.setPickUpImage(pickUpImage);
+					orderMapper.updateByPrimaryKeySelective(tmp);
+				}
+				order.setPickUpImageUrl(tmp.getPickUpImage());
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
 				order.setAccounts(total.add(order.getShippingCost()).subtract(discount).doubleValue());
@@ -2760,7 +2785,7 @@ public class UserServiceImpl implements UserServiceI {
 			//同步积分到洪石系统
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
 			if(oauthLogin!=null){
-				hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),record.getPoint());
+				hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),record.getPoint(),"签到送积分");
 			}
 			
 			map.put("result", true);
@@ -3001,28 +3026,30 @@ public class UserServiceImpl implements UserServiceI {
 						}
 
 						//二级分销
-						User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
-						Balance secondBalance = this.getBalance(secondDist.getUserId());
-						if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
-							BigDecimal secondMoney;
-							try {
-								secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								secondMoney=new BigDecimal(0.01);
-							}
-							secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
-							if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
-								//记录日志
-								BalanceLog log = new BalanceLog();
-								log.setUserId(secondDist.getUserId());
-								log.setBalance(secondBalance.getBalance());
-								log.setMoney(secondMoney);
-								balanceLogMapper.insertSelective(log);
-								//记录订单分销信息
-								order.setFirstDistId(secondDist.getUserId());
-								order.setFirstDistMoney(secondMoney);
+						if(firstDist!=null){
+							User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
+							Balance secondBalance = this.getBalance(secondDist.getUserId());
+							if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
+								BigDecimal secondMoney;
+								try {
+									secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+									secondMoney=new BigDecimal(0.01);
+								}
+								secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
+								if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
+									//记录日志
+									BalanceLog log = new BalanceLog();
+									log.setUserId(secondDist.getUserId());
+									log.setBalance(secondBalance.getBalance());
+									log.setMoney(secondMoney);
+									balanceLogMapper.insertSelective(log);
+									//记录订单分销信息
+									order.setFirstDistId(secondDist.getUserId());
+									order.setFirstDistMoney(secondMoney);
+								}
 							}
 						}
 					}
@@ -3046,8 +3073,11 @@ public class UserServiceImpl implements UserServiceI {
 				}
 				String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
 				Config config = configMapper.getByTag("payTmpId");
+				Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+				Config config2 = configMapper.getByTag(WebConfig.domain);
+				Config config3 = configMapper.getByTag(WebConfig.signName);
 				//"S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok"
-				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue() + "/order-list?merchantCode="+config1.getValue(), "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
 				//改变支付单状态
 				paymentOrder.setCompleteTime(new Date());
 				paymentOrder.setIsCompleted(true);

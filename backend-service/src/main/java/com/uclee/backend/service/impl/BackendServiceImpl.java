@@ -294,20 +294,20 @@ public class BackendServiceImpl implements BackendServiceI {
 		return true;
 	}
 	@Override
-	public boolean updateBirthVoucher(FreightPost freightPost) {
+	public boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost) {
 		int delAll = birthVoucherMapper.deleteAll();
-		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0){
+		if(birthVoucherPost.getMyKey()==null||birthVoucherPost.getMyValue()==null||birthVoucherPost.getMyKey().size()==0||birthVoucherPost.getMyValue().size()==0){
 			return false;
 		}
-		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
-			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+		for(Map.Entry<Integer, String> entry : birthVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||birthVoucherPost.getMyValue().get(entry.getKey())==null){
 				return false;
 			}
 		}
-		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+		for(Map.Entry<Integer, String> entry : birthVoucherPost.getMyKey().entrySet()){
 			BirthVoucher tmp = new BirthVoucher();
-			tmp.setAmount(entry.getValue().intValue());
-			tmp.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			tmp.setAmount(Integer.parseInt(birthVoucherPost.getMyValue().get(entry.getKey())));
+			tmp.setVoucherCode(entry.getValue().toString());
 			birthVoucherMapper.insertSelective(tmp);
 		}
 		return true;
@@ -709,7 +709,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config3 = configMapper.getByTag(WebConfig.signName);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), config2+"?merchantCode="+config1.getValue(), config3.getValue()+"商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue()+"商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(1);
 				msgRecord.setUserId(userId);
@@ -756,7 +756,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config3 = configMapper.getByTag(WebConfig.signName);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), config2+"?merchantCode="+config1.getValue(), config3.getValue()+"商城促销大优惠，赶紧来抢购吧", key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue()+"商城促销大优惠，赶紧来抢购吧", key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(2);
 				msgRecord.setUserId(userId);

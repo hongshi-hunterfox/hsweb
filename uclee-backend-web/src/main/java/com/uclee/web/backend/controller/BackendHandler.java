@@ -67,8 +67,8 @@ public class BackendHandler {
 		return backendService.updateBindingRewards(freightPost);
 	}
 	@RequestMapping("/birthVoucherHandler")
-	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
-		return backendService.updateBirthVoucher(freightPost);
+	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
+		return backendService.updateBirthVoucher(birthVoucherPost);
 	}
 	@RequestMapping("/lotteryHandler")
 	public @ResponseBody boolean lotteryHandler(HttpServletRequest request,@RequestBody LotteryConfigPost post) {

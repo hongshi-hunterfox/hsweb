@@ -1,6 +1,25 @@
 .order {
   margin-bottom: 51px;
 }
+.order .none {
+  display: none;
+}
+.order-pick-up-image {
+  top: 0;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  background-color: rgba(153, 153, 153, 0.6);
+  height: 100%;
+}
+.order-pick-up-image .image {
+  margin-left: 10%;
+}
+.order-pick-up-image .icon {
+  margin-top: 40%;
+  margin-left: 90%;
+  font-size: 25px;
+}
 .order-top {
   width: 100%;
 }

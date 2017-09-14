@@ -28,7 +28,7 @@ public interface HongShiMapper {
 	List<HongShiOrderItem> getHongShiOrderItems(Integer id);
 	HongShiGoods getHongShiGoods(String code);
 	CreateOrderItemResult createOrderItem(HongShiCreateOrderItem createOrderItem);
-	HongShiCommonResult signInAddPoint(@Param("oauthId")String oauthId, @Param("point")Integer point);
+	HongShiCommonResult signInAddPoint(@Param("oauthId")String oauthId, @Param("point")Integer point,@Param("tag") String tag);
 	HongShiCommonResult lotteryPoint(@Param("oauthId")String oauthId, @Param("point")Integer point);
 	int recoverVoucher(@Param("goodsCode")String goodsCode,@Param("orderId")Integer orderId,@Param("voucherCode")String voucherCode,@Param("remark")String remark);
 	int saleVoucher(@Param("oauthId")String oauthId,@Param("voucherCode")String voucherCode,@Param("goodsCode")String goodsCode);

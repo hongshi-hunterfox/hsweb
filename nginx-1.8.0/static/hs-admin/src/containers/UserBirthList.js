@@ -43,8 +43,7 @@ class UserBirthList extends React.Component {
     }else{
       url='/uclee-backend-web/sendBirthMsg?userId=' + userId;
     }
-    alert(url);
-    /*req
+    req
       .get(url)
       .end((err, res) => {
         if (err) {
@@ -53,11 +52,11 @@ class UserBirthList extends React.Component {
         if (res.body) {
           alert('发送成功')
           window.location =
-            '/user-birth-list?day=' + this.props.location.query.day
+            '/user-birth-list?start=' + this.props.location.query.start + '&end='+this.props.location.query.end
         } else {
           alert('网络繁忙，请稍后重试')
         }
-      })*/
+      })
   }
   _change = e => {
     this.setState({
@@ -101,7 +100,7 @@ class UserBirthList extends React.Component {
     if (ret) {
           alert('发送成功')
           window.location =
-            '/user-birth-list?day=' + this.props.location.query.day
+            '/user-birth-list?start=' + this.props.location.query.start + '&end='+this.props.location.query.end
         } else {
           alert('网络繁忙，请稍后重试')
         }

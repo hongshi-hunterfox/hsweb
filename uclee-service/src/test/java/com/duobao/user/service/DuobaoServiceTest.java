@@ -76,6 +76,8 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Autowired
 	private OrderItemMapper orderItemMapper;
 	@Autowired
+	private RechargeConfigMapper rechargeConfigMapper;
+	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
@@ -95,6 +97,8 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	private DataSourceFacade datasource;
 	@Autowired
 	private UserProfileMapper userProfileMapper;
+	@Autowired
+	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
 	@Test
 	public void testFreight(){
 		datasource.switchDataSource("hs");
@@ -283,14 +287,74 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Test
 	public void testWxMessage(){
 		dataSource.switchDataSource("kf");
-		List<HongShiVip> ret= hongShiVipService.getVipInfo("ocydnwkicQdKQgz5x4Pedh5LpFUM");//openid 去拿信息
-		if(ret!=null&&ret.size()>0){
-			if(ret.get(0).getState()==0||ret.get(0).getDisable()==1||(ret.get(0).getVipType()&2)==0||ret.get(0).getIsVoucher()==1||ret.get(0).getEndTime().before(new Date())){
-				ret.get(0).setAllowRecharge(false);
-				System.out.println("不可用");
+		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(new BigDecimal("0.01"));
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
+		if(rechargeConfig!=null){
+			//优惠券处理
+			if(rechargeConfig.getStartTime()!=null&&rechargeConfig.getEndTime()!=null&&new Date().after(rechargeConfig.getStartTime())&&new Date().before(rechargeConfig.getEndTime())){
+				try{
+					RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),6);
+					boolean isSend=false;
+					if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
+						if(rechargeConfig.getAmount()!=null) {
+							for (int i = 0; i < rechargeConfig.getAmount(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
+								if (coupon != null && coupon.size() > 0) {
+									try {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+										isSend = true;
+									} catch (Exception e) {
+
+									}
+								}
+							}
+						}
+						if(rechargeConfig.getAmountSecond()!=null) {
+							for (int i = 0; i < rechargeConfig.getAmountSecond(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
+								if (coupon != null && coupon.size() > 0) {
+									try {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+										isSend = true;
+									} catch (Exception e) {
+
+									}
+								}
+							}
+						}
+						if(rechargeConfig.getAmountThird()!=null) {
+							for (int i = 0; i < rechargeConfig.getAmountThird(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
+								if (coupon != null && coupon.size() > 0) {
+									try {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+										isSend = true;
+									} catch (Exception e) {
+
+									}
+								}
+							}
+						}
+						if(isSend){
+							if(record==null){
+								RechargeRewardsRecord tmp = new RechargeRewardsRecord();
+								tmp.setConfigId(rechargeConfig.getId());
+								tmp.setCount(1);
+								tmp.setUserId(6);
+								rechargeRewardsRecordMapper.insertSelective(tmp);
+							}else{
+								record.setCount(record.getCount()+1);
+								rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
+							}
+						}
+					}else{
+						logger.error("赠送上限");
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 			}else{
-				ret.get(0).setAllowRecharge(true);
-				System.out.println("可用");
+				logger.error("不在赠送时期");
 			}
 		}
 	}

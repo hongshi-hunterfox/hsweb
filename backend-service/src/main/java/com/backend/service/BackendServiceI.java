@@ -101,7 +101,7 @@ public interface BackendServiceI {
 
 	List<BirthVoucher> selectAllBirthVoucher();
 
-	boolean updateBirthVoucher(FreightPost freightPost);
+	boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost);
 
     List<ShippingFullCut> selectAllShippingFullCut();
 

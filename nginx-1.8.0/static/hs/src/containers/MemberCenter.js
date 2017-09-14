@@ -19,7 +19,8 @@ class MemberCenter extends React.Component {
       cVipCode:null,
       isSigned:false,
       unPayCount:0,
-      unCommentCount:0
+      unCommentCount:0,
+      deliCount:0
     }
   }
 
@@ -83,7 +84,7 @@ class MemberCenter extends React.Component {
                 })
 
             }}>签到获取积分</span>:
-            <span className="member-center-check-in">已签到</span>
+            <span className="member-center-check-in">今日已签到</span>
           }
             <img src={hero} alt=""/>
             <div className="member-center-info">
@@ -117,6 +118,7 @@ class MemberCenter extends React.Component {
               </a>
             </div>
             <div className="member-center-order" onClick={() => { window.location='/order-list?isEnd=0' }}>
+             {this.state.deliCount&&this.state.deliCount>0?<div className='member-center-order-count'>{this.state.deliCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>制作配送中</span>

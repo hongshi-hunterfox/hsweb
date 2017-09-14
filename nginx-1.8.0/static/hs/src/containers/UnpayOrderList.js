@@ -44,8 +44,15 @@ class UnpayOrderList extends React.Component {
 					<div className="order-list-bottom">
 						<span className="pull-right total">优惠：￥{item.discount?item.discount:0}</span>
 					</div>
+					{
+						item.cut>0?
+							<div className="order-list-bottom">
+								<span className="pull-right total">满减：￥{item.cut?item.cut:0}</span>
+							</div>
+						:null
+					}
 					<div className="order-list-bottom">
-						<span className="pull-right total">合计：￥{item.totalPrice+item.shippingCost-item.discount>0?item.totalPrice+item.shippingCost-item.discount:0}</span>
+						<span className="pull-right total">合计：￥{item.totalPrice+item.shippingCost-item.discount-item.cut>0?item.totalPrice+item.shippingCost-item.discount-item.cut:0}</span>
 					</div>
 					<div className="order-list-button">
 						<span className="pull-right text" onClick={this._delHandler.bind(this,item.orderSerialNum)}>删除订单</span>

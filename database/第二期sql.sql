@@ -88,3 +88,4 @@ CREATE TABLE web_binding_rewards (
   time DATETIME DEFAULT(GETDATE())
 );
 
+alter table web_orders add cut decimal(15,2) not null default 0 ; 

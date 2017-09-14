@@ -36,6 +36,7 @@
 		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
 		<result column="Accounts" property="accounts" jdbcType="DOUBLE" />
 		<result column="IsEnd" property="isEnd" jdbcType="BIT" />
+		<result column="PickUpCode" property="pickUpCode" jdbcType="BIT" />
 	</resultMap>
 	<resultMap id="HongShiOrderItem" type="com.uclee.fundation.data.mybatis.model.HongShiOrderItem">
 		<id column="ID" property="id" jdbcType="INTEGER" />
@@ -109,7 +110,7 @@
 		 exec WSC_AddOrderItem #{pId,jdbcType=INTEGER},#{goodsCode,jdbcType=VARCHAR},#{goodsCount,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL}
 	</select>
 	<select id="signInAddPoint" resultMap="HongShiCommonResult">
-		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},'签到送积分'
+		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},#{tag,jdbcType=INTEGER}
 	</select>
 	<select id="lotteryPoint" resultMap="HongShiCommonResult">
 		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},'抽奖扣积分'

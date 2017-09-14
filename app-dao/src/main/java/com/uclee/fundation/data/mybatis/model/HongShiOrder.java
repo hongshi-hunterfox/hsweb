@@ -28,6 +28,36 @@ public class HongShiOrder {
 
 	private Boolean isComment;
 
+	private BigDecimal cut;
+
+	private String pickUpCode;
+
+	private String pickUpImageUrl;
+
+	public String getPickUpImageUrl() {
+		return pickUpImageUrl;
+	}
+
+	public void setPickUpImageUrl(String pickUpImageUrl) {
+		this.pickUpImageUrl = pickUpImageUrl;
+	}
+
+	public String getPickUpCode() {
+		return pickUpCode;
+	}
+
+	public void setPickUpCode(String pickUpCode) {
+		this.pickUpCode = pickUpCode;
+	}
+
+	public BigDecimal getCut() {
+		return cut;
+	}
+
+	public void setCut(BigDecimal cut) {
+		this.cut = cut;
+	}
+
 	public Boolean getIsComment() {
 		return isComment;
 	}

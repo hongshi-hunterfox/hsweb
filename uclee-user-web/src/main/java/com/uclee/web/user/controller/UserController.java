@@ -769,31 +769,35 @@ public class UserController extends CommonUserHandler{
 		map.put("config", configs);
 		Map<String,List<String>> extraData = new HashMap<String,List<String>>();
 		for(RechargeConfig config:configs){
-			RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(config.getId(),userId);
-			if(record==null||(config.getLimit()!=null&&config.getLimit()>record.getCount())){
-				List<String> extra = new ArrayList<String>();
-				int i = 1;
-				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
-				if (coupon!=null&&coupon.size()>0) {
-					String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
-					i++;
-					extra.add(tmp);
+			if(config.getStartTime()!=null&&config.getEndTime()!=null&&new Date().after(config.getStartTime())&&new Date().before(config.getEndTime())){
+				RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(config.getId(),userId);
+				if(record==null||(config.getLimit()!=null&&config.getLimit()>record.getCount())){
+					List<String> extra = new ArrayList<String>();
+					int i = 1;
+					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
+					if (coupon!=null&&coupon.size()>0) {
+						String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
+						i++;
+						extra.add(tmp);
+					}
+					extra.add(config.getMoney() + "元优惠券1张");
+					extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
+					List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
+					if (coupon!=null&&coupon.size()>0) {
+						String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
+						i++;
+						extra.add(tmp);
+					}
+					List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
+					if (coupon!=null&&coupon.size()>0) {
+						String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
+						i++;
+						extra.add(tmp);
+					}
+					extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()),extra);
 				}
-				extra.add(config.getMoney() + "元优惠券1张");
-				extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
-				List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
-				if (coupon!=null&&coupon.size()>0) {
-					String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
-					i++;
-					extra.add(tmp);
-				}
-				List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
-				if (coupon!=null&&coupon.size()>0) {
-					String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
-					i++;
-					extra.add(tmp);
-				}
-				extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()),extra);
+			}else{
+				logger.error("不在充值优惠期间");
 			}
 		}
 		map.put("extraData", extraData);
@@ -1002,6 +1006,9 @@ public class UserController extends CommonUserHandler{
 			}else{
 				map.put("couponAmount",0);
 			}
+			List<HongShiOrder> orders = hongShiMapper.getHongShiOrder(tt.getOauthId(),false);
+			int deliCount = orders.size();
+			map.put("deliCount", deliCount);
 		}
 		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
 		SignRecord existed = signRecordMapper.selectToday(userId,today);
@@ -1014,6 +1021,7 @@ public class UserController extends CommonUserHandler{
 		map.put("unPayCount", unPayCount);
 		int unCommentCount = userService.getUnCommentCount(userId);
 		map.put("unCommentCount", unCommentCount);
+
 		return map;
 	}
 

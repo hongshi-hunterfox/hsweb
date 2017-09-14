@@ -76,11 +76,16 @@ public class HongShiVipController {
 						}else{
 							ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
 						}
-						if(userProfile.getVipJbarcode()!=null&&userProfile.getVipJbarcode().length()>2){
-							ret.get(0).setVipJbarcode(userProfile.getVipJbarcode());
-						}else{
-							ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+						try{
+							if(userProfile.getVipJbarcode()!=null&&userProfile.getVipJbarcode().length()>2){
+								ret.get(0).setVipJbarcode(userProfile.getVipJbarcode());
+							}else{
+								ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+							}
+						}catch (Exception e){
+							e.printStackTrace();
 						}
+
 						ret.get(0).setAllowRecharge(true);
 						ret.get(0).setAllowPayment(true);
 						if(ret.get(0).getState()==0){
@@ -171,7 +176,7 @@ public class HongShiVipController {
 					List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 					OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
 					if(oauthLogin!=null&&bindingRewards!=null&&bindingRewards.size()>0){
-						hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),bindingRewards.get(0).getPoint());
+						hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),bindingRewards.get(0).getPoint(),"绑会员送积分");
 						for(int i=0;i<bindingRewards.get(0).getAmount();i++){
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
 							if (coupon != null && coupon.size() > 0) {
