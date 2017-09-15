@@ -1,4 +1,4 @@
---use Modeldb
+--use Modeldb4
 /*
 与微商城对接的更新
 函数：
@@ -232,6 +232,9 @@
 
 2017-09-11
   存储过程【NewVip】中,新添加的会员,不指定默认折扣值,直接依靠【会员】表【折扣】字段默认值【DF__会员__状态__4D7622B8】来定值
+
+2017-09-14
+  存储过程【WSC_GetOrdersList】添加了一列【PickUpCode】，其内容是提货码
 */
 /******************************************************************************/
 /*
@@ -330,8 +333,28 @@ Begin
   Else
     Select @SortCode=编号 From goods_sort Where 名称='加收费'
   --添加商品"运费",类别为"加收费",单价为1
-  Insert Into goods(编号,名称,类别编号,销售主价,成本价)Values('SYS_001', '运费', @SortCode, 1, 1)
+  Insert Into goods(编号,名称,规格,单位,换算单位,换算率
+                   ,类别编号,是否销售,销售主价,成本价
+                   ,产地编号,叫货控制,停用日期,是否库存)
+         Values('SYS_001', '运费', '', '元', '元',1
+               ,@SortCode, 1 ,1, 1
+               ,'10101',0,convert(varchar(10),getdate()+3650,120),0)
 End
+Else
+  Update goods
+  Set 名称     = '运费'
+    , 规格     = ''
+    , 单位     = ''
+    , 换算单位 = ''
+    , 换算率   = 1
+    , 是否销售 = 1
+    , 销售主价 = 1
+    , 成本价   = 1
+    , 产地编号 = '10101'
+    , 叫货控制 = 0
+    , 停用日期 = convert(varchar(10),getdate()+3650,120)
+    , 是否库存 = 0
+  Where 编号='SYS_001'
 Go
 /******************************************************************************/
 --确保[会员身份]表有效可用
@@ -418,9 +441,9 @@ Begin
         From 充值明细表 a 
         Left Join 充值表 b On a.pid=b.id 
         Where b.建立日期 >= @dStart And a.编号=@cVipCode
-          And a.金额<>0 And Isnull(a.备注,'')<>''
+          And a.金额<>0 And IsNull(a.备注,'')<>''
           And a.备注 Like '[0-9][0-9][0-9]%'
-          And DataLength(rtrim(a.备注))<6
+          And Len(RTrim(a.备注))<6
         Union All
         --统一结算中会员积分支付(零售与订单)
         Select Case 来源 When 0 Then'零售' Else'订单' End,业务ID
@@ -434,7 +457,7 @@ Begin
           And A.备注=@cVipCode And A.建立时间>= @dStart
         Union All
         --旧的零售中积分兑换记录
-        Select '零售',A.id,A.单号,A.建立日期,Null,0,0-substring(B.备注,5,10),当前余额,0 As 余额,当前积分
+        Select '零售',A.id,A.单号,A.建立日期,Null,0,0-SubString(B.备注,5,10),当前余额,0 As 余额,当前积分
         From sales As A
         Inner Join sales_detail As b On A.ID=B.销售ID
         Where A.建立日期 >= @dStart And A.往来编号=@cVipCode And B.备注 Like '减积分:%'
@@ -580,12 +603,20 @@ Begin
        不指定则返回所有没有绑定外键的会员
   */
   If @cWeiXinCode Is Null Or len(@cWeiXinCode)=0
-    Select * 
+    Select ID,编号,名称,生日,是否农历,电话,积分,折扣,最近时间,最近部门,状态,截止日期
+          ,是否充值,卡金额,卡余额,建立时间,内码,身份证号,工作单位,审核人,记帐人,备注
+          ,卡现金,卡赠送,换卡余额,换卡积分,换卡日期,换卡编号,是否积分,会员生日
+          ,所属编号,会员类别,是否购物券,客户编号,会员卡类型,积分比例,限额
+          ,会员等级类型,oID,Ocode,首次充值
     From 会员 
     Where id Not In(Select Distinct 会员ID 
                     From 会员身份)
   Else
-    Select * 
+    Select ID,编号,名称,生日,是否农历,电话,积分,折扣,最近时间,最近部门,状态,截止日期
+          ,是否充值,卡金额,卡余额,建立时间,内码,身份证号,工作单位,审核人,记帐人,备注
+          ,卡现金,卡赠送,换卡余额,换卡积分,换卡日期,换卡编号,是否积分,会员生日
+          ,所属编号,会员类别,是否购物券,客户编号,会员卡类型,积分比例,限额
+          ,会员等级类型,oID,Ocode,首次充值
     From 会员 
     Where id In(Select 会员ID 
                 From 会员身份 
@@ -1049,6 +1080,7 @@ Begin
       Where A.状态=1 And B.往来编号=@DepartmentCode
         And A.截止日期>=getdate()
         And A.产品编号=@GoodsCode
+      Order By b.出库时间
     End
   Else If IsNull(@DepartmentCode, '') <> ''
     Begin
@@ -1060,6 +1092,7 @@ Begin
       Left Join 礼券出库表 As B On A.编号=B.编号
       Where A.状态=1 And B.往来编号=@DepartmentCode
         And A.截止日期>=getdate()
+      Order By b.出库时间
     End
   Else If IsNull(@VipCode, '') <> ''
     Begin
@@ -1072,6 +1105,7 @@ Begin
       Where b.往来编号=@VipCode
         And a.状态=2 and a.是否回收=0
         And a.截止日期>=getdate()
+      Order By a.截止日期
     End
   Else If IsNull(@VoucherCode, '') <> ''
     Begin
@@ -1592,6 +1626,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='查询指定会员的订单'
       Select * ,0 As Hierarchy From orders
       Where 日期 Between @StartDate And @EndDate And 往来编号=@VipCode
+      Order By 建立日期
     End
   Else If @authcode<>''
     Begin--查询指定会员的下级会员分销订单
@@ -2276,7 +2311,9 @@ Go
 Create Procedure [WSC_GetVouchers]
        @WeiXinCode  varchar(50)='',--会员外键
        @VoucherCode varchar(20)='',--券编号
-       @GoodsCode   varchar(10)='' --券的产品编号
+       @GoodsCode   varchar(10)='',--券的产品编号
+       @VouchersCode1 varchar(20)='',--券的起码
+       @VouchersCode2 varchar(20)='' --券的止码
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2320,7 +2357,10 @@ Begin
       Select @cDepart = 编号 From department Where 简称='公众号'
       Insert Into #tmp_WSC_GetVouchers Exec GetVouchers @cDepart
     End
-  Select * From #tmp_WSC_GetVouchers
+  If IsNull(@VouchersCode1, '') <> '' And IsNull(@VouchersCode2, '') <> ''
+    Select * From #tmp_WSC_GetVouchers Where VouchersCode Between @VouchersCode1 And @VouchersCode2
+  Else
+    Select * From #tmp_WSC_GetVouchers
   Drop Table #tmp_WSC_GetVouchers 
 End
 Go
@@ -2573,12 +2613,14 @@ Begin
   If @IsEnd Is Null
     Begin
       Exec Loger @LogID,@ExtendInfo='结果集以[CreateTime]倒序排序'
-      Select * From #tmp_WSC_GetOrdersList Order By CreateTime Desc
+      Select *,dbo.fn_GetPickUpCode(Outer_OrderCode) As PickUpCode 
+      From #tmp_WSC_GetOrdersList Order By CreateTime Desc
     End
   Else 
     Begin
       Exec Loger @LogID,@ExtendInfo='提取相应结单状态的记录作为结果集,以[CreateTime]倒序排序'
-      Select * From #tmp_WSC_GetOrdersList Where IsEnd=@IsEnd Order By CreateTime Desc
+      Select *,dbo.fn_GetPickUpCode(Outer_OrderCode) As PickUpCode
+      From #tmp_WSC_GetOrdersList Where IsEnd=@IsEnd Order By CreateTime Desc
     End
   Drop Table #tmp_WSC_GetOrdersList
 End
@@ -3028,7 +3070,7 @@ Begin
     If Exists(Select * From [EventLog] Where ID=@ID And [Parameters] Is Null)
       Update [EventLog] Set [Parameters]='{'+@Parameters+'}' Where ID=@ID
     Else
-      Update [EventLog] Set [Parameters]=SubString([Parameters], 1, DataLength([Parameters]) - 1) + ',' + @Parameters + '}' Where ID=@ID
+      Update [EventLog] Set [Parameters]=SubString([Parameters], 1, Len([Parameters]) - 1) + ',' + @Parameters + '}' Where ID=@ID
   If @ExtendInfo Is Not Null 
     If Exists(Select * From [EventLog] Where ID=@ID And [ExtendInfo] Is Null)
       Update [EventLog] Set [ExtendInfo]=@ExtendInfo Where ID=@ID
