@@ -374,21 +374,24 @@ class Order extends React.Component {
              <div className="order-total">
               满减：<span className="money">¥{this.state.cut}</span>
             </div>
-             <div className="order-sales">
-               <div onClick={this.salesInfoShowClick} className='order-sales-top'>
-                <span className='order-sales-tag'>
-                  营销
-                    
-                </span>
+
                 {
                   this.state.salesInfo.length>=1&&!this.state.salesInfoShow?
-                  <span className='order-sales-text'>
-                      {this.state.salesInfo[0]}...
-                  </span>:null
+                  <div className="order-sales">
+                     <div onClick={this.salesInfoShowClick} className='order-sales-top'>
+                      <span className='order-sales-tag'>
+                        营销
+                          
+                      </span>
+                      <span className='order-sales-text'>
+                            {this.state.salesInfo[0]}...
+                        </span>
+                        <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
+                    </div>
+                  :null
                 }
                 
-                <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
-              </div>
+                
               <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
                 {this.state.salesInfo.map((item,index)=>{
                   return(
