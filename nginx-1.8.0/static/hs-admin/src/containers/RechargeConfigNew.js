@@ -28,7 +28,10 @@ class RechargeConfigNew extends React.Component {
     super(props)
     this.state = {
       err: null,
-      rechargeConfig:{},
+      rechargeConfig:{
+        startTimeStr:'',
+        endTimeStr:''
+      },
       startMoment:moment(),
       endMoment:moment()
     }
@@ -133,11 +136,11 @@ class RechargeConfigNew extends React.Component {
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">优惠券2对应商品号：</label>
-              <input type='text' name='voucherCodeSecond' value={this.state.rechargeConfig.voucherCodeSecond?this.state.rechargeConfig.voucherCodeSecond:''} onChange={this._handleChange.bind(this, 'voucherCodeSecond')}/>
+              <input type='text' name='voucherCodeSecond' value={this.state.rechargeConfig.voucherCodeSecond} onChange={this._handleChange.bind(this, 'voucherCodeSecond')}/>
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">优惠券2赠送数量：</label>
-              <input type='text' name='amountSecond' value={this.state.rechargeConfig.amountSecond?this.state.rechargeConfig.amountSecond:''} onChange={this._handleChange.bind(this, 'amountSecond')}/>
+              <input type='text' name='amountSecond' value={this.state.rechargeConfig.amountSecond} onChange={this._handleChange.bind(this, 'amountSecond')}/>
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">优惠券3对应商品号：</label>

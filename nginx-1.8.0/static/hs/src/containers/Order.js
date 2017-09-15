@@ -388,21 +388,22 @@ class Order extends React.Component {
                         </span>
                         <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
                     </div>
+                    <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
+                      {this.state.salesInfo.map((item,index)=>{
+                        return(
+                          <div className='order-sales-item' key={index}>
+                            {item}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    
+                  </div>
                   :null
                 }
                 
                 
-              <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
-                {this.state.salesInfo.map((item,index)=>{
-                  return(
-                    <div className='order-sales-item' key={index}>
-                      {item}
-                    </div>
-                  )
-                })}
-              </div>
               
-            </div>
             <div className="order-submit">
               合计：¥
               {this.state.total -

@@ -9,6 +9,7 @@ import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.dynamicDatasource.DynamicDataSourceManager;
 import com.uclee.dynamicDatasource.DynamicDataSourceManagerHeyp;
 import com.uclee.fundation.config.links.TermGroupTag;
+import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
@@ -29,6 +30,7 @@ import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.payment.strategy.wcPaymetnTools.PayImpl;
 import com.uclee.payment.strategy.wcPaymetnTools.UniteOrder;
+import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import org.junit.Test;
@@ -99,6 +101,14 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	private UserProfileMapper userProfileMapper;
 	@Autowired
 	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private BalanceMapper balanceMapper;
+	@Autowired
+	private ConfigMapper configMapper;
+	@Autowired
+	private  BalanceLogMapper balanceLogMapper;
 	@Test
 	public void testFreight(){
 		datasource.switchDataSource("hs");
@@ -267,21 +277,110 @@ public class DuobaoServiceTest extends AbstractServiceTests {
         //
         sql="CREATE TABLE web_role_permission_link(   role_id int  NOT NULL,   permission_id int NOT NULL);";
         jdbcTemplatefwefwef.execute(sql);
+
+	}
+	private Balance getBalance(Integer userId) {
+		Balance balance = balanceMapper.selectByUserId(userId);
+		if(balance==null){
+			Balance tmp = new Balance();
+			tmp.setBalance(new BigDecimal(0));
+			tmp.setUserId(userId);
+			if(balanceMapper.insertSelective(tmp)>0){
+				return tmp;
+			}else{
+				return null;
+			}
+
+		}
+		return balance;
 	}
 	@Test
 	public void test1() throws Exception{
 		datasource.switchDataSource("kf");
-		/*List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
-		logger.info("t: " + JSON.toJSONString(t));
-		for(DataSourceInfo info:t) {
-			if(!info.getMerchantCode().equals("master")) {
-				dataSource.switchDataSource(info.getMerchantCode());
-				Var var = varMapper.selectByPrimaryKey(new Integer(1));
-				logger.info(JSON.toJSONString(var));
-					duobaoService.getGolbalAccessToken();
+		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15054624651135084");
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
+		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(paymentOrder.getMoney());
+
+		BigDecimal realMoney = paymentOrder.getMoney();
+		if(rechargeConfig!=null){
+			//优惠券处理
+			if(rechargeConfig.getStartTime()!=null&&rechargeConfig.getEndTime()!=null&&new Date().after(rechargeConfig.getStartTime())&&new Date().before(rechargeConfig.getEndTime())){
+				try{
+					RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),paymentOrder.getUserId());
+					boolean isSend=false;
+					if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
+						for(int i=0;i<rechargeConfig.getAmount();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						for(int i=0;i<rechargeConfig.getAmountSecond();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						for(int i=0;i<rechargeConfig.getAmountThird();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						if(isSend){
+							if(record==null){
+								RechargeRewardsRecord tmp = new RechargeRewardsRecord();
+								tmp.setConfigId(rechargeConfig.getId());
+								tmp.setCount(1);
+								tmp.setUserId(paymentOrder.getUserId());
+								rechargeRewardsRecordMapper.insertSelective(tmp);
+							}else{
+								record.setCount(record.getCount()+1);
+								rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				realMoney = realMoney.add(rechargeConfig.getRewards());
+			}else{
+				logger.error("不在赠送时期");
 			}
-		}*/
-		System.out.println(JSON.toJSONString(userService.getProductDtoById(1)));
+		}
+		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId())
+				.setcWeiXinOrderCode(paymentOrder.getPaymentSerialNum())
+				.setnAddMoney(realMoney);
+		Integer res=hongShiVipService.hongShiRecharge(dd);
+		//发送充值成功微信通知
+		if(res==0){
+			paymentOrder.setIsSync(true);
+			paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder);
+			String[] key = {"keyword1","keyword2"};
+			String[] value = {DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString()};
+			Config config = configMapper.getByTag("rechargeTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
+			if(config!=null) {
+				userService.sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/recharge-list?merchantCode="+config1.getValue(), "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
+			}
+		}
 	}
 	
 	@Test

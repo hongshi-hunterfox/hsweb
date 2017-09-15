@@ -766,10 +766,11 @@ public class UserController extends CommonUserHandler{
 		map.put("payment", payments);
 		//获取充值配置
 		List<RechargeConfig> configs = backendService.selectAllRechargeConfig();
-		map.put("config", configs);
 		Map<String,List<String>> extraData = new HashMap<String,List<String>>();
 		for(RechargeConfig config:configs){
 			if(config.getStartTime()!=null&&config.getEndTime()!=null&&new Date().after(config.getStartTime())&&new Date().before(config.getEndTime())){
+				map.put("inTime", true);
+				config.setInTime(true);
 				RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(config.getId(),userId);
 				if(record==null||(config.getLimit()!=null&&config.getLimit()>record.getCount())){
 					List<String> extra = new ArrayList<String>();
@@ -797,9 +798,12 @@ public class UserController extends CommonUserHandler{
 					extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()),extra);
 				}
 			}else{
+				map.put("inTime", false);
+				config.setInTime(false);
 				logger.error("不在充值优惠期间");
 			}
 		}
+		map.put("config", configs);
 		map.put("extraData", extraData);
 		OauthLogin login = userService.getOauthLoginInfoByUserId(userId);
 		if(login!=null){

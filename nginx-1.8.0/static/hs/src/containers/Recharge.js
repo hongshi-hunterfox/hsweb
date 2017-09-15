@@ -61,7 +61,8 @@ class Recharge extends React.Component {
 			hongShiVip:{},
 			type:1,
 			voucherText:'',
-			extraData:{}
+			extraData:{},
+			inTime:true
 	    }
 	  }
 
@@ -80,7 +81,7 @@ class Recharge extends React.Component {
 	render() {
 		var money = this.state.config.map((item, index) => {
 				return (
-					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type)}>{item.money}</div>
+					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
 				);
 		});
 		console.log(this.state.extraData);
@@ -97,8 +98,8 @@ class Recharge extends React.Component {
 						{money}
 
 					</div>
-					{this.state.rewards!==0?<div className='payment-note'>已选充值优惠： 充值<span className='gold'>{this.state.rechargeMoney}</span>，赠送<span className='gold'>{this.state.rewards}</span></div>:null}
-					{this.state.rewards!==0?<div className='payment-info'>
+					{this.state.rewards!==0&&this.state.inTime?<div className='payment-note'>已选充值优惠： 充值<span className='gold'>{this.state.rechargeMoney}</span>，赠送<span className='gold'>{this.state.rewards}</span></div>:null}
+					{this.state.rewards!==0&&this.state.inTime?<div className='payment-info'>
 						实际到账: <span className='gold'>{this.state.rechargeMoney+this.state.rewards}</span>，应付金额：<span className='gold'>{this.state.rechargeMoney}</span>
 					</div>:null}
 					{
@@ -132,20 +133,13 @@ class Recharge extends React.Component {
 		);
 	}
 
-	_clickHandler = (money,rewards,voucherText,type) =>{
-		if(type===1){
+	_clickHandler = (money,rewards,voucherText,type,inTime) =>{
 			this.setState({
 				rechargeMoney:money,
 				rewards:rewards,
-				type:type
+				type:type,
+				inTime:inTime
 			});
-		}else{
-			this.setState({
-				rechargeMoney:money,
-				voucherText:voucherText,
-				type:type
-			});
-		}
 	}
 	_getMarkup = () => {
 		return {

@@ -31,7 +31,17 @@ public class RechargeConfig {
 
     private Date endTime;
 
-    private String startTimeStr;
+    private boolean inTime;
+
+	public boolean isInTime() {
+		return inTime;
+	}
+
+	public void setInTime(boolean inTime) {
+		this.inTime = inTime;
+	}
+
+	private String startTimeStr;
 
     private String endTimeStr;
 
