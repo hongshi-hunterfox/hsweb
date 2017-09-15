@@ -98,20 +98,23 @@ const DetailPick = (props) => {
 const DetailSales = (props) => {
   return (
     <div className="detail-sales">
-       <div onClick={props.salesInfoShowClick} className='detail-sales-top'>
-        <span className='detail-sales-tag'>
-          优惠
-            
-        </span>
+
         {
           props.salesInfo.length>=1&&!props.salesInfoShow?
-          <span className='detail-sales-text'>
-              {props.salesInfo[0]}...
-          </span>:null
+          <div onClick={props.salesInfoShowClick} className='detail-sales-top'>
+            <span className='detail-sales-tag'>
+              优惠
+                
+            </span>
+            <span className='detail-sales-text'>
+                  {props.salesInfo[0]}...
+              </span>
+              <Icon className="detail-sales-icon" name={props.salesInfoShow?'chevron-down':'chevron-right'} />
+          </div>
+          :null
         }
         
-        <Icon className="detail-sales-icon" name={props.salesInfoShow?'chevron-down':'chevron-right'} />
-      </div>
+        
       <div className={'detail-sales-info ' +(!props.salesInfoShow?'none':'')}>
         {props.salesInfo.map((item,index)=>{
           return(
