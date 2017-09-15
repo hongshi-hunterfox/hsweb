@@ -20,7 +20,7 @@ CREATE TABLE web_message (
 CREATE TABLE web_comment (
   id int identity (1,1) primary key,
   user_id int not null,
-  orderSerialNum varchar(255) NOT NULL,
+  order_serial_num varchar(255) NOT NULL,
   title varchar(1024) not null DEFAULT '',
   deliver int NOT NULL DEFAULT 5,
   service int NOT NULL DEFAULT 5,
