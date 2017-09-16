@@ -33,7 +33,9 @@ class RechargeConfigNew extends React.Component {
         endTimeStr:''
       },
       startMoment:moment(),
-      endMoment:moment()
+      endMoment:moment(),
+      startTimestamp:0,
+      endTimestamp:0
     }
   }
 
@@ -183,6 +185,12 @@ class RechargeConfigNew extends React.Component {
     if(!data.money){
       this.setState({
         err: '请输入金额'
+      })
+      return false;
+    }
+    if(this.state.startMoment>=this.state.endMoment){
+      this.setState({
+        err: '开始时间需小于结束时间'
       })
       return false;
     }

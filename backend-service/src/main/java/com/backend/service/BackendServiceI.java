@@ -83,9 +83,9 @@ public interface BackendServiceI {
 
 	List<Category> getCategoryList();
 
-	boolean delCategory(Integer categoryId);
+	Map<String,Object> delCategory(Integer categoryId);
 
-	boolean editCategory(Category category);
+	Map<String,Object> editCategory(Category category);
 
 	Category getCategoryById(Integer categoryId);
 
@@ -114,4 +114,6 @@ public interface BackendServiceI {
 	List<BindingRewards> selectAllBindingRewards();
 
 	boolean updateBindingRewards(FreightPost freightPost);
+
+	NapaStore getHongShiStore(String hsCode);
 }

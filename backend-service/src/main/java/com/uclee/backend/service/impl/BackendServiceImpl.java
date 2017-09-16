@@ -8,12 +8,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
@@ -905,6 +900,14 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return null;
 	}
+	@Override
+	public NapaStore getHongShiStore(String hsCode) {
+		List<NapaStore> napaStores = napaStoreMapper.selectByHsCode(hsCode);
+		if(napaStores!=null&&napaStores.size()>=1){
+			return napaStores.get(0);
+		}
+		return null;
+	}
 
 	@Override
 	public List<ProductDto> selectAllProductByCatId(Integer categoryId) {
@@ -928,27 +931,67 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
-	public boolean delCategory(Integer categoryId) {
-		return categoryMapper.deleteByPrimaryKey(categoryId)>0;
+	public Map<String,Object> delCategory(Integer categoryId) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		List<ProductCategoryLinkKey> productCategoryLinkKeys = productCategoryLinkMapper.selectByCId(categoryId);
+		if(productCategoryLinkKeys!=null&&productCategoryLinkKeys.size()>0){
+			ret.put("result",false);
+			ret.put("reason","不可删除已经有下属产品的类别");
+			return ret;
+		}
+		if(categoryMapper.deleteByPrimaryKey(categoryId)>0){
+			ret.put("result",true);
+		}else{
+			ret.put("result",false);
+			ret.put("reason","网络繁忙");
+		}
+		return ret;
 	}
 
 	@Override
-	public boolean editCategory(Category category) {
+	public Map<String,Object> editCategory(Category category) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
 		if(category.getCategoryId()!=null){
 			Category tmp = categoryMapper.selectByPrimaryKey(category.getCategoryId());
+			Category tmp2 = categoryMapper.selectByName(category.getCategory());
+			if(tmp2!=null&&tmp2.getCategoryId()!=category.getCategoryId()){
+				ret.put("result",false);
+				ret.put("reason","该类别已经存在，不可重复添加");
+				return ret;
+			}
 			if(tmp!=null){
 				tmp.setCategory(category.getCategory());
-				return categoryMapper.updateByPrimaryKeySelective(category)>0;
+				if(categoryMapper.updateByPrimaryKeySelective(category)>0){
+					ret.put("result",true);
+				}else{
+					ret.put("result",false);
+					ret.put("reason","网络繁忙");
+				}
+				return ret;
 			}else{
-				return false;
+				ret.put("result",false);
+				ret.put("reason","网络繁忙");
+				return ret;
 			}
 		}else{
 			if(category.getCategory()!=null){
 				category.setParentId(0);
-				return categoryMapper.insertSelective(category)>0;
+				Category tmp2 = categoryMapper.selectByName(category.getCategory());
+				if(tmp2!=null){
+					ret.put("result",false);
+					ret.put("reason","该类别已经存在，不可重复添加");
+					return ret;
+				}
+				if(categoryMapper.insertSelective(category)>0){
+					ret.put("result",true);
+				}else{
+					ret.put("result",false);
+					ret.put("reason","网络繁忙");
+				}
+				return ret;
 			}
 		}
-		return false;
+		return ret;
 	}
 
 	@Override

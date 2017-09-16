@@ -651,6 +651,12 @@ class Product extends React.Component {
         err: '请填写标题'
       })
     }
+    if (Number(data.sale)<0) {
+      alert("sdg");
+      return this.setState({
+        err: '销量需大于0'
+      })
+    }
 
     var params=data.title+'';
     if(this.props.params.id){

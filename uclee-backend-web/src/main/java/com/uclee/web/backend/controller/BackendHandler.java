@@ -43,11 +43,11 @@ public class BackendHandler {
 		return backendService.sendUnbuyMsg(userId);
 	}
 	@RequestMapping("/delCategory")
-	public @ResponseBody boolean delCategory(HttpServletRequest request,Integer categoryId) {
+	public @ResponseBody Map<String,Object> delCategory(HttpServletRequest request,Integer categoryId) {
 		return backendService.delCategory(categoryId);
 	}
 	@RequestMapping("/editCategory")
-	public @ResponseBody boolean editCategory(HttpServletRequest request,@RequestBody Category category) {
+	public @ResponseBody Map<String,Object> editCategory(HttpServletRequest request,@RequestBody Category category) {
 		return backendService.editCategory(category);
 	}
 	@RequestMapping("/freightHandler")

@@ -27,6 +27,12 @@
     from web_categories A left join web_products_categories_link B  on A.category_id=B.category_id
     where B.product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectByName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from web_categories
+    where category = #{category,jdbcType=VARCHAR}
+  </select>
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />

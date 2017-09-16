@@ -30,7 +30,12 @@ class CategoryList extends React.Component {
         if (err) {
           return err
         }
-        window.location='/category-list'
+        var data = JSON.parse(res.text)
+        if(data.result){
+          window.location='/category-list'
+        }else{
+          alert(data.reason);
+        }
       })
     }
   }

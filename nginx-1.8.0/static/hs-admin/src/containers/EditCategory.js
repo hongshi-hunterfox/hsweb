@@ -77,11 +77,11 @@ class EditCategory extends React.Component {
         return err
       }
 
-      console.log(res.body)
-      if (res.body) {
-        window.location = '/category-list'
-      } else {
-        alert('网络繁忙，请稍后重试')
+      var data = JSON.parse(res.text)
+      if(data.result){
+        window.location='/category-list'
+      }else{
+        alert(data.reason);
       }
     })
   }

@@ -161,6 +161,7 @@ public class BackendController {
 	public @ResponseBody Map<String,Object> getHongShiStoreName(HttpServletRequest request,String hsCode) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		map.put("storeName",backendService.getHongShiStoreName(hsCode));
+		map.put("store",backendService.getHongShiStore(hsCode));
 
 		return map;
 	}
