@@ -91,7 +91,7 @@ class AddUser extends React.Component {
         if(res.body.result==="success"){
           alert("添加成功！");
         }else{
-          alert("添加失败！手机已存在");
+          alert(res.body.reason);
         }
 
         browserHistory.push({

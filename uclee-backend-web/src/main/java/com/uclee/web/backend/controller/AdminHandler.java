@@ -1,6 +1,7 @@
 package com.uclee.web.backend.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.web.dto.StoreDto;
@@ -40,6 +41,9 @@ public class AdminHandler {
     private UserServiceI userService;
 
     @Autowired
+    private UserProfileMapper userProfileMapper;
+
+    @Autowired
     private HongShiServiceI hongShiService;
 
     @RequestMapping("doAddStore")
@@ -69,11 +73,19 @@ public class AdminHandler {
         Map<String,Object> map = new TreeMap<String,Object>();
         HttpSession session = request.getSession();
         logger.info("user:"+JSON.toJSONString(user));
+
         map.put("result","fail");
         if(user!=null){
+            UserProfile userProfile = userProfileMapper.selectByName(user.getName());
+            if(userProfile!=null){
+                map.put("reason","该名称已注册，请重新填写");
+                return map;
+            }
             boolean b = userService.addPhoneUser(user.getName(), user.getPhone());
             if(b) {
                 map.put("result", "success");
+            }else{
+                map.put("reason","添加失败！手机已存在");
             }
         }
 

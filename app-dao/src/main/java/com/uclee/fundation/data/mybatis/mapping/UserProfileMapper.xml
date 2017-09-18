@@ -41,6 +41,12 @@
     from web_user_profiles
     where profile_id = #{profileId,jdbcType=INTEGER}
   </select>
+  <select id="selectByName" resultMap="UserProfile">
+    select
+    <include refid="Base_Column_List" />
+    from web_user_profiles
+    where name = #{name,jdbcType=INTEGER}
+  </select>
   <select id="selectAllProfileList" resultMap="UserProfile">
     select A.image,A.name,convert(nvarchar(12),D.生日,102) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on 
 C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID

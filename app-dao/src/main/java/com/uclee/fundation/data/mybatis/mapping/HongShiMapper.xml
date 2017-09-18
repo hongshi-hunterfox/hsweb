@@ -104,7 +104,7 @@
 	</select>
 	<select id="createOrder" resultMap="CreateOrderResult">
 		exec WSC_CreateOrder '',#{WSC_TardNo,jdbcType=VARCHAR},#{PickUpTime,jdbcType=TIMESTAMP},#{WeiXinCode,jdbcType=VARCHAR},#{CallNumber,jdbcType=VARCHAR},#{Remarks,jdbcType=VARCHAR}
-		,#{Destination,jdbcType=VARCHAR},#{TotalAmount,jdbcType=DECIMAL},0,0,#{Payment,jdbcType=DECIMAL},#{Voucher,jdbcType=DECIMAL},'','',#{Department,jdbcType=VARCHAR}
+		,#{Destination,jdbcType=VARCHAR},#{TotalAmount,jdbcType=DECIMAL},0,0,#{Payment,jdbcType=DECIMAL},#{Voucher,jdbcType=DECIMAL},'','',#{Department,jdbcType=VARCHAR},#{Vouchers,jdbcType=VARCHAR}
 	</select>
 	<select id="createOrderItem" resultMap="CreateOrderItemResult">
 		 exec WSC_AddOrderItem #{pId,jdbcType=INTEGER},#{goodsCode,jdbcType=VARCHAR},#{goodsCount,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL}

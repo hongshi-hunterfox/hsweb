@@ -2959,6 +2959,7 @@ public class UserServiceImpl implements UserServiceI {
 					createOrderData.setWeiXinCode(oauthLogin.getOauthId());
 					createOrderData.setWSC_TardNo(order.getOrderSerialNum());
 					BigDecimal total = order.getTotalPrice();
+					createOrderData.setVouchers(order.getVoucherCode());
 					createOrderData.setPayment(paymentOrder.getMoney());
 					if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
@@ -3040,27 +3041,29 @@ public class UserServiceImpl implements UserServiceI {
 						//二级分销
 						if(firstDist!=null){
 							User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
-							Balance secondBalance = this.getBalance(secondDist.getUserId());
-							if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
-								BigDecimal secondMoney;
-								try {
-									secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-									secondMoney=new BigDecimal(0.01);
-								}
-								secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
-								if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
-									//记录日志
-									BalanceLog log = new BalanceLog();
-									log.setUserId(secondDist.getUserId());
-									log.setBalance(secondBalance.getBalance());
-									log.setMoney(secondMoney);
-									balanceLogMapper.insertSelective(log);
-									//记录订单分销信息
-									order.setFirstDistId(secondDist.getUserId());
-									order.setFirstDistMoney(secondMoney);
+							if(secondDist!=null) {
+								Balance secondBalance = this.getBalance(secondDist.getUserId());
+								if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
+									BigDecimal secondMoney;
+									try {
+										secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+										secondMoney=new BigDecimal(0.01);
+									}
+									secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
+									if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
+										//记录日志
+										BalanceLog log = new BalanceLog();
+										log.setUserId(secondDist.getUserId());
+										log.setBalance(secondBalance.getBalance());
+										log.setMoney(secondMoney);
+										balanceLogMapper.insertSelective(log);
+										//记录订单分销信息
+										order.setFirstDistId(secondDist.getUserId());
+										order.setFirstDistMoney(secondMoney);
+									}
 								}
 							}
 						}

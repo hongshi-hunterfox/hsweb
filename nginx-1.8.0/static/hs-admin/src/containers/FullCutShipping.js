@@ -182,6 +182,12 @@ class FullCutShipping extends React.Component {
       })
       return;
     }
+    if(this.state.startMoment>=this.state.endMoment){
+      this.setState({
+        err: '开始时间需小于结束时间'
+      })
+      return false;
+    }
     data.myKey = values1(data.myKey)
     data.myValue = values1(data.myValue)
     
