@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -76,8 +77,8 @@ public class AdminHandler {
 
         map.put("result","fail");
         if(user!=null){
-            UserProfile userProfile = userProfileMapper.selectByName(user.getName());
-            if(userProfile!=null){
+            List<UserProfile> userProfile = userProfileMapper.selectByName(user.getName());
+            if(userProfile!=null&&userProfile.size()>0){
                 map.put("reason","该名称已注册，请重新填写");
                 return map;
             }

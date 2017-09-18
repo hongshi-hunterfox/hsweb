@@ -35,5 +35,5 @@ public interface UserProfileMapper {
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
-    UserProfile selectByName(String name);
+    List<UserProfile> selectByName(String name);
 }
