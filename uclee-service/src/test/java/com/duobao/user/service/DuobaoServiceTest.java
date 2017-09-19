@@ -2,6 +2,8 @@ package com.duobao.user.service;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.service.BackendServiceI;
+import com.uclee.QRCode.util.BarcodeUtil;
+import com.uclee.QRCode.util.MyQRCode;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.dynamicDatasource.DBContextHolder;
@@ -27,6 +29,7 @@ import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
 import com.uclee.fundation.data.mybatis.mapping.VarMapper;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.payment.strategy.wcPaymetnTools.PayImpl;
 import com.uclee.payment.strategy.wcPaymetnTools.UniteOrder;
@@ -37,10 +40,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -87,6 +87,10 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	private PaymentMapper paymentMapper;
 	@Autowired
 	private PaymentOrderMapper paymentOrderMapper;
+	@Autowired
+	private FDFSFileUpload fDFSFileUpload;
+	@Autowired
+	private CommentMapper commentMapper;
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
@@ -296,90 +300,84 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	@Test
 	public void test1() throws Exception{
-		datasource.switchDataSource("kf");
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15054624651135084");
-		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
-		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(paymentOrder.getMoney());
-
-		BigDecimal realMoney = paymentOrder.getMoney();
-		if(rechargeConfig!=null){
-			//优惠券处理
-			if(rechargeConfig.getStartTime()!=null&&rechargeConfig.getEndTime()!=null&&new Date().after(rechargeConfig.getStartTime())&&new Date().before(rechargeConfig.getEndTime())){
-				try{
-					RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),paymentOrder.getUserId());
-					boolean isSend=false;
-					if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
-						for(int i=0;i<rechargeConfig.getAmount();i++) {
-							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
-							if (coupon != null && coupon.size() > 0) {
-								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
-									isSend=true;
-								} catch (Exception e) {
-
-								}
-							}
-						}
-						for(int i=0;i<rechargeConfig.getAmountSecond();i++) {
-							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
-							if (coupon != null && coupon.size() > 0) {
-								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
-									isSend=true;
-								} catch (Exception e) {
-
-								}
-							}
-						}
-						for(int i=0;i<rechargeConfig.getAmountThird();i++) {
-							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
-							if (coupon != null && coupon.size() > 0) {
-								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
-									isSend=true;
-								} catch (Exception e) {
-
-								}
-							}
-						}
-						if(isSend){
-							if(record==null){
-								RechargeRewardsRecord tmp = new RechargeRewardsRecord();
-								tmp.setConfigId(rechargeConfig.getId());
-								tmp.setCount(1);
-								tmp.setUserId(paymentOrder.getUserId());
-								rechargeRewardsRecordMapper.insertSelective(tmp);
-							}else{
-								record.setCount(record.getCount()+1);
-								rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
-							}
+		datasource.switchDataSource("hs");
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(26);
+		if (oauthLogin!=null) {
+			List<HongShiOrder> orders = hongShiMapper.getHongShiOrder(oauthLogin.getOauthId(),false);
+			logger.info(JSON.toJSONString(orders));
+			for (HongShiOrder order : orders) {
+				logger.info(JSON.toJSONString(order));
+				BigDecimal discount = new BigDecimal(0);
+				BigDecimal total = new BigDecimal(0);
+				List<HongShiOrderItem> orderItems = hongShiMapper.getHongShiOrderItems(order.getId());
+				for (HongShiOrderItem item : orderItems) {
+					HongShiGoods goods = hongShiMapper.getHongShiGoods(item.getCode());
+					if (goods != null) {
+						ProductImageLink link = productImageLinkMapper.selectByHongShiGoodsCodeLimit(goods.getCode());
+						if (link != null) {
+							goods.setImage(link.getImageUrl());
 						}
 					}
-				}catch (Exception e){
-					e.printStackTrace();
+					item.setHongShiGoods(goods);
+					total = total.add(new BigDecimal(item.getPrice()).multiply(new BigDecimal(item.getCount())));
 				}
-				realMoney = realMoney.add(rechargeConfig.getRewards());
-			}else{
-				logger.error("不在赠送时期");
+				Comment comment = commentMapper.selectByOrderId(order.getOuterOrderCode());
+				if(comment==null){
+					order.setIsComment(false);
+				}else{
+					order.setIsComment(true);
+				}
+				Order tmp = orderMapper.selectBySerialNum(order.getOuterOrderCode());
+				order.setOrderItems(orderItems);
+				if(tmp!=null){
+					if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
+						try {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(tmp.getVoucherCode());
+							if(coupon!=null&&coupon.size()>0){
+								discount = coupon.get(0).getPayQuota();
+							}else{
+							}
+						} catch (Exception e) {
+						}
+					}
+					order.setShippingCost(tmp.getShippingCost());
+					order.setIsSelfPick(tmp.getIsSelfPick());
+					NapaStore napaStore = napaStoreMapper.selectByPrimaryKey(tmp.getStoreId());
+					if(napaStore!=null){
+						order.setPickAddr(napaStore.getProvince()+napaStore.getCity()+napaStore.getRegion()+napaStore.getAddrDetail());
+					}
+					order.setCut(tmp.getCut());
+					if(tmp.getPickUpImage()==null||tmp.getPickUpImage().length()<2){
+						File file = MyQRCode.generateQRCode(600,600,order.getPickUpCode());
+						String pickUpImage = fDFSFileUpload.getFileId(file);
+						tmp.setPickUpImage(pickUpImage);
+
+					}
+					if(tmp.getPickUpBarcode()==null||tmp.getPickUpBarcode().length()<2){
+						try{
+							File file = BarcodeUtil.generateFile(order.getPickUpCode(), System.getProperty("java.io.tmpdir")+".png");
+							String pickUpImage = fDFSFileUpload.getFileId(file);
+							tmp.setPickUpBarcode(pickUpImage);
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+
+					}
+					orderMapper.updateByPrimaryKeySelective(tmp);
+					order.setPickUpImageUrl(tmp.getPickUpImage());
+					order.setBarcode(tmp.getPickUpBarcode());
+				}
+				if(order.getShippingCost()==null){
+					order.setShippingCost(new BigDecimal(0));
+				}
+
+
+
+				order.setDiscount(discount);
+				order.setTotalAmount(total.doubleValue());
+				order.setAccounts(total.add(order.getShippingCost()).subtract(discount).doubleValue());
 			}
-		}
-		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId())
-				.setcWeiXinOrderCode(paymentOrder.getPaymentSerialNum())
-				.setnAddMoney(realMoney);
-		Integer res=hongShiVipService.hongShiRecharge(dd);
-		//发送充值成功微信通知
-		if(res==0){
-			paymentOrder.setIsSync(true);
-			paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder);
-			String[] key = {"keyword1","keyword2"};
-			String[] value = {DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString()};
-			Config config = configMapper.getByTag("rechargeTmpId");
-			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
-			Config config2 = configMapper.getByTag(WebConfig.domain);
-			Config config3 = configMapper.getByTag(WebConfig.signName);
-			if(config!=null) {
-				userService.sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/recharge-list?merchantCode="+config1.getValue(), "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
-			}
+			System.out.println(JSON.toJSONString(orders));
 		}
 	}
 	

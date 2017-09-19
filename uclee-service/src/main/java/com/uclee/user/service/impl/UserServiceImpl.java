@@ -2709,29 +2709,30 @@ public class UserServiceImpl implements UserServiceI {
 						order.setPickAddr(napaStore.getProvince()+napaStore.getCity()+napaStore.getRegion()+napaStore.getAddrDetail());
 					}
 					order.setCut(tmp.getCut());
+					if(tmp.getPickUpImage()==null||tmp.getPickUpImage().length()<2){
+						File file = MyQRCode.generateQRCode(600,600,order.getPickUpCode());
+						String pickUpImage = fDFSFileUpload.getFileId(file);
+						tmp.setPickUpImage(pickUpImage);
+
+					}
+					if(tmp.getPickUpBarcode()==null||tmp.getPickUpBarcode().length()<2){
+						try{
+							File file = BarcodeUtil.generateFile(order.getPickUpCode(), System.getProperty("java.io.tmpdir")+".png");
+							String pickUpImage = fDFSFileUpload.getFileId(file);
+							tmp.setPickUpBarcode(pickUpImage);
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+
+					}
+					orderMapper.updateByPrimaryKeySelective(tmp);
+					order.setPickUpImageUrl(tmp.getPickUpImage());
+					order.setBarcode(tmp.getPickUpBarcode());
 				}
 				if(order.getShippingCost()==null){
 					order.setShippingCost(new BigDecimal(0));
 				}
-				if(tmp.getPickUpImage()==null||tmp.getPickUpImage().length()<2){
-					File file = MyQRCode.generateQRCode(600,600,order.getPickUpCode());
-					String pickUpImage = fDFSFileUpload.getFileId(file);
-					tmp.setPickUpImage(pickUpImage);
 
-				}
-				if(tmp.getPickUpBarcode()==null||tmp.getPickUpBarcode().length()<2){
-					try{
-						File file = BarcodeUtil.generateFile(order.getPickUpCode(), System.getProperty("java.io.tmpdir")+".png");
-						String pickUpImage = fDFSFileUpload.getFileId(file);
-						tmp.setPickUpBarcode(pickUpImage);
-					}catch (Exception e){
-						e.printStackTrace();
-					}
-
-				}
-				orderMapper.updateByPrimaryKeySelective(tmp);
-				order.setPickUpImageUrl(tmp.getPickUpImage());
-				order.setBarcode(tmp.getPickUpBarcode());
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
 				order.setAccounts(total.add(order.getShippingCost()).subtract(discount).doubleValue());
