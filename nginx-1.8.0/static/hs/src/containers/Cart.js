@@ -186,6 +186,9 @@ class Cart extends React.Component {
                         {'合计：¥' + totalPrice.toString()}
                       </div>
                       <div className="cart-settle-info">不含运费</div>
+                      <div className="cart-settle-go left" onClick={()=>{window.location='/'}}>
+                        <span>再逛逛</span>
+                      </div>
                       <div className="cart-settle-go" onClick={this._go}>
                         <span>结算</span>
                       </div>

@@ -1,5 +1,6 @@
 package com.uclee.web.user.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.backend.service.BackendServiceI;
 import com.uclee.dynamicDatasource.DataSourceFacade;
@@ -67,6 +68,8 @@ public class UserController extends CommonUserHandler{
 	private ShippingFullCutMapper shippingFullCutMapper;
 	@Autowired
 	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
+	@Autowired
+	private RechargeConfigMapper rechargeConfigMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -690,7 +693,19 @@ public class UserController extends CommonUserHandler{
 		map.put("comment",tmp);
 		return map;
 	}
-	/** 
+	@RequestMapping(value="/getRechargeAble")
+	public @ResponseBody Map<String,Object> getRechargeAble(HttpServletRequest request,BigDecimal money) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(money);
+		if(rechargeConfig==null||rechargeConfig.getEndTime().before(new Date())){
+			map.put("result",false);
+		}else{
+			map.put("result",true);
+		}
+		return map;
+	}
+	/**
 	* @Title: getLotteryConfig 
 	* @Description: 积分抽奖页面数据接口，获得积分抽奖配置等信息 
 	* @param @param request
@@ -775,25 +790,31 @@ public class UserController extends CommonUserHandler{
 				if(record==null||(config.getLimit()!=null&&config.getLimit()>record.getCount())){
 					List<String> extra = new ArrayList<String>();
 					int i = 1;
-					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
-					if (coupon!=null&&coupon.size()>0) {
-						String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
-						i++;
-						extra.add(tmp);
+					if(StringUtils.isEmpty(config.getVoucherCode())){
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
+						if (coupon!=null&&coupon.size()>0) {
+							String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
+							i++;
+							extra.add(tmp);
+						}
+						extra.add(config.getMoney() + "元优惠券1张");
+						extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
 					}
-					extra.add(config.getMoney() + "元优惠券1张");
-					extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
-					List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
-					if (coupon!=null&&coupon.size()>0) {
-						String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
-						i++;
-						extra.add(tmp);
+					if(StringUtils.isEmpty(config.getVoucherCodeSecond())) {
+						List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
+						if (coupon2 != null && coupon2.size() > 0) {
+							String tmp = i + ". " + coupon2.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" + config.getAmountSecond() + "张";
+							i++;
+							extra.add(tmp);
+						}
 					}
-					List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
-					if (coupon!=null&&coupon.size()>0) {
-						String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
-						i++;
-						extra.add(tmp);
+					if(StringUtils.isEmpty(config.getVoucherCodeSecond())) {
+						List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
+						if (coupon3 != null && coupon3.size() > 0) {
+							String tmp = i + ". " + coupon3.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" + config.getAmountThird() + "张";
+							i++;
+							extra.add(tmp);
+						}
 					}
 					extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()),extra);
 				}

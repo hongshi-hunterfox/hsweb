@@ -4,7 +4,7 @@ import './recharge.css'
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 var RechargeUtil = require('../utils/RechargeUtil.js');
-
+import req from 'superagent'
 
 class PaymentMethod  extends React.Component {
 	constructor(props) {
@@ -189,42 +189,57 @@ class Recharge extends React.Component {
 			alert("充值金额需大于0");
 			return;
 		}
-
-		var data={};
-		data.paymentId=this.state.paymentId;
-		data.money=this.state.rechargeMoney;
-		RechargeUtil.submitHandler(data, function(res) {
-			console.log(res);
-			if(res.result===true){
-				if (res.type === 'WC') {
-					if(res.result==='failed'){
-						alert('网络繁忙，请稍后再试');
-						return false;
-					}
-					res['package'] = res.prePackage;
-					this._getWeixinConfig(res);
-					return false;
-				}else if (res.type === 'alipay') {
-					if(res.isWC){
-						window.location.href = '/seller/paymentAlipay?loginRequired=false&paymentSerialNum=' + res.paymentSerialNum + "&payType=" + res.payType+"&merchantCode=" + localStorage.getItem('merchantCode');
+		req
+        .get('/uclee-user-web/getRechargeAble?money=' + this.state.rechargeMoney)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          var data = res.text;
+          if(!data.result){
+          	var conf = confirm('检测到已选优惠活动已过期，是否继续充值？');
+          	if(!conf){
+          		return;
+          	}else{
+          		var data={};
+				data.paymentId=this.state.paymentId;
+				data.money=this.state.rechargeMoney;
+				RechargeUtil.submitHandler(data, function(res) {
+					console.log(res);
+					if(res.result===true){
+						if (res.type === 'WC') {
+							if(res.result==='failed'){
+								alert('网络繁忙，请稍后再试');
+								return false;
+							}
+							res['package'] = res.prePackage;
+							this._getWeixinConfig(res);
+							return false;
+						}else if (res.type === 'alipay') {
+							if(res.isWC){
+								window.location.href = '/seller/paymentAlipay?loginRequired=false&paymentSerialNum=' + res.paymentSerialNum + "&payType=" + res.payType+"&merchantCode=" + localStorage.getItem('merchantCode');
+							}else{
+								this.setState({
+									html: res.html
+								});
+								setTimeout(function() {
+									document.forms['alipaysubmit'].submit();
+								}, 0);
+							}
+						}	
 					}else{
-						this.setState({
-							html: res.html
-						});
-						setTimeout(function() {
-							document.forms['alipaysubmit'].submit();
-						}, 0);
+						if(res.reason==='money_not_enough'){
+							alert("余额不足，请选择其他支付方式");
+						}else{
+							alert("网络繁忙，请稍后再试");
+						}
 					}
-				}	
-			}else{
-				if(res.reason==='money_not_enough'){
-					alert("余额不足，请选择其他支付方式");
-				}else{
-					alert("网络繁忙，请稍后再试");
-				}
-			}
-			
-		}.bind(this));
+					
+				}.bind(this));
+          	}
+          }
+        })
+		
 	}
 }
 

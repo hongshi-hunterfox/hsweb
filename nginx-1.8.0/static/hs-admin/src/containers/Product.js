@@ -652,9 +652,8 @@ class Product extends React.Component {
       })
     }
     if (Number(data.sale)<0) {
-      alert("sdg");
       return this.setState({
-        err: '销量需大于0'
+        err: '销量不可以为负数'
       })
     }
 

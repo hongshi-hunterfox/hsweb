@@ -376,7 +376,7 @@ class Order extends React.Component {
             </div>
 
                 {
-                  this.state.salesInfo.length>=1&&!this.state.salesInfoShow?
+                  this.state.salesInfo.length>=1?
                   <div className="order-sales">
                      <div onClick={this.salesInfoShowClick} className='order-sales-top'>
                       <span className='order-sales-tag'>

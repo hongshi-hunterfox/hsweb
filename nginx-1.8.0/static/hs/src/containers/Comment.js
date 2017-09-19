@@ -139,12 +139,12 @@ class Comment extends React.Component{
 			})
 			return false
 		}
-		if (!data.title) {
+		/*if (!data.title) {
 			this.setState({
 				err: '请填写评论内容'
 			})
 			return false
-		}
+		}*/
 		req.post('/uclee-user-web/commentHandler').send(data).end((err, res) => {
         if (err) {
           return err
