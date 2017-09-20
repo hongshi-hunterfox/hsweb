@@ -599,6 +599,8 @@ public class BackendServiceImpl implements BackendServiceI {
 			group = productGroupLinkMapper.selectAll();
 		}
 		for(ProductGroupLink item:group){
+			ProductDto productDto = productMapper.getProductById(item.getProductId());
+
 			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(link!=null){
 				item.setImage(link.getImageUrl());

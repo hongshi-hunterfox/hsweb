@@ -24,13 +24,13 @@
   </delete>
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
-    *
-    from web_product_group_links
+    A.*
+    from web_product_group_links as A left join web_products as C on A.product_id=C.product_id where C.product_id is not null
   </select>
   <select id="selectByTag" resultMap="BaseResultMap" >
     select 
     A.*
-    from web_product_group_links as A left join web_product_groups as B on A.group_id=B.group_id where B.tag=#{tag,jdbcType=VARCHAR}
+    from web_product_group_links as A left join web_product_groups as B on A.group_id=B.group_id left join web_products as C on A.product_id=C.product_id where B.tag=#{tag,jdbcType=VARCHAR} and C.product_id is not null
   </select>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
     insert into web_product_group_links (group_id, product_id, position
