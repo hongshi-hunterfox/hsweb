@@ -432,7 +432,7 @@ public class UserHandler {
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		comment.setUserId(userId);
-		if(comment.getOrderSerialNum()==null||comment.getTitle()==null||comment.getQuality()==null||comment.getService()==null||comment.getDeliver()==null){
+		if(comment.getOrderSerialNum()==null||comment.getQuality()==null||comment.getService()==null||comment.getDeliver()==null){
 			map.put("reason","参数错误");
 			map.put("result",false);
 			return map;
