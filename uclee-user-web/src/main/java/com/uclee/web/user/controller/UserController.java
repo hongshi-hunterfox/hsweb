@@ -790,33 +790,33 @@ public class UserController extends CommonUserHandler{
 				if(record==null||(config.getLimit()!=null&&config.getLimit()>record.getCount())){
 					List<String> extra = new ArrayList<String>();
 					int i = 1;
-					if(StringUtils.isEmpty(config.getVoucherCode())){
+					if(!StringUtils.isEmpty(config.getVoucherCode())){
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
-						if (coupon!=null&&coupon.size()>0) {
+						if (coupon!=null&&coupon.size()>0&&config.getAmount()!=null&&config.getAmount()>0) {
 							String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
 							i++;
 							extra.add(tmp);
 						}
-						extra.add(config.getMoney() + "元优惠券1张");
-						extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
 					}
-					if(StringUtils.isEmpty(config.getVoucherCodeSecond())) {
+					if(!StringUtils.isEmpty(config.getVoucherCodeSecond())) {
 						List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
-						if (coupon2 != null && coupon2.size() > 0) {
+						if (coupon2 != null && coupon2.size() > 0&&config.getAmountSecond()!=null&&config.getAmountSecond()>0) {
 							String tmp = i + ". " + coupon2.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" + config.getAmountSecond() + "张";
 							i++;
 							extra.add(tmp);
 						}
 					}
-					if(StringUtils.isEmpty(config.getVoucherCodeSecond())) {
+					if(!StringUtils.isEmpty(config.getVoucherCodeSecond())) {
 						List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
-						if (coupon3 != null && coupon3.size() > 0) {
+						if (coupon3 != null && coupon3.size() > 0&&config.getAmountThird()!=null&&config.getAmountThird()>0) {
 							String tmp = i + ". " + coupon3.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" + config.getAmountThird() + "张";
 							i++;
 							extra.add(tmp);
 						}
 					}
-					extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()),extra);
+					if(extra!=null&&extra.size()>0) {
+						extraData.put(String.valueOf(config.getMoney().multiply(new BigDecimal(100)).intValue()), extra);
+					}
 				}
 			}else{
 				map.put("inTime", false);
