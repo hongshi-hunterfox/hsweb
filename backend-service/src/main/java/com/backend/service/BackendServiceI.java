@@ -116,4 +116,6 @@ public interface BackendServiceI {
 	boolean updateBindingRewards(FreightPost freightPost);
 
 	NapaStore getHongShiStore(String hsCode);
+
+    boolean isVoucherLimit(Integer amount);
 }

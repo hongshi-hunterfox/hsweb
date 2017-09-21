@@ -60,7 +60,7 @@ class Coupon extends React.Component{
         });
         return(
         	<DocumentTitle title="我的优惠券">
-        		<div className="coupons">
+        		<div className="coupon">
         			{coupons}
         			{this.props.location.query.isFromOrder?<div className="coupon-bottom">
         				<button

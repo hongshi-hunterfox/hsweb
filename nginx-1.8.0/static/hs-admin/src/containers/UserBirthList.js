@@ -40,10 +40,34 @@ class UserBirthList extends React.Component {
     var url='';
     if(conf){
       url='/uclee-backend-web/sendBirthMsg?userId=' + userId+'&sendVoucher=1';
+      req
+      .get('/uclee-backend-web/isVoucherLimit')
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+        if (!res.body) {
+          alert('礼券数量不符，数量不足')
+        } else {
+          req
+            .get(url)
+            .end((err, res) => {
+              if (err) {
+                return err
+              }
+              if (res.body) {
+                alert('发送成功')
+                window.location =
+                  '/user-birth-list?start=' + this.props.location.query.start + '&end='+this.props.location.query.end
+              } else {
+                alert('网络繁忙，请稍后重试')
+              }
+            })
+        }
+      })
     }else{
       url='/uclee-backend-web/sendBirthMsg?userId=' + userId;
-    }
-    req
+      req
       .get(url)
       .end((err, res) => {
         if (err) {
@@ -57,6 +81,7 @@ class UserBirthList extends React.Component {
           alert('网络繁忙，请稍后重试')
         }
       })
+    }
   }
   _change = e => {
     this.setState({
@@ -78,32 +103,74 @@ class UserBirthList extends React.Component {
     }
     var conf = confirm('是否要联动送礼券？');
     
-    var ret = true;
-    for (var i in this.state.checked)
-    {
-      console.log(this.state.checked[i]);
-      var url='';
     if(conf){
-      url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i]+'&sendVoucher=1';
-    }else{
-      url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i];
-    }
       req
-      .get(url)
+      .get('/uclee-backend-web/isVoucherLimit?amount='+this.state.checked.length)
       .end((err, res) => {
         if (err) {
           return err
         }
-        ret = ret && res.body;
-      })
-    }
-    if (ret) {
-          alert('发送成功')
-          window.location =
-            '/user-birth-list?start=' + this.props.location.query.start + '&end='+this.props.location.query.end
+        if (!res.body) {
+          alert('礼券数量不符，数量不足')
         } else {
-          alert('网络繁忙，请稍后重试')
+          var ret = true;
+          for (var i in this.state.checked)
+          {
+            console.log(this.state.checked[i]);
+            var url='';
+            if(conf){
+              url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i]+'&sendVoucher=1';
+            }else{
+              url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i];
+            }
+            req
+            .get(url)
+            .end((err, res) => {
+              if (err) {
+                return err
+              }
+              ret = ret && res.body;
+            })
+          }
+          if (ret) {
+                alert('发送成功')
+                window.location =
+                  '/user-birth-list?start=' + this.props.location.query.start + '&end='+this.props.location.query.end
+              } else {
+                alert('网络繁忙，请稍后重试')
+              }
         }
+      })
+    }else{
+      var ret = true;
+      for (var i in this.state.checked)
+      {
+        console.log(this.state.checked[i]);
+        var url='';
+        if(conf){
+          url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i]+'&sendVoucher=1';
+        }else{
+          url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i];
+        }
+        req
+        .get(url)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          ret = ret && res.body;
+        })
+      }
+      if (ret) {
+            alert('发送成功')
+            window.location =
+              '/user-birth-list?start=' + this.props.location.query.start + '&end='+this.props.location.query.end
+          } else {
+            alert('网络繁忙，请稍后重试')
+          }
+    }
+
+    
   }
 
   render() {

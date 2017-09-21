@@ -38,6 +38,10 @@ public class BackendHandler {
 	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
 		return backendService.sendBirthMsg(userId,sendVoucher);
 	}
+	@RequestMapping("/isVoucherLimit")
+	public @ResponseBody boolean isVoucherLimit(HttpServletRequest request,Integer amount) {
+		return backendService.isVoucherLimit(amount);
+	}
 	@RequestMapping("/sendUnbuyMsg")
 	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId) {
 		return backendService.sendUnbuyMsg(userId);

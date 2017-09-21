@@ -114,12 +114,11 @@ class Order extends React.Component {
         total: resJson.total,
         isShippingfree:resJson.isShippingFree,
         supportDeliver:resJson.supportDeliver,
-        isSelfPick:resJson.isSelfPick,
+        isSelfPick:resJson.isSelfPick?resJson.isSelfPick:sessionStorage.getItem('isSelfPick') || '',
         salesInfo:resJson.salesInfo,
         cut:resJson.cut
       })
       sessionStorage.setItem('total', resJson.total);
-      console.log('isShippingfree: ' + this.state.isShippingfree);
       if (sessionStorage.getItem('addr') != null) {
         this.setState({
           defaultAddr: JSON.parse(sessionStorage.getItem('addr'))
@@ -132,6 +131,7 @@ class Order extends React.Component {
         localStorage.getItem('longitude') != null
       ) {
         if (this.state.defaultAddr) {
+          alert("in");
           var addr =
             this.state.defaultAddr.province +
             this.state.defaultAddr.city +
@@ -158,7 +158,13 @@ class Order extends React.Component {
         })
         return
       }
+      if (sessionStorage.getItem('isSelfPick')) {
+        this.setState({
+          isSelfPick: sessionStorage.getItem('isSelfPick') || ''
+        })
+      }
     })
+    console.log('isSelfPick: ' + this.state.isSelfPick);
   }
 
   render() {

@@ -912,6 +912,26 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
+	public boolean isVoucherLimit(Integer amount) {
+		if(amount==null){
+			amount=1;
+		}
+		try {
+			List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
+			for(BirthVoucher birthVoucher:birthVouchers) {
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
+				if(coupon!=null&&coupon.size()<(birthVoucher.getAmount()*amount)){
+					return false;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			return true;
+		}
+		return true;
+	}
+
+	@Override
 	public List<ProductDto> selectAllProductByCatId(Integer categoryId) {
 		List<ProductDto> product =  productMapper.getAllProductByCatId(categoryId);
 		for(ProductDto item:product){
