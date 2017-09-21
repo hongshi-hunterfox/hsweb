@@ -32,7 +32,8 @@ class MemberSetting extends React.Component {
 
       time: 60,
       fetchingCode: false,
-      bindText:''
+      bindText:'',
+      disabled:false
     }
 
     this.tick = null
@@ -236,7 +237,7 @@ class MemberSetting extends React.Component {
             <ErrorMsg msg={this.state.error} />
 
             <div className="form-btn-wrap">
-              <button type="submit" className="btn btn-success btn-block">
+              <button type="submit" className="btn btn-success btn-block" disabled={this.state.disabled}>
                 保存
               </button>
             </div>
@@ -304,6 +305,9 @@ class MemberSetting extends React.Component {
   }
 
   _submit = e => {
+    this.setState({
+      disabled:true
+    })
     e.preventDefault()
     var data = fto(e.target)
     if (!data.cMobileNumber) {
@@ -359,12 +363,16 @@ class MemberSetting extends React.Component {
           if(conf){
             req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
               if (err) {
+                this.setState({
+                    disabled:false
+                  })
                 return err
               }
 
               if (res.body.result === 'fail') {
                 this.setState({
-                  error: res.body.reason
+                  error: res.body.reason,
+                  disabled:false
                 })
                 return
               }
@@ -390,12 +398,16 @@ class MemberSetting extends React.Component {
       }else{
             req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
               if (err) {
+                this.setState({
+                    disabled:false
+                  })
                 return err
               }
 
               if (res.body.result === 'fail') {
                 this.setState({
-                  error: res.body.reason
+                  error: res.body.reason,
+                  disabled:false
                 })
                 return
               }
