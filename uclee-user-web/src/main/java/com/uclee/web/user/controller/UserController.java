@@ -70,6 +70,8 @@ public class UserController extends CommonUserHandler{
 	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
 	@Autowired
 	private RechargeConfigMapper rechargeConfigMapper;
+	@Autowired
+	private BindingRewardsMapper bindingRewardsMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -347,6 +349,24 @@ public class UserController extends CommonUserHandler{
 		}else {
 			map.put("bindText", "");
 		}
+		return map;
+	}
+	//
+	@RequestMapping("/isVoucherLimit")
+	public @ResponseBody Map<String,Object> isVoucherLimit(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
+		if(bindingRewards!=null&&bindingRewards.size()>=1){
+			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
+			if(coupon.size()<bindingRewards.get(0).getAmount()){
+				map.put("result",false);
+				return map;
+			}
+		}
+
+		map.put("result",true);
 		return map;
 	}
 

@@ -349,36 +349,79 @@ class MemberSetting extends React.Component {
         })
       }
     }
-
-    req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+    req.get('/uclee-user-web/isVoucherLimit').end((err, res) => {
       if (err) {
         return err
       }
-
-      if (res.body.result === 'fail') {
-        this.setState({
-          error: res.body.reason
-        })
-        return
-      }
-
-      this.setState({
-        showNoti: true
-      })
-      console.log(sessionStorage.getItem('isBackToCart'));
-      console.log(sessionStorage.getItem('isBackToCart')===1);
-      if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
-        sessionStorage.removeItem('isBackToCart');
-        window.location='/cart';
-      }else{
-        setTimeout(() => {
-          browserHistory.replace({
-            pathname: '/member-card'
-          })
-        }, 2500)
-      }
       
+      if(!res.body.result){
+          var conf = confirm('礼券已赠完，继续将不会得到礼券赠送券,是否继续绑定？');
+          if(conf){
+            req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+              if (err) {
+                return err
+              }
+
+              if (res.body.result === 'fail') {
+                this.setState({
+                  error: res.body.reason
+                })
+                return
+              }
+
+              this.setState({
+                showNoti: true
+              })
+              console.log(sessionStorage.getItem('isBackToCart'));
+              console.log(sessionStorage.getItem('isBackToCart')===1);
+              if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
+                sessionStorage.removeItem('isBackToCart');
+                window.location='/cart';
+              }else{
+                setTimeout(() => {
+                  browserHistory.replace({
+                    pathname: '/member-card'
+                  })
+                }, 2500)
+              }
+              
+            })
+          }else{
+            req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+              if (err) {
+                return err
+              }
+
+              if (res.body.result === 'fail') {
+                this.setState({
+                  error: res.body.reason
+                })
+                return
+              }
+
+              this.setState({
+                showNoti: true
+              })
+              console.log(sessionStorage.getItem('isBackToCart'));
+              console.log(sessionStorage.getItem('isBackToCart')===1);
+              if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
+                sessionStorage.removeItem('isBackToCart');
+                window.location='/cart';
+              }else{
+                setTimeout(() => {
+                  browserHistory.replace({
+                    pathname: '/member-card'
+                  })
+                }, 2500)
+              }
+              
+            })
+          }
+
+      }
     })
+
+    
 
     this.setState({
       error: ''
