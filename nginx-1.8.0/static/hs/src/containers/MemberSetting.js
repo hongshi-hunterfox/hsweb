@@ -386,7 +386,8 @@ class MemberSetting extends React.Component {
               }
               
             })
-          }else{
+          }
+      }else{
             req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
               if (err) {
                 return err
@@ -418,7 +419,6 @@ class MemberSetting extends React.Component {
             })
           }
 
-      }
     })
 
     
