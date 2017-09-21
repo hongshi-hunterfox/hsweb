@@ -59,7 +59,7 @@ public class DuobaoSchedule {
 			if(!info.getMerchantCode().equals("master")) {
 				dataSource.switchDataSource(info.getMerchantCode());
 				Var var = varMapper.selectByPrimaryKey(new Integer(1));
-				if (DateUtils.addSecond(var.getStorageTime(), 7200).before(new Date())) {
+				if (DateUtils.addSecond(var.getStorageTime(), 5800).before(new Date())) {
 					duobaoService.getGolbalAccessToken();
 				}
 			}

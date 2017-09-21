@@ -305,27 +305,20 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Test
 	public void test1() throws Exception{
 		datasource.switchDataSource("hs");
-		String[] tags = {TermGroupTag.HOT_PRODUCT,TermGroupTag.RECOMMEND};
-		List<ProductGroup> groups = productGroupMapper.selectByTags(tags);
-		for(ProductGroup group : groups){
-			List<ProductDto> products = new ArrayList<ProductDto>();
-			List<ProductGroupLink> links  = productGroupLinkMapper.selectByGroupId(group.getGroupId());
-			for(ProductGroupLink link : links){
-				ProductDto productDto = productMapper.getProductById(link.getProductId());
-				if(productDto!=null){
-					ProductImageLink productImageLink = productImageLinkMapper.selectByProductIdLimit(link.getProductId());
-					if(productImageLink!=null){
-						productDto.setImage(productImageLink.getImageUrl());
-					}
-					SpecificationValue value = specificationValueMapper.selectByProductIdLimit(link.getProductId());
-					if(value!=null){
-						productDto.setPrice(value.getHsGoodsPrice());
-					}
-					products.add(productDto);
-				}
-			}
-			group.setProducts(products);
-		}System.out.println(JSON.toJSONString(groups));
+		Message message = new Message();
+		message.setPayType("线下支付");
+		message.setIsSend(false);
+		message.setMoney(new BigDecimal(100));
+		message.setOauthId("oH7hfuEN8qnZjC7fr2_zUFK7eVl8");
+		message.setOrderNum("tests");
+		message.setTime(new Date());
+		Config config = configMapper.getByTag(WebConfig.payTmpId);
+		String[] key = {"keyword1","keyword2","keyword3","keyword4"};
+		if(message.getPayType()==null){
+			message.setPayType("线下门店支付");
+		}
+		String[] value = {message.getOrderNum(),DateUtils.format(message.getTime(), DateUtils.FORMAT_LONG).toString(),message.getMoney()+"元".toString(),message.getPayType()};
+		userService.sendWXMessage(message.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临");
 	}
 	
 	@Test
