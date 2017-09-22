@@ -131,7 +131,6 @@ class Order extends React.Component {
         localStorage.getItem('longitude') != null
       ) {
         if (this.state.defaultAddr) {
-          alert("in");
           var addr =
             this.state.defaultAddr.province +
             this.state.defaultAddr.city +
