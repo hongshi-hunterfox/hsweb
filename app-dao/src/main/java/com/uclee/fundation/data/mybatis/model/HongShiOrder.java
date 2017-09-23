@@ -36,6 +36,16 @@ public class HongShiOrder {
 
 	private String barcode;
 
+	private Boolean isVoid;
+
+	public Boolean getVoid() {
+		return isVoid;
+	}
+
+	public void setVoid(Boolean aVoid) {
+		isVoid = aVoid;
+	}
+
 	public String getBarcode() {
 		return barcode;
 	}

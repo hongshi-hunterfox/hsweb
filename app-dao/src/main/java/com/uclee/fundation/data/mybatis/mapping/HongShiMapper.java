@@ -1,5 +1,6 @@
 package com.uclee.fundation.data.mybatis.mapping;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -30,7 +31,7 @@ public interface HongShiMapper {
 	CreateOrderItemResult createOrderItem(HongShiCreateOrderItem createOrderItem);
 	HongShiCommonResult signInAddPoint(@Param("oauthId")String oauthId, @Param("point")Integer point,@Param("tag") String tag);
 	HongShiCommonResult lotteryPoint(@Param("oauthId")String oauthId, @Param("point")Integer point);
-	int recoverVoucher(@Param("goodsCode")String goodsCode,@Param("orderId")Integer orderId,@Param("voucherCode")String voucherCode,@Param("remark")String remark);
+	int recoverVoucher(@Param("goodsCode")String goodsCode,@Param("orderId")Integer orderId,@Param("voucherCode")String voucherCode,@Param("remark")String remark,@Param("amount") BigDecimal amount);
 	int saleVoucher(@Param("oauthId")String oauthId,@Param("voucherCode")String voucherCode,@Param("goodsCode")String goodsCode);
 	List<HongShiCoupon> getHongShiCouponByGoodsCode(@Param("goodsCode")String goodsCode);
 	List<BossCenterItem> selectBossCenter(@Param("hsCode")String hsCode,@Param("userId")Integer userId);

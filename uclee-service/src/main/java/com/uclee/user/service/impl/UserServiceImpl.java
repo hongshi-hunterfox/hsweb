@@ -1671,7 +1671,7 @@ public class UserServiceImpl implements UserServiceI {
 					if(createOrderResult!=null){
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 						if(coupon!=null&&coupon.size()>0){
-							hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum());
+							hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum(),order.getVoucherPrice());
 						}
 					}
 				} catch (Exception e) {
@@ -2389,6 +2389,11 @@ public class UserServiceImpl implements UserServiceI {
 			try {
 				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(orderPost.getVoucherCode());
 				if(coupon!=null&&coupon.size()>0){
+					if(coupon.get(0).getPayQuota().compareTo(totalMoney)<=0){
+						order.setVoucherPrice(coupon.get(0).getPayQuota());
+					}else{
+						order.setVoucherPrice(totalMoney);
+					}
 					order.setVoucherCode(orderPost.getVoucherCode());
 					totalMoney = totalMoney.subtract(coupon.get(0).getPayQuota());
 				}
@@ -2467,7 +2472,7 @@ public class UserServiceImpl implements UserServiceI {
 	public List<Order> getUnpayOrderListByUserId(Integer userId) {
 		List<Order> orders = orderMapper.getUnpayOrderListByUserId(userId);
 		for(Order order:orders){
-			if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
+			/*if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
 				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 				if(coupon!=null&&coupon.size()>0){
 					order.setDiscount(coupon.get(0).getPayQuota());
@@ -2476,7 +2481,8 @@ public class UserServiceImpl implements UserServiceI {
 				}
 			}else{
 				order.setDiscount(new BigDecimal(0));
-			}
+			}*/
+			order.setDiscount(order.getVoucherPrice());
 			order.setCreateTimeStr(DateUtils.format(order.getCreateTime(), DateUtils.FORMAT_LONG));
 			NapaStore store = napaStoreMapper.selectByPrimaryKey(order.getStoreId());
 			if(store!=null){
@@ -2692,7 +2698,7 @@ public class UserServiceImpl implements UserServiceI {
 				Order tmp = orderMapper.selectBySerialNum(order.getOuterOrderCode());
 				order.setOrderItems(orderItems);
 				if(tmp!=null){
-					if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
+					/*if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
 						try {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(tmp.getVoucherCode());
 							if(coupon!=null&&coupon.size()>0){
@@ -2701,7 +2707,8 @@ public class UserServiceImpl implements UserServiceI {
 							}
 						} catch (Exception e) {
 						}
-					}
+					}*/
+					discount = tmp.getVoucherPrice();
 					order.setShippingCost(tmp.getShippingCost());
 					order.setIsSelfPick(tmp.getIsSelfPick());
 					NapaStore napaStore = napaStoreMapper.selectByPrimaryKey(tmp.getStoreId());
@@ -2732,10 +2739,11 @@ public class UserServiceImpl implements UserServiceI {
 				if(order.getShippingCost()==null){
 					order.setShippingCost(new BigDecimal(0));
 				}
-
+				total=total.setScale(2,BigDecimal.ROUND_HALF_UP);
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
-				order.setAccounts(total.add(order.getShippingCost()).subtract(discount).doubleValue());
+				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
+				order.setAccounts(account.doubleValue());
 			}
 			return orders;
 		}
@@ -2981,7 +2989,7 @@ public class UserServiceImpl implements UserServiceI {
 						if(createOrderResult!=null){
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 							if(coupon!=null&&coupon.size()>0){
-								hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum());
+								hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum(),order.getVoucherPrice());
 							}
 						}
 					} catch (Exception e) {

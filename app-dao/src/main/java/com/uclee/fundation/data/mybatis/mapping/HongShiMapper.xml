@@ -36,6 +36,7 @@
 		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
 		<result column="Accounts" property="accounts" jdbcType="DOUBLE" />
 		<result column="IsEnd" property="isEnd" jdbcType="BIT" />
+		<result column="IsVoid" property="isVoid" jdbcType="BIT" />
 		<result column="PickUpCode" property="pickUpCode" jdbcType="BIT" />
 	</resultMap>
 	<resultMap id="HongShiOrderItem" type="com.uclee.fundation.data.mybatis.model.HongShiOrderItem">
@@ -100,7 +101,7 @@
 		exec WSC_SaleVoucher #{goodsCode,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR},0,0
 	</select>
 	<select id="recoverVoucher" resultType="java.lang.Integer">
-		exec WSC_RecoverVoucher #{orderId,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},0,#{remark,jdbcType=VARCHAR}
+		exec WSC_RecoverVoucher #{orderId,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR}
 	</select>
 	<select id="createOrder" resultMap="CreateOrderResult">
 		exec WSC_CreateOrder '',#{WSC_TardNo,jdbcType=VARCHAR},#{PickUpTime,jdbcType=TIMESTAMP},#{WeiXinCode,jdbcType=VARCHAR},#{CallNumber,jdbcType=VARCHAR},#{Remarks,jdbcType=VARCHAR}
