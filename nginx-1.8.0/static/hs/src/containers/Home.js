@@ -418,7 +418,7 @@ class Home extends React.Component {
                             {item1.title}
                           </div>
                           <div className="product-item-price">
-                            <div className='left'>¥{item1.price}</div>
+                            <div className='left'>¥{'  ' + item1.price}</div>
                             <div className='right' onClick={()=>{
                               req
                                 .get('/uclee-user-web/productDetail?productId=' + item1.productId)
