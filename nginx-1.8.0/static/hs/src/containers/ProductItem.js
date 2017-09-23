@@ -30,7 +30,7 @@ class ProductItem extends React.Component {
 					</div>
 					<div className="product-item-price">
 						<div className='left'>¥{this.props.price}</div>
-						<div className='right'>buy</div>
+						<div className='right' onClick={this.props._buyClick.bind(this,this.props.productId)}>buy</div>
 					</div>
 				</div>
 			</div>

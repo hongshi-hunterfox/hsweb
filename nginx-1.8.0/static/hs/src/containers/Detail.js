@@ -228,7 +228,7 @@ class Detail extends React.Component {
       title: null,
       shippingFree:false,
       loading: true,
-      showPick: true,
+      showPick: false,
       currentSpecValudId: null,
       currentAmount: 1,
       salesAmount:0,
