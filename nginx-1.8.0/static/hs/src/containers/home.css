@@ -1,6 +1,112 @@
 .home {
   padding-bottom: 60px;
 }
+.home-picker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  padding-left: 10px;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-name: detail-slideInUp;
+  min-height: 200px;
+}
+.home-picker-overlay {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.home-picker-close {
+  font-size: 24px;
+  color: #bbb;
+  position: absolute;
+  display: block;
+  top: 5px;
+  right: 10px;
+}
+.home-picker-header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.home-picker-header-img {
+  float: left;
+}
+.home-picker-header-info {
+  overflow: hidden;
+  padding-left: 10px;
+}
+.home-picker-header-title {
+  font-weight: bold;
+}
+.home-picker-header-price {
+  color: #ff6600;
+  font-size: 16px;
+  padding-top: 5px;
+  font-weight: bold;
+}
+.home-picker-header-price .pre {
+  color: #b5b5b5;
+  font-size: 14px;
+  text-decoration: line-through;
+  margin-left: 15px;
+}
+.home-picker-spec {
+  margin-bottom: 5px;
+}
+.home-picker-spec-name {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.home-picker-spec-value {
+  border: 1px solid #959595;
+  float: left;
+  padding: 4px 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.home-picker-spec-value.active {
+  color: white;
+  background-color: #eb544d;
+  border-color: #eb544d;
+}
+.home-picker-amount {
+  border-top: 1px solid #f2f2f2;
+  padding: 10px;
+}
+.home-picker-amount .input-group {
+  float: right;
+  width: 50%;
+}
+.home-picker-amount .input-group .btn {
+  padding-left: 15px;
+  padding-right: 15px;
+  outline: 0;
+}
+.home-picker-amount .input-group .form-control {
+  text-align: center;
+}
+.home-picker-amount .input-group .form-control[readonly] {
+  background-color: white;
+}
+.home-picker-amount-key {
+  display: inline-block;
+  padding-top: 5px;
+}
+.home-picker-next {
+  padding: 10px;
+  text-align: center;
+  color: white;
+  background-color: #eb544d;
+  margin-left: -10px;
+}
 .home-search {
   position: absolute;
   top: 40px;
