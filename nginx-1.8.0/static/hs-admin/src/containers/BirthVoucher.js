@@ -104,24 +104,37 @@ class BirthVoucher extends React.Component {
       })
       return;
     }
-    data.myKey = values1(data.myKey)
-    data.myValue = values1(data.myValue)
+    if(data.myKey&&data.myValue){
+      data.myKey = values1(data.myKey)
+      data.myValue = values1(data.myValue)
+      this.setState({
+        err: null
+      })
+
+      // return
+
+      req.post('/uclee-backend-web/birthVoucherHandler').send(data).end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        if (res.text) {
+          window.location = '/birth-voucher'
+        }
+      })
+    }else{
+      req.post('/uclee-backend-web/truncateBirthVoucherHandler').send(data).end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        if (res.text) {
+          window.location = '/birth-voucher'
+        }
+      })
+    }
     
-    this.setState({
-      err: null
-    })
-
-    // return
-
-    req.post('/uclee-backend-web/birthVoucherHandler').send(data).end((err, res) => {
-      if (err) {
-        return err
-      }
-
-      if (res.text) {
-        window.location = '/birth-voucher'
-      }
-    })
+    
   }
 }
 

@@ -120,4 +120,6 @@ public interface BackendServiceI {
     boolean isVoucherLimit(Integer amount);
 
 	boolean delComment(Integer id);
+
+	boolean truncateBirthVoucherHandler();
 }

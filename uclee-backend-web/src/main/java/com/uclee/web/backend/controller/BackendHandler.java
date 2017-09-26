@@ -74,6 +74,10 @@ public class BackendHandler {
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		return backendService.updateBirthVoucher(birthVoucherPost);
 	}
+	@RequestMapping("/truncateBirthVoucherHandler")
+	public @ResponseBody boolean truncateBirthVoucherHandler(HttpServletRequest request) {
+		return backendService.truncateBirthVoucherHandler();
+	}
 	@RequestMapping("/lotteryHandler")
 	public @ResponseBody boolean lotteryHandler(HttpServletRequest request,@RequestBody LotteryConfigPost post) {
 		System.out.println(JSON.toJSONString(post));

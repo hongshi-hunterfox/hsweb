@@ -141,12 +141,12 @@ public class BackendController {
 		Map<String,Object> result = new TreeMap<String,Object>();
 		Map<String,Object> map = new TreeMap<String,Object>();
 		List<BirthVoucher> birthVoucher = backendService.selectAllBirthVoucher();
-		if(birthVoucher!=null&&birthVoucher.size()==0){
+		/*if(birthVoucher!=null&&birthVoucher.size()==0){
 			BirthVoucher tmp = new BirthVoucher();
 			tmp.setVoucherCode("");
 			tmp.setAmount(0);
 			birthVoucher.add(tmp);
-		}
+		}*/
 		int i = 0;
 		for(BirthVoucher item : birthVoucher){
 			map.put("myKey[" + i + "]", item.getVoucherCode());

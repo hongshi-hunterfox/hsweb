@@ -307,6 +307,12 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return true;
 	}
+	@Override
+	public boolean truncateBirthVoucherHandler() {
+		int delAll = birthVoucherMapper.deleteAll();
+
+		return true;
+	}
 
 	@Override
 	public List<ShippingFullCut> selectAllShippingFullCut() {
