@@ -305,20 +305,15 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Test
 	public void test1() throws Exception{
 		datasource.switchDataSource("hs");
-		Message message = new Message();
-		message.setPayType("线下支付");
-		message.setIsSend(false);
-		message.setMoney(new BigDecimal(100));
-		message.setOauthId("oH7hfuEN8qnZjC7fr2_zUFK7eVl8");
-		message.setOrderNum("tests");
-		message.setTime(new Date());
-		Config config = configMapper.getByTag(WebConfig.payTmpId);
-		String[] key = {"keyword1","keyword2","keyword3","keyword4"};
-		if(message.getPayType()==null){
-			message.setPayType("线下门店支付");
+		String[] key = {"keyword1","keyword2"};
+		String[] value = {DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),0.01+"元".toString()};
+		Config config = configMapper.getByTag("rechargeTmpId");
+		Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+		Config config2 = configMapper.getByTag(WebConfig.domain);
+		Config config3 = configMapper.getByTag(WebConfig.signName);
+		if(config!=null) {
+			userService.sendWXMessage("oH7hfuEN8qnZjC7fr2_zUFK7eVl8", config.getValue(), config2.getValue()+"/recharge-list?merchantCode="+config1.getValue(), "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
 		}
-		String[] value = {message.getOrderNum(),DateUtils.format(message.getTime(), DateUtils.FORMAT_LONG).toString(),message.getMoney()+"元".toString(),message.getPayType()};
-		userService.sendWXMessage(message.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临");
 	}
 	
 	@Test

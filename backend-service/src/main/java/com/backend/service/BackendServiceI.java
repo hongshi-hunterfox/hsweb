@@ -118,4 +118,6 @@ public interface BackendServiceI {
 	NapaStore getHongShiStore(String hsCode);
 
     boolean isVoucherLimit(Integer amount);
+
+	boolean delComment(Integer id);
 }

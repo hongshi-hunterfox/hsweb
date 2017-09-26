@@ -932,6 +932,17 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
+	public boolean delComment(Integer id) {
+		Comment comment = commentMapper.selectByPrimaryKey(id);
+		if(comment!=null){
+			comment.setBackTitle("");
+			comment.setBackTime(null);
+			return commentMapper.updateByPrimaryKeySelective(comment)>0;
+		}
+		return false;
+	}
+
+	@Override
 	public List<ProductDto> selectAllProductByCatId(Integer categoryId) {
 		List<ProductDto> product =  productMapper.getAllProductByCatId(categoryId);
 		for(ProductDto item:product){

@@ -32,7 +32,6 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 
 	@Override
 	public Integer hongShiRecharge(HongShiRecharge params) {
-		hongShiVipMapper.hongShiRecharge(params);
-		return 1;
+		return hongShiVipMapper.hongShiRecharge(params);
 	}
 }

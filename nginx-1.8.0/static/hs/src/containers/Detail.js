@@ -314,7 +314,11 @@ class Detail extends React.Component {
               maxPrice={this.maxPrice}
               preMinPrice={this.preMinPrice}
               preMaxPrice={this.preMaxPrice}/>
-            <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
+              {
+                this.state.salesInfo.length>=1&&!this.state.salesInfoShow?
+                <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
+                :null
+              }
             <DetailPick
               onClick={this._showPick}
               currentAmount={this.state.currentAmount}

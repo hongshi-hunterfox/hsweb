@@ -112,7 +112,7 @@
 .detail-info-stat-item {
   display: block;
   float: left;
-  width: 33.33333333%;
+  width: 100%;
 }
 .detail-info-stat-item .tag {
   border-radius: 5px;

@@ -54,6 +54,17 @@ class CommentList extends React.Component {
       comment: comment
     })
   }
+  delHandle=(id)=>{
+    var conf = confirm('确认要删除该回复吗？');
+    if(conf){
+      req.get('/uclee-backend-web/delComment?id='+id).end((err, res) => {
+        if (err) {
+          return err
+        }
+        window.location='/comment-list'
+      })
+    }
+  }
 
   render() {
     var list = this.state.comments.map((item, index) => {
@@ -101,6 +112,9 @@ class CommentList extends React.Component {
           }}>
             <button className="btn btn-primary" onClick={this.openModal.bind(this,item.id)}>
               回复
+            </button>
+            <button className="btn btn-primary" style={{marginTop:'5px'}} onClick={this.delHandle.bind(this,item.id)}>
+              删除回复
             </button>
           </td>
         </tr>

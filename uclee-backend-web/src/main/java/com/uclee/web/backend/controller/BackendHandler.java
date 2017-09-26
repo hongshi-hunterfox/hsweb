@@ -129,6 +129,10 @@ public class BackendHandler {
 	public @ResponseBody Map<String,Object> commentBackHandler(HttpServletRequest request,@RequestBody Comment comment) {
 		return backendService.commentBackHandler(comment);
 	}
+	@RequestMapping(value="/delComment")
+	public @ResponseBody boolean delComment(HttpServletRequest request,Integer id) {
+		return backendService.delComment(id);
+	}
 	@RequestMapping("/delQuickNaviProduct")
 	public @ResponseBody int delQuickNaviProduct(HttpServletRequest request,Integer naviId,Integer productId) {
 		return backendService.delQuickNaviProduct(naviId,productId);
