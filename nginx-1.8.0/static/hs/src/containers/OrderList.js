@@ -49,7 +49,7 @@ class OrderList extends React.Component {
 									: "线下订单"}
 							</span>
 							<span className="status pull-right">
-								{item.void? "已废弃" : item.isEnd ? "已完成" : "制作配送中"}
+								{item.isEnd ? item.void? "已废弃" :  "已完成" : "制作配送中"}
 							</span>
 						</div>
 						<div className="number">
