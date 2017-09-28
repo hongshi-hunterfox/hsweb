@@ -49,7 +49,7 @@ class OrderList extends React.Component {
 									: "线下订单"}
 							</span>
 							<span className="status pull-right">
-								{item.isEnd ? item.void? "已废弃" :  "已完成" : "制作配送中"}
+								{!item.isEnd ? item.void? "已废弃" :  "制作配送中" : "已完成"}
 							</span>
 						</div>
 						<div className="number">
@@ -91,7 +91,7 @@ class OrderList extends React.Component {
 					</div>
 					
 
-						{!item.isEnd?
+						{!item.isEnd&&!item.void?
 							<div>
 							<span className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} onClick={this._showImage.bind(this,item.pickUpImageUrl,item.barcode)}>查看提货码</span>
 							</div>

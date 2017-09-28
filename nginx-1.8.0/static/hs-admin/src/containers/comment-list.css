@@ -55,7 +55,7 @@
   float: left;
 }
 .comment-list-order-item .title {
-  width: 80%;
+  width: 60%;
   float: right;
   overflow: hidden;
   display: -webkit-box;
@@ -66,4 +66,8 @@
 .comment-list table > thead > tr > th {
   text-align: center;
   vertical-align: middle;
+}
+table {
+  table-layout: fixed;
+  word-break: break-all;
 }

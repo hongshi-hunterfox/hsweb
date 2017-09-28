@@ -20,7 +20,8 @@ class CommentList extends React.Component {
       comments:[],
       isOpen:false,
       comment:{},
-      commentId:0
+      commentId:0,
+      backTitle:''
     }
   }
 
@@ -35,10 +36,11 @@ class CommentList extends React.Component {
       })
     })
   }
-  openModal = (id) => {
+  openModal = (id,text) => {
     this.setState({
       isOpen: true,
-      commentId:id
+      commentId:id,
+      backTitle:text
     });
   }
    
@@ -51,7 +53,8 @@ class CommentList extends React.Component {
     var comment = Object.assign({}, this.state.comment)
     comment[key] = e.target.value
     this.setState({
-      comment: comment
+      comment: comment,
+      backTitle:e.target.value
     })
   }
   delHandle=(id)=>{
@@ -70,7 +73,7 @@ class CommentList extends React.Component {
     var list = this.state.comments.map((item, index) => {
       return (
         <tr key={index}>
-          <td style={{
+          <td width="20%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>
             <div className='comment-list-order'>
@@ -86,31 +89,31 @@ class CommentList extends React.Component {
             }
             </div>
           </td>
-          <td style={{
+          <td width="15%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.title}</td>
-          <td style={{
+          <td width="10%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.deliver}</td>
-          <td style={{
+          <td width="10%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.service}</td>
-          <td style={{
+          <td width="10%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.quality}</td>
-          <td style={{
+          <td width="7%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.timeStr}</td>
-          <td style={{
+          <td width="15%"    style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.backTitle}</td>
-          <td style={{
+          <td width="7%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.backTimeStr}</td>
-          <td style={{
+          <td width="6%" style={{
             textAlign:'center',verticalAlign:'middle'
           }}>
-            <button className="btn btn-primary" onClick={this.openModal.bind(this,item.id)}>
+            <button className="btn btn-primary" onClick={this.openModal.bind(this,item.id,item.backTitle)}>
               回复
             </button>
             <button className="btn btn-primary" style={{marginTop:'5px'}} onClick={this.delHandle.bind(this,item.id)}>
@@ -123,22 +126,22 @@ class CommentList extends React.Component {
     return (
       <DocumentTitle title="评论列表">
         <div className="comment-list">
-            <table className="table table-bordered table-striped">
-              <thead>
+            <table className="table table-bordered table-striped" width='135%'>
+              <thead width='135%'>
                 <tr>
-                  <th>订单信息</th>
-                  <th>评论内容</th>
-                  <th>送货速度评分</th>
-                  <th>服务态度评分</th>
-                  <th>产品质量评分</th>
-                  <th>评论时间</th>
-                  <th>后台回复</th>
-                  <th>回复时间</th>
-                  <th>
+                  <th width="20%">订单信息</th>
+                  <th width="20%">评论内容</th>
+                  <th width="10%">送货速度评分</th>
+                  <th width="10%">服务态度评分</th>
+                  <th width="10%">产品质量评分</th>
+                  <th width="15%">评论时间</th>
+                  <th width="20%">后台回复</th>
+                  <th width="15%">回复时间</th>
+                  <th width="15%">
                     <a href=""></a>操作</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody width='135%'>
                 {list}
               </tbody>
             </table>
@@ -155,16 +158,16 @@ class CommentList extends React.Component {
                   >
                   <input name="id" value={this.state.commentId} type='hidden'/>
                   <div className="form-group">
-                    <textarea  className="comment-textarea" rows='10' style={{overflow:'auto',width:'96%',marginLeft:'2%' }}  placeholder="请写下对订单的宝贵意见" name='backTitle' onChange={this._handleChange.bind(this, 'backTitle')}>
+                    <textarea  className="comment-textarea" rows='10' style={{overflow:'auto',width:'96%',marginLeft:'2%' }}  value={this.state.backTitle}  placeholder="请写下对订单的宝贵意见" name='backTitle' onChange={this._handleChange.bind(this, 'backTitle')}>
 
                     </textarea>
                   </div>
                   <ErrorMessage error={this.state.err} />
-                  <button className='btn btn-default' onClick={this.hideModal}>
-                  Close
-                </button>
                 <button className='btn btn-primary' type="submit">
-                  Save changes
+                  回复
+                </button>
+                  <button className='btn btn-default' onClick={this.hideModal}>
+                  取消
                 </button>
               </form>
               
@@ -173,6 +176,11 @@ class CommentList extends React.Component {
         </div>
       </DocumentTitle>
     )
+  }
+  _valueChange = (e) => {
+    this.setState({
+      backTitle: e.target.value
+    })
   }
   _handleSubmit = e => {
     e.preventDefault()
