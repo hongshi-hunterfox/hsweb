@@ -15,9 +15,9 @@ class AllProductsCats extends React.Component{
 		var cats = this.props.cats.map(function(item, index) {
 			return (
 				<div className="all-prod-cat" onClick={()=>{window.location='/all-product?categoryId=' + item.categoryId}}>
-					<span className="all-prod-cat-icon">
+					{/*<span className="all-prod-cat-icon">
 						{item.category.slice(0, 1)}
-					</span>
+					</span>*/}
 					{item.category}
 				</div>
 				);
