@@ -237,6 +237,42 @@ class Recharge extends React.Component {
 					
 				}.bind(this));
           	}
+          }else{
+          	var data={};
+				data.paymentId=this.state.paymentId;
+				data.money=this.state.rechargeMoney;
+				RechargeUtil.submitHandler(data, function(res) {
+					console.log(res);
+					if(res.result===true){
+						if (res.type === 'WC') {
+							if(res.result==='failed'){
+								alert('网络繁忙，请稍后再试');
+								return false;
+							}
+							res['package'] = res.prePackage;
+							this._getWeixinConfig(res);
+							return false;
+						}else if (res.type === 'alipay') {
+							if(res.isWC){
+								window.location.href = '/seller/paymentAlipay?loginRequired=false&paymentSerialNum=' + res.paymentSerialNum + "&payType=" + res.payType+"&merchantCode=" + localStorage.getItem('merchantCode');
+							}else{
+								this.setState({
+									html: res.html
+								});
+								setTimeout(function() {
+									document.forms['alipaysubmit'].submit();
+								}, 0);
+							}
+						}	
+					}else{
+						if(res.reason==='money_not_enough'){
+							alert("余额不足，请选择其他支付方式");
+						}else{
+							alert("网络繁忙，请稍后再试");
+						}
+					}
+					
+				}.bind(this));
           }
         })
 		
