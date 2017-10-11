@@ -88,6 +88,9 @@
 	<select id="getHongShiStore" resultMap="HongShiStore">
 		select id as id,编号 as code,rtrim(简称) as abbreviation,rtrim(全称) as fullName,rtrim(地址) as address,rtrim(联系电话)  as phone,rtrim(类别简称) as catAbbreviation,往来属性 as type from department where 是否停用=0 and 往来属性 in ('直营店','加盟店')
 	</select>
+	<select id="getOrderByOutCode" resultMap="HongShiOrder">
+		select rtrim(是否废止) as IsVoid  from orders where 商户订单号=#{code,jdbcType=VARCHAR}
+	</select>
 	<select id="getHongShiCoupon" resultMap="HongShiCoupon">
 		exec WSC_GetVouchers #{cWeiXinCode,jdbcType=VARCHAR}
 	</select>

@@ -21,8 +21,13 @@ class GlobalConfig extends React.Component {
     super(props)
     this.state = {
       config:{},
-      err: null
+      err: null,
+      uploading:false,
+      logoUrl:'',
+      ucenterImg:''
     }
+    this.imgFile = null
+    this.imgFile1 = null
   }
   componentDidMount() {
     req.get('/uclee-backend-web/config').end((err, res) => {
@@ -31,7 +36,9 @@ class GlobalConfig extends React.Component {
       }
       var data = JSON.parse(res.text)
       this.setState({
-        config: data.config
+        config: data.config,
+        logoUrl:data.config?data.config.logoUrl:'',
+        ucenterImg:data.config?data.config.ucenterImg:''
       })
     })
   }
@@ -177,6 +184,128 @@ class GlobalConfig extends React.Component {
                 </select>
               </div>
             </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">是否免运费：</label>
+              <div className="col-md-9">
+                <select
+                  name="shippingFree"
+                  className="form-control"
+                  value={this.state.shippingFree}
+                  onChange={this._simpleInputChange}
+                >
+                  <option value={false}>否</option>
+                  <option value={true}>是</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">logo图片：</label>
+              <div className="col-md-9">
+                <div className="row">
+                  {
+                    this.state.uploading ?
+                    <div className="product-uploading">
+                      <span>上传中...</span>
+                    </div>
+                    :
+                    null
+                  }
+                  <div className="col-md-4" >
+                    <div className="panel panel-default">
+                      <div className="panel-body">
+                        <div style={{ marginBottom: 10 }}>
+                          <img
+                            src={this.state.logoUrl}
+                            alt=""
+                            className="img-responsive"
+                          />
+                        </div>
+                        {/*<button
+                          type="button"
+                          className="btn btn-danger btn-block"
+                          onClick={this._deleteLogoImg}
+                        >
+                          更换图片
+                        </button>*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => {
+                    this.imgFile.click()
+                  }}
+                >
+                  <span className="glyphicon glyphicon-plus" />
+                  更换图片
+                  {this.state.logoUrl}
+                </button>
+                <input
+                  type="file"
+                  onChange={this._onChooseLogoImage}
+                  className="hidden"
+                  ref={c => {
+                    this.imgFile = c
+                  }}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">用户中心图片：</label>
+              <div className="col-md-9">
+                <div className="row">
+                  {
+                    this.state.uploading ?
+                    <div className="product-uploading">
+                      <span>上传中...</span>
+                    </div>
+                    :
+                    null
+                  }
+                  <div className="col-md-4" >
+                    <div className="panel panel-default">
+                      <div className="panel-body">
+                        <div style={{ marginBottom: 10 }}>
+                          <img
+                            src={this.state.ucenterImg}
+                            alt=""
+                            className="img-responsive"
+                          />
+                        </div>
+                        {/*<button
+                          type="button"
+                          className="btn btn-danger btn-block"
+                          onClick={this._deleteLogoImg}
+                        >
+                          更换图片
+                        </button>*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => {
+                    this.imgFile1.click()
+                  }}
+                >
+                  <span className="glyphicon glyphicon-plus" />
+                  更换图片
+                  {this.state.ucenterImg}
+                </button>
+                <input
+                  type="file"
+                  onChange={this._onChooseUcenterImage}
+                  className="hidden"
+                  ref={c => {
+                    this.imgFile1 = c
+                  }}
+                />
+              </div>
+            </div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
@@ -196,7 +325,69 @@ class GlobalConfig extends React.Component {
       config: c
     })
   }
+  _onChooseLogoImage = fe => {
+    console.log("进入_onChooseLogoImage")
+    if (fe.target.files && fe.target.files[0]) {
+      var f = fe.target.files[0]
 
+      this.setState({
+        uploading: true
+      })
+
+      var fd = new FormData()
+      fd.append('file', f)
+      req
+        .post('/uclee-product-web/doUploadImage')
+        .send(fd)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          console.log(this.state);
+          this.setState({
+              logoUrl: res.text,
+              uploading:false
+          })
+          console.log(this.state);
+        })
+    }
+  }
+_onChooseUcenterImage = fe => {
+  console.log("进入_onChooseUcenterImage")
+    if (fe.target.files && fe.target.files[0]) {
+      var f = fe.target.files[0]
+
+      this.setState({
+        uploading: true
+      })
+
+      var fd = new FormData()
+      fd.append('file', f)
+      req
+        .post('/uclee-product-web/doUploadImage')
+        .send(fd)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          
+          this.setState({
+              ucenterImg: res.text,
+              uploading:false
+          })
+        })
+    }
+  }
+  _deleteLogoImg = index => {
+    this.setState({
+        logoUrl: ''
+    })
+  }
+  _deleteUcenterImg = index => {
+    this.setState({
+        ucenterImg: ''
+    })
+  }
   _submit = (e) => {
     e.preventDefault()
     var data = fto(e.target)
@@ -318,7 +509,8 @@ class GlobalConfig extends React.Component {
     this.setState({
       err: null
     })
-
+    data.logoUrl = this.state.logoUrl;
+    data.ucenterImg = this.state.ucenterImg;
     req
       .post('/uclee-backend-web/configHandler')
       .send(data)

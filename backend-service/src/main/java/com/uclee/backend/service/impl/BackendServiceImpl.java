@@ -187,6 +187,16 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.hsMerchatCode, "");
 		}
+		if (configPost.getLogoUrl()!=null) {
+			configMapper.updateByTag(WebConfig.logoUrl, configPost.getLogoUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.logoUrl, "");
+		}
+		if (configPost.getUcenterImg()!=null) {
+			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}else{
+			configMapper.updateByTag(WebConfig.ucenterImg, "");
+		}
 		return true;
 	}
 
@@ -585,6 +595,10 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setDomain(config.getValue());
 			}else if(config.getTag().equals(WebConfig.hsMerchatCode)){
 				configPost.setHsMerchantCode(config.getValue());
+			}else if(config.getTag().equals(WebConfig.logoUrl)){
+				configPost.setLogoUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.ucenterImg)){
+				configPost.setUcenterImg(config.getValue());
 			}
 
 		}

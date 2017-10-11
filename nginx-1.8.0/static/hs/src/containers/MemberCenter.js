@@ -20,7 +20,8 @@ class MemberCenter extends React.Component {
       isSigned:false,
       unPayCount:0,
       unCommentCount:0,
-      deliCount:0
+      deliCount:0,
+      ucenterImg:''
     }
   }
 
@@ -86,7 +87,7 @@ class MemberCenter extends React.Component {
             }}>签到获取积分</span>:
             <span className="member-center-check-in">今日已签到</span>
           }
-            <img src={hero} alt=""/>
+            <img src={this.state.ucenterImg} alt=""/>
             <div className="member-center-info">
               <div>尊贵的 {this.state.nickName}</div>
               {/*<div>您拥有本店积分：{0}</div>*/}

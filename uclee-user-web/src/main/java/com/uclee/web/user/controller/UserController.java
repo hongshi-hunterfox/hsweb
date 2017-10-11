@@ -49,6 +49,8 @@ public class UserController extends CommonUserHandler{
 	@Autowired
 	private DataSourceFacade dataSource;
 	@Autowired
+	private ConfigMapper configMapper;
+	@Autowired
 	private BackendServiceI backendService;
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
@@ -1066,7 +1068,10 @@ public class UserController extends CommonUserHandler{
 		map.put("unPayCount", unPayCount);
 		int unCommentCount = userService.getUnCommentCount(userId);
 		map.put("unCommentCount", unCommentCount);
-
+		Config config = configMapper.getByTag(WebConfig.ucenterImg);
+		if(config!=null) {
+			map.put("ucenterImg", config.getValue());
+		}
 		return map;
 	}
 

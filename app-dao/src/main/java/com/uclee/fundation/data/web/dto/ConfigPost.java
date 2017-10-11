@@ -37,6 +37,26 @@ public class ConfigPost {
 
 	private String hsMerchantCode;
 
+	private String logoUrl;
+
+	private String ucenterImg;
+
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+
+	public String getUcenterImg() {
+		return ucenterImg;
+	}
+
+	public void setUcenterImg(String ucenterImg) {
+		this.ucenterImg = ucenterImg;
+	}
+
 	public String getDomain() {
 		return domain;
 	}

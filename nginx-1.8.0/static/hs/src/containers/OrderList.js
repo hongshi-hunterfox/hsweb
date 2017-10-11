@@ -116,7 +116,7 @@ class OrderList extends React.Component {
 						})
 					}}>
 						
-						<img className='barcode' src={this.state.barcode} width='95%' />
+						<img className='barcode' src={this.state.barcode} width='80%' />
 						<img className='image' src={this.state.imageUrl} width='80%' /> 
 						<span className='fa fa-times-circle-o icon' ></span>
 					</div>

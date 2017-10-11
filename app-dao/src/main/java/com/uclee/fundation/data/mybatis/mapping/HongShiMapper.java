@@ -25,6 +25,7 @@ public interface HongShiMapper {
 	List<HongShiCoupon> getHongShiCoupon(String cWeiXinCode);
 	List<HongShiCoupon> getHongShiCouponByCode(String voucherCode);
 	List<HongShiOrder> getHongShiOrder(@Param("cWeiXinCode")String cWeiXinCode,@Param("isEnd")Boolean isEnd);
+	HongShiOrder getOrderByOutCode(@Param("code")String code);
 	CreateOrderResult createOrder(HongShiCreateOrder createOrder);
 	List<HongShiOrderItem> getHongShiOrderItems(Integer id);
 	HongShiGoods getHongShiGoods(String code);

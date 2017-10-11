@@ -1,5 +1,8 @@
 package com.uclee.web.user.controller;
 
+import com.uclee.fundation.config.links.WebConfig;
+import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
+import com.uclee.fundation.data.mybatis.model.Config;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.hongshi.service.StoreServiceI;
 import org.apache.log4j.Logger;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by super13 on 5/20/17.
@@ -25,6 +30,8 @@ public class StoreController {
 
     @Autowired
     private StoreServiceI storeService;
+    @Autowired
+    private ConfigMapper configMapper;
 
 
     /** 
@@ -37,9 +44,19 @@ public class StoreController {
     */
     @RequestMapping("storeList")
     public @ResponseBody
-    List<NapaStore> storeList(HttpServletRequest request){
+    Map<String,Object> storeList(HttpServletRequest request){
+        Map<String,Object> ret = new TreeMap<String,Object>();
+        ret.put("storeList",storeService.selectAllNapaStore());
+        Config config1 = configMapper.getByTag(WebConfig.logoUrl);
+        if(config1!=null) {
+            ret.put("logoUrl",config1.getValue() );
+        }
+        Config config2 = configMapper.getByTag(WebConfig.signName);
+        if(config2!=null) {
+            ret.put("signName",config2.getValue());
+        }
 
-        return storeService.selectAllNapaStore();
+        return ret;
     }
 
 }

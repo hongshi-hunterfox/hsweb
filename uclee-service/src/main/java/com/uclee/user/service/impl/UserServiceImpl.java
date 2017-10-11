@@ -2745,7 +2745,13 @@ public class UserServiceImpl implements UserServiceI {
 				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
 				order.setAccounts(account.doubleValue());
 			}
-			return orders;
+			List<HongShiOrder> ordersRet = new ArrayList<HongShiOrder>();
+			for(HongShiOrder item : orders){
+				if(!(isEnd!=null&&!isEnd&&item.getVoid())){
+					ordersRet.add(item);
+				}
+			}
+			return ordersRet;
 		}
 		return null;
 	}
@@ -2769,7 +2775,12 @@ public class UserServiceImpl implements UserServiceI {
 				List<Order> order = orderMapper.selectByVoucherCode(coupon.getVouchersCode());
 				if (order == null || order.size() == 0) {
 					couponsRet.add(coupon);
-				} 
+				}else{
+					HongShiOrder tmp = hongShiMapper.getOrderByOutCode(order.get(0).getOrderSerialNum());
+					if(tmp!=null&&tmp.getVoid()){
+						couponsRet.add(coupon);
+					}
+				}
 			}
 		}
 		return couponsRet;

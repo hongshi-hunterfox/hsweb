@@ -35,5 +35,7 @@ public interface WebConfig {
 	String supportDeliver = "supportDeliver";
 	String domain = "domain";
 	String hsMerchatCode = "hsMerchantCode";
+	String logoUrl = "logoUrl";
+	String ucenterImg = "ucenterImg";
 
 }                      

@@ -542,6 +542,14 @@ insert into web_config (tag,value) values ('thirdCount',30);
     insert into web_config (tag,value) values ('aliAppkey','23887342');
 insert into web_config (tag,value) values ('aliAppSecret','0db633205f62d240086ee62fe892380f');
 insert into web_config (tag,value) values ('templateCode','SMS_67316055');
+  insert into web_config (tag,value) values ('rechargeTmpId','');
+insert into web_config (tag,value) values ('buyTmpId','');
+insert into web_config (tag,value) values ('bindText','');
+insert into web_config (tag,value) values ('supportDeliver','');
+insert into web_config (tag,value) values ('domain','');
+insert into web_config (tag,value) values ('hsMerchantCode','');
+insert into web_config (tag,value) values ('logoUrl','');
+insert into web_config (tag,value) values ('ucenterImg','');
 /*province初始数据*/
 insert into web_province (province_id,province) values (11,'北京');
 insert into web_province (province_id,province) values (12,'天津');
