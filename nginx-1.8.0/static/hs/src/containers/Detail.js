@@ -100,14 +100,14 @@ const DetailSales = (props) => {
     <div className="detail-sales">
 
         {
-          props.salesInfo.length>=1&&!props.salesInfoShow?
+          props.salesInfo.length>=1?
           <div onClick={props.salesInfoShowClick} className='detail-sales-top'>
             <span className='detail-sales-tag'>
               优惠
                 
             </span>
             <span className='detail-sales-text'>
-                  {props.salesInfo[0]}...
+                  {!props.salesInfoShow?props.salesInfo[0]+'...':null}
               </span>
               <Icon className="detail-sales-icon" name={props.salesInfoShow?'chevron-down':'chevron-right'} />
           </div>
@@ -315,7 +315,7 @@ class Detail extends React.Component {
               preMinPrice={this.preMinPrice}
               preMaxPrice={this.preMaxPrice}/>
               {
-                this.state.salesInfo.length>=1&&!this.state.salesInfoShow?
+                this.state.salesInfo.length>=1?
                 <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
                 :null
               }

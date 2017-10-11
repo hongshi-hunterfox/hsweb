@@ -195,7 +195,7 @@ class Recharge extends React.Component {
           if (err) {
             return err
           }
-          var data = res.text;
+          var data = res.body;
           if(!data.result){
           	var conf = confirm('检测到已选优惠活动已过期，是否继续充值？');
           	if(!conf){
