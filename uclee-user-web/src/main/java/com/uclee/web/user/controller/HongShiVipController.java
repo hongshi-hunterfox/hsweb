@@ -173,6 +173,11 @@ public class HongShiVipController {
 				ret.put("result", "success");
 				try{
 					//赠送积分处理
+					UserProfile userProfile = userService.getBasicUserProfile(userId);
+					if(userProfile!=null){
+						userProfile.setRegistTime(new Date());
+						userService.updateProfile(userId,userProfile);
+					}
 					List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 					OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
 					if(oauthLogin!=null&&bindingRewards!=null&&bindingRewards.size()>0){
