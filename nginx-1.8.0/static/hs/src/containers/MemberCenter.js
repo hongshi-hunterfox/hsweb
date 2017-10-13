@@ -32,7 +32,9 @@ class MemberCenter extends React.Component {
         t: new Date().getTime()
       })
       .end((err, res) => {
-        this.setState(res.body)
+        if(res&&res.body){
+          this.setState(res.body)
+        }
       })
 
       req

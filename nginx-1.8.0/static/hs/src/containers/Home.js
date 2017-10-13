@@ -254,14 +254,16 @@ class Home extends React.Component {
     req
       .get('/uclee-user-web/productDetail?productId=' + productId)
       .end((err, res) => {
+        alert('here:' + res.body.currentSpecValudId)
         if (err) {
           return err
         }
-
+        alert('here:' + res.body.currentSpecValudId)
         this.setState({
           showPick: true,
           specifications:res.body.specifications,
-          images:res.body.images
+          images:res.body.images,
+          currentSpecValudId:res.body.currentSpecValudId
         })
       })
   }
@@ -359,7 +361,6 @@ class Home extends React.Component {
           return item.hsGoodsPrice
         })
         var prePrices = spec.values.map((item) => {
-          console.log(item)
           // calc the map BTW
           this.specPrePriceMap[`_${item.valueId}`] = item.prePrice
           this.specPreValueMap[`_${item.valueId}`] = item.value
@@ -370,9 +371,7 @@ class Home extends React.Component {
         this.maxPrice = Math.max.apply(null, prices)
         this.preMinPrice = Math.min.apply(null, prePrices)
         this.preMaxPrice = Math.max.apply(null, prePrices)
-        console.log(prePrices)
     }
-
     var totalPrice = '-'
     if (this.specPriceMap[`_${this.state.currentSpecValudId}`]) {
       totalPrice = new Big(this.specPriceMap[`_${this.state.currentSpecValudId}`]).times(new Big(this.state.currentAmount)).toString()
@@ -420,7 +419,14 @@ class Home extends React.Component {
                           <div className="product-item-price">
                             <div className='left'>¥{'  ' + item1.price}</div>
                             <div className='right' onClick={()=>{
-                              req
+                              this.setState({
+                                  showPick: true,
+                                  specifications:item1.specifications,
+                                  images:item1.images,
+                                  currentSpecValudId:item1.currentSpecValudId,
+                                  productId:item1.productId
+                                })
+                              /*req
                                 .get('/uclee-user-web/productDetail?productId=' + item1.productId)
                                 .end((err, res) => {
                                   if (err) {
@@ -431,9 +437,10 @@ class Home extends React.Component {
                                     showPick: true,
                                     specifications:res.body.specifications,
                                     images:res.body.images,
+                                    currentSpecValudId:res.body.currentSpecValudId,
                                     productId:item1.productId
                                   })
-                                })
+                                })*/
                             }}>buy</div>
                           </div>
                         </div>

@@ -2558,6 +2558,21 @@ public class UserServiceImpl implements UserServiceI {
 					if(value!=null){
 						productDto.setPrice(value.getHsGoodsPrice());
 					}
+					List<ProductImageLink> images = productImageLinkMapper.selectByProductId(productDto.getProductId());
+					productDto.setImages(images);
+					List<Specification> specifications = specificationMapper.getByProductId(productDto.getProductId());
+					productDto.setSpecifications(specifications);
+					if(specifications!=null&&specifications.size()>0){
+						if(specifications.get(0).getValues()!=null&&specifications.get(0).getValues().size()==1){
+							if(specifications.get(0).getValues().get(0)!=null){
+								productDto.setCurrentSpecValudId(specifications.get(0).getValues().get(0).getValueId());
+							}else{
+								productDto.setCurrentSpecValudId(null);
+							}
+						}else{
+							productDto.setCurrentSpecValudId(null);
+						}
+					}
 					products.add(productDto);
 				}
 			}

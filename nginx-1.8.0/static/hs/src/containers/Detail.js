@@ -58,7 +58,7 @@ const DetailInfo = (props) => {
       </div>
       </div>
       <div className="detail-info-stat">
-        <div className="detail-info-stat-item">{props.shippingFree?<span className="tag">免运费</span>:null}销量：{props.salesAmount}</div>
+        <div className="detail-info-stat-item">{props.shippingFree?<span className="tag">免运费</span>:null}<span style={{float:'right'}}>销量：{props.salesAmount}</span></div>
       </div>
     </div>
     )

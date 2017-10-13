@@ -40,6 +40,8 @@ import EditCategory from './containers/EditCategory'
 import BirthVoucher from './containers/BirthVoucher'
 import FullCut from './containers/FullCut'
 import BindMemberSetting from './containers/BindMemberSetting'
+import SystemConfig from './containers/SystemConfig'
+import ActivityConfig from './containers/ActivityConfig'
 import RechargeConfigList from './containers/RechargeConfigList'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
@@ -54,6 +56,8 @@ ReactDOM.render(
       <Route path="product" component={Product} />
       <Route path="product/:id" component={Product} />
       <Route path="global-config" component={GlobalConfig} />
+      <Route path="system-config" component={SystemConfig} />
+      <Route path="activity-config" component={ActivityConfig} />
       <Route path="recharge-config" component={RechargeConfig} />
       <Route path="recharge-config-new" component={RechargeConfigNew} />
       <Route path="recharge-config-list" component={RechargeConfigList} />

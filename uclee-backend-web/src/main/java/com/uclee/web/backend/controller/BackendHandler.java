@@ -34,6 +34,14 @@ public class BackendHandler {
 	public @ResponseBody boolean configHandler(HttpServletRequest request,@RequestBody ConfigPost configPost) {
 		return backendService.updateConfig(configPost);
 	}
+	@RequestMapping("/activityConfigHandler")
+	public @ResponseBody boolean activityConfigHandler(HttpServletRequest request,@RequestBody ConfigPost configPost) {
+		return backendService.updateActivityConfig(configPost);
+	}
+	@RequestMapping("/systemConfigHandler")
+	public @ResponseBody boolean systemConfigHandler(HttpServletRequest request,@RequestBody ConfigPost configPost) {
+		return backendService.systemConfigHandler(configPost);
+	}
 	@RequestMapping("/sendBirthMsg")
 	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
 		return backendService.sendBirthMsg(userId,sendVoucher);

@@ -199,7 +199,222 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return true;
 	}
+	@Override
+	public boolean updateActivityConfig(ConfigPost configPost) {
 
+		boolean flag = true;
+		if (configPost.getDrawPoint()!=null) {
+			configMapper.updateByTag(WebConfig.drawPoint, configPost.getDrawPoint());
+		}
+		if (configPost.getFirstDis()!=null) {
+			configMapper.updateByTag(WebConfig.firstDis, configPost.getFirstDis());
+		}
+		if (configPost.getRegistPoint()!=null) {
+			configMapper.updateByTag(WebConfig.registPoint, configPost.getRegistPoint());
+		}
+		if (configPost.getSecondDis()!=null) {
+			configMapper.updateByTag(WebConfig.secondDis, configPost.getSecondDis());
+		}
+		if (configPost.getSignInPoint()!=null) {
+			configMapper.updateByTag(WebConfig.signInPoint, configPost.getSignInPoint());
+		}
+		if (configPost.getAppId()!=null) {
+			configMapper.updateByTag(WebConfig.APPID, configPost.getAppId());
+		}
+		if (configPost.getAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.AppSecret, configPost.getAppSecret());
+		}
+		if (configPost.getAppKey()!=null) {
+			configMapper.updateByTag(WebConfig.APPKEY, configPost.getAppKey());
+		}
+		if (configPost.getMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.MERCHANT_CODE, configPost.getMerchantCode());
+		}
+		if (configPost.getNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.NOTIFY_URL, configPost.getNotifyUrl());
+		}
+		if (configPost.getFirstPrize()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_PRIZE, configPost.getFirstPrize());
+		}
+		if (configPost.getSecondPrize()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_PRIZE, configPost.getSecondPrize());
+		}
+		if (configPost.getThirdPrize()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_PRIZE, configPost.getThirdPrize());
+		}
+		if (configPost.getFirstCount()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_COUNT, configPost.getFirstCount());
+		}
+		if (configPost.getSecondCount()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_COUNT, configPost.getSecondCount());
+		}
+		if (configPost.getThirdCount()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getThirdCount());
+		}
+		if (configPost.getAlipayNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.alipayNotifyUrl, configPost.getAlipayNotifyUrl());
+		}
+		if (configPost.getSellerId()!=null) {
+			configMapper.updateByTag(WebConfig.sellerId, configPost.getSellerId());
+		}
+		if (configPost.getKey()!=null) {
+			configMapper.updateByTag(WebConfig.key, configPost.getKey());
+		}
+		if (configPost.getPartner()!=null) {
+			configMapper.updateByTag(WebConfig.partner, configPost.getPartner());
+		}
+		if (configPost.getAliAppkey()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppkey, configPost.getAliAppkey());
+		}
+		if (configPost.getAliAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppSecret, configPost.getAliAppSecret());
+		}
+		if (configPost.getTemplateCode()!=null) {
+			configMapper.updateByTag(WebConfig.templateCode, configPost.getTemplateCode());
+		}
+		if (configPost.getSignName()!=null) {
+			configMapper.updateByTag(WebConfig.signName, configPost.getSignName());
+		}
+		if (configPost.getBirthTemId()!=null) {
+			configMapper.updateByTag(WebConfig.birthTmpId, configPost.getBirthTemId());
+		}
+		if (configPost.getBuyTemId()!=null) {
+			configMapper.updateByTag(WebConfig.buyTmpId, configPost.getBuyTemId());
+		}
+		if (configPost.getPayTemId()!=null) {
+			configMapper.updateByTag(WebConfig.payTmpId, configPost.getPayTemId());
+		}
+		if (configPost.getRechargeTemId()!=null) {
+			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
+		}
+		if (configPost.getBindText()!=null) {
+			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
+		}
+		if (configPost.getSupportDeliver()!=null) {
+			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
+		}
+		if (configPost.getDomain()!=null) {
+			configMapper.updateByTag(WebConfig.domain, configPost.getDomain());
+		}
+		if (configPost.getHsMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.hsMerchatCode, configPost.getHsMerchantCode());
+		}
+		if (configPost.getLogoUrl()!=null) {
+			configMapper.updateByTag(WebConfig.logoUrl, configPost.getLogoUrl());
+		}
+		if (configPost.getUcenterImg()!=null) {
+			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}
+		return true;
+	}
+	@Override
+	public boolean systemConfigHandler(ConfigPost configPost) {
+
+		boolean flag = true;
+		if (configPost.getDrawPoint()!=null) {
+			configMapper.updateByTag(WebConfig.drawPoint, configPost.getDrawPoint());
+		}
+		if (configPost.getFirstDis()!=null) {
+			configMapper.updateByTag(WebConfig.firstDis, configPost.getFirstDis());
+		}
+		if (configPost.getRegistPoint()!=null) {
+			configMapper.updateByTag(WebConfig.registPoint, configPost.getRegistPoint());
+		}
+		if (configPost.getSecondDis()!=null) {
+			configMapper.updateByTag(WebConfig.secondDis, configPost.getSecondDis());
+		}
+		if (configPost.getSignInPoint()!=null) {
+			configMapper.updateByTag(WebConfig.signInPoint, configPost.getSignInPoint());
+		}
+		if (configPost.getAppId()!=null) {
+			configMapper.updateByTag(WebConfig.APPID, configPost.getAppId());
+		}
+		if (configPost.getAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.AppSecret, configPost.getAppSecret());
+		}
+		if (configPost.getAppKey()!=null) {
+			configMapper.updateByTag(WebConfig.APPKEY, configPost.getAppKey());
+		}
+		if (configPost.getMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.MERCHANT_CODE, configPost.getMerchantCode());
+		}
+		if (configPost.getNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.NOTIFY_URL, configPost.getNotifyUrl());
+		}
+		if (configPost.getFirstPrize()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_PRIZE, configPost.getFirstPrize());
+		}
+		if (configPost.getSecondPrize()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_PRIZE, configPost.getSecondPrize());
+		}
+		if (configPost.getThirdPrize()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_PRIZE, configPost.getThirdPrize());
+		}
+		if (configPost.getFirstCount()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_COUNT, configPost.getFirstCount());
+		}
+		if (configPost.getSecondCount()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_COUNT, configPost.getSecondCount());
+		}
+		if (configPost.getThirdCount()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getThirdCount());
+		}
+		if (configPost.getAlipayNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.alipayNotifyUrl, configPost.getAlipayNotifyUrl());
+		}
+		if (configPost.getSellerId()!=null) {
+			configMapper.updateByTag(WebConfig.sellerId, configPost.getSellerId());
+		}
+		if (configPost.getKey()!=null) {
+			configMapper.updateByTag(WebConfig.key, configPost.getKey());
+		}
+		if (configPost.getPartner()!=null) {
+			configMapper.updateByTag(WebConfig.partner, configPost.getPartner());
+		}
+		if (configPost.getAliAppkey()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppkey, configPost.getAliAppkey());
+		}
+		if (configPost.getAliAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppSecret, configPost.getAliAppSecret());
+		}
+		if (configPost.getTemplateCode()!=null) {
+			configMapper.updateByTag(WebConfig.templateCode, configPost.getTemplateCode());
+		}
+		if (configPost.getSignName()!=null) {
+			configMapper.updateByTag(WebConfig.signName, configPost.getSignName());
+		}
+		if (configPost.getBirthTemId()!=null) {
+			configMapper.updateByTag(WebConfig.birthTmpId, configPost.getBirthTemId());
+		}
+		if (configPost.getBuyTemId()!=null) {
+			configMapper.updateByTag(WebConfig.buyTmpId, configPost.getBuyTemId());
+		}
+		if (configPost.getPayTemId()!=null) {
+			configMapper.updateByTag(WebConfig.payTmpId, configPost.getPayTemId());
+		}
+		if (configPost.getRechargeTemId()!=null) {
+			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
+		}
+		if (configPost.getBindText()!=null) {
+			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
+		}
+		if (configPost.getSupportDeliver()!=null) {
+			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
+		}
+		if (configPost.getDomain()!=null) {
+			configMapper.updateByTag(WebConfig.domain, configPost.getDomain());
+		}
+		if (configPost.getHsMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.hsMerchatCode, configPost.getHsMerchantCode());
+		}
+		if (configPost.getLogoUrl()!=null) {
+			configMapper.updateByTag(WebConfig.logoUrl, configPost.getLogoUrl());
+		}
+		if (configPost.getUcenterImg()!=null) {
+			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}
+		return true;
+	}
 	@Override
 	public List<Freight> selectAllFreight() {
 

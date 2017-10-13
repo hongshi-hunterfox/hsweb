@@ -122,4 +122,8 @@ public interface BackendServiceI {
 	boolean delComment(Integer id);
 
 	boolean truncateBirthVoucherHandler();
+
+    boolean updateActivityConfig(ConfigPost configPost);
+
+	boolean systemConfigHandler(ConfigPost configPost);
 }
