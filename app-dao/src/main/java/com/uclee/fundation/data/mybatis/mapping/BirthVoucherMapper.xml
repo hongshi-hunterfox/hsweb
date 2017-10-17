@@ -19,7 +19,7 @@
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from web_birth_voucher order by id desc
+    from web_birth_voucher
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_birth_voucher

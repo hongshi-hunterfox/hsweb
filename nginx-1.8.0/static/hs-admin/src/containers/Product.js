@@ -668,7 +668,7 @@ class Product extends React.Component {
       var resJson = JSON.parse(res.text)
       if(!resJson.result){
         return this.setState({
-          err: '标题已存在'
+          err: '名称已存在'
         });
       }
 

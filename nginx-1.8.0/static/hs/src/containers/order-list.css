@@ -45,6 +45,9 @@
   float: left;
   border-right: 1px solid #C9C9C9;
   border-bottom: 1px solid #C9C9C9;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .order-top .active {
   color: #f15f40;

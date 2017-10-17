@@ -18,6 +18,8 @@ class RechargeConfigList extends React.Component {
     super(props)
     this.state = {
       rechargeConfigs:[],
+      config:null,
+      show:false
     }
   }
 
@@ -43,6 +45,17 @@ class RechargeConfigList extends React.Component {
       })
     }
   }
+  _setConfig=(config)=>{
+      this.setState({
+        config:config,
+        show:true
+      })
+  }
+  _close=()=>{
+      this.setState({
+        show:false
+      })
+  }
   render() {
     var list = this.state.rechargeConfigs.map((item, index) => {
       return (
@@ -59,7 +72,7 @@ class RechargeConfigList extends React.Component {
           <td style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.endTimeStr}</td>
-          <td style={{
+          {/*<td style={{
             textAlign:'center',verticalAlign:'middle'
           }}>{item.voucherCode}</td>
           <td style={{
@@ -79,15 +92,22 @@ class RechargeConfigList extends React.Component {
           }}>{item.amountThird}</td>
           <td style={{
             textAlign:'center',verticalAlign:'middle'
-          }}>{item.limit}</td>
+          }}>{item.limit}</td>*/}
           <td style={{
             textAlign:'center',verticalAlign:'middle'
           }}>
-            <button className="btn btn-primary" onClick={()=>{window.location='/recharge-config-new?id='+item.id}}>
+            <button className="btn btn-primary" onClick={()=>{window.location='/recharge-config-new?id='+item.id}} style={{
+            marginRight:'5px',marginBottom:'5px'
+          }}>
               编辑
             </button>
-            <button className="btn btn-primary" onClick={this._del.bind(this,item.id)}>
+            <button className="btn btn-primary" onClick={this._del.bind(this,item.id)} style={{
+            marginRight:'5px',marginBottom:'5px'
+          }}>
               删除
+            </button>
+            <button className="btn btn-primary" onClick={this._setConfig.bind(this,item)} >
+              查看赠送详情
             </button>
           </td>
         </tr>
@@ -104,25 +124,93 @@ class RechargeConfigList extends React.Component {
             <table className="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th>充值金额</th>
-                  <th>赠送金额</th>
-                  <th>起始时间</th>
-                  <th>终止时间</th>
-                  <th>券1商品号</th>
+                  <th style={{
+            textAlign:'center',verticalAlign:'middle'
+          }}>充值金额</th>
+                  <th style={{
+            textAlign:'center',verticalAlign:'middle'
+          }}>赠送金额</th>
+                  <th style={{
+            textAlign:'center',verticalAlign:'middle'
+          }}>起始时间</th>
+                  <th style={{
+            textAlign:'center',verticalAlign:'middle'
+          }}>终止时间</th>
+                  {/*<th>券1商品号</th>
                   <th>券1数量</th>
                   <th>券2商品号</th>
                   <th>券2数量</th>
                   <th>券3商品号</th>
                   <th>券3数量</th>
-                  <th>获券上限</th>
-                  <th>
-                    <a href=""></a>操作</th>
+                  <th>获券上限</th>*/}
+                  <th style={{
+            textAlign:'center',verticalAlign:'middle'
+          }}>操作</th>
                 </tr>
               </thead>
               <tbody>
                 {list}
               </tbody>
             </table>
+            {
+              this.state.config&&this.state.show?
+              <div className='recharge-config-list-model'>
+                <i className='fa fa-times-circle-o icon' onClick={this._close}/>
+                <table className="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>券1商品号</th>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>券1数量</th>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>券2商品号</th>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>券2数量</th>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>券3商品号</th>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>券3数量</th>
+                      <th style={{
+            textAlign:'center',verticalAlign:'middle',color:'white'
+          }}>获券上限</th>
+                    </tr>
+                          </thead>
+                          <tbody>
+                            <tr >
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.voucherCode}</td>
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.amount}</td>
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.voucherCodeSecond}</td>
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.amountSecond}</td>
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.voucherCodeThird}</td>
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.amountThird}</td>
+                      <td style={{
+                        textAlign:'center',verticalAlign:'middle'
+                      }}>{this.state.config.limit}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>:null
+            }
+            
         </div>
       </DocumentTitle>
     )

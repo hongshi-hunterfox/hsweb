@@ -30,8 +30,13 @@ class RechargeConfigNew extends React.Component {
       err: null,
       rechargeConfig:{
         startTimeStr:'',
-        endTimeStr:''
+        endTimeStr:'',
+        startDateTmp:'',
+        endDateTmp:'',
+        startTimeTmp:'00:00',
+        endTimeTmp:'00:00'
       },
+     
       startMoment:moment(),
       endMoment:moment(),
       startTimestamp:0,
@@ -99,9 +104,10 @@ class RechargeConfigNew extends React.Component {
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">起始时间：</label>
-              <input type='text' name='startTimeStr' value={this.state.rechargeConfig.startTimeStr} />
+              <input type='date' name='startDateTmp' value={this.state.rechargeConfig.startDateTmp} onChange={this._handleChange.bind(this, 'startDateTmp')}/>
+              <input type='time' name='startTimeTmp' value={this.state.rechargeConfig.startTimeTmp} onChange={this._handleChange.bind(this, 'startTimeTmp')}/>
             </div>
-            <div className="form-group">
+            {/*<div className="form-group">
             <label className="control-label col-md-3"></label>
               <InputMoment
                 moment={this.state.startMoment}
@@ -110,12 +116,13 @@ class RechargeConfigNew extends React.Component {
                 prevMonthIcon="ion-ios-arrow-left" // default 
                 nextMonthIcon="ion-ios-arrow-right" // default 
               />
-            </div>
+            </div>*/}
             <div className="form-group">
               <label className="control-label col-md-3">截止时间：</label>
-              <input type='text' name='endTimeStr' value={this.state.rechargeConfig.endTimeStr} />
+              <input type='date' name='endDateTmp' value={this.state.rechargeConfig.endDateTmp} onChange={this._handleChange.bind(this, 'endDateTmp')}/>
+              <input type='time' name='endTimeTmp' value={this.state.rechargeConfig.endTimeTmp} onChange={this._handleChange.bind(this, 'endTimeTmp')}/>
             </div>
-            <div className="form-group">
+            {/*<div className="form-group">
             <label className="control-label col-md-3"></label>
               <InputMoment
                 moment={this.state.endMoment}
@@ -124,7 +131,7 @@ class RechargeConfigNew extends React.Component {
                 prevMonthIcon="ion-ios-arrow-left" // default 
                 nextMonthIcon="ion-ios-arrow-right" // default 
               />
-            </div>
+            </div>*/}
             <div className="form-group">
               <label className="control-label col-md-3 col-md-offset-1 fa fa-plus-square-o plus" ></label>
             </div>
@@ -188,12 +195,7 @@ class RechargeConfigNew extends React.Component {
       })
       return false;
     }
-    if(this.state.startMoment>=this.state.endMoment){
-      this.setState({
-        err: '开始时间需小于结束时间'
-      })
-      return false;
-    }
+    
     if(!/^\d+(\.\d{1,2})?$/.test(data.money)){
       this.setState({
         err: '请输入正确金额'
@@ -212,13 +214,13 @@ class RechargeConfigNew extends React.Component {
       })
       return false;
     }
-    if(!data.startTimeStr){
+    if(!data.startDateTmp){
       this.setState({
         err: '请输入起始时间'
       })
       return false;
     }
-    if(!data.endTimeStr){
+    if(!data.endDateTmp){
       this.setState({
         err: '请输入截止时间'
       })
@@ -244,6 +246,15 @@ class RechargeConfigNew extends React.Component {
     if((data.voucherCode||data.voucherCodeSecond||data.voucherCodeThird)&&!data.limit){
       this.setState({
         err: '请输入每人获券上限次数'
+      })
+      return false;
+    }
+    data.startTimeStr=data.startDateTmp+" " + data.startTimeTmp + ":00";
+    data.endTimeStr=data.endDateTmp+" " + data.endTimeTmp + ":00";
+    console.log(data);
+    if(Date.parse(data.startTimeStr)>=Date.parse(data.endTimeStr)){
+      this.setState({
+        err: '开始时间需小于结束时间'
       })
       return false;
     }

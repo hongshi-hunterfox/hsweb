@@ -30,8 +30,14 @@ class DistributionCenter extends React.Component {
           	allowRecharge:res.body.allowRecharge,
           	cVipCode:res.body.cVipCode,
           })
+          if(!res.body.cVipCode){
+			alert("请先绑定会员卡");
+			window.location='/member-setting';
+			return;
+		}
         }
       })
+
 		request.get('/uclee-user-web/distCenter').end((err, res) => {
 			if (err) {
 				return err

@@ -1147,26 +1147,6 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
-	public boolean isVoucherLimit(Integer amount) {
-		if(amount==null){
-			amount=1;
-		}
-		try {
-			List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
-			for(BirthVoucher birthVoucher:birthVouchers) {
-				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
-				if(coupon!=null&&coupon.size()<(birthVoucher.getAmount()*amount)){
-					return false;
-				}
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-			return true;
-		}
-		return true;
-	}
-
-	@Override
 	public boolean delComment(Integer id) {
 		Comment comment = commentMapper.selectByPrimaryKey(id);
 		if(comment!=null){
@@ -1175,6 +1155,35 @@ public class BackendServiceImpl implements BackendServiceI {
 			return commentMapper.updateByPrimaryKeySelective(comment)>0;
 		}
 		return false;
+	}
+
+	@Override
+	public Map<String,Object> isVoucherLimit(Integer amount) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(amount==null){
+			amount=1;
+		}
+		try {
+			List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
+			for(BirthVoucher birthVoucher:birthVouchers) {
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
+				if(coupon!=null&&coupon.size()<(birthVoucher.getAmount()*amount)){
+					ret.put("result",false);
+					if(coupon.size()>0) {
+						ret.put("text", "券（商品券号：" + coupon.get(0).getGoodsCode() + "），剩余张数为" + coupon.size() + "还差" + (birthVoucher.getAmount() * amount-coupon.size()) + "张");
+					}else{
+						ret.put("text", "券（商品券号：" + birthVoucher.getVoucherCode() + "），剩余张数为0张" + "还差" + (birthVoucher.getAmount() * amount) + "张");
+					}
+					return ret;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			ret.put("result",false);
+			return ret;
+		}
+		ret.put("result",true);
+		return ret;
 	}
 
 	@Override

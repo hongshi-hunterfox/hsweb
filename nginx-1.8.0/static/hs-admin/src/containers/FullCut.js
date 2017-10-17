@@ -36,7 +36,11 @@ class FullCut extends React.Component {
       startTimeStr:'',
       endTimeStr:'',
       startMoment:moment(),
-      endMoment:moment()
+      endMoment:moment(),
+      startDateTmp:'',
+      endDateTmp:'',
+      startTimeTmp:'00:00',
+      endTimeTmp:'00:00'
     }
   }
 
@@ -53,7 +57,11 @@ class FullCut extends React.Component {
         startMoment:moment(data.data.startTime),
         endMoment:moment(data.data.endTime),
         startTimeStr:data.data.startTimeStr,
-        endTimeStr:data.data.endTimeStr
+        endTimeStr:data.data.endTimeStr,
+        startDateTmp:data.data.startDateTmp,
+        endDateTmp:data.data.endDateTmp,
+        startTimeTmp:data.data.startTimeTmp,
+        endTimeTmp:data.data.endTimeTmp
       })
     })
   }
@@ -118,9 +126,11 @@ class FullCut extends React.Component {
             </div>
            <div className="form-group">
               <label className="control-label col-md-3">起始时间：</label>
-              <input type='text' name='startTimeStr' value={this.state.startTimeStr} />
+              {/*<input type='text' name='startTimeStr' value={this.state.startTimeStr} />*/}
+               <input type='date' name='startDateTmp' value={this.state.startDateTmp} onChange={this._handleChange.bind(this)}/>
+              <input type='time' name='startTimeTmp' value={this.state.startTimeTmp} onChange={this._handleChange.bind(this)}/>
             </div>
-            <div className="form-group">
+            {/*<div className="form-group">
             <label className="control-label col-md-3"></label>
               <InputMoment
                 moment={this.state.startMoment}
@@ -129,12 +139,14 @@ class FullCut extends React.Component {
                 prevMonthIcon="ion-ios-arrow-left" // default 
                 nextMonthIcon="ion-ios-arrow-right" // default 
               />
-            </div>
+            </div>*/}
             <div className="form-group">
               <label className="control-label col-md-3">截止时间：</label>
-              <input type='text' name='endTimeStr' value={this.state.endTimeStr} />
+              {/*<input type='text' name='endTimeStr' value={this.state.endTimeStr} />*/}
+              <input type='date' name='endDateTmp' value={this.state.endDateTmp} onChange={this._handleChange.bind(this)}/>
+              <input type='time' name='endTimeTmp' value={this.state.endTimeTmp} onChange={this._handleChange.bind(this)}/>
             </div>
-            <div className="form-group">
+            {/*<div className="form-group">
             <label className="control-label col-md-3"></label>
               <InputMoment
                 moment={this.state.endMoment}
@@ -143,7 +155,7 @@ class FullCut extends React.Component {
                 prevMonthIcon="ion-ios-arrow-left" // default 
                 nextMonthIcon="ion-ios-arrow-right" // default 
               />
-            </div>
+            </div>*/}
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
@@ -155,7 +167,11 @@ class FullCut extends React.Component {
       </DocumentTitle>
     )
   }
-
+_handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
   _submit = e => {
     e.preventDefault()
     var data = fto(e.target)
@@ -168,24 +184,33 @@ class FullCut extends React.Component {
       })
       return;
     }
-    if(!data.startTimeStr){
+    if(!data.startDateTmp){
       this.setState({
         err: "请填写开始时间"
       })
       return;
     }
-    if(!data.endTimeStr){
+    if(!data.endDateTmp){
       this.setState({
         err: "请填写截止时间"
       })
       return;
     }
-    if(this.state.startMoment>=this.state.endMoment){
+    data.startTimeStr=data.startDateTmp+" " + data.startTimeTmp + ":00";
+    data.endTimeStr=data.endDateTmp+" " + data.endTimeTmp + ":00";
+    console.log(data);
+    if(Date.parse(data.startTimeStr)>=Date.parse(data.endTimeStr)){
       this.setState({
         err: '开始时间需小于结束时间'
       })
       return false;
     }
+    /*if(this.state.startMoment>=this.state.endMoment){
+      this.setState({
+        err: '开始时间需小于结束时间'
+      })
+      return false;
+    }*/
     data.myKey = values1(data.myKey)
     data.myValue = values1(data.myValue)
     

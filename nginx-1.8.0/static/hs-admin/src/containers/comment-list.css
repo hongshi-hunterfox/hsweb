@@ -71,3 +71,24 @@ table {
   table-layout: fixed;
   word-break: break-all;
 }
+.comment-detail {
+  position: fixed;
+  top: 20%;
+  left: 40%;
+  width: 30%;
+  background-color: #dfdfdf;
+  padding: 5px;
+}
+.comment-detail:before,
+.comment-detail:after {
+  content: "";
+  display: table;
+}
+.comment-detail:after {
+  clear: both;
+}
+.comment-detail .icon {
+  float: right;
+  padding: 5px;
+  font-size: 20px;
+}

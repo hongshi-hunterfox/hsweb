@@ -47,7 +47,7 @@ public class BackendHandler {
 		return backendService.sendBirthMsg(userId,sendVoucher);
 	}
 	@RequestMapping("/isVoucherLimit")
-	public @ResponseBody boolean isVoucherLimit(HttpServletRequest request,Integer amount) {
+	public @ResponseBody Map<String,Object> isVoucherLimit(HttpServletRequest request,Integer amount) {
 		return backendService.isVoucherLimit(amount);
 	}
 	@RequestMapping("/sendUnbuyMsg")

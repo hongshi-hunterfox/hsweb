@@ -41,14 +41,18 @@ class UserBirthList extends React.Component {
     if(conf){
       url='/uclee-backend-web/sendBirthMsg?userId=' + userId+'&sendVoucher=1';
       req
-      .get('/uclee-backend-web/isVoucherLimit')
+      .get('/uclee-backend-web/isVoucherLimit?amount=1')
       .end((err, res) => {
         if (err) {
           return err
         }
-        if (!res.body) {
-          alert('礼券数量不符，数量不足')
-        } else {
+        if (!res.body.result) {
+          if(res.body.text){
+            alert(res.body.text);
+          }else{
+            alert('礼券数量不符，数量不足');
+          }
+        }  else {
           req
             .get(url)
             .end((err, res) => {
@@ -110,8 +114,12 @@ class UserBirthList extends React.Component {
         if (err) {
           return err
         }
-        if (!res.body) {
-          alert('礼券数量不符，数量不足')
+        if (!res.body.result) {
+          if(res.body.text){
+            alert(res.body.text);
+          }else{
+            alert('礼券数量不符，数量不足');
+          }
         } else {
           var ret = true;
           for (var i in this.state.checked)
@@ -201,7 +209,8 @@ class UserBirthList extends React.Component {
       <DocumentTitle title="用户列表">
         <div className="user-list">
           <div className="clearfix" style={{margin:'30px 0'}}>
-            <label className="control-label col-md-3">起始时间：</label>
+          <div className='searchTime'>
+            <label className="control-label">起始时间：</label>
             <input
               className="form-control"
               type="date"
@@ -211,7 +220,9 @@ class UserBirthList extends React.Component {
                 this.setState({ start: e.target.value })
               }}
             />
-            <label className="control-label col-md-3">截止时间：</label>
+            </div>
+            <div className='searchTime'>
+            <label className="control-label">截止时间：</label>
             <input
               className="form-control"
               type="date"
@@ -221,7 +232,8 @@ class UserBirthList extends React.Component {
                 this.setState({ end: e.target.value })
               }}
             />
-            <div className="btn btn-primary" style={{marginTop:'10px',float:'right'}} onClick={this._search}>
+            </div>
+            <div className="btn btn-primary searchBtn" style={{marginTop:'25px',float:'left'}} onClick={this._search}>
               搜索
             </div>
           </div>

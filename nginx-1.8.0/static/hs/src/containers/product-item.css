@@ -73,7 +73,7 @@
 .product-item-title {
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 40px;
+  height: 45px;
   font-size: 15px;
   display: -webkit-box;
   -webkit-line-clamp: 2;

@@ -71,7 +71,8 @@ class BirthVoucher extends React.Component {
 
                 {this.state.initValue
                   ? <ValueGroup
-                      condition={'大于>km'}
+                      condition={''}
+                      hideCondition={true}
                       keyText={'优惠券对应商品号'}
                       valueText={'赠送数量'}
                       keyName={'myKey'}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
 import com.uclee.fundation.data.mybatis.model.*;
+import org.apache.commons.collections.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -66,13 +67,29 @@ public class BackendController {
 			shippingFullCut.add(shippingFullCut1);
 			map.put("startTime",new Date());
 			map.put("endTime",new Date());
-			map.put("startTimeStr",DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
-			map.put("endTimeStr",DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
+			String startTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
+			String endTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
+			map.put("startTimeStr",startTimeStr);
+			map.put("endTimeStr",endTimeStr);
+			try {
+				map.put("startDateTmp",startTimeStr.split(" ")[0]);
+				map.put("startTimeTmp",startTimeStr.split(" ")[1]);
+				map.put("endDateTmp",endTimeStr.split(" ")[0]);
+				map.put("endTimeTmp",endTimeStr.split(" ")[1]);
+			}catch (Exception e){}
 		}else{
 			map.put("startTime",shippingFullCut.get(0).getStartTime());
 			map.put("endTime",shippingFullCut.get(0).getEndTime());
-			map.put("startTimeStr",DateUtils.format(shippingFullCut.get(0).getStartTime(),DateUtils.FORMAT_LONG));
-			map.put("endTimeStr",DateUtils.format(shippingFullCut.get(0).getEndTime(),DateUtils.FORMAT_LONG));
+			String startTimeStr= DateUtils.format(shippingFullCut.get(0).getStartTime(),DateUtils.FORMAT_LONG);
+			String endTimeStr= DateUtils.format(shippingFullCut.get(0).getEndTime(),DateUtils.FORMAT_LONG);
+			map.put("startTimeStr",startTimeStr);
+			map.put("endTimeStr",endTimeStr);
+			try {
+				map.put("startDateTmp",startTimeStr.split(" ")[0]);
+				map.put("startTimeTmp",startTimeStr.split(" ")[1]);
+				map.put("endDateTmp",endTimeStr.split(" ")[0]);
+				map.put("endTimeTmp",endTimeStr.split(" ")[1]);
+			}catch (Exception e){}
 		}
 		for(ShippingFullCut item : shippingFullCut){
 			map.put("myKey[" + i + "]", item.getsLimit());
@@ -119,13 +136,29 @@ public class BackendController {
 			fullCut1.setCondition(new BigDecimal(0));
 			map.put("startTime",new Date());
 			map.put("endTime",new Date());
+			String startTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
+			String endTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
 			map.put("startTimeStr",DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
 			map.put("endTimeStr",DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
+			try {
+				map.put("startDateTmp",startTimeStr.split(" ")[0]);
+				map.put("startTimeTmp",startTimeStr.split(" ")[1]);
+				map.put("endDateTmp",endTimeStr.split(" ")[0]);
+				map.put("endTimeTmp",endTimeStr.split(" ")[1]);
+			}catch (Exception e){}
 		}else{
 			map.put("startTime",fullCut.get(0).getStartTime());
 			map.put("endTime",fullCut.get(0).getEndTime());
-			map.put("startTimeStr",DateUtils.format(fullCut.get(0).getStartTime(),DateUtils.FORMAT_LONG));
-			map.put("endTimeStr",DateUtils.format(fullCut.get(0).getEndTime(),DateUtils.FORMAT_LONG));
+			String startTimeStr= DateUtils.format(fullCut.get(0).getStartTime(),DateUtils.FORMAT_LONG);
+			String endTimeStr= DateUtils.format(fullCut.get(0).getEndTime(),DateUtils.FORMAT_LONG);
+			map.put("startTimeStr",startTimeStr);
+			map.put("endTimeStr",endTimeStr);
+			try {
+				map.put("startDateTmp",startTimeStr.split(" ")[0]);
+				map.put("startTimeTmp",startTimeStr.split(" ")[1]);
+				map.put("endDateTmp",endTimeStr.split(" ")[0]);
+				map.put("endTimeTmp",endTimeStr.split(" ")[1]);
+			}catch (Exception e){}
 		}
 		for(FullCut item : fullCut){
 			map.put("myKey[" + i + "]", item.getCondition());
@@ -139,7 +172,7 @@ public class BackendController {
 	@RequestMapping("/birthVoucher")
 	public @ResponseBody Map<String,Object> birthVoucher(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();
-		Map<String,Object> map = new TreeMap<String,Object>();
+		Map<String,Object> map = new LinkedMap();
 		List<BirthVoucher> birthVoucher = backendService.selectAllBirthVoucher();
 		/*if(birthVoucher!=null&&birthVoucher.size()==0){
 			BirthVoucher tmp = new BirthVoucher();
@@ -219,6 +252,14 @@ public class BackendController {
 		if(rechargeConfig!=null){
 			rechargeConfig.setEndTimeStr(DateUtils.format(rechargeConfig.getEndTime(),DateUtils.FORMAT_LONG));
 			rechargeConfig.setStartTimeStr(DateUtils.format(rechargeConfig.getStartTime(),DateUtils.FORMAT_LONG));
+			try{
+				rechargeConfig.setStartDateTmp(rechargeConfig.getStartTimeStr().split(" ")[0]);
+				rechargeConfig.setStartTimeTmp(rechargeConfig.getStartTimeStr().split(" ")[1]);
+				rechargeConfig.setEndDateTmp(rechargeConfig.getEndTimeStr().split(" ")[0]);
+				rechargeConfig.setEndTimeTmp(rechargeConfig.getEndTimeStr().split(" ")[1]);
+			}catch (Exception e){
+
+			}
 		}
 		return rechargeConfig;
 	}

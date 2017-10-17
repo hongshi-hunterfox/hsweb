@@ -79,7 +79,7 @@ class CommentDetail extends React.Component{
 						{
 							this.state.comment.backTitle?
 							<div className='comment-detail-content'>
-								<label className='lable'>系统回复：</label>
+								<label className='lable'>商家回复：</label>
 								{this.state.comment.backTitle}
 							</div>
 							:null

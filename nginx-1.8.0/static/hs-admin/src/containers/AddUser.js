@@ -90,13 +90,14 @@ class AddUser extends React.Component {
 
         if(res.body.result==="success"){
           alert("添加成功！");
+          browserHistory.push({
+            pathname: '/phoneUserList'
+          })
         }else{
           alert(res.body.reason);
         }
 
-        browserHistory.push({
-          pathname: '/phoneUserList'
-        })
+        
       })
   }
 }

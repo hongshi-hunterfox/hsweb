@@ -42,14 +42,15 @@ class ValueGroup extends React.Component {
       keyText,
       valueText,
       condition,
-      selectDefaultValue
+      selectDefaultValue,
+      hideCondition
     } = this.props
     return (
       <div className="vlaue-group">
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th />
+              {hideCondition?null:<th />}
               <th>{keyText}</th>
               <th>{valueText}</th>
               {useSelect ? <th>{selectText}</th> : null}
@@ -60,7 +61,7 @@ class ValueGroup extends React.Component {
             {range(this.state.rowCount).map((item, index) => {
               return (
                 <tr key={index}>
-                  <td>{condition}</td>
+                  {hideCondition?null:<td>{condition}</td>}
                   <td>
                     <input
                       type="text"

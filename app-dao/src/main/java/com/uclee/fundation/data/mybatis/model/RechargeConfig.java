@@ -31,7 +31,44 @@ public class RechargeConfig {
 
     private Date endTime;
 
+	private String startDateTmp;
+	private String endDateTmp;
+	private String startTimeTmp;
+	private String endTimeTmp;
+
     private boolean inTime;
+
+	public String getStartDateTmp() {
+		return startDateTmp;
+	}
+
+	public void setStartDateTmp(String startDateTmp) {
+		this.startDateTmp = startDateTmp;
+	}
+
+	public String getEndDateTmp() {
+		return endDateTmp;
+	}
+
+	public void setEndDateTmp(String endDateTmp) {
+		this.endDateTmp = endDateTmp;
+	}
+
+	public String getStartTimeTmp() {
+		return startTimeTmp;
+	}
+
+	public void setStartTimeTmp(String startTimeTmp) {
+		this.startTimeTmp = startTimeTmp;
+	}
+
+	public String getEndTimeTmp() {
+		return endTimeTmp;
+	}
+
+	public void setEndTimeTmp(String endTimeTmp) {
+		this.endTimeTmp = endTimeTmp;
+	}
 
 	public boolean isInTime() {
 		return inTime;
