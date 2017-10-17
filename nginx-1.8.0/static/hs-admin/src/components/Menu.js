@@ -66,7 +66,7 @@ class Menu extends React.Component {
             现场抽奖活动
           </Link>
           <Link to={'/activity-config?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
-          活动参数配置
+          参数配置
           </Link>
            <Link to={'/system-config?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             系统配置

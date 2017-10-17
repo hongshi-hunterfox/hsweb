@@ -121,11 +121,7 @@ class SystemConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.rechargeTemId} name="rechargeTemId" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
-              <div className="col-md-9" style={{marginTop:'10px'}}>
-                <textarea rows="6" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
-                </textarea>
-              </div>
+              
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>域名地址：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input  value={this.state.config.domain} name="domain" className="form-control" onChange={this._change} />
@@ -135,114 +131,7 @@ class SystemConfig extends React.Component {
                 <input value={this.state.config.hsMerchantCode} name="hsMerchantCode" className="form-control" onChange={this._change}/>
               </div>
             </div>
-            <div className="form-group">
-              <label className="control-label col-md-3">logo图片：</label>
-              <div className="col-md-9">
-                <div className="row">
-                  {
-                    this.state.uploading ?
-                    <div className="product-uploading">
-                      <span>上传中...</span>
-                    </div>
-                    :
-                    null
-                  }
-                  <div className="col-md-4" >
-                    <div className="panel panel-default">
-                      <div className="panel-body">
-                        <div style={{ marginBottom: 10 }}>
-                          <img
-                            src={this.state.logoUrl}
-                            alt=""
-                            className="img-responsive"
-                          />
-                        </div>
-                        {/*<button
-                          type="button"
-                          className="btn btn-danger btn-block"
-                          onClick={this._deleteLogoImg}
-                        >
-                          更换图片
-                        </button>*/}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  className="btn btn-default"
-                  type="button"
-                  onClick={() => {
-                    this.imgFile.click()
-                  }}
-                >
-                  <span className="glyphicon glyphicon-plus" />
-                  更换图片
-                  {this.state.logoUrl}
-                </button>
-                <input
-                  type="file"
-                  onChange={this._onChooseLogoImage}
-                  className="hidden"
-                  ref={c => {
-                    this.imgFile = c
-                  }}
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="control-label col-md-3">用户中心图片：</label>
-              <div className="col-md-9">
-                <div className="row">
-                  {
-                    this.state.uploading ?
-                    <div className="product-uploading">
-                      <span>上传中...</span>
-                    </div>
-                    :
-                    null
-                  }
-                  <div className="col-md-4" >
-                    <div className="panel panel-default">
-                      <div className="panel-body">
-                        <div style={{ marginBottom: 10 }}>
-                          <img
-                            src={this.state.ucenterImg}
-                            alt=""
-                            className="img-responsive"
-                          />
-                        </div>
-                        {/*<button
-                          type="button"
-                          className="btn btn-danger btn-block"
-                          onClick={this._deleteLogoImg}
-                        >
-                          更换图片
-                        </button>*/}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  className="btn btn-default"
-                  type="button"
-                  onClick={() => {
-                    this.imgFile1.click()
-                  }}
-                >
-                  <span className="glyphicon glyphicon-plus" />
-                  更换图片
-                  {this.state.ucenterImg}
-                </button>
-                <input
-                  type="file"
-                  onChange={this._onChooseUcenterImage}
-                  className="hidden"
-                  ref={c => {
-                    this.imgFile1 = c
-                  }}
-                />
-              </div>
-            </div>
+            
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">

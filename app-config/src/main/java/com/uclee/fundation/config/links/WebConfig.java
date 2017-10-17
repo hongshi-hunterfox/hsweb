@@ -37,5 +37,7 @@ public interface WebConfig {
 	String hsMerchatCode = "hsMerchantCode";
 	String logoUrl = "logoUrl";
 	String ucenterImg = "ucenterImg";
+	String birthText = "birthText";
+	String salesText = "salesText";
 
 }                      

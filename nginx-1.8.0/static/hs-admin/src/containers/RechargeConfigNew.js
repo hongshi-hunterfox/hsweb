@@ -133,7 +133,8 @@ class RechargeConfigNew extends React.Component {
               />
             </div>*/}
             <div className="form-group">
-              <label className="control-label col-md-3 col-md-offset-1 fa fa-plus-square-o plus" ></label>
+             {/* <label className="control-label col-md-3 col-md-offset-1 fa fa-plus-square-o plus" ></label>*/}
+             <label className="control-label col-md-2"  style={{fontSize:'22px',color:'red'}}>再送：</label>
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">优惠券1对应商品号：</label>

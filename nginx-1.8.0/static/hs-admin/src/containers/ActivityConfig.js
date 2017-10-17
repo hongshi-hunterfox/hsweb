@@ -52,10 +52,10 @@ class ActivityConfig extends React.Component {
 
           <form onSubmit={this._submit} className="form-horizontal">
             <div className="form-group">
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>注册积分赠送数量：</label>
+             {/* <label className="control-label col-md-3" style={{marginTop:'10px'}}>注册积分赠送数量：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.registPoint} name="registPoint" className="form-control" onChange={this._change}/>
-              </div>
+              </div>*/}
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>签到积分赠送数量：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.signInPoint} name="signInPoint" className="form-control" onChange={this._change}/>
@@ -96,12 +96,133 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdCount} name="thirdCount" className="form-control" onChange={this._change}/>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}/>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费短信内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}/>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否支持配送：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <select name="supportDeliver" value={this.state.config.supportDeliver?this.state.config.supportDeliver:'yes'} style={{padding:'5px'}} onChange={this._change}>
                   <option value="no">不支持</option>
                   <option value="yes">支持</option>
                 </select>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <textarea rows="6" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">logo图片：</label>
+              <div className="col-md-9">
+                <div className="row">
+                  {
+                    this.state.uploading ?
+                    <div className="product-uploading">
+                      <span>上传中...</span>
+                    </div>
+                    :
+                    null
+                  }
+                  <div className="col-md-4" >
+                    <div className="panel panel-default">
+                      <div className="panel-body">
+                        <div style={{ marginBottom: 10 }}>
+                          <img
+                            src={this.state.logoUrl}
+                            alt=""
+                            className="img-responsive"
+                          />
+                        </div>
+                        {/*<button
+                          type="button"
+                          className="btn btn-danger btn-block"
+                          onClick={this._deleteLogoImg}
+                        >
+                          更换图片
+                        </button>*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => {
+                    this.imgFile.click()
+                  }}
+                >
+                  <span className="glyphicon glyphicon-plus" />
+                  更换图片
+                  {this.state.logoUrl}
+                </button>
+                <input
+                  type="file"
+                  onChange={this._onChooseLogoImage}
+                  className="hidden"
+                  ref={c => {
+                    this.imgFile = c
+                  }}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">用户中心图片：</label>
+              <div className="col-md-9">
+                <div className="row">
+                  {
+                    this.state.uploading ?
+                    <div className="product-uploading">
+                      <span>上传中...</span>
+                    </div>
+                    :
+                    null
+                  }
+                  <div className="col-md-4" >
+                    <div className="panel panel-default">
+                      <div className="panel-body">
+                        <div style={{ marginBottom: 10 }}>
+                          <img
+                            src={this.state.ucenterImg}
+                            alt=""
+                            className="img-responsive"
+                          />
+                        </div>
+                        {/*<button
+                          type="button"
+                          className="btn btn-danger btn-block"
+                          onClick={this._deleteLogoImg}
+                        >
+                          更换图片
+                        </button>*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => {
+                    this.imgFile1.click()
+                  }}
+                >
+                  <span className="glyphicon glyphicon-plus" />
+                  更换图片
+                  {this.state.ucenterImg}
+                </button>
+                <input
+                  type="file"
+                  onChange={this._onChooseUcenterImage}
+                  className="hidden"
+                  ref={c => {
+                    this.imgFile1 = c
+                  }}
+                />
               </div>
             </div>
             {/*<div className="form-group">
@@ -206,11 +327,11 @@ _onChooseUcenterImage = fe => {
     console.log(data)
 
 
-    if (!data.registPoint) {
+    /*if (!data.registPoint) {
       return this.setState({
         err: '请填写 注册积分赠送数量'
       })
-    }
+    }*/
     
     if (!data.signInPoint) {
       return this.setState({

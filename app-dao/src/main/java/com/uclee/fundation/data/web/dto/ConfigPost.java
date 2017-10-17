@@ -41,6 +41,25 @@ public class ConfigPost {
 
 	private String ucenterImg;
 
+	private String birthText;
+	private String salesText;
+
+	public String getBirthText() {
+		return birthText;
+	}
+
+	public void setBirthText(String birthText) {
+		this.birthText = birthText;
+	}
+
+	public String getSalesText() {
+		return salesText;
+	}
+
+	public void setSalesText(String salesText) {
+		this.salesText = salesText;
+	}
+
 	public String getLogoUrl() {
 		return logoUrl;
 	}

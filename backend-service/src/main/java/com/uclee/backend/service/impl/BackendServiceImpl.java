@@ -305,6 +305,12 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getUcenterImg()!=null) {
 			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
 		}
+		if (configPost.getBirthText()!=null) {
+			configMapper.updateByTag(WebConfig.birthText, configPost.getBirthText());
+		}
+		if (configPost.getSalesText()!=null) {
+			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
+		}
 		return true;
 	}
 	@Override
@@ -412,6 +418,12 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getUcenterImg()!=null) {
 			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}
+		if (configPost.getBirthText()!=null) {
+			configMapper.updateByTag(WebConfig.birthText, configPost.getBirthText());
+		}
+		if (configPost.getSalesText()!=null) {
+			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
 		}
 		return true;
 	}
@@ -814,6 +826,10 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setLogoUrl(config.getValue());
 			}else if(config.getTag().equals(WebConfig.ucenterImg)){
 				configPost.setUcenterImg(config.getValue());
+			}else if(config.getTag().equals(WebConfig.birthText)){
+				configPost.setBirthText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.salesText)){
+				configPost.setSalesText(config.getValue());
 			}
 
 		}
@@ -938,10 +954,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config = configMapper.getByTag("birthTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
-			Config config3 = configMapper.getByTag(WebConfig.signName);
+			Config config3 = configMapper.getByTag(WebConfig.birthText);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue()+"商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(1);
 				msgRecord.setUserId(userId);
@@ -985,10 +1001,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config = configMapper.getByTag("buyTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
-			Config config3 = configMapper.getByTag(WebConfig.signName);
+			Config config3 = configMapper.getByTag(WebConfig.salesText);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue()+"商城促销大优惠，赶紧来抢购吧", key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(2);
 				msgRecord.setUserId(userId);

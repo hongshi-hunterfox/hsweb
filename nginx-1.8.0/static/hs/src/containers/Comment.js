@@ -83,7 +83,8 @@ class Comment extends React.Component{
 							<input name="service" value={this.state.serStar} type='hidden'/>
 							<input name="quality" value={this.state.quaStar} type='hidden'/>
 							<div className="form-group">
-								<textarea className="comment-textarea" rows="8" cols="20" placeholder="请写下对订单的宝贵意见" name='title' onChange={this._handleChange.bind(this, 'title')}>
+								<textarea className="comment-textarea" rows="8" cols="20" placeholder="请写下对订单的宝贵意见" name='title' onChange={this._handleChange.bind(this, 'title')} onFocus={this._f}
+								onBlur={this._b}>
 
 								</textarea>
 
@@ -102,6 +103,16 @@ class Comment extends React.Component{
 				</div>
 			</DocumentTitle>
 			);
+	}
+
+	_f = () => {
+		document.getElementById('hs-navi').style.display = 'none'
+		document.getElementById('hs-submit-btn').style.position = 'static'
+	}
+
+	_b = () => {
+		document.getElementById('hs-navi').style.display = 'block'
+		document.getElementById('hs-submit-btn').style.position = 'fixed'
 	}
 	_handleChange = (key, e) => {
 		var comment = Object.assign({}, this.state.comment)
