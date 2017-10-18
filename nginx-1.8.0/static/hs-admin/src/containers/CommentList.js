@@ -169,6 +169,18 @@ class CommentList extends React.Component {
               this.state.showDetail?
               <div className='comment-detail'>
                 <i className='fa fa-times-circle-o icon' onClick={this._closeDetail}/>
+                <div className='comment-detail-order'>
+                {
+                  this.state.commentTmp.order&&this.state.commentTmp.order.items?this.state.commentTmp.order.items.map((item1,index1)=>{
+                    return(
+                      <div className='comment-detail-order-item' key={index1}>
+                        <img src={item1.imageUrl} className='image' width='30px' height='30px'/>
+                        <span className='title'> {item1.title} </span>
+                      </div>
+                    )
+                  }):null
+                }
+                </div>
                 <div className="form-group">
                   <label className="control-label col-md-3">评论内容：</label>
                   <textarea  className="comment-textarea" disabled rows='10' style={{width:'90%',marginLeft:'2%' }}  value={this.state.commentTmp.title}>

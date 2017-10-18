@@ -92,3 +92,32 @@ table {
   padding: 5px;
   font-size: 20px;
 }
+.comment-detail-order {
+  border: 2px solid #dadada;
+}
+.comment-detail-order-item {
+  padding: 15px;
+  border-bottom: 1px solid #dadada;
+  width: 100%;
+  margin-top: 30px;
+}
+.comment-detail-order-item:before,
+.comment-detail-order-item:after {
+  content: "";
+  display: table;
+}
+.comment-detail-order-item:after {
+  clear: both;
+}
+.comment-detail-order-item .image {
+  float: left;
+}
+.comment-detail-order-item .title {
+  width: 60%;
+  float: right;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}

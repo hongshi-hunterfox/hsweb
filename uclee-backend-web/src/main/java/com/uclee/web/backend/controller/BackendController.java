@@ -309,6 +309,8 @@ public class BackendController {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		List<UserProfile> users = backendService.getUserListForBirth(start,end);
 		map.put("users", users);
+		map.put("start", DateUtils.format(new Date(),DateUtils.FORMAT_SHORT));
+		map.put("end", DateUtils.format(new Date(),DateUtils.FORMAT_SHORT));
 		map.put("size", users.size());
 		return map;
 	}

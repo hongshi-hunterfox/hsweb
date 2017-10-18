@@ -101,7 +101,11 @@ public class AdminHandler {
         map.put("result","fail");
         if(user!=null){
             if(user.getUserId()!=null) {
-
+                List<UserProfile> userProfile = userProfileMapper.selectByName(user.getName());
+                if(userProfile!=null&&userProfile.size()>0){
+                    map.put("reason","该名称已注册，请重新填写");
+                    return map;
+                }
                 UserProfile up=new UserProfile();
                 up.setUserId(user.getUserId());
                 up.setName(user.getName());
@@ -109,6 +113,8 @@ public class AdminHandler {
                 boolean b = userService.updateProfile(user.getUserId(),up);
                 if (b) {
                     map.put("result", "success");
+                }else{
+                    map.put("reason","添加失败！手机已存在");
                 }
             }
         }

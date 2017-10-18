@@ -30,8 +30,8 @@ class UserBirthList extends React.Component {
         this.setState({
           users: data.users,
           size: data.users.length,
-          start:this.props.location.query.start,
-          end:this.props.location.query.end
+          start:this.props.location.query.start?this.props.location.query.start:data.start,
+          end:this.props.location.query.end?this.props.location.query.end:data.end
         })
       })
   }

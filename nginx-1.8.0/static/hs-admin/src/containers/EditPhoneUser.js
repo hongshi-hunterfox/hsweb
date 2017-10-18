@@ -113,14 +113,15 @@ class EditPhoneUser extends React.Component {
 
         if(res.body.result==="success"){
           alert("修改成功！");
+          browserHistory.push({
+            pathname: '/phoneUserList'
+          })
         }else{
-          alert("修改失败！手机已存在");
+          alert(res.body.reason);
           return;
         }
 
-        browserHistory.push({
-          pathname: '/phoneUserList'
-        })
+        
       })
   }
 }
