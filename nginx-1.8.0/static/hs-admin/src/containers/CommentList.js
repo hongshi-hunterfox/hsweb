@@ -144,7 +144,7 @@ class CommentList extends React.Component {
       )
     })
     return (
-      <DocumentTitle title="评论列表">
+      <DocumentTitle title="评论管理">
         <div className="comment-list">
             <table className="table table-bordered table-striped" width='135%'>
               <thead width='135%'>

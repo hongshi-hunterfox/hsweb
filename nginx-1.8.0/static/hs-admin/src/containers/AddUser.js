@@ -31,7 +31,7 @@ class AddUser extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title="add-user Page">
+      <DocumentTitle title="加盟商管理">
         <div className="add-user">
           {/* 类名加上页面前缀防止冲突 */}
           <form onSubmit={this._submit} className="form-horizontal" ref="f">

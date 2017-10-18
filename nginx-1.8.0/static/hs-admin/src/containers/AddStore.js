@@ -78,7 +78,7 @@ class AddStore extends React.Component {
   }
   render() {
     return (
-      <DocumentTitle title="add-store Page">
+      <DocumentTitle title="门店管理">
         <div className="add-store">
           {/* 类名加上页面前缀防止冲突 */}
           <h1 className="add-store-title">这里是 add-store 页面</h1>

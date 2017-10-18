@@ -108,7 +108,7 @@ class UserUnBuyList extends React.Component {
       )
     })
     return (
-      <DocumentTitle title="用户列表">
+      <DocumentTitle title="消费信息推送">
         <div className="user-list">
           <div className="user-list-add">
             <label className="control-label col-md-3">距今天数超过：</label>

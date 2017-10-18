@@ -33,7 +33,7 @@ class PhoneUserList extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title="user-list Page">
+      <DocumentTitle title="加盟商列表">
         <div className="user-list">
           {/* 类名加上页面前缀防止冲突 */}
         <Link to="addUser" className="btn btn-success">添加用户</Link>

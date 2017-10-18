@@ -47,7 +47,7 @@ class EditProductGroup extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title={'xxxx'}>
+      <DocumentTitle title={'编辑首页产品'}>
         <div className="product">
           <form onSubmit={this._submit} className="form-horizontal">
             <h1>{'已选产品: ' + this.state.text}</h1>

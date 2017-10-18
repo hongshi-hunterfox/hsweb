@@ -73,7 +73,7 @@ table {
 }
 .comment-detail {
   position: fixed;
-  top: 20%;
+  top: 10%;
   left: 40%;
   width: 30%;
   background-color: #dfdfdf;
@@ -94,12 +94,12 @@ table {
 }
 .comment-detail-order {
   border: 2px solid #dadada;
+  margin-top: 30px;
 }
 .comment-detail-order-item {
   padding: 15px;
   border-bottom: 1px solid #dadada;
   width: 100%;
-  margin-top: 30px;
 }
 .comment-detail-order-item:before,
 .comment-detail-order-item:after {

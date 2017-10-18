@@ -46,7 +46,7 @@ class ActivityConfig extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title="系统配置">
+      <DocumentTitle title="参数配置">
         <div className="global-config">
           {/* 类名加上页面前缀防止冲突 */}
 

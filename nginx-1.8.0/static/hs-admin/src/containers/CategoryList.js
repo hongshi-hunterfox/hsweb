@@ -56,7 +56,7 @@ class CategoryList extends React.Component {
       )
     })
     return (
-      <DocumentTitle title="分类列表">
+      <DocumentTitle title="分类列管理">
         <div className="product-list">
             <div className="product-list-add">
               <Link to={'/editCategory'} className="btn btn-primary">

@@ -206,7 +206,7 @@ class UserBirthList extends React.Component {
       )
     })
     return (
-      <DocumentTitle title="用户列表">
+      <DocumentTitle title="生日信息推送">
         <div className="user-list">
           <div className="clearfix" style={{margin:'30px 0'}}>
           <div className='searchTime'>

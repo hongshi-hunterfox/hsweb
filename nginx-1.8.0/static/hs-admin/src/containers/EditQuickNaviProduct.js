@@ -42,7 +42,7 @@ class EditQuickNaviProduct extends React.Component {
         )
     })
     return (
-      <DocumentTitle title={'xxxx'}>
+      <DocumentTitle title={'编辑首页快捷导航'}>
         <div className="product">
           <form onSubmit={this._submit} className="form-horizontal">
             <h1>{'已选产品: ' + this.state.text}</h1>
