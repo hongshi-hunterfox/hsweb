@@ -972,7 +972,7 @@ public class BackendServiceImpl implements BackendServiceI {
 						if (coupon != null && coupon.size() > 0) {
 							try {
 								for(int i=0;i<birthVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(0).getVouchersCode(), birthVoucher.getVoucherCode());
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode());
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
