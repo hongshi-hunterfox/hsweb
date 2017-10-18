@@ -1,11 +1,13 @@
 import React from 'react'
 import './store-bar.css'
-
+import req from 'superagent'
 class StoreBar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      storeName: '请选择店铺'
+      storeName: '请选择店铺',
+      logoUrl:'',
+      signName:''
     }
   }
   componentDidMount() {
@@ -26,13 +28,24 @@ class StoreBar extends React.Component {
         window.location = '/storeList'
       }
     }
+    req.get('/uclee-user-web/storeList').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var c = JSON.parse(res.text)
+      console.log(c.storeList)
+      this.setState({
+        logoUrl:c.logoUrl,
+        signName:c.signName
+      })
+    })
   }
   render() {
     return (
       <div className="store-bar">
         <img
           className="store-bar-icon"
-          src={'/images/brand.jpg'}
+          src={this.state.logoUrl}
           alt=""
           width="20"
           height="20"

@@ -59,4 +59,20 @@ public class StoreController {
         return ret;
     }
 
+    @RequestMapping("storeLogo")
+    public @ResponseBody
+    Map<String,Object> storeLogo(HttpServletRequest request){
+        Map<String,Object> ret = new TreeMap<String,Object>();
+        Config config1 = configMapper.getByTag(WebConfig.logoUrl);
+        if(config1!=null) {
+            ret.put("logoUrl",config1.getValue() );
+        }
+        Config config2 = configMapper.getByTag(WebConfig.signName);
+        if(config2!=null) {
+            ret.put("signName",config2.getValue());
+        }
+
+        return ret;
+    }
+
 }
