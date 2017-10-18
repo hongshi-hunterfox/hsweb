@@ -89,15 +89,15 @@ class SystemConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.key} name="key" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里大于appkey：</label>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里云appkey：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.aliAppkey} name="aliAppkey" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里大于appSecret：</label>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里云appSecret：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.aliAppSecret} name="aliAppSecret" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>阿里templateCode：</label>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>短信模版Code：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.templateCode} name="templateCode" className="form-control" onChange={this._change}/>
               </div>

@@ -9,7 +9,8 @@ public class HongShiOrder {
 	private String orderCode;
 	
 	private String date;
-	
+	private String createTime;
+
 	private double totalAmount;
 	
 	private double accounts;
@@ -37,6 +38,14 @@ public class HongShiOrder {
 	private String barcode;
 
 	private Boolean isVoid;
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
 
 	public Boolean getVoid() {
 		return isVoid;

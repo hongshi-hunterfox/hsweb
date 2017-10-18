@@ -33,6 +33,7 @@
 		<result column="OrderCode" property="orderCode" jdbcType="VARCHAR" />
 		<result column="Outer_OrderCode" property="outerOrderCode" jdbcType="VARCHAR" />
 		<result column="Date_C" property="date" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createTime" jdbcType="VARCHAR" />
 		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
 		<result column="Accounts" property="accounts" jdbcType="DOUBLE" />
 		<result column="IsEnd" property="isEnd" jdbcType="BIT" />

@@ -58,7 +58,7 @@ class OrderList extends React.Component {
 							: null}</span>
 						</div>
 						<div className="number">
-							<span>下单时间：{item.date}</span>
+							<span>下单时间：{item.createTime}</span>
 						</div>
 						{	item.isSelfPick&&item.pickAddr?
 							<div className="number">
