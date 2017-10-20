@@ -167,7 +167,7 @@ class CommentList extends React.Component {
                 <button className='btn btn-primary' type="submit">
                   回复
                 </button>
-                  <button className='btn btn-default' onClick={this.hideModal}>
+                  <button className='btn btn-default' style={{marginLeft:'10px'}} onClick={this.hideModal}>
                   取消
                 </button>
               </form>
