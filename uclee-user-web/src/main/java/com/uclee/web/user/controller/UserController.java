@@ -740,7 +740,13 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		Map<String,Object> result = new TreeMap<String,Object>();
-		List<LotteryDrawConfig> configs = userService.getLotteryConfig();
+		List<LotteryDrawConfig> tmp = userService.getLotteryConfig();
+		List<LotteryDrawConfig> configs  = new ArrayList<LotteryDrawConfig>();
+		for(LotteryDrawConfig config : tmp){
+			if(config.getRate()>0){
+				configs.add(config);
+			}
+		}
 		result.put("configs", configs);
 		if(configs!=null&&configs.size()>0){
 			result.put("limits", configs.get(0).getLimits());

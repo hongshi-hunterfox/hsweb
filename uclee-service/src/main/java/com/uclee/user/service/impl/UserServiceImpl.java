@@ -3227,6 +3227,8 @@ public class UserServiceImpl implements UserServiceI {
 							map.put("result", true);
 							map.put("text", "恭喜抽中" + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_HALF_UP)
 									+ "现金优惠券，奖品已放入账户中，请注意查看");
+							config.setCount(config.getCount()-1);
+							lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 							return map;
 						} catch (Exception e) {
 							map.put("result", true);
@@ -3244,10 +3246,10 @@ public class UserServiceImpl implements UserServiceI {
 					Integer res = hongShiVipService.hongShiRecharge(dd);
 					map.put("text", "恭喜抽中" + config.getMoney() + "会员卡余额，奖品已充值到账户中，请注意查看");
 					map.put("result", true);
+					config.setCount(config.getCount()-1);
+					lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 					return map;
 				}
-				config.setCount(config.getCount()-1);
-				lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 			}else{
 				map.put("result", true);
 				map.put("text", "再接再励");
