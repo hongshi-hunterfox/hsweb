@@ -68,7 +68,7 @@ public class BackendController {
 			map.put("startTime",new Date());
 			map.put("endTime",new Date());
 			String startTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
-			String endTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
+			String endTimeStr= DateUtils.format(DateUtils.addDay(new Date(),30),DateUtils.FORMAT_LONG);
 			map.put("startTimeStr",startTimeStr);
 			map.put("endTimeStr",endTimeStr);
 			try {
@@ -139,7 +139,7 @@ public class BackendController {
 			String startTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
 			String endTimeStr= DateUtils.format(new Date(),DateUtils.FORMAT_LONG);
 			map.put("startTimeStr",DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
-			map.put("endTimeStr",DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
+			map.put("endTimeStr",DateUtils.format(DateUtils.addDay(new Date(),30),DateUtils.FORMAT_LONG));
 			try {
 				map.put("startDateTmp",startTimeStr.split(" ")[0]);
 				map.put("startTimeTmp",startTimeStr.split(" ")[1]);
@@ -260,6 +260,18 @@ public class BackendController {
 			}catch (Exception e){
 
 			}
+		}else{
+			rechargeConfig = new RechargeConfig();
+			rechargeConfig.setEndTimeStr(DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
+			rechargeConfig.setStartTimeStr(DateUtils.format(new Date(),DateUtils.FORMAT_LONG));
+			try{
+				rechargeConfig.setStartDateTmp(rechargeConfig.getStartTimeStr().split(" ")[0]);
+				rechargeConfig.setStartTimeTmp("00:01");
+				rechargeConfig.setEndDateTmp(rechargeConfig.getEndTimeStr().split(" ")[0]);
+				rechargeConfig.setEndTimeTmp("23:59");
+			}catch (Exception e){
+
+			}
 		}
 		return rechargeConfig;
 	}
@@ -310,7 +322,7 @@ public class BackendController {
 		List<UserProfile> users = backendService.getUserListForBirth(start,end);
 		map.put("users", users);
 		map.put("start", DateUtils.format(new Date(),DateUtils.FORMAT_SHORT));
-		map.put("end", DateUtils.format(new Date(),DateUtils.FORMAT_SHORT));
+		map.put("end", DateUtils.format(DateUtils.addDay(new Date(),30),DateUtils.FORMAT_SHORT));
 		map.put("size", users.size());
 		return map;
 	}
@@ -349,6 +361,15 @@ public class BackendController {
 				result.put("timeEnd", tmp2[1]);
 			}
 			result.put("limits",configs.get(0).getLimits());
+		}else{
+			String startTmp = DateUtils.format(new Date(), DateUtils.FORMAT_LONG);
+			String endTmp = DateUtils.format(DateUtils.addDay(new Date(),30), DateUtils.FORMAT_LONG);
+			String[] tmp = startTmp.split(" ");
+			String[] tmp2 = endTmp.split(" ");
+			result.put("dateStart", tmp[0]);
+			result.put("timeStart", tmp[1]);
+			result.put("dateEnd", tmp2[0]);
+			result.put("timeEnd", tmp2[1]);
 		}
 		return result;
 	}

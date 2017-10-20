@@ -36,7 +36,7 @@ class Menu extends React.Component {
             运费设置
           </Link>
           <Link to={'/fullCutShipping?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
-            满额减运费
+            满额免运费
           </Link>
           <Link to={'/fullCut?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             满额减金额
