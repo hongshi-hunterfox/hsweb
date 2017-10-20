@@ -53,6 +53,8 @@ class SearchBar extends React.Component {
               value={this.state.keyword}
               placeholder="搜索产品"
               onChange={this._onChange}
+              onFocus={this._f}
+			onBlur={this._b}
             />
           </div>
 
@@ -60,6 +62,14 @@ class SearchBar extends React.Component {
       </div>
     )
   }
+
+  _f = () => {
+		document.getElementById('hs-navi').style.display = 'none'
+	}
+
+	_b = () => {
+		document.getElementById('hs-navi').style.display = 'block'
+	}
 
   _onChange =(e)=>{
     this.setState({
