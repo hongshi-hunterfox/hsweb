@@ -43,7 +43,7 @@ public interface UserServiceI {
 	
 	boolean addChiledUser(UserForm userForm);
 
-	boolean addPhoneUser(String name,String phone);
+	Integer addPhoneUser(String name,String phone);
 
 	List<UserProfile> phoneUserList();
 	

@@ -312,44 +312,51 @@ class MemberSetting extends React.Component {
     var data = fto(e.target)
     if (!data.cMobileNumber) {
       return this.setState({
-        error: '请输入手机号码'
+        error: '请输入手机号码',
+        disabled:false
       })
     }
 
     if (!data.code) {
       return this.setState({
-        error: '请输入验证码'
+        error: '请输入验证码',
+        disabled:false
       })
     }
 
     if (!/^\d{6}$/.test(data.code)) {
       return this.setState({
-        error: '验证码不正确'
+        error: '验证码不正确',
+        disabled:false
       })
     }
 
     if (!validator.isMobilePhone(data.cMobileNumber, 'zh-CN')) {
       return this.setState({
-        error: '请输入正确的手机号码'
+        error: '请输入正确的手机号码',
+        disabled:false
       })
     }
 
     if (this.state.type === '2') {
       if (!data.cName) {
         return this.setState({
-          error: '请输入姓名'
+          error: '请输入姓名',
+        disabled:false
         })
       }
 
       if (!data.cBirthday) {
         return this.setState({
-          error: '请输入生日'
+          error: '请输入生日',
+        disabled:false
         })
       }
 
       if (!data.bIsLunar) {
         return this.setState({
-          error: '请选择生日类型'
+          error: '请选择生日类型',
+        disabled:false
         })
       }
     }

@@ -5,6 +5,7 @@ import com.uclee.fundation.data.mybatis.model.NapaStore;
 import java.util.List;
 import java.util.Map;
 
+import com.uclee.fundation.data.mybatis.model.NapaStoreUserLink;
 import com.uclee.fundation.data.web.dto.StoreDto;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +17,7 @@ public interface StoreServiceI {
 
     List<NapaStore> selectAllNapaStore();
 
-    List<NapaStore> selectNapaStoreByUserId(Integer userId);
+    List<NapaStore> selectNapaStoreByUserId();
 
 
     Map<String,Object> selectNapaStoreById(Integer storeId);
@@ -25,4 +26,8 @@ public interface StoreServiceI {
     boolean updateNapaStoreByStoreId(NapaStore store);
 
 	NapaStore selectNapaStoreByCode(String hsCode, Integer userId);
+
+    boolean updateLink(Integer userId, List<Integer> storeIds);
+
+    List<Integer> getStoreLinkByUserId(Integer userId);
 }

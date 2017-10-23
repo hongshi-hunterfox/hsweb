@@ -33,6 +33,8 @@ public class StoreServiceImpl implements StoreServiceI {
     @Autowired
     private ProductStoreLinkMapper productStoreLinkMapper;
     @Autowired
+    private NapaStoreUserLinkMapper napaStoreUserLinkMapper;
+    @Autowired
     private SpecificationValueMapper specificationValueMapper;
 
     @Override
@@ -59,8 +61,8 @@ public class StoreServiceImpl implements StoreServiceI {
     }
 
     @Override
-    public List<NapaStore> selectNapaStoreByUserId(Integer userId) {
-        return napaStoreMapper.selectByUserId(userId);
+    public List<NapaStore> selectNapaStoreByUserId() {
+        return napaStoreMapper.selectAllNapaStore();
     }
 
     @Override
@@ -90,4 +92,21 @@ public class StoreServiceImpl implements StoreServiceI {
 	public NapaStore selectNapaStoreByCode(String hsCode,Integer userId) {
 		return napaStoreMapper.selectNapaStoreByCode(hsCode,userId);
 	}
+
+    @Override
+    public boolean updateLink(Integer userId, List<Integer> storeIds) {
+        napaStoreUserLinkMapper.deleteByUserId(userId);
+        for(Integer item:storeIds){
+            NapaStoreUserLink link = new NapaStoreUserLink();
+            link.setStoreId(item);
+            link.setUserId(userId);
+            napaStoreUserLinkMapper.insertSelective(link);
+        }
+        return true;
+    }
+
+    @Override
+    public List<Integer> getStoreLinkByUserId(Integer userId) {
+        return napaStoreUserLinkMapper.getByUserId(userId);
+    }
 }

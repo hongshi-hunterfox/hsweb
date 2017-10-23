@@ -77,13 +77,14 @@ public class AdminHandler {
 
         map.put("result","fail");
         if(user!=null){
-            List<UserProfile> userProfile = userProfileMapper.selectByName(user.getName());
-            if(userProfile!=null&&userProfile.size()>0){
+            UserProfile userProfile = userProfileMapper.selectByName(user.getName());
+            if(userProfile!=null){
                 map.put("reason","该名称已注册，请重新填写");
                 return map;
             }
-            boolean b = userService.addPhoneUser(user.getName(), user.getPhone());
-            if(b) {
+            Integer b = userService.addPhoneUser(user.getName(), user.getPhone());
+            if(b!=null) {
+                storeService.updateLink(b,user.getStoreIds());
                 map.put("result", "success");
             }else{
                 map.put("reason","添加失败！手机已存在");
@@ -101,8 +102,8 @@ public class AdminHandler {
         map.put("result","fail");
         if(user!=null){
             if(user.getUserId()!=null) {
-                List<UserProfile> userProfile = userProfileMapper.selectByName(user.getName());
-                if(userProfile!=null&&userProfile.size()>0){
+                UserProfile userProfile = userProfileMapper.selectByName(user.getName());
+                if(userProfile!=null&&userProfile.getUserId()!=user.getUserId()){
                     map.put("reason","该名称已注册，请重新填写");
                     return map;
                 }
@@ -112,6 +113,7 @@ public class AdminHandler {
                 up.setPhone(user.getPhone());
                 boolean b = userService.updateProfile(user.getUserId(),up);
                 if (b) {
+                    storeService.updateLink(user.getUserId(),user.getStoreIds());
                     map.put("result", "success");
                 }else{
                     map.put("reason","添加失败！手机已存在");

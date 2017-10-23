@@ -3,7 +3,6 @@
 <mapper namespace="com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper" >
   <resultMap id="NapaStore" type="com.uclee.fundation.data.mybatis.model.NapaStore" >
     <id column="store_id" property="storeId" jdbcType="INTEGER" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="store_name" property="storeName" jdbcType="VARCHAR" />
     <result column="hs_name" property="hsName" jdbcType="VARCHAR" />
     <result column="province" property="province" jdbcType="VARCHAR" />
@@ -15,7 +14,7 @@
     <result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    store_id, user_id, store_name, province, city, region, longitude, latitude, hs_code, 
+    store_id,  store_name, province, city, region, longitude, latitude, hs_code,
     addr_detail
   </sql>
   <select id="selectByPrimaryKey" resultMap="NapaStore" parameterType="java.lang.Integer" >
@@ -27,7 +26,7 @@
   <select id="selectByPhone" resultMap="NapaStore"  >
     select 
     a.*
-    from web_napa_stores as a left join web_user_profiles as b on a.user_id=b.user_id left join web_user_role_link as c on b.user_id=c.user_id
+    from web_napa_stores as a left join web_napa_store_user_link d on a.store_id=d.store_id left join web_user_profiles as b on d.user_id=b.user_id left join web_user_role_link as c on b.user_id=c.user_id
     where b.phone=#{phone,jdbcType=VARCHAR} and c.role_id=3
   </select>
   <select id="selectByValueId" resultMap="NapaStore" parameterType="java.lang.Integer" >
@@ -53,10 +52,11 @@
     A.*,b.全称 as hs_name
     from web_napa_stores as A left join department as B on A.hs_code=B.编号
     where A.user_id = #{userId,jdbcType=INTEGER}
-  </select>  <select id="selectAllNapaStore" resultMap="NapaStore">
+  </select>
+  <select id="selectAllNapaStore" resultMap="NapaStore">
     select
-    <include refid="Base_Column_List" />
-    from web_napa_stores
+    A.*,b.全称 as hs_name
+   from web_napa_stores as A left join department as B on A.hs_code=B.编号
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_napa_stores

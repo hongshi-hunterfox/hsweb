@@ -455,6 +455,17 @@ create table web_msg_record(
   time DATETIME DEFAULT(GETDATE()),
 );
 
+If Object_ID('web_napa_store_user_link','U') Is Null
+create table web_napa_store_user_link(
+  id int identity(1,1) primary key,
+  user_id int not null ,
+  store_id int not null 
+);
+
+insert into web_napa_store_user_link (store_id,user_id) select store_id,user_id from web_napa_stores;
+
+alter table web_napa_stores drop column user_id;
+
 
 
 /*web_banner初始数据*/
@@ -550,8 +561,8 @@ insert into web_config (tag,value) values ('domain','');
 insert into web_config (tag,value) values ('hsMerchantCode','');
 insert into web_config (tag,value) values ('logoUrl','');
 insert into web_config (tag,value) values ('ucenterImg','');
-  insert into web_config (tag,value) values ('birthText','');
-    insert into web_config (tag,value) values ('salesText','');
+insert into web_config (tag,value) values ('birthText','');
+insert into web_config (tag,value) values ('salesText','');
 /*province初始数据*/
 insert into web_province (province_id,province) values (11,'北京');
 insert into web_province (province_id,province) values (12,'天津');

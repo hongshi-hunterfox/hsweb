@@ -21,12 +21,30 @@ class AddUser extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      err: null
+      err: null,
+       userId: 0,
+      name:"",
+      hongShiProduct: [],
+      phone:"",
+      store:[],
+      sSearch: '',
+      storeIds:[],
+      ids:{}
     }
   }
 
   componentDidMount() {
-    this._init()
+    req.get('/uclee-backend-web/getStore')
+      .query(this.props.location.query)
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        this.setState({
+          store:res.body.stores
+        })
+      })
   }
 
   render() {
@@ -48,6 +66,57 @@ class AddUser extends React.Component {
                 <input type="text" name="phone" className="form-control" />
               </div>
             </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">选择店铺：</label>
+              <div className="control-label col-md-9">
+                  <div className="panel panel-default">
+                    <div className="panel-heading">
+                      <div className="input-group input-group-sm add-store-search">
+                        <span className="input-group-addon">店铺</span>
+                        <input
+                          type="text"
+                          className="form-control input"
+                          placeholder="搜索"
+                          value={this.state.sSearch}
+                          onChange={e => {
+                            this.setState({ sSearch: e.target.value })
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="panel-body add-store-specs">
+
+                      {this.state.store
+                          .filter(item => {
+                            return item.storeName.indexOf(this.state.sSearch) !== -1
+                          })
+                          .map((item, index) => {
+                          return (
+                            <div className="checkbox" key={index}>
+                              <label className="add-store-specs-lable">
+                                <input
+                                  type="checkbox"
+                                  onChange={this._changeStore.bind(
+                                    this,
+                                    item.storeId
+                                  )}
+                                  checked={
+                                    this.state.storeIds &&
+                                      this.state.storeIds.indexOf(
+                                        item.storeId
+                                      ) !== -1
+                                  }
+                                />
+                                {item.storeName}
+                              </label>
+                            </div>
+                            )}
+                      )}
+
+                    </div>
+                  </div>
+                </div>
+            </div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
@@ -59,12 +128,31 @@ class AddUser extends React.Component {
       </DocumentTitle>
     )
   }
+_changeStore = (storeId, e) => {
+    
+    var list = this.state.ids;//有重复的数组
+    var storeIdsTmp = [];
+    if(list[storeId]){
+      delete list[storeId]
+    }else{
+      list[storeId] = storeId;//加入标记对象中
+    }
+    console.log(list)
+    for(var item in list){
+      storeIdsTmp.push(Number(item))
+    }
+    
+    console.log(storeIdsTmp)
 
+    this.setState({
+      storeIds:storeIdsTmp
+    })
+  }
   _submit = e => {
     e.preventDefault()
     var data = fto(e.target)
     console.log(data)
-
+data.storeIds = this.state.storeIds;
     if (!data.name) {
       return this.setState({
         err: '请填写 供应商名称'
@@ -74,6 +162,18 @@ class AddUser extends React.Component {
     if (!data.phone) {
       return this.setState({
         err: '请填写 手机号码'
+      })
+    }
+   if(!this.state.store.length>0){
+      var conf = confirm('无可用门店，是否立即前去添加？');
+      if(conf){
+        window.location="/napaStoreList"
+      }
+    }
+
+    if(!data.storeIds>0){
+      return this.setState({
+        err: '请选择门店'
       })
     }
 

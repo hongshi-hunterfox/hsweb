@@ -99,7 +99,7 @@ class MemberCenter extends React.Component {
           <div className="member-center-status clearfix">
             <div className="member-center-status-item">
                 <span className="member-center-status-title"><Icon name="database" className="member-center-status-icon" />积分</span>
-                <span>{this.state.point || '0'}</span>
+                <span>{this.state.point.toFixed(0) || '0'}</span>
             </div>
             <div className="member-center-status-item" onClick={() => { window.location='/member-card' }}>
               <a href="/member-card">

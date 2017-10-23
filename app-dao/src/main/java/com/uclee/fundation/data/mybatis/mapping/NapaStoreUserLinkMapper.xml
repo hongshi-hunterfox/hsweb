@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.NapaStoreUserLinkMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.NapaStoreUserLink" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.NapaStoreUserLink" >
+    insert into web_napa_store_user_link (id, user_id, store_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}
+      )
+  </insert>
+  <select id="getByUserId" resultType="java.lang.Integer">
+    select
+    store_id
+    from web_napa_store_user_link  where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByUserId" parameterType="java.lang.Integer" >
+    delete from web_napa_store_user_link
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.NapaStoreUserLink" >
+    insert into web_napa_store_user_link
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

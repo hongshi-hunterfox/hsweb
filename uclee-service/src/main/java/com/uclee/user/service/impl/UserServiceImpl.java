@@ -562,7 +562,7 @@ public class UserServiceImpl implements UserServiceI {
     * @throws 
     */
     @Override
-    public boolean addPhoneUser(String name, String phone) {
+    public Integer addPhoneUser(String name, String phone) {
 		try {
 			UserProfile search=new UserProfile();
 			search.setPhone(phone);
@@ -593,16 +593,16 @@ public class UserServiceImpl implements UserServiceI {
 				userProfile.setName(name);
 
 				userProfileMapper.insertSelective(userProfile);
-				return true;
+				return userId;
 			}else{
 				logger.info("already had phone:"+phone);
 			}
 		}catch(Exception e){
 			logger.error("add user error",e);
-			return false;
+			return null;
 		}
 
-        return false;
+        return null;
     }
 
 	/** 
