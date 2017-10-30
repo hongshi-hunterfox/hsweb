@@ -140,8 +140,8 @@ public class HongShiVipController {
 			ret.put("reason", "没传数据");
 			return ret;
 		}
-		if(vip.getcMobileNumber()==null||vip.getcMobileNumber().isEmpty()){
-			if(vip.getCode()==null||vip.getCode().isEmpty()){
+		if(vip.getcMobileNumber()==null||!vip.getcMobileNumber().isEmpty()){
+			if(vip.getCode()==null||!vip.getCode().isEmpty()){
 				if(!VerifyCode.checkVerifyCode(session,vip.getcMobileNumber(),vip.getCode())){
 					ret.put("reason", "验证码错误");
 					return ret;
