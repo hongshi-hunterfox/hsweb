@@ -29,7 +29,8 @@ class AddUser extends React.Component {
       store:[],
       sSearch: '',
       storeIds:[],
-      ids:{}
+      ids:{},
+      all:false
     }
   }
 
@@ -85,7 +86,15 @@ class AddUser extends React.Component {
                       </div>
                     </div>
                     <div className="panel-body add-store-specs">
-
+                      <div className="checkbox" >
+                        <label className="add-store-specs-lable">
+                          <input
+                            type="checkbox"
+                            onChange={this._changeAll}
+                          />
+                          全选
+                        </label>
+                      </div>
                       {this.state.store
                           .filter(item => {
                             return item.storeName.indexOf(this.state.sSearch) !== -1
@@ -128,6 +137,28 @@ class AddUser extends React.Component {
       </DocumentTitle>
     )
   }
+
+_changeAll=()=>{
+  var storeIds = [];
+  if(!this.state.all){
+    for(var item in this.state.store){
+      console.log(this.state.store[item])
+      storeIds.push(Number(this.state.store[item].storeId))
+    }
+    console.log(storeIds);
+    this.setState({
+      storeIds:storeIds,
+      all:!this.state.all
+    })
+  }else{
+    this.setState({
+      storeIds:[],
+      all:!this.state.all
+    })
+  }
+
+}
+
 _changeStore = (storeId, e) => {
     
     var list = this.state.ids;//有重复的数组
@@ -152,7 +183,7 @@ _changeStore = (storeId, e) => {
     e.preventDefault()
     var data = fto(e.target)
     console.log(data)
-data.storeIds = this.state.storeIds;
+    data.storeIds = this.state.storeIds;
     if (!data.name) {
       return this.setState({
         err: '请填写 供应商名称'
@@ -180,7 +211,7 @@ data.storeIds = this.state.storeIds;
     this.setState({
       err: null
     })
-    req
+    /*req
       .post('/uclee-backend-web/doAddPhoneUser')
       .send(data)
       .end((err, res) => {
@@ -198,7 +229,7 @@ data.storeIds = this.state.storeIds;
         }
 
         
-      })
+      })*/
   }
 }
 

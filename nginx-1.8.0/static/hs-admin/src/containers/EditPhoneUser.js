@@ -29,7 +29,8 @@ class EditPhoneUser extends React.Component {
       store:[],
       sSearch: '',
       storeIds:[],
-      ids:{}
+      ids:{},
+      all:false
     }
   }
 
@@ -91,7 +92,15 @@ class EditPhoneUser extends React.Component {
                       </div>
                     </div>
                     <div className="panel-body add-store-specs">
-
+                      <div className="checkbox" >
+                        <label className="add-store-specs-lable">
+                          <input
+                            type="checkbox"
+                            onChange={this._changeAll}
+                          />
+                          全选
+                        </label>
+                      </div>
                       {this.state.store
                           .filter(item => {
                             return item.storeName.indexOf(this.state.sSearch) !== -1
@@ -135,6 +144,27 @@ class EditPhoneUser extends React.Component {
       </DocumentTitle>
     )
   }
+
+  _changeAll=()=>{
+  var storeIds = [];
+  if(!this.state.all){
+    for(var item in this.state.store){
+      console.log(this.state.store[item])
+      storeIds.push(Number(this.state.store[item].storeId))
+    }
+    console.log(storeIds);
+    this.setState({
+      storeIds:storeIds,
+      all:!this.state.all
+    })
+  }else{
+    this.setState({
+      storeIds:[],
+      all:!this.state.all
+    })
+  }
+
+}
 
   _changeStore = (storeId, e) => {
     
