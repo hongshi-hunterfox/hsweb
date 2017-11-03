@@ -59,7 +59,8 @@ public class Order {
     private Integer firstDistId;
     
     private BigDecimal firstDistMoney;
-    
+    private BigDecimal cut;
+
     private Integer secondDistId;
     
     private BigDecimal secondDistMoney;
@@ -79,8 +80,36 @@ public class Order {
     private String paymentSerialNum;
     
     private String pickDateStr;
-    
-    public BigDecimal getDiscount() {
+
+    private String pickUpImage;
+
+    private String pickUpBarcode;
+
+	public String getPickUpBarcode() {
+		return pickUpBarcode;
+	}
+
+	public void setPickUpBarcode(String pickUpBarcode) {
+		this.pickUpBarcode = pickUpBarcode;
+	}
+
+	public String getPickUpImage() {
+		return pickUpImage;
+	}
+
+	public void setPickUpImage(String pickUpImage) {
+		this.pickUpImage = pickUpImage;
+	}
+
+	public BigDecimal getCut() {
+		return cut;
+	}
+
+	public void setCut(BigDecimal cut) {
+		this.cut = cut;
+	}
+
+	public BigDecimal getDiscount() {
 		return discount;
 	}
 

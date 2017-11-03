@@ -29,4 +29,6 @@ public interface NapaStoreMapper {
 	List<NapaStore> selectByPhone(String phone);
 
 	NapaStore selectNapaStoreByCode(@Param("hsCode")String hsCode, @Param("userId")Integer userId);
+
+    List<NapaStore> selectByHsCode(String hsCode);
 }

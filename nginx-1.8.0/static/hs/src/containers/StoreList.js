@@ -13,6 +13,8 @@ class StoreList extends React.Component {
 		super(props)
 		this.state = {
 			stores: [],
+			logoUrl:'',
+			signName:'',
 			userLocation: {
 				latitude: null,
 				longitude: null
@@ -27,9 +29,12 @@ class StoreList extends React.Component {
 			if (err) {
 				return err
 			}
-
+			var c = JSON.parse(res.text)
+			console.log(c.storeList)
 			this.setState({
-				stores: res.body
+				stores: c.storeList,
+				logoUrl:c.logoUrl,
+				signName:c.signName
 			})
 		})
 
@@ -80,12 +85,10 @@ class StoreList extends React.Component {
 			item.distance=distance
 			return item
 		})
-		console.log("before sort:"+JSON.stringify(preItems))
 		preItems.sort((a,b)=>{
 			var x = a.distance; var y = b.distance
 	        return ((x < y) ? -1 : ((x > y) ? 1 : 0))
 		})
-		console.log(JSON.stringify(preItems))
 
 		var items = preItems.map((item, index) => {
 			var distance = item.distance
@@ -122,8 +125,8 @@ class StoreList extends React.Component {
 			<DocumentTitle title="选择店铺">
 				<div className="store">
 					<div className="store-logo">
-						<img src="./images/brand.jpg" className="store-logo-image" alt=""/>
-						<div className="store-logo-text">洪石烘焙</div>
+						<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
+						<div className="store-logo-text">{this.state.signName}</div>
 					</div>
 					<div className="store-select">请选择要进入的店：</div>
 					{items}

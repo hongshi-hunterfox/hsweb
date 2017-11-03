@@ -36,11 +36,17 @@
 
 .member-card-image{
   text-align: center;
+   padding: 5px;
 }
 
 .member-card-image-item{
   width: 250px;
   height: 250px;
+}
+.member-card-image-barcode{
+
+  width: 100%;
+  height: 100px;
 }
 .member-card-list {
   padding: 10px;
@@ -48,7 +54,7 @@
 
 .member-card-item {
   background-color: white;
-  padding: 15px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #e5e5e5;
   box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5)
@@ -56,16 +62,24 @@
 
 .member-card-item-code {
   border-bottom: 1px dashed #ccc;
-  padding-bottom: 5px;
+  padding-bottom: 9px;
+  font-size: 15px;
 }
 
 .member-card-item-balance {
   padding: 15px;
   text-align: center;
   font-size: 24px;
+  float: left;
 }
 
 .member-card-item-recharge {
   text-align: center;
-  margin-top: 10px;
+  float: right;
+  padding: 15px;
+}
+
+.member-card-item-Unbundling {
+	text-align: center;
+  float: right;
 }

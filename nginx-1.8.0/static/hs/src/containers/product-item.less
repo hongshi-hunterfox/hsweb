@@ -9,7 +9,10 @@
 	}
 
 	&-img {
-		width: 100%;
+		padding: 5px;
+		.image{
+			width: 100%;
+		}
 	}
 
 	&-tag {
@@ -45,6 +48,8 @@
 	}
 
 	&-info {
+		.clearfix();
+		width: 100%;
 		padding: 5px;
 		position: relative;
 		background-color: white;
@@ -62,15 +67,36 @@
 
 	&-title {
 		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		float: left;
+	    text-overflow: ellipsis;
+	    height: 45px;
+	    font-size: 15px;
+	    display: -webkit-box;
+	    -webkit-line-clamp: 2;
+	    -webkit-box-orient: vertical;
+	    word-break: break-all;
+	    font-family: "\5FAE\8F6F\96C5\9ED1";
 	}
 	&-price {
+		.clearfix();
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		float: right;
+		color: rgb(245, 92, 57);	
+		padding-top: 5px;
+		padding-bottom: 2px;
+		.left{
+			float: left;
+			font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
+			font-weight: bold;
+			font-size: 16px;
+		}
+		.right{
+			float: right;
+			padding: 0px 10px;
+		    background-color: rgb(245, 92, 57);
+		    color: white;
+		    border-radius: 9px;
+		}
 	}
 
 	&-percent {

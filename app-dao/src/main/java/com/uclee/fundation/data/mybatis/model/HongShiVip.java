@@ -1,6 +1,7 @@
 package com.uclee.fundation.data.mybatis.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class HongShiVip {
 	
@@ -15,6 +16,8 @@ public class HongShiVip {
 	private String code;
 	
 	private String cBirthday;
+
+	private String cardCode;
 	
 	private Integer bIsLunar;
 	
@@ -27,7 +30,95 @@ public class HongShiVip {
 	private double bonusPoints;
 	
 	private String vipJbarcode;
-	
+
+	private Integer state;
+
+	private Integer disable;
+
+	private Integer isVoucher;
+
+	private Integer vipType;
+
+	private Date endTime;
+
+	private Boolean isAllowRecharge;
+
+	private Boolean isAllowPayment;
+
+	private String cardStatus;
+
+	public String getCardStatus() {
+		return cardStatus;
+	}
+
+	public void setCardStatus(String cardStatus) {
+		this.cardStatus = cardStatus;
+	}
+
+	public Boolean getAllowPayment() {
+		return isAllowPayment;
+	}
+
+	public void setAllowPayment(Boolean allowPayment) {
+		isAllowPayment = allowPayment;
+	}
+
+	public String getCardCode() {
+		return cardCode;
+	}
+
+	public void setCardCode(String cardCode) {
+		this.cardCode = cardCode;
+	}
+
+	public Boolean getAllowRecharge() {
+		return isAllowRecharge;
+	}
+
+	public void setAllowRecharge(Boolean allowRecharge) {
+		isAllowRecharge = allowRecharge;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public Integer getDisable() {
+		return disable;
+	}
+
+	public void setDisable(Integer disable) {
+		this.disable = disable;
+	}
+
+	public Integer getIsVoucher() {
+		return isVoucher;
+	}
+
+	public void setIsVoucher(Integer isVoucher) {
+		this.isVoucher = isVoucher;
+	}
+
+	public Integer getVipType() {
+		return vipType;
+	}
+
+	public void setVipType(Integer vipType) {
+		this.vipType = vipType;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getVipJbarcode() {
 		return vipJbarcode;
 	}

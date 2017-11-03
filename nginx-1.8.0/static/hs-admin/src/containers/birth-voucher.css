@@ -1,0 +1,18 @@
+.birth-voucher:before,
+.birth-voucher:after {
+  content: "";
+  display: table;
+}
+.birth-voucher:after {
+  clear: both;
+}
+.birth-voucher-float {
+  float: left;
+  text-align: center;
+}
+.birth-voucher-button {
+  padding: 10px 5px;
+  background-color: #337ab7;
+  color: white;
+  border-color: #337ab7;
+}

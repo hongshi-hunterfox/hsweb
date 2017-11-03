@@ -30,6 +30,8 @@ import Lottery from './containers/Lottery'
 import StoreInfo from './containers/StoreInfo'
 import AllProduct from './containers/AllProduct'
 import ShakeMonitor from './containers/ShakeMonitor'
+import Comment from './containers/Comment'
+import CommentDetail from './containers/CommentDetail'
 import NotFound from './containers/NotFound'
 
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
@@ -59,6 +61,8 @@ ReactDOM.render(
       <Route path="distribution-center" component={DistributionCenter} />
       <Route path="distribution-user" component={DistributionUser} />
       <Route path="distribution-order" component={DistributionOrder} />
+      <Route path="comment" component={Comment} />
+      <Route path="commentDetail" component={CommentDetail} />
       <Route path="address" component={Address} />
       <Route path="coupon" component={Coupon} />
       <Route path="order" component={Order} />

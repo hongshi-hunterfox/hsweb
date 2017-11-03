@@ -30,12 +30,13 @@ class UserList extends React.Component {
     var list = this.state.users.map((item, index) => {
       return (
         <tr key={index}>
-          <td><img src={item.image} alt="" width="50"/></td>
-          <td>{item.cardNum}</td>
-          <td>{item.name}</td>
-          <td>{item.phone}</td>
-          <td>{item.birthday}</td>
-          <td>{item.age&&item.age>0?item.age:null}</td>
+          <td width='20%'><img src={item.image} alt="" width="50"/></td>
+          <td width='15%'>{item.cardNum}</td>
+          <td width='15%'>{item.name}</td>
+          <td width='15%'>{item.phone}</td>
+          <td width='15%'>{item.birthday}</td>
+          <td width='5%'>{item.age&&item.age>0?item.age:null}</td>
+          <td width='15%'>{item.registTimeStr}</td>
         </tr>
       )
     })
@@ -50,12 +51,13 @@ class UserList extends React.Component {
             <table className="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th>头像</th>
-                  <th>卡号</th>
-                  <th>昵称</th>
-                  <th>手机</th>
-                  <th>生日</th>
-                  <th>年龄</th>
+                  <th width='10%'>头像</th>
+                  <th width='15%'>卡号</th>
+                  <th width='15%'>昵称</th>
+                  <th width='15%'>手机</th>
+                  <th width='15%'>生日</th>
+                  <th width='10%'>年龄</th>
+                  <th width='20%'>成为会员时间</th>
                 </tr>
               </thead>
               <tbody>

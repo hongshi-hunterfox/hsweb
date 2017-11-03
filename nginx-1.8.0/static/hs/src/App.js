@@ -53,9 +53,9 @@ class App extends Component {
             return err
           }
 
-          if (!this.state.loading) {
+          /*if (!this.state.loading) {
             return
-          }
+          }*/
 
           // 有 code 访问 callback
           if (q.code) {
@@ -97,6 +97,7 @@ class App extends Component {
   _log = (cb, appId) => {
     req.get('/uclee-user-web/getUserInfo').end((err, res) => {
       if (err) {
+        window.location='/';
         return err
       }
 

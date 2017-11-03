@@ -12,7 +12,7 @@ class ProductGroup extends React.Component{
 	  }
 	render() {
 		var items = this.props.products.map(function(item, index) {
-			return <ProductItem key={index} {...item}/>
+			return <ProductItem key={index} {...item} _buyClick={this.props._buyClick}/>
 		});
 
 		return (

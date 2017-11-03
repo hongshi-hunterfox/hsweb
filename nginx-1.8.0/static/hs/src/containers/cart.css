@@ -118,6 +118,9 @@
 .cart-settle-info {
   color: #aaa;
 }
+.cart-settle .left {
+  right: 6.1em;
+}
 .cart-settle-go {
   background-color: #ec534d;
   color: white;

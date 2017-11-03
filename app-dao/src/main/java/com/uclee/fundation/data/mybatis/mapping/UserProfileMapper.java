@@ -4,6 +4,7 @@ package com.uclee.fundation.data.mybatis.mapping;
 import java.util.List;
 
 import com.uclee.fundation.data.mybatis.model.UserProfile;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserProfileMapper {
     int deleteByPrimaryKey(Integer profileId);
@@ -30,8 +31,9 @@ public interface UserProfileMapper {
 
 	List<UserProfile> selectAllProfileList();
 
-	List<UserProfile> getUserListForBirth(Integer day);
+	List<UserProfile> getUserListForBirth(@Param("start") String start, @Param("end")String end);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
+    UserProfile selectByName(String name);
 }

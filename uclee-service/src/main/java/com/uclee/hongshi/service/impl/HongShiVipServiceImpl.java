@@ -1,10 +1,12 @@
 package com.uclee.hongshi.service.impl;
 
 import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
+import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
 import com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord;
 import com.uclee.fundation.data.mybatis.model.HongShiVip;
 import com.uclee.hongshi.service.HongShiVipServiceI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -15,7 +17,7 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	private HongShiVipMapper hongShiVipMapper;
 
 	@Override
-	public Integer addHongShiVipInfo(HongShiVip params) {
+	public AddVipResult addHongShiVipInfo(HongShiVip params) {
 		return hongShiVipMapper.addVipInfo(params);
 	}
 
@@ -31,7 +33,12 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 
 	@Override
 	public Integer hongShiRecharge(HongShiRecharge params) {
-		hongShiVipMapper.hongShiRecharge(params);
-		return 1;
+		return hongShiVipMapper.hongShiRecharge(params);
+	}
+	
+	
+	@Override
+	public Integer changeVip(Integer cVipLk) {
+		return hongShiVipMapper.changeVip(cVipLk);
 	}
 }

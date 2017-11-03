@@ -45,11 +45,22 @@
   display: block;
   width: 33.3%;
   text-align: center;
+  position: relative;
 }
 
 .member-center-order > a {
   display: inline-block;
   color: #333;
+}
+.member-center-order-count {
+    float: right;
+    background: red;
+    color: white;
+    border-radius: 10px;
+    padding: 0px 5px;
+    font-size: 10px;
+    right: 30%;
+    position: absolute;
 }
 
 .member-center-order-icon {

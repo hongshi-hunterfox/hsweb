@@ -252,9 +252,7 @@ public class WeiXinLogin extends CommonUserHandler{
 			userProfile.setImage(headimgurl);
 			if(!weiXinNickName.equals("")){
 				userProfile.setName(weiXinNickName);
-				if(userProfile.getNickName()==null||userProfile.getNickName().equals("")){
-					userProfile.setNickName(weiXinNickName);
-				}
+				userProfile.setNickName(weiXinNickName);
 			}
 			userProfileServiceI.updateUserProfile(userProfile);
 			Integer userId = userProfile.getUserId();
@@ -296,7 +294,7 @@ public class WeiXinLogin extends CommonUserHandler{
  	        logger.info(weiXinUserInfo);
  	        String isSubcribe = weiXinUserInfoJsonData.getString("subscribe");
  	        String headimgurl;
-			if (isSubcribe.equals("1")) {
+			if (isSubcribe!=null&&isSubcribe.equals("1")) {
 				String weiXinNickName;
 				weiXinNickName = EmojiFilter.filterEmoji(weiXinUserInfoJsonData.getString("nickname"));
 				//headimgurl = headimgurl.replaceAll("\\", "");

@@ -12,4 +12,6 @@ public interface ProductStoreLinkMapper {
     int insertSelective(ProductStoreLinkKey record);
 
 	ProductStoreLinkKey selectByPIdAndStoreId(@Param("productId")Integer productId, @Param("selectedStoreId")Integer selectedStoreId);
+
+    int insertAll(Integer storeId);
 }

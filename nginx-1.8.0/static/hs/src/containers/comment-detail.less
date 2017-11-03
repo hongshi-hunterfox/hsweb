@@ -1,0 +1,84 @@
+@import '../public.less';
+.comment-detail{
+	background: white;
+	&-button{
+		position: fixed;
+		padding: 10px;
+		background-color: #FF3300;
+		color: white;
+		text-align: center;
+		left: 5%;
+		right: 5%;
+		width: 90%;
+		z-index: 999;
+		bottom: 60px;
+		border-radius : 15px;
+    	margin: auto;
+	}
+	&-textarea{
+		width: 96%;
+		margin-left: 2%;
+	}
+	&-form{
+		background-color: white;
+		&-control{
+			&-select{
+				width: 100/3%;
+				float: left;
+			}
+		}
+	}
+	&-star{
+		padding: 10px;
+		.clearfix();
+		.lable{
+			float: left;
+			line-height: 30px;
+			font-size: 15px;
+		}
+		.starList{
+			float: left;
+			.clearfix();
+		    .item{
+		    	width: 30px;
+		    	height: 30px;
+		    	line-height: 5px;
+			    background: url(/images/icon_evaluation_nor@2x.png) no-repeat;
+			    background-size: 100% auto;
+			    float: left;
+		    }
+		    .on{
+				background: url(/images/icon_evaluation_sel@2x.png) no-repeat;
+    			background-size: 100% auto;
+			}
+		}
+		.word{
+			float: left;
+    		color: #A2A7BA;	
+		}
+		ul{
+			list-style: none;
+		}
+	}
+	&-content{
+		padding: 10px;font-size: 15px;
+		border-bottom: 1px solid #C7C7C7;
+    	margin-top: 5px;
+    	    word-wrap: break-word;
+	}
+	.form-control {
+	    border-radius: 15px;
+	    height: 50px;
+	  }
+
+	  .form-horizontal .form-group {
+	    margin-right: 5px;
+	    margin-left: 5px;
+	    padding-top: 10px;
+	    padding-bottom: 10px;
+	  }
+
+	  .form-group {
+	      margin-bottom: 15px;
+	  }
+}

@@ -9,6 +9,8 @@ import req from 'superagent'
 import Navi from './Navi'
 // import Footer from '../components/Footer'
 
+
+
 class MemberCenter extends React.Component {
   constructor(props) {
     super(props)
@@ -16,7 +18,12 @@ class MemberCenter extends React.Component {
       nickName: '',
       point:0,
       serialNum:'',
-      cVipCode:null
+      cVipCode:null,
+      isSigned:false,
+      unPayCount:0,
+      unCommentCount:0,
+      deliCount:0,
+      ucenterImg:''
     }
   }
 
@@ -27,7 +34,9 @@ class MemberCenter extends React.Component {
         t: new Date().getTime()
       })
       .end((err, res) => {
-        this.setState(res.body)
+        if(res&&res.body){
+          this.setState(res.body)
+        }
       })
 
       req
@@ -44,10 +53,13 @@ class MemberCenter extends React.Component {
   }
 
   render() {
+    console.log(this.props.location.query)
     return (
       <DocumentTitle title="会员中心">
         <div className="member-center">
           <div className="member-center-hero">
+          {
+            !this.state.isSigned?
             <span className="member-center-check-in" onClick={() => { 
               if(this.state.cVipCode===null){
                 alert("请先绑定会员。");
@@ -63,7 +75,8 @@ class MemberCenter extends React.Component {
                   }
                   if(data.result){
                     this.setState({
-                      point : Number(this.state.point) + Number(data.point)
+                      point : Number(this.state.point) + Number(data.point),
+                      isSigned:true
                     })
                     alert("签到成功，积分+" + data.point)
                     return;
@@ -75,9 +88,10 @@ class MemberCenter extends React.Component {
                   
                 })
 
-            }}>签到获取积分</span>
-
-            <img src={hero} alt=""/>
+            }}>签到获取积分</span>:
+            <span className="member-center-check-in">今日已签到</span>
+          }
+            <img src={this.state.ucenterImg} alt=""/>
             <div className="member-center-info">
               <div>尊贵的 {this.state.nickName}</div>
               {/*<div>您拥有本店积分：{0}</div>*/}
@@ -87,7 +101,7 @@ class MemberCenter extends React.Component {
           <div className="member-center-status clearfix">
             <div className="member-center-status-item">
                 <span className="member-center-status-title"><Icon name="database" className="member-center-status-icon" />积分</span>
-                <span>{this.state.point || '0'}</span>
+                <span>{this.state.point.toFixed(0) || '0'}</span>
             </div>
             <div className="member-center-status-item" onClick={() => { window.location='/member-card' }}>
               <a href="/member-card">
@@ -100,21 +114,23 @@ class MemberCenter extends React.Component {
                 <span>{this.state.couponAmount || '0'}</span>
             </div>
           </div>
-
           <div className="member-center-orders clearfix">
             <div className="member-center-order" onClick={() => { window.location='/unpay-order-list' }}>
+              {this.state.unPayCount&&this.state.unPayCount>0?<div className='member-center-order-count'>{this.state.unPayCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>待付款</span>
               </a>
             </div>
             <div className="member-center-order" onClick={() => { window.location='/order-list?isEnd=0' }}>
+             {this.state.deliCount&&this.state.deliCount>0?<div className='member-center-order-count'>{this.state.deliCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>制作配送中</span>
               </a>
             </div>
             <div className="member-center-order" onClick={() => { window.location='/order-list?isEnd=1'  }}>
+              {this.state.unCommentCount&&this.state.unCommentCount>0?<div className='member-center-order-count'>{this.state.unCommentCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>已结单</span>
@@ -123,7 +139,7 @@ class MemberCenter extends React.Component {
           </div>
 
           <LinkGroup>
-            <LinkGroupItem icon="smile-o" text="全部订单" onClick={() => { window.location='/order-list'  }}/>
+            <LinkGroupItem icon="smile-o" text="我的订单" onClick={() => { window.location='/order-list'  }}/>
             <LinkGroupItem icon="smile-o" text="我的购物车" onClick={() => { window.location='/cart'}}/>
           </LinkGroup>
 

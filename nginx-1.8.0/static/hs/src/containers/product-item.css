@@ -13,6 +13,9 @@
   display: block;
 }
 .product-item-img {
+  padding: 5px;
+}
+.product-item-img .image {
   width: 100%;
 }
 .product-item-tag {
@@ -46,9 +49,18 @@
   border-bottom-color: transparent;
 }
 .product-item-info {
+  width: 100%;
   padding: 5px;
   position: relative;
   background-color: white;
+}
+.product-item-info:before,
+.product-item-info:after {
+  content: "";
+  display: table;
+}
+.product-item-info:after {
+  clear: both;
 }
 .product-item-extra {
   padding-right: 40px;
@@ -61,14 +73,42 @@
 .product-item-title {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  float: left;
+  height: 45px;
+  font-size: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  font-family: "\5FAE\8F6F\96C5\9ED1";
 }
 .product-item-price {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: #f55c39;
+  padding-top: 5px;
+  padding-bottom: 2px;
+}
+.product-item-price:before,
+.product-item-price:after {
+  content: "";
+  display: table;
+}
+.product-item-price:after {
+  clear: both;
+}
+.product-item-price .left {
+  float: left;
+  font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+}
+.product-item-price .right {
   float: right;
+  padding: 0px 10px;
+  background-color: #f55c39;
+  color: white;
+  border-radius: 9px;
 }
 .product-item-percent {
   background-color: #ddd;

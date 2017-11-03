@@ -14,7 +14,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +43,8 @@ import org.h2.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+//import org.springframework.cache.annotation.Cacheable;
+
 
 import com.alibaba.fastjson.JSON;
 import com.backend.service.ProductManageServiceI;
@@ -59,43 +60,10 @@ import com.uclee.fundation.config.links.DuobaoRoleConstant;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.config.links.WechatMerchantInfo;
-import com.uclee.fundation.data.mybatis.mapping.BalanceLogMapper;
-import com.uclee.fundation.data.mybatis.mapping.BalanceMapper;
-import com.uclee.fundation.data.mybatis.mapping.CartMapper;
-import com.uclee.fundation.data.mybatis.mapping.CityMapper;
-import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.DeliverAddrMapper;
-import com.uclee.fundation.data.mybatis.mapping.FinancialAccountMapper;
-import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
-import com.uclee.fundation.data.mybatis.mapping.LoginHistoryMapper;
-import com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper;
-import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
-import com.uclee.fundation.data.mybatis.mapping.OrderItemMapper;
-import com.uclee.fundation.data.mybatis.mapping.OrderMapper;
-import com.uclee.fundation.data.mybatis.mapping.PaymentMapper;
-import com.uclee.fundation.data.mybatis.mapping.PaymentOrderMapper;
-import com.uclee.fundation.data.mybatis.mapping.PermissionMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductGroupLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductGroupMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductStoreLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProvinceMapper;
-import com.uclee.fundation.data.mybatis.mapping.RegionMapper;
-import com.uclee.fundation.data.mybatis.mapping.RoleMapper;
-import com.uclee.fundation.data.mybatis.mapping.RolePermissionLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.SignRecordMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserInvitedLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserRoleLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.VarMapper;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.BossCenterItem;
+import com.uclee.fundation.data.web.dto.MobileItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
@@ -107,7 +75,7 @@ import com.uclee.payment.exception.PaymentHandlerException;
 import com.uclee.payment.strategy.alipay.util.AlipayNotify;
 import com.uclee.payment.strategy.alipay.util.AlipaySubmit;
 import com.uclee.payment.strategy.wcPaymetnTools.*;
-import com.uclee.payment.strategy.wcPaymetnTools.config.MerchantInfo;
+//import com.uclee.payment.strategy.wcPaymetnTools.config.MerchantInfo;
 import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.model.UserForm;
 import com.uclee.user.service.DuobaoServiceI;
@@ -118,29 +86,31 @@ import com.uclee.user.util.SHA256;
 import com.uclee.user.util.UserUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 import com.uclee.weixin.util.EmojiFilter;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.h2.util.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.*;
-import java.util.Map.Entry;
+//import org.apache.commons.collections.CollectionUtils;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.client.methods.CloseableHttpResponse;
+//import org.apache.http.client.methods.HttpGet;
+//import org.apache.http.impl.client.CloseableHttpClient;
+//import org.apache.http.impl.client.HttpClients;
+//import org.apache.http.util.EntityUtils;
+//import org.apache.log4j.Logger;
+//import org.apache.shiro.crypto.hash.Sha256Hash;
+//import org.h2.util.StringUtils;
+//import org.json.JSONException;
+//import org.json.JSONObject;
+//import org.springframework.beans.factory.annotation.Autowired;
+
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpSession;
+
+//import java.io.*;
+//import java.math.BigDecimal;
+//import java.net.HttpURLConnection;
+//import java.net.URL;
+//import java.nio.charset.Charset;
+//import java.util.*;
+//import java.util.Map.Entry;
 
 public class UserServiceImpl implements UserServiceI {
 
@@ -151,6 +121,8 @@ public class UserServiceImpl implements UserServiceI {
 	private FreightMapper freightMapper;
 	@Autowired
 	private LotteryDrawConfigMapper lotteryDrawConfigMapper;
+	@Autowired
+	private MessageMapper messageMapper;
 	@Autowired
 	private FDFSFileUpload fDFSFileUpload;
 	@Autowired
@@ -224,17 +196,22 @@ public class UserServiceImpl implements UserServiceI {
 	private ProductGroupLinkMapper productGroupLinkMapper;
 	@Autowired
 	private SpecificationValueStoreLinkMapper specificationValueStoreLinkMapper;
-	
+	@Autowired
+	private HomeQuickNaviMapper homeQuickNaviMapper;
 	@Autowired
 	private CartMapper cartMapper;
 	@Autowired
 	private ConfigMapper configMapper;
+	@Autowired
+	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
 	@Autowired
 	private SignRecordMapper signRecordMapper;
 	@Autowired
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private BannerMapper bannerMapper;
+	@Autowired
+	private CommentMapper commentMapper;
 	
 	@Autowired
 	private LotteryRecordMapper lotteryRecordMapper;
@@ -242,6 +219,10 @@ public class UserServiceImpl implements UserServiceI {
 	private ShakeRecordMapper shakeRecordMapper;
 	@Autowired
 	private SpecificationMapper specificationMapper;
+	@Autowired
+	private FullCutMapper fullCutMapper;
+	@Autowired
+	private ShippingFullCutMapper shippingFullCutMapper;
 	@Autowired
 	private DataSourceFacade datasource;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
@@ -551,7 +532,7 @@ public class UserServiceImpl implements UserServiceI {
     * @throws 
     */
     @Override
-    public boolean addPhoneUser(String name, String phone) {
+    public Integer addPhoneUser(String name, String phone) {
 		try {
 			UserProfile search=new UserProfile();
 			search.setPhone(phone);
@@ -582,16 +563,16 @@ public class UserServiceImpl implements UserServiceI {
 				userProfile.setName(name);
 
 				userProfileMapper.insertSelective(userProfile);
-				return true;
+				return userId;
 			}else{
 				logger.info("already had phone:"+phone);
 			}
 		}catch(Exception e){
 			logger.error("add user error",e);
-			return false;
+			return null;
 		}
 
-        return false;
+        return null;
     }
 
 	/** 
@@ -1345,8 +1326,7 @@ public class UserServiceImpl implements UserServiceI {
 	/** 
 	* @Title: updateWXInfo 
 	* @Description: 更新微信用户信息
-	* @param     设定文件  
-	* @throws 
+	* @throws
 	*/
 	@Override
 	public void updateWXInfo() {
@@ -1661,7 +1641,7 @@ public class UserServiceImpl implements UserServiceI {
 					if(createOrderResult!=null){
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 						if(coupon!=null&&coupon.size()>0){
-							hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum());
+							hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum(),order.getVoucherPrice());
 						}
 					}
 				} catch (Exception e) {
@@ -1752,7 +1732,13 @@ public class UserServiceImpl implements UserServiceI {
 				}
 			}
 			String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
-			sendWXMessage(oauthLogin.getOauthId(), "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+			Config config = configMapper.getByTag("payTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
+			if(config!=null) {
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), "尊敬的会员，您有一笔订单已经支付成功", key, value, "感谢您的惠顾");
+			}
 		}
 		return true;
 	}
@@ -1794,17 +1780,66 @@ public class UserServiceImpl implements UserServiceI {
 		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(paymentOrder.getMoney());
 		
 		BigDecimal realMoney = paymentOrder.getMoney();
-		if(rechargeConfig.getType().equals(2)){
-			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
-			if (coupon!=null&&coupon.size()>0) {
-				try {
-					hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),rechargeConfig.getVoucherCode());
-				} catch (Exception e) {
-					
+		if(rechargeConfig!=null){
+			//优惠券处理
+			if(rechargeConfig.getStartTime()!=null&&rechargeConfig.getEndTime()!=null&&new Date().after(rechargeConfig.getStartTime())&&new Date().before(rechargeConfig.getEndTime())){
+				try{
+					RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),paymentOrder.getUserId());
+					boolean isSend=false;
+					if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
+						for(int i=0;i<rechargeConfig.getAmount();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						for(int i=0;i<rechargeConfig.getAmountSecond();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						for(int i=0;i<rechargeConfig.getAmountThird();i++) {
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
+							if (coupon != null && coupon.size() > 0) {
+								try {
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+									isSend=true;
+								} catch (Exception e) {
+
+								}
+							}
+						}
+						if(isSend){
+							if(record==null){
+								RechargeRewardsRecord tmp = new RechargeRewardsRecord();
+								tmp.setConfigId(rechargeConfig.getId());
+								tmp.setCount(1);
+								tmp.setUserId(paymentOrder.getUserId());
+								rechargeRewardsRecordMapper.insertSelective(tmp);
+							}else{
+								record.setCount(record.getCount()+1);
+								rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
 				}
+				realMoney = realMoney.add(rechargeConfig.getRewards());
+			}else{
+				logger.error("不在赠送时期");
 			}
-		}else{
-			realMoney = realMoney.add(rechargeConfig.getRewards());
 		}
 		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId())
 				.setcWeiXinOrderCode(paymentOrder.getPaymentSerialNum())
@@ -1816,7 +1851,13 @@ public class UserServiceImpl implements UserServiceI {
 			paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder);
 			String[] key = {"keyword1","keyword2"};
 			String[] value = {DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString()};
-			sendWXMessage(oauthLogin.getOauthId(), "TBY-Wrn9sQuOoM_BUNZO2aEjX56AG6RRNxHrEH8k_pI", "hs.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
+			Config config = configMapper.getByTag("rechargeTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.signName);
+			if(config!=null) {
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/recharge-list?merchantCode="+config1.getValue(), "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
+			}
 		}
 		return true;
 	}
@@ -1834,7 +1875,7 @@ public class UserServiceImpl implements UserServiceI {
 	* @throws 
 	*/
 	@Override
-	public String sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
+	public Boolean sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
 		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
 		sendData.put("touser", openId);
 		sendData.put("template_id", templateId);
@@ -1861,7 +1902,7 @@ public class UserServiceImpl implements UserServiceI {
 		logger.info(JSON.toJSONString(sendData));
 		try {
         Var var = varMapper.selectByPrimaryKey(new Integer(1));
-        URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + var.getValue());// 创建连接  
+        URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + var.getValue());// 创建连接
         HttpURLConnection connection = (HttpURLConnection) urlPost  
                 .openConnection();  
         connection.setDoOutput(true);  
@@ -1890,11 +1931,15 @@ public class UserServiceImpl implements UserServiceI {
         reader.close();
         // 断开连接
         connection.disconnect();
+        String res = sb.toString();
+        if(res!=null&&res.contains("ok")){
+        	return true;
+		}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 	}
 
 	/** 
@@ -1929,6 +1974,24 @@ public class UserServiceImpl implements UserServiceI {
 		}else{
 			productDto.setSalesAmount(0);
 		}
+		List<String> salesInfo = new ArrayList<String>();
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		Integer count = 1;
+		for(FullCut fullCut:fullCuts){
+			String tmp = "";
+			tmp = count + ". 整单满" + fullCut.getCondition()+"元减"+fullCut.getCut()+"元";
+			count++;
+			salesInfo.add(tmp);
+		}
+		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
+		for(ShippingFullCut shippingFullCut:shippingFullCuts){
+			String tmp = "";
+			tmp = count + ". "+shippingFullCut.getsLimit()+"-"+shippingFullCut.getuLimit()+"公里,"+"满"+shippingFullCut.getCondition()+"元免运费";
+			count++;
+			salesInfo.add(tmp);
+		}
+		productDto.setSalesInfo(salesInfo);
+		System.out.println(JSON.toJSONString(salesInfo));
 		return productDto;
 	}
 
@@ -2109,7 +2172,7 @@ public class UserServiceImpl implements UserServiceI {
 			User user = userMapper.selectByPrimaryKey(userId);
 			User invitor = userMapper.selectBySerialNum(serialNum);
 			logger.info(JSON.toJSONString(user));
-			if(user!=null&&!user.getSerialNum().equals(serialNum)){
+			if(user!=null&&!user.getSerialNum().equals(serialNum)&&invitor!=null){
 				UserInvitedLink link = new UserInvitedLink();
 				link.setUserId(invitor.getUserId());
 				link.setInvitedId(userId);
@@ -2278,6 +2341,15 @@ public class UserServiceImpl implements UserServiceI {
 			orderItem.add(item);
 		}
 		order.setTotalPrice(totalMoney);
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		BigDecimal cut = new BigDecimal(0);
+		for(FullCut fullCut:fullCuts){
+			if(totalMoney.compareTo(fullCut.getCondition())>=0){
+				cut = fullCut.getCut();
+			}
+		}
+		order.setCut(cut);
+		totalMoney = totalMoney.subtract(cut);
 		if(orderPost.getIsSelfPick()!=null&&orderPost.getIsSelfPick().equals("false")){
 			order.setShippingCost(orderPost.getShippingFee());
 			totalMoney = totalMoney.add(orderPost.getShippingFee());
@@ -2287,6 +2359,11 @@ public class UserServiceImpl implements UserServiceI {
 			try {
 				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(orderPost.getVoucherCode());
 				if(coupon!=null&&coupon.size()>0){
+					if(coupon.get(0).getPayQuota().compareTo(totalMoney)<=0){
+						order.setVoucherPrice(coupon.get(0).getPayQuota());
+					}else{
+						order.setVoucherPrice(totalMoney);
+					}
 					order.setVoucherCode(orderPost.getVoucherCode());
 					totalMoney = totalMoney.subtract(coupon.get(0).getPayQuota());
 				}
@@ -2365,7 +2442,7 @@ public class UserServiceImpl implements UserServiceI {
 	public List<Order> getUnpayOrderListByUserId(Integer userId) {
 		List<Order> orders = orderMapper.getUnpayOrderListByUserId(userId);
 		for(Order order:orders){
-			if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
+			/*if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
 				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 				if(coupon!=null&&coupon.size()>0){
 					order.setDiscount(coupon.get(0).getPayQuota());
@@ -2374,7 +2451,8 @@ public class UserServiceImpl implements UserServiceI {
 				}
 			}else{
 				order.setDiscount(new BigDecimal(0));
-			}
+			}*/
+			order.setDiscount(order.getVoucherPrice());
 			order.setCreateTimeStr(DateUtils.format(order.getCreateTime(), DateUtils.FORMAT_LONG));
 			NapaStore store = napaStoreMapper.selectByPrimaryKey(order.getStoreId());
 			if(store!=null){
@@ -2449,6 +2527,21 @@ public class UserServiceImpl implements UserServiceI {
 					SpecificationValue value = specificationValueMapper.selectByProductIdLimit(link.getProductId());
 					if(value!=null){
 						productDto.setPrice(value.getHsGoodsPrice());
+					}
+					List<ProductImageLink> images = productImageLinkMapper.selectByProductId(productDto.getProductId());
+					productDto.setImages(images);
+					List<Specification> specifications = specificationMapper.getByProductId(productDto.getProductId());
+					productDto.setSpecifications(specifications);
+					if(specifications!=null&&specifications.size()>0){
+						if(specifications.get(0).getValues()!=null&&specifications.get(0).getValues().size()==1){
+							if(specifications.get(0).getValues().get(0)!=null){
+								productDto.setCurrentSpecValudId(specifications.get(0).getValues().get(0).getValueId());
+							}else{
+								productDto.setCurrentSpecValudId(null);
+							}
+						}else{
+							productDto.setCurrentSpecValudId(null);
+						}
 					}
 					products.add(productDto);
 				}
@@ -2581,10 +2674,16 @@ public class UserServiceImpl implements UserServiceI {
 					item.setHongShiGoods(goods);
 					total = total.add(new BigDecimal(item.getPrice()).multiply(new BigDecimal(item.getCount())));
 				}
-				order.setOrderItems(orderItems);
+				Comment comment = commentMapper.selectByOrderId(order.getOuterOrderCode());
+				if(comment==null){
+					order.setIsComment(false);
+				}else{
+					order.setIsComment(true);
+				}
 				Order tmp = orderMapper.selectBySerialNum(order.getOuterOrderCode());
+				order.setOrderItems(orderItems);
 				if(tmp!=null){
-					if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
+					/*if(tmp.getVoucherCode()!=null&&!tmp.getVoucherCode().equals("")){
 						try {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(tmp.getVoucherCode());
 							if(coupon!=null&&coupon.size()>0){
@@ -2593,22 +2692,51 @@ public class UserServiceImpl implements UserServiceI {
 							}
 						} catch (Exception e) {
 						}
-					}
+					}*/
+					discount = tmp.getVoucherPrice();
 					order.setShippingCost(tmp.getShippingCost());
 					order.setIsSelfPick(tmp.getIsSelfPick());
 					NapaStore napaStore = napaStoreMapper.selectByPrimaryKey(tmp.getStoreId());
 					if(napaStore!=null){
 						order.setPickAddr(napaStore.getProvince()+napaStore.getCity()+napaStore.getRegion()+napaStore.getAddrDetail());
 					}
+					order.setCut(tmp.getCut());
+					if(tmp.getPickUpImage()==null||tmp.getPickUpImage().length()<2){
+						File file = MyQRCode.generateQRCode(600,600,order.getPickUpCode());
+						String pickUpImage = fDFSFileUpload.getFileId(file);
+						tmp.setPickUpImage(pickUpImage);
+
+					}
+					if(tmp.getPickUpBarcode()==null||tmp.getPickUpBarcode().length()<2){
+						try{
+							File file = BarcodeUtil.generateFile(order.getPickUpCode(), System.getProperty("java.io.tmpdir")+".png");
+							String pickUpImage = fDFSFileUpload.getFileId(file);
+							tmp.setPickUpBarcode(pickUpImage);
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+
+					}
+					orderMapper.updateByPrimaryKeySelective(tmp);
+					order.setPickUpImageUrl(tmp.getPickUpImage());
+					order.setBarcode(tmp.getPickUpBarcode());
 				}
 				if(order.getShippingCost()==null){
 					order.setShippingCost(new BigDecimal(0));
 				}
+				total=total.setScale(2,BigDecimal.ROUND_HALF_UP);
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
-				order.setAccounts(total.add(order.getShippingCost()).subtract(discount).doubleValue());
+				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
+				order.setAccounts(account.doubleValue());
 			}
-			return orders;
+			List<HongShiOrder> ordersRet = new ArrayList<HongShiOrder>();
+			for(HongShiOrder item : orders){
+				if(!(isEnd!=null&&!isEnd&&item.getVoid())){
+					ordersRet.add(item);
+				}
+			}
+			return ordersRet;
 		}
 		return null;
 	}
@@ -2632,7 +2760,12 @@ public class UserServiceImpl implements UserServiceI {
 				List<Order> order = orderMapper.selectByVoucherCode(coupon.getVouchersCode());
 				if (order == null || order.size() == 0) {
 					couponsRet.add(coupon);
-				} 
+				}else{
+					HongShiOrder tmp = hongShiMapper.getOrderByOutCode(order.get(0).getOrderSerialNum());
+					if(tmp!=null&&tmp.getVoid()){
+						couponsRet.add(coupon);
+					}
+				}
 			}
 		}
 		return couponsRet;
@@ -2669,7 +2802,7 @@ public class UserServiceImpl implements UserServiceI {
 			//同步积分到洪石系统
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
 			if(oauthLogin!=null){
-				hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),record.getPoint());
+				hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),record.getPoint(),"签到送积分");
 			}
 			
 			map.put("result", true);
@@ -2714,7 +2847,7 @@ public class UserServiceImpl implements UserServiceI {
 		String vipImage = fDFSFileUpload.getFileId(file);
 		logger.info(vipImage);
 		if(profile!=null){
-			profile.setVipImage(vipImage);
+			profile.setVipJbarcode(vipImage);
 			userProfileMapper.updateByPrimaryKeySelective(profile);
 		}
 		file.delete();
@@ -2734,6 +2867,11 @@ public class UserServiceImpl implements UserServiceI {
 		User user = userMapper.selectByPrimaryKey(userId);
 		if(user!=null){
 			ret.put("serialNum", user.getSerialNum());
+		}
+		UserInvitedLink link = userInvitedLinkMapper.selectByInvitedId(userId);
+		if(link!=null){
+			UserProfile invitator = userProfileMapper.selectByUserId(link.getUserId());
+			ret.put("invitator",invitator);
 		}
 		Balance balance = this.getBalance(userId);
 		if(balance!=null){
@@ -2763,11 +2901,11 @@ public class UserServiceImpl implements UserServiceI {
 		return paymentOrderMapper.selectByPaymentSerialNum(paymentSerialNum);
 	}
 
-	/** 
-	* @Title: getLotteryConfig 
-	* @Description: 获取抽奖配置类 
-	* @param @return    设定文件  
-	* @throws 
+	/**
+	* @Title: getLotteryConfig
+	* @Description: 获取抽奖配置类
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public List<LotteryDrawConfig> getLotteryConfig() {
@@ -2784,7 +2922,7 @@ public class UserServiceImpl implements UserServiceI {
 					}
 				} else {
 					config.setText(config.getMoney().toString() + "元会员卡余额");
-				} 
+				}
 			}else{
 				config.setText("再接再励");
 			}
@@ -2792,12 +2930,12 @@ public class UserServiceImpl implements UserServiceI {
 		return configs;
 	}
 
-	/** 
-	* @Title: memberCardPaymentHandler 
+	/**
+	* @Title: memberCardPaymentHandler
 	* @Description: 会员卡支付处理
 	* @param @param paymentOrder
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public PaymentStrategyResult memberCardPaymentHandler(PaymentOrder paymentOrder) {
@@ -2807,7 +2945,7 @@ public class UserServiceImpl implements UserServiceI {
 			//更新订单状态
 			List<Order> orders = this.selectOrderByPaymentSerialNum(paymentOrder.getUserId(), paymentOrder.getPaymentSerialNum());
 			for(Order order:orders){
-				
+
 				//调用存储过程插入洪石订单
 				int hongShiResult=0;
 				try {
@@ -2826,6 +2964,7 @@ public class UserServiceImpl implements UserServiceI {
 					createOrderData.setWeiXinCode(oauthLogin.getOauthId());
 					createOrderData.setWSC_TardNo(order.getOrderSerialNum());
 					BigDecimal total = order.getTotalPrice();
+					createOrderData.setVouchers(order.getVoucherCode());
 					createOrderData.setPayment(paymentOrder.getMoney());
 					if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
@@ -2837,7 +2976,7 @@ public class UserServiceImpl implements UserServiceI {
 					}else{
 						createOrderData.setVoucher(new BigDecimal(0));
 					}
-					
+
 					total = total.add(order.getShippingCost());
 					createOrderData.setTotalAmount(total);
 					CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
@@ -2846,7 +2985,7 @@ public class UserServiceImpl implements UserServiceI {
 						if(createOrderResult!=null){
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 							if(coupon!=null&&coupon.size()>0){
-								hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum());
+								hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum(),order.getVoucherPrice());
 							}
 						}
 					} catch (Exception e) {
@@ -2872,7 +3011,7 @@ public class UserServiceImpl implements UserServiceI {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				//处理分销
 				try {
 					Config firstDistConfig = configMapper.getByTag(WebConfig.firstDis);
@@ -2903,30 +3042,34 @@ public class UserServiceImpl implements UserServiceI {
 								order.setFirstDistMoney(firstMoney);
 							}
 						}
-						
+
 						//二级分销
-						User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
-						Balance secondBalance = this.getBalance(secondDist.getUserId());
-						if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
-							BigDecimal secondMoney;
-							try {
-								secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								secondMoney=new BigDecimal(0.01);
-							}
-							secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
-							if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
-								//记录日志
-								BalanceLog log = new BalanceLog();
-								log.setUserId(secondDist.getUserId());
-								log.setBalance(secondBalance.getBalance());
-								log.setMoney(secondMoney);
-								balanceLogMapper.insertSelective(log);
-								//记录订单分销信息
-								order.setFirstDistId(secondDist.getUserId());
-								order.setFirstDistMoney(secondMoney);
+						if(firstDist!=null){
+							User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
+							if(secondDist!=null) {
+								Balance secondBalance = this.getBalance(secondDist.getUserId());
+								if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
+									BigDecimal secondMoney;
+									try {
+										secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+										secondMoney=new BigDecimal(0.01);
+									}
+									secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
+									if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
+										//记录日志
+										BalanceLog log = new BalanceLog();
+										log.setUserId(secondDist.getUserId());
+										log.setBalance(secondBalance.getBalance());
+										log.setMoney(secondMoney);
+										balanceLogMapper.insertSelective(log);
+										//记录订单分销信息
+										order.setFirstDistId(secondDist.getUserId());
+										order.setFirstDistMoney(secondMoney);
+									}
+								}
 							}
 						}
 					}
@@ -2934,7 +3077,7 @@ public class UserServiceImpl implements UserServiceI {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				order.setSyncStatus(hongShiResult);
 				orderMapper.updateByPrimaryKeySelective(order);
 				//发送购买成功短信
@@ -2949,7 +3092,12 @@ public class UserServiceImpl implements UserServiceI {
 					}
 				}
 				String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
-				sendWXMessage(oauthLogin.getOauthId(), "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+				Config config = configMapper.getByTag("payTmpId");
+				Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+				Config config2 = configMapper.getByTag(WebConfig.domain);
+				Config config3 = configMapper.getByTag(WebConfig.signName);
+				//"S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok"
+				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue() + "/order-list?merchantCode="+config1.getValue(), "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
 				//改变支付单状态
 				paymentOrder.setCompleteTime(new Date());
 				paymentOrder.setIsCompleted(true);
@@ -2970,13 +3118,13 @@ public class UserServiceImpl implements UserServiceI {
 	public List<Freight> getAllFreightConfig() {
 		return freightMapper.selectAll();
 	}
-	
-	/** 
-	* @Title: tranferBalance 
-	* @Description: 微商城余额转进会员卡 
+
+	/**
+	* @Title: tranferBalance
+	* @Description: 微商城余额转进会员卡
 	* @param @param userId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> tranferBalance(Integer userId) {
@@ -2999,16 +3147,16 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return map;
 	}
-	
-	
 
-	/** 
-	* @Title: lotteryHandler 
-	* @Description: 抽奖结果处理 
+
+
+	/**
+	* @Title: lotteryHandler
+	* @Description: 抽奖结果处理
 	* @param @param userId
 	* @param @param configCode
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String,Object> lotteryHandler(Integer userId, String configCode) {
@@ -3049,6 +3197,8 @@ public class UserServiceImpl implements UserServiceI {
 							map.put("result", true);
 							map.put("text", "恭喜抽中" + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_HALF_UP)
 									+ "现金优惠券，奖品已放入账户中，请注意查看");
+							config.setCount(config.getCount()-1);
+							lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 							return map;
 						} catch (Exception e) {
 							map.put("result", true);
@@ -3066,10 +3216,10 @@ public class UserServiceImpl implements UserServiceI {
 					Integer res = hongShiVipService.hongShiRecharge(dd);
 					map.put("text", "恭喜抽中" + config.getMoney() + "会员卡余额，奖品已充值到账户中，请注意查看");
 					map.put("result", true);
+					config.setCount(config.getCount()-1);
+					lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 					return map;
-				} 
-				config.setCount(config.getCount()-1);
-				lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
+				}
 			}else{
 				map.put("result", true);
 				map.put("text", "再接再励");
@@ -3084,14 +3234,14 @@ public class UserServiceImpl implements UserServiceI {
 		return configMapper.getByTag(WebConfig.drawPoint);
 	}
 
-	/** 
-	* @Title: cardAddHandler 
-	* @Description: 添加购物车处理 
+	/**
+	* @Title: cardAddHandler
+	* @Description: 添加购物车处理
 	* @param @param userId
 	* @param @param cartId
 	* @param @param amount
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount) {
@@ -3106,13 +3256,13 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return map;
 	}
-	/** 
-	* @Title: cardDelHandler 
-	* @Description: 删除购物车处理 
+	/**
+	* @Title: cardDelHandler
+	* @Description: 删除购物车处理
 	* @param @param userId
 	* @param @param cartId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> cardDelHandler(Integer userId,Integer cartId) {
@@ -3126,13 +3276,13 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return map;
 	}
-	/** 
-	* @Title: getAddrInfo 
-	* @Description: 取得地址相信信息 
+	/**
+	* @Title: getAddrInfo
+	* @Description: 取得地址相信信息
 	* @param @param userId
 	* @param @param deliverAddrId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public DeliverAddr getAddrInfo(Integer userId, Integer deliverAddrId) {
@@ -3247,13 +3397,13 @@ public class UserServiceImpl implements UserServiceI {
 		return map;
 	}
 
-	/** 
-	* @Title: getShakeRecord 
+	/**
+	* @Title: getShakeRecord
 	* @Description: 摇一摇记录
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
-	
+
 	@Override
 	public Map<String, Object> getShakeRecord() {
 		Map<String,Object> map = new TreeMap<String,Object>();
@@ -3263,19 +3413,19 @@ public class UserServiceImpl implements UserServiceI {
 		return map;
 	}
 
-	/** 
-	* @Title: shakeHandler 
-	* @Description: 摇一摇处理 
+	/**
+	* @Title: shakeHandler
+	* @Description: 摇一摇处理
 	* @param @param userId
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public boolean shakeHandler(Integer userId) {
-		/*Calendar todayStart = Calendar.getInstance();  
-        todayStart.set(Calendar.HOUR, 0);  
-        todayStart.set(Calendar.MINUTE, 0);  
-        todayStart.set(Calendar.SECOND, 0);  
+		/*Calendar todayStart = Calendar.getInstance();
+        todayStart.set(Calendar.HOUR, 0);
+        todayStart.set(Calendar.MINUTE, 0);
+        todayStart.set(Calendar.SECOND, 0);
         todayStart.set(Calendar.MILLISECOND, 0);
         Date today = todayStart.getTime();*/
 		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
@@ -3296,13 +3446,13 @@ public class UserServiceImpl implements UserServiceI {
 		return paymentMapper.selectMemberPayment();
 	}
 
-	/** 
-	* @Title: getBossCenter 
+	/**
+	* @Title: getBossCenter
 	* @Description: 老板助手数据
 	* @param @param phone
 	* @param @param hsCode
-	* @param @return    设定文件  
-	* @throws 
+	* @param @return    设定文件
+	* @throws
 	*/
 	@Override
 	public Map<String, Object> getBossCenter(String phone, String hsCode) {
@@ -3313,6 +3463,7 @@ public class UserServiceImpl implements UserServiceI {
 			ret.put("reason", "param_error");
 			return ret;
 		}
+		
 		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
 		if(napaStores!=null&&napaStores.size()>0){
 			userId = napaStores.get(0).getUserId();
@@ -3321,24 +3472,67 @@ public class UserServiceImpl implements UserServiceI {
 			ret.put("reason", "no_department");
 			return ret;
 		}
+		//
 		List<BossCenterItem> items = hongShiMapper.selectBossCenter(hsCode,userId);
+		//遍历：根据ValueType决定value输出几位小数
 		for(BossCenterItem item:items){
 			if (item.getValue()!=null) {
 				if (item.getValueType().equals("monery")) {
 					DecimalFormat df1 = new DecimalFormat("0.00");
 					item.setValue(new BigDecimal(df1.format(item.getValue())));
-				} else {
+				} else{
 					DecimalFormat df1 = new DecimalFormat("0");
 					item.setValue(new BigDecimal(df1.format(item.getValue())));
-				} 
+				}
 			}else{
 				item.setValue(new BigDecimal(0));
 			}
 		}
 		ret.put("items", items);
+		
+		List<MobileItem> itemo = hongShiMapper.selectMobile(hsCode,userId);
+//		for(MobileItem item:itemo){
+//			if(item.getTypes()="web:table"){
+//				item.setTypes("aaa.jpg");
+//			}else{
+//				item.setTypes("");
+//			}
+//		}
+		ret.put("itemo", itemo);
+
 		ret.put("result", true);
 		return ret;
 	}
+	
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	public Map<String, Object> getMobile(String phone, String hsCode) {
+//		Map<String, Object> ret = new HashMap<String, Object>();
+//		Integer userId = 0;
+//		ret.put("result", false);
+//		if(phone==null&&hsCode==null){
+//			ret.put("reason", "param_error");
+//			return ret;
+//		}
+//		
+//		List<MobileItem> itemo = hongShiMapper.selectMobile(hsCode,userId);
+//		for(MobileItem item:itemo){
+//			if (item.getName()!=null) {
+//				if (item.getCaption().equals("monery")) {
+//					DecimalFormat df1 = new DecimalFormat("lala");
+//					item.setName(new String(df1.format(item.getName())));
+//				} else {
+//					DecimalFormat df1 = new DecimalFormat("la");
+//					item.setName(new String(df1.format(item.getName())));
+//				}
+//			}else{
+//				item.setName(new String());
+//			}
+//		}
+//		ret.put("itemo", itemo);
+//		ret.put("result", true);
+//		return ret;
+//	}
 
 	@Override
 	public Map<String, Object> getShakePageData() {
@@ -3567,26 +3761,26 @@ public class UserServiceImpl implements UserServiceI {
 		map.put("level3", level3);
 		return map;
 	}
-	/** 
-	  * Math.random()产生一个double型的随机数，判断一下 
-	  * 例如0出现的概率为%50，则介于0到0.50中间的返回0 
-	     * @return int 
-	     * 
-	     */ 
-	
-	 public int percentageRandom(double rate0,double rate1)  
-	 {  
-	  double randomNumber;  
-	  randomNumber = Math.random();  
-	  if (randomNumber >= 0 && randomNumber <= rate0)  
-	  {  
-	   return 0;  
-	  }  
-	  else if (randomNumber >= rate0 && randomNumber <= rate0 + rate1)  
-	  {  
-	   return 1;  
+	/**
+	  * Math.random()产生一个double型的随机数，判断一下
+	  * 例如0出现的概率为%50，则介于0到0.50中间的返回0
+	     * @return int
+	     *
+	     */
+
+	 public int percentageRandom(double rate0,double rate1)
+	 {
+	  double randomNumber;
+	  randomNumber = Math.random();
+	  if (randomNumber >= 0 && randomNumber <= rate0)
+	  {
+	   return 0;
 	  }
-	  return -1;  
+	  else if (randomNumber >= rate0 && randomNumber <= rate0 + rate1)
+	  {
+	   return 1;
+	  }
+	  return -1;
 	 }
 
 	@Override
@@ -3599,10 +3793,43 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public String getAppId(String merchantCode) {
 		if(merchantCode!=null&&merchantCode.isEmpty()){
-			datasource.switchDataSource(merchantCode); 
+			datasource.switchDataSource(merchantCode);
 		}
 		Map<String,String> config = getWeixinConfig();
 		return config.get(WebConfig.APPID);
 	}
-	 
+
+	@Override
+	public List<HomeQuickNavi> getQuickNavis() {
+		return homeQuickNaviMapper.selectAll();
+	}
+
+	@Override
+	public int getUnpayOrderCountByUserId(Integer userId) {
+		return orderMapper.getUnpayOrderCountByUserId(userId);
+	}
+
+	@Override
+	public List<Message> getUnSendMesg() {
+		return messageMapper.getUnSendMesg();
+	}
+
+	@Override
+	public Config getConfigByTag(String supportDeliver) {
+		return configMapper.getByTag(supportDeliver);
+	}
+
+	@Override
+	public int getUnCommentCount(Integer userId) {
+		return orderMapper.getUnCommentCount(userId);
+	}
+
+	@Override
+	public Map<String, Object> getMobile(String phone, String hsCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }

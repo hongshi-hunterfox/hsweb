@@ -2,7 +2,8 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './recharge-list.css'
 import req from 'superagent'
-
+var Link = require('react-router').Link;
+import Navi from "./Navi"
 const NoItem = () => {
   return (
     <div style={{
@@ -17,30 +18,24 @@ const NoItem = () => {
 
 const RechargeListItem = (props) => {
   return (
-    <div className="recharge-list-item">
-
-      {
-        props.logType===1?
-        <div className="recharge-list-value">
-          订单消费： - {props.value}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
+    <div className="recharge-list-item ">
+      <div className='top '>
+        <div className='left'>
+            <div className='tag'><span className='left'>{props.source}：  </span><span className='right'>{props.value}</span></div>
         </div>
-        :props.logType===2?
-        <div className="recharge-list-value">
-          充值金额： + {props.value}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
-        </div>:props.logType===3?
-         <div className="recharge-list-value">
-          签到积分： + {props.bonusPoints}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
-        </div>:
-        <div className="recharge-list-value">
-          抽奖扣积分：  {props.bonusPoints}
-          <span className="recharge-list-point pull-right">积分：{props.integral}</span>
+        <div className='right'>
+            <span className="recharge-list-point pull-right" >余额：{props.balance}</span>
         </div>
-      }
-      <span className="recharge-list-time">{props.time}</span>
-      <span className="recharge-list-balance">余额：{props.balance}</span>
+      </div>
+      <div className='bottom '>
+         <div className='left'>
+            <span className="time"><span className='left'>{props.billCode}</span><span className='bonusPoints' className='right'>{props.bonusPoints}</span></span>
+          </div>
+        <div className='right'>
+            <span className="recharge-list-balance">积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+        </div>
+      </div>
+      
     </div>
     )
 }
@@ -78,10 +73,14 @@ class RechargeList extends React.Component {
           {
             this.state.list.length ?
             this.state.list.map((item, index) => {
-              return <RechargeListItem key={index} title={item.source} value={item.amount} time={item.dealTim} balance={item.balance} logType={item.logType} bonusPoints={item.bonusPoints} integral={item.integral}/>
+              return <RechargeListItem key={index} title={item.source} value={item.amount} billCode={item.billCode} bonusPoints={item.bonusPoints} time={item.dealTim} balance={item.balance} source={item.source} bonusPoints={item.bonusPoints} integral={item.integral}/>
             })
             : <NoItem />
           }
+          {/*<Link to={"/member-center"} className='recharge-list-back'>
+                返回会员中心
+          </Link>*/}
+          <Navi query={'member-center'}/>
         </div>
       </DocumentTitle>
       )

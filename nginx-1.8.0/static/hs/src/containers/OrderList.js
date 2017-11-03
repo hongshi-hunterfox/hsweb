@@ -3,11 +3,15 @@ import React from "react"
 import DocumentTitle from "react-document-title"
 import Navi from './Navi'
 import OrderListUtil from "../utils/OrderListUtil"
+var Link = require("react-router").Link
 class OrderList extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			orders: []
+			orders: [],
+			showImage:false,
+			imageUrl:'',
+			barcode:''
 		}
 	}
 
@@ -26,6 +30,13 @@ class OrderList extends React.Component {
 		)
 
 	}
+	_showImage=(url,url2)=>{
+		this.setState({
+			showImage:!this.state.showImage,
+			imageUrl:url,
+			barcode:url2
+		})
+	}
 	render() {
 		var items = this.state.orders.map((item, index) => {
 			return (
@@ -38,7 +49,7 @@ class OrderList extends React.Component {
 									: "线下订单"}
 							</span>
 							<span className="status pull-right">
-								{item.isEnd ? "已完成" : "制作配送中"}
+								{!item.isEnd ? item.void? "已废弃" :  "制作配送中" : "已完成"}
 							</span>
 						</div>
 						<div className="number">
@@ -47,7 +58,7 @@ class OrderList extends React.Component {
 							: null}</span>
 						</div>
 						<div className="number">
-							<span>下单时间：{item.date}</span>
+							<span>下单时间：{item.createTime}</span>
 						</div>
 						{	item.isSelfPick&&item.pickAddr?
 							<div className="number">
@@ -65,16 +76,50 @@ class OrderList extends React.Component {
 					<div className="order-list-bottom">
 						<span className="pull-right total">运费：￥{item.shippingCost?item.shippingCost:0}</span>
 					</div>
+					{
+						item.cut&&item.cut>0?
+						<div className="order-list-bottom">
+							<span className="pull-right total">满减：￥{item.cut?item.cut:0}</span>
+						</div>:null
+					}
 					<div className="order-list-bottom">
 						<span className="pull-right total">合计：{item.accounts>0?item.accounts:0}</span>
 					</div>
+					<div>
+						{item.isEnd&&!item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/comment?orderSerialNum='+item.outerOrderCode}>去评论</Link>:null}
+						{item.isEnd&&item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/commentDetail?orderSerialNum='+item.outerOrderCode}>查看评论</Link>:null}
+					</div>
+					
+
+						{!item.isEnd&&!item.void?
+							<div>
+							<span className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} onClick={this._showImage.bind(this,item.pickUpImageUrl,item.barcode)}>查看提货码</span>
+							</div>
+						:null}
+					
 				</div>
 			)
 		})
 		return (
 			<DocumentTitle title="我的订单">
 				<div className="order">
+					<div className='order-top'>
+						<span onClick={()=>{window.location='/order-list'}} className={'order-top-item'+(!this.props.location.query.isEnd?' active':'')}>全部</span>
+						<span onClick={()=>{window.location='/unpay-order-list'}} className='order-top-item'>待支付</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=0'}} className={'order-top-item'+(this.props.location.query.isEnd&&this.props.location.query.isEnd==='0'?' active':'')}>制作配送中</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=1'}} className={'order-top-item'+(this.props.location.query.isEnd&&this.props.location.query.isEnd==='1'?' active':'')}>已完成</span>
+					</div>
 					{items}
+					<div className={'order-pick-up-image '+(this.state.showImage?'':'none')} onClick={()=>{
+						this.setState({
+							showImage:!this.state.showImage
+						})
+					}}>
+						
+						<img className='barcode' src={this.state.barcode} width='80%' />
+						<img className='image' src={this.state.imageUrl} width='80%' /> 
+						<span className='fa fa-times-circle-o icon' ></span>
+					</div>
 					<div className="bottom-text">
 						O(∩_∩)O 啊哦，没有更多订单啦~~~
 					</div>

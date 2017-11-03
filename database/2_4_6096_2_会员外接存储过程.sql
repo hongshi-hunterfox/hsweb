@@ -2,7 +2,9 @@
 /*
 与微商城对接的更新
 函数：
-  Fun_Birthday: 函数 转换当年生日为指定日期后的生日日期  
+  GetBirthday: 函数 转换当年生日为指定日期后的生日日期  
+  fn_GetPickUpCode:根据网上商城订单号计算相应的提货码
+  fn_UnPickUpCode:根据提货码计算相应的网上商城订单号
 公开过程:
   GetVipInfo:取会员信息
   AddVip:添加会员(有则不添加),并与指定会员绑定
@@ -25,8 +27,8 @@
   GetBirthday:获取指定日期后XX天内过生日的会员信息
   Loger:写日志
   AddWebPay:在线下系统中生成线上支付对应的结算记录
-  fn_GetPickUpCode:根据网上商城订单号计算相应的提货码
-  fn_UnPickUpCode:根据提货码计算相应的网上商城订单号
+  PushWeiXinMessage:生成一条消费推送信息
+  ChangeVipLinks:将一个会员的绑定信息修改为指向另一个会员
    
 为优势力提供的调用封装:
   WSC_GetVipInfo:取会员信息
@@ -45,196 +47,8 @@
   Wsc_Get_BossTotal:老板小助手 统计销售数据
   WSC_GetPickUpCode:从web_orders.order_serial_num计算相应的提货码
 
-  
+<修改日志已经移到文件尾部>
 2016-12-06 hunter__fox
-
-修改
-2016-12-10 hunter__fox
-  添加过程GetVipLog_ID:获取指定会员ID的消费/充值记录,简化GetVipLog实现
-
-2016-12-10 hunter__fox
-  NewVipCode:生成一个新的会员编号
-
-2016-12-12 hunter__fox
-  NewVip:在[会员]表建立一条记录,并返回相应的ID
-
-2016-12-26 hunter__fox
-  NewVip:指定[积分比例]默认值为1
-
-2017-04-28
-  修正:公众号部门的编号生成时使用的子查询不排除department表中的任何记录,以避免得到一个已经存在的编号
-
-2017-05-08 hunter__fox
-  修正:GetVipLog_ID中修正BUG"当会员交易记录中只有充值记录时,余额显示为Null"
-  添加了封装性质的存储过程:WSC_GetVipInfo/WSC_AddVip/WSC_VipReCharge/WSC_GetVipLog
-  其中WSC_AddVip/WSC_VipReCharge/WSC_GetVipLog均多返回一个结果集,只含一个字段'retcode',只有一条记录,它相当于原始存储过程的返回值
-  *调用方法与原始存储过程一致.
-  
-2017-05-09
-  修正GetVipLog:
-      当会员消费/充值记录最后一次交易是充值时,以会员当前余额为调平计算的基点
-      此修正用于适应初始化卡金额不为0的卡,以及手动修改数据库中会员卡余额的情况
-      GetVipLog返回的结果集以时间倒序排列
-
-2017-05-10
-  WSC_AddVip:参数@cMobileNumber现在是必需参数
-             参数@cVipCode不再使用,该参数未从定义中去除,但它的值已经丢弃
-             状态结果集添加一个字段Msg,包含状态的说明性文字
-             状态:0/-1/-2/-3/-201
-  WSC_VipReCharge:状态结果集添加了字段Msg
-  AddVip:添加返回值-2(无卡)/-3(停用)
-         绑定到已有会员时,检查会员的状态是否是停用状态
-  VipReCharge:生成的充值记录制单人为'公众号'
-  GetVipLog_ID:消费记录中包含了积分信息,增加了字段[Integral]
-               包含了积分充值记录
-               包含了零售中积分兑换礼品记录
-               包含了统一结算中使用积分支付的记录
-               这一改动影响这些存储过程的输出集结构:GetVipLog,WSC_GetVipLog
-  添加存储过程GetVouchers
-  添加存储过程WSC_GetVouchers,获取出库到微商城并且未销售的礼券列表
-
-2017-05-11
-  WSC_SaleVoucher:电子券销售
-  Saleing:生成销售单(单个物品的),并生成相应的销售明细
-  SaleingVoucher:礼券销售/赠送
-  CreateOrder:生成订单主表记录
-
-2017-05-12
-  GetOrdersList:获取订单列表
-  GetOrdersDetail:获取指定订单明细
-  WSC_CreateOrder:生成订单的封装
-  WSC_GetOrdersList:获取订单列表
-  WSC_GetOrdersDetail:获取指定订单明细
-
-2017-05-14
-  AddOrderItem:写订单明细
-  WSC_AddOrderItem:添加订单明细
-  RecoverVoucher礼券回收
-  WSC_RecoverVoucher:为订单回收礼券
-
-2017-05-15
-  修正:在WSC_AddVip中判断指定的电话号码是否已注册为会员
-  在脚本最后补充了获取可用门店列表与可销售产品列表的查询语句
-
-2017-05-17
-  GetOrdersList添加了一个可选参数@authcode,用于配合多层分销
-  WSC_GetOrdersList添加了一个可选参数@oauth_code,用于取多层分销订单数据
-
-2017-05-18
-  GetVouchers增加了参数,用于获取指定会员可使用的券
-             一些查询语句添加了对截止日期的判断
-             添加了一列,指出券是销售到哪个会员,对于未销售的券,它的值为''
-  WSC_GetVouchers增加了一个参数,用于获取指定会员可使用的券
-  WSC_GetVipLog增加一列[BonusPoints],记录每笔交易中积分的增减数量
-  GetVipLog_ID在输出集中添加了积分变动列
-              在获取数据源中添加对对积分使用的一些子查询
-
-2017-05-19
-  GetVipLog_ID:修正了零售记录中未提取退货记录的错误
-
-2017-05-24
-  GetVouchers:在无参数的情况下返回一个空结果集
-  WSC_GetVipLog:去除了返回的状态结果集
-  WSC_GetVouchers:去除了返回的状态结果集
-  WSC_CreateOrder:去除了返回的状态结果集
-  WSC_GetOrdersList:去除了返回的状态结果集
-  WSC_GetOrdersDetail:去除了返回的状态结果集
-  WSC_GetVipInfo结果集字段名改为英文
-  WSC_GetVouchers结果集字段名改为英文
-  WSC_CreateOrder结果集字段名改为英文
-  WSC_GetOrdersList结果集字段名改为英文
-  WSC_GetOrdersDetail结果集字段名改为英文
-  
-2017-05-26
-  CreateOrder添加了一个参数"@销售类别",对应字段[销售类别],仅在创建订单时可以指定值
-  WSC_CreateOrder添加了一个参数,用于指出订单将下到哪个店
-            该接口生成的订单,销售类别为'公众号'
-  GetOrdersList:重新定义了分支逻辑,现在,部门/单号/会员编号/分销根会员号是互斥的
-  WSC_GetOrdersList:按GetOrdersList的修改重新实现了接口逻辑
-  WSC_GetOrdersList:添加了一个参数@IsEnd用于进一步过滤订单的结单状态
-     使用法法的改变请看该过程后附的示例
-
-2017-06-06
-  GetVouchers:礼券出库表中改为检查往来编号以识别礼券出库的目标部门(原为部门编号)
-  SaleingVoucher:调用Saleing时増加了两个参数@PayByCash,@PayByCard,与Saleing保持一致
-  WSC_SaleVoucher:添加了自动匹配礼券的产品编号功能
-  WSC_SaleVoucher:返回的状态集増加了一列,用于返回相应的零售单号,失败时为Null
-
-2017-06-07
-  礼券表添加了字段[产品编号],并为已有数据自动匹配了合适的产品编号
-  GetVouchers:添加了输出列[产品编号]
-  WSC_GetVouchers:添加了输出列[GoodsCode],它是第一列
-  WSC_GetOrdersList:输出集以CreateTime列倒序排列
-  WSC_GetVipRelevance:新増加过程,用于判断两个会员外键是否可以建立分销关系,用法参见相关过程头部注释
-
-2017-06-09
-  GetVouchers:添加了一个参数@GoodsCode用于通过产品编号过滤券,仅在指定部门时该参数有效
-  WSC_GetVouchers:添加了一个参数@GoodsCode用于获取本部门(公众号)可发放的券
-
-2017-06-12
-  添加存储过程:QueryFormMObject
-
-2017-06-15 
-  添加存储过程Get_BossTotal返回老板小助手统计数据
-  添加存储过程Wsc_Get_BossTotal对Get_BossTotal调用的封装
-
-2017-6-19
-  修改 存储过程Get_BossTotal @Boss 变量类型为 int
-  修改 存储过程WSC_Get_BossTotal @Boss 变量类型为 int
-  增加 WSC_Get_BossTotal 调用说明示例
-  
-2017-6-20
-  增加 函数 dbo.Fun_Birthday 计算指定日期后的生日
-  增加 过程 GetBirthday 取指定日期内过生日的会员信息
-  修改 过程 WSC_GetVipInfo 增加 2个可带参数 天数，指定日期
-
-2017-6-28
-  恢复Get_BossTotal 输出 Xtype 内字符为小写
-      
-2017-08-15
-  添加了建表Event_Log的脚本
-  添加了产品类别【加收费】与产品【运费】
-  添加了存储过程Loger
-  修改了存储过程CreateOrder,在其中添加了写日志的动作
-  修改了存储过程AddOrderItem,在其中添加了写日志的动作
-  修改了存储过程CreateOrder,如果订单有运费,生成/更新运费商品项
-  修改了存储过程WSC_GetOrdersDetail,从结果集中去除运费项
-
-2017-08-16
-  添加了建表orders_detail_extend的脚本
-  修改了存储过程AddOrderItem,增加了一个可选参数@ExtendPrice,用于传递来自于网上商城中的售价
-  修改了存储过程WSC_GetOrdersDetail,其结果集中的单价使用商城中相应订单生成时的售价
-  存储过程【Loger】添加了一个可选参数用于传递附加于Key字段的信息
-  表【Event_Log】的【Key】字段宽度修改为128
-
-2017-08-17
-  存储过程【AddVip】修改,加入了对券与挂失卡的检查，增加一个返回码-4,表示相应的卡已经挂失
-  存储过程【WSC_AddVip】,加入了对返回码-4的文字化代码
-  存储过程【VipReCharge】参数改变,不再固定用于微商城充值
-  存储过程【WSC_VipReCharge】修改代码以适应【VipReCharge】新的参数表
-  存储过程【VipReCharge】添加了写日志的动作
-  存储过程【VipBonusPoints】添加了写日志的动作
-
-2017-08-22
-  添加了日志相关的存储过程与函数/表
-  为所有存储过程添加了写日志的代码
-
-2017-08-26
-  添加存储过程【AddWebPay】用于在线下系统中生成线上支付对应的结算记录
-
-2017-09-04  
-  添加函数【fn_GetPickUpCode】根据网上商城订单号计算相应的提货码
-  添加函数【fn_UnPickUpCode】:根据提货码计算相应的网上商城订单号
-  添加存储过程【WSC_GetPickUpCode】完成线上订单号到提货码的转换
-
-2017-09-07
-  存储过程【CreateOrder】中添加了对字段[刷卡日期]与[礼券日期]的赋值动作
-
-2017-09-11
-  存储过程【NewVip】中,新添加的会员,不指定默认折扣值,直接依靠【会员】表【折扣】字段默认值【DF__会员__状态__4D7622B8】来定值
-
-2017-09-14
-  存储过程【WSC_GetOrdersList】添加了一列【PickUpCode】，其内容是提货码
 */
 /******************************************************************************/
 /*
@@ -365,7 +179,6 @@ Begin
     ,外键 varchar(50) not null
     )
   Create Index IX_会员身份_会员ID On 会员身份(会员ID)
-  Create Index IX_会员身份_外键 On 会员身份(外键)
 End
 Go
 If col_length('会员身份','验证方式') Is Null
@@ -377,6 +190,14 @@ Go
 If col_length('会员身份','建立时间') Is Null
 Begin
   Alter Table [会员身份] Add 建立时间 datetime not null default getdate()
+End
+Go
+If Not Exists(Select * From sysobjects 
+              Where parent_obj=Object_ID('会员身份','U') And xtype='UQ' And name='UQ_会员身份_外键')
+Begin
+  If Exists(Select * From sysindexes Where name='IX_会员身份_外键')
+    Drop Index [会员身份].[IX_会员身份_外键]
+  Alter Table [会员身份] Add Constraint [UQ_会员身份_外键] Unique (外键)
 End
 Go
 /*******************************************************************************
@@ -407,11 +228,13 @@ Begin
   If @cDateEnd  ='' Or @cDateEnd   Is Null Set @cDateEnd=Convert(varchar(10),getdate(),120)
   Set @dStart = Convert(datetime,@cDateStart)
   Set @dEnd = Convert(datetime,@cDateEnd) + 1
- 
+
+  Declare @会员积分比例 money
+  Select @会员积分比例=积分比例 From 会员 Where ID=@iVipID
+  Set @会员积分比例 = IsNull(@会员积分比例, 1)
   --取会员核心信息
   Declare @cVipCode varchar(20),@Tmp_Balance money,@Tmp_Integral int
   Select @cVipCode=编号,@Tmp_Balance=卡余额,@Tmp_Integral=积分 From 会员 Where id =@iVipID
-
   --游标:指定会员指定时间之后所有交易记录
   Declare @t_opt table(来源 varchar(10), id int      , 单号 varchar(20), 建立日期 datetime, 充值 money
                       ,刷卡金额 money  , 积分变化 int, 当前余额 money  , 计算余额 money   , 当前积分 int)
@@ -419,17 +242,17 @@ Begin
          ,@刷卡金额 money  , @积分变化 int, @当前余额 money  , @余额 money       , @当前积分 int
   Declare cur_Tmp Cursor
       For --零售记录
-        Select '零售'as 来源,id,单号,建立日期,Null As 充值,刷卡金额,0 as 积分变化,当前余额,0 As 余额,当前积分 
+        Select '零售'as 来源,id,单号,建立日期,Null As 充值,刷卡金额,金额合计*@会员积分比例 as 积分变化,当前余额,0 As 余额,当前积分 
         From sales 
         Where 建立日期 >= @dStart And 往来编号=@cVipCode And 刷卡金额<>0
         Union All
         --订单记录
         Select Case 商户订单号 When '' Then '线下订单' Else '线上订单' End
-              ,id,单号,建立日期,Null,刷卡金额,0,当前余额,0 ,当前积分
-        From orders 
+              ,id,单号,建立日期,0,刷卡金额,应收金额*@会员积分比例,当前余额,0 ,当前积分
+        From orders
         Where 建立日期 >= @dStart And 是否废止=0 And 往来编号=@cVipCode
         Union All 
-        --充值记录(含积分充值)
+        --充值记录
         Select '充值',b.id,b.单号,b.建立日期,a.金额,0,0,Null,0 ,Null
         From 充值明细表 a 
         Left Join 充值表 b On a.pid=b.id 
@@ -441,7 +264,8 @@ Begin
         From 充值明细表 a 
         Left Join 充值表 b On a.pid=b.id 
         Where b.建立日期 >= @dStart And a.编号=@cVipCode
-          And a.金额<>0 And IsNull(a.备注,'')<>''
+          And a.金额<>0 And a.现金=0
+          And IsNull(a.备注,'')<>''
           And a.备注 Like '[0-9][0-9][0-9]%'
           And Len(RTrim(a.备注))<6
         Union All
@@ -457,7 +281,7 @@ Begin
           And A.备注=@cVipCode And A.建立时间>= @dStart
         Union All
         --旧的零售中积分兑换记录
-        Select '零售',A.id,A.单号,A.建立日期,Null,0,0-SubString(B.备注,5,10),当前余额,0 As 余额,当前积分
+        Select '零售',A.id,A.单号,A.建立日期,Null,0,0-IsNull(SubString(B.备注,5,10),0),当前余额,0 As 余额,当前积分
         From sales As A
         Inner Join sales_detail As b On A.ID=B.销售ID
         Where A.建立日期 >= @dStart And A.往来编号=@cVipCode And B.备注 Like '减积分:%'
@@ -470,6 +294,7 @@ Begin
           And a.积分<>0 And 金额=0
         Order By 建立日期 Desc,来源
   --遍历:还原余额与积分在每笔交易发生后的即时值,生成输出集
+  Declare @tmp varchar(1000)
   Open cur_Tmp
   Fetch Next From cur_Tmp Into @来源,@id,@单号,@建立日期,@充值,@刷卡金额,@积分变化,@当前余额,@余额,@当前积分
   While @@Fetch_status=0
@@ -477,6 +302,12 @@ Begin
     If @当前积分 Is Null Set @当前积分 = @Tmp_Integral
                     --@t_opt ( 来源, id, 单号, 建立日期, 充值, 刷卡金额, 积分变化, 当前余额, 计算余额   , 当前积分)
     Insert Into @t_opt Values(@来源,@id,@单号,@建立日期,@充值,@刷卡金额,@积分变化,@当前余额,@Tmp_Balance,@Tmp_Integral)
+    Set @tmp = '@来源='       +cast(@来源         as char(14))
+             + '单号='        +cast(@单号         as char(20))
+             + '@当前积分='   +cast(@当前积分     as char(20))
+             + '@积分变化='   +cast(@积分变化     as char(20))
+             +'@Tmp_Integral='+cast(@Tmp_Integral as char(20)) 
+    print @tmp
     Set @Tmp_Balance = @Tmp_Balance + IsNull(@刷卡金额, 0) - IsNull(@充值, 0)
     Set @Tmp_Integral = @当前积分 - @积分变化
     Fetch Next From cur_Tmp Into @来源,@id,@单号,@建立日期,@充值,@刷卡金额,@积分变化,@当前余额,@余额,@当前积分
@@ -568,7 +399,7 @@ Begin
              Values(@cVipCode,@cVipCode,'','','',0,
                     0,1,GetDate()+3650,0,0,0,
                     1,0,'',3,1)
-    Select @LastError=@@Error,@iVipID = @@Identity
+    Select @LastError=@@Error,@iVipID=Scope_Identity()
   End
   Exec Loger @LogID,@Key=@iVipID,@Result=@LastError
 End
@@ -645,6 +476,7 @@ Procedure AddVip
        -1---已绑定到其它卡
        -2---无此会员
        -3---会员已停用
+       -4---手机号码重复
 2016-12-12 hunter__fox                  调用NewVip完成新会员记录建立
 */
 If Object_id('[AddVip]','P') Is Not Null
@@ -757,6 +589,11 @@ Begin
   Where ID=@iVipID
   --进行会员绑定
   Insert Into 会员身份(会员ID,外键)Values(@iVipID,@cWeiXinCode)
+  If @@ERROR<>0
+  Begin
+    Delete From 会员 where ID=@iVipID
+    Return -1
+  End
   Exec Loger @LogID,@ExtendInfo='在表[会员身份]添加记录',@Result=0
 End
 Go
@@ -867,16 +704,19 @@ Begin
       Exec Loger @LogID,@ExtendInfo='生成充值业务单号失败',@Result=-2
       Return -2
     End
-  Set @cOrderNo = Replace(@cDate, '-', '') + '-' + Replace(Str(@iBillMax, 5), ' ', '0')
+  Set @cOrderNo = Substring(Replace(@cDate, '-', ''),3,6) + '-' + Replace(Str(@iBillMax, 5), ' ', '0')
   --建立充值记录,在事务中进行
   --要求四表同步,会员表由充值明细表触发器更改,第三方结算记录由AddWebPay在事务外完成
+  Declare @PayMoney money
+  Select @PayMoney = money From web_payment_orders Where payment_serial_num=@cWeiXinOrderCode
+  Set @PayMoney = IsNull(@PayMoney, 0)
   Declare @iBusinessID int,@RetCode int
   Begin Tran tran_VipReCharge_2
     Insert Into 充值表(单号, 日期, 部门编号, 制单人,金额合计, 现金合计, 状态, 备注)
-           Values(@cOrderNo, @cDate, @cDepart, @cUser, @nAddMoney, 0, 1, 'WSC_Serial_num:' + @cWeiXinOrderCode)
-    Set @iBusinessID = @@Identity
+           Values(@cOrderNo, @cDate, @cDepart, @cUser, @nAddMoney, @PayMoney, 1, 'WSC_Serial_num:' + @cWeiXinOrderCode)
+    Select @iBusinessID=Scope_Identity()
     Insert Into 充值明细表(PID, 编号, 金额, 现金)
-           Values(@iBusinessID, @cVipCode, @nAddMoney, 0)
+           Values(@iBusinessID, @cVipCode, @nAddMoney, @PayMoney)
   Commit Tran tran_VipReCharge_2
   If @@Error<>0 
     Begin
@@ -903,6 +743,39 @@ Go
 --select * from 充值表 where id=@LasID
 --select * from 充值明细表 where pid=@LasID
 --select * from 结算明细表 where 业务ID=@LasID and 来源=3
+
+/*******************************************************************************
+Procedure PushWeiXinMessage
+功能:生成一条推送信息
+参数:
+     @cVipCode:会员编号
+     @cSource:线下零售/线下订单/线下充值
+     @cSaleNum:单号
+     @cPayType:支付方式
+     @nAmount:金额
+*/
+If Object_id('[PushWeiXinMessage]','P') Is Not Null
+  Drop Procedure [PushWeiXinMessage]
+Go
+Create Procedure [PushWeiXinMessage]
+       @cVipCode varchar(20), --会员编号
+       @cSource  varchar(50), --交易类型,线下零售/线下订单/线下充值
+       @cSaleNum varchar(20), --相关单号
+       @cPayType varchar(20), --支付方式,现金/会员卡/积分...
+       @nAmount  money        --相关金额
+As
+Begin
+  Insert Into web_message(oauth_id,order_num,[money],pay_type)
+  Select 外键,@cSource + ':' + @cSaleNum,@nAmount,@cPayType
+  From 会员身份
+  Where 会员ID In (Select ID From 会员 Where 编号=@cVipCode)
+    And 验证方式='WeiXinOpenid'
+  Return @@RowCount
+End
+Go
+----测试
+--Exec PushWeiXinMessage 'WX00000005','线下零售','170928-09527','没给钱',0.5
+
 /*******************************************************************************
 Procedure VipBonusPoints
 功能:修改会员积分
@@ -974,7 +847,7 @@ Begin
       Begin Tran tran_VipBonusPoints
         Insert Into 充值表(单号, 日期, 部门编号, 制单人,金额合计, 现金合计, 状态, 备注)
                Values(@cOrderNo, @cDate, @cDepart, @cUser, 0, 0, 1, @Description)
-        Set @iBusinessID = @@Identity
+        Set @iBusinessID=Scope_Identity()
         Insert Into 充值明细表(PID, 编号, 金额, 现金,积分,备注)
                Values(@iBusinessID, @VipCode, 0, 0, @Add, @Description)
         Update 会员 Set 积分 = @积分 + @Add Where 编号 = @VipCode
@@ -1200,7 +1073,7 @@ Begin
                  ,@PayByCash,@PayByCard,@GoodsCount*@Price-@PayByCash-@PayByCard)
     If @@Rowcount > 0
       Begin
-        Set @SalesID = SCOPE_IDENTITY()
+        Set @SalesID = Scope_Identity()
         Insert Into sales_detail(销售ID,编号,单价,数量,金额,原价,促销标记)
                Values(@SalesID,@GoodsCode,@Price,@GoodsCount,@GoodsCount*@Price,@原价,Case When @原价=@Price Then 0 Else 1 End)
       End
@@ -1397,6 +1270,7 @@ Begin
   Set @ParaInfo = dbo.NameValue('L','@结单',@结单)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@废止',@废止)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@销售类别',@销售类别)     Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@礼券列表',@礼券列表)     Exec Loger @LogID,@Parameters=@ParaInfo
 
   Declare @运费 money --运费从微商城相应订单记录中提取
   If IsNull(@商户订单号,'')<>''
@@ -1441,7 +1315,7 @@ Begin
                  ,@金额合计,@优惠合计,@应收金额,@让利,@订金,@刷卡金额,@刷卡日期,@礼券,@礼券日期,@欠款
                  ,@结单,@废止,@交货日期,@销售类别)
     Set @ErrorID=@@Error
-    Select @OrderID=SCOPE_IDENTITY()
+    Set @OrderID=Scope_Identity()
     If @ErrorID <> 0
       Begin
         If @ErrorID > 0 Set @ErrorID = 0 - @ErrorID
@@ -1474,18 +1348,19 @@ Begin
       And 结算ID In (Select ID 
                      From 结算方式表 
                      Where 第三方支付=1)
+    Set @第三方支付 = IsNull(@第三方支付, 0)
     Set @欠款= Case When @结单=1 
                     Then 0 
                     Else @应收金额-@让利-@订金-@刷卡金额-@礼券-@第三方支付 
                End
     Set @欠款 = IsNull(@欠款, 0)
-    Update orders Set 欠款=@欠款 Where ID=@OrderID
+    Update orders Set 订金=@第三方支付,欠款=@欠款 Where ID=@OrderID
   End
   Else
   Begin
     --订单只能修改部分字段
     Exec Loger @LogID,@Key=@单号,@ExtendInfo='新建订单'
-    Select @OrderID=id From orders Where 单号=@单号
+    Set @OrderID=Scope_Identity()
     Update orders 
        Set 联系方式=IsNull(@联系方式,联系方式)
           ,取货时间=IsNull(@取货时间,取货时间)
@@ -1817,21 +1692,23 @@ Begin
   Set @ParaInfo = dbo.NameValue('C','@Department',@Department) Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('N','@Boss',@Boss)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('D','@InDate',@InDate)         Exec Loger @LogID,@Parameters=@ParaInfo
-  If Object_id('tempdb..#tmp_Get_BossTotal') Is Not Null  
-    Drop Table #tmp_Get_BossTotal
-  Declare  @date datetime
-  Declare @date0 varchar(10),@date1 varchar(10)
-  Declare @Depart table(Department varchar(10))
-  Declare @Wsc table(Wsc varchar(10))
+
+  --日期
+  Declare @curDate Table(Date_C varchar(10),Name varchar(10),KeyAdd int)
+  Declare  @date datetime,@date0 varchar(10),@date1 varchar(10)
   If @InDate Is Null
-    Set @date=Convert(varchar(10),GetDate(),120) 
+    Set @date=Convert(varchar(10),GetDate(),120)
   Else
-    Set @date=Convert(varchar(10),@InDate,120)   
+    Set @date=Convert(varchar(10),@InDate,120)
   Set @date0= Convert(varchar(10),@date,120)   --今日
   Set @date1= Convert(varchar(10),@date-1,120)  --昨日
-
-  Insert Into @Wsc select 编号 from pub_user where 姓名 ='公众号'
-
+  Insert Into @curDate Values(@date0, '今日', 10)
+  Insert Into @curDate Values(@date1, '昨日', 0)
+  --用户
+  Declare @WscUser varchar(10)
+  Select @WscUser=编号 from pub_user where 姓名 ='公众号'
+  --部门范围
+  Declare @Depart table(Department varchar(10))
   If IsNull(@Department,'')<>''
     Begin
       Exec Loger @LogID,@ExtendInfo='针对指定店'
@@ -1840,73 +1717,96 @@ Begin
   Else If IsNull(@Boss,0)<>0
     Begin
       Exec Loger @LogID,@ExtendInfo='针对指定老板'
-      Insert Into @Depart Select distinct hs_code from [web_napa_stores] where [user_id]=@Boss --指定老板
+      --Insert Into @Depart Select distinct hs_code from [web_napa_stores] where [user_id]=@Boss --指定老板
+      Insert Into @Depart
+      Select distinct hs_code
+      From [web_napa_stores]
+      Where store_id In(Select store_id
+                        From web_napa_store_user_link
+                        Where [user_id]=@Boss)
     End
   Else
     Begin
       Exec Loger @LogID,@ExtendInfo='针对全部店'
       Insert Into @Depart Select 编号 from department where 类别编号 in ('102','103')--全部店
     End
-  
-  Select * Into #tmp_Get_BossTotal 
-  From (
-        Select Sum(Case 日期 When @date0 Then 应收金额 Else 0 End) As ND_Saleing         --今日销售
-              ,Sum(Case 日期 When @date1 Then 应收金额 Else 0 End) As LD_Saleing         --昨日销售
-              ,Sum(Case 日期 When @date0 Then 1 Else 0 End) As ND_Order                 --今日订单数
-              ,Sum(Case 日期 When @date1 Then 1 Else 0 End) As LD_Order                 --昨日订单数
-              ,Sum(Case When 日期= @date0 And IsNull(往来编号,'')<>'' Then 应收金额 Else 0 End) As ND_Vip   --今日会员消费
-              ,Sum(Case When 日期= @date1 And IsNull(往来编号,'')<>'' Then 应收金额 Else 0 End) As LD_Vip   --昨日会员消费 
-              ,Sum(Case When 日期= @date0 And IsNull(往来编号,'') ='' Then 应收金额 Else 0 End) As ND_NoVip --今日非会员消费
-              ,Sum(Case When 日期= @date1 And IsNull(往来编号,'') ='' Then 应收金额 Else 0 End) As LD_NoVip --昨日非会员消费
-        From orders 
-        Where 制单人 In (Select * 
-                         From @Wsc )--(select 编号 from pub_user where 姓名 ='公众号')
-          And 日期 Between @date1 And @date0
-          And 部门编号 In (Select * From @Depart)--这些店网上订单
-        ) a
-  Left Join (
-             Select Sum(Case Convert(datetime,Convert(varchar(10),建立时间,120),120) When @date0 Then 1 Else 0 End) As ND_count --今日新增会员
-                   ,Sum(Case Convert(datetime,Convert(varchar(10),建立时间,120),120) When @date1 Then 1 Else 0 End) As LD_count --昨日新增会员
-             From 会员 
-             Where Convert(datetime,Convert(varchar(10),建立时间,120),120) Between @date1 And @date0 
-             ) b On 1=1
-  Left Join (
-             Select Sum(Case 日期 When @date0 Then 金额合计 Else 0 End) As ND_ReCharge  --今日充值
-                   ,Sum(Case 日期 When @date1 Then 金额合计 Else 0 End) As FD_ReCharge  --昨日充值
-             From 充值表 
-             Where 制单人 In (Select 编号 From pub_user Where 姓名 ='公众号')
-               And 日期  Between @date1 And @date0
-               And 部门编号 In (Select * From @Depart)
-             ) c On 1=1
-  Select Caption= '今日销售'      ,[Values]=ND_Saleing ,VType='money' ,sort='11' From #tmp_Get_BossTotal Union
-  Select Caption= '昨日销售'      ,[Values]=LD_Saleing ,VType='money' ,sort='12' From #tmp_Get_BossTotal Union
-  Select Caption= '今日订单数'    ,[Values]=ND_Order   ,VType='int'   ,sort='21' From #tmp_Get_BossTotal Union
-  Select Caption= '昨日订单数'    ,[Values]=LD_Order   ,VType='int'   ,sort='22' From #tmp_Get_BossTotal Union
-  Select Caption= '今日新增会员'  ,[Values]=ND_count   ,VType='int'   ,sort='31' From #tmp_Get_BossTotal Union
-  Select Caption= '昨日新增会员'  ,[Values]=LD_count   ,VType='int'   ,sort='32' From #tmp_Get_BossTotal Union
-  Select Caption= '今日非会员消费',[Values]=ND_NoVip   ,VType='money' ,sort='41' From #tmp_Get_BossTotal Union
-  Select Caption= '昨日非会员消费',[Values]=LD_NoVip   ,VType='money' ,sort='42' From #tmp_Get_BossTotal Union   
-  Select Caption= '今日会员消费'  ,[Values]=ND_Vip     ,VType='money' ,sort='51' From #tmp_Get_BossTotal Union
-  Select Caption= '昨日会员消费'  ,[Values]=LD_Vip     ,VType='money' ,sort='52' From #tmp_Get_BossTotal Union
-  Select Caption= '今日充值'      ,[Values]=ND_count   ,VType='money' ,sort='61' From #tmp_Get_BossTotal Union
-  Select Caption= '昨日充值'      ,[Values]=LD_count   ,VType='money' ,sort='62' From #tmp_Get_BossTotal
-  Order By sort
+  --未排序的输出集
+  Declare @curTmp table(Caption varchar(20),Value float,OrderKey int,vtype varchar(10))
+  --通用临时集
+  Declare @curSource Table(Date_Name varchar(10), KeyAdd Int
+                          ,Value_Name_1 varchar(20),Value_1 float Null
+                          ,Value_Name_2 varchar(20),Value_2 float Null)
 
-  Drop Table #tmp_Get_BossTotal
+  --订单相关:金额与单数
+  Insert Into @curSource
+         Select A.Name As Date_Name,KeyAdd,'订单金额',B.金额合计,'订单数',B.数量
+         From @curDate As A
+         Full Join(Select 日期
+                         ,Sum(金额合计) As 金额合计
+                         ,Count(*) As 数量
+                   From orders
+                   Where 制单人=@WscUser ----仅取线上数据
+                     And 日期 In (Select Date_C From @curDate)
+                     And 部门编号 In (Select * From @Depart)
+                   Group By 日期
+                   ) As B On A.Date_C=B.日期
+  Insert Into @curTmp Select Date_Name+Value_Name_1,IsNull(Value_1,0),KeyAdd + 1,'money' From @curSource
+  Insert Into @curTmp Select Date_Name+Value_Name_2,IsNull(Value_2,0),KeyAdd + 2,'integer' From @curSource
+  Delete From @curSource
+
+  --充值相关:充值金额
+  Insert Into @curSource
+         Select A.Name As Date_Name,KeyAdd,'充值金额',B.金额合计,Null,Null
+         From @curDate As A
+         Full Join(Select 日期
+                         ,Sum(金额合计) As 金额合计
+                   From 充值表
+                   Where 制单人=@WscUser ----仅取线上数据
+                     And 日期 In (Select Date_C From @curDate)
+                     And 部门编号 In (Select * From @Depart)
+                   Group By 日期
+                   ) As B On A.Date_C=B.日期
+  Insert Into @curTmp Select Date_Name+Value_Name_1,IsNull(Value_1,0),KeyAdd + 3,'money' From @curSource
+  Delete From @curSource
+
+  --会员相关:新増绑定数
+  Insert Into @curSource
+         Select A.Name As Date_Name,KeyAdd,'新増会员',B.新増会员,Null,Null
+         From @curDate As A
+         Full Join(
+                   Select Convert(varchar(10),建立时间,120)As 日期,Count(*) As 新増会员
+                   From 会员身份
+                   Where 验证方式='WeiXinOpenid'
+                     And Convert(varchar(10),建立时间,120) In (Select Date_C From @curDate)
+                   Group By Convert(varchar(10),建立时间,120)
+                   ) As B On A.Date_C=B.日期
+  Insert Into @curTmp Select Date_Name+Value_Name_1,IsNull(Value_1,0),KeyAdd + 21,'integer' From @curSource
+  Delete From @curSource
+
+  --服务相关:评价星级/差评数
+  Declare @Value float
+  Select @Value = Sum(deliver+service+quality) From web_comment Where Convert(varchar(10),time,120) = @date0
+  Insert Into @curTmp Values('今日评价平均星级数', IsNull(@Value,0)/3, 22,'money')
+  Select @Value=Count(*) From web_comment Where Convert(varchar(10),time,120) = @date0 And deliver+service+quality <= 12
+  Insert Into @curTmp Values('今日差评数', @Value, 23,'integer')
+
+
+  --Select * From @curTmp Order By OrderKey
+  Select Caption,Value As [Values],vtype as Vype, OrderKey As sort From @curTmp Order By OrderKey
 End
 Go
 /*******************************************************************************
 Procedure GetBirthday
 取指定日期未来XX天内过生日的会员
-引用 生日函数 obo.Fun_Birthday(生日,指定日期)
+引用 生日函数 obo.GetBirthday(生日,指定日期)
 用法：
 -- exec GetBirthday 20              取当下     未来10天内过生日的会员
 -- exec GetBirthday 20,'2017-7-1'   取2017-7-1 未来20天内过生日的会员
 */
 If Object_id('[GetBirthday]','P') Is Not Null
-  Drop Procedure GetBirthday
+  Drop Procedure [GetBirthday]
 Go
-Create Procedure GetBirthday
+Create Procedure [GetBirthday]
        @Days    int     =null,
        @NowDate datetime=null
 As
@@ -2106,6 +2006,66 @@ Begin
 End
 Go
 /*******************************************************************************
+Procedure ChangeVipLinks
+将一个会员的绑定信息修改为指向另一个会员
+*如果不指定目标会员ID或目标会员ID无效则为清除源会员绑定
+Exec ChangeVipLinks 1,2
+Exec ChangeVipLinks 1
+*/
+If Object_id('[ChangeVipLinks]','P') Is Not Null
+  Drop Procedure [ChangeVipLinks]
+Go
+Create Procedure [ChangeVipLinks]
+       @SourceID int,  ---源会员ID
+       @DestID   int=0 ---目标会员ID
+As
+Begin
+  Set @DestID = IsNull(@DestID,0)
+  If Not Exists(Select * From 会员 Where ID = @DestID) 
+    Set @DestID = 0
+  If (@DestID = 0)
+  Begin
+    --删除绑定
+    Delete From web_user_profiles 
+           Where [user_id] in (Select [user_id] 
+                               From web_oauth_login 
+                               Where oauth_id In(Select 外键 
+                                                 From 会员身份 
+                                                 Where 会员ID=@SourceID 
+                                                   And 验证方式 = 'WeiXinOpenid'))
+    Delete From web_users
+           Where [user_id] in (Select [user_id] 
+                               From web_oauth_login 
+                               Where oauth_id In(Select 外键 
+                                                 From 会员身份 
+                                                 Where 会员ID=@SourceID 
+                                                   And 验证方式 = 'WeiXinOpenid'))
+    Delete From web_oauth_login
+           Where oauth_id In(Select 外键 
+                             From 会员身份 
+                             Where 会员ID=@SourceID 
+                               And 验证方式 = 'WeiXinOpenid')
+    Delete From 会员身份 
+           Where 会员ID=@SourceID 
+             And 验证方式 = 'WeiXinOpenid'
+  End
+  Begin
+    --重绑定
+    Update web_user_profiles
+           Set vip_image='',vip_jbarcode=''
+           Where [user_id] in (Select [user_id] 
+                               From web_oauth_login 
+                               Where oauth_id In(Select 外键 
+                                                 From 会员身份 
+                                                 Where 会员ID=@SourceID 
+                                                   And 验证方式 = 'WeiXinOpenid'))
+    Update 会员身份
+           Set 会员ID=@DestID
+           Where 会员ID=@SourceID
+  End
+End
+Go
+/*******************************************************************************
 为微商城系统提供的接口封装
   主要功能为一些参数的自动生成,以及返回值转化为结果集
 *******************************************************************************/
@@ -2196,6 +2156,7 @@ Begin
   Declare @Return int, @msg varchar(100)
   --定位下线会员身份
   Declare @Tally int
+  
   Select @cVipCode=编号 From 会员 Where 电话=@cMobileNumber
   Set @Tally = @@RowCount
   If @Tally < 1 And IsNull(@cName,'')='' And IsNull(@cBirthday,'')=''
@@ -2489,7 +2450,14 @@ Begin
   Select @Department_Web='公众号'
   Select @UserCode=编号 From pub_user Where 姓名='公众号'
   Select @VipCode=编号 From 会员 Where id in(Select 会员ID From 会员身份 Where 外键=@WeiXinCode)
-  Set @cDate = Convert(varchar(10),getdate(),120)
+  --Set @cDate = Convert(varchar(10),getdate(),120)
+  Select @cDate=Max(日期) From stock_end Where 部门编号=@Department and 状态=1
+  If Exists(Select * From stock_end Where 部门编号=@Department and 状态=0 And 日期>@cDate)
+    Select @cDate=Min(日期) From stock_end Where 部门编号=@Department and 状态=0 And 日期>@cDate
+  Else
+    Set @cDate = convert(varchar(10)
+                        ,convert(datetime,@cDate)+1
+                        ,120)
   --调用订单接口生成订单
   Exec @OrderID=CreateOrder @单号=@OrderCode Output
                            ,@部门编号=@Department
@@ -2559,7 +2527,7 @@ Create Procedure [WSC_GetOrdersList]
        @VipCode    varchar(50)=''          ,--会员外键
        @oauth_code varchar(50)=''          ,--返回该会员下级产生的订单,层数在GetOrdersList中控制
                                             --不含该会员自己产生的订单
-       @IsEnd      bit        =null         --指定此参数,则只返回结单状态与之一致的单
+       @IsEnd      bit        =null        --指定此参数,则只返回结单状态与之一致的单
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2613,13 +2581,15 @@ Begin
   If @IsEnd Is Null
     Begin
       Exec Loger @LogID,@ExtendInfo='结果集以[CreateTime]倒序排序'
-      Select *,dbo.fn_GetPickUpCode(Outer_OrderCode) As PickUpCode 
+      --Select *,dbo.fn_GetPickUpCode(Outer_OrderCode) As PickUpCode 
+      Select *,dbo.fn_GetPickUpCode(ID) As PickUpCode 
       From #tmp_WSC_GetOrdersList Order By CreateTime Desc
     End
   Else 
     Begin
       Exec Loger @LogID,@ExtendInfo='提取相应结单状态的记录作为结果集,以[CreateTime]倒序排序'
-      Select *,dbo.fn_GetPickUpCode(Outer_OrderCode) As PickUpCode
+      --Select *,dbo.fn_GetPickUpCode(Outer_OrderCode) As PickUpCode
+      Select *,dbo.fn_GetPickUpCode(ID) As PickUpCode
       From #tmp_WSC_GetOrdersList Where IsEnd=@IsEnd Order By CreateTime Desc
     End
   Drop Table #tmp_WSC_GetOrdersList
@@ -2695,8 +2665,9 @@ Begin
   
   Declare @Return int,@msg varchar(100)
   Declare @Department varchar(10),@Source int
-  Select @Department=编号 From department Where 简称='公众号'
+  --Select @Department=编号 From department Where 简称='公众号'
   Set @Source=1 --1为订单,0为零售,网上商城均为订单
+  Select @Department=部门编号 From Orders Where ID=@RecordID
   Exec @Return=RecoverVoucher @Department,@Source,@RecordID,@VoucherCode,@Amount,@Remark
   Set @Msg = Case @Return
              When 0  Then '成功'
@@ -3076,7 +3047,7 @@ Begin
       Update [EventLog] Set [ExtendInfo]=@ExtendInfo Where ID=@ID
     Else
       Update [EventLog] Set [ExtendInfo]=[ExtendInfo] + Convert(varchar(1), 0x0d0a) + @ExtendInfo Where ID=@ID
-  If @Result     Is Not Null Update [EventLog] Set [Result]    =@Result     Where ID=@ID
+  If @Result Is Not Null Update [EventLog] Set [Result]=@Result Where ID=@ID
   Return @ID
 End
 Go
@@ -3099,4 +3070,215 @@ Go
 --select id,编号,简称,全称,地址,联系电话,类别简称,往来属性 from department where 是否停用=0 and 往来属性 in ('直营店','加盟店')
 --所有可销售产品
 --select ID,编号,名称,规格,单位,销售主价 from goods where 是否销售=1 and 停用日期>convert(varchar(10),getdate(),120)
+*/
+/*
+修改
+2016-12-10 hunter__fox
+  添加过程GetVipLog_ID:获取指定会员ID的消费/充值记录,简化GetVipLog实现
+
+2016-12-10 hunter__fox
+  NewVipCode:生成一个新的会员编号
+
+2016-12-12 hunter__fox
+  NewVip:在[会员]表建立一条记录,并返回相应的ID
+
+2016-12-26 hunter__fox
+  NewVip:指定[积分比例]默认值为1
+
+2017-04-28
+  修正:公众号部门的编号生成时使用的子查询不排除department表中的任何记录,以避免得到一个已经存在的编号
+
+2017-05-08 hunter__fox
+  修正:GetVipLog_ID中修正BUG"当会员交易记录中只有充值记录时,余额显示为Null"
+  添加了封装性质的存储过程:WSC_GetVipInfo/WSC_AddVip/WSC_VipReCharge/WSC_GetVipLog
+  其中WSC_AddVip/WSC_VipReCharge/WSC_GetVipLog均多返回一个结果集,只含一个字段'retcode',只有一条记录,它相当于原始存储过程的返回值
+  *调用方法与原始存储过程一致.
+  
+2017-05-09
+  修正GetVipLog:
+      当会员消费/充值记录最后一次交易是充值时,以会员当前余额为调平计算的基点
+      此修正用于适应初始化卡金额不为0的卡,以及手动修改数据库中会员卡余额的情况
+      GetVipLog返回的结果集以时间倒序排列
+
+2017-05-10
+  WSC_AddVip:参数@cMobileNumber现在是必需参数
+             参数@cVipCode不再使用,该参数未从定义中去除,但它的值已经丢弃
+             状态结果集添加一个字段Msg,包含状态的说明性文字
+             状态:0/-1/-2/-3/-201
+  WSC_VipReCharge:状态结果集添加了字段Msg
+  AddVip:添加返回值-2(无卡)/-3(停用)
+         绑定到已有会员时,检查会员的状态是否是停用状态
+  VipReCharge:生成的充值记录制单人为'公众号'
+  GetVipLog_ID:消费记录中包含了积分信息,增加了字段[Integral]
+               包含了积分充值记录
+               包含了零售中积分兑换礼品记录
+               包含了统一结算中使用积分支付的记录
+               这一改动影响这些存储过程的输出集结构:GetVipLog,WSC_GetVipLog
+  添加存储过程GetVouchers
+  添加存储过程WSC_GetVouchers,获取出库到微商城并且未销售的礼券列表
+
+2017-05-11
+  WSC_SaleVoucher:电子券销售
+  Saleing:生成销售单(单个物品的),并生成相应的销售明细
+  SaleingVoucher:礼券销售/赠送
+  CreateOrder:生成订单主表记录
+
+2017-05-12
+  GetOrdersList:获取订单列表
+  GetOrdersDetail:获取指定订单明细
+  WSC_CreateOrder:生成订单的封装
+  WSC_GetOrdersList:获取订单列表
+  WSC_GetOrdersDetail:获取指定订单明细
+
+2017-05-14
+  AddOrderItem:写订单明细
+  WSC_AddOrderItem:添加订单明细
+  RecoverVoucher礼券回收
+  WSC_RecoverVoucher:为订单回收礼券
+
+2017-05-15
+  修正:在WSC_AddVip中判断指定的电话号码是否已注册为会员
+  在脚本最后补充了获取可用门店列表与可销售产品列表的查询语句
+
+2017-05-17
+  GetOrdersList添加了一个可选参数@authcode,用于配合多层分销
+  WSC_GetOrdersList添加了一个可选参数@oauth_code,用于取多层分销订单数据
+
+2017-05-18
+  GetVouchers增加了参数,用于获取指定会员可使用的券
+             一些查询语句添加了对截止日期的判断
+             添加了一列,指出券是销售到哪个会员,对于未销售的券,它的值为''
+  WSC_GetVouchers增加了一个参数,用于获取指定会员可使用的券
+  WSC_GetVipLog增加一列[BonusPoints],记录每笔交易中积分的增减数量
+  GetVipLog_ID在输出集中添加了积分变动列
+              在获取数据源中添加对对积分使用的一些子查询
+
+2017-05-19
+  GetVipLog_ID:修正了零售记录中未提取退货记录的错误
+
+2017-05-24
+  GetVouchers:在无参数的情况下返回一个空结果集
+  WSC_GetVipLog:去除了返回的状态结果集
+  WSC_GetVouchers:去除了返回的状态结果集
+  WSC_CreateOrder:去除了返回的状态结果集
+  WSC_GetOrdersList:去除了返回的状态结果集
+  WSC_GetOrdersDetail:去除了返回的状态结果集
+  WSC_GetVipInfo结果集字段名改为英文
+  WSC_GetVouchers结果集字段名改为英文
+  WSC_CreateOrder结果集字段名改为英文
+  WSC_GetOrdersList结果集字段名改为英文
+  WSC_GetOrdersDetail结果集字段名改为英文
+  
+2017-05-26
+  CreateOrder添加了一个参数"@销售类别",对应字段[销售类别],仅在创建订单时可以指定值
+  WSC_CreateOrder添加了一个参数,用于指出订单将下到哪个店
+            该接口生成的订单,销售类别为'公众号'
+  GetOrdersList:重新定义了分支逻辑,现在,部门/单号/会员编号/分销根会员号是互斥的
+  WSC_GetOrdersList:按GetOrdersList的修改重新实现了接口逻辑
+  WSC_GetOrdersList:添加了一个参数@IsEnd用于进一步过滤订单的结单状态
+     使用法法的改变请看该过程后附的示例
+
+2017-06-06
+  GetVouchers:礼券出库表中改为检查往来编号以识别礼券出库的目标部门(原为部门编号)
+  SaleingVoucher:调用Saleing时増加了两个参数@PayByCash,@PayByCard,与Saleing保持一致
+  WSC_SaleVoucher:添加了自动匹配礼券的产品编号功能
+  WSC_SaleVoucher:返回的状态集増加了一列,用于返回相应的零售单号,失败时为Null
+
+2017-06-07
+  礼券表添加了字段[产品编号],并为已有数据自动匹配了合适的产品编号
+  GetVouchers:添加了输出列[产品编号]
+  WSC_GetVouchers:添加了输出列[GoodsCode],它是第一列
+  WSC_GetOrdersList:输出集以CreateTime列倒序排列
+  WSC_GetVipRelevance:新増加过程,用于判断两个会员外键是否可以建立分销关系,用法参见相关过程头部注释
+
+2017-06-09
+  GetVouchers:添加了一个参数@GoodsCode用于通过产品编号过滤券,仅在指定部门时该参数有效
+  WSC_GetVouchers:添加了一个参数@GoodsCode用于获取本部门(公众号)可发放的券
+
+2017-06-12
+  添加存储过程:QueryFormMObject
+
+2017-06-15 
+  添加存储过程Get_BossTotal返回老板小助手统计数据
+  添加存储过程Wsc_Get_BossTotal对Get_BossTotal调用的封装
+
+2017-6-19
+  修改 存储过程Get_BossTotal @Boss 变量类型为 int
+  修改 存储过程WSC_Get_BossTotal @Boss 变量类型为 int
+  增加 WSC_Get_BossTotal 调用说明示例
+  
+2017-6-20
+  增加 函数 dbo.Fun_Birthday 计算指定日期后的生日
+  增加 过程 GetBirthday 取指定日期内过生日的会员信息
+  修改 过程 WSC_GetVipInfo 增加 2个可带参数 天数，指定日期
+
+2017-6-28
+  恢复Get_BossTotal 输出 Xtype 内字符为小写
+      
+2017-08-15
+  添加了建表Event_Log的脚本
+  添加了产品类别【加收费】与产品【运费】
+  添加了存储过程Loger
+  修改了存储过程CreateOrder,在其中添加了写日志的动作
+  修改了存储过程AddOrderItem,在其中添加了写日志的动作
+  修改了存储过程CreateOrder,如果订单有运费,生成/更新运费商品项
+  修改了存储过程WSC_GetOrdersDetail,从结果集中去除运费项
+
+2017-08-16
+  添加了建表orders_detail_extend的脚本
+  修改了存储过程AddOrderItem,增加了一个可选参数@ExtendPrice,用于传递来自于网上商城中的售价
+  修改了存储过程WSC_GetOrdersDetail,其结果集中的单价使用商城中相应订单生成时的售价
+  存储过程【Loger】添加了一个可选参数用于传递附加于Key字段的信息
+  表【Event_Log】的【Key】字段宽度修改为128
+
+2017-08-17
+  存储过程【AddVip】修改,加入了对券与挂失卡的检查，增加一个返回码-4,表示相应的卡已经挂失
+  存储过程【WSC_AddVip】,加入了对返回码-4的文字化代码
+  存储过程【VipReCharge】参数改变,不再固定用于微商城充值
+  存储过程【WSC_VipReCharge】修改代码以适应【VipReCharge】新的参数表
+  存储过程【VipReCharge】添加了写日志的动作
+  存储过程【VipBonusPoints】添加了写日志的动作
+
+2017-08-22
+  添加了日志相关的存储过程与函数/表
+  为所有存储过程添加了写日志的代码
+
+2017-08-26
+  添加存储过程【AddWebPay】用于在线下系统中生成线上支付对应的结算记录
+
+2017-09-04  
+  添加函数【fn_GetPickUpCode】根据网上商城订单号计算相应的提货码
+  添加函数【fn_UnPickUpCode】:根据提货码计算相应的网上商城订单号
+  添加存储过程【WSC_GetPickUpCode】完成线上订单号到提货码的转换
+
+2017-09-07
+  存储过程【CreateOrder】中添加了对字段[刷卡日期]与[礼券日期]的赋值动作
+
+2017-09-11
+  存储过程【NewVip】中,新添加的会员,不指定默认折扣值,直接依靠【会员】表【折扣】字段默认值【DF__会员__状态__4D7622B8】来定值
+
+2017-09-14
+  存储过程【WSC_GetOrdersList】添加了一列【PickUpCode】，其内容是提货码
+
+2017-09-18
+  存储过程【CreateOrder】中关于订金的计算方式保持与线下一致:订金=现金+第三支付金额
+
+2017-09-27
+  存储过程【VipReCharge】中生成的单号不带世纪值,与线下保持一致
+  为表【会员身份】添加唯一约束:外键唯一
+  存储过程【AddVip】中如果因为【会员身份】外键唯一约束而添加失败,会删除会员表中添加的记录以保证不重复添加会员
+
+2017-09-28
+  添加存储过程【PushWeiXinMessage】用于线下向线上推送消费信息
+      调用:Exec PushWeiXinMessage 'c会员编号','c交易类型','c单号','c支付方式',n金额
+  存储过程【WSC_CreateOrder】中日期以Stock_end表来计算
+
+2017-10-12
+  添加存储过程【ChangeVipLinks】用于会员重绑定
+
+2017-10-20
+  存储过程【VipReCharge】对充值表/充值明细表中【现金合计】【现金】写值
+
+2017-11-02
+  存储过程【Get_BossTotal】返回集中vType根据需要修改为不同的值:money或integer
 */

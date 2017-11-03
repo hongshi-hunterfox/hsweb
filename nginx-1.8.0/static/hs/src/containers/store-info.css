@@ -1,7 +1,7 @@
-.detail {
+.store {
   background-color: white;
 }
-.detail .slick-dots {
+.store .slick-dots {
   padding: 0;
   margin: 0;
   text-align: center;
@@ -11,16 +11,16 @@
   right: 0;
   width: 100%;
 }
-.detail .slick-dots > li {
+.store .slick-dots > li {
   list-style-type: none;
   display: inline-block;
   background-color: white;
   border-radius: 50%;
 }
-.detail .slick-dots > li + li {
+.store .slick-dots > li + li {
   margin-left: 15px;
 }
-.detail .slick-dots > li > button {
+.store .slick-dots > li > button {
   width: 12px;
   height: 12px;
   font-size: 0;
@@ -29,50 +29,50 @@
   background-color: transparent;
   outline: 0;
 }
-.detail .slick-dots > .slick-active {
+.store .slick-dots > .slick-active {
   background-color: #ff6600;
 }
-.detail-carousel {
+.store-carousel {
   position: relative;
 }
-.detail-carousel-img {
+.store-carousel-img {
   display: block;
   width: 100%;
 }
-.detail-info {
+.store-info {
   background-color: white;
   padding-left: 15px;
   border-bottom: 1px solid #f2f2f2;
   margin-bottom: 15px;
 }
-.detail-info-title {
+.store-info-title {
   padding-top: 10px;
   padding-bottom: 5px;
   padding-right: 15px;
   font-size: 16px;
 }
-.detail-info-price {
+.store-info-price {
   color: #ff6600;
   font-weight: bold;
   font-size: 16px;
   border-bottom: 1px solid #f2f2f2;
 }
-.detail-info-price-pre {
+.store-info-price-pre {
   color: #b5b5b5;
   font-size: 14px;
   text-decoration: line-through;
 }
-.detail-info-stat {
+.store-info-stat {
   padding-top: 5px;
   padding-bottom: 5px;
   color: #999;
 }
-.detail-info-stat-item {
+.store-info-stat-item {
   display: block;
   float: left;
   width: 33.33333333%;
 }
-.detail-pick {
+.store-pick {
   background-color: white;
   padding: 10px 15px;
   position: relative;
@@ -80,11 +80,11 @@
   border-top: 1px solid #f2f2f2;
   border-bottom: 1px solid #f2f2f2;
 }
-.detail-pick:hover,
-.detail-pick:active {
+.store-pick:hover,
+.store-pick:active {
   background-color: #eee;
 }
-.detail-pick-icon {
+.store-pick-icon {
   color: #999;
   position: absolute;
   width: 1em;
@@ -94,7 +94,7 @@
   right: 15px;
   margin: auto;
 }
-.detail-picker {
+.store-picker {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -106,7 +106,7 @@
   animation-name: detail-slideInUp;
   min-height: 200px;
 }
-.detail-picker-overlay {
+.store-picker-overlay {
   position: fixed;
   z-index: 999;
   top: 0;
@@ -115,7 +115,7 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.detail-picker-close {
+.store-picker-close {
   font-size: 24px;
   color: #bbb;
   position: absolute;
@@ -123,41 +123,41 @@
   top: 5px;
   right: 10px;
 }
-.detail-picker-header {
+.store-picker-header {
   padding-top: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #f2f2f2;
 }
-.detail-picker-header-img {
+.store-picker-header-img {
   float: left;
 }
-.detail-picker-header-info {
+.store-picker-header-info {
   overflow: hidden;
   padding-left: 10px;
 }
-.detail-picker-header-title {
+.store-picker-header-title {
   font-weight: bold;
 }
-.detail-picker-header-price {
+.store-picker-header-price {
   color: #ff6600;
   font-size: 16px;
   padding-top: 5px;
   font-weight: bold;
 }
-.detail-picker-header-price .pre {
+.store-picker-header-price .pre {
   color: #b5b5b5;
   font-size: 14px;
   text-decoration: line-through;
   margin-left: 15px;
 }
-.detail-picker-spec {
+.store-picker-spec {
   margin-bottom: 5px;
 }
-.detail-picker-spec-name {
+.store-picker-spec-name {
   padding-top: 5px;
   padding-bottom: 5px;
 }
-.detail-picker-spec-value {
+.store-picker-spec-value {
   border: 1px solid #959595;
   float: left;
   padding: 4px 10px;
@@ -165,45 +165,45 @@
   margin-bottom: 10px;
   border-radius: 4px;
 }
-.detail-picker-spec-value.active {
+.store-picker-spec-value.active {
   color: white;
   background-color: #eb544d;
   border-color: #eb544d;
 }
-.detail-picker-amount {
+.store-picker-amount {
   border-top: 1px solid #f2f2f2;
   padding: 10px;
 }
-.detail-picker-amount .input-group {
+.store-picker-amount .input-group {
   float: right;
   width: 50%;
 }
-.detail-picker-amount .input-group .btn {
+.store-picker-amount .input-group .btn {
   padding-left: 15px;
   padding-right: 15px;
   outline: 0;
 }
-.detail-picker-amount .input-group .form-control {
+.store-picker-amount .input-group .form-control {
   text-align: center;
 }
-.detail-picker-amount .input-group .form-control[readonly] {
+.store-picker-amount .input-group .form-control[readonly] {
   background-color: white;
 }
-.detail-picker-amount-key {
+.store-picker-amount-key {
   display: inline-block;
   padding-top: 5px;
 }
-.detail-picker-next {
+.store-picker-next {
   padding: 10px;
   text-align: center;
   color: white;
   background-color: #eb544d;
   margin-left: -10px;
 }
-.detail-rich {
+.store-rich {
   padding-bottom: 50px;
 }
-.detail-rich-title {
+.store-rich-title {
   padding: 6px 12px;
   background-color: white;
   color: #ff6600;
@@ -211,13 +211,13 @@
   border-bottom: 1px solid #f2f2f2;
   text-align: center;
 }
-.detail-rich-content {
+.store-rich-content {
   padding: 15px;
 }
-.detail-rich-content img {
+.store-rich-content img {
   max-width: 100%;
 }
-.detail-actions {
+.store-actions {
   position: fixed;
   left: 0;
   right: 0;
@@ -226,20 +226,20 @@
   background-color: white;
   border-top: 1px solid #cbcbcb;
 }
-.detail-action-aside {
+.store-action-aside {
   float: left;
   border-right: 1px solid #cbcbcb;
 }
-.detail-action-group {
+.store-action-group {
   overflow: hidden;
 }
-.detail-action-cart {
+.store-action-cart {
   text-align: center;
   padding: 5px 10px;
   color: #777;
   position: relative;
 }
-.detail-action-cart.has-item:before {
+.store-action-cart.has-item:before {
   content: "";
   width: 10px;
   height: 10px;
@@ -249,14 +249,14 @@
   right: 15px;
   border-radius: 50%;
 }
-.detail-action-cart-icon {
+.store-action-cart-icon {
   font-size: 18px;
 }
-.detail-action-cart-text {
+.store-action-cart-text {
   font-size: 12px;
   display: block;
 }
-.detail-action-add-cart {
+.store-action-add-cart {
   float: left;
   width: 50%;
   text-align: center;
@@ -265,7 +265,7 @@
   font-size: 18px;
   padding: 11px 0;
 }
-.detail-action-buy-now {
+.store-action-buy-now {
   float: left;
   width: 50%;
   text-align: center;

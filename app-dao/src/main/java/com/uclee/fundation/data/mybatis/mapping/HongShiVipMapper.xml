@@ -10,8 +10,14 @@
 		<result column="Birthday" property="cBirthday" jdbcType="VARCHAR" />
 		<result column="IsLunar" property="bIsLunar" jdbcType="BIT" />
 		<result column="VipCode" property="cVipCode" jdbcType="VARCHAR" />
+		<result column="CardCode" property="cardCode" jdbcType="VARCHAR" />
 		<result column="Balance" property="balance" jdbcType="DECIMAL" />
 		<result column="BonusPoints" property="bonusPoints" jdbcType="DECIMAL" />
+		<result column="State" property="state" jdbcType="INTEGER" />
+		<result column="Disable" property="disable" jdbcType="INTEGER" />
+		<result column="IsVoucher" property="isVoucher" jdbcType="INTEGER" />
+		<result column="VipType" property="vipType" jdbcType="INTEGER" />
+		<result column="EndTime" property="endTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<resultMap id="HongShiRechargeRecord"
 		type="com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord">
@@ -32,11 +38,15 @@
 		<result column="编号" property="cVipCode" jdbcType="VARCHAR" />
 		<result column="卡余额" property="balance" jdbcType="DECIMAL" />
 	</resultMap>
+	<resultMap id="AddVipResult" type="com.uclee.fundation.data.mybatis.model.AddVipResult">
+		<result column="ret" property="msg" jdbcType="VARCHAR" />
+		<result column="retcode" property="retcode" jdbcType="INTEGER" />
+	</resultMap>
 	<sql id="Base_Column_List">
-		id, cWeiXinCode, cMobileNumber,cName ，cBirthday，bIsLunar，cVipCode
+		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode
 	</sql>
 	<select id="addVipInfo" parameterType="com.uclee.fundation.data.mybatis.model.HongShiVip"
-		statementType="CALLABLE" resultType="INTEGER">
+		statementType="CALLABLE" resultMap="AddVipResult">
 		CALL WSC_AddVip(#{cWeiXinCode},#{cMobileNumber},#{cName},#{cBirthday},#{bIsLunar},#{cVipCode})
 	</select>
 	<select id="getVipInfo" parameterType="java.lang.String"
@@ -52,9 +62,7 @@
 		statementType="CALLABLE" resultType="java.lang.Integer">
 		CALL WSC_VipReCharge(#{cWeiXinCode},#{nAddMoney},#{cWeiXinOrderCode})
 	</select>
-	
-
-
-
-
+    <select id="changeVip" parameterType="java.lang.Integer" statementType="CALLABLE" >
+    	CALL ChangeVipLinks(#{cVipLk})
+    </select>
 </mapper>

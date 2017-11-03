@@ -5,6 +5,7 @@ import './order.css'
 import req from 'superagent'
 var geocoder = null
 var qq = window.qq
+import Icon from '../components/Icon'
 import validator from 'validator'
 var fto = require('form_to_object')
 var errMap = {
@@ -34,7 +35,12 @@ class Order extends React.Component {
       phone: '',
       pDate: '',
       pTime: '',
-      remark: ''
+      remark: '',
+      isShippingfree:false,
+      supportDeliver:true,
+      salesInfoShow:false,
+      salesInfo:[],
+      cut:0
     }
     this.lat = 23
     this.lng = 113
@@ -105,8 +111,14 @@ class Order extends React.Component {
       this.setState({
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
-        total: resJson.total
+        total: resJson.total,
+        isShippingfree:resJson.isShippingFree,
+        supportDeliver:resJson.supportDeliver,
+        isSelfPick:resJson.isSelfPick?resJson.isSelfPick:sessionStorage.getItem('isSelfPick') || '',
+        salesInfo:resJson.salesInfo,
+        cut:resJson.cut
       })
+      sessionStorage.setItem('total', resJson.total);
       if (sessionStorage.getItem('addr') != null) {
         this.setState({
           defaultAddr: JSON.parse(sessionStorage.getItem('addr'))
@@ -124,7 +136,9 @@ class Order extends React.Component {
             this.state.defaultAddr.city +
             this.state.defaultAddr.region +
             this.state.defaultAddr.addrDetail
-          geocoder.getLocation(addr)
+          if(!this.state.isShippingfree){
+            geocoder.getLocation(addr,this.state.total)
+          }
         }
       }
       if (sessionStorage.getItem('voucher') != null) {
@@ -143,7 +157,13 @@ class Order extends React.Component {
         })
         return
       }
+      if (sessionStorage.getItem('isSelfPick')) {
+        this.setState({
+          isSelfPick: sessionStorage.getItem('isSelfPick') || ''
+        })
+      }
     })
+    console.log('isSelfPick: ' + this.state.isSelfPick);
   }
 
   render() {
@@ -172,11 +192,13 @@ class Order extends React.Component {
                   <option value="false">配送</option>
                   <option value="true">自提</option>
                 </select>*/}
+                {this.state.supportDeliver?
                 <span  className="radio-input"><input type='radio' id='no' name="isSelfPick" checked={this.state.isSelfPick==="false"?'checked':null} value="false" onClick={e => {
                     this.setState({
                       isSelfPick: e.target.value,
                       shippingFee: 0
                     }, () => {
+                      console.log(this.state)
                        if (
                           this.state.isSelfPick &&
                           this.state.isSelfPick === 'false' &&
@@ -190,7 +212,10 @@ class Order extends React.Component {
                               this.state.defaultAddr.region +
                               this.state.defaultAddr.addrDetail
                             console.log('addr:' + addr)
-                            geocoder.getLocation(addr)
+                            console.log('this.state.isShippingfree:' + this.state.isShippingfree)
+                            if(!this.state.isShippingfree){
+                              geocoder.getLocation(addr,this.state.total)
+                            }
                           }
                         }
                     })
@@ -198,6 +223,9 @@ class Order extends React.Component {
                     console.log(this.state.isSelfPick);
                    
                   }}/> <label htmlFor="no">配送</label></span>
+                  :null
+                }
+                
                 <input type='radio' name="isSelfPick" id="yes" value="true" checked={this.state.isSelfPick==="true"?'checked':null} onClick={e => {
                     this.setState({
                       isSelfPick: e.target.value,
@@ -216,7 +244,9 @@ class Order extends React.Component {
                               this.state.defaultAddr.region +
                               this.state.defaultAddr.addrDetail
                             console.log('addr:' + addr)
-                            geocoder.getLocation(addr)
+                            if(!this.state.isShippingfree){
+                             geocoder.getLocation(addr,this.state.total)
+                            }
                           }
                         }
                     })
@@ -335,7 +365,7 @@ class Order extends React.Component {
                 window.location = 'coupon?isFromOrder=1'
               }}
             >
-              优惠：
+              优惠券：
               {this.state.voucherText && this.state.voucherText !== ''
                 ? this.state.voucherText + ' 现金优惠券'
                 : null}
@@ -346,15 +376,50 @@ class Order extends React.Component {
               name="voucherCode"
               value={this.state.voucherCode}
             />
+             <div className="order-total">
+              满减：<span className="money">¥{this.state.cut}</span>
+            </div>
+
+                {
+                  this.state.salesInfo.length>=1?
+                  <div className="order-sales">
+                     <div onClick={this.salesInfoShowClick} className='order-sales-top'>
+                      <span className='order-sales-tag'>
+                        营销
+                          
+                      </span>
+                      <span className='order-sales-text'>
+                            {this.state.salesInfo[0]}...
+                        </span>
+                        <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
+                    </div>
+                    <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
+                      {this.state.salesInfo.map((item,index)=>{
+                        return(
+                          <div className='order-sales-item' key={index}>
+                            {item}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    
+                  </div>
+                  :null
+                }
+                
+                
+              
             <div className="order-submit">
-              合计：￥
+              合计：¥
               {this.state.total -
                 this.state.voucherText +
-                this.state.shippingFee >
+                this.state.shippingFee -
+                this.state.cut >
                 0
-                ? this.state.total -
+                ? (this.state.total -
                     this.state.voucherText +
-                    this.state.shippingFee
+                    this.state.shippingFee-
+                    this.state.cut).toFixed(2)
                 : 0}
               <button type="submit" className="button">提交订单</button>
             </div>
@@ -364,7 +429,11 @@ class Order extends React.Component {
       </DocumentTitle>
     )
   }
-
+salesInfoShowClick=()=>{
+    this.setState({
+      salesInfoShow: !this.state.salesInfoShow
+    })
+  }
   _remarkHandler = e => {
     this.setState({
       remark: e.target.value
@@ -404,7 +473,7 @@ class Order extends React.Component {
   _init = () => {
     //调用地址解析类
     geocoder = new qq.maps.Geocoder({
-      complete: result => {
+      complete: (result) => {
         console.log('result:' + result)
         this.lat = result.detail.location.lat
         this.lng = result.detail.location.lng
@@ -425,7 +494,7 @@ class Order extends React.Component {
           ) / 100
           )/10
         req
-          .get('/uclee-user-web/getShippingFee?distance=' + distance)
+          .get('/uclee-user-web/getShippingFee?distance=' + distance + '&total=' + (sessionStorage.getItem('total')?sessionStorage.getItem('total'):0))
           .end((err, res) => {
             if (err) {
               return err
@@ -507,6 +576,7 @@ class Order extends React.Component {
         sessionStorage.removeItem('p_time')
         sessionStorage.removeItem('isFromCart')
         sessionStorage.removeItem('phone')
+        sessionStorage.removeItem('total')
         window.location =
           'seller/payment?paymentSerialNum=' + resJson.paymentSerialNum
       }

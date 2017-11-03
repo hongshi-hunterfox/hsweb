@@ -18,7 +18,7 @@ import req from 'superagent'
 // ErrorMsg 显示表单错误
 import ErrorMsg from '../components/ErrorMsg'
 
-import ValueGroup from '../components/ValueGroup'
+import ValueGroup from '../components/ValueGroupTmp'
 
 class RechargeConfig extends React.Component {
   constructor(props) {

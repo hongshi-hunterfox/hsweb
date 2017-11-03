@@ -1,6 +1,54 @@
 @import "../public.less";
 .order{
 	margin-bottom: 51px;
+	padding-bottom: 55px;
+	.none{
+		display: none;
+	}
+	&-pick-up-image{
+		top:0;
+		position: fixed;
+		z-index: 999;
+		width: 100%;
+		background-color: rgba(153, 153, 153, 0.6);
+		height: 100%;
+		.image{
+			margin-left: 10%;
+		}
+		.icon{
+			margin-top: 10px;
+			margin-left: 48%;
+			font-size: 25px;
+		}
+		.barcode{
+			margin-top: 10%;
+			margin-left: 10%;
+			margin-bottom: 10px;
+		}
+	}
+	&-top{
+		.clearfix();
+		width: 100%;
+		&-item{
+			color: black;
+			width:25%;
+			padding: 5px;
+			text-align: center;
+			display: block;
+			float: left;
+			border-right: 1px solid #C9C9C9;
+			border-bottom: 1px solid #C9C9C9;
+			    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+		}
+		.active{
+			color: #f15f40;
+			font-weight: bold;
+			border-bottom: 1px solid #f15f40;
+		}
+		
+	}
 	&-list{
 		.clearfix();
 		margin-top: 10px;

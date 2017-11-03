@@ -29,6 +29,100 @@ public class ConfigPost {
 	private String signName;
 	private String buyTemId;
 	private String birthTemId;
+	private String payTemId;
+	private String rechargeTemId;
+	private String bindText;
+	private String supportDeliver;
+	private String domain;
+
+	private String hsMerchantCode;
+
+	private String logoUrl;
+
+	private String ucenterImg;
+
+	private String birthText;
+	private String salesText;
+
+	public String getBirthText() {
+		return birthText;
+	}
+
+	public void setBirthText(String birthText) {
+		this.birthText = birthText;
+	}
+
+	public String getSalesText() {
+		return salesText;
+	}
+
+	public void setSalesText(String salesText) {
+		this.salesText = salesText;
+	}
+
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+
+	public String getUcenterImg() {
+		return ucenterImg;
+	}
+
+	public void setUcenterImg(String ucenterImg) {
+		this.ucenterImg = ucenterImg;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public String getHsMerchantCode() {
+		return hsMerchantCode;
+	}
+
+	public void setHsMerchantCode(String hsMerchantCode) {
+		this.hsMerchantCode = hsMerchantCode;
+	}
+
+	public String getBindText() {
+		return bindText;
+	}
+
+	public void setBindText(String bindText) {
+		this.bindText = bindText;
+	}
+
+	public String getSupportDeliver() {
+		return supportDeliver;
+	}
+
+	public void setSupportDeliver(String supportDeliver) {
+		this.supportDeliver = supportDeliver;
+	}
+
+	public String getPayTemId() {
+		return payTemId;
+	}
+
+	public void setPayTemId(String payTemId) {
+		this.payTemId = payTemId;
+	}
+
+	public String getRechargeTemId() {
+		return rechargeTemId;
+	}
+
+	public void setRechargeTemId(String rechargeTemId) {
+		this.rechargeTemId = rechargeTemId;
+	}
 
 	public String getBuyTemId() {
 		return buyTemId;

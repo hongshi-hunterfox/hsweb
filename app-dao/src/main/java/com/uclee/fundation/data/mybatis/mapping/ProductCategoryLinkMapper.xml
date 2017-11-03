@@ -11,6 +11,12 @@
     from web_products_categories_link
     where product_id = #{productId,jdbcType=INTEGER}
   </select>
+   <select id="selectByCId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    *
+    from web_products_categories_link
+    where category_id = #{categoryId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey" >
     delete from web_products_categories_link
     where category_id = #{categoryId,jdbcType=INTEGER}

@@ -9,7 +9,8 @@ public class HongShiOrder {
 	private String orderCode;
 	
 	private String date;
-	
+	private String createTime;
+
 	private double totalAmount;
 	
 	private double accounts;
@@ -25,7 +26,75 @@ public class HongShiOrder {
 	private BigDecimal discount;
 	
 	private String pickAddr;
-	
+
+	private Boolean isComment;
+
+	private BigDecimal cut;
+
+	private String pickUpCode;
+
+	private String pickUpImageUrl;
+
+	private String barcode;
+
+	private Boolean isVoid;
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public Boolean getVoid() {
+		return isVoid;
+	}
+
+	public void setVoid(Boolean aVoid) {
+		isVoid = aVoid;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+
+	public String getPickUpImageUrl() {
+		return pickUpImageUrl;
+	}
+
+	public void setPickUpImageUrl(String pickUpImageUrl) {
+		this.pickUpImageUrl = pickUpImageUrl;
+	}
+
+	public String getPickUpCode() {
+		return pickUpCode;
+	}
+
+	public void setPickUpCode(String pickUpCode) {
+		this.pickUpCode = pickUpCode;
+	}
+
+	public BigDecimal getCut() {
+		return cut;
+	}
+
+	public void setCut(BigDecimal cut) {
+		this.cut = cut;
+	}
+
+	public Boolean getIsComment() {
+		return isComment;
+	}
+
+	public void setIsComment(Boolean comment) {
+		isComment = comment;
+	}
+
 	public String getPickAddr() {
 		return pickAddr;
 	}

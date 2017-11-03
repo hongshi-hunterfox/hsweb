@@ -5,20 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.backend.model.ProductForm;
-import com.uclee.fundation.data.mybatis.model.Banner;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.Freight;
-import com.uclee.fundation.data.mybatis.model.HongShiOrder;
-import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
-import com.uclee.fundation.data.mybatis.model.ProductGroupLink;
-import com.uclee.fundation.data.mybatis.model.RechargeConfig;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
-import com.uclee.fundation.data.web.dto.BannerPost;
-import com.uclee.fundation.data.web.dto.ConfigPost;
-import com.uclee.fundation.data.web.dto.FreightPost;
-import com.uclee.fundation.data.web.dto.LotteryConfigPost;
-import com.uclee.fundation.data.web.dto.ProductDto;
-import com.uclee.fundation.data.web.dto.ProductGroupPost;
+import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.*;
 
 public interface BackendServiceI {
 
@@ -64,9 +52,9 @@ public interface BackendServiceI {
 
 	int updateStoreInfo(String description);
 
-	List<UserProfile> getUserListForBirth(Integer day);
+	List<UserProfile> getUserListForBirth(String start,String end);
 
-	boolean sendBirthMsg(Integer userId);
+	boolean sendBirthMsg(Integer userId,boolean sendVoucher);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
@@ -75,4 +63,67 @@ public interface BackendServiceI {
 	boolean delStore(Integer storeId);
 
 
+    boolean editQiuckNavi(HomeQuickNavi homeQuickNavi);
+
+	HomeQuickNavi getQuickNavi(Integer naviId);
+
+	List<HomeQuickNavi> getQuickNaviList();
+
+	int delQiuckNavi(Integer naviId);
+
+	boolean editQuickNaviProduct(QuickNaviProductPost quickNaviProductPost);
+
+	List<ProductDto> selectQuickNaviProduct(Integer naviId);
+
+	int delQuickNaviProduct(Integer naviId, Integer productId);
+
+    String getHongShiStoreName(String hsCode);
+
+	List<ProductDto> selectAllProductByCatId(Integer categoryId);
+
+	List<Category> getCategoryList();
+
+	Map<String,Object> delCategory(Integer categoryId);
+
+	Map<String,Object> editCategory(Category category);
+
+	Category getCategoryById(Integer categoryId);
+
+    List<Comment> getCommentList();
+
+	Map<String,Object> commentBackHandler(Comment comment);
+
+    boolean updateRechargeConfigNew(RechargeConfig rechargeConfig);
+
+	List<RechargeConfig> getRechargeConfigList();
+
+	boolean delRechargeConfig(Integer id);
+
+	List<BirthVoucher> selectAllBirthVoucher();
+
+	boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost);
+
+    List<ShippingFullCut> selectAllShippingFullCut();
+
+	boolean updateFullCutShipping(FreightPost freightPost);
+
+	List<FullCut> selectAllFullCut();
+
+	boolean updateFullCut(FreightPost freightPost);
+
+	List<BindingRewards> selectAllBindingRewards();
+
+	boolean updateBindingRewards(FreightPost freightPost);
+
+	NapaStore getHongShiStore(String hsCode);
+
+	Map<String,Object> isVoucherLimit(Integer amount);
+
+	boolean delComment(Integer id);
+
+	boolean truncateBirthVoucherHandler();
+
+    boolean updateActivityConfig(ConfigPost configPost);
+
+	boolean systemConfigHandler(ConfigPost configPost);
 }

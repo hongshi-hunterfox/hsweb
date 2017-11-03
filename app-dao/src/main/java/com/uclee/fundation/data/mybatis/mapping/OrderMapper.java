@@ -30,4 +30,10 @@ public interface OrderMapper {
 	List<Order> selectByVoucherCode(String voucherCode);
 
 	int deleteByOrderSerialNum(String orderSerialNum);
+
+    int getUnpayOrderCountByUserId(Integer userId);
+
+    Order getOrderListByOrderSerailNum(String orderSerialNum);
+
+    int getUnCommentCount(Integer userId);
 }

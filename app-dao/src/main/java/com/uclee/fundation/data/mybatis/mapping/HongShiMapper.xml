@@ -9,6 +9,17 @@
 		<result column="unit" property="unit" jdbcType="VARCHAR" />
 		<result column="hsPrice" property="hsPrice" jdbcType="DECIMAL" />
 	</resultMap>
+	<resultMap id="MobileItem" type="com.uclee.fundation.data.web.dto.MobileItem">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="parent" property="parent" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="caption" property="caption" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="orders" property="orders" jdbcType="INTEGER" />
+		<result column="types" property="types" jdbcType="VARCHAR" />
+		<result column="enabled" property="enabled" jdbcType="BOOLEAN" />
+		<result column="command" property="command" jdbcType="VARCHAR" />
+	</resultMap>
 	<resultMap id="HongShiStore" type="com.uclee.fundation.data.mybatis.model.HongShiStore">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="code" property="code" jdbcType="VARCHAR" />
@@ -33,9 +44,12 @@
 		<result column="OrderCode" property="orderCode" jdbcType="VARCHAR" />
 		<result column="Outer_OrderCode" property="outerOrderCode" jdbcType="VARCHAR" />
 		<result column="Date_C" property="date" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createTime" jdbcType="VARCHAR" />
 		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
 		<result column="Accounts" property="accounts" jdbcType="DOUBLE" />
 		<result column="IsEnd" property="isEnd" jdbcType="BIT" />
+		<result column="IsVoid" property="isVoid" jdbcType="BIT" />
+		<result column="PickUpCode" property="pickUpCode" jdbcType="BIT" />
 	</resultMap>
 	<resultMap id="HongShiOrderItem" type="com.uclee.fundation.data.mybatis.model.HongShiOrderItem">
 		<id column="ID" property="id" jdbcType="INTEGER" />
@@ -86,6 +100,9 @@
 	<select id="getHongShiStore" resultMap="HongShiStore">
 		select id as id,编号 as code,rtrim(简称) as abbreviation,rtrim(全称) as fullName,rtrim(地址) as address,rtrim(联系电话)  as phone,rtrim(类别简称) as catAbbreviation,往来属性 as type from department where 是否停用=0 and 往来属性 in ('直营店','加盟店')
 	</select>
+	<select id="getOrderByOutCode" resultMap="HongShiOrder">
+		select rtrim(是否废止) as IsVoid  from orders where 商户订单号=#{code,jdbcType=VARCHAR}
+	</select>
 	<select id="getHongShiCoupon" resultMap="HongShiCoupon">
 		exec WSC_GetVouchers #{cWeiXinCode,jdbcType=VARCHAR}
 	</select>
@@ -99,22 +116,25 @@
 		exec WSC_SaleVoucher #{goodsCode,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR},0,0
 	</select>
 	<select id="recoverVoucher" resultType="java.lang.Integer">
-		exec WSC_RecoverVoucher #{orderId,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},0,#{remark,jdbcType=VARCHAR}
+		exec WSC_RecoverVoucher #{orderId,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR}
 	</select>
 	<select id="createOrder" resultMap="CreateOrderResult">
 		exec WSC_CreateOrder '',#{WSC_TardNo,jdbcType=VARCHAR},#{PickUpTime,jdbcType=TIMESTAMP},#{WeiXinCode,jdbcType=VARCHAR},#{CallNumber,jdbcType=VARCHAR},#{Remarks,jdbcType=VARCHAR}
-		,#{Destination,jdbcType=VARCHAR},#{TotalAmount,jdbcType=DECIMAL},0,0,#{Payment,jdbcType=DECIMAL},#{Voucher,jdbcType=DECIMAL},'','',#{Department,jdbcType=VARCHAR}
+		,#{Destination,jdbcType=VARCHAR},#{TotalAmount,jdbcType=DECIMAL},0,0,#{Payment,jdbcType=DECIMAL},#{Voucher,jdbcType=DECIMAL},'','',#{Department,jdbcType=VARCHAR},#{Vouchers,jdbcType=VARCHAR}
 	</select>
 	<select id="createOrderItem" resultMap="CreateOrderItemResult">
 		 exec WSC_AddOrderItem #{pId,jdbcType=INTEGER},#{goodsCode,jdbcType=VARCHAR},#{goodsCount,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL}
 	</select>
 	<select id="signInAddPoint" resultMap="HongShiCommonResult">
-		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},'签到送积分'
+		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},#{tag,jdbcType=INTEGER}
 	</select>
 	<select id="lotteryPoint" resultMap="HongShiCommonResult">
 		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},'抽奖扣积分'
 	</select>
 	<select id="getHongShiProduct" resultMap="HongShiProduct">
 		select ID as id,编号 as code,名称 as name,规格 as hsSpec,单位 as hsUnit,销售主价 as hsPrice from goods where 是否销售=1 and 停用日期>convert(varchar(10),getdate(),120)
+	</select>
+	<select id="selectMobile" resultMap="MobileItem">
+	    select id,parent,name,caption,comment,orders,types,enabled,command from mobile_object  where [types] like'web:%'
 	</select>
 </mapper>

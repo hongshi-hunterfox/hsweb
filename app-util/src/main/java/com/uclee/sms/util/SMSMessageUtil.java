@@ -62,7 +62,7 @@ public class SMSMessageUtil {
 			System.out.println("DefaultProfile.addEndpoint is error");
 			e.printStackTrace();
 		}
-		
+
 		IAcsClient acsClient = new DefaultAcsClient(profile);
 		 SendSmsRequest request = new SendSmsRequest();
 		 request.setMethod(MethodType.POST);
@@ -93,7 +93,7 @@ public class SMSMessageUtil {
 				System.out.println("sendSmsResponse.getCode is "+sendSmsResponse.getCode());
 				return false;
 			}
-    	
+
     	//TaobaoClient client = new DefaultTaobaoClient(URL, APP_KEY, SECRET);
       //  AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 //        req.setSmsType(SMS_TYPE);
@@ -132,7 +132,7 @@ public class SMSMessageUtil {
 //        send("15902023879", "345345","LTAIbl6n3zsUcEEJ","0Z0TLDfQ1HdsCpN2k4Cs9UZrWImUVC","邓彪");
 //        send("15902023879", "345345","23887342","0db633205f62d240086ee62fe892380f","洪石软件");
 //        System.out.println(responseCode);
-    	send("15617750720","12345678","SMS_82925013","LTAIR7DaQEcFJ6YZ","9HKp5mkN9wdAPBAhsOGkgZu0SUU5Z7","洪石");
+    	send("15902023879","12345678","SMS_82925013","LTAIR7DaQEcFJ6YZ","9HKp5mkN9wdAPBAhsOGkgZu0SUU5Z7","洪石");
     }
 
 

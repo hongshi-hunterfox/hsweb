@@ -2,13 +2,16 @@ package com.duobao.user.service;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.service.BackendServiceI;
+import com.uclee.QRCode.util.BarcodeUtil;
+import com.uclee.QRCode.util.MyQRCode;
+import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.dynamicDatasource.DBContextHolder;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.dynamicDatasource.DynamicDataSourceManager;
 import com.uclee.dynamicDatasource.DynamicDataSourceManagerHeyp;
 import com.uclee.fundation.config.links.TermGroupTag;
-import com.uclee.fundation.config.links.WechatMerchantInfo;
+import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
@@ -26,24 +29,22 @@ import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
 import com.uclee.fundation.data.mybatis.mapping.VarMapper;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.payment.strategy.wcPaymetnTools.PayImpl;
-import com.uclee.payment.strategy.wcPaymetnTools.PayMD5;
-import com.uclee.payment.strategy.wcPaymetnTools.PaymentTools;
 import com.uclee.payment.strategy.wcPaymetnTools.UniteOrder;
+import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 public class DuobaoServiceTest extends AbstractServiceTests {
 	
@@ -77,6 +78,8 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Autowired
 	private OrderItemMapper orderItemMapper;
 	@Autowired
+	private RechargeConfigMapper rechargeConfigMapper;
+	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
@@ -85,13 +88,35 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Autowired
 	private PaymentOrderMapper paymentOrderMapper;
 	@Autowired
+	private FDFSFileUpload fDFSFileUpload;
+	@Autowired
+	private CommentMapper commentMapper;
+	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
 	private BackendServiceI backendService;
 	@Autowired
 	private ProductSaleMapper productSaleMapper;
 	@Autowired
+	private DataSourceInfoServiceI dataSourceInfoService;
+	@Autowired
 	private DataSourceFacade datasource;
+	@Autowired
+	private ProductGroupMapper productGroupMapper;
+	@Autowired
+	private ProductGroupLinkMapper productGroupLinkMapper;
+	@Autowired
+	private UserProfileMapper userProfileMapper;
+	@Autowired
+	private RechargeRewardsRecordMapper rechargeRewardsRecordMapper;
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private BalanceMapper balanceMapper;
+	@Autowired
+	private ConfigMapper configMapper;
+	@Autowired
+	private  BalanceLogMapper balanceLogMapper;
 	@Test
 	public void testFreight(){
 		datasource.switchDataSource("hs");
@@ -100,7 +125,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 
 	@Test
 	public void testGetCoupon(){
-		List<ProductDto> products = productMapper.getAllProduct(null,null,false);
+		List<ProductDto> products = productMapper.getAllProduct(null,null,false,null, null);
 		for(ProductDto item:products){
 			ProductImageLink productImageLink = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(productImageLink!=null){
@@ -260,26 +285,110 @@ public class DuobaoServiceTest extends AbstractServiceTests {
         //
         sql="CREATE TABLE web_role_permission_link(   role_id int  NOT NULL,   permission_id int NOT NULL);";
         jdbcTemplatefwefwef.execute(sql);
+
+	}
+	private Balance getBalance(Integer userId) {
+		Balance balance = balanceMapper.selectByUserId(userId);
+		if(balance==null){
+			Balance tmp = new Balance();
+			tmp.setBalance(new BigDecimal(0));
+			tmp.setUserId(userId);
+			if(balanceMapper.insertSelective(tmp)>0){
+				return tmp;
+			}else{
+				return null;
+			}
+
+		}
+		return balance;
 	}
 	@Test
 	public void test1() throws Exception{
-		DynamicDataSourceManagerHeyp.init();
-        //获取数据源连接池
-        System.out.println("------------------->数据源1");
-        
-        JdbcTemplate jdbcTemplate1 = DynamicDataSourceManagerHeyp.getDataSourcePoolBySourceID(1);
-        List<Map<String,Object>> users = jdbcTemplate1.queryForList("select * from db_users where serial_num=1480163164631119209");
-        System.err.println(JSON.toJSONString(users));
-		JdbcTemplate jdbcTemplate2 = DynamicDataSourceManagerHeyp.getDataSourcePoolBySourceID(2);
-		List<Map<String,Object>> users2 = jdbcTemplate2.queryForList("select * from db_users where serial_num=1480163164631119209");
-		System.err.println(JSON.toJSONString(users2));
+		datasource.switchDataSource("hs");
+		String[] key = {"keyword1","keyword2"};
+		String[] value = {DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),0.01+"元".toString()};
+		Config config = configMapper.getByTag("rechargeTmpId");
+		Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+		Config config2 = configMapper.getByTag(WebConfig.domain);
+		Config config3 = configMapper.getByTag(WebConfig.signName);
+		if(config!=null) {
+			userService.sendWXMessage("oH7hfuEN8qnZjC7fr2_zUFK7eVl8", config.getValue(), config2.getValue()+"/recharge-list?merchantCode="+config1.getValue(), "尊敬的会员，您本次充值成功到账", key, value, "如有疑问，请点击这里");
+		}
 	}
 	
 	@Test
 	public void testWxMessage(){
-		String[] key = {"OrderSn","OrderStatus"};
-		String[] value = {"2016年12月20日14:40:08","20元（账户余额30.50元）"};
- 		userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "lPKTNYPlugdPDyRF_jNIB3dkL8ehDAT6SxSz3PlsUp0", "www.uclee.com/recharge-list", "尊敬的会员，您本次充值成功到账", key,value, "如有疑问，请点击这里");
+		dataSource.switchDataSource("kf");
+		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(new BigDecimal("0.01"));
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
+		if(rechargeConfig!=null){
+			//优惠券处理
+			if(rechargeConfig.getStartTime()!=null&&rechargeConfig.getEndTime()!=null&&new Date().after(rechargeConfig.getStartTime())&&new Date().before(rechargeConfig.getEndTime())){
+				try{
+					RechargeRewardsRecord record = rechargeRewardsRecordMapper.selectByConfigIdAndUserId(rechargeConfig.getId(),6);
+					boolean isSend=false;
+					if(record==null||(rechargeConfig.getLimit()!=null&&rechargeConfig.getLimit()>record.getCount())) {
+						if(rechargeConfig.getAmount()!=null) {
+							for (int i = 0; i < rechargeConfig.getAmount(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
+								if (coupon != null && coupon.size() > 0) {
+									try {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+										isSend = true;
+									} catch (Exception e) {
+
+									}
+								}
+							}
+						}
+						if(rechargeConfig.getAmountSecond()!=null) {
+							for (int i = 0; i < rechargeConfig.getAmountSecond(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
+								if (coupon != null && coupon.size() > 0) {
+									try {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+										isSend = true;
+									} catch (Exception e) {
+
+									}
+								}
+							}
+						}
+						if(rechargeConfig.getAmountThird()!=null) {
+							for (int i = 0; i < rechargeConfig.getAmountThird(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
+								if (coupon != null && coupon.size() > 0) {
+									try {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+										isSend = true;
+									} catch (Exception e) {
+
+									}
+								}
+							}
+						}
+						if(isSend){
+							if(record==null){
+								RechargeRewardsRecord tmp = new RechargeRewardsRecord();
+								tmp.setConfigId(rechargeConfig.getId());
+								tmp.setCount(1);
+								tmp.setUserId(6);
+								rechargeRewardsRecordMapper.insertSelective(tmp);
+							}else{
+								record.setCount(record.getCount()+1);
+								rechargeRewardsRecordMapper.updateByPrimaryKeySelective(record);
+							}
+						}
+					}else{
+						logger.error("赠送上限");
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}else{
+				logger.error("不在赠送时期");
+			}
+		}
 	}
 	
 	@Test
@@ -289,25 +398,17 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testRecharge(){
-		HongShiRecharge dd = new HongShiRecharge().setcWeiXinCode("oH7hfuEN8qnZjC7fr2_zUFK7eVl8")
+		dataSource.switchDataSource("kf");
+		HongShiRecharge dd = new HongShiRecharge().setcWeiXinCode("ocydnwkicQdKQgz5x4Pedh5LpFUM")
 				.setcWeiXinOrderCode("微商城积分抽奖赠送余额").setnAddMoney(new BigDecimal(10));
 		Integer res = hongShiVipService.hongShiRecharge(dd);
 	}
 	@Test
 	public void testPaymentMessage(){
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("14966410295724564");
-		Payment payment = paymentMapper.selectByPrimaryKey(paymentOrder.getPaymentId());
-		String paymentMethod="微信支付";
-		if(payment!=null){
-			if(payment.getStrategyClassName().equals("MemberCardPaymentStrategy")){
-				paymentMethod="会员卡余额支付";
-			}else if(payment.getStrategyClassName().equals("AlipayPaymentStrategy")){
-				paymentMethod="支付宝支付";
-			}
-		}
+		dataSource.switchDataSource("kf");
 		String[] key = {"keyword1","keyword2","keyword3","keyword4"};
-		String[] value = {paymentOrder.getPaymentSerialNum(),DateUtils.format(paymentOrder.getCompleteTime(), DateUtils.FORMAT_LONG).toString(),paymentOrder.getMoney()+"元".toString(),paymentMethod};
-		userService.sendWXMessage("oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
+		String[] value = {"test","2017-09-13","2元","微信支付"};
+		userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "XKZJz1iRLSDOZIbvjXs0CJekeW7UeEkxJWwDF395Evk", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
 	}
 	
 	@Test

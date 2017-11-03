@@ -1,6 +1,6 @@
 package com.uclee.user.service;
 import com.github.pagehelper.PageInfo;
-import com.uclee.fundation.config.links.WebConfig;
+//import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
@@ -11,6 +11,7 @@ import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.model.UserForm;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
@@ -43,7 +44,7 @@ public interface UserServiceI {
 	
 	boolean addChiledUser(UserForm userForm);
 
-	boolean addPhoneUser(String name,String phone);
+	Integer addPhoneUser(String name,String phone);
 
 	List<UserProfile> phoneUserList();
 	
@@ -116,7 +117,7 @@ public interface UserServiceI {
 
 	boolean WechatNotifyHandle(String out_trade_no, String transaction_id, String attach);
 	
-	String sendWXMessage(String openId,String templateId,String url ,String firstData,String[] key,String[] value,String remarkData);
+	Boolean sendWXMessage(String openId,String templateId,String url ,String firstData,String[] key,String[] value,String remarkData);
 
 	ProductDto getProductDtoById(Integer productId);
 
@@ -231,6 +232,7 @@ public interface UserServiceI {
 	List<Payment> selectMemberPayment();
 
 	Map<String, Object> getBossCenter(String phone, String hsCode);
+	//Map<String, Object> getMobile(String phone, String hsCode);
 
 	Map<String, Object> getShakePageData();
 
@@ -252,4 +254,15 @@ public interface UserServiceI {
 
 	String getAppId(String merchantCode);
 
+    List<HomeQuickNavi> getQuickNavis();
+
+    int getUnpayOrderCountByUserId(Integer userId);
+
+    List<Message> getUnSendMesg();
+
+    Config getConfigByTag(String supportDeliver);
+
+    int getUnCommentCount(Integer userId);
+
+	Map<String, Object> getMobile(String phone, String hsCode);
 }

@@ -30,7 +30,7 @@ class ProductGroupList extends React.Component {
       if (err) {
         return err
       }
-      window.location='/product-group-list?tag=' + this.props.location.query.tag
+      window.location='/product-group-list?tag=' + (this.props.location.query.tag?this.props.location.query.tag:'')
     })
   }
   _edit=(url)=>{

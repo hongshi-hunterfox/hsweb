@@ -61,7 +61,7 @@ class LotteryConfig extends React.Component {
       var limits=0;
       for(var i=0;i<this.state.configs.length;i++){
           key[i] = this.state.configs[i].voucherCode?this.state.configs[i].voucherCode:this.state.configs[i].money;
-          value[i] = this.state.configs[i].voucherCode?1:2;
+          value[i] = this.state.configs[i].voucherCode?1:this.state.configs[i].rate===0?0:2;
           count[i] = this.state.configs[i].count;
           rate[i] = this.state.configs[i].rate;
       }
@@ -88,7 +88,7 @@ class LotteryConfig extends React.Component {
             </div>
             <div  className="lottery-line">
               <select className="lottery-line-item"  name="value[0]" onChange={this._valueChange.bind(this,'value',0)}>
-                  <option selected={!this.state.value.length>0?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>0||this.state.value[0]===0?'selected':null } value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>0?this.state.value[0]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>0?this.state.value[0]===2?'selected':null:null}>会员卡金额</option>
               </select>
@@ -99,7 +99,7 @@ class LotteryConfig extends React.Component {
             </div>
              <div  className="lottery-line">
               <select className="lottery-line-item"  name="value[1]" onChange={this._valueChange.bind(this,'value',1)}>
-                  <option selected={!this.state.value.length>1?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>1||this.state.value[1]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>1?this.state.value[1]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>1?this.state.value[1]===2?'selected':null:null}>会员卡金额</option>
               </select>
@@ -109,9 +109,9 @@ class LotteryConfig extends React.Component {
             </div>
              <div className="lottery-line">
               <select className="lottery-line-item"  name="value[2]" onChange={this._valueChange.bind(this,'value',2)}>
-                  <option selected={!this.state.value.length>2?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>2||this.state.value[2]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>2?this.state.value[2]===1?'selected':null:null}>优惠券</option>
-                  <option value="2" selected={this.state.value.length>2?this.state.value[12]===2?'selected':null:null}>会员卡金额</option>
+                  <option value="2" selected={this.state.value.length>2?this.state.value[2]===2?'selected':null:null}>会员卡金额</option>
               </select>
               <input className="lottery-line-item"  name="key[2]" ploceHolder="请输入优惠券号/会员卡金额" type="text" value={this.state.key.length>2?this.state.key[2]:null} onChange={this._keyChange.bind(this,'key',2)}/> 
               <input className="lottery-line-item"  name="count[2]" ploceHolder="请输入奖池数量" type="text" value={this.state.count.length>2?this.state.count[2]:null} onChange={this._countChange.bind(this,'count',2)}/> 
@@ -119,7 +119,7 @@ class LotteryConfig extends React.Component {
             </div>
              <div  className="lottery-line">
               <select className="lottery-line-item"  name="value[3]" onChange={this._valueChange.bind(this,'value',3)}>
-                  <option selected={!this.state.value.length>3?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>3||this.state.value[3]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>3?this.state.value[3]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>3?this.state.value[3]===2?'selected':null:null}>会员卡金额</option>
               </select>
@@ -129,7 +129,7 @@ class LotteryConfig extends React.Component {
             </div>
              <div  className="lottery-line">
               <select className="lottery-line-item"  name="value[4]" onChange={this._valueChange.bind(this,'value',4)}>
-                  <option selected={!this.state.value.length>4?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>4||this.state.value[4]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>4?this.state.value[4]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>4?this.state.value[4]===2?'selected':null:null}>会员卡金额</option>
               </select>
@@ -139,7 +139,7 @@ class LotteryConfig extends React.Component {
             </div>
              <div className="lottery-line">
               <select className="lottery-line-item"  name="value[5]" onChange={this._valueChange.bind(this,'value',5)}>
-                  <option selected={!this.state.value.length>5?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>5||this.state.value[5]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>5?this.state.value[5]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>5?this.state.value[5]===2?'selected':null:null}>会员卡金额</option>
               </select>
@@ -149,7 +149,7 @@ class LotteryConfig extends React.Component {
             </div>
              <div  className="lottery-line">
               <select className="lottery-line-item"  name="value[6]" onChange={this._valueChange.bind(this,'value',6)}>
-                  <option selected={!this.state.value.length>6?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>6||this.state.value[6]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>6?this.state.value[6]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>6?this.state.value[6]===2?'selected':null:null}>会员卡金额</option>
               </select>
@@ -159,7 +159,7 @@ class LotteryConfig extends React.Component {
             </div>
              <div  className="lottery-line">
               <select className="lottery-line-item"  name="value[7]" onChange={this._valueChange.bind(this,'value',7)}>
-                  <option selected={!this.state.value.length>7?'selected':null}>请选择</option>
+                  <option selected={!this.state.value.length>7||this.state.value[7]===0?'selected':null} value='0'>请选择</option>
                   <option value="1" selected={this.state.value.length>7?this.state.value[7]===1?'selected':null:null}>优惠券</option>
                   <option value="2" selected={this.state.value.length>7?this.state.value[7]===2?'selected':null:null}>会员卡金额</option>
               </select>
