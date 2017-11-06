@@ -211,7 +211,7 @@ _changeStore = (storeId, e) => {
     this.setState({
       err: null
     })
-    /*req
+    req
       .post('/uclee-backend-web/doAddPhoneUser')
       .send(data)
       .end((err, res) => {
@@ -229,7 +229,7 @@ _changeStore = (storeId, e) => {
         }
 
         
-      })*/
+      })
   }
 }
 
