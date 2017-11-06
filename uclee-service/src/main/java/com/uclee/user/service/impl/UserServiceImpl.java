@@ -3495,7 +3495,6 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
 		if(napaStores!=null&&napaStores.size()>0){
-			userId = napaStores.get(0).getUserId();
 			ret.put("napaStores", napaStores);
 		}else{
 			ret.put("reason", "no_department");

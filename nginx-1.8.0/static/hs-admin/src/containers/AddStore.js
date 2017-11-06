@@ -262,7 +262,6 @@ _setCity = e => {
 
     data.longitude=this.lng
     data.latitude=this.lat
-    data.userId=this.props.location.query.userId;
 
     if (!data.storeName) {
       return this.setState({

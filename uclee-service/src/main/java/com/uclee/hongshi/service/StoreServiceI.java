@@ -25,7 +25,7 @@ public interface StoreServiceI {
 
     boolean updateNapaStoreByStoreId(NapaStore store);
 
-	NapaStore selectNapaStoreByCode(String hsCode, Integer userId);
+	NapaStore selectNapaStoreByCode(String hsCode);
 
     boolean updateLink(Integer userId, List<Integer> storeIds);
 

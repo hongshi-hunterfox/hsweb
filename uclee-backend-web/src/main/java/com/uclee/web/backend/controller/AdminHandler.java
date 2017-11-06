@@ -56,7 +56,7 @@ public class AdminHandler {
         logger.info("store:"+JSON.toJSONString(store));
         map.put("result","fail");
         if(store!=null){
-        	NapaStore tmp = storeService.selectNapaStoreByCode(store.getHsCode(),store.getUserId());
+        	NapaStore tmp = storeService.selectNapaStoreByCode(store.getHsCode());
         	if(tmp!=null){
         		map.put("reason", "existed");
         		return map;

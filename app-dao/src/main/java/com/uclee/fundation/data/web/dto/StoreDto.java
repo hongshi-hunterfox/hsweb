@@ -17,13 +17,13 @@ import com.uclee.fundation.data.mybatis.model.NapaStore;
  * Created by heyaopeng on 2017/9/3.
  */
 public class StoreDto extends NapaStore {
-    private Boolean link;
+    private String link;
 
-    public Boolean getLink() {
+    public String getLink() {
         return link;
     }
 
-    public void setLink(Boolean link) {
+    public void setLink(String link) {
         this.link = link;
     }
 }
