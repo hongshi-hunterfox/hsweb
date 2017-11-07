@@ -103,7 +103,7 @@ public class AdminHandler {
         if(user!=null){
             if(user.getUserId()!=null) {
                 UserProfile userProfile = userProfileMapper.selectByName(user.getName());
-                if(userProfile!=null&&userProfile.getUserId()!=user.getUserId()){
+                if(userProfile!=null&&!userProfile.getUserId().equals(user.getUserId())){
                     map.put("reason","该名称已注册，请重新填写");
                     return map;
                 }
