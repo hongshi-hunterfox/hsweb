@@ -56,7 +56,7 @@ public class AdminHandler {
         logger.info("store:"+JSON.toJSONString(store));
         map.put("result","fail");
         if(store!=null){
-        	NapaStore tmp = storeService.selectNapaStoreByCode(store.getHsCode(),store.getUserId());
+        	NapaStore tmp = storeService.selectNapaStoreByCode(store.getHsCode());
         	if(tmp!=null){
         		map.put("reason", "existed");
         		return map;
@@ -103,7 +103,7 @@ public class AdminHandler {
         if(user!=null){
             if(user.getUserId()!=null) {
                 UserProfile userProfile = userProfileMapper.selectByName(user.getName());
-                if(userProfile!=null&&userProfile.getUserId()!=user.getUserId()){
+                if(userProfile!=null&&!userProfile.getUserId().equals(user.getUserId())){
                     map.put("reason","该名称已注册，请重新填写");
                     return map;
                 }

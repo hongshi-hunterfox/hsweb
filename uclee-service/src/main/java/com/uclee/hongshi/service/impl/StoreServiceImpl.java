@@ -40,7 +40,7 @@ public class StoreServiceImpl implements StoreServiceI {
     @Override
     public boolean addNapaStore(StoreDto store) {
         napaStoreMapper.insertSelective(store);
-        if(store.getLink()!=null&&store.getLink()){
+        if(store.getLink()!=null&&store.getLink().equals("true")){
             productStoreLinkMapper.insertAll(store.getStoreId());
         }
         return true;
@@ -89,8 +89,8 @@ public class StoreServiceImpl implements StoreServiceI {
     }
 
 	@Override
-	public NapaStore selectNapaStoreByCode(String hsCode,Integer userId) {
-		return napaStoreMapper.selectNapaStoreByCode(hsCode,userId);
+	public NapaStore selectNapaStoreByCode(String hsCode) {
+		return napaStoreMapper.selectNapaStoreByCode(hsCode);
 	}
 
     @Override

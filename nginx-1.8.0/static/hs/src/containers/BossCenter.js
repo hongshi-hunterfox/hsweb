@@ -94,10 +94,10 @@ class BossCenter extends React.Component {
             <div className='item' key={index.caption}>
                 <div className='top'>
                 
-                //{item.types}
+                {item.types}
                 </div>
                 <div className='bottom'>
-                {item.caption}
+         		{item.caption}
                 </div>
             </div>
         );
@@ -115,9 +115,9 @@ class BossCenter extends React.Component {
             </div>
             <div className='boss-center-top'>
               {items}
-            </div>
+            </ div>
             <div className='boss-center-bottom'>
-            	{itemo}
+              <a href="/Assistant">{itemo}</a>
             </div>
         </div>
       </DocumentTitle>

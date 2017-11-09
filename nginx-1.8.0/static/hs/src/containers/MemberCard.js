@@ -115,7 +115,7 @@ class MemberCard extends React.Component {
             <div className="member-card-item">
               <div className="member-card-item-code">电子会员卡:
               <span onClick={() => { 
-              	var conf = confirm('确认解绑吗？解绑后会员功能将无法使用!');
+              	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
           	if(!conf){
           		return;
           	}else{

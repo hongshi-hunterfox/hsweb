@@ -32,7 +32,9 @@ import AllProduct from './containers/AllProduct'
 import ShakeMonitor from './containers/ShakeMonitor'
 import Comment from './containers/Comment'
 import CommentDetail from './containers/CommentDetail'
+import Assistant from './containers/Assistant'
 import NotFound from './containers/NotFound'
+
 
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -67,6 +69,7 @@ ReactDOM.render(
       <Route path="coupon" component={Coupon} />
       <Route path="order" component={Order} />
       <Route path="storeList" component={StoreList} />
+      <Route path="assistant" component={Assistant} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,
