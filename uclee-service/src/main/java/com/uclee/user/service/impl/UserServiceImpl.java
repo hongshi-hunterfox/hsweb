@@ -2758,6 +2758,7 @@ public class UserServiceImpl implements UserServiceI {
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
 				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
+				account = account.subtract(order.getCut());
 				order.setAccounts(account.doubleValue());
 			}
 			List<HongShiOrder> ordersRet = new ArrayList<HongShiOrder>();
