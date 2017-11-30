@@ -43,9 +43,24 @@ import org.h2.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //import org.springframework.cache.annotation.Cacheable;
-
-
 import com.alibaba.fastjson.JSON;
 import com.backend.service.ProductManageServiceI;
 import com.github.pagehelper.PageHelper;
@@ -87,30 +102,6 @@ import com.uclee.user.util.UserUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 import com.uclee.weixin.util.EmojiFilter;
 
-//import org.apache.commons.collections.CollectionUtils;
-//import org.apache.http.client.ClientProtocolException;
-//import org.apache.http.client.methods.CloseableHttpResponse;
-//import org.apache.http.client.methods.HttpGet;
-//import org.apache.http.impl.client.CloseableHttpClient;
-//import org.apache.http.impl.client.HttpClients;
-//import org.apache.http.util.EntityUtils;
-//import org.apache.log4j.Logger;
-//import org.apache.shiro.crypto.hash.Sha256Hash;
-//import org.h2.util.StringUtils;
-//import org.json.JSONException;
-//import org.json.JSONObject;
-//import org.springframework.beans.factory.annotation.Autowired;
-
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpSession;
-
-//import java.io.*;
-//import java.math.BigDecimal;
-//import java.net.HttpURLConnection;
-//import java.net.URL;
-//import java.nio.charset.Charset;
-//import java.util.*;
-//import java.util.Map.Entry;
 
 public class UserServiceImpl implements UserServiceI {
 
@@ -2728,6 +2719,7 @@ public class UserServiceImpl implements UserServiceI {
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
 				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
+				account = account.subtract(order.getCut());
 				order.setAccounts(account.doubleValue());
 			}
 			List<HongShiOrder> ordersRet = new ArrayList<HongShiOrder>();
@@ -3490,48 +3482,38 @@ public class UserServiceImpl implements UserServiceI {
 		ret.put("items", items);
 		
 		List<MobileItem> itemo = hongShiMapper.selectMobile(hsCode,userId);
-//		for(MobileItem item:itemo){
-//			if(item.getTypes()="web:table"){
-//				item.setTypes("aaa.jpg");
-//			}else{
-//				item.setTypes("");
-//			}
-//		}
 		ret.put("itemo", itemo);
-
 		ret.put("result", true);
 		return ret;
 	}
-	
-//	@SuppressWarnings("deprecation")
-//	@Override
-//	public Map<String, Object> getMobile(String phone, String hsCode) {
-//		Map<String, Object> ret = new HashMap<String, Object>();
-//		Integer userId = 0;
-//		ret.put("result", false);
-//		if(phone==null&&hsCode==null){
-//			ret.put("reason", "param_error");
-//			return ret;
-//		}
-//		
-//		List<MobileItem> itemo = hongShiMapper.selectMobile(hsCode,userId);
-//		for(MobileItem item:itemo){
-//			if (item.getName()!=null) {
-//				if (item.getCaption().equals("monery")) {
-//					DecimalFormat df1 = new DecimalFormat("lala");
-//					item.setName(new String(df1.format(item.getName())));
-//				} else {
-//					DecimalFormat df1 = new DecimalFormat("la");
-//					item.setName(new String(df1.format(item.getName())));
-//				}
-//			}else{
-//				item.setName(new String());
-//			}
-//		}
-//		ret.put("itemo", itemo);
-//		ret.put("result", true);
-//		return ret;
-//	}
+	/**
+	 * 
+	 */
+	@Override
+	public  Map<String, Object> getMobJect(String QueryName){
+		HashMap<String,Object> ret = new HashMap<String, Object>();
+		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName);
+//		List<List<Object>> allList = new ArrayList<List<Object>>();
+//		int index = 0;
+//		for (Map<String, Object> kv : itema) {  
+//		    List<Object> key = new ArrayList<Object>();  
+//		    List<Object> value = new ArrayList<Object>();  
+//		    for (Map.Entry<String, Object> entry : kv.entrySet()) {  
+//		        if (index == 0) {   
+//		            key.add(entry.getKey());  
+//		        }  
+//		        value.add(entry.getValue());  
+//		    }  
+//		    if (index == 0) {  
+//		        allList.add(key);  
+//		    }  
+//		    allList.add(value);  
+//		    index++;  
+//		}  
+		ret.put("info",QueryName);
+		ret.put("itema", itema);
+		return ret;
+	}
 
 	@Override
 	public Map<String, Object> getShakePageData() {
@@ -3829,6 +3811,23 @@ public class UserServiceImpl implements UserServiceI {
 		return null;
 	}
 
+	@Override
+	public Map<String, Object> selectMobile(String phone, String hsCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public Map<String, Object> getVersion(String version) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+//
+//	@SuppressWarnings("rawtypes")
+//	@Override
+//	public List<Map> getMobJect(String QueryName) {
+//		// TODO Auto-generated method stub
+//		return hongShiMapper.getmobJect(QueryName);
+//	}
 
 }

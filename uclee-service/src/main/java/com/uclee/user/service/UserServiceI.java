@@ -232,8 +232,7 @@ public interface UserServiceI {
 	List<Payment> selectMemberPayment();
 
 	Map<String, Object> getBossCenter(String phone, String hsCode);
-	//Map<String, Object> getMobile(String phone, String hsCode);
-
+	
 	Map<String, Object> getShakePageData();
 
 	Map<String, Object> firstDrawHandler();
@@ -264,5 +263,12 @@ public interface UserServiceI {
 
     int getUnCommentCount(Integer userId);
 
+	Map<String, Object> selectMobile(String phone, String hsCode);
+	
+	Map<String, Object> getVersion(String version);
+
 	Map<String, Object> getMobile(String phone, String hsCode);
+	
+	Map<String, Object> getMobJect(String QueryName);
+	
 }

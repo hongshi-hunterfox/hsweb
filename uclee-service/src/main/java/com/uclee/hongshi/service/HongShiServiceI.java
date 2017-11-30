@@ -14,8 +14,7 @@ public interface HongShiServiceI {
     List<HongShiCoupon> getHongShiCoupon(String cWeiXinCode);
     List<HongShiOrderItem> getHongShiOrderItems(Integer id);
     HongShiGoods getHongShiGoods(String code);
-
     HongShiStore getHongShiStoreById();
-
     List<HongShiProduct> getHongShiProduct();
+   
 }

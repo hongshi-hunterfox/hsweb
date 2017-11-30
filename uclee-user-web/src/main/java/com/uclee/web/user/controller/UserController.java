@@ -28,12 +28,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+//import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -920,9 +921,6 @@ public class UserController extends CommonUserHandler{
 				}
 			}
 		}
-//		if(money==null&&freights!=null&&freights.size()>0){
-//			money=freights.get(freights.size()-1).getMoney().doubleValue();
-//		}
 		if(money==null){
 			money=(double) 0;
 		}
@@ -1255,7 +1253,7 @@ public class UserController extends CommonUserHandler{
 	
 	/** 
 	* @Title: bossCenter 
-	* @Description: 老板助手数据接口 7
+	* @Description: 老板助手数据接口 
 	* @param @param request
 	* @param @param phone
 	* @param @param hsCode
@@ -1269,12 +1267,18 @@ public class UserController extends CommonUserHandler{
 		return userService.getBossCenter(phone,hsCode);
 	}
 	
-//	/**
-//	 * 
-//	 */
-//	@RequestMapping("/mobileCenter")
-//	public @ResponseBody Map<String, Object> mobileCenter(HttpServletRequest request,String phone,String hsCode){
-//		return userService.getMobile(phone, hsCode);
-//	}
+	/**
+	 * 
+	 */
+	@RequestMapping("/assistant")
+	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName){
+//		Map<String, Object>  ret = new HashMap<String, Object>();
+//		ret.put("info",QueryName);
+//		@SuppressWarnings("rawtypes")
+//		List<Map> itema = hongShiMapper.getmobJect(QueryName);
+//		ret.put("itema", itema);
+//		return ret;	
+		return userService.getMobJect(QueryName);
+	}
 	
-	 }
+ }

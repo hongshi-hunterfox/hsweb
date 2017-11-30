@@ -80,10 +80,10 @@ public class DuobaoServiceImpl implements DuobaoServiceI {
 	private SpecificationMapper specificationMapper;
 	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
-	private String wc_notify_url = "http://cooka.vicp.cc/seller/WCNotifyHandler";
-	private String wc_general_order = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-	private String alipay_notify_url = "http://cooka.vicp.cc/cooka-finance-web/alipayNotifyHandler";
-	private String alipay_return_url = "http://cooka.vicp.cc/fastpaysuccess/";
+//	private String wc_notify_url = "http://cooka.vicp.cc/seller/WCNotifyHandler";
+//	private String wc_general_order = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+//	private String alipay_notify_url = "http://cooka.vicp.cc/cooka-finance-web/alipayNotifyHandler";
+//	private String alipay_return_url = "http://cooka.vicp.cc/fastpaysuccess/";
 	
 	@Override
 	public List<Category> getAllCat() {

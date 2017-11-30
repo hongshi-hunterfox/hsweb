@@ -41,4 +41,5 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	public Integer changeVip(Integer cVipLk) {
 		return hongShiVipMapper.changeVip(cVipLk);
 	}
+
 }

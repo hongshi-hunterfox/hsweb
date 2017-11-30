@@ -18,7 +18,4 @@ public interface HongShiVipMapper {
 
 	Integer changeVip(Integer cVipLk);
 	
-	//int changeVip(Integer cVipLk);
-	
-	
 }

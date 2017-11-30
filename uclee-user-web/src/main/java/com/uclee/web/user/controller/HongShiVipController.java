@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.math.BigDecimal;
@@ -140,7 +141,6 @@ public class HongShiVipController {
 		}
 		
 	
-	
 	/** 
 	* @Title: addVipInfo 
 	* @Description: 绑定会员卡处理
@@ -160,8 +160,8 @@ public class HongShiVipController {
 			ret.put("reason", "没传数据");
 			return ret;
 		}
-		if(vip.getcMobileNumber()==null||vip.getcMobileNumber().isEmpty()){
-			if(vip.getCode()==null||vip.getCode().isEmpty()){
+		if(vip.getcMobileNumber()==null||!vip.getcMobileNumber().isEmpty()){
+			if(vip.getCode()==null||!vip.getCode().isEmpty()){
 				if(!VerifyCode.checkVerifyCode(session,vip.getcMobileNumber(),vip.getCode())){
 					ret.put("reason", "验证码错误");
 					return ret;

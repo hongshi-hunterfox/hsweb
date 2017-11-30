@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.uclee.fundation.data.mybatis.model.Product;
+import com.uclee.fundation.data.mybatis.model.SalesRanking;
 import com.uclee.fundation.data.web.dto.ProductDto;
 
 public interface ProductMapper {

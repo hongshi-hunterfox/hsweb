@@ -8,8 +8,10 @@ import com.uclee.hongshi.service.HongShiServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by super13 on 6/1/17.
@@ -70,6 +72,7 @@ public class HongShiServiceImpl implements HongShiServiceI{
     public HongShiStore getHongShiStoreById() {
         return null;
     }
+
 
 	
    
