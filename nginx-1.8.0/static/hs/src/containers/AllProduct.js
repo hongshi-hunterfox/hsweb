@@ -219,7 +219,6 @@ class AllProduct extends React.Component{
 				<div className="all-prod">
 					<SearchBar/>
 					<AllProductsTab query={this.props.location.query} cats={this.state.cat}/>
-
 					{/*<div className="all-prod-items">
 						{products}
 					</div>*/}

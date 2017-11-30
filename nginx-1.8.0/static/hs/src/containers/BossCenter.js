@@ -44,23 +44,10 @@ class BossCenter extends React.Component {
           napaStores:res.body.napaStores,
           items:res.body.items,
           itemo:res.body.itemo
+          	
         })
       })
      
-//   req
-//    .get('/uclee-user-web/mobileCenter')
-//    .query({
-//      phone: this.state.phone,
-//      hsCode:this.state.hsCode
-//    })
-//    .end((err, res) => {
-//    	
-//    	this.setState({
-//    		itemo:res.body.itemo
-//    	})
-//    	//return(res);
-//    })
-
   }
 
   
@@ -88,20 +75,18 @@ class BossCenter extends React.Component {
             </div>
         );
     })
-    //图表列表
+    //图表列表onClick={()=>{window.location='/Assistant?FunctionName=' + item.name}}
 	var itemo = this.state.itemo.map((item,index)=>{
+		
         return (
-            <div className='item' key={index.caption}>
-                <div className='top'>
-                
-                {item.types}
-                </div>
-                <div className='bottom'>
-         		{item.caption}
-                </div>
+            <div className='item' key={index} onClick={()=>{window.location='/Assistant?QueryName=' + item.name}}>
+              <div className='top'>{item.types}</div>
+              <div className='bottom'>{item.caption}</div>
             </div>
         );
+       
     })
+		
     return (
       <DocumentTitle title="老板助手">
         <div className="boss-center">
@@ -115,15 +100,15 @@ class BossCenter extends React.Component {
             </div>
             <div className='boss-center-top'>
               {items}
-            </ div>
+            </div>
             <div className='boss-center-bottom'>
-              <a href="/Assistant">{itemo}</a>
+              {itemo}
             </div>
         </div>
       </DocumentTitle>
-      )
+     )
+		
   }
 }
-  
 
 export default BossCenter

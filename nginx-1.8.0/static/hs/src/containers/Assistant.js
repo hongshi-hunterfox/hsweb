@@ -1,95 +1,65 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import { Link } from 'react-router'
+import './boss-center.css'
 import req from 'superagent'
-//import './add-store.css'
+import './member-card.css'
 
 class Assistant extends React.Component {
-  
-  constructor(props) {
+constructor(props) {
     super(props)
     this.state = {
-      err: null,
-      list:[]
+      QueryName:this.props.location.query.QueryName,
+       itema:[],
+       info:''
     }
+}
 
-    this.lat=23.12463
-    this.lng=113.36199
-
-  }
-
-  componentDidMount() {
+componentDidMount() {
+    
     req
-      .get('/uclee-backend-web/phoneUserList')
+      .get('/uclee-user-web/assistant')
+      .query({
+        QueryName:this.state.QueryName        
+      })
       .end((err, res) => {
-        if (err) {
-          return err
-        }
-
+     	if (err) {
+          info:err.ToString();
+       	}
         this.setState({
-          list: res.body
+          	info:res.body.info,
+          	itema:res.body.itema
         })
       })
-  }
+     
+}
 
-  render() {
-    return (
-      <DocumentTitle title="加盟商管理">
-        <div className="user-list">
-         {/* 类名加上页面前缀防止冲突 */}
-        <Link to="addUser" style={{marginRight:'5px',marginBottom:'5px'}} className="btn btn-success">添加用户</Link>
-        <Link to="napaStoreList" style={{marginRight:'5px',marginBottom:'5px'}} className="btn btn-success">门店列表</Link>
-          <table className="table table-bordered user-list">
-            <thead>
-              <tr>
-                <th width="33%"> 名字</th>
-                <th width="33%"> 手机</th>
-                <th width="33%"> 操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                this.state.list.map((item, index) => {
-                  return (
-                    <tr key={index}>
-                        <td width="20%"> {item.name}</td>
-                        <td width="20%"> {item.phone}</td>
-                        <td width="60%">
-                          <Link style={{marginRight:'5px'}} to={`/editPhoneUser?userId=${item.userId}`} className="btn btn-danger">编辑用户</Link>
-                          <button style={{marginRight:'5px'}} onClick={this._delete_user.bind(this,item.userId)} className="btn btn-warning delete-user">删除用户</button>
-                        </td>
-                    </tr>
-                    )
-                })
-              }
-              
-            </tbody>
-          </table>
 
+   
+render() {
+	var cTitle = this.state.itema.map((item,index)=>{
+		return (
+			<div key={index}>
+			 <div>{item.SortName} {item.GoodsName} {item.Sales}</div>
+			 <div>{item.来源} {item.业务ID} {item.结算ID} {item.结算金额} {item.建立时间}</div>
+			 <div>{item.序号} {item.营业额} {item.现金}</div>
+			 <div>{item.lastversion}</div>
+			</div>
+		)
+	})
+  return (
+      <DocumentTitle title="小助手">
+        <div className="boss-center">
+        <img src='/images/data.png' alt=""/>
+            <div className='boss-center-bottom'>
+            <div className="member-card-item">
+            	<p>POST QueryName:{this.state.QueryName}</p>
+            	<p>Request info:{this.state.info}</p>
+                <p>{cTitle}</p>
+            </div>
+            </div>
         </div>
       </DocumentTitle>
-      )
-  }
-  _delete_user = (id) => {
-    if(confirm("确认要删除该用户吗？")){
-        req
-          .post('/uclee-backend-web/doDeletePhoneUser?userId='+id)
-          .end((err, res) => {
-            if (err) {
-              return err
-            }
-            console.log(res.body)
-            if(res.body.result==="success"){
-              alert("删除成功！");
-              window.location.reload();
-            }else{
-              alert("删除失败！");
-            }
-          })
-
-    }
-
-  }
-
+    )
+}
 }
 export default Assistant
