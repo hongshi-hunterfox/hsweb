@@ -61,10 +61,8 @@ class PhoneUserList extends React.Component {
                     )
                 })
               }
-              
             </tbody>
           </table>
-
         </div>
       </DocumentTitle>
       )
