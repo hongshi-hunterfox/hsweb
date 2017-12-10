@@ -1,6 +1,8 @@
 package com.duobao.user.service;
 
 import com.alibaba.fastjson.JSON;
+import com.uclee.dynamicDatasource.DataSourceFacade;
+import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
 import com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord;
 import com.uclee.fundation.data.mybatis.model.HongShiVip;
@@ -15,17 +17,13 @@ public class TestCallableInSQLServer extends AbstractServiceTests{
 	
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
-	
+	@Autowired
+	private DataSourceFacade datasource;
 	@Test
 	public void testAddVip(){
-		HongShiVip dd=new HongShiVip()
-				.setcMobileNumber("13423456666")
-				.setcWeiXinCode("gfgwwrg")
-				.setcBirthday("2000-10-22")
-				.setbIsLunar(1)
-				;
-		Integer res=hongShiVipService.addHongShiVipInfo(dd);
-		System.out.println("res:"+res);
+		datasource.switchDataSource("kf");
+		List<HongShiVip> dd= hongShiVipService.getVipInfo("ocydnwkicQdKQgz5x4Pedh5LpFUM");
+		System.out.println("res:"+JSON.toJSONString(dd));
 	}
 	
 	@Test
