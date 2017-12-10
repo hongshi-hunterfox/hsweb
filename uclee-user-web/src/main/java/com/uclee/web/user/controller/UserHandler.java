@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.uclee.fundation.data.mybatis.mapping.CommentMapper;
+import com.uclee.fundation.data.mybatis.model.*;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -24,15 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
-import com.uclee.fundation.data.mybatis.model.Cart;
-import com.uclee.fundation.data.mybatis.model.DeliverAddr;
-import com.uclee.fundation.data.mybatis.model.FinancialAccount;
-import com.uclee.fundation.data.mybatis.model.Payment;
-import com.uclee.fundation.data.mybatis.model.PaymentOrder;
-import com.uclee.fundation.data.mybatis.model.Product;
-import com.uclee.fundation.data.mybatis.model.Specification;
-import com.uclee.fundation.data.mybatis.model.SpecificationValue;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.fundation.dfs.fastdfs.data.Result;
@@ -53,6 +46,8 @@ public class UserHandler {
 	private UserServiceI userService;
 	@Autowired
 	private DuobaoServiceI duobaoService;
+	@Autowired
+	private CommentMapper commentMapper;
 	
 	/** 
 	* @Title: invitation 
@@ -424,6 +419,40 @@ public class UserHandler {
 		paymentStrategyResult = userService.getAlipayForFastPay(paymentOrderTmp, title, null);
 		return paymentStrategyResult;
 	}
+
+	/**
+	 * 评论
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/commentHandler",method = RequestMethod.POST)
+	public @ResponseBody Map<String,Object> commentHandler(HttpServletRequest request,@RequestBody Comment comment) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		logger.info(JSON.toJSONString(comment));
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		comment.setUserId(userId);
+		if(comment.getOrderSerialNum()==null||comment.getQuality()==null||comment.getService()==null||comment.getDeliver()==null){
+			map.put("reason","参数错误");
+			map.put("result",false);
+			return map;
+		}
+		Comment tmp = commentMapper.selectByOrderId(comment.getOrderSerialNum());
+		if(tmp!=null){
+			map.put("reason","订单已评论，请勿重复评论");
+			map.put("result",false);
+			return map;
+		}
+		if(commentMapper.insertSelective(comment)>0){
+			map.put("result",true);
+			return map;
+		}else{
+			map.put("reason","网络繁忙，请稍后重试");
+			map.put("result",false);
+			return map;
+		}
+	}
+
 	/** 
 	* @Title: paymentHandler 
 	* @Description: 处理微信支付，会员卡支付，支付宝支付预处理请求

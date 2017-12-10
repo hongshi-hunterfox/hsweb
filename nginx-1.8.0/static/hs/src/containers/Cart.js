@@ -22,7 +22,8 @@ class Cart extends React.Component {
     this.state = {
       loading: true,
       list: [],
-      editMode: false
+      editMode: false,
+
     }
   }
 
@@ -185,6 +186,9 @@ class Cart extends React.Component {
                         {'合计：¥' + totalPrice.toString()}
                       </div>
                       <div className="cart-settle-info">不含运费</div>
+                      <div className="cart-settle-go left" onClick={()=>{window.location='/'}}>
+                        <span>再逛逛</span>
+                      </div>
                       <div className="cart-settle-go" onClick={this._go}>
                         <span>结算</span>
                       </div>
@@ -356,21 +360,41 @@ class Cart extends React.Component {
   }
 
   _go = () => {
-    var chekedItem = this.state.list.filter(item => {
-      return item.checked
-    })
 
-    if (!chekedItem.length) {
-      alert('请选择要结算的商品')
-      return
-    }
+    
+  var chekedItem = this.state.list.filter(item => {
+        return item.checked
+      })
 
-    var checkedCartIds = chekedItem.map(item => {
-      return item.cartId
-    })
-    sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
-    sessionStorage.setItem('isFromCart', 1)
-    window.location = '/order'
+      if (!chekedItem.length) {
+        alert('请选择要结算的商品')
+        return
+      }
+
+      var checkedCartIds = chekedItem.map(item => {
+        return item.cartId
+      })
+
+      var data = {};
+      data.cartIds = checkedCartIds;
+
+      req.post('/uclee-user-web/stockCheck').send(data).end((err, res) => {
+        if (err) {
+          return err
+        }
+        var resJson = JSON.parse(res.text)
+        if (!resJson.result) {
+          alert(resJson.reason);
+          return ;
+        }else{
+          sessionStorage.setItem('cart_item_ids', JSON.stringify(checkedCartIds))
+          sessionStorage.setItem('isFromCart', 1)
+          sessionStorage.removeItem('isSelfPick');
+          window.location = '/order'
+        }
+      })
+    
+    
   }
 }
 

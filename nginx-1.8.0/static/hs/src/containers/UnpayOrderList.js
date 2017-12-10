@@ -44,8 +44,15 @@ class UnpayOrderList extends React.Component {
 					<div className="order-list-bottom">
 						<span className="pull-right total">优惠：￥{item.discount?item.discount:0}</span>
 					</div>
+					{
+						item.cut>0?
+							<div className="order-list-bottom">
+								<span className="pull-right total">满减：￥{item.cut?item.cut:0}</span>
+							</div>
+						:null
+					}
 					<div className="order-list-bottom">
-						<span className="pull-right total">合计：￥{item.totalPrice+item.shippingCost-item.discount>0?item.totalPrice+item.shippingCost-item.discount:0}</span>
+						<span className="pull-right total">合计：￥{item.totalPrice+item.shippingCost-item.discount-item.cut>0?(item.totalPrice+item.shippingCost-item.discount-item.cut).toFixed(2):0}</span>
 					</div>
 					<div className="order-list-button">
 						<span className="pull-right text" onClick={this._delHandler.bind(this,item.orderSerialNum)}>删除订单</span>
@@ -59,6 +66,12 @@ class UnpayOrderList extends React.Component {
 		return (
 			<DocumentTitle title="我的订单">
 				<div className="order" >
+					<div className='order-top'>
+						<span onClick={()=>{window.location='/order-list'}} className='order-top-item'>全部</span>
+						<span onClick={()=>{window.location='/unpay-order-list'}} className='order-top-item active'>待支付</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=0'}} className={'order-top-item'}>制作配送中</span>
+						<span onClick={()=>{window.location='/order-list?isEnd=1'}} className={'order-top-item'}>已完成</span>
+					</div>
 					{items}
 					<div className="bottom-text">
 						O(∩_∩)O 啊哦，没有更多订单啦~~~

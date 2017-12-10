@@ -18,6 +18,24 @@ public class Product {
     
     private BigDecimal price;
 
+    private Boolean isShippingFree;
+
+    public Boolean getShippingFree() {
+        return isShippingFree;
+    }
+
+    public void setShippingFree(Boolean shippingFree) {
+        isShippingFree = shippingFree;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
     public BigDecimal getPrice() {
 		return price;
 	}

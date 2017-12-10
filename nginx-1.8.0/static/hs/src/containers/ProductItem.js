@@ -5,7 +5,7 @@ class ProductItem extends React.Component {
 	render() {
 		return (
 			<div className="product-item">
-				<div
+				<div className='product-item-img'
 					onClick={this._location.bind(
 						this,
 						"/detail/" + this.props.productId
@@ -13,7 +13,7 @@ class ProductItem extends React.Component {
 				>
 					<img
 						src={this.props.image}
-						className="product-item-img"
+						className="image"
 						alt=""
 					/>
 				</div>
@@ -29,7 +29,8 @@ class ProductItem extends React.Component {
 						{this.props.title}
 					</div>
 					<div className="product-item-price">
-						￥{this.props.price}
+						<div className='left'>¥{this.props.price}</div>
+						<div className='right' onClick={this.props._buyClick.bind(this,this.props.productId)}>buy</div>
 					</div>
 				</div>
 			</div>

@@ -3,7 +3,6 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import Navi from './Navi'
 var EditAddrUtil = require('../utils/EditAddrUtil.js')
-// var FormUtil = require('../utils/FormUtil.js')
 var fto = require('form_to_object')
 import ErrorMessage from './ErrorMessage'
 var browserHistory = require('react-router').browserHistory

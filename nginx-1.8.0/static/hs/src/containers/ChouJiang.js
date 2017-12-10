@@ -1,7 +1,6 @@
 require("./choujiang.css")
 import React from "react"
 import DocumentTitle from "react-document-title"
-// import req from 'superagent'
 var ChoujiangUtil = require("../utils/ChoujiangUtil.js")
 import Navi from './Navi'
 class ChouJiang extends React.Component {

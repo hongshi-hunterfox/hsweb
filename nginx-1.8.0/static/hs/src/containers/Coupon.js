@@ -1,6 +1,7 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './coupon.css'
+import './order.css'
 import Navi from './Navi'
 import req from 'superagent'
 class Coupon extends React.Component{
@@ -60,7 +61,14 @@ class Coupon extends React.Component{
         });
         return(
         	<DocumentTitle title="我的优惠券">
-        		<div className="coupons">
+        		<div className="coupon">
+        		<div className="coupon-item">
+            <div className='bottom-line'>
+             <span className="date">
+               <font color="red" size='4' Face="楷体"><marquee loop='1'>已过期优惠券,已使用优惠券此页面会自动屏蔽不显示哦~~~</marquee></font>
+               </span>
+            </div>
+            </div>
         			{coupons}
         			{this.props.location.query.isFromOrder?<div className="coupon-bottom">
         				<button
@@ -80,6 +88,11 @@ class Coupon extends React.Component{
 					</div>:null
 					}
         			<Navi query={this.props.location.query}/>
+        		<div className="order">
+        			<div className="bottom-text"> 
+						O(∩_∩)O 啊哦，到底啦~~~
+					</div>
+					</div>
             	</div>
         	</DocumentTitle>
         );

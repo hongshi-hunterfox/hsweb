@@ -3,8 +3,6 @@ package com.uclee.fundation.data.mybatis.model;
 public class NapaStore {
     private Integer storeId;
 
-    private Integer userId;
-
     private String storeName;
 
     private String province;
@@ -37,14 +35,6 @@ public class NapaStore {
 
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getStoreName() {

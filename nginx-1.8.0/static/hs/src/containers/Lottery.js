@@ -20,7 +20,8 @@ class Lottery extends React.Component {
 			startTime:'',
 			endTime:'',
 			limits:0,
-			isSubscribe:false
+			isSubscribe:false,
+			rest:0
 		}
 
 		this.intID = null
@@ -44,7 +45,8 @@ class Lottery extends React.Component {
 					startTime:res.body.startTime,
 					endTime:res.body.endTime,
 					limits:res.body.limits,
-					isSubscribe:res.body.isSubscribe
+					isSubscribe:res.body.isSubscribe,
+					rest:res.body.rest
 				})
 			})
 	}
@@ -72,6 +74,7 @@ class Lottery extends React.Component {
 							抽奖时间：<div>{this.state.startTime}至{this.state.endTime}</div>
 					</div>
 					<div className="lottery-limits">每人每天限制次数：{this.state.limits}</div>
+					<div className="lottery-limits">剩余抽奖次数：{this.state.rest}</div>
 					<div className="lottery-items">
 						{
 							this.state.runing ?
@@ -110,6 +113,10 @@ class Lottery extends React.Component {
 		}
 		if(!this.state.isInTime){
 			alert('还没到开放时间，敬请期待');
+			return ;
+		}
+		if(!this.state.point&&this.state.point!==0){
+			alert('请先绑定会员');
 			return ;
 		}
 		if(this.state.point<this.state.cost){

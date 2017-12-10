@@ -4,7 +4,7 @@ import './recharge.css'
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 var RechargeUtil = require('../utils/RechargeUtil.js');
-
+import req from 'superagent'
 
 class PaymentMethod  extends React.Component {
 	constructor(props) {
@@ -60,7 +60,9 @@ class Recharge extends React.Component {
 			config:[],
 			hongShiVip:{},
 			type:1,
-			voucherText:''
+			voucherText:'',
+			extraData:{},
+			inTime:true
 	    }
 	  }
 
@@ -70,7 +72,8 @@ class Recharge extends React.Component {
 				payment:res.payment,
 				isWC:res.isWC,
 				config:res.config,
-				hongShiVip:res.hongShiVip
+				hongShiVip:res.hongShiVip,
+				extraData:res.extraData
 			});
 		}.bind(this));
 	}
@@ -78,9 +81,12 @@ class Recharge extends React.Component {
 	render() {
 		var money = this.state.config.map((item, index) => {
 				return (
-					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type)}>{item.money}</div>
+					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
 				);
 		});
+		console.log(this.state.extraData);
+		console.log(this.state.rechargeMoney);
+		console.log(this.state.extraData[this.state.rechargeMoney]);
 		return (
 			<DocumentTitle title="充值">
 				<div className='payment'>
@@ -92,10 +98,31 @@ class Recharge extends React.Component {
 						{money}
 
 					</div>
-					{this.state.rewards!==0||this.state.voucherText!==null?<div className='payment-note'>已选充值优惠： 充值<span className='gold'>{this.state.rechargeMoney}</span>，赠送<span className='gold'>{this.state.type===1?this.state.rewards:this.state.voucherText}</span></div>:null}
-					{this.state.rewards!==0?<div className='payment-info'>
-						实际到账: <span className='gold'>{this.state.type===1?this.state.rechargeMoney+this.state.rewards:this.state.rechargeMoney}</span>，应付金额：<span className='gold'>{this.state.rechargeMoney}</span>
+					{this.state.rewards!==0&&this.state.inTime?<div className='payment-note'>已选充值优惠： 充值<span className='gold'>{this.state.rechargeMoney}</span>，赠送<span className='gold'>{this.state.rewards}</span></div>:null}
+					{this.state.rewards!==0&&this.state.inTime?<div className='payment-info'>
+						实际到账: <span className='gold'>{this.state.rechargeMoney+this.state.rewards}</span>，应付金额：<span className='gold'>{this.state.rechargeMoney}</span>
 					</div>:null}
+					{
+						this.state.extraData&&this.state.extraData[this.state.rechargeMoney*100]&&this.state.rechargeMoney!==0?
+						<div className='payment-extra'>
+						{
+							<div className='note'>
+								额外赠送：
+							</div>
+						}
+						{
+							this.state.extraData&&this.state.extraData[this.state.rechargeMoney*100]?this.state.extraData[this.state.rechargeMoney*100].map((item,index)=>{
+								return(
+									<div className='payment-extra-item'>
+										{item}
+									</div>
+								)
+							}):null
+						}
+						</div>
+						:null
+					}
+					
 					<PaymentMethod data={this.state} _paymentOnChange={this._paymentOnChange}/>
 					<div className='payment-bottom'>
 						<button type="button" className="btn btn-default payment-bottom-button" onClick={this._submitHandler}>马上支付</button>
@@ -106,20 +133,13 @@ class Recharge extends React.Component {
 		);
 	}
 
-	_clickHandler = (money,rewards,voucherText,type) =>{
-		if(type===1){
+	_clickHandler = (money,rewards,voucherText,type,inTime) =>{
 			this.setState({
 				rechargeMoney:money,
 				rewards:rewards,
-				type:type
+				type:type,
+				inTime:inTime
 			});
-		}else{
-			this.setState({
-				rechargeMoney:money,
-				voucherText:voucherText,
-				type:type
-			});
-		}
 	}
 	_getMarkup = () => {
 		return {
@@ -169,42 +189,93 @@ class Recharge extends React.Component {
 			alert("充值金额需大于0");
 			return;
 		}
-
-		var data={};
-		data.paymentId=this.state.paymentId;
-		data.money=this.state.rechargeMoney;
-		RechargeUtil.submitHandler(data, function(res) {
-			console.log(res);
-			if(res.result===true){
-				if (res.type === 'WC') {
-					if(res.result==='failed'){
-						alert('网络繁忙，请稍后再试');
-						return false;
-					}
-					res['package'] = res.prePackage;
-					this._getWeixinConfig(res);
-					return false;
-				}else if (res.type === 'alipay') {
-					if(res.isWC){
-						window.location.href = '/seller/paymentAlipay?loginRequired=false&paymentSerialNum=' + res.paymentSerialNum + "&payType=" + res.payType+"&merchantCode=" + localStorage.getItem('merchantCode');
+		req
+        .get('/uclee-user-web/getRechargeAble?money=' + this.state.rechargeMoney)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          var data = res.body;
+          if(!data.result){
+          	var conf = confirm('检测到已选优惠活动已过期，是否继续充值？');
+          	if(!conf){
+          		return;
+          	}else{
+          		var data={};
+				data.paymentId=this.state.paymentId;
+				data.money=this.state.rechargeMoney;
+				RechargeUtil.submitHandler(data, function(res) {
+					console.log(res);
+					if(res.result===true){
+						if (res.type === 'WC') {
+							if(res.result==='failed'){
+								alert('网络繁忙，请稍后再试');
+								return false;
+							}
+							res['package'] = res.prePackage;
+							this._getWeixinConfig(res);
+							return false;
+						}else if (res.type === 'alipay') {
+							if(res.isWC){
+								window.location.href = '/seller/paymentAlipay?loginRequired=false&paymentSerialNum=' + res.paymentSerialNum + "&payType=" + res.payType+"&merchantCode=" + localStorage.getItem('merchantCode');
+							}else{
+								this.setState({
+									html: res.html
+								});
+								setTimeout(function() {
+									document.forms['alipaysubmit'].submit();
+								}, 0);
+							}
+						}	
 					}else{
-						this.setState({
-							html: res.html
-						});
-						setTimeout(function() {
-							document.forms['alipaysubmit'].submit();
-						}, 0);
+						if(res.reason==='money_not_enough'){
+							alert("余额不足，请选择其他支付方式");
+						}else{
+							alert("网络繁忙，请稍后再试");
+						}
 					}
-				}	
-			}else{
-				if(res.reason==='money_not_enough'){
-					alert("余额不足，请选择其他支付方式");
-				}else{
-					alert("网络繁忙，请稍后再试");
-				}
-			}
-			
-		}.bind(this));
+					
+				}.bind(this));
+          	}
+          }else{
+          	var data={};
+				data.paymentId=this.state.paymentId;
+				data.money=this.state.rechargeMoney;
+				RechargeUtil.submitHandler(data, function(res) {
+					console.log(res);
+					if(res.result===true){
+						if (res.type === 'WC') {
+							if(res.result==='failed'){
+								alert('网络繁忙，请稍后再试');
+								return false;
+							}
+							res['package'] = res.prePackage;
+							this._getWeixinConfig(res);
+							return false;
+						}else if (res.type === 'alipay') {
+							if(res.isWC){
+								window.location.href = '/seller/paymentAlipay?loginRequired=false&paymentSerialNum=' + res.paymentSerialNum + "&payType=" + res.payType+"&merchantCode=" + localStorage.getItem('merchantCode');
+							}else{
+								this.setState({
+									html: res.html
+								});
+								setTimeout(function() {
+									document.forms['alipaysubmit'].submit();
+								}, 0);
+							}
+						}	
+					}else{
+						if(res.reason==='money_not_enough'){
+							alert("余额不足，请选择其他支付方式");
+						}else{
+							alert("网络繁忙，请稍后再试");
+						}
+					}
+					
+				}.bind(this));
+          }
+        })
+		
 	}
 }
 

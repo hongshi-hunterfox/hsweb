@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Comment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="order_serial_num" property="orderSerialNum" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="deliver" property="deliver" jdbcType="INTEGER" />
+    <result column="service" property="service" jdbcType="INTEGER" />
+    <result column="quality" property="quality" jdbcType="INTEGER" />
+    <result column="back_title" property="backTitle" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="back_time" property="backTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, order_serial_num, title, deliver, service, quality, back_title,time,back_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_comment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_comment
+    where order_serial_num = #{orderSerialNum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_comment order by time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_comment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    insert into web_comment (id, user_id, order_serial_num,
+      title, deliver, service, 
+      quality, back_title,time,back_time
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderSerialNum,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR}, #{deliver,jdbcType=INTEGER}, #{service,jdbcType=INTEGER}, 
+      #{quality,jdbcType=INTEGER}, #{backTitle,jdbcType=VARCHAR},#{time,jdbcType=TIMESTAMP},#{backTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    insert into web_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="orderSerialNum != null" >
+        order_serial_num,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="deliver != null" >
+        deliver,
+      </if>
+      <if test="service != null" >
+        service,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="backTitle != null" >
+        back_title,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="backTime != null" >
+        back_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderSerialNum != null" >
+        #{orderSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="deliver != null" >
+        #{deliver,jdbcType=INTEGER},
+      </if>
+      <if test="service != null" >
+        #{service,jdbcType=INTEGER},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=INTEGER},
+      </if>
+      <if test="backTitle != null" >
+        #{backTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backTime != null" >
+        #{backTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    update web_comment
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderSerialNum != null" >
+        order_serial_num = #{orderSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="deliver != null" >
+        deliver = #{deliver,jdbcType=INTEGER},
+      </if>
+      <if test="service != null" >
+        service = #{service,jdbcType=INTEGER},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=INTEGER},
+      </if>
+      <if test="backTitle != null" >
+        back_title = #{backTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backTime != null" >
+        back_time = #{backTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Comment" >
+    update web_comment
+    set user_id = #{userId,jdbcType=INTEGER},
+      orderSerialNum = #{orderSerialNum,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      deliver = #{deliver,jdbcType=INTEGER},
+      service = #{service,jdbcType=INTEGER},
+      quality = #{quality,jdbcType=INTEGER},
+      back_title = #{backTitle,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      back_time = #{backTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

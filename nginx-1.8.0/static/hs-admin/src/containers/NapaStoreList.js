@@ -31,7 +31,7 @@ class NapaStoreList extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title="store-list Page">
+      <DocumentTitle title="门店列表">
         <div className="store-list">
           {/* 类名加上页面前缀防止冲突 */}
           <Link to={"addStore?userId="+this.props.location.query.userId} className="btn btn-success">添加店铺</Link>

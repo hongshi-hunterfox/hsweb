@@ -28,4 +28,5 @@ public interface SpecificationValueMapper {
 
 	List<SpecificationValue> selectByProductId(Integer productId);
 
+    List<String> selectHsCodeByProductId(Integer productId);
 }

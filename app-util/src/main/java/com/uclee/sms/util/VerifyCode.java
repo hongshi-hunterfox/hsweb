@@ -1,23 +1,25 @@
 package com.uclee.sms.util;
 
 import com.taobao.api.ApiException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Random;
 
 public class VerifyCode {
 	
     private static final Logger logger = LoggerFactory.getLogger(VerifyCode.class);
 	
-	public static boolean sendVerifyCode(HttpSession session,String phone,String appkey,String secret,String signName){
+	public static boolean sendVerifyCode(HttpSession session,String phone,String appkey,String secret,String signName,String TemplateCode){
         String code = getCode();
         System.out.println("verifyCode:"+code);
 		System.out.println("phone:"+phone);
         try {
         	session.setAttribute("v_code",code);
-			boolean responseCode = SMSMessageUtil.send(phone, code,appkey,secret,signName);
+			boolean responseCode = SMSMessageUtil.send(phone, code,TemplateCode,appkey,secret,signName);
             return responseCode;
         } catch (ApiException e) {
             if (logger.isErrorEnabled()) {
@@ -48,4 +50,7 @@ public class VerifyCode {
 		return false;
 	}
 	
+	public static void main(String[] args){
+		System.out.println("");
+	}
 }

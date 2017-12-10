@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import req from 'superagent'
 import StoreBar from './components/StoreBar'
 
-function authURL(u) {
+function authURL(u, appId) {
   return (
-    'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx68abe3fb2a71dcc7&redirect_uri=' +
+    'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' +
+    appId +
+    '&redirect_uri=' +
     encodeURIComponent(u) +
     '&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
   )
@@ -35,46 +37,49 @@ class App extends Component {
       })
     }
 
-    var pathname = this.props.location.pathname
-    var noLogin = pathname === '/' || pathname.indexOf('/detail/') !== -1
-    if (noLogin) {
-      return this.setState({
-        loading: false
+    req
+      .get('/uclee-user-web/getAppId')
+      .query({
+        merchantCode: localStorage.getItem('merchantCode')
       })
-    }
+      .end((err, resAppId) => {
+        if (err) {
+          return err
+        }
 
-    this._sendMerchantCode((err, res) => {
-      if (err) {
-        alert('商户信息不正确，请重新从公众号打开')
-        return err
-      }
+        this._sendMerchantCode((err, res) => {
+          if (err) {
+            alert('商户信息不正确，请重新从公众号打开')
+            return err
+          }
 
-      if (!this.state.loading) {
-        return
-      }
+          /*if (!this.state.loading) {
+            return
+          }*/
 
-      // 有 code 访问 callback
-      if (q.code) {
-        this._wxCallback(() => {
-          this.setState({
-            loading: false
-          })
-        })
-        return
-      } else {
-        // 没有 code，检查登录
-        this._log(yes => {
-          if (yes) {
-            this.setState({
-              loading: false
+          // 有 code 访问 callback
+          if (q.code) {
+            this._wxCallback(() => {
+              this.setState({
+                loading: false
+              })
             })
+            return
+          } else {
+            // 没有 code，检查登录
+            this._log(yes => {
+              if (yes) {
+                this.setState({
+                  loading: false
+                })
+              }
+            }, resAppId.text)
           }
         })
-      }
-    })
+      })
 
-    if(localStorage.getItem('merchantCode')){
-        req
+    if (localStorage.getItem('merchantCode')) {
+      req
         .get('/uclee-user-web/getPageTitle')
         .query({
           mCode: localStorage.getItem('merchantCode')
@@ -84,20 +89,21 @@ class App extends Component {
             return err
           }
 
-          document.title = res.body.merchantName;
+          document.title = res.body.merchantName
         })
     }
   }
 
-  _log = cb => {
+  _log = (cb, appId) => {
     req.get('/uclee-user-web/getUserInfo').end((err, res) => {
       if (err) {
+        window.location='/';
         return err
       }
 
       // 没有登录
       if (!res.body.nickName) {
-        window.location = authURL(window.location.href)
+        window.location = authURL(window.location.href, appId)
         return
       }
 
@@ -146,12 +152,15 @@ class App extends Component {
       pathname === '/' ||
       pathname.indexOf('/detail/') !== -1 ||
       pathname === '/cart'
-       /*|| pathname === '/order'*/
+    /*|| pathname === '/order'*/
 
     return (
       <div className="app">
         {this.state.loading
-          ? <div className="text-center">微信授权中...</div>
+          ? <div className="text-center">
+          					微信授权中
+          <i className="fa fa-spinner fa-pulse"></i>
+          </div>
           : <div className="main">
               {showStoreBar ? <StoreBar /> : null}
 

@@ -24,11 +24,12 @@ class Product extends React.Component {
       currentSpec: {
         storeIds: []
       },
-
+      shippingFree:false,
       text: '',
       title: '',
       categoryId: '',
-      images: []
+      images: [],
+      sale:0
     }
 
     this.hongShiProductById = {}
@@ -85,7 +86,32 @@ class Product extends React.Component {
                 </select>
               </div>
             </div>
-
+            <div className="form-group">
+              <label className="control-label col-md-3">销量：</label>
+              <div className="col-md-9">
+                <input
+                  type="text"
+                  name="sale"
+                  className="form-control"
+                  value={this.state.sale}
+                  onChange={this._simpleInputChange}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">是否免运费：</label>
+              <div className="col-md-9">
+                <select
+                  name="shippingFree"
+                  className="form-control"
+                  value={this.state.shippingFree}
+                  onChange={this._simpleInputChange}
+                >
+                  <option value={false}>否</option>
+                  <option value={true}>是</option>
+                </select>
+              </div>
+            </div>
             <div className="form-group">
               <label className="control-label col-md-3">图片：</label>
               <div className="col-md-9">
@@ -399,15 +425,18 @@ class Product extends React.Component {
         })
 
         this.setState({
+          shippingFree:res.body.productForm.shippingFree,
           title: res.body.productForm.title,
           categoryId: res.body.productForm.categoryId,
-          images: res.body.productForm.images,
+          //images: res.body.productForm.images,
+          images: res.body.productForm.images.filter((item) => (item !== null)),
           cat: res.body.cat,
           hongShiProduct: hongShiProduct,
           store: res.body.store,
-          text: res.body.productForm.description
+          text: res.body.productForm.description,
+          sale:res.body.sale
         })
-
+        console.log(this.state.shippingFree)
         hongShiProduct.forEach(item => {
           this.hongShiProductById[item.id] = item
         })
@@ -622,6 +651,26 @@ class Product extends React.Component {
         err: '请填写标题'
       })
     }
+    if (Number(data.sale)<0) {
+      return this.setState({
+        err: '销量不可以为负数'
+      })
+    }
+
+    var params=data.title+'';
+    if(this.props.params.id){
+        params=params+'&productId='+this.props.params.id;
+    }
+    req.get('/uclee-product-web/isTitleExisted?title='+params).end((err, res) => {
+      if (err) {
+        return err
+      }
+      var resJson = JSON.parse(res.text)
+      if(!resJson.result){
+        return this.setState({
+          err: '名称已存在'
+        });
+      }
 
     if (!data.images || !data.images.length) {
       return this.setState({
@@ -659,7 +708,7 @@ class Product extends React.Component {
 
     var foundWrongPrice = false
     data.valuePost.every(item => {
-      if (!/^\d+(,\d{1,2})?$/.test(item.hsPrice)) {
+      if (!/^\d+(\.\d{1,2})?$/.test(item.hsPrice)) {
         foundWrongPrice = true
         return false
       }
@@ -692,6 +741,8 @@ class Product extends React.Component {
         alert("网络繁忙，请稍后重试");
       }
     })
+    })
+
   }
 }
 

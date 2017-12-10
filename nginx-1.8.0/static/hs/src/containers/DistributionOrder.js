@@ -29,6 +29,10 @@ class DistributionOrder extends React.Component{
     _transHandler = () => {
         var conf = confirm('确定要转入到会员卡？');
         if(conf){
+            if(this.state.money<=0){
+                alert("无可转入余额");
+                return;
+            }
             request
               .get('/uclee-user-web/tranferBalance')
               .end((err, res) => {

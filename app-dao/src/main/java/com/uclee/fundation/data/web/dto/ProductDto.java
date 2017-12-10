@@ -12,9 +12,29 @@ public class ProductDto extends Product{
 	private Integer salesAmount;
 	
 	private String image;
-	
+
+	private String category;
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	private List<ProductImageLink> images;
-	
+
+	private List<String> salesInfo;
+
+	public List<String> getSalesInfo() {
+		return salesInfo;
+	}
+
+	public void setSalesInfo(List<String> salesInfo) {
+		this.salesInfo = salesInfo;
+	}
+
 	private List<Specification> specifications;
 	
 	private BigDecimal price;

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.uclee.fundation.data.mybatis.model.Product;
+import com.uclee.fundation.data.mybatis.model.SalesRanking;
 import com.uclee.fundation.data.web.dto.ProductDto;
 
 public interface ProductMapper {
@@ -24,5 +25,11 @@ public interface ProductMapper {
 
 	List<ProductDto> selectOneImage(Integer productId);
 
-	List<ProductDto> getAllProduct(@Param("categoryId")Integer categoryId, @Param("isSaleDesc")Boolean isSaleDesc, @Param("isPriceDesc")Boolean isPriceDesc);
+	List<ProductDto> getAllProduct(@Param("categoryId") Integer categoryId, @Param("isSaleDesc") Boolean isSaleDesc, @Param("isPriceDesc") Boolean isPriceDesc, @Param("keyword") String keyword, @Param("naviId")Integer naviId);
+
+    List<ProductDto> selectQuickNaviProduct(Integer naviId);
+
+    List<ProductDto> getAllProductByCatId(Integer categoryId);
+
+    Product selectByTitle(String title);
 }

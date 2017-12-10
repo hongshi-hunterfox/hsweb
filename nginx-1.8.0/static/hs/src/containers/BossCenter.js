@@ -1,13 +1,8 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-// import hero from './member-center.jpg'
 import './boss-center.css'
-// import Icon from '../components/Icon'
-// import LinkGroup from '../components/LinkGroup'
-// import LinkGroupItem from '../components/LinkGroupItem'
- import req from 'superagent'
-// import Navi from './Navi'
-// import Footer from '../components/Footer'
+import req from 'superagent'
+
 
 class BossCenter extends React.Component {
   constructor(props) {
@@ -18,7 +13,8 @@ class BossCenter extends React.Component {
       phone:localStorage.getItem('napaStorePhone'),
       hsCode:localStorage.getItem('hsCode'),
       napaStores:[],
-      items:[]
+      items:[],
+      itemo:[]
     }
   }
 
@@ -26,6 +22,8 @@ class BossCenter extends React.Component {
     if(!localStorage.getItem('napaStorePhone')){
       window.location='/phone-login'
     }
+    
+    
     req
       .get('/uclee-user-web/bossCenter')
       .query({
@@ -44,16 +42,27 @@ class BossCenter extends React.Component {
         }
         this.setState({
           napaStores:res.body.napaStores,
-          items:res.body.items
+          items:res.body.items,
+          itemo:res.body.itemo
+          	
         })
       })
+     
   }
 
+  
   _setHsCode=(e)=>{
     localStorage.setItem('hsCode', e.target.value);
     window.location='/boss-center';
   }
   render() {
+  	//加盟店列表
+    var option = this.state.napaStores.map((item,index)=>{
+        return(
+          <option key={index} value={item.hsCode} selected={this.state.hsCode===item.hsCode?'selected':null}>{item.storeName}</option>
+        );  
+    })
+    //数据列表
     var items = this.state.items.map((item,index)=>{
         return (
             <div className='item' key={index}>
@@ -66,10 +75,15 @@ class BossCenter extends React.Component {
             </div>
         );
     })
-    var option = this.state.napaStores.map((item,index)=>{
-        return(
-          <option key={index} value={item.hsCode} selected={this.state.hsCode===item.hsCode?'selected':null}>{item.storeName}</option>
-        );  
+    //图表列表onClick={()=>{window.location='/Assistant?FunctionName=' + item.name}}
+	var itemo = this.state.itemo.map((item,index)=>{
+		
+        return (
+            <div className='item' key={index} onClick={()=>{window.location='/Assistant?QueryName=' + item.name}}>
+              <div className='top'>{item.types}</div>
+              <div className='bottom'>{item.caption}</div>
+            </div>
+        );
     })
     return (
       <DocumentTitle title="老板助手">
@@ -86,58 +100,12 @@ class BossCenter extends React.Component {
               {items}
             </div>
             <div className='boss-center-bottom'>
-              <div className='item'>
-                <div className='top '>
-                <span className='fa fa-line-chart'/>
-                </div> 
-                <div className='bottom'>
-                10000
-                </div>
-              </div>
-              <div className='item'>
-                <div className='top '>
-                <span className='fa fa-line-chart'/>
-                </div> 
-                <div className='bottom'>
-                10000
-                </div>
-              </div>
-              <div className='item'>
-                <div className='top '>
-                <span className='fa fa-line-chart'/>
-                </div> 
-                <div className='bottom'>
-                10000
-                </div>
-              </div>
-              <div className='item'>
-                <div className='top '>
-                <span className='fa fa-line-chart'/>
-                </div> 
-                <div className='bottom'>
-                10000
-                </div>
-              </div>
-              <div className='item'>
-                <div className='top '>
-                <span className='fa fa-line-chart'/>
-                </div> 
-                <div className='bottom'>
-                10000
-                </div>
-              </div>
-              <div className='item'>
-                <div className='top '>
-                <span className='fa fa-line-chart'/>
-                </div> 
-                <div className='bottom'>
-                10000
-                </div>
-              </div>
+              {itemo}
             </div>
         </div>
       </DocumentTitle>
-      )
+     )
+		
   }
 }
 

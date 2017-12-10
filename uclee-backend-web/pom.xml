@@ -25,11 +25,6 @@
 			<artifactId>uclee-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.uclee</groupId>
-			<artifactId>uclee-common-web</artifactId>
-			<version>${project.version}</version>
-		</dependency>
         <dependency>
         	<groupId>com.uclee</groupId>
         	<artifactId>backend-service</artifactId>

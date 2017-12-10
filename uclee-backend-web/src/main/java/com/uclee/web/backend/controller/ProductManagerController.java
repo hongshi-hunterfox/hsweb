@@ -2,15 +2,8 @@ package com.uclee.web.backend.controller;
 
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
-import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
-import com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
-import com.uclee.fundation.data.mybatis.model.Category;
-import com.uclee.fundation.data.mybatis.model.HongShiProduct;
-import com.uclee.fundation.data.mybatis.model.HongShiStore;
-import com.uclee.fundation.data.mybatis.model.NapaStore;
-import com.uclee.fundation.data.mybatis.model.Product;
+import com.uclee.fundation.data.mybatis.mapping.*;
+import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.oss.OssUtil;
 import com.uclee.hongshi.service.HongShiServiceI;
@@ -31,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import static com.sun.tools.javac.jvm.ByteCodes.ret;
 
 @Controller
 @EnableAutoConfiguration
@@ -55,6 +50,8 @@ public class ProductManagerController {
 
 	@Autowired
 	private OssUtil ossUtil;
+	@Autowired
+	private ProductSaleMapper productSaleMapper;
 	
 	@RequestMapping(value="addProduct")
 	public @ResponseBody Map<String,Object> addProduct(HttpSession session){
@@ -75,19 +72,48 @@ public class ProductManagerController {
 		map.put("store", ret);
 		return map;
 	}
-	
-	@RequestMapping(value="productList")
-	public @ResponseBody Map<String,Object> productList(HttpSession session,Integer productId){
+	@RequestMapping(value="isTitleExisted")
+	public @ResponseBody Map<String,Object> isTitleExisted(HttpSession session,String title,Integer productId){
 		Map<String,Object> map = new HashMap<String,Object>();
-		List<ProductDto> productDto = backendService.selectAllProduct();
+		Product product = productMapper.selectByTitle(title);
+		if(product!=null){
+			if(product.getProductId()==productId){
+				map.put("result", true);
+			}else{
+				map.put("result", false);
+			}
+		}else{
+			map.put("result", true);
+		}
+		return map;
+	}
+
+	@RequestMapping(value="productList")
+	public @ResponseBody Map<String,Object> productList(HttpSession session,Integer productId,Integer categoryId){
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<ProductDto> productDto = new ArrayList<>();
+		if(categoryId==null||categoryId==0) {
+			productDto = backendService.selectAllProduct();
+		}else{
+			productDto = backendService.selectAllProductByCatId(categoryId);
+		}
 		ProductDto product = productMapper.getProductById(productId);
 		if(product!=null){
 			map.put("text", product.getTitle());
 		}
+		List<Category> categories = categoryMapper.selectAll();
+		map.put("categories", categories);
 		map.put("products", productDto);
 		return map;
 	}
-	
+	@RequestMapping(value="quickNaviProduct")
+	public @ResponseBody Map<String,Object> quickNaviProduct(HttpSession session,Integer naviId){
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<ProductDto> productDto = backendService.selectQuickNaviProduct(naviId);
+		map.put("products", productDto);
+		return map;
+	}
+
 	@RequestMapping(value="getCategory")
 	public @ResponseBody List<Category>  getCategory(ModelMap model,HttpSession session,Integer parentId){
 		if(parentId==null){
@@ -125,7 +151,7 @@ public class ProductManagerController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<Category> cat = categoryMapper.selectAll();
 		map.put("cat", cat);
-		List<HongShiProduct> hongShiProduct = hongShiService.getHongShiProduct();
+		List<HongShiProduct> hongShiProduct = hongShiService.getHongShiProduct(productId);
 		map.put("hongShiProduct", hongShiProduct);
 		List<NapaStore> tmp = napaStoreMapper.selectAllNapaStore();
     	HashSet<String> hsCode = new HashSet<String>();
@@ -137,6 +163,12 @@ public class ProductManagerController {
     		}
     	}
 		map.put("store", ret);
+		ProductSale productSale = productSaleMapper.selectByProductId(productId);
+		if(productSale!=null){
+			map.put("sale",productSale.getCount());
+		}else{
+			map.put("sale",0);
+		}
 		ProductForm productForm = backendService.getProductForm(productId);
 		map.put("productForm", productForm);
 		return map;

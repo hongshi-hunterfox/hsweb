@@ -1,10 +1,7 @@
 package com.uclee.web.backend.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.uclee.fundation.data.mybatis.model.HongShiStore;
-import com.uclee.fundation.data.mybatis.model.NapaStore;
-import com.uclee.fundation.data.mybatis.model.Province;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
+import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.hongshi.service.HongShiServiceI;
 import com.uclee.hongshi.service.StoreServiceI;
 import com.uclee.user.service.UserServiceI;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -61,10 +59,24 @@ public class AdminController {
         UserProfile u = userService.getBasicUserProfile(userId);
         logger.info(JSON.toJSONString(u));
         if(u!=null){
+            List<Integer> links = storeService.getStoreLinkByUserId(u.getUserId());
+            Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+            for(Integer item:links){
+                map.put(item,item);
+            }
+            ret.setIds(map);
+            ret.setStoreIds(links);
             ret.setUserId(u.getUserId());
             ret.setName(u.getName());
             ret.setPhone(u.getPhone());
+            ret.setStores(storeService.selectAllNapaStore());
         }
+        return ret;
+    }
+    @RequestMapping("getStore")
+    public @ResponseBody UserVo getStore(HttpServletRequest request){
+        UserVo ret=new UserVo();
+        ret.setStores(storeService.selectAllNapaStore());
         return ret;
     }
 
@@ -84,7 +96,7 @@ public class AdminController {
 
     @RequestMapping("napaStoreList")
     public @ResponseBody
-    List<NapaStore> napaStoreList(Integer userId,HttpServletRequest request){
-        return storeService.selectNapaStoreByUserId(userId);
+    List<NapaStore> napaStoreList(HttpServletRequest request){
+        return storeService.selectAllNapaStore();
     }
 }

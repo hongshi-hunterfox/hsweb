@@ -5,7 +5,7 @@ var CartBtn = (props) => {
 	return (
 		<Link to="/cart" style={{
 			position: 'fixed',
-			zIndex: 9999,
+			zIndex: 1000,
 			bottom: '60px',
 			right: '25px',
 			backgroundColor: 'rgb(226, 64, 61)',

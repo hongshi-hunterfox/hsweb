@@ -2,6 +2,37 @@
 
 .all-prod {
 	padding-bottom: 55px;
+	&-search {
+		background-color: white;
+		border-bottom: 1px solid #EAEAEA;
+		top: 0px;
+		z-index: 2;
+		width: 100%;
+		padding: 5px;
+		&-div {
+			opacity: 0.75;
+			border-radius: 15px;
+			background-color: #EAEAEA;
+			.icon {
+				padding: 5px;
+			}
+
+			width: 76%;
+			margin-left: 11%;
+		}
+
+		&-input {
+			-webkit-appearance: none;
+			height: 25px;
+			width: 88%;
+			border: 0px;
+			padding: 10px;
+			outline: 0;
+			text-align: center;
+			background-color: #EAEAEA;
+		}
+
+	}
 	&-tab {
 		background-color: white;
 		top: 0;
@@ -150,7 +181,10 @@
 		// text-align: center;
 		color: #333;
 		border-bottom: 1px solid #eee;
-
+		font-size: 15px;
+    font-weight: bold;
+    font-family: "\5FAE\8F6F\96C5\9ED1";
+    letter-spacing: 3px;
 		&-icon {
 			color: @ck_sub;
 			display: inline-block;

@@ -37,16 +37,17 @@ const DetailInfo = (props) => {
       <div className="detail-info-title">
         {props.title}
       </div>
-      <div className="detail-info-price">
+      <div className='detail-info-price'>
+      <div className="detail-info-price-lprice">
         {
           props.preMinPrice!==null&&props.preMaxPrice!==null?
           props.preMinPrice === props.preMaxPrice ? 
-            props.preMinPrice>0?<span className="detail-info-price-pre">原价：¥ {props.preMinPrice}</span>:<span className="detail-info-price-pre">原价：¥ {props.preMaxPrice}</span>
+            props.preMinPrice>0?<span className="detail-info-price-rprice-pre">原价：¥ {props.preMinPrice}</span>:<span className="detail-info-price-rprice-pre">原价：¥ {props.preMaxPrice}</span>
             :
-            props.preMinPrice>0?<span className="detail-info-price-pre">原价：¥ {props.preMinPrice} - {props.preMaxPrice}</span>:<span className="detail-info-price-pre">原价：¥ {props.preMaxPrice}</span>:null
+            props.preMinPrice>0?<span className="detail-info-price-rprice-pre">原价：¥ {props.preMinPrice} - {props.preMaxPrice}</span>:<span className="detail-info-price-rprice-pre">原价：¥ {props.preMaxPrice}</span>:null
         }
       </div>
-      <div className="detail-info-price">
+      <div className="detail-info-price-rprice">
         {
           props.minPrice === props.maxPrice ? 
           <span>¥ {props.minPrice}</span>
@@ -55,8 +56,9 @@ const DetailInfo = (props) => {
         }
          
       </div>
-      <div className="detail-info-stat clearfix">
-        <div className="detail-info-stat-item">销量：{props.salesAmount}</div>
+      </div>
+      <div className="detail-info-stat">
+        <div className="detail-info-stat-item">{props.shippingFree?<span className="tag">免运费</span>:null}<span style={{float:'right'}}>销量：{props.salesAmount}</span></div>
       </div>
     </div>
     )
@@ -93,6 +95,39 @@ const DetailPick = (props) => {
     )
 }
 
+const DetailSales = (props) => {
+  return (
+    <div className="detail-sales">
+
+        {
+          props.salesInfo.length>=1?
+          <div onClick={props.salesInfoShowClick} className='detail-sales-top'>
+            <span className='detail-sales-tag'>
+              优惠
+                
+            </span>
+            <span className='detail-sales-text'>
+                  {!props.salesInfoShow?props.salesInfo[0]+'...':null}
+              </span>
+              <Icon className="detail-sales-icon" name={props.salesInfoShow?'chevron-down':'chevron-right'} />
+          </div>
+          :null
+        }
+        
+        
+      <div className={'detail-sales-info ' +(!props.salesInfoShow?'none':'')}>
+        {props.salesInfo.map((item,index)=>{
+          return(
+            <div className='detail-sales-item' key={index}>
+              {item}
+            </div>
+          )
+        })}
+      </div>
+      
+    </div>
+    )
+}
 const DetailPicker = (props) => {
   if (props.showPick) {
     return (
@@ -191,13 +226,15 @@ class Detail extends React.Component {
       description: null,
       specifications: [],
       title: null,
-
+      shippingFree:false,
       loading: true,
       showPick: false,
       currentSpecValudId: null,
       currentAmount: 1,
       salesAmount:0,
-      pickType: 'add_to_cart' // 'add_to_cart' || 'buy_now'
+      pickType: 'add_to_cart', // 'add_to_cart' || 'buy_now'
+      salesInfo:[],
+      salesInfoShow:false
     }
 
     this.specPriceMap = {}
@@ -271,11 +308,17 @@ class Detail extends React.Component {
             <DetailCarousel images={this.state.images}/>
             <DetailInfo
               title={this.state.title}
+              shippingFree={this.state.shippingFree}
               salesAmount={this.state.salesAmount}
               minPrice={this.minPrice}
               maxPrice={this.maxPrice}
               preMinPrice={this.preMinPrice}
               preMaxPrice={this.preMaxPrice}/>
+              {
+                this.state.salesInfo.length>=1?
+                <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
+                :null
+              }
             <DetailPick
               onClick={this._showPick}
               currentAmount={this.state.currentAmount}
@@ -304,7 +347,11 @@ class Detail extends React.Component {
       </DocumentTitle>
       )
   }
-
+  salesInfoShowClick=()=>{
+    this.setState({
+      salesInfoShow: !this.state.salesInfoShow
+    })
+  }
   _showPick = () => {
     this.setState({
       showPick: true

@@ -79,7 +79,7 @@ class EditStore extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title="add-store Page">
+      <DocumentTitle title="编辑门店">
         <div className="add-store">
           <form onSubmit={this._submit} className="form-horizontal" ref="f">
             <div className="form-group">

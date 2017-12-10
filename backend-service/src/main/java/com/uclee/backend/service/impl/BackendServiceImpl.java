@@ -8,17 +8,14 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-import org.apache.commons.validator.Msg;
+import com.uclee.fundation.data.mybatis.mapping.*;
+import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.*;
+import org.apache.poi.hssf.record.formula.functions.Na;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
@@ -26,59 +23,28 @@ import com.backend.service.BackendServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.WebConfig;
-import com.uclee.fundation.data.mybatis.mapping.BannerMapper;
-import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.FreightMapper;
-import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
-import com.uclee.fundation.data.mybatis.mapping.LotteryDrawConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.MsgRecordMapper;
-import com.uclee.fundation.data.mybatis.mapping.NapaStoreMapper;
-import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductCategoryLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductGroupLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductGroupMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
-import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMapper;
-import com.uclee.fundation.data.mybatis.mapping.StoreInfoMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
-import com.uclee.fundation.data.mybatis.mapping.VarMapper;
-import com.uclee.fundation.data.mybatis.model.Banner;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.Freight;
-import com.uclee.fundation.data.mybatis.model.HongShiCoupon;
-import com.uclee.fundation.data.mybatis.model.HongShiGoods;
-import com.uclee.fundation.data.mybatis.model.HongShiOrder;
-import com.uclee.fundation.data.mybatis.model.HongShiOrderItem;
-import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
-import com.uclee.fundation.data.mybatis.model.MsgRecord;
-import com.uclee.fundation.data.mybatis.model.NapaStore;
-import com.uclee.fundation.data.mybatis.model.OauthLogin;
-import com.uclee.fundation.data.mybatis.model.Payment;
-import com.uclee.fundation.data.mybatis.model.Product;
-import com.uclee.fundation.data.mybatis.model.ProductCategoryLink;
-import com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey;
-import com.uclee.fundation.data.mybatis.model.ProductGroup;
-import com.uclee.fundation.data.mybatis.model.ProductGroupLink;
-import com.uclee.fundation.data.mybatis.model.ProductImageLink;
-import com.uclee.fundation.data.mybatis.model.RechargeConfig;
-import com.uclee.fundation.data.mybatis.model.SpecificationValue;
-import com.uclee.fundation.data.mybatis.model.StoreInfo;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
-import com.uclee.fundation.data.mybatis.model.Var;
-import com.uclee.fundation.data.web.dto.BannerPost;
-import com.uclee.fundation.data.web.dto.ConfigPost;
-import com.uclee.fundation.data.web.dto.FreightPost;
-import com.uclee.fundation.data.web.dto.LotteryConfigPost;
-import com.uclee.fundation.data.web.dto.ProductDto;
-import com.uclee.fundation.data.web.dto.ProductGroupPost;
-import com.uclee.fundation.data.web.dto.ValuePost;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.number.util.NumberUtil;
 
 public class BackendServiceImpl implements BackendServiceI {
+
+
+	@Autowired
+	private CommentMapper commentMapper;
+	@Autowired
+	private OrderMapper orderMapper;
+	@Autowired
+	private ShippingFullCutMapper shippingFullCutMapper;
+	@Autowired
+	private FullCutMapper fullCutMapper;
+	@Autowired
+	private BindingRewardsMapper bindingRewardsMapper;
+	@Autowired
+	private CategoryMapper categoryMapper;
+	@Autowired
+	private HomeQuickNaviMapper homeQuickNaviMapper;
+	@Autowired
+	private QuickNaviProductLinkMapper quickNaviProductLinkMapper;
 	@Autowired
 	private BannerMapper bannerMapper;
 	@Autowired
@@ -87,6 +53,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private FDFSFileUpload fDFSFileUpload;
 	@Autowired
 	private ProductGroupLinkMapper productGroupLinkMapper;
+	@Autowired
+	private BirthVoucherMapper birthVoucherMapper;
 	@Autowired
 	private OauthLoginMapper oauthLoginMapper;
 	@Autowired
@@ -179,13 +147,300 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.signName, "");
 		}
+		if (configPost.getBirthTemId()!=null) {
+			configMapper.updateByTag(WebConfig.birthTmpId, configPost.getBirthTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.birthTmpId, "");
+		}
+		if (configPost.getBuyTemId()!=null) {
+			configMapper.updateByTag(WebConfig.buyTmpId, configPost.getBuyTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.buyTmpId, "");
+		}
+		if (configPost.getPayTemId()!=null) {
+			configMapper.updateByTag(WebConfig.payTmpId, configPost.getPayTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.payTmpId, "");
+		}
+		if (configPost.getRechargeTemId()!=null) {
+			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
+		}else{
+			configMapper.updateByTag(WebConfig.rechargeTmpId, "");
+		}
+		if (configPost.getBindText()!=null) {
+			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
+		}else{
+			configMapper.updateByTag(WebConfig.bindText, "");
+		}
+		if (configPost.getSupportDeliver()!=null) {
+			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
+		}else{
+			configMapper.updateByTag(WebConfig.supportDeliver, "");
+		}
+		if (configPost.getDomain()!=null) {
+			configMapper.updateByTag(WebConfig.domain, configPost.getDomain());
+		}else{
+			configMapper.updateByTag(WebConfig.domain, "");
+		}
+		if (configPost.getHsMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.hsMerchatCode, configPost.getHsMerchantCode());
+		}else{
+			configMapper.updateByTag(WebConfig.hsMerchatCode, "");
+		}
+		if (configPost.getLogoUrl()!=null) {
+			configMapper.updateByTag(WebConfig.logoUrl, configPost.getLogoUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.logoUrl, "");
+		}
+		if (configPost.getUcenterImg()!=null) {
+			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}else{
+			configMapper.updateByTag(WebConfig.ucenterImg, "");
+		}
 		return true;
 	}
+	@Override
+	public boolean updateActivityConfig(ConfigPost configPost) {
 
+		boolean flag = true;
+		if (configPost.getDrawPoint()!=null) {
+			configMapper.updateByTag(WebConfig.drawPoint, configPost.getDrawPoint());
+		}
+		if (configPost.getFirstDis()!=null) {
+			configMapper.updateByTag(WebConfig.firstDis, configPost.getFirstDis());
+		}
+		if (configPost.getRegistPoint()!=null) {
+			configMapper.updateByTag(WebConfig.registPoint, configPost.getRegistPoint());
+		}
+		if (configPost.getSecondDis()!=null) {
+			configMapper.updateByTag(WebConfig.secondDis, configPost.getSecondDis());
+		}
+		if (configPost.getSignInPoint()!=null) {
+			configMapper.updateByTag(WebConfig.signInPoint, configPost.getSignInPoint());
+		}
+		if (configPost.getAppId()!=null) {
+			configMapper.updateByTag(WebConfig.APPID, configPost.getAppId());
+		}
+		if (configPost.getAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.AppSecret, configPost.getAppSecret());
+		}
+		if (configPost.getAppKey()!=null) {
+			configMapper.updateByTag(WebConfig.APPKEY, configPost.getAppKey());
+		}
+		if (configPost.getMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.MERCHANT_CODE, configPost.getMerchantCode());
+		}
+		if (configPost.getNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.NOTIFY_URL, configPost.getNotifyUrl());
+		}
+		if (configPost.getFirstPrize()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_PRIZE, configPost.getFirstPrize());
+		}
+		if (configPost.getSecondPrize()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_PRIZE, configPost.getSecondPrize());
+		}
+		if (configPost.getThirdPrize()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_PRIZE, configPost.getThirdPrize());
+		}
+		if (configPost.getFirstCount()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_COUNT, configPost.getFirstCount());
+		}
+		if (configPost.getSecondCount()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_COUNT, configPost.getSecondCount());
+		}
+		if (configPost.getThirdCount()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getThirdCount());
+		}
+		if (configPost.getAlipayNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.alipayNotifyUrl, configPost.getAlipayNotifyUrl());
+		}
+		if (configPost.getSellerId()!=null) {
+			configMapper.updateByTag(WebConfig.sellerId, configPost.getSellerId());
+		}
+		if (configPost.getKey()!=null) {
+			configMapper.updateByTag(WebConfig.key, configPost.getKey());
+		}
+		if (configPost.getPartner()!=null) {
+			configMapper.updateByTag(WebConfig.partner, configPost.getPartner());
+		}
+		if (configPost.getAliAppkey()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppkey, configPost.getAliAppkey());
+		}
+		if (configPost.getAliAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppSecret, configPost.getAliAppSecret());
+		}
+		if (configPost.getTemplateCode()!=null) {
+			configMapper.updateByTag(WebConfig.templateCode, configPost.getTemplateCode());
+		}
+		if (configPost.getSignName()!=null) {
+			configMapper.updateByTag(WebConfig.signName, configPost.getSignName());
+		}
+		if (configPost.getBirthTemId()!=null) {
+			configMapper.updateByTag(WebConfig.birthTmpId, configPost.getBirthTemId());
+		}
+		if (configPost.getBuyTemId()!=null) {
+			configMapper.updateByTag(WebConfig.buyTmpId, configPost.getBuyTemId());
+		}
+		if (configPost.getPayTemId()!=null) {
+			configMapper.updateByTag(WebConfig.payTmpId, configPost.getPayTemId());
+		}
+		if (configPost.getRechargeTemId()!=null) {
+			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
+		}
+		if (configPost.getBindText()!=null) {
+			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
+		}
+		if (configPost.getSupportDeliver()!=null) {
+			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
+		}
+		if (configPost.getDomain()!=null) {
+			configMapper.updateByTag(WebConfig.domain, configPost.getDomain());
+		}
+		if (configPost.getHsMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.hsMerchatCode, configPost.getHsMerchantCode());
+		}
+		if (configPost.getLogoUrl()!=null) {
+			configMapper.updateByTag(WebConfig.logoUrl, configPost.getLogoUrl());
+		}
+		if (configPost.getUcenterImg()!=null) {
+			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}
+		if (configPost.getBirthText()!=null) {
+			configMapper.updateByTag(WebConfig.birthText, configPost.getBirthText());
+		}
+		if (configPost.getSalesText()!=null) {
+			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
+		}
+		return true;
+	}
+	@Override
+	public boolean systemConfigHandler(ConfigPost configPost) {
+
+		boolean flag = true;
+		if (configPost.getDrawPoint()!=null) {
+			configMapper.updateByTag(WebConfig.drawPoint, configPost.getDrawPoint());
+		}
+		if (configPost.getFirstDis()!=null) {
+			configMapper.updateByTag(WebConfig.firstDis, configPost.getFirstDis());
+		}
+		if (configPost.getRegistPoint()!=null) {
+			configMapper.updateByTag(WebConfig.registPoint, configPost.getRegistPoint());
+		}
+		if (configPost.getSecondDis()!=null) {
+			configMapper.updateByTag(WebConfig.secondDis, configPost.getSecondDis());
+		}
+		if (configPost.getSignInPoint()!=null) {
+			configMapper.updateByTag(WebConfig.signInPoint, configPost.getSignInPoint());
+		}
+		if (configPost.getAppId()!=null) {
+			configMapper.updateByTag(WebConfig.APPID, configPost.getAppId());
+		}
+		if (configPost.getAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.AppSecret, configPost.getAppSecret());
+		}
+		if (configPost.getAppKey()!=null) {
+			configMapper.updateByTag(WebConfig.APPKEY, configPost.getAppKey());
+		}
+		if (configPost.getMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.MERCHANT_CODE, configPost.getMerchantCode());
+		}
+		if (configPost.getNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.NOTIFY_URL, configPost.getNotifyUrl());
+		}
+		if (configPost.getFirstPrize()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_PRIZE, configPost.getFirstPrize());
+		}
+		if (configPost.getSecondPrize()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_PRIZE, configPost.getSecondPrize());
+		}
+		if (configPost.getThirdPrize()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_PRIZE, configPost.getThirdPrize());
+		}
+		if (configPost.getFirstCount()!=null) {
+			configMapper.updateByTag(WebConfig.FIRST_COUNT, configPost.getFirstCount());
+		}
+		if (configPost.getSecondCount()!=null) {
+			configMapper.updateByTag(WebConfig.SECOND_COUNT, configPost.getSecondCount());
+		}
+		if (configPost.getThirdCount()!=null) {
+			configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getThirdCount());
+		}
+		if (configPost.getAlipayNotifyUrl()!=null) {
+			configMapper.updateByTag(WebConfig.alipayNotifyUrl, configPost.getAlipayNotifyUrl());
+		}
+		if (configPost.getSellerId()!=null) {
+			configMapper.updateByTag(WebConfig.sellerId, configPost.getSellerId());
+		}
+		if (configPost.getKey()!=null) {
+			configMapper.updateByTag(WebConfig.key, configPost.getKey());
+		}
+		if (configPost.getPartner()!=null) {
+			configMapper.updateByTag(WebConfig.partner, configPost.getPartner());
+		}
+		if (configPost.getAliAppkey()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppkey, configPost.getAliAppkey());
+		}
+		if (configPost.getAliAppSecret()!=null) {
+			configMapper.updateByTag(WebConfig.aliAppSecret, configPost.getAliAppSecret());
+		}
+		if (configPost.getTemplateCode()!=null) {
+			configMapper.updateByTag(WebConfig.templateCode, configPost.getTemplateCode());
+		}
+		if (configPost.getSignName()!=null) {
+			configMapper.updateByTag(WebConfig.signName, configPost.getSignName());
+		}
+		if (configPost.getBirthTemId()!=null) {
+			configMapper.updateByTag(WebConfig.birthTmpId, configPost.getBirthTemId());
+		}
+		if (configPost.getBuyTemId()!=null) {
+			configMapper.updateByTag(WebConfig.buyTmpId, configPost.getBuyTemId());
+		}
+		if (configPost.getPayTemId()!=null) {
+			configMapper.updateByTag(WebConfig.payTmpId, configPost.getPayTemId());
+		}
+		if (configPost.getRechargeTemId()!=null) {
+			configMapper.updateByTag(WebConfig.rechargeTmpId, configPost.getRechargeTemId());
+		}
+		if (configPost.getBindText()!=null) {
+			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
+		}
+		if (configPost.getSupportDeliver()!=null) {
+			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
+		}
+		if (configPost.getDomain()!=null) {
+			configMapper.updateByTag(WebConfig.domain, configPost.getDomain());
+		}
+		if (configPost.getHsMerchantCode()!=null) {
+			configMapper.updateByTag(WebConfig.hsMerchatCode, configPost.getHsMerchantCode());
+		}
+		if (configPost.getLogoUrl()!=null) {
+			configMapper.updateByTag(WebConfig.logoUrl, configPost.getLogoUrl());
+		}
+		if (configPost.getUcenterImg()!=null) {
+			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
+		}
+		if (configPost.getBirthText()!=null) {
+			configMapper.updateByTag(WebConfig.birthText, configPost.getBirthText());
+		}
+		if (configPost.getSalesText()!=null) {
+			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
+		}
+		return true;
+	}
 	@Override
 	public List<Freight> selectAllFreight() {
-		
+
 		return freightMapper.selectAllAsc();
+	}
+	@Override
+	public List<FullCut> selectAllFullCut() {
+
+		return fullCutMapper.selectAll();
+	}
+	@Override
+	public List<BindingRewards> selectAllBindingRewards() {
+
+		return bindingRewardsMapper.selectOne();
 	}
 
 	@Override
@@ -207,6 +462,100 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return true;
 	}
+	@Override
+	public boolean updateFullCutShipping(FreightPost freightPost) {
+		int delAll = shippingFullCutMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			ShippingFullCut shippingFullCut1 = new ShippingFullCut();
+			shippingFullCut1.setsLimit(entry.getValue());
+			shippingFullCut1.setuLimit(Double.parseDouble(freightPost.getMyValue().get(entry.getKey())));
+			shippingFullCut1.setCondition(new BigDecimal(freightPost.getMyValue1().get(entry.getKey())));
+			shippingFullCut1.setStartTime(DateUtils.parse(freightPost.getStartTimeStr(),DateUtils.FORMAT_LONG));
+			shippingFullCut1.setEndTime(DateUtils.parse(freightPost.getEndTimeStr(),DateUtils.FORMAT_LONG));
+			shippingFullCutMapper.insertSelective(shippingFullCut1);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateBindingRewards(FreightPost freightPost) {
+		int delAll = bindingRewardsMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			BindingRewards bindingRewards = new BindingRewards();
+			bindingRewards.setPoint(entry.getValue().intValue());
+			bindingRewards.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			bindingRewards.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
+			bindingRewardsMapper.insertSelective(bindingRewards);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateFullCut(FreightPost freightPost) {
+		int delAll = fullCutMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			FullCut fullCut1 = new FullCut();
+			fullCut1.setCondition(new BigDecimal(entry.getValue()));
+			fullCut1.setCut(new BigDecimal(freightPost.getMyValue().get(entry.getKey())));
+			fullCut1.setStartTime(DateUtils.parse(freightPost.getStartTimeStr(),DateUtils.FORMAT_LONG));
+			fullCut1.setEndTime(DateUtils.parse(freightPost.getEndTimeStr(),DateUtils.FORMAT_LONG));
+			fullCutMapper.insertSelective(fullCut1);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost) {
+		int delAll = birthVoucherMapper.deleteAll();
+		if(birthVoucherPost.getMyKey()==null||birthVoucherPost.getMyValue()==null||birthVoucherPost.getMyKey().size()==0||birthVoucherPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, String> entry : birthVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||birthVoucherPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, String> entry : birthVoucherPost.getMyKey().entrySet()){
+			BirthVoucher tmp = new BirthVoucher();
+			tmp.setAmount(Integer.parseInt(birthVoucherPost.getMyValue().get(entry.getKey())));
+			tmp.setVoucherCode(entry.getValue().toString());
+			birthVoucherMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+	@Override
+	public boolean truncateBirthVoucherHandler() {
+		int delAll = birthVoucherMapper.deleteAll();
+
+		return true;
+	}
+
+	@Override
+	public List<ShippingFullCut> selectAllShippingFullCut() {
+		return shippingFullCutMapper.selectAllShippingFullCut();
+	}
+
 	@Override
 	@CacheEvict(value = "cookaCache", key = "'config'")
 	public boolean updateLottery(LotteryConfigPost post) {
@@ -267,6 +616,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		ProductForm productForm = new ProductForm();
 		Product product = productMapper.selectByPrimaryKey(productId);
 		if(product!=null){
+			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
 			productForm.setDescription(FileUtil.UrlRequest(product.getDescription()));
 		}
@@ -306,12 +656,31 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public List<RechargeConfig> selectAllRechargeConfig() {
 		List<RechargeConfig> configs = rechargeConfigMapper.selectAll();
-		for(RechargeConfig config:configs){
+		/*for(RechargeConfig config:configs){
+			List<String> extra = new ArrayList<String>();
+			int i = 1;
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
 			if (coupon!=null&&coupon.size()>0) {
-				config.setVoucherText(coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券");
+				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
+				i++;
+				extra.add(tmp);
 			}
-		}
+			extra.add(config.getMoney() + "元优惠券1张");
+			extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
+			List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
+			if (coupon!=null&&coupon.size()>0) {
+				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
+				i++;
+				extra.add(tmp);
+			}
+			List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
+			if (coupon!=null&&coupon.size()>0) {
+				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
+				i++;
+				extra.add(tmp);
+			}
+			config.setExtra(extra);
+		}*/
 		return configs;
 	}
 
@@ -322,11 +691,15 @@ public class BackendServiceImpl implements BackendServiceI {
 
 	@Override
 	public List<ProductDto> selectAllProduct() {
-		List<ProductDto> product = productMapper.getAllProduct(null,null,null);
+		List<ProductDto> product = productMapper.getAllProduct(null,null,null,null, null);
 		for(ProductDto item:product){
 			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(link!=null){
 				item.setImage(link.getImageUrl());
+			}
+			Category category = categoryMapper.selectByPId(item.getProductId());
+			if(category!=null){
+				item.setCategory(category.getCategory());
 			}
 		}
 		return product;
@@ -361,8 +734,11 @@ public class BackendServiceImpl implements BackendServiceI {
 		return userProfile;
 	}
 	@Override
-	public List<UserProfile> getUserListForBirth(Integer day) {
-		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(day);
+	public List<UserProfile> getUserListForBirth(String start,String end) {
+		if(start==null||end==null){
+			return new ArrayList<UserProfile>();
+		}
+		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(start,end);
 		for(UserProfile item : userProfile){
 			item.setBirthStr(DateUtils.format(item.getBirth(), DateUtils.FORMAT_SHORT));
 		}
@@ -430,8 +806,32 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setTemplateCode(config.getValue());
 			}else if(config.getTag().equals(WebConfig.signName)){
 				configPost.setSignName(config.getValue());
+			}else if(config.getTag().equals(WebConfig.birthTmpId)){
+				configPost.setBirthTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.buyTmpId)){
+				configPost.setBuyTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.payTmpId)){
+				configPost.setPayTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.rechargeTmpId)){
+				configPost.setRechargeTemId(config.getValue());
+			}else if(config.getTag().equals(WebConfig.bindText)){
+				configPost.setBindText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.supportDeliver)){
+				configPost.setSupportDeliver(config.getValue());
+			}else if(config.getTag().equals(WebConfig.domain)){
+				configPost.setDomain(config.getValue());
+			}else if(config.getTag().equals(WebConfig.hsMerchatCode)){
+				configPost.setHsMerchantCode(config.getValue());
+			}else if(config.getTag().equals(WebConfig.logoUrl)){
+				configPost.setLogoUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.ucenterImg)){
+				configPost.setUcenterImg(config.getValue());
+			}else if(config.getTag().equals(WebConfig.birthText)){
+				configPost.setBirthText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.salesText)){
+				configPost.setSalesText(config.getValue());
 			}
-			
+
 		}
 		return configPost;
 	}
@@ -450,6 +850,8 @@ public class BackendServiceImpl implements BackendServiceI {
 			group = productGroupLinkMapper.selectAll();
 		}
 		for(ProductGroupLink item:group){
+			ProductDto productDto = productMapper.getProductById(item.getProductId());
+
 			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(link!=null){
 				item.setImage(link.getImageUrl());
@@ -539,7 +941,7 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
-	public boolean sendBirthMsg(Integer userId) {
+	public boolean sendBirthMsg(Integer userId,boolean sendVoucher) {
 		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
 		if(login!=null){
 			String nickName="";
@@ -549,11 +951,38 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日祝福"};
-			sendWXMessage(login.getOauthId(), "EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew", "hs.uclee.com", "洪石商城预祝您生日快乐，赶快过来选取您的专属生日蛋糕吧", key,value, "");
-			MsgRecord msgRecord = new MsgRecord();
-			msgRecord.setType(1);
-			msgRecord.setUserId(userId);
-			msgRecordMapper.insertSelective(msgRecord);
+			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.birthText);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
+			//联动送礼券
+			if(sendVoucher) {
+				try {
+					List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
+					for(BirthVoucher birthVoucher:birthVouchers) {
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
+						if (coupon != null && coupon.size() > 0) {
+							try {
+								for(int i=0;i<birthVoucher.getAmount();i++) {
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode());
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}
 			return true;
 		}
 		return false;
@@ -569,11 +998,18 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"消费提醒"};
-			sendWXMessage(login.getOauthId(), "EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew", "hs.uclee.com", "洪石商城促销大优惠，赶紧来抢购吧", key,value, "");
-			MsgRecord msgRecord = new MsgRecord();
-			msgRecord.setType(2);
-			msgRecord.setUserId(userId);
-			msgRecordMapper.insertSelective(msgRecord);
+			Config config = configMapper.getByTag("buyTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.salesText);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(2);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
 			return true;
 		}
 		return false;
@@ -645,5 +1081,287 @@ public class BackendServiceImpl implements BackendServiceI {
 		napaStoreMapper.deleteByPrimaryKey(storeId);
 		specificationValueStoreLinkMapper.delByStoreId(storeId);
 		return true;
+	}
+
+	@Override
+	public boolean editQiuckNavi(HomeQuickNavi homeQuickNavi) {
+		if(homeQuickNavi.getNaviId()!=null){
+			HomeQuickNavi tmp = homeQuickNaviMapper.selectByPrimaryKey(homeQuickNavi.getNaviId());
+			tmp.setImageUrl(homeQuickNavi.getImageUrl());
+			tmp.setTitle(homeQuickNavi.getTitle());
+			homeQuickNaviMapper.updateByPrimaryKeySelective(tmp);
+		}else{
+			HomeQuickNavi tmp = new HomeQuickNavi();
+			tmp.setImageUrl(homeQuickNavi.getImageUrl());
+			tmp.setTitle(homeQuickNavi.getTitle());
+			homeQuickNaviMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+
+	@Override
+	public HomeQuickNavi getQuickNavi(Integer naviId) {
+		return homeQuickNaviMapper.selectByPrimaryKey(naviId);
+	}
+
+	@Override
+	public List<HomeQuickNavi> getQuickNaviList() {
+		return homeQuickNaviMapper.selectAll();
+	}
+
+	@Override
+	public int delQiuckNavi(Integer naviId) {
+		return homeQuickNaviMapper.deleteByPrimaryKey(naviId);
+	}
+
+	@Override
+	public boolean editQuickNaviProduct(QuickNaviProductPost quickNaviProductPost) {
+		System.out.println(JSON.toJSONString(quickNaviProductPost));
+		for(Integer productId:quickNaviProductPost.getProductIds()){
+			if(quickNaviProductLinkMapper.selectByNaviIdAndProductId(quickNaviProductPost.getNaviId(),productId)==null){
+				QuickNaviProductLink link = new QuickNaviProductLink();
+				link.setProductId(productId);
+				link.setNaviId(quickNaviProductPost.getNaviId());
+				quickNaviProductLinkMapper.insertSelective(link);
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public List<ProductDto> selectQuickNaviProduct(Integer naviId) {
+		List<ProductDto> product = productMapper.selectQuickNaviProduct(naviId);
+		for(ProductDto item:product){
+			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
+			if(link!=null){
+				item.setImage(link.getImageUrl());
+			}
+		}
+		return product;
+	}
+
+	@Override
+	public int delQuickNaviProduct(Integer naviId, Integer productId) {
+		return quickNaviProductLinkMapper.deleteByNIdAndPId(naviId,productId);
+	}
+
+	@Override
+	public String getHongShiStoreName(String hsCode) {
+		List<NapaStore> napaStores = napaStoreMapper.selectByHsCode(hsCode);
+		if(napaStores!=null&&napaStores.size()>=1){
+			return napaStores.get(0).getStoreName();
+		}
+		return null;
+	}
+	@Override
+	public NapaStore getHongShiStore(String hsCode) {
+		List<NapaStore> napaStores = napaStoreMapper.selectByHsCode(hsCode);
+		if(napaStores!=null&&napaStores.size()>=1){
+			return napaStores.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean delComment(Integer id) {
+		Comment comment = commentMapper.selectByPrimaryKey(id);
+		if(comment!=null){
+			comment.setBackTitle("");
+			comment.setBackTime(null);
+			return commentMapper.updateByPrimaryKeySelective(comment)>0;
+		}
+		return false;
+	}
+
+	@Override
+	public Map<String,Object> isVoucherLimit(Integer amount) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(amount==null){
+			amount=1;
+		}
+		try {
+			List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
+			for(BirthVoucher birthVoucher:birthVouchers) {
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
+				if(coupon!=null&&coupon.size()<(birthVoucher.getAmount()*amount)){
+					ret.put("result",false);
+					if(coupon.size()>0) {
+						ret.put("text", "券（商品券号：" + coupon.get(0).getGoodsCode() + "），剩余张数为" + coupon.size() + "还差" + (birthVoucher.getAmount() * amount-coupon.size()) + "张");
+					}else{
+						ret.put("text", "券（商品券号：" + birthVoucher.getVoucherCode() + "），剩余张数为0张" + "还差" + (birthVoucher.getAmount() * amount) + "张");
+					}
+					return ret;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			ret.put("result",false);
+			return ret;
+		}
+		ret.put("result",true);
+		return ret;
+	}
+
+	@Override
+	public List<ProductDto> selectAllProductByCatId(Integer categoryId) {
+		List<ProductDto> product =  productMapper.getAllProductByCatId(categoryId);
+		for(ProductDto item:product){
+			ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
+			if(link!=null){
+				item.setImage(link.getImageUrl());
+			}
+			Category category = categoryMapper.selectByPId(item.getProductId());
+			if(category!=null){
+				item.setCategory(category.getCategory());
+			}
+		}
+		return product;
+	}
+
+	@Override
+	public List<Category> getCategoryList() {
+		return categoryMapper.selectAll();
+	}
+
+	@Override
+	public Map<String,Object> delCategory(Integer categoryId) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		List<ProductCategoryLinkKey> productCategoryLinkKeys = productCategoryLinkMapper.selectByCId(categoryId);
+		if(productCategoryLinkKeys!=null&&productCategoryLinkKeys.size()>0){
+			ret.put("result",false);
+			ret.put("reason","不可删除已经有下属产品的类别");
+			return ret;
+		}
+		if(categoryMapper.deleteByPrimaryKey(categoryId)>0){
+			ret.put("result",true);
+		}else{
+			ret.put("result",false);
+			ret.put("reason","网络繁忙");
+		}
+		return ret;
+	}
+
+	@Override
+	public Map<String,Object> editCategory(Category category) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(category.getCategoryId()!=null){
+			Category tmp = categoryMapper.selectByPrimaryKey(category.getCategoryId());
+			Category tmp2 = categoryMapper.selectByName(category.getCategory());
+			if(tmp2!=null&&tmp2.getCategoryId()!=category.getCategoryId()){
+				ret.put("result",false);
+				ret.put("reason","该类别已经存在，不可重复添加");
+				return ret;
+			}
+			if(tmp!=null){
+				tmp.setCategory(category.getCategory());
+				if(categoryMapper.updateByPrimaryKeySelective(category)>0){
+					ret.put("result",true);
+				}else{
+					ret.put("result",false);
+					ret.put("reason","网络繁忙");
+				}
+				return ret;
+			}else{
+				ret.put("result",false);
+				ret.put("reason","网络繁忙");
+				return ret;
+			}
+		}else{
+			if(category.getCategory()!=null){
+				category.setParentId(0);
+				Category tmp2 = categoryMapper.selectByName(category.getCategory());
+				if(tmp2!=null){
+					ret.put("result",false);
+					ret.put("reason","该类别已经存在，不可重复添加");
+					return ret;
+				}
+				if(categoryMapper.insertSelective(category)>0){
+					ret.put("result",true);
+				}else{
+					ret.put("result",false);
+					ret.put("reason","网络繁忙");
+				}
+				return ret;
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public Category getCategoryById(Integer categoryId) {
+		return categoryMapper.selectByPrimaryKey(categoryId);
+	}
+
+	@Override
+	public List<Comment> getCommentList() {
+		List<Comment> comments = commentMapper.selectAll();
+		for (Comment comment:comments){
+			Order order  = orderMapper.getOrderListByOrderSerailNum(comment.getOrderSerialNum());
+			comment.setOrder(order);
+			UserProfile userProfile = userProfileMapper.selectByUserId(comment.getUserId());
+			comment.setUserProfile(userProfile);
+			comment.setTimeStr(DateUtils.format(comment.getTime(),DateUtils.FORMAT_LONG));
+			comment.setBackTimeStr(DateUtils.format(comment.getBackTime(),DateUtils.FORMAT_LONG));
+		}
+		return comments;
+	}
+
+	@Override
+	public Map<String,Object> commentBackHandler(Comment comment) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(comment.getId()==null||comment.getBackTitle()==null){
+			ret.put("result",false);
+			ret.put("reason","参数错误");
+		}
+		Comment tmp = commentMapper.selectByPrimaryKey(comment.getId());
+		if(tmp!=null){
+			tmp.setBackTime(new Date());
+			tmp.setBackTitle(comment.getBackTitle());
+			if(commentMapper.updateByPrimaryKeySelective(tmp)>0){
+				ret.put("result",true);
+			}else{
+				ret.put("result",false);
+				ret.put("reason","网络繁忙，请稍后重试");
+			}
+		}else{
+			ret.put("result",false);
+			ret.put("reason","参数错误");
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean updateRechargeConfigNew(RechargeConfig rechargeConfig) {
+		if(rechargeConfig.getStartTimeStr()!=null){
+			rechargeConfig.setStartTime(DateUtils.parse(rechargeConfig.getStartTimeStr(),DateUtils.FORMAT_LONG));
+		}
+		if(rechargeConfig.getEndTimeStr()!=null){
+			rechargeConfig.setEndTime(DateUtils.parse(rechargeConfig.getEndTimeStr(),DateUtils.FORMAT_LONG));
+		}
+		if(rechargeConfig.getId()!=null){
+			return rechargeConfigMapper.updateByPrimaryKeySelective(rechargeConfig)>0;
+		}else{
+			return rechargeConfigMapper.insertSelective(rechargeConfig)>0;
+		}
+	}
+
+	@Override
+	public List<RechargeConfig> getRechargeConfigList() {
+		List<RechargeConfig> rechargeConfigs = rechargeConfigMapper.selectAll();
+		for(RechargeConfig item:rechargeConfigs){
+			item.setEndTimeStr(DateUtils.format(item.getEndTime(),DateUtils.FORMAT_LONG));
+			item.setStartTimeStr(DateUtils.format(item.getStartTime(),DateUtils.FORMAT_LONG));
+		}
+		return rechargeConfigs;
+	}
+
+	@Override
+	public boolean delRechargeConfig(Integer id) {
+		return rechargeConfigMapper.deleteByPrimaryKey(id)>0;
+	}
+
+	@Override
+	public List<BirthVoucher> selectAllBirthVoucher() {
+		return birthVoucherMapper.selectAll();
 	}
 }

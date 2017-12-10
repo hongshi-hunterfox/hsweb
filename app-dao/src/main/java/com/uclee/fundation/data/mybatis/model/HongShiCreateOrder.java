@@ -27,6 +27,16 @@ public class HongShiCreateOrder {
 	
 	private String Department;
 
+	private String Vouchers;
+
+	public String getVouchers() {
+		return Vouchers;
+	}
+
+	public void setVouchers(String vouchers) {
+		Vouchers = vouchers;
+	}
+
 	public String getDepartment() {
 		return Department;
 	}

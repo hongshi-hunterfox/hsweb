@@ -31,7 +31,9 @@ class MemberSetting extends React.Component {
       resultmsg: '保存成功',
 
       time: 60,
-      fetchingCode: false
+      fetchingCode: false,
+      bindText:'',
+      disabled:false
     }
 
     this.tick = null
@@ -50,6 +52,16 @@ class MemberSetting extends React.Component {
         cBirthday: moment(d.cBirthday).format('YYYY-MM-DD'),
         bIsLunar: d.bIsLunar,
         cVipCode: d.cVipCode
+      })
+    })
+    req.get('/uclee-user-web/getBindText').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var d = res.body
+
+      this.setState({
+        bindText: d.bindText
       })
     })
   }
@@ -225,11 +237,19 @@ class MemberSetting extends React.Component {
             <ErrorMsg msg={this.state.error} />
 
             <div className="form-btn-wrap">
-              <button type="submit" className="btn btn-success btn-block">
+              <button type="submit" className="btn btn-success btn-block" disabled={this.state.disabled}>
                 保存
               </button>
             </div>
+            <div className="form-btn-wrap">
+            <button type="submit" className="btn btn-success btn-block">
+            <a href="/uclee-user-web/logout">再次绑定前请点此按钮刷新</a>
+            </button>
+            </div>
           </form>
+          <div style={{padding:'10px',lineHeight:'25px',whiteSpace: 'pre-line'}}>
+             {this.state.bindText}
+          </div>
         </div>
       </DocumentTitle>
     )
@@ -290,74 +310,142 @@ class MemberSetting extends React.Component {
   }
 
   _submit = e => {
+    this.setState({
+      disabled:true
+    })
     e.preventDefault()
     var data = fto(e.target)
     if (!data.cMobileNumber) {
       return this.setState({
-        error: '请输入手机号码'
+        error: '请输入手机号码',
+        disabled:false
       })
     }
 
     if (!data.code) {
       return this.setState({
-        error: '请输入验证码'
+        error: '请输入验证码',
+        disabled:false
       })
     }
 
     if (!/^\d{6}$/.test(data.code)) {
       return this.setState({
-        error: '验证码不正确'
+        error: '验证码不正确',
+        disabled:false
       })
     }
 
     if (!validator.isMobilePhone(data.cMobileNumber, 'zh-CN')) {
       return this.setState({
-        error: '请输入正确的手机号码'
+        error: '请输入正确的手机号码',
+        disabled:false
       })
     }
 
     if (this.state.type === '2') {
       if (!data.cName) {
         return this.setState({
-          error: '请输入姓名'
+          error: '请输入姓名',
+        disabled:false
         })
       }
 
       if (!data.cBirthday) {
         return this.setState({
-          error: '请输入生日'
+          error: '请输入生日',
+        disabled:false
         })
       }
 
       if (!data.bIsLunar) {
         return this.setState({
-          error: '请选择生日类型'
+          error: '请选择生日类型',
+        disabled:false
         })
       }
     }
-
-    req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+    req.get('/uclee-user-web/isVoucherLimit').end((err, res) => {
       if (err) {
         return err
       }
+      
+      if(!res.body.result){
+          var conf = confirm('礼券已赠完，继续将不会得到礼券赠送券,是否继续绑定？');
+          if(conf){
+            req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+              if (err) {
+                this.setState({
+                    disabled:false
+                  })
+                return err
+              }
 
-      if (res.body.result === 'fail') {
-        this.setState({
-          error: res.body.reason
-        })
-        return
-      }
+              if (res.body.result === 'fail') {
+                this.setState({
+                  error: res.body.reason,
+                  disabled:false
+                })
+                return
+              }
 
-      this.setState({
-        showNoti: true
-      })
+              this.setState({
+                showNoti: true
+              })
+              console.log(sessionStorage.getItem('isBackToCart'));
+              console.log(sessionStorage.getItem('isBackToCart')===1);
+              if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
+                sessionStorage.removeItem('isBackToCart');
+                window.location='/cart';
+              }else{
+                setTimeout(() => {
+                  browserHistory.replace({
+                    pathname: '/member-card'
+                  })
+                }, 2500)
+              }
+              
+            })
+          }
+      }else{
+            req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+              if (err) {
+                this.setState({
+                    disabled:false
+                  })
+                return err
+              }
 
-      setTimeout(() => {
-        browserHistory.replace({
-          pathname: '/member-card'
-        })
-      }, 2500)
+              if (res.body.result === 'fail') {
+                this.setState({
+                  error: res.body.reason,
+                  disabled:false
+                })
+                return
+              }
+
+              this.setState({
+                showNoti: true
+              })
+              console.log(sessionStorage.getItem('isBackToCart'));
+              console.log(sessionStorage.getItem('isBackToCart')===1);
+              if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
+                sessionStorage.removeItem('isBackToCart');
+                window.location='/cart';
+              }else{
+                setTimeout(() => {
+                  browserHistory.replace({
+                    pathname: '/member-card'
+                  })
+                }, 2500)
+              }
+              
+            })
+          }
+
     })
+
+    
 
     this.setState({
       error: ''

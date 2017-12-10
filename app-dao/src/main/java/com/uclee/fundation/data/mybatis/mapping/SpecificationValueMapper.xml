@@ -31,6 +31,12 @@
     from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
     where B.product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectHsCodeByProductId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+    select
+    A.hs_goods_code
+    from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
+    where B.product_id = #{productId,jdbcType=INTEGER}
+  </select>
   <select id="selectByProductIdAndValueId" resultMap="BaseResultMap" >
     select 
     A.* 

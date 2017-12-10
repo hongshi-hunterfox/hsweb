@@ -47,7 +47,7 @@ class EditProductGroup extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title={'xxxx'}>
+      <DocumentTitle title={'编辑首页产品'}>
         <div className="product">
           <form onSubmit={this._submit} className="form-horizontal">
             <h1>{'已选产品: ' + this.state.text}</h1>
@@ -153,7 +153,7 @@ class EditProductGroup extends React.Component {
       if (res.body) {
         window.location = '/product-group-list'
       } else {
-        alert('网络繁忙，请稍后重试')
+        alert('该区域已存在此商品')
       }
     })
   }
