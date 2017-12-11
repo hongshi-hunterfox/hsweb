@@ -27,24 +27,19 @@ componentDidMount() {
        	}
         this.setState({
           	info:res.body.info,
-          	itema:res.body.itema
+            itema:res.body.itema
         })
       })
-      var data = 'ctitle';
-      AssistantUtil.Table(data,'myview');
- }
-//				<script type="text/javascript">
-//					var data = '{ctitle}';
-//          		PullListToTable(data,'myview');
-//</script>
+      var data =[{"Sales":1234,"SortName":"101","GoodsName":"我的产品"},{"Sales":9,"SortName":"面包类","GoodsName":"盐之花黄油卷"}];
+		AssistantUtil.Table(data,"myview");
+}
 render() {
 //      var items = this.state.itema.map((item,index)=>{
 //      return (         
 //              <div>{JSON.stringify(item)}</div>   
 //      );
 //      })
-       var ctitle = JSON.stringify(this.state.itema);
-       var data = ctitle;
+//    var data =JSON.stringify(this.state.itema);
   return (
       <DocumentTitle title="小助手">
         <div className="boss-center">
@@ -53,8 +48,7 @@ render() {
         <div className="member-card-item">
          	<p>POST QueryName:{this.state.QueryName}</p>
             <p>Request info:{this.state.info}</p>
-			<table id='myview' className="table table-bordered user-list"></table>
-			<p>{ctitle}</p>
+			<table id="myview" className="table table-bordered user-list"></table>
         </div>
         </div>
         </div>
