@@ -19,7 +19,8 @@ componentDidMount() {
     req
       .get('/uclee-user-web/assistant')
       .query({
-        QueryName:this.state.QueryName        
+        QueryName:this.state.QueryName,   
+        itema:this.state.itema 
       })
       .end((err, res) => {
      	if (err) {
@@ -30,16 +31,13 @@ componentDidMount() {
             itema:res.body.itema
         })
       })
-      var data =[{"Sales":1234,"SortName":"101","GoodsName":"我的产品"},{"Sales":9,"SortName":"面包类","GoodsName":"盐之花黄油卷"}];
-		AssistantUtil.Table(data,"myview");
+       const data= JSON.stringify(this.state.itema);
+        AssistantUtil.Table(data,"myview");
+//    [{"Sales":1234,"SortName":"101","GoodsName":"我的产品"},{"Sales":9,"SortName":"面包类","GoodsName":"盐之花黄油卷"}];
 }
 render() {
-//      var items = this.state.itema.map((item,index)=>{
-//      return (         
-//              <div>{JSON.stringify(item)}</div>   
-//      );
-//      })
-//    var data =JSON.stringify(this.state.itema);
+//      var data =JSON.stringify(this.state.itema);  
+//      	AssistantUtil.Table(data,"myview");
   return (
       <DocumentTitle title="小助手">
         <div className="boss-center">
