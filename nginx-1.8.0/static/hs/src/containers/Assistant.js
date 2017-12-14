@@ -31,24 +31,28 @@ componentDidMount() {
             itema:res.body.itema
         })
       })
-       const data= JSON.stringify(this.state.itema);
-        AssistantUtil.Table(data,"myview");
-//    [{"Sales":1234,"SortName":"101","GoodsName":"我的产品"},{"Sales":9,"SortName":"面包类","GoodsName":"盐之花黄油卷"}];
+        var data = JSON.stringify(this.state.itema);
+        AssistantUtil.PullListToTable(data,"myview");
+        //var data = [{"Sales":1234,"SortName":"101","GoodsName":"我的产品"},{"Sales":9,"SortName":"面包类","GoodsName":"盐之花黄油卷"}];
+		AssistantUtil.PullListToTable(data,"myview");
+		document.getElementById('opt').innerHTML = 'sadf'
 }
 render() {
-//      var data =JSON.stringify(this.state.itema);  
+         var data =JSON.stringify(this.state.itema); 
 //      	AssistantUtil.Table(data,"myview");
   return (
       <DocumentTitle title="小助手">
         <div className="boss-center">
         	<img src='/images/data.png' alt=""/>
-        <div className='boss-center-bottom'>
-        <div className="member-card-item">
-         	<p>POST QueryName:{this.state.QueryName}</p>
-            <p>Request info:{this.state.info}</p>
-			<table id="myview" className="table table-bordered user-list"></table>
-        </div>
-        </div>
+	        <div className='boss-center-bottom'>
+		        <div className="member-card-item">
+		         	<p>POST QueryName:{this.state.QueryName}</p>
+		            <p>Request info:{this.state.info}</p>
+					<table id="myview"></table>
+					<p id='opt'>rrrr</p>
+					<p>{data}</p>
+		        </div>
+	        </div>
         </div>
       </DocumentTitle>
     )}
