@@ -79,7 +79,7 @@ class BossCenter extends React.Component {
 	var itemo = this.state.itemo.map((item,index)=>{
 		
         return (
-            <div className='item' key={index} onClick={()=>{window.location='/Assistant?QueryName=' + item.name}}>
+            <div className='item' key={index} onClick={()=>{window.location='/TableView?QueryName=' + item.name}}>
               <div className='top'>{item.types}</div>
               <div className='bottom'>{item.caption}</div>
             </div>
