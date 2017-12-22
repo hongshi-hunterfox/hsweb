@@ -75,11 +75,11 @@ class BossCenter extends React.Component {
             </div>
         );
     })
-    //图表列表onClick={()=>{window.location='/Assistant?FunctionName=' + item.name}}
+    //图表列表
 	var itemo = this.state.itemo.map((item,index)=>{
 		
         return (
-            <div className='item' key={index} onClick={()=>{window.location='/TableView?QueryName=' + item.name}}>
+            <div className='item' key={index} onClick={()=>{window.location='/dataView?QueryName=' + item.name}}>
               <div className='top'>{item.types}</div>
               <div className='bottom'>{item.caption}</div>
             </div>

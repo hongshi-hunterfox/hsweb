@@ -1268,16 +1268,10 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * 
+	 * @Description: 小助手数据接口
 	 */
-	@RequestMapping("/assistant")
+	@RequestMapping("/DataView")
 	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName){
-//		Map<String, Object>  ret = new HashMap<String, Object>();
-//		ret.put("info",QueryName);
-//		@SuppressWarnings("rawtypes")
-//		List<Map> itema = hongShiMapper.getmobJect(QueryName);
-//		ret.put("itema", itema);
-//		return ret;	
 		return userService.getMobJect(QueryName);
 	}
 	

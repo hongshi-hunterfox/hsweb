@@ -32,7 +32,7 @@ import AllProduct from './containers/AllProduct'
 import ShakeMonitor from './containers/ShakeMonitor'
 import Comment from './containers/Comment'
 import CommentDetail from './containers/CommentDetail'
-import TableView from './containers/TableView'
+import DataView from './containers/DataView'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -67,7 +67,7 @@ ReactDOM.render(
       <Route path="coupon" component={Coupon} />
       <Route path="order" component={Order} />
       <Route path="storeList" component={StoreList} />
-      <Route path="tableview" component={TableView} />
+      <Route path="dataView" component={DataView} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

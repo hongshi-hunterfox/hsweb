@@ -42,25 +42,9 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.h2.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//import org.springframework.cache.annotation.Cacheable;
 import com.alibaba.fastjson.JSON;
 import com.backend.service.ProductManageServiceI;
 import com.github.pagehelper.PageHelper;
@@ -3480,36 +3464,21 @@ public class UserServiceImpl implements UserServiceI {
 			}
 		}
 		ret.put("items", items);
-		
 		List<MobileItem> itemo = hongShiMapper.selectMobile(hsCode,userId);
 		ret.put("itemo", itemo);
 		ret.put("result", true);
 		return ret;
 	}
 	/**
-	 * 
+	 * @Title:getMobJect
+	 * @Description:老板助手二级页面数据
+	 * @param @param QueryName
+	 * @param @return    设定文件
 	 */
 	@Override
 	public  Map<String, Object> getMobJect(String QueryName){
 		HashMap<String,Object> ret = new HashMap<String, Object>();
 		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName);
-//		List<List<Object>> allList = new ArrayList<List<Object>>();
-//		int index = 0;
-//		for (Map<String, Object> kv : itema) {  
-//		    List<Object> key = new ArrayList<Object>();  
-//		    List<Object> value = new ArrayList<Object>();  
-//		    for (Map.Entry<String, Object> entry : kv.entrySet()) {  
-//		        if (index == 0) {   
-//		            key.add(entry.getKey());  
-//		        }  
-//		        value.add(entry.getValue());  
-//		    }  
-//		    if (index == 0) {  
-//		        allList.add(key);  
-//		    }  
-//		    allList.add(value);  
-//		    index++;  
-//		}  
 		ret.put("info",QueryName);
 		ret.put("itema", itema);
 		return ret;
@@ -3822,12 +3791,4 @@ public class UserServiceImpl implements UserServiceI {
 		// TODO Auto-generated method stub
 		return null;
 	}
-//
-//	@SuppressWarnings("rawtypes")
-//	@Override
-//	public List<Map> getMobJect(String QueryName) {
-//		// TODO Auto-generated method stub
-//		return hongShiMapper.getmobJect(QueryName);
-//	}
-
 }

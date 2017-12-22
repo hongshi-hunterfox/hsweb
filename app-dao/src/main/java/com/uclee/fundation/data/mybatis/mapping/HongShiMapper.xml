@@ -85,15 +85,6 @@
 		<result column="Values" property="value" jdbcType="DECIMAL" />
 		<result column="VType" property="valueType" jdbcType="VARCHAR" />
 	</resultMap>
-	<resultMap id="SalesRanking" type="com.uclee.fundation.data.mybatis.model.SalesRanking">
-		<result column="SortName" property="SortName" jdbcType="VARCHAR" />
-		<result column="GoodsName" property="GoodsName" jdbcType="VARCHAR" />
-		<result column="Sales" property="Sales" jdbcType="INTEGER" />
-		<result column="lastversion" property="lastversion" jdbcType="DOUBLE"/>
-	</resultMap>
-	<resultMap id="getmobJect" type="map">
-		<result column="lastversion" property="lastversion" javaType="DOUBLE" jdbcType="DOUBLE"/>
-	</resultMap>
 	<select id="getHongShiOrder" resultMap="HongShiOrder">
 		exec WSC_GetOrdersList '','','',#{cWeiXinCode,jdbcType=VARCHAR},null,#{isEnd,jdbcType=BIT}
 	</select>
@@ -146,8 +137,8 @@
 	<select id="selectMobile" resultMap="MobileItem">
 	    select id,parent,name,caption,comment,orders,types,enabled,command from mobile_object where [types] like 'web:%'
 	</select>
-	<select id="getmobJect" resultType="java.util.Map">
- 		exec QueryFormMObject #{QueryName,jdbcType=VARCHAR}
+	<select id="getmobJect" parameterType="java.util.Map" resultType="java.util.Map">
+ 		<![CDATA[exec QueryFormMObject #{QueryName,jdbcType=VARCHAR}]]>
     </select>
    
 </mapper>
