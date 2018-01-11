@@ -645,32 +645,25 @@ insert into web_config (tag,value) values ('firstPrize',2);
 insert into web_config (tag,value) values ('secondPrize',10);
 insert into web_config (tag,value) values ('thirdPrize',30);
 insert into web_config (tag,value) values ('signName','ºéÊ¯Èí¼þ');
-
 insert into web_config (tag,value) values ('firstCount',2);
-
 insert into web_config (tag,value) values ('secondCount',10);
-
 insert into web_config (tag,value) values ('thirdCount',30);
 insert into web_config (tag,value) values ('aliAppkey','LTAIb36ti4sJYhwY');
 insert into web_config (tag,value) values ('aliAppSecret','wDkzuBidUH6oog7jvdxW9A4JNS42br');
 insert into web_config (tag,value) values ('templateCode','SMS_94630154');
 insert into web_config (tag,value) values ('birthTmpId','EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew');
- 
 insert into web_config (tag,value) values ('buyTmpId','EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew');
 insert into web_config (tag,value) values ('payTmpId','S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok');
- 
 insert into web_config (tag,value) values ('rechargeTmpId','TBY-Wrn9sQuOoM_BUNZO2aEjX56AG6RRNxHrEH8k_pI');
 insert into web_config (tag,value) values ('bindText','');
 insert into web_config (tag,value) values ('supportDeliver','');
 insert into web_config (tag,value) values ('domain','');
 insert into web_config (tag,value) values ('hsMerchantCode','');
 insert into web_config (tag,value) values ('logoUrl','http://wsc.in80s.com/file/file1507708577132837.jpg');
-
 insert into web_config (tag,value) values ('ucenterImg','http://wsc.in80s.com/file/file1507708606025464.jpg');
 insert into web_config (tag,value) values ('birthText','');
-
 insert into web_config (tag,value) values ('salesText','');
-
+insert into web_config (tag,value) values ('restrictedDistance','30');
 
 
 

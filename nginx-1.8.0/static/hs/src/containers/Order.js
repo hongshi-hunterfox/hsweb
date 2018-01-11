@@ -7,6 +7,7 @@ var geocoder = null
 var qq = window.qq
 import Icon from '../components/Icon'
 import validator from 'validator'
+import "./order-list.css"
 var fto = require('form_to_object')
 var errMap = {
   data_error: '非法数据',
@@ -40,7 +41,8 @@ class Order extends React.Component {
       supportDeliver:true,
       salesInfoShow:false,
       salesInfo:[],
-      cut:0
+      cut:0,
+      config:{}
     }
     this.lat = 23
     this.lng = 113
@@ -164,6 +166,16 @@ class Order extends React.Component {
       }
     })
     console.log('isSelfPick: ' + this.state.isSelfPick);
+    req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config: data.config
+      })
+      console.log(this.state.config)
+    })
   }
 
   render() {
@@ -186,7 +198,6 @@ class Order extends React.Component {
                 {/*<select
                   name="isSelfPick"
                   value={this.state.isSelfPick}
-                  
                 >
                   <option value="">请选择</option>
                   <option value="false">配送</option>
@@ -263,7 +274,8 @@ class Order extends React.Component {
               storeAddr={this.state.storeAddr}
             />
             <div className="order-store">
-              <span className="" /> {localStorage.getItem('storeName')}
+              <span className="fa fa-home fa-lg" />{localStorage.getItem('storeName')}
+              <span className="number">(配送范围：{this.state.config.restrictedDistance}公里内)</span>
             </div>
             <OrderItem cartItems={this.state.cartItems} />
             <input
@@ -386,7 +398,6 @@ class Order extends React.Component {
                      <div onClick={this.salesInfoShowClick} className='order-sales-top'>
                       <span className='order-sales-tag'>
                         营销
-                          
                       </span>
                       <span className='order-sales-text'>
                             {this.state.salesInfo[0]}...
@@ -402,13 +413,9 @@ class Order extends React.Component {
                         )
                       })}
                     </div>
-                    
                   </div>
                   :null
                 }
-                
-                
-              
             <div className="order-submit">
               合计：¥
               {this.state.total -
@@ -487,7 +494,7 @@ salesInfoShowClick=()=>{
         var distance = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
-            new qq.maps.LatLng(
+            new qq.maps.LatLng( 
               Number(localStorage.getItem('latitude')),
               Number(localStorage.getItem('longitude'))
             )

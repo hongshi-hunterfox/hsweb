@@ -34,15 +34,12 @@ public class ConfigPost {
 	private String bindText;
 	private String supportDeliver;
 	private String domain;
-
 	private String hsMerchantCode;
-
-	private String logoUrl;
-
+    private String logoUrl;
 	private String ucenterImg;
-
 	private String birthText;
 	private String salesText;
+	private String restrictedDistance;
 
 	public String getBirthText() {
 		return birthText;
@@ -298,5 +295,12 @@ public class ConfigPost {
 	public void setNotifyUrl(String notifyUrl) {
 		this.notifyUrl = notifyUrl;
 	}
-	
+
+	public String getRestrictedDistance() {
+		return restrictedDistance;
+	}
+
+	public void setRestrictedDistance(String restrictedDistance) {
+		this.restrictedDistance = restrictedDistance;
+	}
 }

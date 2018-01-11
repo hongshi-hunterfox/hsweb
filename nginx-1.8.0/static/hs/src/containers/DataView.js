@@ -1,7 +1,6 @@
 import React from 'react'
 import "./home.css"
 import DocumentTitle from 'react-document-title'
-import './boss-center.css'
 import req from 'superagent'
 import './data-view.css'
 var DataViewUtil = require('../utils/DataViewUtil.js');
@@ -33,21 +32,19 @@ componentDidMount() {
         var data = JSON.parse(dat);
         DataViewUtil.FillTable(data,'myview');
       })
-//      document.getElementById('opt').innerHTML = 'sadf';
+ //      document.getElementById('opt').innerHTML = 'sadf';
 }
-render() {
-//          var data =JSON.stringify(this.state.itema);
-//          <p>POST QueryName:{this.state.QueryName}</p>
-//		            <p>Request info:{this.state.info}</p>
-  return (
-      <DocumentTitle title="小助手">
+ render(){
+   return (
+    <DocumentTitle title="小助手">
       <div className='data-view'>
-      	<img src='/images/data.png' alt=""/>
+        <img src='/images/data.png' alt=""/>
         <div className='data-view-color'>
-					<table id='myview' className="table table-striped table-bordered"></table>
+          <table id='myview' className="table table-striped table-bordered"></table>
         </div>
-        </div>
-      </DocumentTitle>
-    )}
+      </div>
+    </DocumentTitle>
+   )
+ }
 }
 export default DataView

@@ -21,14 +21,11 @@ const NoItem = () => {
 const MemberCardItem = (props) => {
   return (
     <div className="member-card-item clearfix">
-      <div className="member-card-item-code">卡号：{props.code}
-      </div>
+      <div className="member-card-item-code">卡号：{props.code}</div>
       <div className="member-card-item-balance">余额：{props.balance} 元</div>
-      
-        <div className="member-card-item-recharge">
+      <div className="member-card-item-recharge">
         <div onClick={props._clickHander.bind(this,"/seller/recharge",props.cardStatus)} className="btn btn-success">充值</div>
       </div>
-      
     </div>
   )
 }
@@ -58,7 +55,7 @@ class MemberCard extends React.Component {
           nickName: res.body.nickName
         })
       })
-	
+    
     req
       .get('/uclee-user-web/getVipInfo')
       .end((err, res) => {
@@ -71,8 +68,8 @@ class MemberCard extends React.Component {
         }
       })
       
-		  
-
+  	  
+  
   }
   _clickHander=(url,cardStatus)=>{
     if(this.state.allowRecharge){
@@ -117,19 +114,22 @@ class MemberCard extends React.Component {
               <span onClick={() => { 
               	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
           	if(!conf){
-          		return;
-          	}else{
+          	    return;
+          	}   
+          	else{
               req
-		  					.get('/uclee-user-web/changeVip')
-		  					.end((err, res) => {
-		  						          
-                 						alert("解绑成功,请返回页面刷新!")
-                 						window.location.reload();
-                    				return;
-                    				window.location.reload();
-                  })}
-		  					}}className="member-card-item-Unbundling"><button type="submit" className="btn btn-warning btn-sm" >解除绑定</button>
-		  				</span>    
+                .get('/uclee-user-web/changeVip')
+                .end((err, res) => {				          
+                 	alert("解绑成功,请返回页面刷新!")
+                 	window.location.reload();
+                    return;
+                    window.location.reload();
+                })
+            }   
+		  	  }}
+              className="member-card-item-Unbundling">
+                <button type="submit" className="btn btn-warning btn-sm" >解除绑定</button>
+		  	  </span>    
               </div>
               {
                 this.state.vipJbarcode&&this.state.vipJbarcode!==''?
@@ -139,7 +139,6 @@ class MemberCard extends React.Component {
                 this.state.vipImage&&this.state.vipImage!==''?
                   <div className='member-card-image'><img src={this.state.vipImage} className="member-card-image-item" alt=""/></div>:null
               }
-             
             </div>
           </div>
         </div>

@@ -84,7 +84,7 @@ class BossCenter extends React.Component {
               <div className='bottom'>{item.caption}</div>
             </div>
         );
-    })
+  })
     return (
       <DocumentTitle title="老板助手">
         <div className="boss-center">
@@ -104,8 +104,7 @@ class BossCenter extends React.Component {
             </div>
         </div>
       </DocumentTitle>
-     )
-		
+    )
   }
 }
 

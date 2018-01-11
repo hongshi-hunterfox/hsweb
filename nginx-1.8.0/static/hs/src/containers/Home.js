@@ -13,6 +13,7 @@ import ProductGroup from "./ProductGroup"
 var HomeUtil = require('../utils/HomeUtil.js');
 import req from 'superagent'
 var fto = require('form_to_object')
+
 class HomeCarousel extends React.Component {
   render() {
     var slickSettings = {
@@ -225,7 +226,6 @@ class Home extends React.Component {
     HomeUtil.home(function (res) {
       this.setState(res)
     }.bind(this))
-
     if(this.props.location.query.serialNum!==null){
       req
         .get('/uclee-user-web/invitation?serialNum='+this.props.location.query.serialNum)
@@ -453,6 +453,7 @@ class Home extends React.Component {
           </div>
       );
     });
+          
     return (
       <DocumentTitle title="首页">
           <div className="home">
@@ -460,7 +461,7 @@ class Home extends React.Component {
             {
               this.state.banner.length ? 
               <HomeCarousel banner={this.state.banner}/> : null
-            }
+            }            
             <HomeNav quickNavis={this.state.quickNavis}/>
             {groups}
             <CartBtn />

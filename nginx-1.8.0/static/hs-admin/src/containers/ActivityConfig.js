@@ -96,6 +96,10 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdCount} name="thirdCount" className="form-control" onChange={this._change}/>
               </div>
+              <label className="control-label col-md-3">配送距离限制km：</label>
+              <div className="col-md-9">
+                <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 {/*<input type="text" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}/>*/}
@@ -393,6 +397,11 @@ _onChooseUcenterImage = fe => {
         err: '抽奖数不能大于奖池数'
       })
     }
+    if(!data.restrictedDistance) {
+      return this.setState({
+        err: '请填写配送距离限制km!'
+      })
+    }
     this.setState({
       err: null
     })
@@ -412,9 +421,6 @@ _onChooseUcenterImage = fe => {
         }
         console.log(res.body)
       })
-
-
-
   }
 }
 

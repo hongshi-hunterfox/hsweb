@@ -107,6 +107,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		if(!(configMapper.updateByTag(WebConfig.FIRST_COUNT, configPost.getFirstCount())>0)) flag=false;
 		if(!(configMapper.updateByTag(WebConfig.SECOND_COUNT, configPost.getSecondCount())>0)) flag=false;
 		if(!(configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getThirdCount())>0)) flag=false;
+		if(!(configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getRestrictedDistance())>0)) flag=false;
 		if (configPost.getAlipayNotifyUrl()!=null) {
 			configMapper.updateByTag(WebConfig.alipayNotifyUrl, configPost.getAlipayNotifyUrl());
 		}else{
@@ -196,6 +197,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
 		}else{
 			configMapper.updateByTag(WebConfig.ucenterImg, "");
+		}
+		if (configPost.getRestrictedDistance()!=null) {
+			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
+		}else{
+			configMapper.updateByTag(WebConfig.restrictedDistance, "");
 		}
 		return true;
 	}
@@ -311,6 +317,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getSalesText()!=null) {
 			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
 		}
+		if (configPost.getRestrictedDistance()!=null) {
+			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
+		}
 		return true;
 	}
 	@Override
@@ -424,6 +433,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getSalesText()!=null) {
 			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
+		}
+		if (configPost.getRestrictedDistance()!=null) {
+			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
 		}
 		return true;
 	}
@@ -830,6 +842,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBirthText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.salesText)){
 				configPost.setSalesText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.restrictedDistance)){
+				configPost.setRestrictedDistance(config.getValue());
 			}
 
 		}

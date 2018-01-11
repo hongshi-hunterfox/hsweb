@@ -11,5 +11,5 @@ module.exports = {
 
 				cb(JSON.parse(res.text));
 			});
-	}
+	}	
 };

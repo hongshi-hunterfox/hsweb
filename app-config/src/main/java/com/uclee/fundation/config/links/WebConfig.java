@@ -39,5 +39,6 @@ public interface WebConfig {
 	String ucenterImg = "ucenterImg";
 	String birthText = "birthText";
 	String salesText = "salesText";
+	String restrictedDistance = "restrictedDistance";
 
 }                      
