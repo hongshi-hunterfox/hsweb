@@ -24,7 +24,7 @@ class MemberSetting extends React.Component {
       cMobileNumber: '',
       code: '',
       cBirthday: '',
-      bIsLunar: '',
+      bIsLunar: '0',
       cVipCode: '',
 
       type: '1',
@@ -181,10 +181,8 @@ class MemberSetting extends React.Component {
                         name="bIsLunar"
                         className="form-control"
                         value={this.state.bIsLunar}
-                        onChange={this._change}
                       >
                         <option value="0">公历</option>
-                        <option value="1">农历</option>
                       </select>
                     </div>
                   </div>

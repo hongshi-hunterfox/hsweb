@@ -1629,7 +1629,8 @@ public class UserServiceImpl implements UserServiceI {
 	* @return boolean    返回类型 
 	* @throws 
 	*/
-	private boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
+	@Override
+	public boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
 		//更新订单状态
 		List<Order> orders = this.selectOrderByPaymentSerialNum(paymentOrder.getUserId(), paymentOrder.getPaymentSerialNum());
 		for(Order order:orders){
@@ -1645,7 +1646,7 @@ public class UserServiceImpl implements UserServiceI {
 					logger.info("加盟店不存在");
 				}
 				createOrderData.setCallNumber(order.getPhone());
-				if(order.getIsSelfPick()){
+				if(!order.getIsSelfPick()){
 					createOrderData.setDestination(order.getProvince()+order.getCity()+order.getRegion()+order.getAddrDetail()+"(收货人:" + order.getName()+")");
 				}
 				createOrderData.setOrderCode(null);
@@ -1766,7 +1767,7 @@ public class UserServiceImpl implements UserServiceI {
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
 			Config config3 = configMapper.getByTag(WebConfig.signName);
-			if(config!=null) {
+			if(config!=null&&config1!=null&&config2!=null&&config3!=null&&oauthLogin!=null) {
 				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), "尊敬的会员，您有一笔订单已经支付成功", key, value, "感谢您的惠顾");
 			}
 		}
@@ -2758,7 +2759,9 @@ public class UserServiceImpl implements UserServiceI {
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
 				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
-				account = account.subtract(order.getCut());
+				if(order.getCut()!=null){
+					account = account.subtract(order.getCut());
+				}
 				order.setAccounts(account.doubleValue());
 			}
 			List<HongShiOrder> ordersRet = new ArrayList<HongShiOrder>();

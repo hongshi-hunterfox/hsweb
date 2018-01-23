@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.uclee.fundation.data.mybatis.mapping.*;
@@ -738,7 +739,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if(start==null||end==null){
 			return new ArrayList<UserProfile>();
 		}
-		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(start,end);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		Date date = new Date();
+		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(start,end,sdf.format(date));
 		for(UserProfile item : userProfile){
 			item.setBirthStr(DateUtils.format(item.getBirth(), DateUtils.FORMAT_SHORT));
 		}
