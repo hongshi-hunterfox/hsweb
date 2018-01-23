@@ -249,8 +249,18 @@
   text-decoration: line-through;
   margin-left: 15px;
 }
+/*
 .detail-picker-spec {
   margin-bottom: 5px;
+}
+*/
+
+.detail-picker-spec {
+  margin-bottom: 5px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  width: 350px;
+  height: 400px;
 }
 .detail-picker-spec-name {
   padding-top: 5px;

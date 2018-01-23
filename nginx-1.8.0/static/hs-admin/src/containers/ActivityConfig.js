@@ -415,7 +415,7 @@ _onChooseUcenterImage = fe => {
           return err
         }
         if(res.body){
-          window.location='activity-config';
+          window.location='system-config';
         }else{
           alert('网络繁忙，请稍后重试');
         }
