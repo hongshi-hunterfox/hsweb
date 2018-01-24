@@ -154,7 +154,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Test
 	public void PaymentSuccess(){
 		dataSource.switchDataSource("kf");
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15166782471634858");
+		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15167773840915325");
 		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
 		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
 	}
@@ -402,6 +402,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testUpdateWXAccessToken(){
+		dataSource.switchDataSource("jyzc");
 		logger.info("更新微信Token:  " + duobaoService.getGolbalAccessToken());
 	}
 	
