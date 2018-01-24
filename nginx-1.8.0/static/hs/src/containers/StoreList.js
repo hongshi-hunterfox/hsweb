@@ -60,6 +60,8 @@ class StoreList extends React.Component {
 						success: res => {
 							var latitude = res.latitude
 							var longitude = res.longitude
+							console.log("latitude: " + latitude)
+							console.log("longitude: " + longitude)
 							this.setState({
 								userLocation: {
 									latitude: latitude,
@@ -73,6 +75,8 @@ class StoreList extends React.Component {
 	}
 	render() {
 		var preItems=this.state.stores.map((item, index) => {
+			console.log("latitude1: " + this.state.userLocation.latitude)
+			console.log("longitude1: " + this.state.userLocation.longitude)
 			var distance = Math.round(
 				qq.maps.geometry.spherical.computeDistanceBetween(
 					new qq.maps.LatLng(

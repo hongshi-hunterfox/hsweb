@@ -26,38 +26,31 @@ class DistributionOrder extends React.Component{
           })
       }
 
-//  _transHandler = () => {
-//      var conf = confirm('确定要转入到会员卡？');
-//      if(conf){
-//          if(this.state.money<=0){
-//              alert("无可转入余额");
-//              return;
-//          }
-//          request
-//            .get('/uclee-user-web/tranferBalance')
-//            .end((err, res) => {
-//              if (err) {
-//                return err
-//              }
-//              var resJson = JSON.parse(res.text);
-//              if(resJson.result===true){
-//                alert("转入成功");
-//                this.setState({
-//                  money:0
-//                })
-//              }else{
-//                alert("网络繁忙，请稍后重试");
-//              }
-//            })
-//      }
-//  }
-//	    <div className="distribution-order-top">
-//        <div className="left pull-left">
-//        <div className="money">收益余额</div>
-//        <div className='number'>{this.state.money}</div>
-//        </div>
-//        <div className="transfer pull-right" onClick={this._transHandler}>转进会员卡</div>
-//        </div>
+    _transHandler = () => {
+        var conf = confirm('确定要转入到会员卡？');
+        if(conf){
+            if(this.state.money<=0){
+                alert("无可转入余额");
+                return;
+            }
+            request
+              .get('/uclee-user-web/tranferBalance')
+              .end((err, res) => {
+                if (err) {
+                  return err
+                }
+                var resJson = JSON.parse(res.text);
+                if(resJson.result===true){
+                  alert("转入成功");
+                  this.setState({
+                    money:0
+                  })
+                }else{
+                  alert("网络繁忙，请稍后重试");
+                }
+              })
+        }
+    }
     render(){
         var orders = this.state.orders.map((item, index) => {
             return(
@@ -84,6 +77,13 @@ class DistributionOrder extends React.Component{
         return(
             <DocumentTitle title="分销订单">
                 <div className="distribution-order" >
+                    <div className="distribution-order-top">
+                        <div className="left pull-left">
+                            <div className="money">收益余额</div>
+                            <div className='number'>{this.state.money}</div>
+                        </div>
+                        {/*<div className="transfer pull-right" onClick={this._transHandler}>转进会员卡</div>*/}
+                    </div>
                     {orders}
                     <div className="bottom-text">
                         O(∩_∩)O 啊哦，没有更多收益订单啦~~~

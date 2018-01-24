@@ -116,7 +116,9 @@ public interface UserServiceI {
 	int insertPaymentOrder(PaymentOrder paymentOrder);
 
 	boolean WechatNotifyHandle(String out_trade_no, String transaction_id, String attach);
-	
+
+	boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin);
+
 	Boolean sendWXMessage(String openId,String templateId,String url ,String firstData,String[] key,String[] value,String remarkData);
 
 	ProductDto getProductDtoById(Integer productId);

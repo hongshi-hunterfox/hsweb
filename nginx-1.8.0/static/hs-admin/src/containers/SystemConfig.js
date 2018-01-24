@@ -282,7 +282,7 @@ _onChooseUcenterImage = fe => {
           return err
         }
         if(res.body){
-          window.location='system-config';
+          window.location='global-config';
         }else{
           alert('网络繁忙，请稍后重试');
         }

@@ -150,6 +150,16 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 		hongShiMapper.saleVoucher("83001","oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "10011");
 		//hongShiMapper.recoverVoucher(6, "oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "订单消费");
 	}
+
+
+	@Test
+	public void PaymentSuccess(){
+		dataSource.switchDataSource("kf");
+		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15166782471634858");
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
+		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
+	}
+
 	@Test
 	public void testChoujiang(){
 		Config webConfig = userService.getLotteryWebConfig();
