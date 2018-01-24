@@ -226,10 +226,7 @@ public class WeiXinLogin extends CommonUserHandler{
 				weiXinUserInfo = userService.getWeiXinUserInfo(var.getValue(), openid);
 				weiXinUserInfoJsonData = JSON.parseObject(weiXinUserInfo);
 			}
-			long c = System.currentTimeMillis();
-			logger.info("c-b: " + (c-b));
-			String isSubcribe = weiXinUserInfoJsonData.getString("subscribe");
-			if (isSubcribe!=null&&isSubcribe.equals("1")) {
+			if(weiXinUserInfoJsonData!=null){
 				weiXinNickName = EmojiFilter.filterEmoji(weiXinUserInfoJsonData.getString("nickname"));
 				//headimgurl = headimgurl.replaceAll("\\", "");
 				logger.info(weiXinNickName);
@@ -243,6 +240,24 @@ public class WeiXinLogin extends CommonUserHandler{
 				oauthLogin.setIsSubcribe(true);
 				oauthLogin.setIsSubscribeShow(false);
 				oauthLoginMapper.updateByPrimaryKeySelective(oauthLogin);
+			}
+			long c = System.currentTimeMillis();
+			logger.info("c-b: " + (c-b));
+			String isSubcribe = weiXinUserInfoJsonData.getString("subscribe");
+			if (isSubcribe!=null&&isSubcribe.equals("1")) {
+				/*weiXinNickName = EmojiFilter.filterEmoji(weiXinUserInfoJsonData.getString("nickname"));
+				//headimgurl = headimgurl.replaceAll("\\", "");
+				logger.info(weiXinNickName);
+				if (Strings.isNullOrEmpty(weiXinNickName)) {
+					logger.info("获取微信用户名失败");
+					result.setResult(false);
+					return result;
+				}
+				headimgurl = weiXinUserInfoJsonData.getString("headimgurl");
+				logger.info(headimgurl);
+				oauthLogin.setIsSubcribe(true);
+				oauthLogin.setIsSubscribeShow(false);
+				oauthLoginMapper.updateByPrimaryKeySelective(oauthLogin);*/
 			} else {
 				oauthLogin.setIsSubcribe(false);
 				oauthLogin.setIsSubscribeShow(true);
