@@ -92,7 +92,7 @@ class MemberCard extends React.Component {
                 <span>{this.state.nickName}</span>
                 {
                   !this.state.cVipCode ?
-                  <span className="member-card-setting-link">设置 ></span>
+                  <span className="member-card-setting-link">绑定会员卡 ></span>
                   : null
                 }
               </div>
