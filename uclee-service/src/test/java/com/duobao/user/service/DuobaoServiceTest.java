@@ -403,6 +403,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testUpdateWXAccessToken(){
+		//dataSource.switchDataSource("jyzc"); hyp's code annotation by chiangpan
 		logger.info("更新微信Token:  " + duobaoService.getGolbalAccessToken());
 	}
 	
