@@ -215,7 +215,7 @@ public class WeiXinLogin extends CommonUserHandler{
 			String weiXinUserInfo = userService.getWeiXinUserInfo(var.getValue(), openid);
 			JSONObject weiXinUserInfoJsonData = JSON.parseObject(weiXinUserInfo);
 			logger.info(weiXinUserInfo);
-			String headimgurl;
+			String headimgurl="";
 			String weiXinNickName = "";
 			String errcode = weiXinUserInfoJsonData.getString("errcode");
 			logger.info("erroCode: " + errcode);
