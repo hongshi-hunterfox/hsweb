@@ -1650,8 +1650,11 @@ public class UserServiceImpl implements UserServiceI {
 					createOrderData.setDestination(order.getProvince()+order.getCity()+order.getRegion()+order.getAddrDetail()+"(收货人:" + order.getName()+")");
 				}
 				createOrderData.setOrderCode(null);
+				BigDecimal total = order.getTotalPrice();
+
+				createOrderData.setPickUpTime(order.getPickTime());
+				createOrderData.setCallNumber(order.getPhone());
 				createOrderData.setRemarks(order.getRemark());
-				BigDecimal total = order.getTotalPrice(); 
 				createOrderData.setWeiXinCode(oauthLogin.getOauthId());
 				createOrderData.setWSC_TardNo(order.getOrderSerialNum());
 				createOrderData.setPayment(new BigDecimal(0));
