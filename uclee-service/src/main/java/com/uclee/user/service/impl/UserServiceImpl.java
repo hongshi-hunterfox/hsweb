@@ -2016,6 +2016,11 @@ public class UserServiceImpl implements UserServiceI {
 		for(FullCut fullCut:fullCuts){
 			String tmp = "";
 			tmp = count + ". 整单满" + fullCut.getCondition()+"元减"+fullCut.getCut()+"元";
+			try {
+				tmp = new String(tmp.getBytes("UTF-8"),"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			count++;
 			salesInfo.add(tmp);
 		}

@@ -154,8 +154,8 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Test
 	public void PaymentSuccess(){
 		dataSource.switchDataSource("hs");
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15172925928748263");
-		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(256);
+		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15172984456905562");
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(275);
 		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
 	}
 
