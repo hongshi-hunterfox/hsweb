@@ -1670,6 +1670,7 @@ public class UserServiceImpl implements UserServiceI {
 				}
 				createOrderData.setTotalAmount(total);
 				createOrderData.setOauthId(oauthLogin.getOauthId());
+				System.out.println("订单： " + JSON.toJSONString(createOrderData));
 				CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 				//回收礼券
 				try {
@@ -1695,7 +1696,7 @@ public class UserServiceImpl implements UserServiceI {
 					createOrderItem.setpId(createOrderResult.getOrderID());
 					createOrderItem.setPrice(item.getPrice());
 					createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
-					System.out.println(JSON.toJSONString(createOrderItem));
+					System.out.println("订单明细： " + JSON.toJSONString(createOrderItem));
 					hongShiMapper.createOrderItem(createOrderItem);
 				}
 			} catch (Exception e) {
