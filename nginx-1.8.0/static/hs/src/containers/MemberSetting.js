@@ -241,11 +241,7 @@ class MemberSetting extends React.Component {
                 保存
               </button>
             </div>
-            <div className="form-btn-wrap">
-            <button type="submit" className="btn btn-success btn-block">
-            <a href="/uclee-user-web/logout">再次绑定前请点此按钮刷新</a>
-            </button>
-            </div>
+
           </form>
           <div style={{padding:'10px',lineHeight:'25px',whiteSpace: 'pre-line'}}>
              {this.state.bindText}

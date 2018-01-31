@@ -128,7 +128,7 @@ class MemberCard extends React.Component {
             }   
 		  	  }}
               className="member-card-item-Unbundling">
-                <button type="submit" className="btn btn-warning btn-sm" >解除绑定</button>
+                <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout">解除绑定</a></button>
 		  	  </span>    
               </div>
               {
