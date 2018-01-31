@@ -21,7 +21,6 @@ import com.uclee.user.util.JwtUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 
 import joptsimple.internal.Strings;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -669,7 +668,7 @@ public class UserController extends CommonUserHandler{
 	* @return ProductDto    返回类型 
 	* @throws 
 	*/
-	@RequestMapping("/productDetail")
+	@RequestMapping(value = "/productDetail",produces = "application/json; charset=utf-8")
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
 		ProductDto productDto = userService.getProductDtoById(productId);
 		System.out.println(JSON.toJSONString(productDto));
