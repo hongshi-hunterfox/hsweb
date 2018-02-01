@@ -671,7 +671,7 @@ public class UserController extends CommonUserHandler{
 	* @return ProductDto    返回类型 
 	* @throws 
 	*/
-	@RequestMapping("/productDetail",produces = "application/json; charset=utf-8")
+	@RequestMapping("/productDetail")
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
 		ProductDto productDto = userService.getProductDtoById(productId);
 		System.out.println(JSON.toJSONString(productDto));
