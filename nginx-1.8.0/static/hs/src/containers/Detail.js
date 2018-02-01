@@ -260,6 +260,17 @@ class Detail extends React.Component {
           ...res.body
         })
       })
+      req
+      .get('/uclee-user-web/productDetailImg?productId=' + this.props.params.id)
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        this.setState({
+          description: res.body
+        })
+      })
   }
 
   render() {
