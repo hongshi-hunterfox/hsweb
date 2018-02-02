@@ -679,9 +679,10 @@ public class UserController extends CommonUserHandler{
 	}
 
 	@RequestMapping("/productDetailImg")
-	public @ResponseBody String productDetailImg(HttpServletRequest request,Integer productId){
+	public @ResponseBody ProductDto productDetailImg(HttpServletRequest request,Integer productId){
 		ProductDto productDto = productMapper.getProductById(productId);
-		return FileUtil.UrlRequest(productDto.getDescription());
+		productDto.setDescription(FileUtil.UrlRequest(productDto.getDescription()));
+		return productDto;
 	}
 	/** 
 	* @Title:  

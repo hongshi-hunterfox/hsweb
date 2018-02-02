@@ -267,7 +267,7 @@ class Detail extends React.Component {
           }
 
           this.setState({
-            description: res.body
+            description: res.body.description
           })
         })
       })
