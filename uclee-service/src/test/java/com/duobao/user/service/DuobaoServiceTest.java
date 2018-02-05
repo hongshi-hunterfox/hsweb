@@ -119,8 +119,9 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	private  BalanceLogMapper balanceLogMapper;
 	@Test
 	public void testFreight(){
-		datasource.switchDataSource("hs");
-		System.out.println(JSON.toJSONString(userService.getHongShiOrder(5, false)));
+		datasource.switchDataSource("kf");
+		List<HongShiOrderItem> orderItems = hongShiMapper.getHongShiOrderItems(3);
+		logger.info(JSON.toJSON(orderItems));
 	}
 
 	@Test

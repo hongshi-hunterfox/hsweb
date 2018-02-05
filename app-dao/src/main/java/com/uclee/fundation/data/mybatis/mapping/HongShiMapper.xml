@@ -42,7 +42,7 @@
 	</resultMap>
 	<resultMap id="HongShiOrderItem" type="com.uclee.fundation.data.mybatis.model.HongShiOrderItem">
 		<id column="ID" property="id" jdbcType="INTEGER" />
-		<result column="OrderId" property="orderId" jdbcType="INTEGER" />
+		<result column="OrderID" property="orderId" jdbcType="INTEGER" />
 		<result column="Code" property="code" jdbcType="VARCHAR" />
 		<result column="Price" property="price" jdbcType="DOUBLE" />
 		<result column="DiscountRate" property="discountRate" jdbcType="DOUBLE" />

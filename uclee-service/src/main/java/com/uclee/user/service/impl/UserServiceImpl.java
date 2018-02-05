@@ -1695,9 +1695,7 @@ public class UserServiceImpl implements UserServiceI {
 					if(value!=null){
 						createOrderItem.setGoodsCode(value.getHsGoodsCode());
 					}
-					if(productsSpecificationsValuesLink!=null){
-						createOrderItem.setProductId(productsSpecificationsValuesLink.getProductId());
-					}
+					createOrderItem.setProductId(item.getProductId());
 					createOrderItem.setGoodsCount(item.getAmount().intValue());
 					createOrderItem.setpId(createOrderResult.getOrderID());
 					createOrderItem.setPrice(item.getPrice());
@@ -2710,6 +2708,7 @@ public class UserServiceImpl implements UserServiceI {
 				BigDecimal discount = new BigDecimal(0);
 				BigDecimal total = new BigDecimal(0);
 				List<HongShiOrderItem> orderItems = hongShiMapper.getHongShiOrderItems(order.getId());
+				logger.info("取出来的订单明细： " + JSON.toJSONString(orderItems));
 				for (HongShiOrderItem item : orderItems) {
 					HongShiGoods goods = hongShiMapper.getHongShiGoods(item.getCode());
 					if (goods != null) {
