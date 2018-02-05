@@ -16,4 +16,6 @@ public interface ProductsSpecificationsValuesLinkMapper {
     int updateByPrimaryKey(ProductsSpecificationsValuesLink record);
 
 	void delByProductId(Integer productId);
+
+    ProductsSpecificationsValuesLink selectByValueId(Integer valueId);
 }

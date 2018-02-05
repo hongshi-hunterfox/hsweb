@@ -15,7 +15,17 @@ public class HongShiOrderItem {
 	private Integer count;
 	
 	private double totalAmount;
-	
+
+	private Integer productId;
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
 	private double sumDiscount;
 	
 	private HongShiGoods hongShiGoods;

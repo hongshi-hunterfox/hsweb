@@ -49,6 +49,7 @@
 		<result column="Count" property="count" jdbcType="INTEGER" />
 		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
 		<result column="SumDiscount" property="sumDiscount" jdbcType="DOUBLE" />
+		<result column="Product_id" property="productId" jdbcType="INTEGER" />
 	</resultMap>
 	<resultMap id="HongShiGoods" type="com.uclee.fundation.data.mybatis.model.HongShiGoods">
 		<id column="ID" property="id" jdbcType="INTEGER" />
@@ -112,7 +113,7 @@
 		,#{Destination,jdbcType=VARCHAR},#{TotalAmount,jdbcType=DECIMAL},0,0,#{Payment,jdbcType=DECIMAL},#{Voucher,jdbcType=DECIMAL},'','',#{Department,jdbcType=VARCHAR},#{Vouchers,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR}
 	</select>
 	<select id="createOrderItem" resultMap="CreateOrderItemResult">
-		 exec WSC_AddOrderItem #{pId,jdbcType=INTEGER},#{goodsCode,jdbcType=VARCHAR},#{goodsCount,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL}
+		 exec WSC_AddOrderItem #{pId,jdbcType=INTEGER},#{goodsCode,jdbcType=VARCHAR},#{goodsCount,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{productId,jdbcType=INTEGER}
 	</select>
 	<select id="signInAddPoint" resultMap="HongShiCommonResult">
 		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},#{tag,jdbcType=INTEGER}

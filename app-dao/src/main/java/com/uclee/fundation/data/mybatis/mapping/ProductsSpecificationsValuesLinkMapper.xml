@@ -19,6 +19,12 @@
     from web_products_specifications_values_link
     where specification_id = #{specificationId,jdbcType=INTEGER}
   </select>
+  <select id="selectByValueId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_products_specifications_values_link
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductsSpecificationsValuesLink" >
     insert into web_products_specifications_values_link (specification_id, product_id, value_id
       )
