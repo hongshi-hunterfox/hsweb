@@ -199,6 +199,8 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private ShippingFullCutMapper shippingFullCutMapper;
 	@Autowired
+	private ProductsSpecificationsValuesLinkMapper productsSpecificationsValuesLinkMapper;
+	@Autowired
 	private DataSourceFacade datasource;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
 	private String alipay_return_url = "http://cooka.vicp.cc/fastpaysuccess/";
@@ -1633,8 +1635,12 @@ public class UserServiceImpl implements UserServiceI {
 				for(OrderItem item:items){
 					HongShiCreateOrderItem createOrderItem = new HongShiCreateOrderItem();
 					SpecificationValue value = specificationValueMapper.selectByPrimaryKey(item.getValueId());
+					ProductsSpecificationsValuesLink productsSpecificationsValuesLink = productsSpecificationsValuesLinkMapper.selectByValueId(value.getValueId());
 					if(value!=null){
 						createOrderItem.setGoodsCode(value.getHsGoodsCode());
+					}
+					if(productsSpecificationsValuesLink!=null){
+						createOrderItem.setProductId(productsSpecificationsValuesLink.getProductId());
 					}
 					createOrderItem.setGoodsCount(item.getAmount().intValue());
 					createOrderItem.setpId(createOrderResult.getOrderID());
@@ -2651,7 +2657,7 @@ public class UserServiceImpl implements UserServiceI {
 				for (HongShiOrderItem item : orderItems) {
 					HongShiGoods goods = hongShiMapper.getHongShiGoods(item.getCode());
 					if (goods != null) {
-						ProductImageLink link = productImageLinkMapper.selectByHongShiGoodsCodeLimit(goods.getCode());
+						ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 						if (link != null) {
 							goods.setImage(link.getImageUrl());
 						}

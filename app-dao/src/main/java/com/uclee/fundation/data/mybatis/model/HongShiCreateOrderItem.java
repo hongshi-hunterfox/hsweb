@@ -14,6 +14,16 @@ public class HongShiCreateOrderItem {
 	
 	private BigDecimal totalAmount;
 
+	private Integer productId;
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
 	public Integer getpId() {
 		return pId;
 	}
