@@ -6,6 +6,7 @@ import com.backend.service.BackendServiceI;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
+import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
@@ -64,6 +65,8 @@ public class UserController extends CommonUserHandler{
 	private CommentMapper commentMapper;
 	@Autowired
 	private HongShiMapper hongShiMapper;
+	@Autowired
+	private ProductMapper productMapper;
 	@Autowired
 	private FullCutMapper fullCutMapper;
 	@Autowired
@@ -672,6 +675,13 @@ public class UserController extends CommonUserHandler{
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
 		ProductDto productDto = userService.getProductDtoById(productId);
 		System.out.println(JSON.toJSONString(productDto));
+		return productDto;
+	}
+
+	@RequestMapping("/productDetailImg")
+	public @ResponseBody ProductDto productDetailImg(HttpServletRequest request,Integer productId){
+		ProductDto productDto = productMapper.getProductById(productId);
+		productDto.setDescription(FileUtil.UrlRequest(productDto.getDescription()));
 		return productDto;
 	}
 	

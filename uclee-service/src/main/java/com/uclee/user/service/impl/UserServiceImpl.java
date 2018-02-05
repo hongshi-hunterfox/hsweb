@@ -1932,7 +1932,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public ProductDto getProductDtoById(Integer productId) {
 		ProductDto productDto = productMapper.getProductById(productId);
-		productDto.setDescription(FileUtil.UrlRequest(productDto.getDescription()));
+		productDto.setDescription("");
 		List<ProductImageLink> images = productImageLinkMapper.selectByProductId(productId);
 		productDto.setImages(images);
 		List<Specification> specifications = specificationMapper.getByProductId(productId);

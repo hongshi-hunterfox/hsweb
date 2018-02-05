@@ -250,6 +250,9 @@ class Detail extends React.Component {
   componentDidMount() {
     req
       .get('/uclee-user-web/productDetail?productId=' + this.props.params.id)
+      .query({
+          merchantCode: localStorage.getItem('merchantCode')
+        })
       .end((err, res) => {
         if (err) {
           return err
@@ -259,8 +262,23 @@ class Detail extends React.Component {
           loading: false,
           ...res.body
         })
+   req
+    .get('/uclee-user-web/productDetailImg?productId=' + this.props.params.id)
+    .query({
+        merchantCode: localStorage.getItem('merchantCode')
+          })
+    .end((err, res) => {
+      if (err) {
+        return err
+      }
+
+      this.setState({
+        description: res.body.description
+          })
       })
-  }
+    })
+
+}
 
   render() {
     var { specifications } = this.state
