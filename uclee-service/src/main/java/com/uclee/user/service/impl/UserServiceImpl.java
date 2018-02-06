@@ -3050,6 +3050,7 @@ public class UserServiceImpl implements UserServiceI {
 						if(value!=null){
 							createOrderItem.setGoodsCode(value.getHsGoodsCode());
 						}
+						createOrderItem.setProductId(item.getProductId());
 						createOrderItem.setGoodsCount(item.getAmount().intValue());
 						createOrderItem.setpId(createOrderResult.getOrderID());
 						createOrderItem.setPrice(item.getPrice());
