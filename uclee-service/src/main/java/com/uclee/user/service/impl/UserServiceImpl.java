@@ -1691,7 +1691,6 @@ public class UserServiceImpl implements UserServiceI {
 				for(OrderItem item:items){
 					HongShiCreateOrderItem createOrderItem = new HongShiCreateOrderItem();
 					SpecificationValue value = specificationValueMapper.selectByPrimaryKey(item.getValueId());
-					ProductsSpecificationsValuesLink productsSpecificationsValuesLink = productsSpecificationsValuesLinkMapper.selectByValueId(value.getValueId());
 					if(value!=null){
 						createOrderItem.setGoodsCode(value.getHsGoodsCode());
 					}

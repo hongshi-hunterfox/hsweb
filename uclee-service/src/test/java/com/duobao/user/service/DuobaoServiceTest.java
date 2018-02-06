@@ -117,11 +117,26 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	private ConfigMapper configMapper;
 	@Autowired
 	private  BalanceLogMapper balanceLogMapper;
+	@Autowired
+	private ProductsSpecificationsValuesLinkMapper productsSpecificationsValuesLinkMapper;
 	@Test
 	public void testFreight(){
 		datasource.switchDataSource("kf");
-		List<HongShiOrderItem> orderItems = hongShiMapper.getHongShiOrderItems(3);
-		logger.info(JSON.toJSON(orderItems));
+		List<OrderItem> items = orderItemMapper.selectByOrderId(18);
+		for(OrderItem item:items){
+			HongShiCreateOrderItem createOrderItem = new HongShiCreateOrderItem();
+			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(item.getValueId());
+			if(value!=null){
+				createOrderItem.setGoodsCode(value.getHsGoodsCode());
+			}
+			createOrderItem.setProductId(item.getProductId());
+			createOrderItem.setGoodsCount(item.getAmount().intValue());
+			createOrderItem.setpId(1);
+			createOrderItem.setPrice(item.getPrice());
+			createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
+			System.out.println("订单明细： " + JSON.toJSONString(createOrderItem));
+			hongShiMapper.createOrderItem(createOrderItem);
+		}
 	}
 
 	@Test
