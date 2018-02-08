@@ -1053,7 +1053,7 @@ public class UserServiceImpl implements UserServiceI {
 	*/
 	public UniteOrderResult getWCPayResult(String openId, String paymentSerialNum,String money,String body,String detail) {
 		try {
-		body=body.substring(0,100);
+		body=body.substring(0,50);
 		Map<String,String> weixinConfig = getWeixinConfig();
 		UniteOrder order = new UniteOrder();
 		order.setAttach(datasource.getDataSourceStr());
