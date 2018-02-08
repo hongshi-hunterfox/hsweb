@@ -1670,6 +1670,7 @@ public class UserServiceImpl implements UserServiceI {
 				}else{
 					createOrderData.setVoucher(new BigDecimal(0));
 				}
+				total = total.add(order.getShippingCost());
 				createOrderData.setTotalAmount(total);
 				createOrderData.setOauthId(oauthLogin.getOauthId());
 				createOrderData.setShipping(order.getShippingCost());
