@@ -1615,8 +1615,11 @@ public class UserServiceImpl implements UserServiceI {
 				}else{
 					createOrderData.setVoucher(new BigDecimal(0));
 				}
+				total = total.add(order.getShippingCost());
 				createOrderData.setTotalAmount(total);
 				createOrderData.setOauthId(oauthLogin.getOauthId());
+				createOrderData.setShipping(order.getShippingCost());
+				createOrderData.setDeducted(order.getCut());
 				System.out.println("订单： " + JSON.toJSONString(createOrderData));
 				CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 				//回收礼券
@@ -2977,6 +2980,8 @@ public class UserServiceImpl implements UserServiceI {
 					total = total.add(order.getShippingCost());
 					createOrderData.setTotalAmount(total);
 					createOrderData.setOauthId(oauthLogin.getOauthId());
+					createOrderData.setShipping(order.getShippingCost());
+					createOrderData.setDeducted(order.getCut());
 					CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 					//回收礼券
 					try {

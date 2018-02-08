@@ -18,6 +18,10 @@ public class HongShiCreateOrder {
 	private String Remarks;
 	
 	private String Destination;
+
+	private BigDecimal shipping;
+
+	private BigDecimal deducted;
 	
 	private BigDecimal TotalAmount;
 	
@@ -30,6 +34,22 @@ public class HongShiCreateOrder {
 	private String Vouchers;
 
 	private String oauthId;
+
+	public BigDecimal getShipping() {
+		return shipping;
+	}
+
+	public void setShipping(BigDecimal shipping) {
+		this.shipping = shipping;
+	}
+
+	public BigDecimal getDeducted() {
+		return deducted;
+	}
+
+	public void setDeducted(BigDecimal deducted) {
+		this.deducted = deducted;
+	}
 
 	public String getOauthId() {
 		return oauthId;
