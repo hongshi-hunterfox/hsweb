@@ -249,13 +249,8 @@
   text-decoration: line-through;
   margin-left: 15px;
 }
-/*
 .detail-picker-spec {
-  margin-bottom: 5px;
-}
-*/
-
-.detail-picker-spec {
+  /*margin-bottom: 5px;*/
   margin-bottom: 5px;
   overflow-y: scroll;
   overflow-x: scroll;

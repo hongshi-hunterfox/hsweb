@@ -96,10 +96,6 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdCount} name="thirdCount" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3">配送距离限制km：</label>
-              <div className="col-md-9">
-                <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>
-              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 {/*<input type="text" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}/>*/}
@@ -118,6 +114,10 @@ class ActivityConfig extends React.Component {
                   <option value="no">不支持</option>
                   <option value="yes">支持</option>
                 </select>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>配送距离限制km：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
@@ -415,7 +415,7 @@ _onChooseUcenterImage = fe => {
           return err
         }
         if(res.body){
-          window.location='system-config';
+          window.location='activity-config';
         }else{
           alert('网络繁忙，请稍后重试');
         }

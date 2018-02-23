@@ -15,7 +15,8 @@ var errMap = {
   picktime_error: '请选择取货时间',
   phone_error: '手机格式错误',
   phone_empty: '自提请输入联系手机',
-  isSelfPick_error: '请选择是否自提'
+  isSelfPick_error: '请选择是否自提',
+  Distribution_error: '不在配送范围内'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -529,6 +530,12 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    if (this._init>this.state.config.restrictedDistance) {
+      this.setState({
+        error: errMap['Distribution_error']
+      })
+      return false
+    }
     if (data.isSelfPick === 'false' && !data.addrId) {
       this.setState({
         error: errMap['addr_error']
@@ -562,6 +569,12 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    if(this.props.defaultAddr.addrDetail>this.state.config.restrictedDistance){
+    	this.setState({
+        error: errMap['picktime_error']
+      })
+      return false
+      }
     req.post('/uclee-user-web/orderHandler').send(data).end((err, res) => {
       if (err) {
         return err
