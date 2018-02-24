@@ -461,7 +461,6 @@ salesInfoShowClick=()=>{
       isSelfPick: a,
       shippingFee: 0
     })
-
     if (
       !a &&
       localStorage.getItem('latitude') != null &&
@@ -530,7 +529,18 @@ salesInfoShowClick=()=>{
       })
       return false
     }
-    if (this._init>this.state.config.restrictedDistance) {
+    
+      var distance = Math.round(
+          qq.maps.geometry.spherical.computeDistanceBetween(
+            new qq.maps.LatLng(this.lat, this.lng),
+            new qq.maps.LatLng( 
+              Number(localStorage.getItem('latitude')),
+              Number(localStorage.getItem('longitude'))
+            )
+          )/100
+      )/10
+          
+    if (data.isSelfPick === 'false' && distance>this.state.config.restrictedDistance) {
       this.setState({
         error: errMap['Distribution_error']
       })
@@ -569,12 +579,6 @@ salesInfoShowClick=()=>{
       })
       return false
     }
-    if(this.props.defaultAddr.addrDetail>this.state.config.restrictedDistance){
-    	this.setState({
-        error: errMap['picktime_error']
-      })
-      return false
-      }
     req.post('/uclee-user-web/orderHandler').send(data).end((err, res) => {
       if (err) {
         return err
