@@ -100,6 +100,7 @@ public class ProductManagerController {
 		ProductDto product = productMapper.getProductById(productId);
 		if(product!=null){
 			map.put("text", product.getTitle());
+			map.put("text", product.getExplain());
 		}
 		List<Category> categories = categoryMapper.selectAll();
 		map.put("categories", categories);

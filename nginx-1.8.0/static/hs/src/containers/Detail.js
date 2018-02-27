@@ -1,3 +1,4 @@
+/* global wx */
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import 'slick-carousel/slick/slick.css'
@@ -7,6 +8,7 @@ import Icon from '../components/Icon'
 import Loading from '../components/Loading'
 import req from 'superagent'
 import Big from 'big.js'
+var request = require('superagent')
 
 const DetailCarousel = (props) => {
   var slickSetting = {
@@ -223,9 +225,13 @@ class Detail extends React.Component {
     super(props)
     this.state = {
       images: [],
+      stores: [],
+      signName:'',
+      text: '',
       description: null,
       specifications: [],
       title: null,
+      explain: null,
       shippingFree:false,
       loading: true,
       showPick: false,
@@ -257,11 +263,21 @@ class Detail extends React.Component {
         if (err) {
           return err
         }
-
         this.setState({
           loading: false,
           ...res.body
         })
+      req.get('/uclee-user-web/storeList').end((err, res) => {
+			if (err) {
+				return err
+			}
+			var c = JSON.parse(res.text)
+			console.log(c.storeList)
+			this.setState({
+				signName:c.signName
+			})
+		})
+
    req
     .get('/uclee-user-web/productDetailImg?productId=' + this.props.params.id)
     .query({
@@ -277,8 +293,42 @@ class Detail extends React.Component {
           })
       })
     })
+    req
+			.get('/uclee-user-web/wxConfig')
+			.query({
+				url: window.location.href.split('#')[0]
+			})
+			.end((err, res) => {
+				var c = JSON.parse(res.text)
+				wx.config({
+					debug: false,
+					appId: c.appId,
+					timestamp: c.timestamp,
+					nonceStr: c.noncestr,
+					signature: c.signature,
+					jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+				})
 
-}
+				wx.ready(() => {
+					wx.onMenuShareAppMessage({
+					title: this.state.title+'-'+this.state.signName, // 分享标题
+					/*desc: '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!', */ // 分享描述
+					desc: this.state.explain,
+					link: window.location.href, // 分享链接
+					imgUrl: this.state.images[0].imageUrl, // 分享图标
+					success: function() {},
+					cancel: function() {}
+				})
+				   wx.onMenuShareTimeline({
+					title: '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!', // 分享标题
+					link: window.location.href, // 分享链接
+					imgUrl: this.state.images[0].imageUrl, // 分享图标
+					success: function() {},
+					cancel: function() {}
+				   })
+				})
+			})
+	}
 
   render() {
     var { specifications } = this.state
@@ -326,6 +376,7 @@ class Detail extends React.Component {
             <DetailCarousel images={this.state.images}/>
             <DetailInfo
               title={this.state.title}
+              explain={this.state.explain}
               shippingFree={this.state.shippingFree}
               salesAmount={this.state.salesAmount}
               minPrice={this.minPrice}

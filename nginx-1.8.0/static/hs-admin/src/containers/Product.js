@@ -27,6 +27,7 @@ class Product extends React.Component {
       shippingFree:false,
       text: '',
       title: '',
+      explain: '',
       categoryId: '',
       images: [],
       sale:0
@@ -66,7 +67,6 @@ class Product extends React.Component {
                 />
               </div>
             </div>
-
             <div className="form-group">
               <label className="control-label col-md-3">分类：</label>
               <div className="col-md-9">
@@ -110,6 +110,14 @@ class Product extends React.Component {
                   <option value={false}>否</option>
                   <option value={true}>是</option>
                 </select>
+              </div>
+            </div>
+            <div className="form-group">
+            {this.props.params?<input type='hidden' name='productId' value={this.props.params.id}/>:null}
+              <label className="control-label col-md-3">分享描述：</label>
+              <div className="col-md-9">
+                <textarea rows="2" cols="20" value={this.state.explain} name="explain" className="form-control" onChange={this._simpleInputChange}>
+                </textarea>
               </div>
             </div>
             <div className="form-group">
@@ -427,6 +435,7 @@ class Product extends React.Component {
         this.setState({
           shippingFree:res.body.productForm.shippingFree,
           title: res.body.productForm.title,
+          explain: res.body.productForm.explain,
           categoryId: res.body.productForm.categoryId,
           //images: res.body.productForm.images,
           images: res.body.productForm.images.filter((item) => (item !== null)),
@@ -437,6 +446,7 @@ class Product extends React.Component {
           sale:res.body.sale
         })
         console.log(this.state.shippingFree)
+        console.log("skx="+this.state.explain)
         hongShiProduct.forEach(item => {
           this.hongShiProductById[item.id] = item
         })
@@ -648,15 +658,20 @@ class Product extends React.Component {
 
     if (!data.title) {
       return this.setState({
-        err: '请填写标题'
+        err: '请填写产品名称'
       })
     }
+     if (!data.explain) {
+      return this.setState({
+        err: '请填写分享描述'
+      })
+    }
+    
     if (Number(data.sale)<0) {
       return this.setState({
         err: '销量不可以为负数'
       })
     }
-
     var params=data.title+'';
     if(this.props.params.id){
         params=params+'&productId='+this.props.params.id;

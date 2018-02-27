@@ -29,4 +29,6 @@ public interface ProductMapper {
     List<ProductDto> getAllProductByCatId(Integer categoryId);
 
     Product selectByTitle(String title);
+    
+    Product selectByExplain(String explain);
 }

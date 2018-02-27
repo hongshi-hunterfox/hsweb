@@ -10,6 +10,7 @@
     <result column="is_active" property="isActive" jdbcType="BIT" />
     <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="is_shipping_free" property="isShippingFree" jdbcType="BIT" />
+    <result column="Explain" property="explain" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ProductDto" type="com.uclee.fundation.data.web.dto.ProductDto" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -20,9 +21,10 @@
     <result column="is_active" property="isActive" jdbcType="BIT" />
     <result column="image" property="image" jdbcType="VARCHAR" />
     <result column="is_shipping_free" property="isShippingFree" jdbcType="BIT" />
+    <result column="Explain" property="explain" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free
+    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,6 +37,12 @@
     <include refid="Base_Column_List" />
     from web_products
     where title = #{title,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByExplain" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_products
+    where Explain = #{explain,jdbcType=VARCHAR}
   </select>
   <select id="selectOneImage" resultMap="ProductDto" parameterType="java.lang.Integer" >
     select 
@@ -109,10 +117,10 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
-      create_time, last_modify, is_active ,price,is_shipping_free
+      create_time, last_modify, is_active , price, is_shipping_free, Explain
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT}
+      #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT}, #{explain,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
@@ -143,6 +151,9 @@
       <if test="isShippingFree != null" >
         is_shipping_free,
       </if>
+      <if test="explain != null" >
+        Explain,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -168,6 +179,9 @@
       </if>
       <if test="isShippingFree != null" >
         #{isShippingFree,jdbcType=BIT},
+      </if>
+      <if test="explain != null" >
+        #{explain,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -195,6 +209,9 @@
       <if test="price != null" >
         price = #{price,jdbcType=DECIMAL},
       </if>
+       <if test="explain != null" >
+        Explain = #{explain,jdbcType=VARCHAR},
+      </if>
     </set>
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
@@ -206,7 +223,8 @@
       last_modify = #{lastModify,jdbcType=TIMESTAMP},
       price = #{price,jdbcType=DECIMAL},
       is_shipping_free = #{isShippingFree,jdbcType=BIT},
-      is_active = #{isActive,jdbcType=BIT}
+      is_active = #{isActive,jdbcType=BIT},
+      Explain = #{explain,jdbcType=VARCHAR}
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
 </mapper>

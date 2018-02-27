@@ -19,6 +19,8 @@ public class Product {
     private BigDecimal price;
 
     private Boolean isShippingFree;
+    
+    private String explain;
 
     public Boolean getShippingFree() {
         return isShippingFree;
@@ -91,4 +93,12 @@ public class Product {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
+
+	public String getExplain() {
+		return explain;
+	}
+
+	public void setExplain(String explain) {
+		this.explain = explain;
+	}
 }
