@@ -308,18 +308,20 @@ class Detail extends React.Component {
 					signature: c.signature,
 					jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
 				})
-
+				var explain = this.state.explain
+				
 				wx.ready(() => {
+					var explain = this.state.explain
 					wx.onMenuShareAppMessage({
 					title: this.state.title+'-'+this.state.signName, // 分享标题
-					/*desc: '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!', */ // 分享描述
-					desc: this.state.explain,
+					desc: explain != null ? explain : '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!',  // 分享描述
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.images[0].imageUrl, // 分享图标
 					success: function() {},
 					cancel: function() {}
 				})
-				   wx.onMenuShareTimeline({
+
+				  wx.onMenuShareTimeline({
 					title: '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!', // 分享标题
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.images[0].imageUrl, // 分享图标
