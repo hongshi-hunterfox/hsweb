@@ -663,7 +663,9 @@ insert into web_config (tag,value) values ('logoUrl','http://wsc.in80s.com/file/
 insert into web_config (tag,value) values ('ucenterImg','http://wsc.in80s.com/file/file1507708606025464.jpg');
 insert into web_config (tag,value) values ('birthText','');
 insert into web_config (tag,value) values ('salesText','');
-insert into web_config (tag,value) values ('restrictedDistance','30');
+insert into web_config (tag,value) values ('restrictedDistance','50');
+
+
 
 
 

@@ -629,6 +629,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		ProductForm productForm = new ProductForm();
 		Product product = productMapper.selectByPrimaryKey(productId);
 		if(product!=null){
+			productForm.setIsShow(product.getIsShow());
 			productForm.setExplain(product.getExplain());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());

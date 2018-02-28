@@ -22,6 +22,8 @@ public class Product {
     
     private String explain;
 
+    private Boolean isShow;
+
     public Boolean getShippingFree() {
         return isShippingFree;
     }
@@ -101,4 +103,12 @@ public class Product {
 	public void setExplain(String explain) {
 		this.explain = explain;
 	}
+
+    public Boolean getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(Boolean isShow) {
+        this.isShow = isShow;
+    }
 }

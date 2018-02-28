@@ -24,6 +24,7 @@ class Product extends React.Component {
       currentSpec: {
         storeIds: []
       },
+      isShow:false,
       shippingFree:false,
       text: '',
       title: '',
@@ -97,6 +98,20 @@ class Product extends React.Component {
                   onChange={this._simpleInputChange}
                 />
               </div>
+            </div>
+            <div className="form-group">
+                <label className="control-label col-md-3">是否显示：</label>
+                <div className="col-md-9">
+                <select
+                    name="isShow"
+                    className="form-control"
+                     value={this.state.isShow}
+                    onChange={this._simpleInputChange}
+                    >
+                  <option value={false}>否</option>
+                  <option value={true}>是</option>
+                </select>
+                </div>
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">是否免运费：</label>
@@ -433,6 +448,7 @@ class Product extends React.Component {
         })
 
         this.setState({
+          isShow : res.body.productForm.isShow,
           shippingFree:res.body.productForm.shippingFree,
           title: res.body.productForm.title,
           explain: res.body.productForm.explain,
@@ -447,6 +463,7 @@ class Product extends React.Component {
         })
         console.log(this.state.shippingFree)
         console.log("skx="+this.state.explain)
+        console.log("this.state="+this.state.isShow);
         hongShiProduct.forEach(item => {
           this.hongShiProductById[item.id] = item
         })

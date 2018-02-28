@@ -7,13 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -251,6 +245,13 @@ public class DuobaoServiceImpl implements DuobaoServiceI {
 	@Override
 	public List<ProductDto> getAllProduct(Integer categoryId, Boolean isSaleDesc, Boolean isPriceDesc, String keyword, Integer naviId) {
 		List<ProductDto> products = productMapper.getAllProduct(categoryId,isSaleDesc,isPriceDesc,keyword,naviId);
+		Iterator<ProductDto> iter = products.iterator();
+		while(iter.hasNext()){
+			ProductDto productDto =iter.next();
+			if(productDto!=null && productDto.getIsShow() == false){
+				iter.remove();
+			}
+		}
 		for(ProductDto item:products){
 			ProductImageLink productImageLink = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 			if(productImageLink!=null){
