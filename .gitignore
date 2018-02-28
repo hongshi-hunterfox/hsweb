@@ -7,6 +7,8 @@ bin/
 .conf
 .settings
 .project
+.iml
+.docx
 .classpath
 cooka.log
 .idea/
