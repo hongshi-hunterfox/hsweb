@@ -337,7 +337,25 @@ public class UserController extends CommonUserHandler{
 		map.put("coupons", coupons);
 		return map;
 	}
-
+	
+	/**
+	 * 新绑定会员赠送优惠券数据展示
+	 *@param @param request
+	* @param @return    设定文件 
+	* @return Map<String,Object>    返回类型 
+	* @throws 
+    */
+	@RequestMapping("/getShowCoupon")
+	public @ResponseBody Map<String,Object> getShowCoupon(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
+		map.put("coupons", coupons);
+		return map;
+	}
+	
+	
 	/**
 	 * 获取会员绑定的配置文安
 	 * @param request

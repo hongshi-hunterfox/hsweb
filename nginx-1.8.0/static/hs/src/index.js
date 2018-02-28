@@ -33,6 +33,7 @@ import ShakeMonitor from './containers/ShakeMonitor'
 import Comment from './containers/Comment'
 import CommentDetail from './containers/CommentDetail'
 import DataView from './containers/DataView'
+import ShowCoupon from './containers/ShowCoupon'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -68,6 +69,7 @@ ReactDOM.render(
       <Route path="order" component={Order} />
       <Route path="storeList" component={StoreList} />
       <Route path="dataView" component={DataView} />
+      <Route path="ShowCoupon" component={ShowCoupon} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,
