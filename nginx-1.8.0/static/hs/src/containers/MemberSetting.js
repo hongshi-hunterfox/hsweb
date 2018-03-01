@@ -27,7 +27,7 @@ class MemberSetting extends React.Component {
       bIsLunar: '0',
       cVipCode: '',
 
-      type: '1',
+      type: '0',
       resultmsg: '保存成功',
 
       time: 60,
@@ -431,7 +431,7 @@ class MemberSetting extends React.Component {
               }else{
                 setTimeout(() => {
                   browserHistory.replace({
-                    pathname: '/member-card'
+                    pathname: '/ShowCoupon'
                   })
                 }, 2500)
               }
