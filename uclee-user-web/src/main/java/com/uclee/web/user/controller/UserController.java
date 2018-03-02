@@ -339,7 +339,7 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * 新绑定会员赠送优惠券数据展示
+	 * 新绑定会员赠送优惠券数据
 	 *@param @param request
 	* @param @return    设定文件 
 	* @return Map<String,Object>    返回类型 

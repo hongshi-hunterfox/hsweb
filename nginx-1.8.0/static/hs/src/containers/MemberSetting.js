@@ -1,16 +1,16 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './member-setting.css'
-
+ 
 import { browserHistory } from 'react-router'
-
+ 
 import ErrorMsg from '../components/ErrorMsg'
 import Noti from '../components/Noti'
-
+ 
 import fto from 'form_to_object'
 import validator from 'validator'
 import req from 'superagent'
-
+ 
 import moment from 'moment'
 
 class MemberSetting extends React.Component {
@@ -19,15 +19,14 @@ class MemberSetting extends React.Component {
     this.state = {
       error: '',
       showNoti: false,
-
+ 
       cName: '',
       cMobileNumber: '',
       code: '',
       cBirthday: '',
       bIsLunar: '0',
       cVipCode: '',
-
-      type: '0',
+      type: '1',
       resultmsg: '保存成功',
 
       time: 60,
@@ -235,7 +234,6 @@ class MemberSetting extends React.Component {
                 </div>}
 
             <ErrorMsg msg={this.state.error} />
-
             <div className="form-btn-wrap">
               <button type="submit" className="btn btn-success btn-block" disabled={this.state.disabled}>
                 保存
@@ -361,92 +359,92 @@ class MemberSetting extends React.Component {
         })
       }
     }
-    req.get('/uclee-user-web/isVoucherLimit').end((err, res) => {
-      if (err) {
-        return err
-      }
-      
-      if(!res.body.result){
-          var conf = confirm('礼券已赠完，继续将不会得到礼券赠送券,是否继续绑定？');
-          if(conf){
-            req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
-              if (err) {
-                this.setState({
-                    disabled:false
-                  })
-                return err
-              }
-
-              if (res.body.result === 'fail') {
-                this.setState({
-                  error: res.body.reason,
-                  disabled:false
-                })
-                return
-              }
-
+           
+     req.get('/uclee-user-web/isVoucherLimit').end((err, res) => {
+       if (err) {
+         return err
+       }
+       
+       if(!res.body.result){
+       	/* var conf = confirm('礼券已赠完，继续将不会得到礼券赠送券,是否继续绑定？');
+           if(conf){*/
+             req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+               if (err) {
+                 this.setState({
+                     disabled:false
+                   })
+                 return err
+               }
+ 
+               if (res.body.result === 'fail') {
+                 this.setState({
+                   error: res.body.reason,
+                   disabled:false
+                 })
+                 return
+               }
+ 
+               this.setState({
+                 showNoti: true
+               })
+               console.log(sessionStorage.getItem('isBackToCart'));
+               console.log(sessionStorage.getItem('isBackToCart')===1);
+               if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
+                 sessionStorage.removeItem('isBackToCart');
+                 window.location='/cart';
+               }else{
+                 setTimeout(() => {
+                   browserHistory.replace({
+                     pathname: '/member-card'
+                   })
+                 }, 2500)
+               }
+               
+             })
+       }else{
+             req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
+               if (err) {
+                 this.setState({
+                     disabled:false
+                   })
+                 return err
+               }
+ 
+               if (res.body.result === 'fail') {
+                 this.setState({
+                   error: res.body.reason,
+                   disabled:false
+                 })
+                 return
+               }
+ 
               this.setState({
                 showNoti: true
               })
-              console.log(sessionStorage.getItem('isBackToCart'));
-              console.log(sessionStorage.getItem('isBackToCart')===1);
+               console.log(sessionStorage.getItem('isBackToCart'));
+               console.log(sessionStorage.getItem('isBackToCart')===1);
               if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
                 sessionStorage.removeItem('isBackToCart');
                 window.location='/cart';
               }else{
-                setTimeout(() => {
-                  browserHistory.replace({
-                    pathname: '/member-card'
+                  setTimeout(() => {
+                   browserHistory.replace({
+                   pathname: '/ShowCoupon'
                   })
                 }, 2500)
               }
-              
+               
             })
           }
-      }else{
-            req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
-              if (err) {
-                this.setState({
-                    disabled:false
-                  })
-                return err
-              }
-
-              if (res.body.result === 'fail') {
-                this.setState({
-                  error: res.body.reason,
-                  disabled:false
-                })
-                return
-              }
-
-              this.setState({
-                showNoti: true
-              })
-              console.log(sessionStorage.getItem('isBackToCart'));
-              console.log(sessionStorage.getItem('isBackToCart')===1);
-              if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
-                sessionStorage.removeItem('isBackToCart');
-                window.location='/cart';
-              }else{
-                setTimeout(() => {
-                  browserHistory.replace({
-                    pathname: '/ShowCoupon'
-                  })
-                }, 2500)
-              }
-              
-            })
-          }
-
+ 
     })
-
-    
-
-    this.setState({
-      error: ''
-    })
-  }
-}
-
-export default MemberSetting
+ 
+     
+ 
+     this.setState({
+       error: ''
+     })
+   }
+ }
+ 
+ export default MemberSetting
