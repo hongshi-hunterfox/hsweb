@@ -1338,6 +1338,8 @@ insert into web_config (tag,value) values ('salesText','');
 
 insert into web_config (tag,value) values ('restrictedDistance','50');
 
+insert into web_config (tag,value) values ('startUp','1');
+
 
 
 
