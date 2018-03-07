@@ -12,6 +12,8 @@ import UnpayOrderList from './containers/UnpayOrderList'
 import OrderList from './containers/OrderList'
 import MemberCard from './containers/MemberCard'
 import MemberSetting from './containers/MemberSetting'
+import MemberSetting1 from './containers/MemberSetting1'
+import MemberSetting2 from './containers/MemberSetting2'
 import RechargeList from './containers/RechargeList'
 import Detail from './containers/Detail'
 import Cart from './containers/Cart'
@@ -48,6 +50,8 @@ ReactDOM.render(
       <Route path="boss-center" component={BossCenter} />
       <Route path="member-card" component={MemberCard} />
       <Route path="member-setting" component={MemberSetting} />
+      <Route path="member-setting1" component={MemberSetting1} />
+      <Route path="member-setting2" component={MemberSetting2} />
       <Route path="recharge-list" component={RechargeList} />
       <Route path="seller/recharge" component={Recharge} />
       <Route path="unpay-order-list" component={UnpayOrderList} />

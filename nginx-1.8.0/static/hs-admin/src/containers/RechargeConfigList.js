@@ -215,6 +215,7 @@ class RechargeConfigList extends React.Component {
       </DocumentTitle>
     )
   }
-}
+  }
+
 
 export default RechargeConfigList
