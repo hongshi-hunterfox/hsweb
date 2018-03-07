@@ -115,6 +115,15 @@ class ActivityConfig extends React.Component {
                   <option value="yes">支持</option>
                 </select>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定会员：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="startUp" value={this.state.config.startUp?this.state.config.startUp:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">默认</option>
+                  <option value="1">启用无线下会员</option>
+                  <option value="2">启用有线下会员</option>
+                  <option value="3">停用会员绑定</option>
+                </select>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>配送距离限制km：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>

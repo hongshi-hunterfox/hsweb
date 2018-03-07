@@ -40,5 +40,6 @@ public interface WebConfig {
 	String birthText = "birthText";
 	String salesText = "salesText";
 	String restrictedDistance = "restrictedDistance";
+	String startUp = "startUp";
 
 }                      

@@ -38,7 +38,7 @@ class MemberCard extends React.Component {
       cVipCode: null,
       image: '',
       nickName: '',
-      
+      config:{},
       vipImage:'',
       allowRecharge:true,
       vipJbarcode:'',
@@ -55,6 +55,16 @@ class MemberCard extends React.Component {
           nickName: res.body.nickName
         })
       })
+    
+    req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config: data.config
+      })
+    })
     
     req
       .get('/uclee-user-web/getVipInfo')
@@ -148,9 +158,25 @@ class MemberCard extends React.Component {
 
   _setting = () => {
     if (!this.state.cVipCode) {
+    	var cc = this.state.config.startUp;
+    if(cc ==3){
+    	alert("未启用此功能")
+    }else{
+   	 if(cc == 0){
       browserHistory.push({
         pathname: '/member-setting'
       })
+     }else if(cc == 1){
+     browserHistory.push({
+        pathname: '/member-setting1'
+     })
+     }
+     else{
+     browserHistory.push({
+        pathname: '/member-setting2'
+     })	
+     }
+     }
     }
   }
 }

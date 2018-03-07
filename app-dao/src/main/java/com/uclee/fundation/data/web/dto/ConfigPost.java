@@ -40,6 +40,7 @@ public class ConfigPost {
 	private String birthText;
 	private String salesText;
 	private String restrictedDistance;
+	private String startUp;
 
 	public String getBirthText() {
 		return birthText;
@@ -303,4 +304,11 @@ public class ConfigPost {
 	public void setRestrictedDistance(String restrictedDistance) {
 		this.restrictedDistance = restrictedDistance;
 	}
+	public String getStartUp() {
+		return startUp;
+	}
+	public void setStartUp(String startUp) {
+		this.startUp = startUp;
+	}
+
 }

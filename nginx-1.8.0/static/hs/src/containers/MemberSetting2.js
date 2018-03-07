@@ -68,9 +68,10 @@ class MemberSetting extends React.Component {
   componentWillUnmount() {
     clearInterval(this.tick)
   }
+render() {
 
-  render() {
     return (
+
       <DocumentTitle title="会员信息设置">
         <div className="member-setting container">
           <Noti visible={this.state.showNoti} text={this.state.resultmsg} />
@@ -83,41 +84,14 @@ class MemberSetting extends React.Component {
 				onClick={ this._tab.bind(this, '1')}
             >
               有线下会员卡
-
-            </div>
-            <div
-              className={
-                'member-setting-tab' +
-                  (this.state.type === '2' ? ' active' : '')
-              }
-              onClick={this._tab.bind(this, '2')}
-            >
-              无线下会员卡
             </div>
           </div>
           <form
             className="form-horizontal member-setting-form"
             onSubmit={this._submit}
           >
-            {this.state.type === '2'
-              ? 
-              <div>
-
-                  <div className="form-group">
-                    <label className="control-label col-xs-3 trim-right">
-                      姓名
-                    </label>
-                    <div className="col-xs-9">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="请输入姓名"
-                        name="cName"
-                        value={this.state.cName}
-                        onChange={this._change}
-                      />
-                    </div>
-                  </div>
+            {this.state.type === '1'
+              ? <div>
                   <div className="form-group">
                     <label className="control-label col-xs-3 trim-right">
                       手机号码
@@ -135,7 +109,7 @@ class MemberSetting extends React.Component {
                   </div>
                   <div className="form-group">
                     <label className="control-label col-xs-3 trim-right">
-                      验证码
+                     验证码
                     </label>
                     <div className="col-xs-5">
                       <input
@@ -160,89 +134,13 @@ class MemberSetting extends React.Component {
                       </button>
                     </div>
                   </div>
-                  <div className="form-group">
-                    <label className="control-label col-xs-3 trim-right">
-                      生日
-                    </label>
-                    <div className="col-xs-9">
-                      <input
-                        type="date"
-                        name="cBirthday"
-                        className="form-control"
-                        value={this.state.cBirthday}
-                        onChange={this._change}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-xs-3 trim-right">
-                      生日类型
-                    </label>
-                    <div className="col-xs-9">
-                      <select
-                        name="bIsLunar"
-                        className="form-control"
-                        value={this.state.bIsLunar}
-
-                      >
-                        <option value="0">公历</option>
-
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              : <div>
-                  <div className="form-group">
-                    <label className="control-label col-xs-3 trim-right">
-                      手机号码
-                    </label>
-                    <div className="col-xs-9">
-                      <input
-                        type="tel"
-                        name="cMobileNumber"
-                        className="form-control"
-                        placeholder="请输入手机号码"
-                        value={this.state.cMobileNumber}
-                        onChange={this._change}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group">
-                    <label className="control-label col-xs-3 trim-right">
-                      验证码
-                    </label>
-                    <div className="col-xs-5">
-                      <input
-                        type="tel"
-                        name="code"
-                        className="form-control"
-                        placeholder="请输入验证码"
-                        value={this.state.code}
-                        onChange={this._change}
-                      />
-                    </div>
-                    <div className="col-xs-4">
-                      <button
-                        type="button"
-                        className="btn btn-default member-setting-code-btn"
-                        onClick={this._getCode}
-                        disabled={this.state.fetchingCode}
-                      >
-                        {this.state.fetchingCode
-                          ? `(${this.state.time})`
-                          : '获取验证码'}
-                      </button>
-                    </div>
-                  </div>
-                </div>}
-
+                </div> : ''}
             <ErrorMsg msg={this.state.error} />
             <div className="form-btn-wrap">
               <button type="submit" className="btn btn-success btn-block" disabled={this.state.disabled}>
                 保存
               </button>
             </div>
-
           </form>
           <div style={{padding:'10px',lineHeight:'25px',whiteSpace: 'pre-line'}}>
              {this.state.bindText}
@@ -252,6 +150,8 @@ class MemberSetting extends React.Component {
     )
   }
 
+
+
   _tab = t => {
     this.setState({
       type: t,
@@ -259,11 +159,15 @@ class MemberSetting extends React.Component {
     })
   }
 
+
+
   _change = e => {
     this.setState({
       [e.target.name]: e.target.value
     })
   }
+
+
 
   _getCode = () => {
     if (!validator.isMobilePhone(this.state.cMobileNumber, 'zh-CN')) {
@@ -272,8 +176,9 @@ class MemberSetting extends React.Component {
       })
     }
     this.setState({
-      fetchingCode: true
+     fetchingCode: true
     })
+
     req
       .get('/uclee-user-web/verifyCode')
       .query({
@@ -287,13 +192,17 @@ class MemberSetting extends React.Component {
       })
   }
 
+
+
   _tick = () => {
+
     this.tick = setInterval(() => {
       if (this.state.time <= 0) {
         this.setState({
           fetchingCode: false,
           time: 60
         })
+
         clearInterval(this.tick)
         return
       }
@@ -311,6 +220,7 @@ class MemberSetting extends React.Component {
       disabled:true
     })
     e.preventDefault()
+
     var data = fto(e.target)
     if (!data.cMobileNumber) {
       return this.setState({
@@ -318,6 +228,8 @@ class MemberSetting extends React.Component {
         disabled:false
       })
     }
+
+
 
     if (!data.code) {
       return this.setState({
@@ -340,34 +252,11 @@ class MemberSetting extends React.Component {
       })
     }
 
-    if (this.state.type === '2') {
-      if (!data.cName) {
-        return this.setState({
-          error: '请输入姓名',
-        disabled:false
-        })
-      }
-
-      if (!data.cBirthday) {
-        return this.setState({
-          error: '请输入生日',
-        disabled:false
-        })
-      }
-
-      if (!data.bIsLunar) {
-        return this.setState({
-          error: '请选择生日类型',
-        disabled:false
-        })
-      }
-    }
-           
      req.get('/uclee-user-web/isVoucherLimit').end((err, res) => {
        if (err) {
          return err
        }
-       
+
        if(!res.body.result){
        	/* var conf = confirm('礼券已赠完，继续将不会得到礼券赠送券,是否继续绑定？');
            if(conf){*/
@@ -375,10 +264,9 @@ class MemberSetting extends React.Component {
                if (err) {
                  this.setState({
                      disabled:false
-                   })
+                  })
                  return err
                }
- 
                if (res.body.result === 'fail') {
                  this.setState({
                    error: res.body.reason,
@@ -386,7 +274,6 @@ class MemberSetting extends React.Component {
                  })
                  return
                }
- 
                this.setState({
                  showNoti: true
                })
@@ -402,17 +289,15 @@ class MemberSetting extends React.Component {
                    })
                  }, 2500)
                }
-               
              })
        }else{
              req.post('/uclee-user-web/addVipInfo').send(data).end((err, res) => {
                if (err) {
                  this.setState({
                      disabled:false
-                   })
+                  })
                  return err
                }
- 
                if (res.body.result === 'fail') {
                  this.setState({
                    error: res.body.reason,
@@ -420,7 +305,6 @@ class MemberSetting extends React.Component {
                  })
                  return
                }
- 
               this.setState({
                 showNoti: true
               })
@@ -428,7 +312,7 @@ class MemberSetting extends React.Component {
                console.log(sessionStorage.getItem('isBackToCart')===1);
               if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
                 sessionStorage.removeItem('isBackToCart');
-                window.location='/cart';
+                window.location='/cart';                
               }else{
                   setTimeout(() => {
                    browserHistory.replace({
@@ -833,6 +717,8 @@ render() {
        error: ''
      })
    }
- }
- 
+}
+
  export default MemberSetting
+  
+                                         

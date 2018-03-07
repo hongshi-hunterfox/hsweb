@@ -88,6 +88,7 @@ public class BackendServiceImpl implements BackendServiceI {
 	private UserProfileMapper userProfileMapper;
 	@Autowired
 	private VarMapper varMapper;
+	@SuppressWarnings("unused")
 	@Override
 	public boolean updateConfig(ConfigPost configPost) { 
 		
@@ -203,6 +204,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
 		}else{
 			configMapper.updateByTag(WebConfig.restrictedDistance, "");
+		}
+		if (configPost.getStartUp()!=null) {
+			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
+		}else{
+			configMapper.updateByTag(WebConfig.startUp, "");
 		}
 		return true;
 	}
@@ -321,6 +327,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getRestrictedDistance()!=null) {
 			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
 		}
+		if (configPost.getStartUp()!=null) {
+			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
+		}
 		return true;
 	}
 	@Override
@@ -437,6 +446,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getRestrictedDistance()!=null) {
 			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
+		}
+		if (configPost.getStartUp()!=null) {
+			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
 		}
 		return true;
 	}
@@ -849,8 +861,9 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setSalesText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.restrictedDistance)){
 				configPost.setRestrictedDistance(config.getValue());
+			}else if(config.getTag().equals(WebConfig.startUp)){
+				configPost.setStartUp(config.getValue());
 			}
-
 		}
 		return configPost;
 	}
