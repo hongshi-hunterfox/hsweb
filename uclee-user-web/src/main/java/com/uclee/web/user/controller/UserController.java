@@ -65,6 +65,8 @@ public class UserController extends CommonUserHandler{
 	@Autowired
 	private HongShiMapper hongShiMapper;
 	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
+	@Autowired
 	private ProductMapper productMapper;
 	@Autowired
 	private FullCutMapper fullCutMapper;
@@ -76,6 +78,8 @@ public class UserController extends CommonUserHandler{
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
+	@Autowired
+	private EvaluationGiftsMapper evaluationGiftsMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -354,7 +358,23 @@ public class UserController extends CommonUserHandler{
 		map.put("coupons", coupons);
 		return map;
 	}
-	
+	/**
+	 * 获取评论赠送提示内容
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getCommentText")
+	public @ResponseBody Map<String,Object> getCommentText(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Config config = userService.getConfigByTag(WebConfig.commentText);
+		if(config!=null){
+			map.put("commentText", config.getValue());
+		}else {
+			map.put("commentText", "");
+		}
+		return map;
+	}
 	
 	/**
 	 * 获取会员绑定的配置文安
@@ -392,6 +412,23 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 
+	@RequestMapping("/Commentary")
+	public @ResponseBody Map<String,Object> Commentary(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<EvaluationGifts> evaluationGift = evaluationGiftsMapper.selectOne();
+		if(evaluationGift!=null&&evaluationGift.size()>=1){
+			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGift.get(0).getVoucherCode());
+			if(coupon.size()<evaluationGift.get(0).getAmount()){
+				map.put("result",false);
+				return map;
+			}
+		}
+	map.put("result",true);
+	return map;
+	}
+	
 	/** 
 	* @Title: order 
 	* @Description: 提交订单页面的数据处理
@@ -1299,5 +1336,49 @@ public class UserController extends CommonUserHandler{
 	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName){
 		return userService.getMobJect(QueryName);
 	}
+	
+	/**
+	 * @Description: 评论赠送接口skx
+	 */
+	@RequestMapping("/zengSong")
+	public @ResponseBody HongShiCommonResult zengsong(HttpServletRequest request,String oauthId,Integer point,String tag){
+		//1、更新券数量 原来的券数量加上现在的web_evaluation_config里面的amount就可以了。
+		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		
+		List<EvaluationGifts> evaluationGifts = evaluationGiftsMapper.selectOne();
+		//判断赠送数量
+		for(int i=0;i<evaluationGifts.get(0).getAmount();i++){
+		List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGifts.get(0).getVoucherCode());
+		if(coupon!=null && !coupon.isEmpty()){
+			if(coupon != null && coupon.size()>0){
+				coupon.get(0);                       
+				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode());
+				if(a>0){
+					System.out.println("发送成功");
+				}else{
+					System.out.println("发送失败");
+				}
+				
+			}
+		}else{
+			System.out.println("券被抢光了");
+		}
+		}
+		hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),evaluationGifts.get(0).getPoint(),"评论赠积分");	
+		//评论送金额
+		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(evaluationGifts.get(0).getMoney());
+		hongShiVipService.hongShiRecharge(dd);
+		
+	    return null;		
+			
+
+
+	}
+	
+	
 	
  }

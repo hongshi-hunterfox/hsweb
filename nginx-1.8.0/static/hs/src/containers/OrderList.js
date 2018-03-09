@@ -3,6 +3,7 @@ import React from "react"
 import DocumentTitle from "react-document-title"
 import Navi from './Navi'
 import OrderListUtil from "../utils/OrderListUtil"
+import req from 'superagent'
 var Link = require("react-router").Link
 class OrderList extends React.Component {
 	constructor(props) {
@@ -11,7 +12,8 @@ class OrderList extends React.Component {
 			orders: [],
 			showImage:false,
 			imageUrl:'',
-			barcode:''
+			barcode:'',
+			commentTextText:''
 		}
 	}
 
@@ -28,7 +30,16 @@ class OrderList extends React.Component {
 				})
 			}.bind(this)
 		)
+    req.get('/uclee-user-web/getCommentText').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var d = res.body
 
+      this.setState({
+        commentText: d.commentText
+      })
+    })
 	}
 	_showImage=(url,url2)=>{
 		this.setState({
@@ -66,8 +77,12 @@ class OrderList extends React.Component {
 							</div>
 							:null	
 						}
-						
-
+						{   item.isEnd ==1?
+							<div className="number">
+							    <span>评论订单有礼：{this.state.commentText}</span>
+						    </div>
+						    :null
+						}
 					</div>
 					<OrderItem orderItems={item.orderItems} isSelfPick={item.isSelfPick}/>
 					<div className="order-list-bottom">

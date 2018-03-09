@@ -41,6 +41,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
 	@Autowired
+	private EvaluationGiftsMapper evaluationGiftsMapper;
+	@Autowired
 	private CategoryMapper categoryMapper;
 	@Autowired
 	private HomeQuickNaviMapper homeQuickNaviMapper;
@@ -175,6 +177,11 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.bindText, "");
 		}
+		if (configPost.getCommentText()!=null) {
+			configMapper.updateByTag(WebConfig.commentText, configPost.getCommentText());
+		}else{
+			configMapper.updateByTag(WebConfig.commentText, "");
+		}
 		if (configPost.getSupportDeliver()!=null) {
 			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
 		}else{
@@ -303,6 +310,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getBindText()!=null) {
 			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
 		}
+		if (configPost.getCommentText()!=null) {
+			configMapper.updateByTag(WebConfig.commentText, configPost.getCommentText());
+		}
 		if (configPost.getSupportDeliver()!=null) {
 			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
 		}
@@ -423,6 +433,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getBindText()!=null) {
 			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
 		}
+		if (configPost.getCommentText()!=null) {
+			configMapper.updateByTag(WebConfig.commentText, configPost.getCommentText());
+		}
 		if (configPost.getSupportDeliver()!=null) {
 			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
 		}
@@ -466,6 +479,12 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<BindingRewards> selectAllBindingRewards() {
 
 		return bindingRewardsMapper.selectOne();
+	}
+	
+	@Override
+	public List<EvaluationGifts> selectAllEvaluationGifts() {
+
+		return evaluationGiftsMapper.selectOne();
 	}
 
 	@Override
@@ -526,6 +545,27 @@ public class BackendServiceImpl implements BackendServiceI {
 			bindingRewards.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
 			bindingRewards.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
 			bindingRewardsMapper.insertSelective(bindingRewards);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateEvaluationGifts(FreightPost freightPost) {
+		int delAll = evaluationGiftsMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0||freightPost.getMyValue0()==null||freightPost.getMyValue0().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			EvaluationGifts evaluationGifts = new EvaluationGifts();
+			evaluationGifts.setPoint(entry.getValue().intValue());
+			evaluationGifts.setMoney(new BigDecimal(freightPost.getMyValue0().get(entry.getKey())));
+			evaluationGifts.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			evaluationGifts.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
+			evaluationGiftsMapper.insertSelective(evaluationGifts);
 		}
 		return true;
 	}
@@ -845,6 +885,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setRechargeTemId(config.getValue());
 			}else if(config.getTag().equals(WebConfig.bindText)){
 				configPost.setBindText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.commentText)){
+				configPost.setCommentText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.supportDeliver)){
 				configPost.setSupportDeliver(config.getValue());
 			}else if(config.getTag().equals(WebConfig.domain)){

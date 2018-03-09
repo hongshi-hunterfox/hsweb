@@ -53,6 +53,9 @@ class Menu extends React.Component {
           <Link to={'/comment-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             评论管理
           </Link>
+            <Link to={'/evaluationConfiguration?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            评论赠送设置
+          </Link>
            <Link to={'/user-birth-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             生日信息推送
           </Link>

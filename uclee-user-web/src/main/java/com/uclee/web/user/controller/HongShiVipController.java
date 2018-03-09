@@ -3,6 +3,7 @@ package com.uclee.web.user.controller;
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
+import com.uclee.fundation.data.mybatis.mapping.EvaluationGiftsMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
 import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
 import com.uclee.fundation.data.mybatis.model.*;
@@ -47,6 +48,9 @@ public class HongShiVipController {
 
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
+	
+	@Autowired
+	private EvaluationGiftsMapper evaluationGiftsMapper;
 	
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
@@ -201,7 +205,7 @@ public class HongShiVipController {
 					List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 					OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
 					if(oauthLogin!=null&&bindingRewards!=null&&bindingRewards.size()>0){
-						hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),bindingRewards.get(0).getPoint(),"绑会员送积分");
+						hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),bindingRewards.get(0).getPoint(),"绑卡送积分");
 						for(int i=0;i<bindingRewards.get(0).getAmount();i++){
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
 							if (coupon != null && coupon.size() > 0) {

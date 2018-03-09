@@ -1,4 +1,4 @@
-use 数据库名
+﻿use 数据库名
 
 go
 
@@ -248,7 +248,28 @@ end
 
 CREATE NONCLUSTERED INDEX orderIdx ON web_order_items(order_id)
 
+If Object_ID('web_evaluation_config','U') Is Null
 
+CREATE TABLE web_evaluation_config(
+	
+
+id int IDENTITY(1,1) NOT NULL,
+	
+
+point int NOT NULL,
+	
+
+money decimal(20, 2) NULL,
+	
+
+voucher_code varchar(255) NOT NULL,
+
+	
+amount int NOT NULL,
+	
+
+time datetime NULL
+);
 
 
 
@@ -1340,6 +1361,7 @@ insert into web_config (tag,value) values ('restrictedDistance','50');
 
 insert into web_config (tag,value) values ('startUp','1');
 
+insert into web_config(id,tag,value) values(43,"commentText","评论有惊喜哦~~");
 
 
 

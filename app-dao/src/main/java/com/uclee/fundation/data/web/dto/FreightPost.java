@@ -1,10 +1,15 @@
 package com.uclee.fundation.data.web.dto;
 
+import java.util.List;
 import java.util.Map;
+
+import com.uclee.fundation.data.mybatis.model.Freight;
 
 public class FreightPost {
 	
 	private Map<Integer,Double> myKey;
+	
+	private Map<Integer,String> myValue0;
 	
 	private Map<Integer,String> myValue;
 
@@ -39,6 +44,14 @@ public class FreightPost {
 	public void setMyValue1(Map<Integer, String> myValue1) {
 		this.myValue1 = myValue1;
 	}
+	
+	public Map<Integer, String> getMyValue0() {
+		return myValue0;
+	}
+
+	public void setMyValue0(Map<Integer, String> myValue0) {
+		this.myValue0 = myValue0;
+	}
 
 	public Map<Integer, Integer> getMySelect() {
 		return mySelect;
@@ -63,5 +76,6 @@ public class FreightPost {
 	public void setMyValue(Map<Integer, String> myValue) {
 		this.myValue = myValue;
 	}
+
 
 }

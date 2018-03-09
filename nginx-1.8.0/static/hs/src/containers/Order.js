@@ -43,6 +43,7 @@ class Order extends React.Component {
       salesInfoShow:false,
       salesInfo:[],
       cut:0,
+      distance:0,
       config:{}
     }
     this.lat = 23
@@ -227,6 +228,8 @@ class Order extends React.Component {
                             console.log('this.state.isShippingfree:' + this.state.isShippingfree)
                             if(!this.state.isShippingfree){
                               geocoder.getLocation(addr,this.state.total)
+                            }else{
+                            	geocoder.getLocation(addr,this.state.total)
                             }
                           }
                         }
@@ -368,9 +371,9 @@ class Order extends React.Component {
               <input
                 type="hidden"
                 name="shippingFee"
-                value={this.state.shippingFee}
+                value={this.state.isShippingfree ? 0 : this.state.shippingFee}
               />
-              运费：<span className="money">￥{this.state.shippingFee}</span>
+              运费：<span className="money">￥{this.state.isShippingfree ? 0 : this.state.shippingFee}</span>
             </div>
             <div
               className="order-coupon"
@@ -421,12 +424,12 @@ class Order extends React.Component {
               合计：¥
               {this.state.total -
                 this.state.voucherText +
-                this.state.shippingFee -
+                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
                 this.state.cut >
                 0
                 ? (this.state.total -
                     this.state.voucherText +
-                    this.state.shippingFee-
+                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
                     this.state.cut).toFixed(2)
                 : 0}
               <button type="submit" className="button">提交订单</button>
@@ -529,18 +532,16 @@ salesInfoShowClick=()=>{
       })
       return false
     }
-    
-      var distance = Math.round(
+          var distance = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
             new qq.maps.LatLng( 
               Number(localStorage.getItem('latitude')),
               Number(localStorage.getItem('longitude'))
             )
-          )/100
-      )/10
-          
-    if (data.isSelfPick === 'false' && distance>this.state.config.restrictedDistance) {
+          ) / 100
+          )/10
+     if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
       this.setState({
         error: errMap['Distribution_error']
       })

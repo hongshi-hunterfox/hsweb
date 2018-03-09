@@ -32,6 +32,7 @@ public class ConfigPost {
 	private String payTemId;
 	private String rechargeTemId;
 	private String bindText;
+	private String commentText;
 	private String supportDeliver;
 	private String domain;
 	private String hsMerchantCode;
@@ -96,6 +97,14 @@ public class ConfigPost {
 
 	public void setBindText(String bindText) {
 		this.bindText = bindText;
+	}
+	
+	public String getCommentText() {
+		return commentText;
+	}
+
+	public void setCommentText(String commentText) {
+		this.commentText = commentText;
 	}
 
 	public String getSupportDeliver() {
