@@ -50,6 +50,7 @@
 		<result column="IsEnd" property="isEnd" jdbcType="BIT" />
 		<result column="IsVoid" property="isVoid" jdbcType="BIT" />
 		<result column="PickUpCode" property="pickUpCode" jdbcType="BIT" />
+		<result column="Department" property="department" jdbcType="VARCHAR"/>
 	</resultMap>
 	<resultMap id="HongShiOrderItem" type="com.uclee.fundation.data.mybatis.model.HongShiOrderItem">
 		<id column="ID" property="id" jdbcType="INTEGER" />
@@ -86,6 +87,7 @@
 		<result column="Values" property="value" jdbcType="DECIMAL" />
 		<result column="VType" property="valueType" jdbcType="VARCHAR" />
 	</resultMap>
+
 	<select id="getHongShiOrder" resultMap="HongShiOrder">
 		exec WSC_GetOrdersList '','','',#{cWeiXinCode,jdbcType=VARCHAR},null,#{isEnd,jdbcType=BIT}
 	</select>

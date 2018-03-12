@@ -171,7 +171,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String,String> config = userService.getSMSConfig();
-		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
+		return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"), config.get("signName"), config.get("templateCode"));
 	}
 	/** 
 	* @Title: checkVerifyCode 
@@ -274,7 +274,7 @@ public class UserController extends CommonUserHandler{
 		if(keyword!=null){
 			keyword = "%"+keyword+"%";
 		}
-		List<ProductDto> products = duobaoService.getAllProduct(categoryId,isSaleDesc,isPriceDesc,keyword,naviId);
+		List<ProductDto> products = duobaoService.getAllProduct(categoryId, isSaleDesc, isPriceDesc, keyword, naviId);
 		map.put("products", products);
 		return map;
 	}
@@ -293,6 +293,15 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<HongShiOrder> orders = userService.getHongShiOrder(userId,isEnd);
+		//因为邓彪不修改存储过程，取回来的department是ID，不是名字。所以要修改一下by chiangpan
+		for(int i=0;i<orders.size();i++){
+			HongShiOrder hongShiOrder=orders.get(i);
+			if(hongShiOrder.getDepartment()!=null){
+				//根据hsCode获得到店铺名称
+				String storeName = backendService.getHongShiStoreName(hongShiOrder.getDepartment());
+				hongShiOrder.setDepartment(storeName);
+			}
+		}
 		map.put("orders", orders);
 		return map;
 	}
@@ -713,7 +722,7 @@ public class UserController extends CommonUserHandler{
 	public @ResponseBody List<CartDto> cart(HttpServletRequest request,Integer storeId){
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		return userService.getUserCart(userId,storeId);
+		return userService.getUserCart(userId, storeId);
 	}
 	
 	/** 
@@ -1377,6 +1386,32 @@ public class UserController extends CommonUserHandler{
 			
 
 
+	}
+
+
+
+	/**
+	 * @Description : 订单详情页面 by chiangpan
+	 */
+	@RequestMapping(value="/getMyOrderDetail")
+	public @ResponseBody Map<String,Object> getMyOrderDetail(HttpServletRequest request,String outerOrderCode){
+		Map<String,Object> orderMap=new TreeMap<String,Object>();
+		//根据微商城订单号取得订单
+		Order order=userService.getOrderListSerailNum(outerOrderCode);
+
+		if(order!=null){
+			NapaStore napaStore=userService.getNapaStore(order.getStoreId());//下单部门
+			if(napaStore!=null){
+				order.setStoreName(napaStore.getStoreName());//设置下单部门
+			}
+
+			order.setCreateTimeStr(DateUtils.format(order.getCreateTime(),DateUtils.FORMAT_LONG_CN));//下单时间
+			order.setPickDateStr(DateUtils.format(order.getPickTime(),DateUtils.FORMAT_LONG_CN));//取货时间
+
+		}
+
+		orderMap.put("order",order);
+		return orderMap;
 	}
 	
 	

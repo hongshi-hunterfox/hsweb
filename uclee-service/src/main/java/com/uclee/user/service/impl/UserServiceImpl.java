@@ -1053,8 +1053,8 @@ public class UserServiceImpl implements UserServiceI {
 	*/
 	public UniteOrderResult getWCPayResult(String openId, String paymentSerialNum,String money,String body,String detail) {
 		try {
-		if(body!=null && body.length()>50){
-			body=body.substring(0,49)+"...";
+		if(body!=null && body.length()>30){
+			body=body.substring(0,29)+"...";
 		}
 
 		Map<String,String> weixinConfig = getWeixinConfig();
@@ -1080,7 +1080,7 @@ public class UserServiceImpl implements UserServiceI {
 		order.setProduct_id(paymentSerialNum);
 		String reqXML = PayImpl.generateXML(order,weixinConfig.get(WechatMerchantInfo.AppSecret_CONFIG));
 		reqXML = new String(reqXML.getBytes("UTF-8"), "UTF-8");
-		System.out.println("reqXML:" + reqXML);
+		logger.info("reqXML:" + reqXML);
 		
 		String respXML = PayImpl.requestWechat(wc_general_order, reqXML);
 		 //String respXML =HttpsPost.httpsPost(reqXML);			
@@ -3822,5 +3822,12 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String, Object> getVersion(String version) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	//根据微商城订单号生成订单的所有信息
+	public Order getOrderListSerailNum(String outerOrderCode) {
+		Order order=orderMapper.getOrderListByOrderSerailNum(outerOrderCode);
+		return order;
 	}
 }

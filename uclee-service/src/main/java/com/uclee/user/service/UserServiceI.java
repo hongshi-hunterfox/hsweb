@@ -272,5 +272,6 @@ public interface UserServiceI {
 	Map<String, Object> getMobile(String phone, String hsCode);
 	
 	Map<String, Object> getMobJect(String QueryName);
-	
+	//根据微商城订单号取得订单的所有信息by chiangpan
+	Order getOrderListSerailNum(String outerOrderCode);
 }
