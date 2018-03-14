@@ -263,4 +263,8 @@ public interface UserServiceI {
     Config getConfigByTag(String supportDeliver);
 
     int getUnCommentCount(Integer userId);
+
+    List<PaymentOrder> selectForTimer();
+
+	Map<String,String> wxInitiativeCheck(PaymentOrder paymentOrder);
 }

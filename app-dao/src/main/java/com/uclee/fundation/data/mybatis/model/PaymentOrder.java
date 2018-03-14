@@ -31,7 +31,27 @@ public class PaymentOrder {
     
     private List<Order> orders;
 
-	public Integer getPayType() {
+    private Integer checkCount;
+
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public Integer getCheckCount() {
+        return checkCount;
+    }
+
+    public void setCheckCount(Integer checkCount) {
+        this.checkCount = checkCount;
+    }
+
+    public Integer getPayType() {
 		return payType;
 	}
 

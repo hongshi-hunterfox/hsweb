@@ -7,11 +7,9 @@ import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
 import com.uclee.fundation.data.mybatis.mapping.MessageMapper;
+import com.uclee.fundation.data.mybatis.mapping.PaymentOrderMapper;
 import com.uclee.fundation.data.mybatis.mapping.VarMapper;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.DataSourceInfo;
-import com.uclee.fundation.data.mybatis.model.Message;
-import com.uclee.fundation.data.mybatis.model.Var;
+import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import org.apache.log4j.Logger;
@@ -23,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Configurable
@@ -46,6 +45,9 @@ public class DuobaoSchedule {
 	@Autowired
 	private ConfigMapper configMapper;
 
+	@Autowired
+	private PaymentOrderMapper paymentOrderMapper;
+
 	/*@Scheduled(cron="0 0 0 * * *")
 	private void updateWXInfo(){
 		userService.updateWXInfo();
@@ -65,6 +67,23 @@ public class DuobaoSchedule {
 			}
 		}
 	}
+
+	@Scheduled(fixedRate = 1000 * 10)
+	private void InitiativeCheck(){
+		dataSource.switchDataSource("fcx");
+		List<PaymentOrder> paymentOrders = userService.selectForTimer();
+		for(PaymentOrder paymentOrder : paymentOrders){
+			paymentOrder.setCheckCount(paymentOrder.getCheckCount()+1);
+			paymentOrderMapper.updateCheckCount(paymentOrder);
+
+			Map<String,String> ret = userService.wxInitiativeCheck(paymentOrder);
+
+			if(ret.get("trade_state")!=null&&ret.get("trade_state").equals("SUCCESS")){
+				userService.WechatNotifyHandle(paymentOrder.getPaymentSerialNum(),ret.get("transaction_id"),"fcx");
+			}
+		}
+	}
+
 	@Scheduled(fixedRate = 1000 * 3)
 	private void sendMessage(){
 		dataSource.switchDataSource("master");

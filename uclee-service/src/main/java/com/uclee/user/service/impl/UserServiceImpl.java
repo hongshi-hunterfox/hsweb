@@ -30,7 +30,11 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.uclee.user.model.MessageUtil;
+import com.uclee.user.model.WxUnifiedRequest;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -1577,7 +1581,7 @@ public class UserServiceImpl implements UserServiceI {
 			paymentOrder.setTransactionId(transaction_id);
 			paymentOrder.setIsCompleted(true);
 			paymentOrder.setCompleteTime(new Date());
-			if(paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder)>0){
+			if(paymentOrderMapper.updatePaymentResult(paymentOrder)>0){
 				//TODO 调用存储过程
 				OauthLogin oauthLogin = getOauthLoginInfoByUserId(paymentOrder.getUserId());
 				if(oauthLogin!=null){
@@ -3832,6 +3836,69 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public int getUnCommentCount(Integer userId) {
 		return orderMapper.getUnCommentCount(userId);
+	}
+
+	@Override
+	public List<PaymentOrder> selectForTimer() {
+	 	Date target = DateUtils.addSecond(new Date(),-5);
+	 	List<PaymentOrder> paymentOrderLIst = paymentOrderMapper.selectForTimer(target);
+		return paymentOrderLIst;
+	}
+
+	protected String joinKeyValue(Map<String, Object> map, String prefix, String suffix, String separator, boolean ignoreEmptyValue, String... ignoreKeys) {
+		List<String> list = new ArrayList<String>();
+		if (map != null) {
+			for (Entry<String, Object> entry : map.entrySet()) {
+				String key = entry.getKey();
+				String value = ConvertUtils.convert(entry.getValue());
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(key) && !ArrayUtils.contains(ignoreKeys, key) && (!ignoreEmptyValue || org.apache.commons.lang3.StringUtils.isNotEmpty(value))) {
+					list.add(key + "=" + (value != null ? value : ""));
+				}
+			}
+		}
+		return (prefix != null ? prefix : "") + org.apache.commons.lang3.StringUtils.join(list, separator) + (suffix != null ? suffix : "");
+	}
+	private String generateSignForPay(Map<String, ?> parameterMap) {
+		Map<String,String> weixinConfig = getWeixinConfig();
+		String str = joinKeyValue(new TreeMap<String, Object>(parameterMap), null, "&key=" + weixinConfig.get(WechatMerchantInfo.APPKEY_CONFIG), "&", true, "sign");
+		try {
+			return MyTool.getMD5(str.getBytes("iso-8859-1")).toUpperCase();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
+		//return DigestUtils.md5Hex().toUpperCase();
+	}
+	@Override
+	public Map<String, String> wxInitiativeCheck(PaymentOrder paymentOrder) {
+		Map<String,String> weixinConfig = getWeixinConfig();
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("appid", weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
+		parameterMap.put("mch_id", weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
+		long time = System.currentTimeMillis();
+		String nonceStr = String.valueOf(time);
+		parameterMap.put("nonce_str", nonceStr);
+		parameterMap.put("out_trade_no", paymentOrder.getPaymentSerialNum());
+		String sign = generateSignForPay(parameterMap);
+		parameterMap.put("sign",sign);
+		WxUnifiedRequest wxUnifiedRequest = new WxUnifiedRequest();
+		wxUnifiedRequest.setAppid(weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
+		wxUnifiedRequest.setMch_id(weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
+		wxUnifiedRequest.setNonce_str(nonceStr);
+		wxUnifiedRequest.setOut_trade_no(paymentOrder.getPaymentSerialNum());
+		wxUnifiedRequest.setSign(sign);
+		String xmlString = MessageUtil.wxUnifiedRequestToXml(wxUnifiedRequest).replaceAll("__", "_");
+		try {
+			String retXml = new String(HttpClientUtil.httpsPost("https://api.mch.weixin.qq.com/pay/orderquery", xmlString).getBytes(), "ISO-8859-1");
+			Map<String,String> ret = MessageUtil.parseXml(retXml);
+			logger.info("微信公众号主动查询结果： " + JSON.toJSONString(ret));
+			return ret;
+		} catch (UnsupportedEncodingException e) {
+			logger.error("数据解析错误");
+		} catch (Exception e) {
+			logger.error("数据解析错误");
+		}
+		return new HashMap<>();
 	}
 
 }

@@ -176,6 +176,22 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(2151);
 		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
 	}
+	@Test
+	public void wxInitiativeCheck(){
+		dataSource.switchDataSource("kf");
+		List<PaymentOrder> paymentOrders = userService.selectForTimer();
+		for(PaymentOrder paymentOrder : paymentOrders){
+			paymentOrder.setCheckCount(paymentOrder.getCheckCount()+1);
+			paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder);
+
+			Map<String,String> ret = userService.wxInitiativeCheck(paymentOrder);
+
+			if(ret.get("trade_state")!=null&&ret.get("trade_state").equals("SUCCESS")){
+				logger.info("支付成功");
+				userService.WechatNotifyHandle(paymentOrder.getPaymentSerialNum(),ret.get("transaction_id"),"kf");
+			}
+		}
+	}
 
 	@Test
 	public void testChoujiang(){
