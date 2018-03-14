@@ -70,16 +70,19 @@ public class DuobaoSchedule {
 
 	@Scheduled(fixedRate = 1000 * 10)
 	private void InitiativeCheck(){
-		dataSource.switchDataSource("fcx");
-		List<PaymentOrder> paymentOrders = userService.selectForTimer();
-		for(PaymentOrder paymentOrder : paymentOrders){
-			paymentOrder.setCheckCount(paymentOrder.getCheckCount()+1);
-			paymentOrderMapper.updateCheckCount(paymentOrder);
+		String[] datasourceStr = {"fcx","hs"};
+		for(String tmp:datasourceStr){
+			dataSource.switchDataSource(tmp);
+			List<PaymentOrder> paymentOrders = userService.selectForTimer();
+			for(PaymentOrder paymentOrder : paymentOrders){
+				paymentOrder.setCheckCount(paymentOrder.getCheckCount()+1);
+				paymentOrderMapper.updateCheckCount(paymentOrder);
 
-			Map<String,String> ret = userService.wxInitiativeCheck(paymentOrder);
+				Map<String,String> ret = userService.wxInitiativeCheck(paymentOrder);
 
-			if(ret.get("trade_state")!=null&&ret.get("trade_state").equals("SUCCESS")){
-				userService.WechatNotifyHandle(paymentOrder.getPaymentSerialNum(),ret.get("transaction_id"),"fcx");
+				if(ret.get("trade_state")!=null&&ret.get("trade_state").equals("SUCCESS")){
+					userService.WechatNotifyHandle(paymentOrder.getPaymentSerialNum(),ret.get("transaction_id"),tmp);
+				}
 			}
 		}
 	}
