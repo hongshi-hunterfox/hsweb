@@ -1133,6 +1133,7 @@ public class UserServiceImpl implements UserServiceI {
 		order.setNotify_url(weixinConfig.get(WechatMerchantInfo.NOTIFY_URL_CONFIG));
 		order.setTrade_type("JSAPI");  
 		order.setProduct_id(paymentSerialNum);
+		logger.info("order: " + JSON.toJSONString(order));
 		String reqXML = PayImpl.generateXML(order,weixinConfig.get(WechatMerchantInfo.AppSecret_CONFIG));
 		reqXML = new String(reqXML.getBytes("UTF-8"), "UTF-8");
 		System.out.println("reqXML:" + reqXML);
