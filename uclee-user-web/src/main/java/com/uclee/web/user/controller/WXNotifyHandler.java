@@ -1,10 +1,13 @@
 package com.uclee.web.user.controller;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.uclee.fundation.data.mybatis.mapping.PaymentCallBackDataMapper;
+import com.uclee.fundation.data.mybatis.model.PaymentCallBackData;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -28,6 +31,9 @@ import com.uclee.user.service.UserServiceI;
 public class WXNotifyHandler {
 	@Autowired
 	private UserServiceI userService;
+
+	@Autowired
+	private PaymentCallBackDataMapper paymentCallBackDataMapper;
 	private static final Logger logger = Logger.getLogger(WXNotifyHandler.class);
 	/** 
 	* @Title: WCNotifyHandler 
@@ -46,6 +52,16 @@ public class WXNotifyHandler {
 			String respXML = IOUtils.toString(request.getInputStream(),request.getCharacterEncoding());
 			logger.info("微信回调通知：" + respXML);
 			PayResultNotice payResultNotice = (PayResultNotice) PayImpl.turnObject(PayResultNotice.class, respXML);
+			try{
+				PaymentCallBackData paymentCallBackData = new PaymentCallBackData();
+				paymentCallBackData.setData(respXML);
+				paymentCallBackData.setPaymentSerialNum(payResultNotice.getOut_trade_no());
+				paymentCallBackData.setCreateTime(new Date());
+				paymentCallBackDataMapper.insertSelective(paymentCallBackData);
+			}catch (Exception e){
+
+			}
+
 			logger.info("resultNtice:" + JSON.toJSONString(payResultNotice));
 			logger.info("method:WCNotifyHandler name:payResultNotice data: " + JSON.toJSONString(payResultNotice));
 			if(payResultNotice.getReturn_code()!=null && payResultNotice.getReturn_code().equals("SUCCESS")){

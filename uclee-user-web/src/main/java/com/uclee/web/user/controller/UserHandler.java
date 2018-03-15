@@ -79,6 +79,7 @@ public class UserHandler {
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		userService.delOrder(orderSerialNum);
+		logger.info("删除未支付的订单:微商城订单编号为"+orderSerialNum);
 		return true;
 	}
 	/** 
