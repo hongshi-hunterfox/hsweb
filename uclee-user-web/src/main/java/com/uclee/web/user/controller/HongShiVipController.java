@@ -1,6 +1,7 @@
 package com.uclee.web.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.uclee.date.util.DateUtils;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
 import com.uclee.fundation.data.mybatis.mapping.EvaluationGiftsMapper;
@@ -70,9 +71,23 @@ public class HongShiVipController {
 	*/
 	@RequestMapping("getVipInfo")
 	public @ResponseBody HongShiVip  getVipInfo(Integer type,HttpSession session ){
-		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		//Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		Integer userId=type;
 		UserProfile userProfile = userService.getBasicUserProfile(userId);
 		logger.info("user_id:"+userId);
+
+		//獲得今天的日期如今天是3月14号，day=14
+		String day= DateUtils.getDay(new Date());
+		//获得现在是几点,hour=15
+		String hour=DateUtils.getTime(new Date()).substring(0,2);
+
+		char[]  dayChar=day.toCharArray();
+		char[]  hourChar=hour.toCharArray();
+
+		//以下就是邓彪要求的值
+		String preFixStr=String.valueOf(dayChar[0]).concat(String.valueOf(hourChar[0]));//11
+		String endFixStr=String.valueOf(dayChar[1]).concat(String.valueOf(hourChar[1]));//45
+
 		if(userId!=null){
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
 			if(tt!=null){
@@ -83,13 +98,13 @@ public class HongShiVipController {
 						if(userProfile.getVipImage()!=null&&userProfile.getVipImage().length()>2){
 							ret.get(0).setVipImage(userProfile.getVipImage());
 						}else{
-							ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
+							ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(endFixStr),userId));
 						}
 						try{
 							if(userProfile.getVipJbarcode()!=null&&userProfile.getVipJbarcode().length()>2){
 								ret.get(0).setVipJbarcode(userProfile.getVipJbarcode());
 							}else{
-								ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+								ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(endFixStr),userId));
 							}
 						}catch (Exception e){
 							e.printStackTrace();

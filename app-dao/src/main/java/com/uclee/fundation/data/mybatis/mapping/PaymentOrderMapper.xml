@@ -5,6 +5,8 @@
     <id column="payment_order_id" property="paymentOrderId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="payment_id" property="paymentId" jdbcType="INTEGER" />
+    <result column="check_count" property="checkCount" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
     <result column="payment_serial_num" property="paymentSerialNum" jdbcType="VARCHAR" />
     <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
     <result column="money" property="money" jdbcType="DECIMAL" />
@@ -16,7 +18,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     payment_order_id, user_id, payment_id, payment_serial_num, transaction_id, money, 
-    transaction_type, is_completed, create_time, complete_time ,is_sync
+    transaction_type, is_completed, create_time, complete_time ,is_sync,check_count,version
   </sql>
   <select id="selectByPrimaryKey" resultMap="PaymentOrder" parameterType="java.lang.Integer" >
     select 
@@ -30,17 +32,24 @@
     from web_payment_orders
     where payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR}
   </select>
+  <select id="selectForTimer" resultMap="PaymentOrder" >
+    select top 50
+    <include refid="Base_Column_List" />
+    from web_payment_orders
+    where is_completed = 0 and create_time &lt; #{target,jdbcType=TIMESTAMP} and check_count &lt;= 50 and create_time >'2018-03-13'
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_payment_orders
     where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" useGeneratedKeys="true"
     keyProperty="paymentOrderId">
-    insert into web_payment_orders (payment_order_id, user_id, payment_id, 
+    insert into web_payment_orders (payment_order_id, user_id, payment_id, check_count,version,
       payment_serial_num, transaction_id, money, 
       transaction_type, is_completed, 
       create_time,complete_time,is_sync)
-    values (#{paymentOrderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{paymentId,jdbcType=INTEGER}, 
+    values (#{paymentOrderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{paymentId,jdbcType=INTEGER}, #{checkCount,jdbcType=INTEGER},
+    #{version,jdbcType=INTEGER},
       #{paymentSerialNum,jdbcType=VARCHAR}, #{transactionId,jdbcType=VARCHAR}, #{money,jdbcType=DECIMAL}, 
       #{transactionType,jdbcType=CHAR}, #{isCompleted,jdbcType=BIT}, 
       #{createTime,jdbcType=TIMESTAMP},#{completeTime,jdbcType=TIMESTAMP}, #{isSync,jdbcType=BIT})
@@ -57,6 +66,12 @@
       </if>
       <if test="paymentId != null" >
         payment_id,
+      </if>
+      <if test="checkCount != null" >
+        check_count,
+      </if>
+      <if test="version != null" >
+        version,
       </if>
       <if test="paymentSerialNum != null" >
         payment_serial_num,
@@ -93,6 +108,12 @@
       <if test="paymentId != null" >
         #{paymentId,jdbcType=INTEGER},
       </if>
+      <if test="checkCount != null" >
+        #{checkCount,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
       <if test="paymentSerialNum != null" >
         #{paymentSerialNum,jdbcType=VARCHAR},
       </if>
@@ -128,6 +149,9 @@
       <if test="paymentId != null" >
         payment_id = #{paymentId,jdbcType=INTEGER},
       </if>
+      <if test="checkCount != null" >
+        check_count = #{checkCount,jdbcType=INTEGER},
+      </if>
       <if test="paymentSerialNum != null" >
         payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR},
       </if>
@@ -159,6 +183,8 @@
     update web_payment_orders
     set user_id = #{userId,jdbcType=INTEGER},
       payment_id = #{paymentId,jdbcType=INTEGER},
+      check_count = #{checkCount,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
       payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR},
       transaction_id = #{transactionId,jdbcType=VARCHAR},
       money = #{money,jdbcType=DECIMAL},
@@ -167,6 +193,22 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       complete_time = #{completeTime,jdbcType=TIMESTAMP},
       isSync = #{isSync,jdbcType=BIT}
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updatePaymentResult" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    update web_payment_orders
+    set
+    version=#{version,jdbcType=INTEGER} + 1,
+    transaction_id = #{transactionId,jdbcType=VARCHAR},
+    is_completed = #{isCompleted,jdbcType=BIT},
+    complete_time = #{completeTime,jdbcType=TIMESTAMP}
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER} and version = #{version,jdbcType=INTEGER}
+  </update>
+  <update id="updateCheckCount" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    update web_payment_orders
+    set
+    check_count=check_count + 1
     where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
   </update>
 </mapper>
