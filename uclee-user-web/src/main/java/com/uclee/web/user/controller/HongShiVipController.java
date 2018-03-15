@@ -71,8 +71,8 @@ public class HongShiVipController {
 	*/
 	@RequestMapping("getVipInfo")
 	public @ResponseBody HongShiVip  getVipInfo(Integer type,HttpSession session ){
-		//Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		Integer userId=type;
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		//Integer userId=type;
 		UserProfile userProfile = userService.getBasicUserProfile(userId);
 		logger.info("user_id:"+userId);
 
