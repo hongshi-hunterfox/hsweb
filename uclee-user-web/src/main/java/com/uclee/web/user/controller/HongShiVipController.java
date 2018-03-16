@@ -95,17 +95,13 @@ public class HongShiVipController {
 				
 				if(ret!=null&&ret.size()>0){
 					if(userProfile!=null){
-						if(userProfile.getVipImage()!=null&&userProfile.getVipImage().length()>2){
-							ret.get(0).setVipImage(userProfile.getVipImage());
-						}else{
+
 							ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(endFixStr),userId));
-						}
+
 						try{
-							if(userProfile.getVipJbarcode()!=null&&userProfile.getVipJbarcode().length()>2){
-								ret.get(0).setVipJbarcode(userProfile.getVipJbarcode());
-							}else{
-								ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(endFixStr),userId));
-							}
+
+							ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(endFixStr),userId));
+
 						}catch (Exception e){
 							e.printStackTrace();
 						}
