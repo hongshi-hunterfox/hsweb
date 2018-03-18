@@ -7,7 +7,6 @@ import LinkGroup from '../components/LinkGroup'
 import LinkGroupItem from '../components/LinkGroupItem'
 import req from 'superagent'
 import Navi from './Navi'
-// import Footer from '../components/Footer'
 
 
 

@@ -3,6 +3,7 @@ import React from "react"
 import DocumentTitle from "react-document-title"
 import Navi from './Navi'
 import OrderListUtil from "../utils/OrderListUtil"
+import req from 'superagent'
 var Link = require("react-router").Link
 class OrderList extends React.Component {
 	constructor(props) {
@@ -11,7 +12,8 @@ class OrderList extends React.Component {
 			orders: [],
 			showImage:false,
 			imageUrl:'',
-			barcode:''
+			barcode:'',
+			commentTextText:''
 		}
 	}
 
@@ -28,7 +30,16 @@ class OrderList extends React.Component {
 				})
 			}.bind(this)
 		)
+    req.get('/uclee-user-web/getCommentText').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var d = res.body
 
+      this.setState({
+        commentText: d.commentText
+      })
+    })
 	}
 	_showImage=(url,url2)=>{
 		this.setState({
@@ -60,36 +71,33 @@ class OrderList extends React.Component {
 						<div className="number">
 							<span>下单时间：{item.createTime}</span>
 						</div>
-						{	item.isSelfPick&&item.pickAddr?
+            			<div className="number">
+							<span>下单部门：{item.department}</span>
+						</div>
+						{   item.isEnd ==1?
 							<div className="number">
-								<span>自提地址：{item.pickAddr}</span>
-							</div>
-							:null	
+							    <span>评论订单有礼：{this.state.commentText}</span>
+						    </div>
+						    :null
 						}
-						
 
+						<div className="number">
+							<span>订单金额：{item.totalAmount>0?item.totalAmount:0}</span>
+
+						</div>
 					</div>
-					<OrderItem orderItems={item.orderItems} isSelfPick={item.isSelfPick}/>
-					<div className="order-list-bottom">
-						<span className="pull-right total">优惠金额：￥{item.discount?item.discount:0}</span>
-					</div>
-					<div className="order-list-bottom">
-						<span className="pull-right total">运费：￥{item.shippingCost?item.shippingCost:0}</span>
-					</div>
-					{
-						item.cut&&item.cut>0?
-						<div className="order-list-bottom">
-							<span className="pull-right total">满减：￥{item.cut?item.cut:0}</span>
-						</div>:null
-					}
-					<div className="order-list-bottom">
-						<span className="pull-right total">合计：{item.accounts>0?item.accounts:0}</span>
-					</div>
+			          
+                
+
+
 					<div>
 						{item.isEnd&&!item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/comment?orderSerialNum='+item.outerOrderCode}>去评论</Link>:null}
 						{item.isEnd&&item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/commentDetail?orderSerialNum='+item.outerOrderCode}>查看评论</Link>:null}
 					</div>
 					
+          			<div>
+						<span onClick={()=>{window.location="/myOrderDetail/" + item.outerOrderCode}} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单详情</span>
+					</div>
 
 						{!item.isEnd&&!item.void?
 							<div>
@@ -129,7 +137,7 @@ class OrderList extends React.Component {
 		)
 	}
 }
-
+/*
 class OrderItem extends React.Component {
 	constructor(props) {
 		super(props)
@@ -166,5 +174,5 @@ class OrderItem extends React.Component {
 		)
 	}
 }
-
+*/
 export default OrderList

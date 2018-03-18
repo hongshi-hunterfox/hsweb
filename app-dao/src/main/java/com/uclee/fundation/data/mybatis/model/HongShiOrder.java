@@ -39,6 +39,9 @@ public class HongShiOrder {
 
 	private Boolean isVoid;
 
+	//add by jp for orderDetail
+	private String department;
+
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -192,6 +195,13 @@ public class HongShiOrder {
 	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	
 
+	//订单详情页面增加的字段
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 }

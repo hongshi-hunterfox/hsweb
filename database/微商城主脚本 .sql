@@ -1,4438 +1,8897 @@
-use Êı¾İ¿âÃû
+ï»¿use æ•°æ®åº“å
+
 go
+
 If Object_ID('web_users','U') Is Null
+
 CREATE TABLE web_users (
-   user_id int identity (1,1) primary key, --ÓÃ»§id
-   parent_id int  NOT NULL DEFAULT '0', --¸¸id£¬Î¢ÉÌ³ÇÔİÊ±²»ÓÃ
-   password varchar(255) not null, --ÃÜÂë£¬Î¢ÉÌ³ÇÔİÊ±Ã»ÓÃ
-   serial_num varchar(255) not null --ÓÃ»§ĞòÁĞºÅ
+
+   user_id int identity (1,1) primary key, --ç”¨æˆ·id
+
+   parent_id int  NOT NULL DEFAULT '0', --çˆ¶idï¼Œå¾®å•†åŸæš‚æ—¶ä¸ç”¨
+
+   password varchar(255) not null, --å¯†ç ï¼Œå¾®å•†åŸæš‚æ—¶æ²¡ç”¨
+
+   serial_num varchar(255) not null --ç”¨æˆ·åºåˆ—å·
+
  );
+
 If Object_ID('web_user_invited_link','U') Is Null
+
 CREATE TABLE web_user_invited_link (
-  user_id int  NOT NULL,    --ÓÃ»§id
-  invited_id int  NOT NULL, --ÊÜÑûÓÃ»§id
-  invite_time DATETIME DEFAULT(GETDATE()) --ÑûÇëÊ±¼ä
+
+  user_id int  NOT NULL,    --ç”¨æˆ·id
+
+  invited_id int  NOT NULL, --å—é‚€ç”¨æˆ·id
+
+  invite_time DATETIME DEFAULT(GETDATE()) --é‚€è¯·æ—¶é—´
+
 );
 
+
+
 If Object_ID('web_oauth_login','U') Is Null
+
 begin
+
 CREATE TABLE web_oauth_login (
-   login_id int identity (1,1) primary key, --Ö÷¼üid
-   oauth_id varchar(255) NOT NULL,    --ÈçÎ¢ĞÅopenid
-   user_id int NOT NULL,  --ÓÃ»§id
-   oauth_name varchar(255) not null,  --µÇÂ½ÃûĞÅÏ¢
-   oauth_access_token varchar(255) not null,--µÇÂ½ÃûĞÅÏ¢
-   oauth_expires varchar(255) not null,--µÇÂ½ÃûĞÅÏ¢
-   is_subcribe bit not null ,    --ÊÇ·ñ¹Ø×¢
-   is_subscribe_show bit not null default 1, --Î¢ÉÌ³ÇÎ´Ê¹ÓÃ
-   is_point_send bit not null default 0, --Î¢ÉÌ³ÇÎ´Ê¹ÓÃ
+
+   login_id int identity (1,1) primary key, --ä¸»é”®id
+
+   oauth_id varchar(255) NOT NULL,    --å¦‚å¾®ä¿¡openid
+
+   user_id int NOT NULL,  --ç”¨æˆ·id
+
+   oauth_name varchar(255) not null,  --ç™»é™†åä¿¡æ¯
+
+   oauth_access_token varchar(255) not null,--ç™»é™†åä¿¡æ¯
+
+   oauth_expires varchar(255) not null,--ç™»é™†åä¿¡æ¯
+
+   is_subcribe bit not null ,    --æ˜¯å¦å…³æ³¨
+
+   is_subscribe_show bit not null default 1, --å¾®å•†åŸæœªä½¿ç”¨
+
+   is_point_send bit not null default 0, --å¾®å•†åŸæœªä½¿ç”¨
+
  );
+
 end
+
 CREATE NONCLUSTERED INDEX oauthIdx ON web_oauth_login(oauth_id)
 
 
+
+
+
 If Object_ID('web_user_profiles','U') Is Null
+
 begin
+
 CREATE TABLE web_user_profiles(
-   profile_id int identity (1,1) primary key, --Ö÷¼üid
-   user_id int  NOT NULL, --ÓÃ»§id
-   image varchar(255) NOT NULL default '', --ÓÃ»§Í·Ïñ
-   email varchar(255) NOT NULL default '', --Î¢ÉÌ³ÇÎ´Ê¹ÓÃ
-   phone varchar(32) NOT NULL DEFAULT '',  --Èç¹ûÊÇÀÏ°å£¬¶ÔÓ¦´æÊÖ»úµÇÂ½ÊÖ»úºÅ
-   name varchar(255) NOT NULL DEFAULT'',  --ÓÃ»§Ãû
-   nick_name varchar(255) NOT NULL DEFAULT'', --êÇ³Æ
-   login_count smallint NOT NULL DEFAULT 0, --Î¢ÉÌ³ÇÎ´Ê¹ÓÃ
-   regist_time  DATETIME DEFAULT(GETDATE()), --×¢²áÊ±¼ä
-   is_active bit NOT NULL DEFAULT '1', --Î¢ÉÌ³ÇÎ´Ê¹ÓÃ
-   ip_addr varchar(255) not null default '', --Î¢ÉÌ³ÇÎ´Ê¹ÓÃ
-   vip_image varchar(255) NOT NULL default '', --¶şÎ¬ÂëµØÖ·
-   vip_jbarcode varchar(255) NOT NULL default '', --ÌõĞÎÂëµØÖ·
-   last_buy DATETIME DEFAULT null, --×îºóÒ»´Î¹ºÂòÊ±¼ä
+
+   profile_id int identity (1,1) primary key, --ä¸»é”®id
+
+   user_id int  NOT NULL, --ç”¨æˆ·id
+
+   image varchar(255) NOT NULL default '', --ç”¨æˆ·å¤´åƒ
+
+   email varchar(255) NOT NULL default '', --å¾®å•†åŸæœªä½¿ç”¨
+
+   phone varchar(32) NOT NULL DEFAULT '',  --å¦‚æœæ˜¯è€æ¿ï¼Œå¯¹åº”å­˜æ‰‹æœºç™»é™†æ‰‹æœºå·
+
+   name varchar(255) NOT NULL DEFAULT'',  --ç”¨æˆ·å
+
+   nick_name varchar(255) NOT NULL DEFAULT'', --æ˜µç§°
+
+   login_count smallint NOT NULL DEFAULT 0, --å¾®å•†åŸæœªä½¿ç”¨
+
+   regist_time  DATETIME DEFAULT(GETDATE()), --æ³¨å†Œæ—¶é—´
+
+   is_active bit NOT NULL DEFAULT '1', --å¾®å•†åŸæœªä½¿ç”¨
+
+   ip_addr varchar(255) not null default '', --å¾®å•†åŸæœªä½¿ç”¨
+
+   vip_image varchar(255) NOT NULL default '', --äºŒç»´ç åœ°å€
+
+   vip_jbarcode varchar(255) NOT NULL default '', --æ¡å½¢ç åœ°å€
+
+   last_buy DATETIME DEFAULT null, --æœ€åä¸€æ¬¡è´­ä¹°æ—¶é—´
+
 );
+
 end
+
 CREATE NONCLUSTERED INDEX uidIdx ON web_oauth_login(user_id)
 
 
+
+
+
 If Object_ID('web_payment_orders','U') Is Null
+
 begin
+
 CREATE TABLE web_payment_orders(
-   payment_order_id int identity (1,1) primary key, --Ö§¸¶µ¥ºÅid
-   user_id int  NOT NULL, --ÓÃ»§id
-   payment_id int  NOT NULL, --Ö§¸¶·½Ê½id
-   payment_serial_num varchar(255) NOT NULL, --Ö§¸¶µ¥ºÅ
-   transaction_id varchar(255) NOT NULL DEFAULT '', --Íâ²¿Ö§¸¶½»Ò×ºÅ
-   money decimal(20,2) NOT NULL DEFAULT '0.00', --Ö§¸¶½ğ¶î
-   transaction_type smallint not null default 1, --½»Ò×ÀàĞÍ 1ÎªÉÌÆ·¶©µ¥£¬2Îª³äÖµ¶©µ¥
-   is_completed bit NOT NULL DEFAULT '0', --ÊÇ·ñÍê³ÉÖ§¸¶
-   create_time DATETIME DEFAULT(GETDATE()), --´´½¨Ê±¼ä
-   complete_time DATETIME DEFAULT null, --Íê³ÉÊ±¼ä
-   is_sync bit not null default 0  --ÊÇ·ñÒÑÍ¬²½¶©µ¥µ½ºéÊ¯ÏµÍ³
+
+   payment_order_id int identity (1,1) primary key, --æ”¯ä»˜å•å·id
+
+   user_id int  NOT NULL, --ç”¨æˆ·id
+
+   payment_id int  NOT NULL, --æ”¯ä»˜æ–¹å¼id
+
+   payment_serial_num varchar(255) NOT NULL, --æ”¯ä»˜å•å·
+
+   transaction_id varchar(255) NOT NULL DEFAULT '', --å¤–éƒ¨æ”¯ä»˜äº¤æ˜“å·
+
+   money decimal(20,2) NOT NULL DEFAULT '0.00', --æ”¯ä»˜é‡‘é¢
+
+   transaction_type smallint not null default 1, --äº¤æ˜“ç±»å‹ 1ä¸ºå•†å“è®¢å•ï¼Œ2ä¸ºå……å€¼è®¢å•
+
+   is_completed bit NOT NULL DEFAULT '0', --æ˜¯å¦å®Œæˆæ”¯ä»˜
+
+   create_time DATETIME DEFAULT(GETDATE()), --åˆ›å»ºæ—¶é—´
+
+   complete_time DATETIME DEFAULT null, --å®Œæˆæ—¶é—´
+
+   is_sync bit not null default 0  --æ˜¯å¦å·²åŒæ­¥è®¢å•åˆ°æ´ªçŸ³ç³»ç»Ÿ
+
 );
+
 end
+
 CREATE NONCLUSTERED INDEX uidIdx ON web_payment_orders(user_id)
 
 
+
+
+
 If Object_ID('web_orders','U') Is Null
+
 begin
+
 CREATE TABLE web_orders(
-   order_id int identity (1,1) primary key, --¶©µ¥id
-   order_serial_num varchar(255) NOT NULL DEFAULT '', --¶©µ¥ºÅ
-   user_id int  NOT NULL , --ÓÃ»§id
-   store_id int NOT NULL,  --¼ÓÃËµêid
-   payment_order_id int NOT NULL DEFAULT 0, --Ö§¸¶µ¥id
-   province VARCHAR(255) not null default '', --Ê¡·İ
-   city VARCHAR(255) not null default '', --³ÇÊĞ
-   region VARCHAR(255) not null default '', --ÇøÓò
-   addr_detail VARCHAR(255) not null default '', --ÏêÏ¸µØÖ·
-   name VARCHAR(255) not null default '', --ÊÕ»õÈË
-   phone VARCHAR(255) not null default '', --ÊÕ»õºÅÂë
-   zip_code VARCHAR(255) not null default '', --ÓÊ±à
-   create_time DATETIME DEFAULT(GETDATE()), -- ´´½¨Ê±¼ä
-   pay_time DATETIME DEFAULT null, -- Ö§¸¶Ê±¼ä
-   shipping_cost decimal(20,2) NOT NULL DEFAULT '0.00', --ÔË·Ñ
-   total_price decimal(20,2) NOT NULL, --×Ü¼Û
-   voucher_price decimal(20,2) NOT NULL default 0.00, --µç×ÓÈ¯Ê¹ÓÃ½ğ¶î
-   voucher_code VARCHAR(255) not null default '',  --µç×ÓÈ¯±àºÅ
-   status smallint NOT NULL DEFAULT '1', --×´Ì¬£¬1Î´Ö§¸¶£¬2ÒÑÖ§¸¶
-   remark VARCHAR(255) not null default '', --±¸×¢
-   pick_time DATETIME DEFAULT null,--È¡»õÊ±¼ä
-   is_self_pick bit not null default 0,--ÊÇ·ñ×ÔÌá
-   first_dist_id int not null default 0, --µÚÒ»·ÖÏúÕßid
-   first_dist_money decimal(20,2) NOT NULL default 0, --Ò»¼¶·ÖÏú½ğ¶î
-   second_dist_id int not null default 0, --¶ş¼¶·ÖÏúid
-   second_dist_money decimal(20,2) NOT NULL default 0, --¶ş¼¶·ÖÏú½ğ¶î
+
+   order_id int identity (1,1) primary key, --è®¢å•id
+
+   order_serial_num varchar(255) NOT NULL DEFAULT '', --è®¢å•å·
+
+   user_id int  NOT NULL , --ç”¨æˆ·id
+
+   store_id int NOT NULL,  --åŠ ç›Ÿåº—id
+
+   payment_order_id int NOT NULL DEFAULT 0, --æ”¯ä»˜å•id
+
+   province VARCHAR(255) not null default '', --çœä»½
+
+   city VARCHAR(255) not null default '', --åŸå¸‚
+
+   region VARCHAR(255) not null default '', --åŒºåŸŸ
+
+   addr_detail VARCHAR(255) not null default '', --è¯¦ç»†åœ°å€
+
+   name VARCHAR(255) not null default '', --æ”¶è´§äºº
+
+   phone VARCHAR(255) not null default '', --æ”¶è´§å·ç 
+
+   zip_code VARCHAR(255) not null default '', --é‚®ç¼–
+
+   create_time DATETIME DEFAULT(GETDATE()), -- åˆ›å»ºæ—¶é—´
+
+   pay_time DATETIME DEFAULT null, -- æ”¯ä»˜æ—¶é—´
+
+   shipping_cost decimal(20,2) NOT NULL DEFAULT '0.00', --è¿è´¹
+
+   total_price decimal(20,2) NOT NULL, --æ€»ä»·
+
+   voucher_price decimal(20,2) NOT NULL default 0.00, --ç”µå­åˆ¸ä½¿ç”¨é‡‘é¢
+
+   voucher_code VARCHAR(255) not null default '',  --ç”µå­åˆ¸ç¼–å·
+
+   status smallint NOT NULL DEFAULT '1', --çŠ¶æ€ï¼Œ1æœªæ”¯ä»˜ï¼Œ2å·²æ”¯ä»˜
+
+   remark VARCHAR(255) not null default '', --å¤‡æ³¨
+
+   pick_time DATETIME DEFAULT null,--å–è´§æ—¶é—´
+
+   is_self_pick bit not null default 0,--æ˜¯å¦è‡ªæ
+
+   first_dist_id int not null default 0, --ç¬¬ä¸€åˆ†é”€è€…id
+
+   first_dist_money decimal(20,2) NOT NULL default 0, --ä¸€çº§åˆ†é”€é‡‘é¢
+
+   second_dist_id int not null default 0, --äºŒçº§åˆ†é”€id
+
+   second_dist_money decimal(20,2) NOT NULL default 0, --äºŒçº§åˆ†é”€é‡‘é¢
+
    sync_status smallint NOT NULL DEFAULT '100',
+
 );
+
 end
+
 CREATE NONCLUSTERED INDEX orderSerialNumIdx ON web_orders(order_serial_num)
 
 
+
+
+
 If Object_ID('web_order_items','U') Is Null
+
 begin
+
 CREATE TABLE web_order_items(
+
    item_id int identity (1,1) primary key,
+
    item_serial_num varchar(255) NOT NULL DEFAULT '',
+
    order_id int NOT NULL ,
+
    store_id int NOT NULL,
+
    product_id int NOT NULL,
+
    image_url varchar(255) NOT NULL DEFAULT '',
+
    value_id int NOT NULL,
+
    value varchar(255) not null default '',
+
    amount smallint NOT NULL DEFAULT 0,
+
    price decimal(20,2) NOT NULL
+
 );
+
 end
+
 CREATE NONCLUSTERED INDEX orderIdx ON web_order_items(order_id)
+
+If Object_ID('web_evaluation_config','U') Is Null
+
+CREATE TABLE web_evaluation_config(
+	
+
+id int IDENTITY(1,1) NOT NULL,
+	
+
+point int NOT NULL,
+	
+
+money decimal(20, 2) NULL,
+	
+
+voucher_code varchar(255) NOT NULL,
+
+	
+amount int NOT NULL,
+	
+
+time datetime NULL
+);
+
 
 
 If Object_ID('web_payments','U') Is Null
+
 CREATE TABLE web_payments(
+
    payment_id int identity (1,1) primary key,
+
    payment_name varchar(255) NOT NULL ,
+
    unit varchar(255) not null default '',
+
    platform varchar(255) not null default '',
+
    is_active bit NOT NULL DEFAULT '1',
+
    strategy_class_name varchar(255) not  NULL
+
 );
+
+
 
 If Object_ID('web_vars','U') Is Null
+
 CREATE TABLE web_vars (
+
   var_id int identity (1,1) primary key,
+
   platform varchar(255) NOT NULL DEFAULT '',
+
   name varchar(255) NOT NULL DEFAULT '',
+
   storage_time DATETIME DEFAULT(GETDATE()),
+
   value varchar(1024) NOT NULL DEFAULT '',
+
 );
+
+
 
 If Object_ID('web_roles','U') Is Null
+
 CREATE TABLE web_roles(
+
    role_id int identity (1,1) primary key,
+
    role varchar(255) NOT NULL ,
+
    parent_id int NOT NULL default 0,
+
    is_active bit NOT NULL DEFAULT '1',
+
    is_in_list bit not null default '1'
+
 );
+
+
 
 If Object_ID('web_user_role_link','U') Is Null
+
 CREATE TABLE web_user_role_link(
+
    user_id int NOT NULL,
+
    role_id int NOT NULL
+
 );
 
+
+
 If Object_ID('web_permissions','U') Is Null
+
 CREATE TABLE web_permissions(
+
    permission_id int identity (1,1) primary key,
+
    permission varchar(255) NOT NULL,
+
    tag VARCHAR(255) NOT NULL DEFAULT '',
+
    name varchar(255) NOT NULL,
+
    is_active bit NOT NULL DEFAULT '1'
+
 );
+
+
+
 
 
 If Object_ID('web_role_permission_link','U') Is Null
+
 CREATE TABLE web_role_permission_link(
+
    role_id int  NOT NULL,
+
    permission_id int NOT NULL
+
 );
+
+
 
 If Object_ID('web_categories','U') Is Null
+
 CREATE TABLE web_categories(
+
    category_id int identity (1,1) primary key,
+
    category  varchar(255) NOT NULL,
+
    parent_id int NOT NULL
+
 );
+
+
 
 If Object_ID('web_products_categories_link','U') Is Null
+
 CREATE TABLE web_products_categories_link(
+
    product_id int NOT NULL,
+
    category_id int NOT NULL
+
 );
+
+
 
 If Object_ID('web_products','U') Is Null
+
 CREATE TABLE web_products (
+
    product_id int identity (1,1) primary key,
+
    title varchar(255) NOT NULL DEFAULT '', 
+
    description varchar(255) NOT NULL DEFAULT '', 
+
    create_time DATETIME DEFAULT(GETDATE()), 
+
    last_modify DATETIME DEFAULT(GETDATE()),
+
    is_active bit NOT NULL DEFAULT '0',
+
    price decimal(20,2) NOT NULL DEFAULT '0.00',
+
  );
+
+ alter table web_products add is_shipping_free bit not null DEFAULT 0;
+
+ alter table web_products add is_show bit not null default 1;
+
+ alter table web_products add Explain varchar(255);
+
+ 
+
+ 
+
+
 
 If Object_ID('web_product_images_link','U') Is Null
+
  CREATE TABLE web_product_images_link(
+
    link_id int identity (1,1) primary key,
+
    product_id int NOT NULL ,
+
    image_url varchar(255) NOT NULL DEFAULT ''
+
 );
+
+
 
 If Object_ID('web_specifications','U') Is Null
+
  CREATE TABLE web_specifications(
+
    specification_id int identity (1,1) primary key,
+
    specification varchar(255) NOT NULL DEFAULT ''
+
 );
+
+
 
 If Object_ID('web_specification_values','U') Is Null
+
 CREATE TABLE web_specification_values(
+
    value_id int identity (1,1) primary key,
+
    specification_id int not null,
+
    value varchar(255) NOT NULL DEFAULT '',
+
    hs_goods_code varchar(255) not null,
+
    hs_goods_price decimal(20,2) NOT NULL DEFAULT '0.00',
+
    hs_stock int not null,
+
    pre_price decimal(20,2) NOT NULL DEFAULT '0.00'
+
 );
+
+
 
 If Object_ID('web_products_specifications_values_link','U') Is Null
+
  CREATE TABLE web_products_specifications_values_link(
+
    specification_id int  NOT NULL,
+
    value_id int  NOT NULL,
+
    product_id int not null
+
 );
+
+
 
 If Object_ID('web_product_groups','U') Is Null
+
  CREATE TABLE web_product_groups (
+
   group_id int identity (1,1) primary key,
+
   group_name varchar(255) NOT NULL,
+
   tag varchar(255) not null default '',
+
   display_type varchar(255) not null default '',
+
   is_active bit NOT NULL DEFAULT '0'
+
 );
+
+
 
 If Object_ID('web_product_group_links','U') Is Null
+
 CREATE TABLE web_product_group_links (
+
   group_id int not null,
+
   product_id int  NOT NULL,
+
   position int  NOT NULL default 0
+
 );
+
+
 
 If Object_ID('web_napa_stores','U') Is Null
+
  create table web_napa_stores(
+
    store_id int identity (1,1) primary key,
+
    user_id int not null,
+
    store_name varchar(255) not null,
+
    province varchar(255) not null,
+
    city varchar(255) not null,
+
    region varchar(255) not null,
+
    addr_detail varchar(255) not null,
+
    longitude varchar(255) not null,
+
    latitude varchar(255) not null,
+
    hs_code varchar(255) not null
+
 );
+
+
 
 If Object_ID('web_specification_value_store_link','U') Is Null
+
 CREATE TABLE web_specification_value_store_link (
+
    value_id int not null,
+
    store_id int not null
+
  );
 
+
+
 If Object_ID('web_province','U') Is Null
+
  CREATE TABLE web_province(
+
    province_id int primary key,
+
    province varchar(255) NOT NULL ,
+
 );
+
+
 
 If Object_ID('web_cities','U') Is Null
+
 CREATE TABLE web_cities(
+
    city_id int primary key,
+
    province_id int NOT NULL,
+
    city varchar(255) NOT NULL 
+
 );
+
+
 
 If Object_ID('web_regions','U') Is Null
+
 CREATE TABLE web_regions(
+
    region_id int primary key,
+
    city_id int  NOT NULL,
+
    region varchar(255) NOT NULL 
+
 );
+
+
 
 If Object_ID('web_deliver_addrs','U') Is Null
+
 begin
+
 CREATE TABLE web_deliver_addrs(
+
   
+
  deliverAddr_id int identity (1,1) primary key,
+
   
+
  user_id int  NOT NULL ,
+
   
+
  name varchar(255) NOT NULL DEFAULT '',
+
   
+
  phone varchar(32) NOT NULL DEFAULT '',
+
    
+
 province varchar(32) NOT NULL DEFAULT '',
+
    
+
 city varchar(32) NOT NULL DEFAULT '',
+
  
+
   region varchar(32) NOT NULL DEFAULT '',
+
  
+
   addr_detail varchar(255) NOT NULL DEFAULT'',
+
  
+
   zipCode varchar(32) NOT NULL DEFAULT '',
+
  
+
   is_default bit NOT NULL DEFAULT 0,
+
  
+
   longitude varchar(255) not null default '',
+
   
+
  latitude varchar(255) not null default ''
 
+
+
 );
+
 end
+
 CREATE NONCLUSTERED INDEX userIdx ON web_deliver_addrs(user_id);
 
 
+
+
+
 If Object_ID('web_cart','U') Is Null
+
 begin
+
 create table web_cart(
+
    cart_id int identity (1,1) primary key,
+
    user_id int not null,
+
    product_id int not null,
+
    specification_value_id int not null,
+
    amount int not null,
+
    create_time DATETIME DEFAULT(GETDATE())
+
 );
+
 end
+
 CREATE NONCLUSTERED INDEX userIdx ON web_cart(user_id);
 
+
+
 If Object_ID('web_datasource','U') Is Null
+
 CREATE TABLE web_datasource (
+
   id int identity (1,1) primary key,
+
   driver_class_name varchar(255) NOT NULL,
+
   url varchar(255) NOT NULL,
+
   username varchar(255) NOT NULL,
+
   password varchar(255) NOT NULL,
+
   merchant_code varchar(255) NOT NULL
+
 );
+
+
 
 If Object_ID('web_config','U') Is Null
+
 create table web_config(
+
   id int identity (1,1) primary key,
+
   tag varchar(255) not null,
+
   value varchar(255) not null
+
 );
+
+
 
 If Object_ID('web_sign_record','U') Is Null
+
 create table web_sign_record(
+
   id int identity (1,1) primary key,
+
   user_id int not null,
+
   sign_time DATETIME DEFAULT(GETDATE()),
+
   point int not null default 0
+
 );
+
+
 
 If Object_ID('web_balance','U') Is Null
+
 create table web_balance(
+
   id int identity (1,1) primary key,
+
   user_id int not null,
+
   balance decimal(20,2) NOT NULL,
+
 );
+
+
 
 If Object_ID('web_balance_log','U') Is Null
+
 create table web_balance_log(
+
   id int identity (1,1) primary key,
+
   user_id int not null,
+
   money decimal(20,2) NOT NULL,
+
   balance decimal(20,2) NOT NULL,
+
   create_time DATETIME DEFAULT(GETDATE())
+
 );
+
+
 
 If Object_ID('web_freight','U') Is Null
+
 create table web_freight(
+
   id int identity (1,1) primary key,
+
   condition float not null default 0.00,
+
   money decimal(20,2) NOT NULL
+
 );
+
+
 
 If Object_ID('web_recharge_config','U') Is Null
+
 create table web_recharge_config(
+
   id int identity (1,1) primary key,
+
   money decimal(20,2) NOT NULL,
+
   rewards decimal(20,2) NOT NULL default 0,
+
   voucher_code varchar(255) not null default '',
+
   type int not null default 1,
+
   start_time DATETIME DEFAULT(GETDATE()),
+
   end_time DATETIME DEFAULT(GETDATE())
+
 );
+
+
 
 If Object_ID('web_lottery_draw_config','U') Is Null
+
 create table web_lottery_draw_config(
+
   id int identity(1,1) primary key,
+
   voucher_code varchar(255) default null,
+
   money decimal(20,2) default null,
+
   product_id int not null default 0,
+
   code varchar(255) not null default '',
+
   rate float not null default 0.00,
+
   count int not null default 0,
+
   is_end bit not null default 0,
+
   limits int not null default 10000,
+
   start_time DATETIME DEFAULT(GETDATE()),
+
   end_time DATETIME DEFAULT(GETDATE())
+
 );
+
+
 
 If Object_ID('web_lottery_record','U') Is Null
+
 create table web_lottery_record(
+
   id int identity(1,1) primary key,
+
   user_id int not null,
+
   time DATETIME DEFAULT(GETDATE())
+
 );
+
+
 
 If Object_ID('web_banner','U') Is Null
+
 create table web_banner(
+
   id int identity(1,1) primary key,
+
   image_url varchar(255) not null default '',
+
   link varchar(255) not null default ''
+
 );
+
+
 
 If Object_ID('web_shake_record','U') Is Null
+
 create table web_shake_record(
+
   id int identity(1,1) primary key,
+
   user_id int not null,
+
   time DATETIME DEFAULT(GETDATE()),
+
   is_show bit not null default 0
+
 );
+
+
 
 If Object_ID('web_winning_record','U') Is Null
+
 create table web_winning_record(
+
   id int identity(1,1) primary key,
+
   user_id int not null,
+
   winning_level int not null,
+
   time DATETIME DEFAULT(GETDATE()) 
+
 );
+
+
 
 If Object_ID('web_store_info','U') Is Null
+
 create table web_store_info(
+
   id int identity(1,1) primary key,
+
   description varchar(255) not null default '',
+
 );
+
+
 
 If Object_ID('web_product_sale','U') Is Null
+
 create table web_product_sale(
+
   id int identity(1,1) primary key,
+
   product_id int not null ,
+
   count int not null default 0,
+
 );
+
+
 
 If Object_ID('web_msg_record','U') Is Null
+
 create table web_msg_record(
+
   id int identity(1,1) primary key,
+
   user_id int not null ,
+
   type int not null default 0,
+
   time DATETIME DEFAULT(GETDATE()),
-);
-/*ĞÂÔö±í*/
-If Object_ID('web_home_quick_navi ','U') Is Null
-CREATE TABLE web_home_quick_navi (
-  navi_id int identity (1,1) primary key,
-  title varchar(255) NOT NULL DEFAULT '',
-  image_url varchar(255) NOT NULL DEFAULT ''
+
 );
 
-If Object_ID('web_quick_navi_product_link  ','U') Is Null
-CREATE TABLE web_quick_navi_product_link (
-  id int identity (1,1) primary key,   
-  navi_id int  NOT NULL, 
-  product_id int  NOT NULL, 
+/*æ–°å¢è¡¨*/
+
+If Object_ID('web_home_quick_navi ','U') Is Null
+
+CREATE TABLE web_home_quick_navi (
+
+  navi_id int identity (1,1) primary key,
+
+  title varchar(255) NOT NULL DEFAULT '',
+
+  image_url varchar(255) NOT NULL DEFAULT ''
+
 );
-alter table web_products add is_shipping_free bit not null DEFAULT 0;
+
+
+
+If Object_ID('web_quick_navi_product_link  ','U') Is Null
+
+CREATE TABLE web_quick_navi_product_link (
+
+  id int identity (1,1) primary key,   
+
+  navi_id int  NOT NULL, 
+
+  product_id int  NOT NULL, 
+
+);
+
+
+
 
 
 If Object_ID('web_message  ','U') Is Null
+
 CREATE TABLE web_message (
+
   id int identity (1,1) primary key,
+
   oauth_id varchar(255) NOT NULL DEFAULT '',
+
   order_num varchar(255) not null DEFAULT '',
+
   time DATETIME DEFAULT(GETDATE()),
+
   money decimal(20,2) NOT NULL DEFAULT '0.00',
+
   pay_type varchar(255) not null DEFAULT '',
+
   is_send bit NOT NULL DEFAULT 0
+
 );
+
+
 
 If Object_ID('web_comment  ','U') Is Null
+
 CREATE TABLE web_comment (
+
   id int identity (1,1) primary key,
+
   user_id int not null,
+
   order_serial_num varchar(255) NOT NULL,
+
   title varchar(1024) not null DEFAULT '',
+
   deliver int NOT NULL DEFAULT 5,
+
   service int NOT NULL DEFAULT 5,
+
   quality int NOT NULL DEFAULT 5,
+
   back_title varchar(1024) not null DEFAULT '',
+
   time DATETIME DEFAULT(GETDATE()),
+
   back_time DATETIME DEFAULT null
+
 );
+
+
 
 alter table web_recharge_config add amount int default 0;
+
 alter table web_recharge_config add amount_second int default 0;
+
 alter table web_recharge_config add amount_third int default 0;
+
 alter table web_recharge_config add voucher_code_second varchar(255) default null;
+
 alter table web_recharge_config add voucher_code_third varchar(255) default null;
+
 alter table web_recharge_config add limit int default 0;
+
 alter table web_recharge_config add start_time DATETIME DEFAULT null;
+
 alter table web_recharge_config add end_time DATETIME DEFAULT null;
 
+
+
 If Object_ID('web_birth_voucher  ','U') Is Null
+
 CREATE TABLE web_birth_voucher (
+
   id int identity (1,1) primary key,
+
   voucher_code varchar(255) NOT NULL DEFAULT '',
+
   amount int NOT NULL DEFAULT 0,
+
   time DATETIME DEFAULT(GETDATE())
+
 );
+
+
 
 If Object_ID('web_shipping_full_cut  ','U') Is Null
+
 CREATE TABLE web_shipping_full_cut (
+
   id int identity (1,1) primary key,
+
   s_limit float not null ,
+
   u_limit float not null ,
+
   condition decimal(15,2) not null ,
+
   time DATETIME DEFAULT(GETDATE()),
+
   start_time DATETIME DEFAULT null,
+
   end_time DATETIME DEFAULT null
+
 );
+
+
 
 If Object_ID('web_recharge_rewards_record  ','U') Is Null
+
 CREATE TABLE web_recharge_rewards_record (
+
   id int identity (1,1) primary key,
+
   user_id int not null,
+
   config_id int not null,
+
   count int not null default 0
+
 );
+
+
 
 If Object_ID('web_full_cut ','U') Is Null
+
 CREATE TABLE web_full_cut (
+
   id int identity (1,1) primary key,
+
   condition decimal(15,2) not null,
+
   cut decimal(15,2) not null ,
+
   time DATETIME DEFAULT(GETDATE()),
+
   start_time DATETIME DEFAULT null,
+
   end_time DATETIME DEFAULT null
+
 );
 
+
+
 If Object_ID('web_binding_rewards  ','U') Is Null
+
 CREATE TABLE web_binding_rewards (
+
   id int identity (1,1) primary key,
+
   point int not null default 0,
+
   voucher_code varchar(255) NOT NULL DEFAULT '',
-  amount int NOT NULL DEFAULT 0,
+
+  amount int NOT NULL DEFAULT 1,
+
   time DATETIME DEFAULT(GETDATE())
+
 );
+
+
 
 alter table web_orders add cut decimal(15,2) not null default 0 ;
 
+
+
 alter table web_orders add pick_up_image varchar(255) not null default '';
+
 alter table web_orders add pick_up_barcode varchar(255) not null default '';
 
+
+
 /*2017/10/25*/
+
 If Object_ID('web_napa_store_user_link','U') Is Null
+
 create table web_napa_store_user_link(
+
   id int identity(1,1) primary key,
+
   user_id int not null ,
+
   store_id int not null 
+
 );
+
+
+
 
 
 insert into web_napa_store_user_link (store_id,user_id) select store_id,user_id from web_napa_stores;
 
 
+
+
+
 alter table web_napa_stores drop column user_id;
+
  
-/*web_banner³õÊ¼Êı¾İ*/
+
+/*web_banneråˆå§‹æ•°æ®*/
+
 insert into web_banner (image_url) values ('http://120.25.193.220/group1/M00/31/AD/eBnB3Fk9GD6AIPnoAABjjVg2HRo57.file');
+
 insert into web_banner (image_url) values ('http://120.25.193.220/group1/M00/31/AD/eBnB3Fk9GFaAEUgtAACT8LBtwhw95.file');
+
 insert into web_banner (image_url) values ('http://120.25.193.220/group1/M00/31/AD/eBnB3Fk9GBSAPOnyAACmblVhynw90.file');
 
-/*web_freight³õÊ¼Êı¾İ*/
+
+
+/*web_freightåˆå§‹æ•°æ®*/
+
 insert into web_freight (condition,money) values (10,8);
+
   insert into web_freight (condition,money) values (20,10);
+
     insert into web_freight (condition,money) values (30,12);
 
-/*web_product_groups³õÊ¼Êı¾İ*/
-insert into web_product_groups(group_name,tag,display_type,is_active) values ('µêÆÌÍÆ¼ö','recommend','horizontal','1');
-insert into web_product_groups(group_name,tag,display_type,is_active) values ('µêÆÌ¾«Æ·','hotProduct','vertical','1');
 
-/*web_payments±í³õÊ¼Êı¾İ*/
-insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('Î¢ĞÅÖ§¸¶','WeChat','WAP',1,'WCJSAPIPaymentStrategy');
- insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('»áÔ±¿¨Ö§¸¶','VipCard','WAP',1,'MemberCardPaymentStrategy');
- insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('Ö§¸¶±¦Ö§¸¶','Alipay','WAP',1,'AlipayPaymentStrategy');
+
+/*web_product_groupsåˆå§‹æ•°æ®*/
+
+insert into web_product_groups(group_name,tag,display_type,is_active) values ('åº—é“ºæ¨è','recommend','horizontal','1');
+
+insert into web_product_groups(group_name,tag,display_type,is_active) values ('åº—é“ºç²¾å“','hotProduct','vertical','1');
+
+
+
+/*web_paymentsè¡¨åˆå§‹æ•°æ®*/
+
+insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('å¾®ä¿¡æ”¯ä»˜','WeChat','WAP',1,'WCJSAPIPaymentStrategy');
+
+ insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('ä¼šå‘˜å¡æ”¯ä»˜','VipCard','WAP',1,'MemberCardPaymentStrategy');
+
+ insert into web_payments (payment_name,unit,platform,is_active,strategy_class_name) values ('æ”¯ä»˜å®æ”¯ä»˜','Alipay','WAP',1,'AlipayPaymentStrategy');
+
+
 
 /*web_recharge_config*/
+
 insert into web_recharge_config (money,rewards) values (50,10);
+
 insert into web_recharge_config (money,rewards) values (100,15);
+
 insert into web_recharge_config (money,rewards) values (150,20);
+
 insert into web_recharge_config (money,rewards) values (200,25);
+
 insert into web_recharge_config (money,rewards) values (250,30);
+
 insert into web_recharge_config (money,rewards) values (300,35);
+
 insert into web_recharge_config (money,rewards) values (400,40);
+
 insert into web_recharge_config (money,rewards) values (500,50);
+
 insert into web_recharge_config (money,rewards) values (800,80);
+
 insert into web_recharge_config (money,rewards) values (1000,100);
 
+
+
 /*web_categories*/
-insert into web_categories (category,parent_id) values ('ÏÂÎç²è',0);
-insert into web_categories (category,parent_id) values ('Ãæ°ü',0);
-insert into web_categories (category,parent_id) values ('ÉúÈÕµ°¸â',0);
-insert into web_categories (category,parent_id) values ('ÇÉ¿ËÁ¦µ°¸â',0);
-insert into web_categories (category,parent_id) values ('ÏÊ¹ûµ°¸â',0);
-insert into web_categories (category,parent_id) values ('Ö¥Ê¿Ä½Ë¹µ°¸â',0);
-insert into web_categories (category,parent_id) values ('¶à²ãµ°¸â',0);
-insert into web_categories (category,parent_id) values ('Àõ×Óµ°¸â',0);
-insert into web_categories (category,parent_id) values ('½ÚÈÕµ°¸â',0);
+
+insert into web_categories (category,parent_id) values ('ä¸‹åˆèŒ¶',0);
+
+insert into web_categories (category,parent_id) values ('é¢åŒ…',0);
+
+insert into web_categories (category,parent_id) values ('ç”Ÿæ—¥è›‹ç³•',0);
+
+insert into web_categories (category,parent_id) values ('å·§å…‹åŠ›è›‹ç³•',0);
+
+insert into web_categories (category,parent_id) values ('é²œæœè›‹ç³•',0);
+
+insert into web_categories (category,parent_id) values ('èŠå£«æ…•æ–¯è›‹ç³•',0);
+
+insert into web_categories (category,parent_id) values ('å¤šå±‚è›‹ç³•',0);
+
+insert into web_categories (category,parent_id) values ('æ —å­è›‹ç³•',0);
+
+insert into web_categories (category,parent_id) values ('èŠ‚æ—¥è›‹ç³•',0);
+
+
+
 
 
 /*web_role*/
+
 insert into web_roles (role,parent_id,is_active) values ('admin',0,1);
+
 insert into web_roles (role,parent_id,is_active) values ('user',0,1);
+
 insert into web_roles (role,parent_id,is_active) values ('business',0,1);
 
+
+
 /*web_var*/
+
 insert into web_vars (platform,name,storage_time,value) values ('WX','access_token','2017-01-01 00:00:00','CO4OuunYImgxUl1tZu6BDcyDlT2RhISAkfuv_rUE2RKKUhoRjtVWJeTLwkzq5DCO6TJwlhcLgIHTd8VsMzZzyC6Bui00l2eFBwoH_u-aVZxjBzy_Et77YqW0p71Klb5QXTPjADATPL');
 
-/*web_specifications*/
-insert into web_specifications(specification) values ('¿îÊ½');
 
-/*web_config±í³õÊ¼Êı¾İ*/
+
+/*web_specifications*/
+
+insert into web_specifications(specification) values ('æ¬¾å¼');
+
+
+
+/*web_configè¡¨åˆå§‹æ•°æ®*/
+
 insert into web_config (tag,value) values ('registPoint','10');
+
 insert into web_config (tag,value) values ('signInPoint','10');
+
 insert into web_config (tag,value) values ('drawPoint','10');
+
 insert into web_config (tag,value) values ('firstDis','10');
+
 insert into web_config (tag,value) values ('secondDis','10');
+
 insert into web_config (tag,value) values ('appid','wx68abe3fb2a71dcc7');
+
 insert into web_config (tag,value) values ('appsecret','00030b62032af67f83e535223616a0d6');
+
 insert into web_config (tag,value) values ('appkey','00030b62032af67f83e535223616a0d6');
+
 insert into web_config (tag,value) values ('merchantcode','1253393501');
+
 insert into web_config (tag,value) values ('notifyurl','http://hs.uclee.com/seller/WCNotifyHandler');
+
 insert into web_config (tag,value) values ('partner','');
+
 insert into web_config (tag,value) values ('sellerId','');
+
 insert into web_config (tag,value) values ('key','');
+
 insert into web_config (tag,value) values ('alipayNotifyUrl','');
+
 insert into web_config (tag,value) values ('firstPrize',2);
+
 insert into web_config (tag,value) values ('secondPrize',10);
+
 insert into web_config (tag,value) values ('thirdPrize',30);
-insert into web_config (tag,value) values ('signName','ºéÊ¯Èí¼ş');
+
+insert into web_config (tag,value) values ('signName','æ´ªçŸ³è½¯ä»¶');
 
 insert into web_config (tag,value) values ('firstCount',2);
 
 insert into web_config (tag,value) values ('secondCount',10);
 
 insert into web_config (tag,value) values ('thirdCount',30);
+
 insert into web_config (tag,value) values ('aliAppkey','LTAIb36ti4sJYhwY');
+
 insert into web_config (tag,value) values ('aliAppSecret','wDkzuBidUH6oog7jvdxW9A4JNS42br');
+
 insert into web_config (tag,value) values ('templateCode','SMS_94630154');
+
 insert into web_config (tag,value) values ('birthTmpId','EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew');
- 
+
 insert into web_config (tag,value) values ('buyTmpId','EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew');
+
 insert into web_config (tag,value) values ('payTmpId','S3vfLhEEbVICFmwgpHedYUtlm7atyY3zl-GxJYY20ok');
- 
+
 insert into web_config (tag,value) values ('rechargeTmpId','TBY-Wrn9sQuOoM_BUNZO2aEjX56AG6RRNxHrEH8k_pI');
+
 insert into web_config (tag,value) values ('bindText','');
+
 insert into web_config (tag,value) values ('supportDeliver','');
+
 insert into web_config (tag,value) values ('domain','');
+
 insert into web_config (tag,value) values ('hsMerchantCode','');
+
 insert into web_config (tag,value) values ('logoUrl','http://wsc.in80s.com/file/file1507708577132837.jpg');
 
 insert into web_config (tag,value) values ('ucenterImg','http://wsc.in80s.com/file/file1507708606025464.jpg');
+
 insert into web_config (tag,value) values ('birthText','');
 
 insert into web_config (tag,value) values ('salesText','');
 
+insert into web_config (tag,value) values ('restrictedDistance','50');
+
+insert into web_config (tag,value) values ('startUp','1');
+
+insert into web_config(id,tag,value) values(43,"commentText","è¯„è®ºæœ‰æƒŠå–œå“¦~~");
 
 
 
 
-/*province³õÊ¼Êı¾İ*/
-insert into web_province (province_id,province) values (11,'±±¾©');
-insert into web_province (province_id,province) values (12,'Ìì½ò');
-insert into web_province (province_id,province) values (13,'ºÓ±±Ê¡');
-insert into web_province (province_id,province) values (14,'É½Î÷Ê¡');
-insert into web_province (province_id,province) values (15,'ÄÚÃÉ¹Å×ÔÖÎÇø');
-insert into web_province (province_id,province) values (21,'ÁÉÄşÊ¡');
-insert into web_province (province_id,province) values (22,'¼ªÁÖÊ¡');
-insert into web_province (province_id,province) values (23,'ºÚÁú½­Ê¡');
-insert into web_province (province_id,province) values (31,'ÉÏº£');
-insert into web_province (province_id,province) values (32,'½­ËÕÊ¡');
-insert into web_province (province_id,province) values (33,'Õã½­Ê¡');
-insert into web_province (province_id,province) values (34,'°²»ÕÊ¡');
-insert into web_province (province_id,province) values (35,'¸£½¨Ê¡');
-insert into web_province (province_id,province) values (36,'½­Î÷Ê¡');
-insert into web_province (province_id,province) values (37,'É½¶«Ê¡');
-insert into web_province (province_id,province) values (41,'ºÓÄÏÊ¡');
-insert into web_province (province_id,province) values (42,'ºş±±Ê¡');
-insert into web_province (province_id,province) values (43,'ºşÄÏÊ¡');
-insert into web_province (province_id,province) values (44,'¹ã¶«Ê¡');
-insert into web_province (province_id,province) values (45,'¹ãÎ÷×³×å×ÔÖÎÇø');
-insert into web_province (province_id,province) values (46,'º£ÄÏÊ¡');
-insert into web_province (province_id,province) values (50,'ÖØÇì');
-insert into web_province (province_id,province) values (51,'ËÄ´¨Ê¡');
-insert into web_province (province_id,province) values (52,'¹óÖİÊ¡');
-insert into web_province (province_id,province) values (53,'ÔÆÄÏÊ¡');
-insert into web_province (province_id,province) values (54,'Î÷²Ø×ÔÖÎÇø');
-insert into web_province (province_id,province) values (61,'ÉÂÎ÷Ê¡');
-insert into web_province (province_id,province) values (62,'¸ÊËàÊ¡');
-insert into web_province (province_id,province) values (63,'Çàº£Ê¡');
-insert into web_province (province_id,province) values (64,'ÄşÏÄ»Ø×å×ÔÖÎÇø');
-insert into web_province (province_id,province) values (65,'ĞÂ½®Î¬Îá¶û×ÔÖÎÇø');
-insert into web_province (province_id,province) values (71,'Ì¨Íå');
-insert into web_province (province_id,province) values (81,'Ïã¸ÛÌØ±ğĞĞÕşÇø');
-insert into web_province (province_id,province) values (82,'°ÄÃÅÌØ±ğĞĞÕşÇø');
-insert into web_province (province_id,province) values (90,'µöÓãµº');
-
-/*web_city³õÊ¼Êı¾İ*/
-insert into web_cities (city_id,province_id,city) values (1101,11,'±±¾©ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1201,12,'Ìì½òÊĞ');
-insert into web_cities (city_id,province_id,city) values (1301,13,'Ê¯¼Ò×¯ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1302,13,'ÌÆÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1303,13,'ÇØ»ÊµºÊĞ');
-insert into web_cities (city_id,province_id,city) values (1304,13,'ºªµ¦ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1305,13,'ĞÏÌ¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1306,13,'±£¶¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1307,13,'ÕÅ¼Ò¿ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (1308,13,'³ĞµÂÊĞ');
-insert into web_cities (city_id,province_id,city) values (1309,13,'²×ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (1310,13,'ÀÈ·»ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1311,13,'ºâË®ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1401,14,'Ì«Ô­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1402,14,'´óÍ¬ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1403,14,'ÑôÈªÊĞ');
-insert into web_cities (city_id,province_id,city) values (1404,14,'³¤ÖÎÊĞ');
-insert into web_cities (city_id,province_id,city) values (1405,14,'½ú³ÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (1406,14,'Ë·ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (1407,14,'½úÖĞÊĞ');
-insert into web_cities (city_id,province_id,city) values (1408,14,'ÔË³ÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (1409,14,'ĞÃÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (1410,14,'ÁÙ·ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (1411,14,'ÂÀÁºÊĞ');
-insert into web_cities (city_id,province_id,city) values (1501,15,'ºôºÍºÆÌØÊĞ');
-insert into web_cities (city_id,province_id,city) values (1502,15,'°üÍ·ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1503,15,'ÎÚº£ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1504,15,'³à·åÊĞ');
-insert into web_cities (city_id,province_id,city) values (1505,15,'Í¨ÁÉÊĞ');
-insert into web_cities (city_id,province_id,city) values (1506,15,'¶õ¶û¶àË¹ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1507,15,'ºôÂ×±´¶ûÊĞ');
-insert into web_cities (city_id,province_id,city) values (1508,15,'°ÍÑåÄ×¶ûÊĞ');
-insert into web_cities (city_id,province_id,city) values (1509,15,'ÎÚÀ¼²ì²¼ÊĞ');
-insert into web_cities (city_id,province_id,city) values (1522,15,'ĞË°²ÃË');
-insert into web_cities (city_id,province_id,city) values (1525,15,'ÎıÁÖ¹ùÀÕÃË');
-insert into web_cities (city_id,province_id,city) values (1529,15,'°¢À­ÉÆÃË');
-insert into web_cities (city_id,province_id,city) values (2101,21,'ÉòÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (2102,21,'´óÁ¬ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2103,21,'°°É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2104,21,'¸§Ë³ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2105,21,'±¾ÏªÊĞ');
-insert into web_cities (city_id,province_id,city) values (2106,21,'µ¤¶«ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2107,21,'½õÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (2108,21,'Óª¿ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (2109,21,'¸·ĞÂÊĞ');
-insert into web_cities (city_id,province_id,city) values (2110,21,'ÁÉÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (2111,21,'ÅÌ½õÊĞ');
-insert into web_cities (city_id,province_id,city) values (2112,21,'ÌúÁëÊĞ');
-insert into web_cities (city_id,province_id,city) values (2113,21,'³¯ÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (2114,21,'ºùÂ«µºÊĞ');
-insert into web_cities (city_id,province_id,city) values (2115,21,'½ğÆÕĞÂÇø');
-insert into web_cities (city_id,province_id,city) values (2201,22,'³¤´ºÊĞ');
-insert into web_cities (city_id,province_id,city) values (2202,22,'¼ªÁÖÊĞ');
-insert into web_cities (city_id,province_id,city) values (2203,22,'ËÄÆ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2204,22,'ÁÉÔ´ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2205,22,'Í¨»¯ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2206,22,'°×É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2207,22,'ËÉÔ­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2208,22,'°×³ÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (2224,22,'ÑÓ±ß³¯ÏÊ×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (2301,23,'¹ş¶û±õÊĞ');
-insert into web_cities (city_id,province_id,city) values (2302,23,'ÆëÆë¹ş¶ûÊĞ');
-insert into web_cities (city_id,province_id,city) values (2303,23,'¼¦Î÷ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2304,23,'º×¸ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (2305,23,'Ë«Ñ¼É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2306,23,'´óÇìÊĞ');
-insert into web_cities (city_id,province_id,city) values (2307,23,'ÒÁ´ºÊĞ');
-insert into web_cities (city_id,province_id,city) values (2308,23,'¼ÑÄ¾Ë¹ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2309,23,'ÆßÌ¨ºÓÊĞ');
-insert into web_cities (city_id,province_id,city) values (2310,23,'Äµµ¤½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2311,23,'ºÚºÓÊĞ');
-insert into web_cities (city_id,province_id,city) values (2312,23,'Ëç»¯ÊĞ');
-insert into web_cities (city_id,province_id,city) values (2327,23,'´óĞË°²ÁëµØÇø');
-insert into web_cities (city_id,province_id,city) values (3101,31,'ÉÏº£ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3201,32,'ÄÏ¾©ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3202,32,'ÎŞÎıÊĞ');
-insert into web_cities (city_id,province_id,city) values (3203,32,'ĞìÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3204,32,'³£ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3205,32,'ËÕÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3206,32,'ÄÏÍ¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3207,32,'Á¬ÔÆ¸ÛÊĞ');
-insert into web_cities (city_id,province_id,city) values (3208,32,'»´°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3209,32,'ÑÎ³ÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (3210,32,'ÑïÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3211,32,'Õò½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3212,32,'Ì©ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3213,32,'ËŞÇ¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3301,33,'º¼ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3302,33,'Äş²¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3303,33,'ÎÂÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3304,33,'¼ÎĞËÊĞ');
-insert into web_cities (city_id,province_id,city) values (3305,33,'ºşÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3306,33,'ÉÜĞËÊĞ');
-insert into web_cities (city_id,province_id,city) values (3307,33,'½ğ»ªÊĞ');
-insert into web_cities (city_id,province_id,city) values (3308,33,'áéÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3309,33,'ÖÛÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3310,33,'Ì¨ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3311,33,'ÀöË®ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3312,33,'ÖÛÉ½ÈºµºĞÂÇø');
-insert into web_cities (city_id,province_id,city) values (3401,34,'ºÏ·ÊÊĞ');
-insert into web_cities (city_id,province_id,city) values (3402,34,'ÎßºşÊĞ');
-insert into web_cities (city_id,province_id,city) values (3403,34,'°ö²ºÊĞ');
-insert into web_cities (city_id,province_id,city) values (3404,34,'»´ÄÏÊĞ');
-insert into web_cities (city_id,province_id,city) values (3405,34,'Âí°°É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3406,34,'»´±±ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3407,34,'Í­ÁêÊĞ');
-insert into web_cities (city_id,province_id,city) values (3408,34,'°²ÇìÊĞ');
-insert into web_cities (city_id,province_id,city) values (3410,34,'»ÆÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3411,34,'³üÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3412,34,'¸·ÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (3413,34,'ËŞÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3415,34,'Áù°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3416,34,'ÙñÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3417,34,'³ØÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3418,34,'Ğû³ÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (3501,35,'¸£ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3502,35,'ÏÃÃÅÊĞ');
-insert into web_cities (city_id,province_id,city) values (3503,35,'ÆÎÌïÊĞ');
-insert into web_cities (city_id,province_id,city) values (3504,35,'ÈıÃ÷ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3505,35,'ÈªÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3506,35,'ÕÄÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3507,35,'ÄÏÆ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3508,35,'ÁúÑÒÊĞ');
-insert into web_cities (city_id,province_id,city) values (3509,35,'ÄşµÂÊĞ');
-insert into web_cities (city_id,province_id,city) values (3601,36,'ÄÏ²ıÊĞ');
-insert into web_cities (city_id,province_id,city) values (3602,36,'¾°µÂÕòÊĞ');
-insert into web_cities (city_id,province_id,city) values (3603,36,'Æ¼ÏçÊĞ');
-insert into web_cities (city_id,province_id,city) values (3604,36,'¾Å½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3605,36,'ĞÂÓàÊĞ');
-insert into web_cities (city_id,province_id,city) values (3606,36,'Ó¥Ì¶ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3607,36,'¸ÓÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3608,36,'¼ª°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3609,36,'ÒË´ºÊĞ');
-insert into web_cities (city_id,province_id,city) values (3610,36,'¸§ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3611,36,'ÉÏÈÄÊĞ');
-insert into web_cities (city_id,province_id,city) values (3701,37,'¼ÃÄÏÊĞ');
-insert into web_cities (city_id,province_id,city) values (3702,37,'ÇàµºÊĞ');
-insert into web_cities (city_id,province_id,city) values (3703,37,'×Í²©ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3704,37,'Ôæ×¯ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3705,37,'¶«ÓªÊĞ');
-insert into web_cities (city_id,province_id,city) values (3706,37,'ÑÌÌ¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3707,37,'Î«·»ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3708,37,'¼ÃÄşÊĞ');
-insert into web_cities (city_id,province_id,city) values (3709,37,'Ì©°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3710,37,'Íşº£ÊĞ');
-insert into web_cities (city_id,province_id,city) values (3711,37,'ÈÕÕÕÊĞ');
-insert into web_cities (city_id,province_id,city) values (3712,37,'À³ÎßÊĞ');
-insert into web_cities (city_id,province_id,city) values (3713,37,'ÁÙÒÊÊĞ');
-insert into web_cities (city_id,province_id,city) values (3714,37,'µÂÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3715,37,'ÁÄ³ÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (3716,37,'±õÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (3717,37,'ºÊÔóÊĞ');
-insert into web_cities (city_id,province_id,city) values (4101,41,'Ö£ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4102,41,'¿ª·âÊĞ');
-insert into web_cities (city_id,province_id,city) values (4103,41,'ÂåÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4104,41,'Æ½¶¥É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4105,41,'°²ÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4106,41,'º×±ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (4107,41,'ĞÂÏçÊĞ');
-insert into web_cities (city_id,province_id,city) values (4108,41,'½¹×÷ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4109,41,'å§ÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4110,41,'Ğí²ıÊĞ');
-insert into web_cities (city_id,province_id,city) values (4111,41,'äğºÓÊĞ');
-insert into web_cities (city_id,province_id,city) values (4112,41,'ÈıÃÅÏ¿ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4113,41,'ÄÏÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4114,41,'ÉÌÇğÊĞ');
-insert into web_cities (city_id,province_id,city) values (4115,41,'ĞÅÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4116,41,'ÖÜ¿ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (4117,41,'×¤ÂíµêÊĞ');
-insert into web_cities (city_id,province_id,city) values (4190,41,'Ö±Ï½ÏØ¼¶');
-insert into web_cities (city_id,province_id,city) values (4201,42,'ÎäººÊĞ');
-insert into web_cities (city_id,province_id,city) values (4202,42,'»ÆÊ¯ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4203,42,'Ê®ÑßÊĞ');
-insert into web_cities (city_id,province_id,city) values (4205,42,'ÒË²ıÊĞ');
-insert into web_cities (city_id,province_id,city) values (4206,42,'ÏåÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4207,42,'¶õÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4208,42,'¾£ÃÅÊĞ');
-insert into web_cities (city_id,province_id,city) values (4209,42,'Ğ¢¸ĞÊĞ');
-insert into web_cities (city_id,province_id,city) values (4210,42,'¾£ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4211,42,'»Æ¸ÔÊĞ');
-insert into web_cities (city_id,province_id,city) values (4212,42,'ÏÌÄşÊĞ');
-insert into web_cities (city_id,province_id,city) values (4213,42,'ËæÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4228,42,'¶÷Ê©ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (4290,42,'Ö±Ï½ÏØ¼¶');
-insert into web_cities (city_id,province_id,city) values (4301,43,'³¤É³ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4302,43,'ÖêÖŞÊĞ');
-insert into web_cities (city_id,province_id,city) values (4303,43,'ÏæÌ¶ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4304,43,'ºâÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4305,43,'ÉÛÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4306,43,'ÔÀÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4307,43,'³£µÂÊĞ');
-insert into web_cities (city_id,province_id,city) values (4308,43,'ÕÅ¼Ò½çÊĞ');
-insert into web_cities (city_id,province_id,city) values (4309,43,'ÒæÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4310,43,'³»ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4311,43,'ÓÀÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4312,43,'»³»¯ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4313,43,'Â¦µ×ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4331,43,'ÏæÎ÷ÍÁ¼Ò×åÃç×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (4401,44,'¹ãÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4402,44,'ÉØ¹ØÊĞ');
-insert into web_cities (city_id,province_id,city) values (4403,44,'ÉîÛÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (4404,44,'Öéº£ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4405,44,'ÉÇÍ·ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4406,44,'·ğÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4407,44,'½­ÃÅÊĞ');
-insert into web_cities (city_id,province_id,city) values (4408,44,'Õ¿½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4409,44,'Ã¯ÃûÊĞ');
-insert into web_cities (city_id,province_id,city) values (4412,44,'ÕØÇìÊĞ');
-insert into web_cities (city_id,province_id,city) values (4413,44,'»İÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4414,44,'Ã·ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4415,44,'ÉÇÎ²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4416,44,'ºÓÔ´ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4417,44,'Ñô½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4418,44,'ÇåÔ¶ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4419,44,'¶«İ¸ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4420,44,'ÖĞÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4451,44,'³±ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4452,44,'½ÒÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (4453,44,'ÔÆ¸¡ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4501,45,'ÄÏÄşÊĞ');
-insert into web_cities (city_id,province_id,city) values (4502,45,'ÁøÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4503,45,'¹ğÁÖÊĞ');
-insert into web_cities (city_id,province_id,city) values (4504,45,'ÎàÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4505,45,'±±º£ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4506,45,'·À³Ç¸ÛÊĞ');
-insert into web_cities (city_id,province_id,city) values (4507,45,'ÇÕÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4508,45,'¹ó¸ÛÊĞ');
-insert into web_cities (city_id,province_id,city) values (4509,45,'ÓñÁÖÊĞ');
-insert into web_cities (city_id,province_id,city) values (4510,45,'°ÙÉ«ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4511,45,'ºØÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (4512,45,'ºÓ³ØÊĞ');
-insert into web_cities (city_id,province_id,city) values (4513,45,'À´±öÊĞ');
-insert into web_cities (city_id,province_id,city) values (4514,45,'³ç×óÊĞ');
-insert into web_cities (city_id,province_id,city) values (4601,46,'º£¿ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (4602,46,'ÈıÑÇÊĞ');
-insert into web_cities (city_id,province_id,city) values (4603,46,'ÈıÉ³ÊĞ');
-insert into web_cities (city_id,province_id,city) values (4690,46,'Ö±Ï½ÏØ¼¶');
-insert into web_cities (city_id,province_id,city) values (5001,50,'ÖØÇìÊĞ');
-insert into web_cities (city_id,province_id,city) values (5003,50,'Á½½­ĞÂÇø');
-insert into web_cities (city_id,province_id,city) values (5101,51,'³É¶¼ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5103,51,'×Ô¹±ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5104,51,'ÅÊÖ¦»¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5105,51,'ãòÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (5106,51,'µÂÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (5107,51,'ÃàÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (5108,51,'¹ãÔªÊĞ');
-insert into web_cities (city_id,province_id,city) values (5109,51,'ËìÄşÊĞ');
-insert into web_cities (city_id,province_id,city) values (5110,51,'ÄÚ½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5111,51,'ÀÖÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5113,51,'ÄÏ³äÊĞ');
-insert into web_cities (city_id,province_id,city) values (5114,51,'Ã¼É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5115,51,'ÒË±öÊĞ');
-insert into web_cities (city_id,province_id,city) values (5116,51,'¹ã°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5117,51,'´ïÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (5118,51,'ÑÅ°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5119,51,'°ÍÖĞÊĞ');
-insert into web_cities (city_id,province_id,city) values (5120,51,'×ÊÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (5132,51,'°¢°Ó²Ø×åÇ¼×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5133,51,'¸Ê×Î²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5134,51,'Á¹É½ÒÍ×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5201,52,'¹óÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (5202,52,'ÁùÅÌË®ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5203,52,'×ñÒåÊĞ');
-insert into web_cities (city_id,province_id,city) values (5204,52,'°²Ë³ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5205,52,'±Ï½ÚÊĞ');
-insert into web_cities (city_id,province_id,city) values (5206,52,'Í­ÈÊÊĞ');
-insert into web_cities (city_id,province_id,city) values (5223,52,'Ç­Î÷ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5226,52,'Ç­¶«ÄÏÃç×å¶±×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5227,52,'Ç­ÄÏ²¼ÒÀ×åÃç×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5301,53,'À¥Ã÷ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5303,53,'Çú¾¸ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5304,53,'ÓñÏªÊĞ');
-insert into web_cities (city_id,province_id,city) values (5305,53,'±£É½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5306,53,'ÕÑÍ¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5307,53,'Àö½­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5308,53,'ÆÕ¶ıÊĞ');
-insert into web_cities (city_id,province_id,city) values (5309,53,'ÁÙ²×ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5323,53,'³şĞÛÒÍ×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5325,53,'ºìºÓ¹şÄá×åÒÍ×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5326,53,'ÎÄÉ½×³×åÃç×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5328,53,'Î÷Ë«°æÄÉ´ö×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5329,53,'´óÀí°××å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5331,53,'µÂºê´ö×å¾°ÆÄ×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5333,53,'Å­½­ÀüËÛ×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5334,53,'µÏÇì²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (5401,54,'À­ÈøÊĞ');
-insert into web_cities (city_id,province_id,city) values (5402,54,'ÈÕ¿¦ÔòÊĞ');
-insert into web_cities (city_id,province_id,city) values (5403,54,'²ı¶¼ÊĞ');
-insert into web_cities (city_id,province_id,city) values (5422,54,'É½ÄÏµØÇø');
-insert into web_cities (city_id,province_id,city) values (5424,54,'ÄÇÇúµØÇø');
-insert into web_cities (city_id,province_id,city) values (5425,54,'°¢ÀïµØÇø');
-insert into web_cities (city_id,province_id,city) values (5426,54,'ÁÖÖ¥µØÇø');
-insert into web_cities (city_id,province_id,city) values (6101,61,'Î÷°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6102,61,'Í­´¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6103,61,'±¦¼¦ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6104,61,'ÏÌÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (6105,61,'Î¼ÄÏÊĞ');
-insert into web_cities (city_id,province_id,city) values (6106,61,'ÑÓ°²ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6107,61,'ººÖĞÊĞ');
-insert into web_cities (city_id,province_id,city) values (6108,61,'ÓÜÁÖÊĞ');
-insert into web_cities (city_id,province_id,city) values (6109,61,'°²¿µÊĞ');
-insert into web_cities (city_id,province_id,city) values (6110,61,'ÉÌÂåÊĞ');
-insert into web_cities (city_id,province_id,city) values (6111,61,'Î÷ÏÌĞÂÇø');
-insert into web_cities (city_id,province_id,city) values (6201,62,'À¼ÖİÊĞ');
-insert into web_cities (city_id,province_id,city) values (6202,62,'¼ÎÓø¹ØÊĞ');
-insert into web_cities (city_id,province_id,city) values (6203,62,'½ğ²ıÊĞ');
-insert into web_cities (city_id,province_id,city) values (6204,62,'°×ÒøÊĞ');
-insert into web_cities (city_id,province_id,city) values (6205,62,'ÌìË®ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6206,62,'ÎäÍşÊĞ');
-insert into web_cities (city_id,province_id,city) values (6207,62,'ÕÅÒ´ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6208,62,'Æ½Á¹ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6209,62,'¾ÆÈªÊĞ');
-insert into web_cities (city_id,province_id,city) values (6210,62,'ÇìÑôÊĞ');
-insert into web_cities (city_id,province_id,city) values (6211,62,'¶¨Î÷ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6212,62,'Â¤ÄÏÊĞ');
-insert into web_cities (city_id,province_id,city) values (6229,62,'ÁÙÏÄ»Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6230,62,'¸ÊÄÏ²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6301,63,'Î÷ÄşÊĞ');
-insert into web_cities (city_id,province_id,city) values (6302,63,'º£¶«ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6322,63,'º£±±²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6323,63,'»ÆÄÏ²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6325,63,'º£ÄÏ²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6326,63,'¹ûÂå²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6327,63,'ÓñÊ÷²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6328,63,'º£Î÷ÃÉ¹Å×å²Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6401,64,'Òø´¨ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6402,64,'Ê¯×ìÉ½ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6403,64,'ÎâÖÒÊĞ');
-insert into web_cities (city_id,province_id,city) values (6404,64,'¹ÌÔ­ÊĞ');
-insert into web_cities (city_id,province_id,city) values (6405,64,'ÖĞÎÀÊĞ');
-insert into web_cities (city_id,province_id,city) values (6501,65,'ÎÚÂ³Ä¾ÆëÊĞ');
-insert into web_cities (city_id,province_id,city) values (6502,65,'¿ËÀ­ÂêÒÀÊĞ');
-insert into web_cities (city_id,province_id,city) values (6521,65,'ÍÂÂ³·¬µØÇø');
-insert into web_cities (city_id,province_id,city) values (6522,65,'¹şÃÜµØÇø');
-insert into web_cities (city_id,province_id,city) values (6523,65,'²ı¼ª»Ø×å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6527,65,'²©¶ûËşÀ­ÃÉ¹Å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6528,65,'°ÍÒô¹ùÀãÃÉ¹Å×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6529,65,'°¢¿ËËÕµØÇø');
-insert into web_cities (city_id,province_id,city) values (6530,65,'¿Ë×ÎÀÕËÕ¿Â¶û¿Ë×Î×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6531,65,'¿¦Ê²µØÇø');
-insert into web_cities (city_id,province_id,city) values (6532,65,'ºÍÌïµØÇø');
-insert into web_cities (city_id,province_id,city) values (6540,65,'ÒÁÀç¹şÈø¿Ë×ÔÖÎÖİ');
-insert into web_cities (city_id,province_id,city) values (6542,65,'Ëş³ÇµØÇø');
-insert into web_cities (city_id,province_id,city) values (6543,65,'°¢ÀÕÌ©µØÇø');
-insert into web_cities (city_id,province_id,city) values (6590,65,'Ö±Ï½ÏØ¼¶');
-insert into web_cities (city_id,province_id,city) values (7101,71,'Ì¨±±ÊĞ');
-insert into web_cities (city_id,province_id,city) values (7102,71,'¸ßĞÛÊĞ');
-insert into web_cities (city_id,province_id,city) values (7103,71,'»ùÂ¡ÊĞ');
-insert into web_cities (city_id,province_id,city) values (7104,71,'Ì¨ÖĞÊĞ');
-insert into web_cities (city_id,province_id,city) values (7105,71,'Ì¨ÄÏÊĞ');
-insert into web_cities (city_id,province_id,city) values (7106,71,'ĞÂÖñÊĞ');
-insert into web_cities (city_id,province_id,city) values (7107,71,'¼ÎÒåÊĞ');
-insert into web_cities (city_id,province_id,city) values (7108,71,'ĞÂ±±ÊĞ');
-insert into web_cities (city_id,province_id,city) values (7122,71,'ÒËÀ¼ÏØ');
-insert into web_cities (city_id,province_id,city) values (7123,71,'ÌÒÔ°ÏØ');
-insert into web_cities (city_id,province_id,city) values (7124,71,'ĞÂÖñÏØ');
-insert into web_cities (city_id,province_id,city) values (7125,71,'ÃçÀõÏØ');
-insert into web_cities (city_id,province_id,city) values (7127,71,'ÕÃ»¯ÏØ');
-insert into web_cities (city_id,province_id,city) values (7128,71,'ÄÏÍ¶ÏØ');
-insert into web_cities (city_id,province_id,city) values (7129,71,'ÔÆÁÖÏØ');
-insert into web_cities (city_id,province_id,city) values (7130,71,'¼ÎÒåÏØ');
-insert into web_cities (city_id,province_id,city) values (7133,71,'ÆÁ¶«ÏØ');
-insert into web_cities (city_id,province_id,city) values (7134,71,'Ì¨¶«ÏØ');
-insert into web_cities (city_id,province_id,city) values (7135,71,'»¨Á«ÏØ');
-insert into web_cities (city_id,province_id,city) values (7136,71,'ÅìºşÏØ');
-insert into web_cities (city_id,province_id,city) values (7137,71,'½ğÃÅÏØ');
-insert into web_cities (city_id,province_id,city) values (7138,71,'Á¬½­ÏØ');
-insert into web_cities (city_id,province_id,city) values (8101,81,'Ïã¸Ûµº');
-insert into web_cities (city_id,province_id,city) values (8102,81,'¾ÅÁú');
-insert into web_cities (city_id,province_id,city) values (8103,81,'ĞÂ½ç');
-insert into web_cities (city_id,province_id,city) values (8201,82,'°ÄÃÅ°ëµº');
-insert into web_cities (city_id,province_id,city) values (8202,82,'šë×Ğµº');
-insert into web_cities (city_id,province_id,city) values (8203,82,'Â·»·µº');
-
-/*web_regions³õÊ¼Êı¾İ*/
-insert into web_regions (region_id,city_id,region) values (110101,1101,'¶«³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (110102,1101,'Î÷³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (110105,1101,'³¯ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (110106,1101,'·áÌ¨Çø');
-insert into web_regions (region_id,city_id,region) values (110107,1101,'Ê¯¾°É½Çø');
-insert into web_regions (region_id,city_id,region) values (110108,1101,'º£µíÇø');
-insert into web_regions (region_id,city_id,region) values (110109,1101,'ÃÅÍ·¹µÇø');
-insert into web_regions (region_id,city_id,region) values (110111,1101,'·¿É½Çø');
-insert into web_regions (region_id,city_id,region) values (110112,1101,'Í¨ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (110113,1101,'Ë³ÒåÇø');
-insert into web_regions (region_id,city_id,region) values (110114,1101,'²ıÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (110115,1101,'´óĞËÇø');
-insert into web_regions (region_id,city_id,region) values (110116,1101,'»³ÈáÇø');
-insert into web_regions (region_id,city_id,region) values (110117,1101,'Æ½¹ÈÇø');
-insert into web_regions (region_id,city_id,region) values (110228,1101,'ÃÜÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (110229,1101,'ÑÓÇìÏØ');
-insert into web_regions (region_id,city_id,region) values (120101,1201,'ºÍÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (120102,1201,'ºÓ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (120103,1201,'ºÓÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (120104,1201,'ÄÏ¿ªÇø');
-insert into web_regions (region_id,city_id,region) values (120105,1201,'ºÓ±±Çø');
-insert into web_regions (region_id,city_id,region) values (120106,1201,'ºìÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (120110,1201,'¶«ÀöÇø');
-insert into web_regions (region_id,city_id,region) values (120111,1201,'Î÷ÇàÇø');
-insert into web_regions (region_id,city_id,region) values (120112,1201,'½òÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (120113,1201,'±±³½Çø');
-insert into web_regions (region_id,city_id,region) values (120114,1201,'ÎäÇåÇø');
-insert into web_regions (region_id,city_id,region) values (120115,1201,'±¦ÛæÇø');
-insert into web_regions (region_id,city_id,region) values (120116,1201,'±õº£ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (120221,1201,'ÄşºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (120223,1201,'¾²º£ÏØ');
-insert into web_regions (region_id,city_id,region) values (120225,1201,'¼»ÏØ');
-insert into web_regions (region_id,city_id,region) values (130102,1301,'³¤°²Çø');
-insert into web_regions (region_id,city_id,region) values (130104,1301,'ÇÅÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (130105,1301,'ĞÂ»ªÇø');
-insert into web_regions (region_id,city_id,region) values (130107,1301,'¾®Úê¿óÇø');
-insert into web_regions (region_id,city_id,region) values (130108,1301,'Ô£»ªÇø');
-insert into web_regions (region_id,city_id,region) values (130109,1301,'Ş»³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (130110,1301,'Â¹ÈªÇø');
-insert into web_regions (region_id,city_id,region) values (130111,1301,'èï³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (130121,1301,'¾®ÚêÏØ');
-insert into web_regions (region_id,city_id,region) values (130123,1301,'Õı¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (130125,1301,'ĞĞÌÆÏØ');
-insert into web_regions (region_id,city_id,region) values (130126,1301,'ÁéÊÙÏØ');
-insert into web_regions (region_id,city_id,region) values (130127,1301,'¸ßÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (130128,1301,'ÉîÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (130129,1301,'ÔŞ»ÊÏØ');
-insert into web_regions (region_id,city_id,region) values (130130,1301,'ÎŞ¼«ÏØ');
-insert into web_regions (region_id,city_id,region) values (130131,1301,'Æ½É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (130132,1301,'ÔªÊÏÏØ');
-insert into web_regions (region_id,city_id,region) values (130133,1301,'ÕÔÏØ');
-insert into web_regions (region_id,city_id,region) values (130181,1301,'ĞÁ¼¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (130183,1301,'½úÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (130184,1301,'ĞÂÀÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (130202,1302,'Â·ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (130203,1302,'Â·±±Çø');
-insert into web_regions (region_id,city_id,region) values (130204,1302,'¹ÅÒ±Çø');
-insert into web_regions (region_id,city_id,region) values (130205,1302,'¿ªÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (130207,1302,'·áÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (130208,1302,'·áÈóÇø');
-insert into web_regions (region_id,city_id,region) values (130209,1302,'²ÜåúµéÇø');
-insert into web_regions (region_id,city_id,region) values (130223,1302,'ÂĞÏØ');
-insert into web_regions (region_id,city_id,region) values (130224,1302,'ÂĞÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (130225,1302,'ÀÖÍ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (130227,1302,'Ç¨Î÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (130229,1302,'ÓñÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (130281,1302,'×ñ»¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (130283,1302,'Ç¨°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (130302,1303,'º£¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (130303,1303,'É½º£¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (130304,1303,'±±´÷ºÓÇø');
-insert into web_regions (region_id,city_id,region) values (130321,1303,'ÇàÁúÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (130322,1303,'²ıÀèÏØ');
-insert into web_regions (region_id,city_id,region) values (130323,1303,'¸§ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (130324,1303,'Â¬ÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (130402,1304,'ºªÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (130403,1304,'´ÔÌ¨Çø');
-insert into web_regions (region_id,city_id,region) values (130404,1304,'¸´ĞËÇø');
-insert into web_regions (region_id,city_id,region) values (130406,1304,'·å·å¿óÇø');
-insert into web_regions (region_id,city_id,region) values (130421,1304,'ºªµ¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (130423,1304,'ÁÙÕÄÏØ');
-insert into web_regions (region_id,city_id,region) values (130424,1304,'³É°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (130425,1304,'´óÃûÏØ');
-insert into web_regions (region_id,city_id,region) values (130426,1304,'ÉæÏØ');
-insert into web_regions (region_id,city_id,region) values (130427,1304,'´ÅÏØ');
-insert into web_regions (region_id,city_id,region) values (130428,1304,'·ÊÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (130429,1304,'ÓÀÄêÏØ');
-insert into web_regions (region_id,city_id,region) values (130430,1304,'ÇñÏØ');
-insert into web_regions (region_id,city_id,region) values (130431,1304,'¼¦ÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (130432,1304,'¹ãÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (130433,1304,'¹İÌÕÏØ');
-insert into web_regions (region_id,city_id,region) values (130434,1304,'ÎºÏØ');
-insert into web_regions (region_id,city_id,region) values (130435,1304,'ÇúÖÜÏØ');
-insert into web_regions (region_id,city_id,region) values (130481,1304,'Îä°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (130502,1305,'ÇÅ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (130503,1305,'ÇÅÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (130521,1305,'ĞÏÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (130522,1305,'ÁÙ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (130523,1305,'ÄÚÇğÏØ');
-insert into web_regions (region_id,city_id,region) values (130524,1305,'°ØÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (130525,1305,'Â¡Ò¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (130526,1305,'ÈÎÏØ');
-insert into web_regions (region_id,city_id,region) values (130527,1305,'ÄÏºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (130528,1305,'Äş½úÏØ');
-insert into web_regions (region_id,city_id,region) values (130529,1305,'¾ŞÂ¹ÏØ');
-insert into web_regions (region_id,city_id,region) values (130530,1305,'ĞÂºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (130531,1305,'¹ã×ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (130532,1305,'Æ½ÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (130533,1305,'ÍşÏØ');
-insert into web_regions (region_id,city_id,region) values (130534,1305,'ÇåºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (130535,1305,'ÁÙÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (130581,1305,'ÄÏ¹¬ÊĞ');
-insert into web_regions (region_id,city_id,region) values (130582,1305,'É³ºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (130602,1306,'ĞÂÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (130603,1306,'±±ÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (130604,1306,'ÄÏÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (130621,1306,'Âú³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (130622,1306,'ÇåÔ·ÏØ');
-insert into web_regions (region_id,city_id,region) values (130623,1306,'äµË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (130624,1306,'¸·Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (130625,1306,'ĞìË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (130626,1306,'¶¨ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (130627,1306,'ÌÆÏØ');
-insert into web_regions (region_id,city_id,region) values (130628,1306,'¸ßÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (130629,1306,'Èİ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (130630,1306,'äµÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (130631,1306,'Íû¶¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (130632,1306,'°²ĞÂÏØ');
-insert into web_regions (region_id,city_id,region) values (130633,1306,'Ò×ÏØ');
-insert into web_regions (region_id,city_id,region) values (130634,1306,'ÇúÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (130635,1306,'ó»ÏØ');
-insert into web_regions (region_id,city_id,region) values (130636,1306,'Ë³Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (130637,1306,'²©Ò°ÏØ');
-insert into web_regions (region_id,city_id,region) values (130638,1306,'ĞÛÏØ');
-insert into web_regions (region_id,city_id,region) values (130681,1306,'äÃÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (130682,1306,'¶¨ÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (130683,1306,'°²¹úÊĞ');
-insert into web_regions (region_id,city_id,region) values (130684,1306,'¸ß±®µêÊĞ');
-insert into web_regions (region_id,city_id,region) values (130702,1307,'ÇÅ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (130703,1307,'ÇÅÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (130705,1307,'Ğû»¯Çø');
-insert into web_regions (region_id,city_id,region) values (130706,1307,'ÏÂ»¨Ô°Çø');
-insert into web_regions (region_id,city_id,region) values (130721,1307,'Ğû»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (130722,1307,'ÕÅ±±ÏØ');
-insert into web_regions (region_id,city_id,region) values (130723,1307,'¿µ±£ÏØ');
-insert into web_regions (region_id,city_id,region) values (130724,1307,'¹ÁÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (130725,1307,'ÉĞÒåÏØ');
-insert into web_regions (region_id,city_id,region) values (130726,1307,'ÎµÏØ');
-insert into web_regions (region_id,city_id,region) values (130727,1307,'ÑôÔ­ÏØ');
-insert into web_regions (region_id,city_id,region) values (130728,1307,'»³°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (130729,1307,'ÍòÈ«ÏØ');
-insert into web_regions (region_id,city_id,region) values (130730,1307,'»³À´ÏØ');
-insert into web_regions (region_id,city_id,region) values (130731,1307,'äÃÂ¹ÏØ');
-insert into web_regions (region_id,city_id,region) values (130732,1307,'³à³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (130733,1307,'³çÀñÏØ');
-insert into web_regions (region_id,city_id,region) values (130802,1308,'Ë«ÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (130803,1308,'Ë«ÂĞÇø');
-insert into web_regions (region_id,city_id,region) values (130804,1308,'Ó¥ÊÖÓª×Ó¿óÇø');
-insert into web_regions (region_id,city_id,region) values (130821,1308,'³ĞµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (130822,1308,'ĞËÂ¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (130823,1308,'Æ½ÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (130824,1308,'ÂĞÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (130825,1308,'Â¡»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (130826,1308,'·áÄşÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (130827,1308,'¿í³ÇÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (130828,1308,'Î§³¡Âú×åÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (130902,1309,'ĞÂ»ªÇø');
-insert into web_regions (region_id,city_id,region) values (130903,1309,'ÔËºÓÇø');
-insert into web_regions (region_id,city_id,region) values (130921,1309,'²×ÏØ');
-insert into web_regions (region_id,city_id,region) values (130922,1309,'ÇàÏØ');
-insert into web_regions (region_id,city_id,region) values (130923,1309,'¶«¹âÏØ');
-insert into web_regions (region_id,city_id,region) values (130924,1309,'º£ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (130925,1309,'ÑÎÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (130926,1309,'ËàÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (130927,1309,'ÄÏÆ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (130928,1309,'ÎâÇÅÏØ');
-insert into web_regions (region_id,city_id,region) values (130929,1309,'Ï×ÏØ');
-insert into web_regions (region_id,city_id,region) values (130930,1309,'ÃÏ´å»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (130981,1309,'²´Í·ÊĞ');
-insert into web_regions (region_id,city_id,region) values (130982,1309,'ÈÎÇğÊĞ');
-insert into web_regions (region_id,city_id,region) values (130983,1309,'»ÆæèÊĞ');
-insert into web_regions (region_id,city_id,region) values (130984,1309,'ºÓ¼äÊĞ');
-insert into web_regions (region_id,city_id,region) values (131002,1310,'°²´ÎÇø');
-insert into web_regions (region_id,city_id,region) values (131003,1310,'¹ãÑôÇø');
-insert into web_regions (region_id,city_id,region) values (131022,1310,'¹Ì°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (131023,1310,'ÓÀÇåÏØ');
-insert into web_regions (region_id,city_id,region) values (131024,1310,'ÏãºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (131025,1310,'´ó³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (131026,1310,'ÎÄ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (131028,1310,'´ó³§»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (131081,1310,'°ÔÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (131082,1310,'ÈıºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (131102,1311,'ÌÒ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (131121,1311,'ÔæÇ¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (131122,1311,'ÎäÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (131123,1311,'ÎäÇ¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (131124,1311,'ÈÄÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (131125,1311,'°²Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (131126,1311,'¹Ê³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (131127,1311,'¾°ÏØ');
-insert into web_regions (region_id,city_id,region) values (131128,1311,'¸·³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (131181,1311,'¼½ÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (131182,1311,'ÉîÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (140105,1401,'Ğ¡µêÇø');
-insert into web_regions (region_id,city_id,region) values (140106,1401,'Ó­ÔóÇø');
-insert into web_regions (region_id,city_id,region) values (140107,1401,'ĞÓ»¨ÁëÇø');
-insert into web_regions (region_id,city_id,region) values (140108,1401,'¼â²İÆºÇø');
-insert into web_regions (region_id,city_id,region) values (140109,1401,'Íò°ØÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (140110,1401,'½úÔ´Çø');
-insert into web_regions (region_id,city_id,region) values (140121,1401,'ÇåĞìÏØ');
-insert into web_regions (region_id,city_id,region) values (140122,1401,'ÑôÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (140123,1401,'Â¦·³ÏØ');
-insert into web_regions (region_id,city_id,region) values (140181,1401,'¹Å½»ÊĞ');
-insert into web_regions (region_id,city_id,region) values (140202,1402,'³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (140203,1402,'¿óÇø');
-insert into web_regions (region_id,city_id,region) values (140211,1402,'ÄÏ½¼Çø');
-insert into web_regions (region_id,city_id,region) values (140212,1402,'ĞÂÈÙÇø');
-insert into web_regions (region_id,city_id,region) values (140221,1402,'Ñô¸ßÏØ');
-insert into web_regions (region_id,city_id,region) values (140222,1402,'ÌìÕòÏØ');
-insert into web_regions (region_id,city_id,region) values (140223,1402,'¹ãÁéÏØ');
-insert into web_regions (region_id,city_id,region) values (140224,1402,'ÁéÇğÏØ');
-insert into web_regions (region_id,city_id,region) values (140225,1402,'»ëÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (140226,1402,'×óÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (140227,1402,'´óÍ¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (140302,1403,'³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (140303,1403,'¿óÇø');
-insert into web_regions (region_id,city_id,region) values (140311,1403,'½¼Çø');
-insert into web_regions (region_id,city_id,region) values (140321,1403,'Æ½¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (140322,1403,'ÓÛÏØ');
-insert into web_regions (region_id,city_id,region) values (140402,1404,'³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (140411,1404,'½¼Çø');
-insert into web_regions (region_id,city_id,region) values (140421,1404,'³¤ÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (140423,1404,'ÏåÔ«ÏØ');
-insert into web_regions (region_id,city_id,region) values (140424,1404,'ÍÍÁôÏØ');
-insert into web_regions (region_id,city_id,region) values (140425,1404,'Æ½Ë³ÏØ');
-insert into web_regions (region_id,city_id,region) values (140426,1404,'Àè³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (140427,1404,'ºø¹ØÏØ');
-insert into web_regions (region_id,city_id,region) values (140428,1404,'³¤×ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (140429,1404,'ÎäÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (140430,1404,'ÇßÏØ');
-insert into web_regions (region_id,city_id,region) values (140431,1404,'ÇßÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (140481,1404,'Âº³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (140502,1405,'³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (140521,1405,'ÇßË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (140522,1405,'Ñô³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (140524,1405,'Áê´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (140525,1405,'ÔóÖİÏØ');
-insert into web_regions (region_id,city_id,region) values (140581,1405,'¸ßÆ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (140602,1406,'Ë·³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (140603,1406,'Æ½Â³Çø');
-insert into web_regions (region_id,city_id,region) values (140621,1406,'É½ÒõÏØ');
-insert into web_regions (region_id,city_id,region) values (140622,1406,'Ó¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (140623,1406,'ÓÒÓñÏØ');
-insert into web_regions (region_id,city_id,region) values (140624,1406,'»³ÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (140702,1407,'ÓÜ´ÎÇø');
-insert into web_regions (region_id,city_id,region) values (140721,1407,'ÓÜÉçÏØ');
-insert into web_regions (region_id,city_id,region) values (140722,1407,'×óÈ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (140723,1407,'ºÍË³ÏØ');
-insert into web_regions (region_id,city_id,region) values (140724,1407,'ÎôÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (140725,1407,'ÊÙÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (140726,1407,'Ì«¹ÈÏØ');
-insert into web_regions (region_id,city_id,region) values (140727,1407,'ÆîÏØ');
-insert into web_regions (region_id,city_id,region) values (140728,1407,'Æ½Ò£ÏØ');
-insert into web_regions (region_id,city_id,region) values (140729,1407,'ÁéÊ¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (140781,1407,'½éĞİÊĞ');
-insert into web_regions (region_id,city_id,region) values (140802,1408,'ÑÎºşÇø');
-insert into web_regions (region_id,city_id,region) values (140821,1408,'ÁÙâ¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (140822,1408,'ÍòÈÙÏØ');
-insert into web_regions (region_id,city_id,region) values (140823,1408,'ÎÅÏ²ÏØ');
-insert into web_regions (region_id,city_id,region) values (140824,1408,'ğ¢É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (140825,1408,'ĞÂç­ÏØ');
-insert into web_regions (region_id,city_id,region) values (140826,1408,'ç­ÏØ');
-insert into web_regions (region_id,city_id,region) values (140827,1408,'Ô«ÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (140828,1408,'ÏÄÏØ');
-insert into web_regions (region_id,city_id,region) values (140829,1408,'Æ½Â½ÏØ');
-insert into web_regions (region_id,city_id,region) values (140830,1408,'ÜÇ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (140881,1408,'ÓÀ¼ÃÊĞ');
-insert into web_regions (region_id,city_id,region) values (140882,1408,'ºÓ½òÊĞ');
-insert into web_regions (region_id,city_id,region) values (140902,1409,'ĞÃ¸®Çø');
-insert into web_regions (region_id,city_id,region) values (140921,1409,'¶¨ÏåÏØ');
-insert into web_regions (region_id,city_id,region) values (140922,1409,'ÎåÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (140923,1409,'´úÏØ');
-insert into web_regions (region_id,city_id,region) values (140924,1409,'·±ÖÅÏØ');
-insert into web_regions (region_id,city_id,region) values (140925,1409,'ÄşÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (140926,1409,'¾²ÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (140927,1409,'Éñ³ØÏØ');
-insert into web_regions (region_id,city_id,region) values (140928,1409,'ÎåÕ¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (140929,1409,'á³á°ÏØ');
-insert into web_regions (region_id,city_id,region) values (140930,1409,'ºÓÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (140931,1409,'±£µÂÏØ');
-insert into web_regions (region_id,city_id,region) values (140932,1409,'Æ«¹ØÏØ');
-insert into web_regions (region_id,city_id,region) values (140981,1409,'Ô­Æ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (141002,1410,'Ò¢¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (141021,1410,'ÇúÎÖÏØ');
-insert into web_regions (region_id,city_id,region) values (141022,1410,'Òí³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (141023,1410,'Ïå·ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (141024,1410,'ºé¶´ÏØ');
-insert into web_regions (region_id,city_id,region) values (141025,1410,'¹ÅÏØ');
-insert into web_regions (region_id,city_id,region) values (141026,1410,'°²ÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (141027,1410,'¸¡É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (141028,1410,'¼ªÏØ');
-insert into web_regions (region_id,city_id,region) values (141029,1410,'ÏçÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (141030,1410,'´óÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (141031,1410,'ÚôÏØ');
-insert into web_regions (region_id,city_id,region) values (141032,1410,'ÓÀºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (141033,1410,'ÆÑÏØ');
-insert into web_regions (region_id,city_id,region) values (141034,1410,'·ÚÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (141081,1410,'ºîÂíÊĞ');
-insert into web_regions (region_id,city_id,region) values (141082,1410,'»ôÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (141102,1411,'ÀëÊ¯Çø');
-insert into web_regions (region_id,city_id,region) values (141121,1411,'ÎÄË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (141122,1411,'½»³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (141123,1411,'ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (141124,1411,'ÁÙÏØ');
-insert into web_regions (region_id,city_id,region) values (141125,1411,'ÁøÁÖÏØ');
-insert into web_regions (region_id,city_id,region) values (141126,1411,'Ê¯Â¥ÏØ');
-insert into web_regions (region_id,city_id,region) values (141127,1411,'á°ÏØ');
-insert into web_regions (region_id,city_id,region) values (141128,1411,'·½É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (141129,1411,'ÖĞÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (141130,1411,'½»¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (141181,1411,'Ğ¢ÒåÊĞ');
-insert into web_regions (region_id,city_id,region) values (141182,1411,'·ÚÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (150102,1501,'ĞÂ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (150103,1501,'»ØÃñÇø');
-insert into web_regions (region_id,city_id,region) values (150104,1501,'ÓñÈªÇø');
-insert into web_regions (region_id,city_id,region) values (150105,1501,'Èüº±Çø');
-insert into web_regions (region_id,city_id,region) values (150121,1501,'ÍÁÄ¬ÌØ×óÆì');
-insert into web_regions (region_id,city_id,region) values (150122,1501,'ÍĞ¿ËÍĞÏØ');
-insert into web_regions (region_id,city_id,region) values (150123,1501,'ºÍÁÖ¸ñ¶ûÏØ');
-insert into web_regions (region_id,city_id,region) values (150124,1501,'ÇåË®ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (150125,1501,'Îä´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (150202,1502,'¶«ºÓÇø');
-insert into web_regions (region_id,city_id,region) values (150203,1502,'À¥¶¼ÂØÇø');
-insert into web_regions (region_id,city_id,region) values (150204,1502,'ÇàÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (150205,1502,'Ê¯¹ÕÇø');
-insert into web_regions (region_id,city_id,region) values (150206,1502,'°×ÔÆ¶õ²©¿óÇø');
-insert into web_regions (region_id,city_id,region) values (150207,1502,'¾ÅÔ­Çø');
-insert into web_regions (region_id,city_id,region) values (150221,1502,'ÍÁÄ¬ÌØÓÒÆì');
-insert into web_regions (region_id,city_id,region) values (150222,1502,'¹ÌÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (150223,1502,'´ï¶ûº±Ã¯Ã÷°²ÁªºÏÆì');
-insert into web_regions (region_id,city_id,region) values (150302,1503,'º£²ªÍåÇø');
-insert into web_regions (region_id,city_id,region) values (150303,1503,'º£ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (150304,1503,'ÎÚ´ïÇø');
-insert into web_regions (region_id,city_id,region) values (150402,1504,'ºìÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (150403,1504,'Ôª±¦É½Çø');
-insert into web_regions (region_id,city_id,region) values (150404,1504,'ËÉÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (150421,1504,'°¢Â³¿Æ¶ûÇßÆì');
-insert into web_regions (region_id,city_id,region) values (150422,1504,'°ÍÁÖ×óÆì');
-insert into web_regions (region_id,city_id,region) values (150423,1504,'°ÍÁÖÓÒÆì');
-insert into web_regions (region_id,city_id,region) values (150424,1504,'ÁÖÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (150425,1504,'¿ËÊ²¿ËÌÚÆì');
-insert into web_regions (region_id,city_id,region) values (150426,1504,'ÎÌÅ£ÌØÆì');
-insert into web_regions (region_id,city_id,region) values (150428,1504,'¿¦À®ÇßÆì');
-insert into web_regions (region_id,city_id,region) values (150429,1504,'Äş³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (150430,1504,'°½ººÆì');
-insert into web_regions (region_id,city_id,region) values (150502,1505,'¿Æ¶ûÇßÇø');
-insert into web_regions (region_id,city_id,region) values (150521,1505,'¿Æ¶ûÇß×óÒíÖĞÆì');
-insert into web_regions (region_id,city_id,region) values (150522,1505,'¿Æ¶ûÇß×óÒíºóÆì');
-insert into web_regions (region_id,city_id,region) values (150523,1505,'¿ªÂ³ÏØ');
-insert into web_regions (region_id,city_id,region) values (150524,1505,'¿âÂ×Æì');
-insert into web_regions (region_id,city_id,region) values (150525,1505,'ÄÎÂüÆì');
-insert into web_regions (region_id,city_id,region) values (150526,1505,'ÔúÂ³ÌØÆì');
-insert into web_regions (region_id,city_id,region) values (150581,1505,'»ôÁÖ¹ùÀÕÊĞ');
-insert into web_regions (region_id,city_id,region) values (150602,1506,'¶«Ê¤Çø');
-insert into web_regions (region_id,city_id,region) values (150621,1506,'´ïÀ­ÌØÆì');
-insert into web_regions (region_id,city_id,region) values (150622,1506,'×¼¸ñ¶ûÆì');
-insert into web_regions (region_id,city_id,region) values (150623,1506,'¶õÍĞ¿ËÇ°Æì');
-insert into web_regions (region_id,city_id,region) values (150624,1506,'¶õÍĞ¿ËÆì');
-insert into web_regions (region_id,city_id,region) values (150625,1506,'º¼½õÆì');
-insert into web_regions (region_id,city_id,region) values (150626,1506,'ÎÚÉóÆì');
-insert into web_regions (region_id,city_id,region) values (150627,1506,'ÒÁ½ğ»ôÂåÆì');
-insert into web_regions (region_id,city_id,region) values (150702,1507,'º£À­¶ûÇø');
-insert into web_regions (region_id,city_id,region) values (150703,1507,'ÔúêãÅµ¶ûÇø');
-insert into web_regions (region_id,city_id,region) values (150721,1507,'°¢ÈÙÆì');
-insert into web_regions (region_id,city_id,region) values (150722,1507,'ÄªÁ¦´ïÍß´ïÎÓ¶û×å×ÔÖÎÆì');
-insert into web_regions (region_id,city_id,region) values (150723,1507,'¶õÂ×´º×ÔÖÎÆì');
-insert into web_regions (region_id,city_id,region) values (150724,1507,'¶õÎÂ¿Ë×å×ÔÖÎÆì');
-insert into web_regions (region_id,city_id,region) values (150725,1507,'³Â°Í¶û»¢Æì');
-insert into web_regions (region_id,city_id,region) values (150726,1507,'ĞÂ°Í¶û»¢×óÆì');
-insert into web_regions (region_id,city_id,region) values (150727,1507,'ĞÂ°Í¶û»¢ÓÒÆì');
-insert into web_regions (region_id,city_id,region) values (150781,1507,'ÂúÖŞÀïÊĞ');
-insert into web_regions (region_id,city_id,region) values (150782,1507,'ÑÀ¿ËÊ¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (150783,1507,'ÔúÀ¼ÍÍÊĞ');
-insert into web_regions (region_id,city_id,region) values (150784,1507,'¶î¶û¹ÅÄÉÊĞ');
-insert into web_regions (region_id,city_id,region) values (150785,1507,'¸ùºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (150802,1508,'ÁÙºÓÇø');
-insert into web_regions (region_id,city_id,region) values (150821,1508,'ÎåÔ­ÏØ');
-insert into web_regions (region_id,city_id,region) values (150822,1508,'íã¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (150823,1508,'ÎÚÀ­ÌØÇ°Æì');
-insert into web_regions (region_id,city_id,region) values (150824,1508,'ÎÚÀ­ÌØÖĞÆì');
-insert into web_regions (region_id,city_id,region) values (150825,1508,'ÎÚÀ­ÌØºóÆì');
-insert into web_regions (region_id,city_id,region) values (150826,1508,'º¼½õºóÆì');
-insert into web_regions (region_id,city_id,region) values (150902,1509,'¼¯ÄşÇø');
-insert into web_regions (region_id,city_id,region) values (150921,1509,'×¿×ÊÏØ');
-insert into web_regions (region_id,city_id,region) values (150922,1509,'»¯µÂÏØ');
-insert into web_regions (region_id,city_id,region) values (150923,1509,'ÉÌ¶¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (150924,1509,'ĞËºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (150925,1509,'Á¹³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (150926,1509,'²ì¹ş¶ûÓÒÒíÇ°Æì');
-insert into web_regions (region_id,city_id,region) values (150927,1509,'²ì¹ş¶ûÓÒÒíÖĞÆì');
-insert into web_regions (region_id,city_id,region) values (150928,1509,'²ì¹ş¶ûÓÒÒíºóÆì');
-insert into web_regions (region_id,city_id,region) values (150929,1509,'ËÄ×ÓÍõÆì');
-insert into web_regions (region_id,city_id,region) values (150981,1509,'·áÕòÊĞ');
-insert into web_regions (region_id,city_id,region) values (152201,1522,'ÎÚÀ¼ºÆÌØÊĞ');
-insert into web_regions (region_id,city_id,region) values (152202,1522,'°¢¶ûÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (152221,1522,'¿Æ¶ûÇßÓÒÒíÇ°Æì');
-insert into web_regions (region_id,city_id,region) values (152222,1522,'¿Æ¶ûÇßÓÒÒíÖĞÆì');
-insert into web_regions (region_id,city_id,region) values (152223,1522,'ÔúêãÌØÆì');
-insert into web_regions (region_id,city_id,region) values (152224,1522,'Í»ÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (152501,1525,'¶şÁ¬ºÆÌØÊĞ');
-insert into web_regions (region_id,city_id,region) values (152502,1525,'ÎıÁÖºÆÌØÊĞ');
-insert into web_regions (region_id,city_id,region) values (152522,1525,'°¢°Í¸ÂÆì');
-insert into web_regions (region_id,city_id,region) values (152523,1525,'ËÕÄáÌØ×óÆì');
-insert into web_regions (region_id,city_id,region) values (152524,1525,'ËÕÄáÌØÓÒÆì');
-insert into web_regions (region_id,city_id,region) values (152525,1525,'¶«ÎÚÖéÄÂÇßÆì');
-insert into web_regions (region_id,city_id,region) values (152526,1525,'Î÷ÎÚÖéÄÂÇßÆì');
-insert into web_regions (region_id,city_id,region) values (152527,1525,'Ì«ÆÍËÂÆì');
-insert into web_regions (region_id,city_id,region) values (152528,1525,'Ïâ»ÆÆì');
-insert into web_regions (region_id,city_id,region) values (152529,1525,'ÕıÏâ°×Æì');
-insert into web_regions (region_id,city_id,region) values (152530,1525,'ÕıÀ¶Æì');
-insert into web_regions (region_id,city_id,region) values (152531,1525,'¶àÂ×ÏØ');
-insert into web_regions (region_id,city_id,region) values (152921,1529,'°¢À­ÉÆ×óÆì');
-insert into web_regions (region_id,city_id,region) values (152922,1529,'°¢À­ÉÆÓÒÆì');
-insert into web_regions (region_id,city_id,region) values (152923,1529,'¶î¼ÃÄÉÆì');
-insert into web_regions (region_id,city_id,region) values (210102,2101,'ºÍÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (210103,2101,'ÉòºÓÇø');
-insert into web_regions (region_id,city_id,region) values (210104,2101,'´ó¶«Çø');
-insert into web_regions (region_id,city_id,region) values (210105,2101,'»Ê¹ÃÇø');
-insert into web_regions (region_id,city_id,region) values (210106,2101,'ÌúÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (210111,2101,'ËÕ¼ÒÍÍÇø');
-insert into web_regions (region_id,city_id,region) values (210112,2101,'»ëÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (210113,2101,'Éò±±ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (210114,2101,'ÓÚºéÇø');
-insert into web_regions (region_id,city_id,region) values (210122,2101,'ÁÉÖĞÏØ');
-insert into web_regions (region_id,city_id,region) values (210123,2101,'¿µÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (210124,2101,'·¨¿âÏØ');
-insert into web_regions (region_id,city_id,region) values (210181,2101,'ĞÂÃñÊĞ');
-insert into web_regions (region_id,city_id,region) values (210202,2102,'ÖĞÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (210203,2102,'Î÷¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (210204,2102,'É³ºÓ¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (210211,2102,'¸Ê¾®×ÓÇø');
-insert into web_regions (region_id,city_id,region) values (210212,2102,'ÂÃË³¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (210213,2102,'½ğÖİÇø');
-insert into web_regions (region_id,city_id,region) values (210224,2102,'³¤º£ÏØ');
-insert into web_regions (region_id,city_id,region) values (210281,2102,'Íß·¿µêÊĞ');
-insert into web_regions (region_id,city_id,region) values (210282,2102,'ÆÕÀ¼µêÊĞ');
-insert into web_regions (region_id,city_id,region) values (210283,2102,'×¯ºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (210302,2103,'Ìú¶«Çø');
-insert into web_regions (region_id,city_id,region) values (210303,2103,'ÌúÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (210304,2103,'Á¢É½Çø');
-insert into web_regions (region_id,city_id,region) values (210311,2103,'Ç§É½Çø');
-insert into web_regions (region_id,city_id,region) values (210321,2103,'Ì¨°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (210323,2103,'á¶ÑÒÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210381,2103,'º£³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (210402,2104,'ĞÂ¸§Çø');
-insert into web_regions (region_id,city_id,region) values (210403,2104,'¶«ÖŞÇø');
-insert into web_regions (region_id,city_id,region) values (210404,2104,'Íû»¨Çø');
-insert into web_regions (region_id,city_id,region) values (210411,2104,'Ë³³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (210421,2104,'¸§Ë³ÏØ');
-insert into web_regions (region_id,city_id,region) values (210422,2104,'ĞÂ±öÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210423,2104,'ÇåÔ­Âú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210502,2105,'Æ½É½Çø');
-insert into web_regions (region_id,city_id,region) values (210503,2105,'ÏªºşÇø');
-insert into web_regions (region_id,city_id,region) values (210504,2105,'Ã÷É½Çø');
-insert into web_regions (region_id,city_id,region) values (210505,2105,'ÄÏ·ÒÇø');
-insert into web_regions (region_id,city_id,region) values (210521,2105,'±¾ÏªÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210522,2105,'»¸ÈÊÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210602,2106,'Ôª±¦Çø');
-insert into web_regions (region_id,city_id,region) values (210603,2106,'ÕñĞËÇø');
-insert into web_regions (region_id,city_id,region) values (210604,2106,'Õñ°²Çø');
-insert into web_regions (region_id,city_id,region) values (210624,2106,'¿íµéÂú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210681,2106,'¶«¸ÛÊĞ');
-insert into web_regions (region_id,city_id,region) values (210682,2106,'·ï³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (210702,2107,'¹ÅËşÇø');
-insert into web_regions (region_id,city_id,region) values (210703,2107,'ÁèºÓÇø');
-insert into web_regions (region_id,city_id,region) values (210711,2107,'Ì«ºÍÇø');
-insert into web_regions (region_id,city_id,region) values (210726,2107,'ºÚÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (210727,2107,'ÒåÏØ');
-insert into web_regions (region_id,city_id,region) values (210781,2107,'Áèº£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (210782,2107,'±±ÕòÊĞ');
-insert into web_regions (region_id,city_id,region) values (210802,2108,'Õ¾Ç°Çø');
-insert into web_regions (region_id,city_id,region) values (210803,2108,'Î÷ÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (210804,2108,'öÑÓãÈ¦Çø');
-insert into web_regions (region_id,city_id,region) values (210811,2108,'ÀÏ±ßÇø');
-insert into web_regions (region_id,city_id,region) values (210881,2108,'¸ÇÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (210882,2108,'´óÊ¯ÇÅÊĞ');
-insert into web_regions (region_id,city_id,region) values (210902,2109,'º£ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (210903,2109,'ĞÂÇñÇø');
-insert into web_regions (region_id,city_id,region) values (210904,2109,'Ì«Æ½Çø');
-insert into web_regions (region_id,city_id,region) values (210905,2109,'ÇåºÓÃÅÇø');
-insert into web_regions (region_id,city_id,region) values (210911,2109,'Ï¸ºÓÇø');
-insert into web_regions (region_id,city_id,region) values (210921,2109,'¸·ĞÂÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (210922,2109,'ÕÃÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (211002,2110,'°×ËşÇø');
-insert into web_regions (region_id,city_id,region) values (211003,2110,'ÎÄÊ¥Çø');
-insert into web_regions (region_id,city_id,region) values (211004,2110,'ºêÎ°Çø');
-insert into web_regions (region_id,city_id,region) values (211005,2110,'¹­³¤ÁëÇø');
-insert into web_regions (region_id,city_id,region) values (211011,2110,'Ì«×ÓºÓÇø');
-insert into web_regions (region_id,city_id,region) values (211021,2110,'ÁÉÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (211081,2110,'µÆËşÊĞ');
-insert into web_regions (region_id,city_id,region) values (211102,2111,'Ë«Ì¨×ÓÇø');
-insert into web_regions (region_id,city_id,region) values (211103,2111,'ĞËÂ¡Ì¨Çø');
-insert into web_regions (region_id,city_id,region) values (211121,2111,'´óÍİÏØ');
-insert into web_regions (region_id,city_id,region) values (211122,2111,'ÅÌÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (211202,2112,'ÒøÖİÇø');
-insert into web_regions (region_id,city_id,region) values (211204,2112,'ÇåºÓÇø');
-insert into web_regions (region_id,city_id,region) values (211221,2112,'ÌúÁëÏØ');
-insert into web_regions (region_id,city_id,region) values (211223,2112,'Î÷·áÏØ');
-insert into web_regions (region_id,city_id,region) values (211224,2112,'²ıÍ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (211281,2112,'µ÷±øÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (211282,2112,'¿ªÔ­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (211302,2113,'Ë«ËşÇø');
-insert into web_regions (region_id,city_id,region) values (211303,2113,'Áú³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (211321,2113,'³¯ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (211322,2113,'½¨Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (211324,2113,'¿¦À®Çß×óÒíÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (211381,2113,'±±Æ±ÊĞ');
-insert into web_regions (region_id,city_id,region) values (211382,2113,'ÁèÔ´ÊĞ');
-insert into web_regions (region_id,city_id,region) values (211402,2114,'Á¬É½Çø');
-insert into web_regions (region_id,city_id,region) values (211403,2114,'Áú¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (211404,2114,'ÄÏÆ±Çø');
-insert into web_regions (region_id,city_id,region) values (211421,2114,'ËçÖĞÏØ');
-insert into web_regions (region_id,city_id,region) values (211422,2114,'½¨²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (211481,2114,'ĞË³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (211501,2115,'½ğÖİĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (211502,2115,'ÆÕÍåĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (211503,2115,'±£Ë°Çø');
-insert into web_regions (region_id,city_id,region) values (220102,2201,'ÄÏ¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (220103,2201,'¿í³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (220104,2201,'³¯ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (220105,2201,'¶şµÀÇø');
-insert into web_regions (region_id,city_id,region) values (220106,2201,'ÂÌÔ°Çø');
-insert into web_regions (region_id,city_id,region) values (220112,2201,'Ë«ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (220113,2201,'¾ÅÌ¨Çø');
-insert into web_regions (region_id,city_id,region) values (220122,2201,'Å©°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (220182,2201,'ÓÜÊ÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (220183,2201,'µÂ»İÊĞ');
-insert into web_regions (region_id,city_id,region) values (220202,2202,'²ıÒØÇø');
-insert into web_regions (region_id,city_id,region) values (220203,2202,'ÁúÌ¶Çø');
-insert into web_regions (region_id,city_id,region) values (220204,2202,'´¬ÓªÇø');
-insert into web_regions (region_id,city_id,region) values (220211,2202,'·áÂúÇø');
-insert into web_regions (region_id,city_id,region) values (220221,2202,'ÓÀ¼ªÏØ');
-insert into web_regions (region_id,city_id,region) values (220281,2202,'òÔºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (220282,2202,'èëµéÊĞ');
-insert into web_regions (region_id,city_id,region) values (220283,2202,'ÊæÀ¼ÊĞ');
-insert into web_regions (region_id,city_id,region) values (220284,2202,'ÅÍÊ¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (220302,2203,'ÌúÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (220303,2203,'Ìú¶«Çø');
-insert into web_regions (region_id,city_id,region) values (220322,2203,'ÀæÊ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (220323,2203,'ÒÁÍ¨Âú×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (220381,2203,'¹«Ö÷ÁëÊĞ');
-insert into web_regions (region_id,city_id,region) values (220382,2203,'Ë«ÁÉÊĞ');
-insert into web_regions (region_id,city_id,region) values (220402,2204,'ÁúÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (220403,2204,'Î÷°²Çø');
-insert into web_regions (region_id,city_id,region) values (220421,2204,'¶«·áÏØ');
-insert into web_regions (region_id,city_id,region) values (220422,2204,'¶«ÁÉÏØ');
-insert into web_regions (region_id,city_id,region) values (220502,2205,'¶«²ıÇø');
-insert into web_regions (region_id,city_id,region) values (220503,2205,'¶şµÀ½­Çø');
-insert into web_regions (region_id,city_id,region) values (220521,2205,'Í¨»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (220523,2205,'»ÔÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (220524,2205,'ÁøºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (220581,2205,'Ã·ºÓ¿ÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (220582,2205,'¼¯°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (220602,2206,'»ë½­Çø');
-insert into web_regions (region_id,city_id,region) values (220605,2206,'½­Ô´Çø');
-insert into web_regions (region_id,city_id,region) values (220621,2206,'¸§ËÉÏØ');
-insert into web_regions (region_id,city_id,region) values (220622,2206,'¾¸ÓîÏØ');
-insert into web_regions (region_id,city_id,region) values (220623,2206,'³¤°×³¯ÏÊ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (220681,2206,'ÁÙ½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (220702,2207,'Äş½­Çø');
-insert into web_regions (region_id,city_id,region) values (220721,2207,'Ç°¹ù¶ûÂŞË¹ÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (220722,2207,'³¤ÁëÏØ');
-insert into web_regions (region_id,city_id,region) values (220723,2207,'Ç¬°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (220781,2207,'·öÓàÊĞ');
-insert into web_regions (region_id,city_id,region) values (220802,2208,'ä¬±±Çø');
-insert into web_regions (region_id,city_id,region) values (220821,2208,'ÕòêãÏØ');
-insert into web_regions (region_id,city_id,region) values (220822,2208,'Í¨ÓÜÏØ');
-insert into web_regions (region_id,city_id,region) values (220881,2208,'ä¬ÄÏÊĞ');
-insert into web_regions (region_id,city_id,region) values (220882,2208,'´ó°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (222401,2224,'ÑÓ¼ªÊĞ');
-insert into web_regions (region_id,city_id,region) values (222402,2224,'Í¼ÃÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (222403,2224,'¶Ø»¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (222404,2224,'çõ´ºÊĞ');
-insert into web_regions (region_id,city_id,region) values (222405,2224,'Áú¾®ÊĞ');
-insert into web_regions (region_id,city_id,region) values (222406,2224,'ºÍÁúÊĞ');
-insert into web_regions (region_id,city_id,region) values (222424,2224,'ÍôÇåÏØ');
-insert into web_regions (region_id,city_id,region) values (222426,2224,'°²Í¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (230102,2301,'µÀÀïÇø');
-insert into web_regions (region_id,city_id,region) values (230103,2301,'ÄÏ¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (230104,2301,'µÀÍâÇø');
-insert into web_regions (region_id,city_id,region) values (230108,2301,'Æ½·¿Çø');
-insert into web_regions (region_id,city_id,region) values (230109,2301,'ËÉ±±Çø');
-insert into web_regions (region_id,city_id,region) values (230110,2301,'Ïã·»Çø');
-insert into web_regions (region_id,city_id,region) values (230111,2301,'ºôÀ¼Çø');
-insert into web_regions (region_id,city_id,region) values (230112,2301,'°¢³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (230113,2301,'Ë«³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (230123,2301,'ÒÀÀ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (230124,2301,'·½ÕıÏØ');
-insert into web_regions (region_id,city_id,region) values (230125,2301,'±öÏØ');
-insert into web_regions (region_id,city_id,region) values (230126,2301,'°ÍÑåÏØ');
-insert into web_regions (region_id,city_id,region) values (230127,2301,'Ä¾À¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (230128,2301,'Í¨ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (230129,2301,'ÑÓÊÙÏØ');
-insert into web_regions (region_id,city_id,region) values (230183,2301,'ÉĞÖ¾ÊĞ');
-insert into web_regions (region_id,city_id,region) values (230184,2301,'Îå³£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (230202,2302,'ÁúÉ³Çø');
-insert into web_regions (region_id,city_id,region) values (230203,2302,'½¨»ªÇø');
-insert into web_regions (region_id,city_id,region) values (230204,2302,'Ìú·æÇø');
-insert into web_regions (region_id,city_id,region) values (230205,2302,'°º°ºÏªÇø');
-insert into web_regions (region_id,city_id,region) values (230206,2302,'¸»À­¶û»ùÇø');
-insert into web_regions (region_id,city_id,region) values (230207,2302,'Äë×ÓÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230208,2302,'Ã·ÀïË¹´ïÎÓ¶û×åÇø');
-insert into web_regions (region_id,city_id,region) values (230221,2302,'Áú½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (230223,2302,'ÒÀ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (230224,2302,'Ì©À´ÏØ');
-insert into web_regions (region_id,city_id,region) values (230225,2302,'¸ÊÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (230227,2302,'¸»Ô£ÏØ');
-insert into web_regions (region_id,city_id,region) values (230229,2302,'¿ËÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (230230,2302,'¿Ë¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (230231,2302,'°İÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (230281,2302,'Ú«ºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (230302,2303,'¼¦¹ÚÇø');
-insert into web_regions (region_id,city_id,region) values (230303,2303,'ºãÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230304,2303,'µÎµÀÇø');
-insert into web_regions (region_id,city_id,region) values (230305,2303,'ÀæÊ÷Çø');
-insert into web_regions (region_id,city_id,region) values (230306,2303,'³Ç×ÓºÓÇø');
-insert into web_regions (region_id,city_id,region) values (230307,2303,'ÂéÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230321,2303,'¼¦¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (230381,2303,'»¢ÁÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (230382,2303,'ÃÜÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (230402,2304,'ÏòÑôÇø');
-insert into web_regions (region_id,city_id,region) values (230403,2304,'¹¤Å©Çø');
-insert into web_regions (region_id,city_id,region) values (230404,2304,'ÄÏÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230405,2304,'ĞË°²Çø');
-insert into web_regions (region_id,city_id,region) values (230406,2304,'¶«É½Çø');
-insert into web_regions (region_id,city_id,region) values (230407,2304,'ĞËÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230421,2304,'ÂÜ±±ÏØ');
-insert into web_regions (region_id,city_id,region) values (230422,2304,'Ëç±õÏØ');
-insert into web_regions (region_id,city_id,region) values (230502,2305,'¼âÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230503,2305,'Áë¶«Çø');
-insert into web_regions (region_id,city_id,region) values (230505,2305,'ËÄ·½Ì¨Çø');
-insert into web_regions (region_id,city_id,region) values (230506,2305,'±¦É½Çø');
-insert into web_regions (region_id,city_id,region) values (230521,2305,'¼¯ÏÍÏØ');
-insert into web_regions (region_id,city_id,region) values (230522,2305,'ÓÑÒêÏØ');
-insert into web_regions (region_id,city_id,region) values (230523,2305,'±¦ÇåÏØ');
-insert into web_regions (region_id,city_id,region) values (230524,2305,'ÈÄºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (230602,2306,'Èø¶ûÍ¼Çø');
-insert into web_regions (region_id,city_id,region) values (230603,2306,'Áú·ïÇø');
-insert into web_regions (region_id,city_id,region) values (230604,2306,'ÈÃºúÂ·Çø');
-insert into web_regions (region_id,city_id,region) values (230605,2306,'ºì¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (230606,2306,'´óÍ¬Çø');
-insert into web_regions (region_id,city_id,region) values (230621,2306,'ÕØÖİÏØ');
-insert into web_regions (region_id,city_id,region) values (230622,2306,'ÕØÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (230623,2306,'ÁÖµéÏØ');
-insert into web_regions (region_id,city_id,region) values (230624,2306,'¶Å¶û²®ÌØÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (230702,2307,'ÒÁ´ºÇø');
-insert into web_regions (region_id,city_id,region) values (230703,2307,'ÄÏ²íÇø');
-insert into web_regions (region_id,city_id,region) values (230704,2307,'ÓÑºÃÇø');
-insert into web_regions (region_id,city_id,region) values (230705,2307,'Î÷ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (230706,2307,'´äÂÍÇø');
-insert into web_regions (region_id,city_id,region) values (230707,2307,'ĞÂÇàÇø');
-insert into web_regions (region_id,city_id,region) values (230708,2307,'ÃÀÏªÇø');
-insert into web_regions (region_id,city_id,region) values (230709,2307,'½ğÉ½ÍÍÇø');
-insert into web_regions (region_id,city_id,region) values (230710,2307,'ÎåÓªÇø');
-insert into web_regions (region_id,city_id,region) values (230711,2307,'ÎÚÂíºÓÇø');
-insert into web_regions (region_id,city_id,region) values (230712,2307,'ÌÀÍúºÓÇø');
-insert into web_regions (region_id,city_id,region) values (230713,2307,'´øÁëÇø');
-insert into web_regions (region_id,city_id,region) values (230714,2307,'ÎÚÒÁÁëÇø');
-insert into web_regions (region_id,city_id,region) values (230715,2307,'ºìĞÇÇø');
-insert into web_regions (region_id,city_id,region) values (230716,2307,'ÉÏ¸ÊÁëÇø');
-insert into web_regions (region_id,city_id,region) values (230722,2307,'¼ÎÒñÏØ');
-insert into web_regions (region_id,city_id,region) values (230781,2307,'ÌúÁ¦ÊĞ');
-insert into web_regions (region_id,city_id,region) values (230803,2308,'ÏòÑôÇø');
-insert into web_regions (region_id,city_id,region) values (230804,2308,'Ç°½øÇø');
-insert into web_regions (region_id,city_id,region) values (230805,2308,'¶«·çÇø');
-insert into web_regions (region_id,city_id,region) values (230811,2308,'½¼Çø');
-insert into web_regions (region_id,city_id,region) values (230822,2308,'èëÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (230826,2308,'èë´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (230828,2308,'ÌÀÔ­ÏØ');
-insert into web_regions (region_id,city_id,region) values (230833,2308,'¸§Ô¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (230881,2308,'Í¬½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (230882,2308,'¸»½õÊĞ');
-insert into web_regions (region_id,city_id,region) values (230902,2309,'ĞÂĞËÇø');
-insert into web_regions (region_id,city_id,region) values (230903,2309,'ÌÒÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (230904,2309,'ÇÑ×ÓºÓÇø');
-insert into web_regions (region_id,city_id,region) values (230921,2309,'²ªÀûÏØ');
-insert into web_regions (region_id,city_id,region) values (231002,2310,'¶«°²Çø');
-insert into web_regions (region_id,city_id,region) values (231003,2310,'ÑôÃ÷Çø');
-insert into web_regions (region_id,city_id,region) values (231004,2310,'°®ÃñÇø');
-insert into web_regions (region_id,city_id,region) values (231005,2310,'Î÷°²Çø');
-insert into web_regions (region_id,city_id,region) values (231024,2310,'¶«ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (231025,2310,'ÁÖ¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (231081,2310,'Ëç·ÒºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (231083,2310,'º£ÁÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (231084,2310,'Äş°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (231085,2310,'ÄÂÀâÊĞ');
-insert into web_regions (region_id,city_id,region) values (231102,2311,'°®»ÔÇø');
-insert into web_regions (region_id,city_id,region) values (231121,2311,'ÄÛ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (231123,2311,'Ñ·¿ËÏØ');
-insert into web_regions (region_id,city_id,region) values (231124,2311,'ËïÎâÏØ');
-insert into web_regions (region_id,city_id,region) values (231181,2311,'±±°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (231182,2311,'Îå´óÁ¬³ØÊĞ');
-insert into web_regions (region_id,city_id,region) values (231202,2312,'±±ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (231221,2312,'Íû¿üÏØ');
-insert into web_regions (region_id,city_id,region) values (231222,2312,'À¼Î÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (231223,2312,'Çà¸ÔÏØ');
-insert into web_regions (region_id,city_id,region) values (231224,2312,'Çì°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (231225,2312,'Ã÷Ë®ÏØ');
-insert into web_regions (region_id,city_id,region) values (231226,2312,'ËçÀâÏØ');
-insert into web_regions (region_id,city_id,region) values (231281,2312,'°²´ïÊĞ');
-insert into web_regions (region_id,city_id,region) values (231282,2312,'ÕØ¶«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (231283,2312,'º£Â×ÊĞ');
-insert into web_regions (region_id,city_id,region) values (232701,2327,'¼Ó¸ñ´ïÆæÇø');
-insert into web_regions (region_id,city_id,region) values (232702,2327,'ĞÂÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (232703,2327,'ËÉÁëÇø');
-insert into web_regions (region_id,city_id,region) values (232704,2327,'ºôÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (232721,2327,'ºôÂêÏØ');
-insert into web_regions (region_id,city_id,region) values (232722,2327,'ËşºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (232723,2327,'Ä®ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (310101,3101,'»ÆÆÖÇø');
-insert into web_regions (region_id,city_id,region) values (310104,3101,'Ğì»ãÇø');
-insert into web_regions (region_id,city_id,region) values (310105,3101,'³¤ÄşÇø');
-insert into web_regions (region_id,city_id,region) values (310106,3101,'¾²°²Çø');
-insert into web_regions (region_id,city_id,region) values (310107,3101,'ÆÕÍÓÇø');
-insert into web_regions (region_id,city_id,region) values (310108,3101,'Õ¢±±Çø');
-insert into web_regions (region_id,city_id,region) values (310109,3101,'ºç¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (310110,3101,'ÑîÆÖÇø');
-insert into web_regions (region_id,city_id,region) values (310112,3101,'ãÉĞĞÇø');
-insert into web_regions (region_id,city_id,region) values (310113,3101,'±¦É½Çø');
-insert into web_regions (region_id,city_id,region) values (310114,3101,'¼Î¶¨Çø');
-insert into web_regions (region_id,city_id,region) values (310115,3101,'ÆÖ¶«ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (310116,3101,'½ğÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (310117,3101,'ËÉ½­Çø');
-insert into web_regions (region_id,city_id,region) values (310118,3101,'ÇàÆÖÇø');
-insert into web_regions (region_id,city_id,region) values (310120,3101,'·îÏÍÇø');
-insert into web_regions (region_id,city_id,region) values (310230,3101,'³çÃ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (320102,3201,'ĞşÎäÇø');
-insert into web_regions (region_id,city_id,region) values (320104,3201,'ÇØ»´Çø');
-insert into web_regions (region_id,city_id,region) values (320105,3201,'½¨ÚşÇø');
-insert into web_regions (region_id,city_id,region) values (320106,3201,'¹ÄÂ¥Çø');
-insert into web_regions (region_id,city_id,region) values (320111,3201,'ÆÖ¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (320113,3201,'ÆÜÏ¼Çø');
-insert into web_regions (region_id,city_id,region) values (320114,3201,'Óê»¨Ì¨Çø');
-insert into web_regions (region_id,city_id,region) values (320115,3201,'½­ÄşÇø');
-insert into web_regions (region_id,city_id,region) values (320116,3201,'ÁùºÏÇø');
-insert into web_regions (region_id,city_id,region) values (320117,3201,'äàË®Çø');
-insert into web_regions (region_id,city_id,region) values (320118,3201,'¸ß´¾Çø');
-insert into web_regions (region_id,city_id,region) values (320202,3202,'³ç°²Çø');
-insert into web_regions (region_id,city_id,region) values (320203,3202,'ÄÏ³¤Çø');
-insert into web_regions (region_id,city_id,region) values (320204,3202,'±±ÌÁÇø');
-insert into web_regions (region_id,city_id,region) values (320205,3202,'ÎıÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (320206,3202,'»İÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (320211,3202,'±õºşÇø');
-insert into web_regions (region_id,city_id,region) values (320281,3202,'½­ÒõÊĞ');
-insert into web_regions (region_id,city_id,region) values (320282,3202,'ÒËĞËÊĞ');
-insert into web_regions (region_id,city_id,region) values (320302,3203,'¹ÄÂ¥Çø');
-insert into web_regions (region_id,city_id,region) values (320303,3203,'ÔÆÁúÇø');
-insert into web_regions (region_id,city_id,region) values (320305,3203,'¼ÖÍôÇø');
-insert into web_regions (region_id,city_id,region) values (320311,3203,'ÈªÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (320312,3203,'Í­É½Çø');
-insert into web_regions (region_id,city_id,region) values (320321,3203,'·áÏØ');
-insert into web_regions (region_id,city_id,region) values (320322,3203,'ÅæÏØ');
-insert into web_regions (region_id,city_id,region) values (320324,3203,'î¡ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (320381,3203,'ĞÂÒÊÊĞ');
-insert into web_regions (region_id,city_id,region) values (320382,3203,'ÚüÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (320402,3204,'ÌìÄşÇø');
-insert into web_regions (region_id,city_id,region) values (320404,3204,'ÖÓÂ¥Çø');
-insert into web_regions (region_id,city_id,region) values (320405,3204,'ÆİÊûÑßÇø');
-insert into web_regions (region_id,city_id,region) values (320411,3204,'ĞÂ±±Çø');
-insert into web_regions (region_id,city_id,region) values (320412,3204,'Îä½øÇø');
-insert into web_regions (region_id,city_id,region) values (320481,3204,'äàÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (320482,3204,'½ğÌ³ÊĞ');
-insert into web_regions (region_id,city_id,region) values (320505,3205,'»¢ÇğÇø');
-insert into web_regions (region_id,city_id,region) values (320506,3205,'ÎâÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (320507,3205,'Ïà³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (320508,3205,'¹ÃËÕÇø');
-insert into web_regions (region_id,city_id,region) values (320509,3205,'Îâ½­Çø');
-insert into web_regions (region_id,city_id,region) values (320581,3205,'³£ÊìÊĞ');
-insert into web_regions (region_id,city_id,region) values (320582,3205,'ÕÅ¼Ò¸ÛÊĞ');
-insert into web_regions (region_id,city_id,region) values (320583,3205,'À¥É½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (320585,3205,'Ì«²ÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (320602,3206,'³ç´¨Çø');
-insert into web_regions (region_id,city_id,region) values (320611,3206,'¸ÛÕ¢Çø');
-insert into web_regions (region_id,city_id,region) values (320612,3206,'Í¨ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (320621,3206,'º£°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (320623,3206,'Èç¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (320681,3206,'Æô¶«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (320682,3206,'Èç¸ŞÊĞ');
-insert into web_regions (region_id,city_id,region) values (320684,3206,'º£ÃÅÊĞ');
-insert into web_regions (region_id,city_id,region) values (320703,3207,'Á¬ÔÆÇø');
-insert into web_regions (region_id,city_id,region) values (320706,3207,'º£ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (320707,3207,'¸ÓÓÜÇø');
-insert into web_regions (region_id,city_id,region) values (320722,3207,'¶«º£ÏØ');
-insert into web_regions (region_id,city_id,region) values (320723,3207,'¹àÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (320724,3207,'¹àÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (320802,3208,'ÇåºÓÇø');
-insert into web_regions (region_id,city_id,region) values (320803,3208,'»´°²Çø');
-insert into web_regions (region_id,city_id,region) values (320804,3208,'»´ÒõÇø');
-insert into web_regions (region_id,city_id,region) values (320811,3208,'ÇåÆÖÇø');
-insert into web_regions (region_id,city_id,region) values (320826,3208,'Á°Ë®ÏØ');
-insert into web_regions (region_id,city_id,region) values (320829,3208,'ºéÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (320830,3208,'íìíôÏØ');
-insert into web_regions (region_id,city_id,region) values (320831,3208,'½ğºşÏØ');
-insert into web_regions (region_id,city_id,region) values (320902,3209,'Í¤ºşÇø');
-insert into web_regions (region_id,city_id,region) values (320903,3209,'ÑÎ¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (320921,3209,'ÏìË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (320922,3209,'±õº£ÏØ');
-insert into web_regions (region_id,city_id,region) values (320923,3209,'¸·ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (320924,3209,'ÉäÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (320925,3209,'½¨ºşÏØ');
-insert into web_regions (region_id,city_id,region) values (320981,3209,'¶«Ì¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (320982,3209,'´ó·áÊĞ');
-insert into web_regions (region_id,city_id,region) values (321002,3210,'¹ãÁêÇø');
-insert into web_regions (region_id,city_id,region) values (321003,3210,'Úõ½­Çø');
-insert into web_regions (region_id,city_id,region) values (321012,3210,'½­¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (321023,3210,'±¦Ó¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (321081,3210,'ÒÇÕ÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (321084,3210,'¸ßÓÊÊĞ');
-insert into web_regions (region_id,city_id,region) values (321102,3211,'¾©¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (321111,3211,'ÈóÖİÇø');
-insert into web_regions (region_id,city_id,region) values (321112,3211,'µ¤Í½Çø');
-insert into web_regions (region_id,city_id,region) values (321181,3211,'µ¤ÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (321182,3211,'ÑïÖĞÊĞ');
-insert into web_regions (region_id,city_id,region) values (321183,3211,'¾äÈİÊĞ');
-insert into web_regions (region_id,city_id,region) values (321202,3212,'º£ÁêÇø');
-insert into web_regions (region_id,city_id,region) values (321203,3212,'¸ß¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (321204,3212,'½ªÑßÇø');
-insert into web_regions (region_id,city_id,region) values (321281,3212,'ĞË»¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (321282,3212,'¾¸½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (321283,3212,'Ì©ĞËÊĞ');
-insert into web_regions (region_id,city_id,region) values (321302,3213,'ËŞ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (321311,3213,'ËŞÔ¥Çø');
-insert into web_regions (region_id,city_id,region) values (321322,3213,'ãğÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (321323,3213,'ãôÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (321324,3213,'ãôºéÏØ');
-insert into web_regions (region_id,city_id,region) values (330102,3301,'ÉÏ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (330103,3301,'ÏÂ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (330104,3301,'½­¸ÉÇø');
-insert into web_regions (region_id,city_id,region) values (330105,3301,'¹°ÊûÇø');
-insert into web_regions (region_id,city_id,region) values (330106,3301,'Î÷ºşÇø');
-insert into web_regions (region_id,city_id,region) values (330108,3301,'±õ½­Çø');
-insert into web_regions (region_id,city_id,region) values (330109,3301,'ÏôÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (330110,3301,'Óàº¼Çø');
-insert into web_regions (region_id,city_id,region) values (330122,3301,'Í©Â®ÏØ');
-insert into web_regions (region_id,city_id,region) values (330127,3301,'´¾°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (330182,3301,'½¨µÂÊĞ');
-insert into web_regions (region_id,city_id,region) values (330183,3301,'¸»ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (330185,3301,'ÁÙ°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (330203,3302,'º£ÊïÇø');
-insert into web_regions (region_id,city_id,region) values (330204,3302,'½­¶«Çø');
-insert into web_regions (region_id,city_id,region) values (330205,3302,'½­±±Çø');
-insert into web_regions (region_id,city_id,region) values (330206,3302,'±±ÂØÇø');
-insert into web_regions (region_id,city_id,region) values (330211,3302,'Õòº£Çø');
-insert into web_regions (region_id,city_id,region) values (330212,3302,'Û´ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (330225,3302,'ÏóÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (330226,3302,'Äşº£ÏØ');
-insert into web_regions (region_id,city_id,region) values (330281,3302,'ÓàÒ¦ÊĞ');
-insert into web_regions (region_id,city_id,region) values (330282,3302,'´ÈÏªÊĞ');
-insert into web_regions (region_id,city_id,region) values (330283,3302,'·î»¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (330302,3303,'Â¹³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (330303,3303,'ÁúÍåÇø');
-insert into web_regions (region_id,city_id,region) values (330304,3303,'ê±º£Çø');
-insert into web_regions (region_id,city_id,region) values (330322,3303,'¶´Í·ÏØ');
-insert into web_regions (region_id,city_id,region) values (330324,3303,'ÓÀ¼ÎÏØ');
-insert into web_regions (region_id,city_id,region) values (330326,3303,'Æ½ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (330327,3303,'²ÔÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (330328,3303,'ÎÄ³ÉÏØ');
-insert into web_regions (region_id,city_id,region) values (330329,3303,'Ì©Ë³ÏØ');
-insert into web_regions (region_id,city_id,region) values (330381,3303,'Èğ°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (330382,3303,'ÀÖÇåÊĞ');
-insert into web_regions (region_id,city_id,region) values (330402,3304,'ÄÏºşÇø');
-insert into web_regions (region_id,city_id,region) values (330411,3304,'ĞãÖŞÇø');
-insert into web_regions (region_id,city_id,region) values (330421,3304,'¼ÎÉÆÏØ');
-insert into web_regions (region_id,city_id,region) values (330424,3304,'º£ÑÎÏØ');
-insert into web_regions (region_id,city_id,region) values (330481,3304,'º£ÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (330482,3304,'Æ½ºşÊĞ');
-insert into web_regions (region_id,city_id,region) values (330483,3304,'Í©ÏçÊĞ');
-insert into web_regions (region_id,city_id,region) values (330502,3305,'ÎâĞËÇø');
-insert into web_regions (region_id,city_id,region) values (330503,3305,'ÄÏä±Çø');
-insert into web_regions (region_id,city_id,region) values (330521,3305,'µÂÇåÏØ');
-insert into web_regions (region_id,city_id,region) values (330522,3305,'³¤ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (330523,3305,'°²¼ªÏØ');
-insert into web_regions (region_id,city_id,region) values (330602,3306,'Ô½³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (330603,3306,'¿ÂÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (330604,3306,'ÉÏÓİÇø');
-insert into web_regions (region_id,city_id,region) values (330624,3306,'ĞÂ²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (330681,3306,'ÖîôßÊĞ');
-insert into web_regions (region_id,city_id,region) values (330683,3306,'áÓÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (330702,3307,'æÄ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (330703,3307,'½ğ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (330723,3307,'ÎäÒåÏØ');
-insert into web_regions (region_id,city_id,region) values (330726,3307,'ÆÖ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (330727,3307,'ÅÍ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (330781,3307,'À¼ÏªÊĞ');
-insert into web_regions (region_id,city_id,region) values (330782,3307,'ÒåÎÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (330783,3307,'¶«ÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (330784,3307,'ÓÀ¿µÊĞ');
-insert into web_regions (region_id,city_id,region) values (330802,3308,'¿Â³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (330803,3308,'áé½­Çø');
-insert into web_regions (region_id,city_id,region) values (330822,3308,'³£É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (330824,3308,'¿ª»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (330825,3308,'ÁúÓÎÏØ');
-insert into web_regions (region_id,city_id,region) values (330881,3308,'½­É½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (330902,3309,'¶¨º£Çø');
-insert into web_regions (region_id,city_id,region) values (330903,3309,'ÆÕÍÓÇø');
-insert into web_regions (region_id,city_id,region) values (330921,3309,'á·É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (330922,3309,'áÓãôÏØ');
-insert into web_regions (region_id,city_id,region) values (331002,3310,'½·½­Çø');
-insert into web_regions (region_id,city_id,region) values (331003,3310,'»ÆÑÒÇø');
-insert into web_regions (region_id,city_id,region) values (331004,3310,'Â·ÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (331021,3310,'Óñ»·ÏØ');
-insert into web_regions (region_id,city_id,region) values (331022,3310,'ÈıÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (331023,3310,'ÌìÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (331024,3310,'ÏÉ¾ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (331081,3310,'ÎÂÁëÊĞ');
-insert into web_regions (region_id,city_id,region) values (331082,3310,'ÁÙº£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (331102,3311,'Á«¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (331121,3311,'ÇàÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (331122,3311,'çÆÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (331123,3311,'Ëì²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (331124,3311,'ËÉÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (331125,3311,'ÔÆºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (331126,3311,'ÇìÔªÏØ');
-insert into web_regions (region_id,city_id,region) values (331127,3311,'¾°Äşî´×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (331181,3311,'ÁúÈªÊĞ');
-insert into web_regions (region_id,city_id,region) values (331201,3312,'½ğÌÁµº');
-insert into web_regions (region_id,city_id,region) values (331202,3312,'Áùºáµº');
-insert into web_regions (region_id,city_id,region) values (331203,3312,'áéÉ½µº');
-insert into web_regions (region_id,city_id,region) values (331204,3312,'ÖÛÉ½±¾µºÎ÷±±²¿');
-insert into web_regions (region_id,city_id,region) values (331205,3312,'á·É½µºÎ÷ÄÏ²¿');
-insert into web_regions (region_id,city_id,region) values (331206,3312,'ãô½¸µº');
-insert into web_regions (region_id,city_id,region) values (331207,3312,'Öì¼Ò¼âµº');
-insert into web_regions (region_id,city_id,region) values (331208,3312,'ÑóÉ½µº');
-insert into web_regions (region_id,city_id,region) values (331209,3312,'³¤Í¿µº');
-insert into web_regions (region_id,city_id,region) values (331210,3312,'ÏºÖÅµº');
-insert into web_regions (region_id,city_id,region) values (340102,3401,'Ñşº£Çø');
-insert into web_regions (region_id,city_id,region) values (340103,3401,'Â®ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (340104,3401,'ÊñÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340111,3401,'°üºÓÇø');
-insert into web_regions (region_id,city_id,region) values (340121,3401,'³¤·áÏØ');
-insert into web_regions (region_id,city_id,region) values (340122,3401,'·Ê¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (340123,3401,'·ÊÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (340124,3401,'Â®½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (340181,3401,'³²ºşÊĞ');
-insert into web_regions (region_id,city_id,region) values (340202,3402,'¾µºşÇø');
-insert into web_regions (region_id,city_id,region) values (340203,3402,'ß®½­Çø');
-insert into web_regions (region_id,city_id,region) values (340207,3402,'ğ¯½­Çø');
-insert into web_regions (region_id,city_id,region) values (340208,3402,'ÈıÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340221,3402,'ÎßºşÏØ');
-insert into web_regions (region_id,city_id,region) values (340222,3402,'·±²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (340223,3402,'ÄÏÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (340225,3402,'ÎŞÎªÏØ');
-insert into web_regions (region_id,city_id,region) values (340302,3403,'Áú×ÓºşÇø');
-insert into web_regions (region_id,city_id,region) values (340303,3403,'°öÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340304,3403,'Óí»áÇø');
-insert into web_regions (region_id,city_id,region) values (340311,3403,'»´ÉÏÇø');
-insert into web_regions (region_id,city_id,region) values (340321,3403,'»³Ô¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (340322,3403,'ÎåºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (340323,3403,'¹ÌÕòÏØ');
-insert into web_regions (region_id,city_id,region) values (340402,3404,'´óÍ¨Çø');
-insert into web_regions (region_id,city_id,region) values (340403,3404,'Ìï¼ÒâÖÇø');
-insert into web_regions (region_id,city_id,region) values (340404,3404,'Ğ»¼Ò¼¯Çø');
-insert into web_regions (region_id,city_id,region) values (340405,3404,'°Ë¹«É½Çø');
-insert into web_regions (region_id,city_id,region) values (340406,3404,'ÅË¼¯Çø');
-insert into web_regions (region_id,city_id,region) values (340421,3404,'·ïÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (340503,3405,'»¨É½Çø');
-insert into web_regions (region_id,city_id,region) values (340504,3405,'ÓêÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340506,3405,'²©ÍûÇø');
-insert into web_regions (region_id,city_id,region) values (340521,3405,'µ±Í¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (340522,3405,'º¬É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (340523,3405,'ºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (340602,3406,'¶Å¼¯Çø');
-insert into web_regions (region_id,city_id,region) values (340603,3406,'ÏàÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340604,3406,'ÁÒÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340621,3406,'å¡ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (340702,3407,'Í­¹ÙÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340703,3407,'Ê¨×ÓÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (340711,3407,'½¼Çø');
-insert into web_regions (region_id,city_id,region) values (340721,3407,'Í­ÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (340802,3408,'Ó­½­Çø');
-insert into web_regions (region_id,city_id,region) values (340803,3408,'´ó¹ÛÇø');
-insert into web_regions (region_id,city_id,region) values (340811,3408,'ÒËĞãÇø');
-insert into web_regions (region_id,city_id,region) values (340822,3408,'»³ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (340823,3408,'èÈÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (340824,3408,'Ç±É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (340825,3408,'Ì«ºşÏØ');
-insert into web_regions (region_id,city_id,region) values (340826,3408,'ËŞËÉÏØ');
-insert into web_regions (region_id,city_id,region) values (340827,3408,'Íû½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (340828,3408,'ÔÀÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (340881,3408,'Í©³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (341002,3410,'ÍÍÏªÇø');
-insert into web_regions (region_id,city_id,region) values (341003,3410,'»ÆÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (341004,3410,'»ÕÖİÇø');
-insert into web_regions (region_id,city_id,region) values (341021,3410,'ì¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (341022,3410,'ĞİÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (341023,3410,'÷ğÏØ');
-insert into web_regions (region_id,city_id,region) values (341024,3410,'ÆîÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (341102,3411,'ÀÅçğÇø');
-insert into web_regions (region_id,city_id,region) values (341103,3411,'ÄÏÚÛÇø');
-insert into web_regions (region_id,city_id,region) values (341122,3411,'À´°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (341124,3411,'È«½·ÏØ');
-insert into web_regions (region_id,city_id,region) values (341125,3411,'¶¨Ô¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (341126,3411,'·ïÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (341181,3411,'Ìì³¤ÊĞ');
-insert into web_regions (region_id,city_id,region) values (341182,3411,'Ã÷¹âÊĞ');
-insert into web_regions (region_id,city_id,region) values (341202,3412,'ò£ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (341203,3412,'ò£¶«Çø');
-insert into web_regions (region_id,city_id,region) values (341204,3412,'ò£ÈªÇø');
-insert into web_regions (region_id,city_id,region) values (341221,3412,'ÁÙÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (341222,3412,'Ì«ºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (341225,3412,'¸·ÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (341226,3412,'ò£ÉÏÏØ');
-insert into web_regions (region_id,city_id,region) values (341282,3412,'½çÊ×ÊĞ');
-insert into web_regions (region_id,city_id,region) values (341302,3413,'ˆ¬ÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (341321,3413,'í¸É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (341322,3413,'ÏôÏØ');
-insert into web_regions (region_id,city_id,region) values (341323,3413,'ÁéèµÏØ');
-insert into web_regions (region_id,city_id,region) values (341324,3413,'ãôÏØ');
-insert into web_regions (region_id,city_id,region) values (341502,3415,'½ğ°²Çø');
-insert into web_regions (region_id,city_id,region) values (341503,3415,'Ô£°²Çø');
-insert into web_regions (region_id,city_id,region) values (341521,3415,'ÊÙÏØ');
-insert into web_regions (region_id,city_id,region) values (341522,3415,'»ôÇñÏØ');
-insert into web_regions (region_id,city_id,region) values (341523,3415,'Êæ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (341524,3415,'½ğÕ¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (341525,3415,'»ôÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (341602,3416,'ÚÛ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (341621,3416,'ÎĞÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (341622,3416,'ÃÉ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (341623,3416,'ÀûĞÁÏØ');
-insert into web_regions (region_id,city_id,region) values (341702,3417,'¹ó³ØÇø');
-insert into web_regions (region_id,city_id,region) values (341721,3417,'¶«ÖÁÏØ');
-insert into web_regions (region_id,city_id,region) values (341722,3417,'Ê¯Ì¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (341723,3417,'ÇàÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (341802,3418,'ĞûÖİÇø');
-insert into web_regions (region_id,city_id,region) values (341821,3418,'ÀÉÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (341822,3418,'¹ãµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (341823,3418,'ãşÏØ');
-insert into web_regions (region_id,city_id,region) values (341824,3418,'¼¨ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (341825,3418,'ìºµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (341881,3418,'Äş¹úÊĞ');
-insert into web_regions (region_id,city_id,region) values (350102,3501,'¹ÄÂ¥Çø');
-insert into web_regions (region_id,city_id,region) values (350103,3501,'Ì¨½­Çø');
-insert into web_regions (region_id,city_id,region) values (350104,3501,'²ÖÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (350105,3501,'ÂíÎ²Çø');
-insert into web_regions (region_id,city_id,region) values (350111,3501,'½ú°²Çø');
-insert into web_regions (region_id,city_id,region) values (350121,3501,'ÃöºîÏØ');
-insert into web_regions (region_id,city_id,region) values (350122,3501,'Á¬½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (350123,3501,'ÂŞÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (350124,3501,'ÃöÇåÏØ');
-insert into web_regions (region_id,city_id,region) values (350125,3501,'ÓÀÌ©ÏØ');
-insert into web_regions (region_id,city_id,region) values (350128,3501,'Æ½Ì¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (350181,3501,'¸£ÇåÊĞ');
-insert into web_regions (region_id,city_id,region) values (350182,3501,'³¤ÀÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (350203,3502,'Ë¼Ã÷Çø');
-insert into web_regions (region_id,city_id,region) values (350205,3502,'º£²×Çø');
-insert into web_regions (region_id,city_id,region) values (350206,3502,'ºşÀïÇø');
-insert into web_regions (region_id,city_id,region) values (350211,3502,'¼¯ÃÀÇø');
-insert into web_regions (region_id,city_id,region) values (350212,3502,'Í¬°²Çø');
-insert into web_regions (region_id,city_id,region) values (350213,3502,'Ïè°²Çø');
-insert into web_regions (region_id,city_id,region) values (350302,3503,'³ÇÏáÇø');
-insert into web_regions (region_id,city_id,region) values (350303,3503,'º­½­Çø');
-insert into web_regions (region_id,city_id,region) values (350304,3503,'Àó³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (350305,3503,'ĞãÓìÇø');
-insert into web_regions (region_id,city_id,region) values (350322,3503,'ÏÉÓÎÏØ');
-insert into web_regions (region_id,city_id,region) values (350402,3504,'Ã·ÁĞÇø');
-insert into web_regions (region_id,city_id,region) values (350403,3504,'ÈıÔªÇø');
-insert into web_regions (region_id,city_id,region) values (350421,3504,'Ã÷ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (350423,3504,'ÇåÁ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (350424,3504,'Äş»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (350425,3504,'´óÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (350426,3504,'ÓÈÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (350427,3504,'É³ÏØ');
-insert into web_regions (region_id,city_id,region) values (350428,3504,'½«ÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (350429,3504,'Ì©ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (350430,3504,'½¨ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (350481,3504,'ÓÀ°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350502,3505,'Àğ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (350503,3505,'·áÔóÇø');
-insert into web_regions (region_id,city_id,region) values (350504,3505,'Âå½­Çø');
-insert into web_regions (region_id,city_id,region) values (350505,3505,'Èª¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (350521,3505,'»İ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (350524,3505,'°²ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (350525,3505,'ÓÀ´ºÏØ');
-insert into web_regions (region_id,city_id,region) values (350526,3505,'µÂ»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (350527,3505,'½ğÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (350581,3505,'Ê¯Ê¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350582,3505,'½ú½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350583,3505,'ÄÏ°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350602,3506,'Ü¼³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (350603,3506,'ÁúÎÄÇø');
-insert into web_regions (region_id,city_id,region) values (350622,3506,'ÔÆÏöÏØ');
-insert into web_regions (region_id,city_id,region) values (350623,3506,'ÕÄÆÖÏØ');
-insert into web_regions (region_id,city_id,region) values (350624,3506,'Ú¯°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (350625,3506,'³¤Ì©ÏØ');
-insert into web_regions (region_id,city_id,region) values (350626,3506,'¶«É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (350627,3506,'ÄÏ¾¸ÏØ');
-insert into web_regions (region_id,city_id,region) values (350628,3506,'Æ½ºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (350629,3506,'»ª°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (350681,3506,'Áúº£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350702,3507,'ÑÓÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (350703,3507,'½¨ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (350721,3507,'Ë³²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (350722,3507,'ÆÖ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (350723,3507,'¹âÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (350724,3507,'ËÉÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (350725,3507,'ÕşºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (350781,3507,'ÉÛÎäÊĞ');
-insert into web_regions (region_id,city_id,region) values (350782,3507,'ÎäÒÄÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350783,3507,'½¨ê±ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350802,3508,'ĞÂÂŞÇø');
-insert into web_regions (region_id,city_id,region) values (350821,3508,'³¤Í¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (350822,3508,'ÓÀ¶¨Çø');
-insert into web_regions (region_id,city_id,region) values (350823,3508,'ÉÏº¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (350824,3508,'ÎäÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (350825,3508,'Á¬³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (350881,3508,'ÕÄÆ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350902,3509,'½¶³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (350921,3509,'Ï¼ÆÖÏØ');
-insert into web_regions (region_id,city_id,region) values (350922,3509,'¹ÅÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (350923,3509,'ÆÁÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (350924,3509,'ÊÙÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (350925,3509,'ÖÜÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (350926,3509,'èÏÈÙÏØ');
-insert into web_regions (region_id,city_id,region) values (350981,3509,'¸£°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (350982,3509,'¸£¶¦ÊĞ');
-insert into web_regions (region_id,city_id,region) values (360102,3601,'¶«ºşÇø');
-insert into web_regions (region_id,city_id,region) values (360103,3601,'Î÷ºşÇø');
-insert into web_regions (region_id,city_id,region) values (360104,3601,'ÇàÔÆÆ×Çø');
-insert into web_regions (region_id,city_id,region) values (360105,3601,'ÍåÀïÇø');
-insert into web_regions (region_id,city_id,region) values (360111,3601,'ÇàÉ½ºşÇø');
-insert into web_regions (region_id,city_id,region) values (360121,3601,'ÄÏ²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (360122,3601,'ĞÂ½¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (360123,3601,'°²ÒåÏØ');
-insert into web_regions (region_id,city_id,region) values (360124,3601,'½øÏÍÏØ');
-insert into web_regions (region_id,city_id,region) values (360202,3602,'²ı½­Çø');
-insert into web_regions (region_id,city_id,region) values (360203,3602,'ÖéÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (360222,3602,'¸¡ÁºÏØ');
-insert into web_regions (region_id,city_id,region) values (360281,3602,'ÀÖÆ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (360302,3603,'°²Ô´Çø');
-insert into web_regions (region_id,city_id,region) values (360313,3603,'Ïæ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (360321,3603,'Á«»¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (360322,3603,'ÉÏÀõÏØ');
-insert into web_regions (region_id,city_id,region) values (360323,3603,'Â«ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (360402,3604,'Â®É½Çø');
-insert into web_regions (region_id,city_id,region) values (360403,3604,'ä±ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (360421,3604,'¾Å½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (360423,3604,'ÎäÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (360424,3604,'ĞŞË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (360425,3604,'ÓÀĞŞÏØ');
-insert into web_regions (region_id,city_id,region) values (360426,3604,'µÂ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (360427,3604,'ĞÇ×ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (360428,3604,'¶¼²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (360429,3604,'ºş¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (360430,3604,'ÅíÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (360481,3604,'Èğ²ıÊĞ');
-insert into web_regions (region_id,city_id,region) values (360482,3604,'¹²Çà³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (360502,3605,'ÓåË®Çø');
-insert into web_regions (region_id,city_id,region) values (360521,3605,'·ÖÒËÏØ');
-insert into web_regions (region_id,city_id,region) values (360602,3606,'ÔÂºşÇø');
-insert into web_regions (region_id,city_id,region) values (360622,3606,'Óà½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (360681,3606,'¹óÏªÊĞ');
-insert into web_regions (region_id,city_id,region) values (360702,3607,'ÕÂ¹±Çø');
-insert into web_regions (region_id,city_id,region) values (360703,3607,'ÄÏ¿µÇø');
-insert into web_regions (region_id,city_id,region) values (360721,3607,'¸ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (360722,3607,'ĞÅ·áÏØ');
-insert into web_regions (region_id,city_id,region) values (360723,3607,'´óÓàÏØ');
-insert into web_regions (region_id,city_id,region) values (360724,3607,'ÉÏÓÌÏØ');
-insert into web_regions (region_id,city_id,region) values (360725,3607,'³çÒåÏØ');
-insert into web_regions (region_id,city_id,region) values (360726,3607,'°²Ô¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (360727,3607,'ÁúÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (360728,3607,'¶¨ÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (360729,3607,'È«ÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (360730,3607,'Äş¶¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (360731,3607,'ÓÚ¶¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (360732,3607,'ĞË¹úÏØ');
-insert into web_regions (region_id,city_id,region) values (360733,3607,'»á²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (360734,3607,'Ñ°ÎÚÏØ');
-insert into web_regions (region_id,city_id,region) values (360735,3607,'Ê¯³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (360781,3607,'Èğ½ğÊĞ');
-insert into web_regions (region_id,city_id,region) values (360802,3608,'¼ªÖİÇø');
-insert into web_regions (region_id,city_id,region) values (360803,3608,'ÇàÔ­Çø');
-insert into web_regions (region_id,city_id,region) values (360821,3608,'¼ª°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (360822,3608,'¼ªË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (360823,3608,'Ï¿½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (360824,3608,'ĞÂ¸ÉÏØ');
-insert into web_regions (region_id,city_id,region) values (360825,3608,'ÓÀ·áÏØ');
-insert into web_regions (region_id,city_id,region) values (360826,3608,'Ì©ºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (360827,3608,'Ëì´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (360828,3608,'Íò°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (360829,3608,'°²¸£ÏØ');
-insert into web_regions (region_id,city_id,region) values (360830,3608,'ÓÀĞÂÏØ');
-insert into web_regions (region_id,city_id,region) values (360881,3608,'¾®¸ÔÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (360902,3609,'Ô¬ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (360921,3609,'·îĞÂÏØ');
-insert into web_regions (region_id,city_id,region) values (360922,3609,'ÍòÔØÏØ');
-insert into web_regions (region_id,city_id,region) values (360923,3609,'ÉÏ¸ßÏØ');
-insert into web_regions (region_id,city_id,region) values (360924,3609,'ÒË·áÏØ');
-insert into web_regions (region_id,city_id,region) values (360925,3609,'¾¸°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (360926,3609,'Í­¹ÄÏØ');
-insert into web_regions (region_id,city_id,region) values (360981,3609,'·á³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (360982,3609,'ÕÁÊ÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (360983,3609,'¸ß°²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (361002,3610,'ÁÙ´¨Çø');
-insert into web_regions (region_id,city_id,region) values (361021,3610,'ÄÏ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (361022,3610,'Àè´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (361023,3610,'ÄÏ·áÏØ');
-insert into web_regions (region_id,city_id,region) values (361024,3610,'³çÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (361025,3610,'ÀÖ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (361026,3610,'ÒË»ÆÏØ');
-insert into web_regions (region_id,city_id,region) values (361027,3610,'½ğÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (361028,3610,'×ÊÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (361029,3610,'¶«ÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (361030,3610,'¹ã²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (361102,3611,'ĞÅÖİÇø');
-insert into web_regions (region_id,city_id,region) values (361121,3611,'ÉÏÈÄÏØ');
-insert into web_regions (region_id,city_id,region) values (361122,3611,'¹ã·áÏØ');
-insert into web_regions (region_id,city_id,region) values (361123,3611,'ÓñÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (361124,3611,'Ç¦É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (361125,3611,'ºá·åÏØ');
-insert into web_regions (region_id,city_id,region) values (361126,3611,'ß®ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (361127,3611,'Óà¸ÉÏØ');
-insert into web_regions (region_id,city_id,region) values (361128,3611,'Û¶ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (361129,3611,'ÍòÄêÏØ');
-insert into web_regions (region_id,city_id,region) values (361130,3611,'æÄÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (361181,3611,'µÂĞËÊĞ');
-insert into web_regions (region_id,city_id,region) values (370102,3701,'ÀúÏÂÇø');
-insert into web_regions (region_id,city_id,region) values (370103,3701,'ÊĞÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (370104,3701,'»±ÒñÇø');
-insert into web_regions (region_id,city_id,region) values (370105,3701,'ÌìÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (370112,3701,'Àú³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (370113,3701,'³¤ÇåÇø');
-insert into web_regions (region_id,city_id,region) values (370124,3701,'Æ½ÒõÏØ');
-insert into web_regions (region_id,city_id,region) values (370125,3701,'¼ÃÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (370126,3701,'ÉÌºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (370181,3701,'ÕÂÇğÊĞ');
-insert into web_regions (region_id,city_id,region) values (370202,3702,'ÊĞÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (370203,3702,'ÊĞ±±Çø');
-insert into web_regions (region_id,city_id,region) values (370211,3702,'»ÆµºÇø');
-insert into web_regions (region_id,city_id,region) values (370212,3702,'áÀÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (370213,3702,'Àî²×Çø');
-insert into web_regions (region_id,city_id,region) values (370214,3702,'³ÇÑôÇø');
-insert into web_regions (region_id,city_id,region) values (370281,3702,'½ºÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (370282,3702,'¼´Ä«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370283,3702,'Æ½¶ÈÊĞ');
-insert into web_regions (region_id,city_id,region) values (370285,3702,'À³Î÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370286,3702,'Î÷º£°¶ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (370302,3703,'×Í´¨Çø');
-insert into web_regions (region_id,city_id,region) values (370303,3703,'ÕÅµêÇø');
-insert into web_regions (region_id,city_id,region) values (370304,3703,'²©É½Çø');
-insert into web_regions (region_id,city_id,region) values (370305,3703,'ÁÙ×ÍÇø');
-insert into web_regions (region_id,city_id,region) values (370306,3703,'ÖÜ´åÇø');
-insert into web_regions (region_id,city_id,region) values (370321,3703,'»¸Ì¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (370322,3703,'¸ßÇàÏØ');
-insert into web_regions (region_id,city_id,region) values (370323,3703,'ÒÊÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (370402,3704,'ÊĞÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (370403,3704,'Ñ¦³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (370404,3704,'á»³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (370405,3704,'Ì¨¶ù×¯Çø');
-insert into web_regions (region_id,city_id,region) values (370406,3704,'É½Í¤Çø');
-insert into web_regions (region_id,city_id,region) values (370481,3704,'ëøÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (370502,3705,'¶«ÓªÇø');
-insert into web_regions (region_id,city_id,region) values (370503,3705,'ºÓ¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (370521,3705,'¿ÑÀûÏØ');
-insert into web_regions (region_id,city_id,region) values (370522,3705,'Àû½òÏØ');
-insert into web_regions (region_id,city_id,region) values (370523,3705,'¹ãÈÄÏØ');
-insert into web_regions (region_id,city_id,region) values (370602,3706,'Ö¥î·Çø');
-insert into web_regions (region_id,city_id,region) values (370611,3706,'¸£É½Çø');
-insert into web_regions (region_id,city_id,region) values (370612,3706,'Ä²Æ½Çø');
-insert into web_regions (region_id,city_id,region) values (370613,3706,'À³É½Çø');
-insert into web_regions (region_id,city_id,region) values (370634,3706,'³¤µºÏØ');
-insert into web_regions (region_id,city_id,region) values (370681,3706,'Áú¿ÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (370682,3706,'À³ÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (370683,3706,'À³ÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (370684,3706,'ÅîÀ³ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370685,3706,'ÕĞÔ¶ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370686,3706,'ÆÜÏ¼ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370687,3706,'º£ÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (370702,3707,'Î«³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (370703,3707,'º®Í¤Çø');
-insert into web_regions (region_id,city_id,region) values (370704,3707,'·»×ÓÇø');
-insert into web_regions (region_id,city_id,region) values (370705,3707,'¿üÎÄÇø');
-insert into web_regions (region_id,city_id,region) values (370724,3707,'ÁÙëÔÏØ');
-insert into web_regions (region_id,city_id,region) values (370725,3707,'²ıÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (370781,3707,'ÇàÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (370782,3707,'Öî³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (370783,3707,'ÊÙ¹âÊĞ');
-insert into web_regions (region_id,city_id,region) values (370784,3707,'°²ÇğÊĞ');
-insert into web_regions (region_id,city_id,region) values (370785,3707,'¸ßÃÜÊĞ');
-insert into web_regions (region_id,city_id,region) values (370786,3707,'²ıÒØÊĞ');
-insert into web_regions (region_id,city_id,region) values (370811,3708,'ÈÎ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (370812,3708,'ÙğÖİÇø');
-insert into web_regions (region_id,city_id,region) values (370826,3708,'Î¢É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (370827,3708,'ÓãÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (370828,3708,'½ğÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (370829,3708,'¼ÎÏéÏØ');
-insert into web_regions (region_id,city_id,region) values (370830,3708,'ãëÉÏÏØ');
-insert into web_regions (region_id,city_id,region) values (370831,3708,'ãôË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (370832,3708,'ÁºÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (370881,3708,'Çú¸·ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370883,3708,'×Ş³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (370902,3709,'Ì©É½Çø');
-insert into web_regions (region_id,city_id,region) values (370911,3709,'á·ÔÀÇø');
-insert into web_regions (region_id,city_id,region) values (370921,3709,'ÄşÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (370923,3709,'¶«Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (370982,3709,'ĞÂÌ©ÊĞ');
-insert into web_regions (region_id,city_id,region) values (370983,3709,'·Ê³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (371002,3710,'»·´äÇø');
-insert into web_regions (region_id,city_id,region) values (371003,3710,'ÎÄµÇÇø');
-insert into web_regions (region_id,city_id,region) values (371082,3710,'ÈÙ³ÉÊĞ');
-insert into web_regions (region_id,city_id,region) values (371083,3710,'ÈéÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (371102,3711,'¶«¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (371103,3711,'á°É½Çø');
-insert into web_regions (region_id,city_id,region) values (371121,3711,'ÎåÁ«ÏØ');
-insert into web_regions (region_id,city_id,region) values (371122,3711,'ÜìÏØ');
-insert into web_regions (region_id,city_id,region) values (371202,3712,'À³³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (371203,3712,'¸Ö³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (371302,3713,'À¼É½Çø');
-insert into web_regions (region_id,city_id,region) values (371311,3713,'ÂŞ×¯Çø');
-insert into web_regions (region_id,city_id,region) values (371312,3713,'ºÓ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (371321,3713,'ÒÊÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (371322,3713,'Û°³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (371323,3713,'ÒÊË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (371324,3713,'À¼ÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (371325,3713,'·ÑÏØ');
-insert into web_regions (region_id,city_id,region) values (371326,3713,'Æ½ÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (371327,3713,'ÜìÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (371328,3713,'ÃÉÒõÏØ');
-insert into web_regions (region_id,city_id,region) values (371329,3713,'ÁÙãğÏØ');
-insert into web_regions (region_id,city_id,region) values (371402,3714,'µÂ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (371403,3714,'Áê³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (371422,3714,'Äş½òÏØ');
-insert into web_regions (region_id,city_id,region) values (371423,3714,'ÇìÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (371424,3714,'ÁÙÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (371425,3714,'ÆëºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (371426,3714,'Æ½Ô­ÏØ');
-insert into web_regions (region_id,city_id,region) values (371427,3714,'ÏÄ½òÏØ');
-insert into web_regions (region_id,city_id,region) values (371428,3714,'Îä³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (371481,3714,'ÀÖÁêÊĞ');
-insert into web_regions (region_id,city_id,region) values (371482,3714,'Óí³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (371502,3715,'¶«²ı¸®Çø');
-insert into web_regions (region_id,city_id,region) values (371521,3715,'Ñô¹ÈÏØ');
-insert into web_regions (region_id,city_id,region) values (371522,3715,'İ·ÏØ');
-insert into web_regions (region_id,city_id,region) values (371523,3715,'ÜİÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (371524,3715,'¶«°¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (371525,3715,'¹ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (371526,3715,'¸ßÌÆÏØ');
-insert into web_regions (region_id,city_id,region) values (371581,3715,'ÁÙÇåÊĞ');
-insert into web_regions (region_id,city_id,region) values (371602,3716,'±õ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (371603,3716,'Õ´»¯Çø');
-insert into web_regions (region_id,city_id,region) values (371621,3716,'»İÃñÏØ');
-insert into web_regions (region_id,city_id,region) values (371622,3716,'ÑôĞÅÏØ');
-insert into web_regions (region_id,city_id,region) values (371623,3716,'ÎŞé¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (371625,3716,'²©ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (371626,3716,'×ŞÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (371627,3716,'±±º£ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (371702,3717,'Äµµ¤Çø');
-insert into web_regions (region_id,city_id,region) values (371721,3717,'²ÜÏØ');
-insert into web_regions (region_id,city_id,region) values (371722,3717,'µ¥ÏØ');
-insert into web_regions (region_id,city_id,region) values (371723,3717,'³ÉÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (371724,3717,'¾ŞÒ°ÏØ');
-insert into web_regions (region_id,city_id,region) values (371725,3717,'Û©³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (371726,3717,'Û²³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (371727,3717,'¶¨ÌÕÏØ');
-insert into web_regions (region_id,city_id,region) values (371728,3717,'¶«Ã÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (410102,4101,'ÖĞÔ­Çø');
-insert into web_regions (region_id,city_id,region) values (410103,4101,'¶şÆßÇø');
-insert into web_regions (region_id,city_id,region) values (410104,4101,'¹Ü³Ç»Ø×åÇø');
-insert into web_regions (region_id,city_id,region) values (410105,4101,'½ğË®Çø');
-insert into web_regions (region_id,city_id,region) values (410106,4101,'ÉÏ½ÖÇø');
-insert into web_regions (region_id,city_id,region) values (410108,4101,'»İ¼ÃÇø');
-insert into web_regions (region_id,city_id,region) values (410122,4101,'ÖĞÄ²ÏØ');
-insert into web_regions (region_id,city_id,region) values (410181,4101,'¹®ÒåÊĞ');
-insert into web_regions (region_id,city_id,region) values (410182,4101,'ÜşÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (410183,4101,'ĞÂÃÜÊĞ');
-insert into web_regions (region_id,city_id,region) values (410184,4101,'ĞÂÖ£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (410185,4101,'µÇ·âÊĞ');
-insert into web_regions (region_id,city_id,region) values (410202,4102,'ÁúÍ¤Çø');
-insert into web_regions (region_id,city_id,region) values (410203,4102,'Ë³ºÓ»Ø×åÇø');
-insert into web_regions (region_id,city_id,region) values (410204,4102,'¹ÄÂ¥Çø');
-insert into web_regions (region_id,city_id,region) values (410205,4102,'ÓíÍõÌ¨Çø');
-insert into web_regions (region_id,city_id,region) values (410212,4102,'Ïé·ûÇø');
-insert into web_regions (region_id,city_id,region) values (410221,4102,'è½ÏØ');
-insert into web_regions (region_id,city_id,region) values (410222,4102,'Í¨ĞíÏØ');
-insert into web_regions (region_id,city_id,region) values (410223,4102,'Î¾ÊÏÏØ');
-insert into web_regions (region_id,city_id,region) values (410225,4102,'À¼¿¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (410302,4103,'ÀÏ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (410303,4103,'Î÷¹¤Çø');
-insert into web_regions (region_id,city_id,region) values (410304,4103,'eºÓ»Ø×åÇø');
-insert into web_regions (region_id,city_id,region) values (410305,4103,'½§Î÷Çø');
-insert into web_regions (region_id,city_id,region) values (410306,4103,'¼ªÀûÇø');
-insert into web_regions (region_id,city_id,region) values (410311,4103,'ÂåÁúÇø');
-insert into web_regions (region_id,city_id,region) values (410322,4103,'ÃÏ½òÏØ');
-insert into web_regions (region_id,city_id,region) values (410323,4103,'ĞÂ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (410324,4103,'èï´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (410325,4103,'áÔÏØ');
-insert into web_regions (region_id,city_id,region) values (410326,4103,'ÈêÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (410327,4103,'ÒËÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (410328,4103,'ÂåÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (410329,4103,'ÒÁ´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (410381,4103,'ÙÈÊ¦ÊĞ');
-insert into web_regions (region_id,city_id,region) values (410402,4104,'ĞÂ»ªÇø');
-insert into web_regions (region_id,city_id,region) values (410403,4104,'ÎÀ¶«Çø');
-insert into web_regions (region_id,city_id,region) values (410404,4104,'Ê¯ÁúÇø');
-insert into web_regions (region_id,city_id,region) values (410411,4104,'Õ¿ºÓÇø');
-insert into web_regions (region_id,city_id,region) values (410421,4104,'±¦·áÏØ');
-insert into web_regions (region_id,city_id,region) values (410422,4104,'Ò¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (410423,4104,'Â³É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (410425,4104,'Û£ÏØ');
-insert into web_regions (region_id,city_id,region) values (410481,4104,'Îè¸ÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (410482,4104,'ÈêÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (410502,4105,'ÎÄ·åÇø');
-insert into web_regions (region_id,city_id,region) values (410503,4105,'±±¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (410505,4105,'Òó¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (410506,4105,'Áú°²Çø');
-insert into web_regions (region_id,city_id,region) values (410522,4105,'°²ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (410523,4105,'ÌÀÒõÏØ');
-insert into web_regions (region_id,city_id,region) values (410526,4105,'»¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (410527,4105,'ÄÚ»ÆÏØ');
-insert into web_regions (region_id,city_id,region) values (410581,4105,'ÁÖÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (410602,4106,'º×É½Çø');
-insert into web_regions (region_id,city_id,region) values (410603,4106,'É½³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (410611,4106,'ä¿±õÇø');
-insert into web_regions (region_id,city_id,region) values (410621,4106,'¿£ÏØ');
-insert into web_regions (region_id,city_id,region) values (410622,4106,'ä¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (410702,4107,'ºìÆìÇø');
-insert into web_regions (region_id,city_id,region) values (410703,4107,'ÎÀ±õÇø');
-insert into web_regions (region_id,city_id,region) values (410704,4107,'·ïÈªÇø');
-insert into web_regions (region_id,city_id,region) values (410711,4107,'ÄÁÒ°Çø');
-insert into web_regions (region_id,city_id,region) values (410721,4107,'ĞÂÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (410724,4107,'»ñ¼ÎÏØ');
-insert into web_regions (region_id,city_id,region) values (410725,4107,'Ô­ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (410726,4107,'ÑÓ½òÏØ');
-insert into web_regions (region_id,city_id,region) values (410727,4107,'·âÇğÏØ');
-insert into web_regions (region_id,city_id,region) values (410728,4107,'³¤Ô«ÏØ');
-insert into web_regions (region_id,city_id,region) values (410781,4107,'ÎÀ»ÔÊĞ');
-insert into web_regions (region_id,city_id,region) values (410782,4107,'»ÔÏØÊĞ');
-insert into web_regions (region_id,city_id,region) values (410802,4108,'½â·ÅÇø');
-insert into web_regions (region_id,city_id,region) values (410803,4108,'ÖĞÕ¾Çø');
-insert into web_regions (region_id,city_id,region) values (410804,4108,'Âí´åÇø');
-insert into web_regions (region_id,city_id,region) values (410811,4108,'É½ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (410821,4108,'ĞŞÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (410822,4108,'²©°®ÏØ');
-insert into web_regions (region_id,city_id,region) values (410823,4108,'ÎäÚìÏØ');
-insert into web_regions (region_id,city_id,region) values (410825,4108,'ÎÂÏØ');
-insert into web_regions (region_id,city_id,region) values (410882,4108,'ÇßÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (410883,4108,'ÃÏÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (410902,4109,'»ªÁúÇø');
-insert into web_regions (region_id,city_id,region) values (410922,4109,'Çå·áÏØ');
-insert into web_regions (region_id,city_id,region) values (410923,4109,'ÄÏÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (410926,4109,'·¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (410927,4109,'Ì¨Ç°ÏØ');
-insert into web_regions (region_id,city_id,region) values (410928,4109,'å§ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (411002,4110,'Îº¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (411023,4110,'Ğí²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (411024,4110,'Û³ÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (411025,4110,'Ïå³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (411081,4110,'ÓíÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (411082,4110,'³¤¸ğÊĞ');
-insert into web_regions (region_id,city_id,region) values (411102,4111,'Ô´»ãÇø');
-insert into web_regions (region_id,city_id,region) values (411103,4111,'Û±³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (411104,4111,'ÕÙÁêÇø');
-insert into web_regions (region_id,city_id,region) values (411121,4111,'ÎèÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (411122,4111,'ÁÙò£ÏØ');
-insert into web_regions (region_id,city_id,region) values (411202,4112,'ºş±õÇø');
-insert into web_regions (region_id,city_id,region) values (411221,4112,'äÅ³ØÏØ');
-insert into web_regions (region_id,city_id,region) values (411222,4112,'ÉÂÏØ');
-insert into web_regions (region_id,city_id,region) values (411224,4112,'Â¬ÊÏÏØ');
-insert into web_regions (region_id,city_id,region) values (411281,4112,'ÒåÂíÊĞ');
-insert into web_regions (region_id,city_id,region) values (411282,4112,'Áé±¦ÊĞ');
-insert into web_regions (region_id,city_id,region) values (411302,4113,'Íğ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (411303,4113,'ÎÔÁúÇø');
-insert into web_regions (region_id,city_id,region) values (411321,4113,'ÄÏÕÙÏØ');
-insert into web_regions (region_id,city_id,region) values (411322,4113,'·½³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (411323,4113,'Î÷Ï¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (411324,4113,'ÕòÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (411325,4113,'ÄÚÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (411326,4113,'äÀ´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (411327,4113,'ÉçÆìÏØ');
-insert into web_regions (region_id,city_id,region) values (411328,4113,'ÌÆºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (411329,4113,'ĞÂÒ°ÏØ');
-insert into web_regions (region_id,city_id,region) values (411330,4113,'Í©°ØÏØ');
-insert into web_regions (region_id,city_id,region) values (411381,4113,'µËÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (411402,4114,'ÁºÔ°Çø');
-insert into web_regions (region_id,city_id,region) values (411403,4114,'î¡ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (411421,4114,'ÃñÈ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (411422,4114,'î¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (411423,4114,'ÄşÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (411424,4114,'èÏ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (411425,4114,'Óİ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (411426,4114,'ÏÄÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (411481,4114,'ÓÀ³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (411502,4115,'›¸ºÓÇø');
-insert into web_regions (region_id,city_id,region) values (411503,4115,'Æ½ÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (411521,4115,'ÂŞÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (411522,4115,'¹âÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (411523,4115,'ĞÂÏØ');
-insert into web_regions (region_id,city_id,region) values (411524,4115,'ÉÌ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (411525,4115,'¹ÌÊ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (411526,4115,'äê´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (411527,4115,'»´±õÏØ');
-insert into web_regions (region_id,city_id,region) values (411528,4115,'Ï¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (411602,4116,'´¨»ãÇø');
-insert into web_regions (region_id,city_id,region) values (411621,4116,'·ö¹µÏØ');
-insert into web_regions (region_id,city_id,region) values (411622,4116,'Î÷»ªÏØ');
-insert into web_regions (region_id,city_id,region) values (411623,4116,'ÉÌË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (411624,4116,'ÉòÇğÏØ');
-insert into web_regions (region_id,city_id,region) values (411625,4116,'µ¦³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (411626,4116,'»´ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (411627,4116,'Ì«¿µÏØ');
-insert into web_regions (region_id,city_id,region) values (411628,4116,'Â¹ÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (411681,4116,'Ïî³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (411702,4117,'æä³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (411721,4117,'Î÷Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (411722,4117,'ÉÏ²ÌÏØ');
-insert into web_regions (region_id,city_id,region) values (411723,4117,'Æ½ÓßÏØ');
-insert into web_regions (region_id,city_id,region) values (411724,4117,'ÕıÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (411725,4117,'È·É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (411726,4117,'ÃÚÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (411727,4117,'ÈêÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (411728,4117,'ËìÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (411729,4117,'ĞÂ²ÌÏØ');
-insert into web_regions (region_id,city_id,region) values (419001,4190,'¼ÃÔ´ÊĞ');
-insert into web_regions (region_id,city_id,region) values (420102,4201,'½­°¶Çø');
-insert into web_regions (region_id,city_id,region) values (420103,4201,'½­ººÇø');
-insert into web_regions (region_id,city_id,region) values (420104,4201,'³~¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (420105,4201,'ººÑôÇø');
-insert into web_regions (region_id,city_id,region) values (420106,4201,'Îä²ıÇø');
-insert into web_regions (region_id,city_id,region) values (420107,4201,'ÇàÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (420111,4201,'ºéÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (420112,4201,'¶«Î÷ºşÇø');
-insert into web_regions (region_id,city_id,region) values (420113,4201,'ººÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (420114,4201,'²ÌµéÇø');
-insert into web_regions (region_id,city_id,region) values (420115,4201,'½­ÏÄÇø');
-insert into web_regions (region_id,city_id,region) values (420116,4201,'»ÆÚéÇø');
-insert into web_regions (region_id,city_id,region) values (420117,4201,'ĞÂÖŞÇø');
-insert into web_regions (region_id,city_id,region) values (420202,4202,'»ÆÊ¯¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (420203,4202,'Î÷ÈûÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (420204,4202,'ÏÂÂ½Çø');
-insert into web_regions (region_id,city_id,region) values (420205,4202,'ÌúÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (420222,4202,'ÑôĞÂÏØ');
-insert into web_regions (region_id,city_id,region) values (420281,4202,'´óÒ±ÊĞ');
-insert into web_regions (region_id,city_id,region) values (420302,4203,'Ã©¼ıÇø');
-insert into web_regions (region_id,city_id,region) values (420303,4203,'ÕÅÍåÇø');
-insert into web_regions (region_id,city_id,region) values (420304,4203,'ÔÇÑôÇø');
-insert into web_regions (region_id,city_id,region) values (420322,4203,'ÔÇÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (420323,4203,'ÖñÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (420324,4203,'ÖñÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (420325,4203,'·¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (420381,4203,'µ¤½­¿ÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (420502,4205,'Î÷ÁêÇø');
-insert into web_regions (region_id,city_id,region) values (420503,4205,'Îé¼Ò¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (420504,4205,'µã¾üÇø');
-insert into web_regions (region_id,city_id,region) values (420505,4205,'ªVÍ¤Çø');
-insert into web_regions (region_id,city_id,region) values (420506,4205,'ÒÄÁêÇø');
-insert into web_regions (region_id,city_id,region) values (420525,4205,'Ô¶°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (420526,4205,'ĞËÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (420527,4205,'ïö¹éÏØ');
-insert into web_regions (region_id,city_id,region) values (420528,4205,'³¤ÑôÍÁ¼Ò×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (420529,4205,'Îå·åÍÁ¼Ò×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (420581,4205,'ÒË¶¼ÊĞ');
-insert into web_regions (region_id,city_id,region) values (420582,4205,'µ±ÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (420583,4205,'Ö¦½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (420602,4206,'Ïå³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (420606,4206,'·®³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (420607,4206,'ÏåÖİÇø');
-insert into web_regions (region_id,city_id,region) values (420624,4206,'ÄÏÕÄÏØ');
-insert into web_regions (region_id,city_id,region) values (420625,4206,'¹È³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (420626,4206,'±£¿µÏØ');
-insert into web_regions (region_id,city_id,region) values (420682,4206,'ÀÏºÓ¿ÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (420683,4206,'ÔæÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (420684,4206,'ÒË³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (420702,4207,'Áº×ÓºşÇø');
-insert into web_regions (region_id,city_id,region) values (420703,4207,'»ªÈİÇø');
-insert into web_regions (region_id,city_id,region) values (420704,4207,'¶õ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (420802,4208,'¶«±¦Çø');
-insert into web_regions (region_id,city_id,region) values (420804,4208,'¶Şµ¶Çø');
-insert into web_regions (region_id,city_id,region) values (420821,4208,'¾©É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (420822,4208,'É³ÑóÏØ');
-insert into web_regions (region_id,city_id,region) values (420881,4208,'ÖÓÏéÊĞ');
-insert into web_regions (region_id,city_id,region) values (420902,4209,'Ğ¢ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (420921,4209,'Ğ¢²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (420922,4209,'´óÎòÏØ');
-insert into web_regions (region_id,city_id,region) values (420923,4209,'ÔÆÃÎÏØ');
-insert into web_regions (region_id,city_id,region) values (420981,4209,'Ó¦³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (420982,4209,'°²Â½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (420984,4209,'ºº´¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (421002,4210,'É³ÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (421003,4210,'¾£ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (421022,4210,'¹«°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (421023,4210,'¼àÀûÏØ');
-insert into web_regions (region_id,city_id,region) values (421024,4210,'½­ÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (421081,4210,'Ê¯Ê×ÊĞ');
-insert into web_regions (region_id,city_id,region) values (421083,4210,'ºéºşÊĞ');
-insert into web_regions (region_id,city_id,region) values (421087,4210,'ËÉ×ÌÊĞ');
-insert into web_regions (region_id,city_id,region) values (421102,4211,'»ÆÖİÇø');
-insert into web_regions (region_id,city_id,region) values (421121,4211,'ÍÅ·çÏØ');
-insert into web_regions (region_id,city_id,region) values (421122,4211,'ºì°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (421123,4211,'ÂŞÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (421124,4211,'Ó¢É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (421125,4211,'ä»Ë®ÏØ');
-insert into web_regions (region_id,city_id,region) values (421126,4211,'Ş­´ºÏØ');
-insert into web_regions (region_id,city_id,region) values (421127,4211,'»ÆÃ·ÏØ');
-insert into web_regions (region_id,city_id,region) values (421181,4211,'Âé³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (421182,4211,'ÎäÑ¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (421202,4212,'ÏÌ°²Çø');
-insert into web_regions (region_id,city_id,region) values (421221,4212,'¼ÎÓãÏØ');
-insert into web_regions (region_id,city_id,region) values (421222,4212,'Í¨³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (421223,4212,'³çÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (421224,4212,'Í¨É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (421281,4212,'³à±ÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (421303,4213,'Ôø¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (421321,4213,'ËæÏØ');
-insert into web_regions (region_id,city_id,region) values (421381,4213,'¹ãË®ÊĞ');
-insert into web_regions (region_id,city_id,region) values (422801,4228,'¶÷Ê©ÊĞ');
-insert into web_regions (region_id,city_id,region) values (422802,4228,'Àû´¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (422822,4228,'½¨Ê¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (422823,4228,'°Í¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (422825,4228,'Ğû¶÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (422826,4228,'ÏÌ·áÏØ');
-insert into web_regions (region_id,city_id,region) values (422827,4228,'À´·ïÏØ');
-insert into web_regions (region_id,city_id,region) values (422828,4228,'º×·åÏØ');
-insert into web_regions (region_id,city_id,region) values (429004,4290,'ÏÉÌÒÊĞ');
-insert into web_regions (region_id,city_id,region) values (429005,4290,'Ç±½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (429006,4290,'ÌìÃÅÊĞ');
-insert into web_regions (region_id,city_id,region) values (429021,4290,'ÉñÅ©¼ÜÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (430102,4301,'Ü½ÈØÇø');
-insert into web_regions (region_id,city_id,region) values (430103,4301,'ÌìĞÄÇø');
-insert into web_regions (region_id,city_id,region) values (430104,4301,'ÔÀÂ´Çø');
-insert into web_regions (region_id,city_id,region) values (430105,4301,'¿ª¸£Çø');
-insert into web_regions (region_id,city_id,region) values (430111,4301,'Óê»¨Çø');
-insert into web_regions (region_id,city_id,region) values (430112,4301,'Íû³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (430121,4301,'³¤É³ÏØ');
-insert into web_regions (region_id,city_id,region) values (430124,4301,'ÄşÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (430181,4301,'ä¯ÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (430202,4302,'ºÉÌÁÇø');
-insert into web_regions (region_id,city_id,region) values (430203,4302,'Â«äÁÇø');
-insert into web_regions (region_id,city_id,region) values (430204,4302,'Ê¯·åÇø');
-insert into web_regions (region_id,city_id,region) values (430211,4302,'ÌìÔªÇø');
-insert into web_regions (region_id,city_id,region) values (430221,4302,'ÖêÖŞÏØ');
-insert into web_regions (region_id,city_id,region) values (430223,4302,'ØüÏØ');
-insert into web_regions (region_id,city_id,region) values (430224,4302,'²èÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (430225,4302,'Ñ×ÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (430281,4302,'õ·ÁêÊĞ');
-insert into web_regions (region_id,city_id,region) values (430302,4303,'ÓêºşÇø');
-insert into web_regions (region_id,city_id,region) values (430304,4303,'ÔÀÌÁÇø');
-insert into web_regions (region_id,city_id,region) values (430321,4303,'ÏæÌ¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (430381,4303,'ÏæÏçÊĞ');
-insert into web_regions (region_id,city_id,region) values (430382,4303,'ÉØÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (430405,4304,'ÖéêÍÇø');
-insert into web_regions (region_id,city_id,region) values (430406,4304,'Ñã·åÇø');
-insert into web_regions (region_id,city_id,region) values (430407,4304,'Ê¯¹ÄÇø');
-insert into web_regions (region_id,city_id,region) values (430408,4304,'ÕôÏæÇø');
-insert into web_regions (region_id,city_id,region) values (430412,4304,'ÄÏÔÀÇø');
-insert into web_regions (region_id,city_id,region) values (430421,4304,'ºâÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (430422,4304,'ºâÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (430423,4304,'ºâÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (430424,4304,'ºâ¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (430426,4304,'Æî¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (430481,4304,'ñçÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (430482,4304,'³£ÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (430502,4305,'Ë«ÇåÇø');
-insert into web_regions (region_id,city_id,region) values (430503,4305,'´óÏéÇø');
-insert into web_regions (region_id,city_id,region) values (430511,4305,'±±ËşÇø');
-insert into web_regions (region_id,city_id,region) values (430521,4305,'ÉÛ¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (430522,4305,'ĞÂÉÛÏØ');
-insert into web_regions (region_id,city_id,region) values (430523,4305,'ÉÛÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (430524,4305,'Â¡»ØÏØ');
-insert into web_regions (region_id,city_id,region) values (430525,4305,'¶´¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (430527,4305,'ËçÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (430528,4305,'ĞÂÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (430529,4305,'³Ç²½Ãç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (430581,4305,'Îä¸ÔÊĞ');
-insert into web_regions (region_id,city_id,region) values (430602,4306,'ÔÀÑôÂ¥Çø');
-insert into web_regions (region_id,city_id,region) values (430603,4306,'ÔÆÏªÇø');
-insert into web_regions (region_id,city_id,region) values (430611,4306,'¾ıÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (430621,4306,'ÔÀÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (430623,4306,'»ªÈİÏØ');
-insert into web_regions (region_id,city_id,region) values (430624,4306,'ÏæÒõÏØ');
-insert into web_regions (region_id,city_id,region) values (430626,4306,'Æ½½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (430681,4306,'ãèÂŞÊĞ');
-insert into web_regions (region_id,city_id,region) values (430682,4306,'ÁÙÏæÊĞ');
-insert into web_regions (region_id,city_id,region) values (430702,4307,'ÎäÁêÇø');
-insert into web_regions (region_id,city_id,region) values (430703,4307,'¶¦³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (430721,4307,'°²ÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (430722,4307,'ººÊÙÏØ');
-insert into web_regions (region_id,city_id,region) values (430723,4307,'å¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (430724,4307,'ÁÙå¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (430725,4307,'ÌÒÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (430726,4307,'Ê¯ÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (430781,4307,'½òÊĞÊĞ');
-insert into web_regions (region_id,city_id,region) values (430802,4308,'ÓÀ¶¨Çø');
-insert into web_regions (region_id,city_id,region) values (430811,4308,'ÎäÁêÔ´Çø');
-insert into web_regions (region_id,city_id,region) values (430821,4308,'´ÈÀûÏØ');
-insert into web_regions (region_id,city_id,region) values (430822,4308,'É£Ö²ÏØ');
-insert into web_regions (region_id,city_id,region) values (430902,4309,'×ÊÑôÇø');
-insert into web_regions (region_id,city_id,region) values (430903,4309,'ºÕÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (430921,4309,'ÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (430922,4309,'ÌÒ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (430923,4309,'°²»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (430981,4309,'ãä½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (431002,4310,'±±ºşÇø');
-insert into web_regions (region_id,city_id,region) values (431003,4310,'ËÕÏÉÇø');
-insert into web_regions (region_id,city_id,region) values (431021,4310,'¹ğÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (431022,4310,'ÒËÕÂÏØ');
-insert into web_regions (region_id,city_id,region) values (431023,4310,'ÓÀĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (431024,4310,'¼ÎºÌÏØ');
-insert into web_regions (region_id,city_id,region) values (431025,4310,'ÁÙÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (431026,4310,'Èê³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (431027,4310,'¹ğ¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (431028,4310,'°²ÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (431081,4310,'×ÊĞËÊĞ');
-insert into web_regions (region_id,city_id,region) values (431102,4311,'ÁãÁêÇø');
-insert into web_regions (region_id,city_id,region) values (431103,4311,'ÀäË®Ì²Çø');
-insert into web_regions (region_id,city_id,region) values (431121,4311,'ÆîÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (431122,4311,'¶«°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (431123,4311,'Ë«ÅÆÏØ');
-insert into web_regions (region_id,city_id,region) values (431124,4311,'µÀÏØ');
-insert into web_regions (region_id,city_id,region) values (431125,4311,'½­ÓÀÏØ');
-insert into web_regions (region_id,city_id,region) values (431126,4311,'ÄşÔ¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (431127,4311,'À¶É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (431128,4311,'ĞÂÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (431129,4311,'½­»ªÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (431202,4312,'º×³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (431221,4312,'ÖĞ·½ÏØ');
-insert into web_regions (region_id,city_id,region) values (431222,4312,'ãäÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (431223,4312,'³½ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (431224,4312,'äÓÆÖÏØ');
-insert into web_regions (region_id,city_id,region) values (431225,4312,'»áÍ¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (431226,4312,'ÂéÑôÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (431227,4312,'ĞÂ»Î¶±×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (431228,4312,'ÜÆ½­¶±×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (431229,4312,'¾¸ÖİÃç×å¶±×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (431230,4312,'Í¨µÀ¶±×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (431281,4312,'ºé½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (431302,4313,'Â¦ĞÇÇø');
-insert into web_regions (region_id,city_id,region) values (431321,4313,'Ë«·åÏØ');
-insert into web_regions (region_id,city_id,region) values (431322,4313,'ĞÂ»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (431381,4313,'ÀäË®½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (431382,4313,'Á°Ô´ÊĞ');
-insert into web_regions (region_id,city_id,region) values (433101,4331,'¼ªÊ×ÊĞ');
-insert into web_regions (region_id,city_id,region) values (433122,4331,'ãòÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (433123,4331,'·ï»ËÏØ');
-insert into web_regions (region_id,city_id,region) values (433124,4331,'»¨Ô«ÏØ');
-insert into web_regions (region_id,city_id,region) values (433125,4331,'±£¾¸ÏØ');
-insert into web_regions (region_id,city_id,region) values (433126,4331,'¹ÅÕÉÏØ');
-insert into web_regions (region_id,city_id,region) values (433127,4331,'ÓÀË³ÏØ');
-insert into web_regions (region_id,city_id,region) values (433130,4331,'ÁúÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (440103,4401,'ÀóÍåÇø');
-insert into web_regions (region_id,city_id,region) values (440104,4401,'Ô½ĞãÇø');
-insert into web_regions (region_id,city_id,region) values (440105,4401,'º£ÖéÇø');
-insert into web_regions (region_id,city_id,region) values (440106,4401,'ÌìºÓÇø');
-insert into web_regions (region_id,city_id,region) values (440111,4401,'°×ÔÆÇø');
-insert into web_regions (region_id,city_id,region) values (440112,4401,'»ÆÆÒÇø');
-insert into web_regions (region_id,city_id,region) values (440113,4401,'·¬Ø®Çø');
-insert into web_regions (region_id,city_id,region) values (440114,4401,'»¨¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (440115,4401,'ÄÏÉ³Çø');
-insert into web_regions (region_id,city_id,region) values (440117,4401,'´Ó»¯Çø');
-insert into web_regions (region_id,city_id,region) values (440118,4401,'Ôö³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (440119,4401,'ÂÜ¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (440203,4402,'Îä½­Çø');
-insert into web_regions (region_id,city_id,region) values (440204,4402,'ä¥½­Çø');
-insert into web_regions (region_id,city_id,region) values (440205,4402,'Çú½­Çø');
-insert into web_regions (region_id,city_id,region) values (440222,4402,'Ê¼ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (440224,4402,'ÈÊ»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (440229,4402,'ÎÌÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (440232,4402,'ÈéÔ´Ñş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (440233,4402,'ĞÂ·áÏØ');
-insert into web_regions (region_id,city_id,region) values (440281,4402,'ÀÖ²ıÊĞ');
-insert into web_regions (region_id,city_id,region) values (440282,4402,'ÄÏĞÛÊĞ');
-insert into web_regions (region_id,city_id,region) values (440303,4403,'ÂŞºşÇø');
-insert into web_regions (region_id,city_id,region) values (440304,4403,'¸£ÌïÇø');
-insert into web_regions (region_id,city_id,region) values (440305,4403,'ÄÏÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (440306,4403,'±¦°²Çø');
-insert into web_regions (region_id,city_id,region) values (440307,4403,'Áú¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (440308,4403,'ÑÎÌïÇø');
-insert into web_regions (region_id,city_id,region) values (440309,4403,'¹âÃ÷ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (440310,4403,'ÆºÉ½ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (440311,4403,'´óÅôĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (440312,4403,'Áú»ªĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (440402,4404,'ÏãÖŞÇø');
-insert into web_regions (region_id,city_id,region) values (440403,4404,'¶·ÃÅÇø');
-insert into web_regions (region_id,city_id,region) values (440404,4404,'½ğÍåÇø');
-insert into web_regions (region_id,city_id,region) values (440507,4405,'ÁúºşÇø');
-insert into web_regions (region_id,city_id,region) values (440511,4405,'½ğÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (440512,4405,'å©½­Çø');
-insert into web_regions (region_id,city_id,region) values (440513,4405,'³±ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (440514,4405,'³±ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (440515,4405,'³Îº£Çø');
-insert into web_regions (region_id,city_id,region) values (440523,4405,'ÄÏ°ÄÏØ');
-insert into web_regions (region_id,city_id,region) values (440604,4406,'ìø³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (440605,4406,'ÄÏº£Çø');
-insert into web_regions (region_id,city_id,region) values (440606,4406,'Ë³µÂÇø');
-insert into web_regions (region_id,city_id,region) values (440607,4406,'ÈıË®Çø');
-insert into web_regions (region_id,city_id,region) values (440608,4406,'¸ßÃ÷Çø');
-insert into web_regions (region_id,city_id,region) values (440703,4407,'Åî½­Çø');
-insert into web_regions (region_id,city_id,region) values (440704,4407,'½­º£Çø');
-insert into web_regions (region_id,city_id,region) values (440705,4407,'ĞÂ»áÇø');
-insert into web_regions (region_id,city_id,region) values (440781,4407,'Ì¨É½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (440783,4407,'¿ªÆ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (440784,4407,'º×É½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (440785,4407,'¶÷Æ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (440802,4408,'³à¿²Çø');
-insert into web_regions (region_id,city_id,region) values (440803,4408,'Ï¼É½Çø');
-insert into web_regions (region_id,city_id,region) values (440804,4408,'ÆÂÍ·Çø');
-insert into web_regions (region_id,city_id,region) values (440811,4408,'ÂéÕÂÇø');
-insert into web_regions (region_id,city_id,region) values (440823,4408,'ËìÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (440825,4408,'ĞìÎÅÏØ');
-insert into web_regions (region_id,city_id,region) values (440881,4408,'Á®½­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (440882,4408,'À×ÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (440883,4408,'Îâ´¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (440902,4409,'Ã¯ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (440904,4409,'µç°×Çø');
-insert into web_regions (region_id,city_id,region) values (440981,4409,'¸ßÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (440982,4409,'»¯ÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (440983,4409,'ĞÅÒËÊĞ');
-insert into web_regions (region_id,city_id,region) values (441202,4412,'¶ËÖİÇø');
-insert into web_regions (region_id,city_id,region) values (441203,4412,'¶¦ºşÇø');
-insert into web_regions (region_id,city_id,region) values (441223,4412,'¹ãÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (441224,4412,'»³¼¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (441225,4412,'·â¿ªÏØ');
-insert into web_regions (region_id,city_id,region) values (441226,4412,'µÂÇìÏØ');
-insert into web_regions (region_id,city_id,region) values (441283,4412,'¸ßÒªÊĞ');
-insert into web_regions (region_id,city_id,region) values (441284,4412,'ËÄ»áÊĞ');
-insert into web_regions (region_id,city_id,region) values (441302,4413,'»İ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441303,4413,'»İÑôÇø');
-insert into web_regions (region_id,city_id,region) values (441322,4413,'²©ÂŞÏØ');
-insert into web_regions (region_id,city_id,region) values (441323,4413,'»İ¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (441324,4413,'ÁúÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (441402,4414,'Ã·½­Çø');
-insert into web_regions (region_id,city_id,region) values (441403,4414,'Ã·ÏØÇø');
-insert into web_regions (region_id,city_id,region) values (441422,4414,'´óÆÒÏØ');
-insert into web_regions (region_id,city_id,region) values (441423,4414,'·áË³ÏØ');
-insert into web_regions (region_id,city_id,region) values (441424,4414,'Îå»ªÏØ');
-insert into web_regions (region_id,city_id,region) values (441426,4414,'Æ½Ô¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (441427,4414,'½¶ÁëÏØ');
-insert into web_regions (region_id,city_id,region) values (441481,4414,'ĞËÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (441502,4415,'³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441521,4415,'º£·áÏØ');
-insert into web_regions (region_id,city_id,region) values (441523,4415,'Â½ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (441581,4415,'Â½·áÊĞ');
-insert into web_regions (region_id,city_id,region) values (441602,4416,'Ô´³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441621,4416,'×Ï½ğÏØ');
-insert into web_regions (region_id,city_id,region) values (441622,4416,'Áú´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (441623,4416,'Á¬Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (441624,4416,'ºÍÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (441625,4416,'¶«Ô´ÏØ');
-insert into web_regions (region_id,city_id,region) values (441702,4417,'½­³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441704,4417,'Ñô¶«Çø');
-insert into web_regions (region_id,city_id,region) values (441721,4417,'ÑôÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (441781,4417,'Ñô´ºÊĞ');
-insert into web_regions (region_id,city_id,region) values (441802,4418,'Çå³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441803,4418,'ÇåĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (441821,4418,'·ğ¸ÔÏØ');
-insert into web_regions (region_id,city_id,region) values (441823,4418,'ÑôÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (441825,4418,'Á¬É½×³×åÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (441826,4418,'Á¬ÄÏÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (441881,4418,'Ó¢µÂÊĞ');
-insert into web_regions (region_id,city_id,region) values (441882,4418,'Á¬ÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (441901,4419,'İ¸³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441902,4419,'ÄÏ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (441904,4419,'Íò½­Çø');
-insert into web_regions (region_id,city_id,region) values (441905,4419,'Ê¯íÙÕò');
-insert into web_regions (region_id,city_id,region) values (441906,4419,'Ê¯ÁúÕò');
-insert into web_regions (region_id,city_id,region) values (441907,4419,'²èÉ½Õò');
-insert into web_regions (region_id,city_id,region) values (441908,4419,'Ê¯ÅÅÕò');
-insert into web_regions (region_id,city_id,region) values (441909,4419,'ÆóÊ¯Õò');
-insert into web_regions (region_id,city_id,region) values (441910,4419,'ºáÁ¤Õò');
-insert into web_regions (region_id,city_id,region) values (441911,4419,'ÇÅÍ·Õò');
-insert into web_regions (region_id,city_id,region) values (441912,4419,'Ğ»¸ÚÕò');
-insert into web_regions (region_id,city_id,region) values (441913,4419,'¶«¿ÓÕò');
-insert into web_regions (region_id,city_id,region) values (441914,4419,'³£Æ½Õò');
-insert into web_regions (region_id,city_id,region) values (441915,4419,'å¼²½Õò');
-insert into web_regions (region_id,city_id,region) values (441916,4419,'´óÀÊÕò');
-insert into web_regions (region_id,city_id,region) values (441917,4419,'ÂéÓ¿Õò');
-insert into web_regions (region_id,city_id,region) values (441918,4419,'ÖĞÌÃÕò');
-insert into web_regions (region_id,city_id,region) values (441919,4419,'¸ßˆ¶Õò');
-insert into web_regions (region_id,city_id,region) values (441920,4419,'ÕÁÄ¾Í·Õò');
-insert into web_regions (region_id,city_id,region) values (441921,4419,'´óÁëÉ½Õò');
-insert into web_regions (region_id,city_id,region) values (441922,4419,'ÍûÅ£¶ÕÕò');
-insert into web_regions (region_id,city_id,region) values (441923,4419,'»Æ½­Õò');
-insert into web_regions (region_id,city_id,region) values (441924,4419,'ºéÃ·Õò');
-insert into web_regions (region_id,city_id,region) values (441925,4419,'ÇåÏªÕò');
-insert into web_regions (region_id,city_id,region) values (441926,4419,'É³ÌïÕò');
-insert into web_regions (region_id,city_id,region) values (441927,4419,'µÀœòÕò');
-insert into web_regions (region_id,city_id,region) values (441928,4419,'ÌÁÏÃÕò');
-insert into web_regions (region_id,city_id,region) values (441929,4419,'»¢ÃÅÕò');
-insert into web_regions (region_id,city_id,region) values (441930,4419,'ºñ½ÖÕò');
-insert into web_regions (region_id,city_id,region) values (441931,4419,'·ï¸ÚÕò');
-insert into web_regions (region_id,city_id,region) values (441932,4419,'³¤°²Õò');
-insert into web_regions (region_id,city_id,region) values (442001,4420,'Ê¯áªÇø');
-insert into web_regions (region_id,city_id,region) values (442004,4420,'ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (442005,4420,'Îå¹ğÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (442006,4420,'»ğ¾æ¿ª·¢Çø');
-insert into web_regions (region_id,city_id,region) values (442007,4420,'»ÆÆÔÕò');
-insert into web_regions (region_id,city_id,region) values (442008,4420,'ÄÏÍ·Õò');
-insert into web_regions (region_id,city_id,region) values (442009,4420,'¶«·ïÕò');
-insert into web_regions (region_id,city_id,region) values (442010,4420,'¸·É³Õò');
-insert into web_regions (region_id,city_id,region) values (442011,4420,'Ğ¡é­Õò');
-insert into web_regions (region_id,city_id,region) values (442012,4420,'¶«ÉıÕò');
-insert into web_regions (region_id,city_id,region) values (442013,4420,'¹ÅÕòÕò');
-insert into web_regions (region_id,city_id,region) values (442014,4420,'ºáÀ¸Õò');
-insert into web_regions (region_id,city_id,region) values (442015,4420,'Èı½ÇÕò');
-insert into web_regions (region_id,city_id,region) values (442016,4420,'ÃñÖÚÕò');
-insert into web_regions (region_id,city_id,region) values (442017,4420,'ÄÏÀÊÕò');
-insert into web_regions (region_id,city_id,region) values (442018,4420,'¸Û¿ÚÕò');
-insert into web_regions (region_id,city_id,region) values (442019,4420,'´óÓ¿Õò');
-insert into web_regions (region_id,city_id,region) values (442020,4420,'É³ÏªÕò');
-insert into web_regions (region_id,city_id,region) values (442021,4420,'ÈıÏçÕò');
-insert into web_regions (region_id,city_id,region) values (442022,4420,'°åÜ½Õò');
-insert into web_regions (region_id,city_id,region) values (442023,4420,'ÉñÍåÕò');
-insert into web_regions (region_id,city_id,region) values (442024,4420,'Ì¹ÖŞÕò');
-insert into web_regions (region_id,city_id,region) values (445102,4451,'ÏæÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (445103,4451,'³±°²Çø');
-insert into web_regions (region_id,city_id,region) values (445122,4451,'ÈÄÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (445202,4452,'éÅ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (445203,4452,'½Ò¶«Çø');
-insert into web_regions (region_id,city_id,region) values (445222,4452,'½ÒÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (445224,4452,'»İÀ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (445281,4452,'ÆÕÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (445302,4453,'ÔÆ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (445303,4453,'ÔÆ°²Çø');
-insert into web_regions (region_id,city_id,region) values (445321,4453,'ĞÂĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (445322,4453,'ÓôÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (445381,4453,'ÂŞ¶¨ÊĞ');
-insert into web_regions (region_id,city_id,region) values (450102,4501,'ĞËÄşÇø');
-insert into web_regions (region_id,city_id,region) values (450103,4501,'ÇàĞãÇø');
-insert into web_regions (region_id,city_id,region) values (450105,4501,'½­ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (450107,4501,'Î÷ÏçÌÁÇø');
-insert into web_regions (region_id,city_id,region) values (450108,4501,'Á¼ÇìÇø');
-insert into web_regions (region_id,city_id,region) values (450109,4501,'çßÄşÇø');
-insert into web_regions (region_id,city_id,region) values (450122,4501,'ÎäÃùÏØ');
-insert into web_regions (region_id,city_id,region) values (450123,4501,'Â¡°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (450124,4501,'ÂíÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (450125,4501,'ÉÏÁÖÏØ');
-insert into web_regions (region_id,city_id,region) values (450126,4501,'±öÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (450127,4501,'ºáÏØ');
-insert into web_regions (region_id,city_id,region) values (450128,4501,'ˆ°¶«ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (450202,4502,'³ÇÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (450203,4502,'Óã·åÇø');
-insert into web_regions (region_id,city_id,region) values (450204,4502,'ÁøÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (450205,4502,'Áø±±Çø');
-insert into web_regions (region_id,city_id,region) values (450221,4502,'Áø½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (450222,4502,'Áø³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (450223,4502,'Â¹Õ¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (450224,4502,'ÈÚ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (450225,4502,'ÈÚË®Ãç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (450226,4502,'Èı½­¶±×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (450227,4502,'Áø¶«ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (450302,4503,'Ğã·åÇø');
-insert into web_regions (region_id,city_id,region) values (450303,4503,'µş²ÊÇø');
-insert into web_regions (region_id,city_id,region) values (450304,4503,'ÏóÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (450305,4503,'ÆßĞÇÇø');
-insert into web_regions (region_id,city_id,region) values (450311,4503,'ÑãÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (450312,4503,'ÁÙ¹ğÇø');
-insert into web_regions (region_id,city_id,region) values (450321,4503,'ÑôË·ÏØ');
-insert into web_regions (region_id,city_id,region) values (450323,4503,'Áé´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (450324,4503,'È«ÖİÏØ');
-insert into web_regions (region_id,city_id,region) values (450325,4503,'ĞË°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (450326,4503,'ÓÀ¸£ÏØ');
-insert into web_regions (region_id,city_id,region) values (450327,4503,'¹àÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (450328,4503,'ÁúÊ¤¸÷×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (450329,4503,'×ÊÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (450330,4503,'Æ½ÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (450331,4503,'ÀóÆÖÏØ');
-insert into web_regions (region_id,city_id,region) values (450332,4503,'¹§³ÇÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (450403,4504,'ÍòĞãÇø');
-insert into web_regions (region_id,city_id,region) values (450405,4504,'³¤ÖŞÇø');
-insert into web_regions (region_id,city_id,region) values (450406,4504,'ÁúÛ×Çø');
-insert into web_regions (region_id,city_id,region) values (450421,4504,'²ÔÎàÏØ');
-insert into web_regions (region_id,city_id,region) values (450422,4504,'ÌÙÏØ');
-insert into web_regions (region_id,city_id,region) values (450423,4504,'ÃÉÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (450481,4504,'á¯ÏªÊĞ');
-insert into web_regions (region_id,city_id,region) values (450502,4505,'º£³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (450503,4505,'Òøº£Çø');
-insert into web_regions (region_id,city_id,region) values (450512,4505,'ÌúÉ½¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (450521,4505,'ºÏÆÖÏØ');
-insert into web_regions (region_id,city_id,region) values (450602,4506,'¸Û¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (450603,4506,'·À³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (450621,4506,'ÉÏË¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (450681,4506,'¶«ĞËÊĞ');
-insert into web_regions (region_id,city_id,region) values (450702,4507,'ÇÕÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (450703,4507,'ÇÕ±±Çø');
-insert into web_regions (region_id,city_id,region) values (450721,4507,'ÁéÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (450722,4507,'ÆÖ±±ÏØ');
-insert into web_regions (region_id,city_id,region) values (450802,4508,'¸Û±±Çø');
-insert into web_regions (region_id,city_id,region) values (450803,4508,'¸ÛÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (450804,4508,'ñûÌÁÇø');
-insert into web_regions (region_id,city_id,region) values (450821,4508,'Æ½ÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (450881,4508,'¹ğÆ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (450902,4509,'ÓñÖİÇø');
-insert into web_regions (region_id,city_id,region) values (450903,4509,'¸£ÃàÇø');
-insert into web_regions (region_id,city_id,region) values (450904,4509,'Óñ¶«ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (450921,4509,'ÈİÏØ');
-insert into web_regions (region_id,city_id,region) values (450922,4509,'Â½´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (450923,4509,'²©°×ÏØ');
-insert into web_regions (region_id,city_id,region) values (450924,4509,'ĞËÒµÏØ');
-insert into web_regions (region_id,city_id,region) values (450981,4509,'±±Á÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (451002,4510,'ÓÒ½­Çø');
-insert into web_regions (region_id,city_id,region) values (451021,4510,'ÌïÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (451022,4510,'Ìï¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (451023,4510,'Æ½¹ûÏØ');
-insert into web_regions (region_id,city_id,region) values (451024,4510,'µÂ±£ÏØ');
-insert into web_regions (region_id,city_id,region) values (451025,4510,'¾¸Î÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (451026,4510,'ÄÇÆÂÏØ');
-insert into web_regions (region_id,city_id,region) values (451027,4510,'ÁèÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (451028,4510,'ÀÖÒµÏØ');
-insert into web_regions (region_id,city_id,region) values (451029,4510,'ÌïÁÖÏØ');
-insert into web_regions (region_id,city_id,region) values (451030,4510,'Î÷ÁÖÏØ');
-insert into web_regions (region_id,city_id,region) values (451031,4510,'Â¡ÁÖ¸÷×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451102,4511,'°Ë²½Çø');
-insert into web_regions (region_id,city_id,region) values (451121,4511,'ÕÑÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (451122,4511,'ÖÓÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (451123,4511,'¸»´¨Ñş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451124,4511,'Æ½¹ğ¹ÜÀíÇø');
-insert into web_regions (region_id,city_id,region) values (451202,4512,'½ğ³Ç½­Çø');
-insert into web_regions (region_id,city_id,region) values (451221,4512,'ÄÏµ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (451222,4512,'Ìì¶ëÏØ');
-insert into web_regions (region_id,city_id,region) values (451223,4512,'·ïÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (451224,4512,'¶«À¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (451225,4512,'ÂŞ³ÇØïÀĞ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451226,4512,'»·½­Ã«ÄÏ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451227,4512,'°ÍÂíÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451228,4512,'¶¼°²Ñş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451229,4512,'´ó»¯Ñş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451281,4512,'ÒËÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (451302,4513,'ĞË±öÇø');
-insert into web_regions (region_id,city_id,region) values (451321,4513,'ĞÃ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (451322,4513,'ÏóÖİÏØ');
-insert into web_regions (region_id,city_id,region) values (451323,4513,'ÎäĞûÏØ');
-insert into web_regions (region_id,city_id,region) values (451324,4513,'½ğĞãÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (451381,4513,'ºÏÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (451402,4514,'½­ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (451421,4514,'·öËçÏØ');
-insert into web_regions (region_id,city_id,region) values (451422,4514,'ÄşÃ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (451423,4514,'ÁúÖİÏØ');
-insert into web_regions (region_id,city_id,region) values (451424,4514,'´óĞÂÏØ');
-insert into web_regions (region_id,city_id,region) values (451425,4514,'ÌìµÈÏØ');
-insert into web_regions (region_id,city_id,region) values (451481,4514,'Æ¾ÏéÊĞ');
-insert into web_regions (region_id,city_id,region) values (460105,4601,'ĞãÓ¢Çø');
-insert into web_regions (region_id,city_id,region) values (460106,4601,'Áú»ªÇø');
-insert into web_regions (region_id,city_id,region) values (460107,4601,'ÇíÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (460108,4601,'ÃÀÀ¼Çø');
-insert into web_regions (region_id,city_id,region) values (460202,4602,'º£ÌÄÇø');
-insert into web_regions (region_id,city_id,region) values (460203,4602,'¼ªÑôÇø');
-insert into web_regions (region_id,city_id,region) values (460204,4602,'ÌìÑÄÇø');
-insert into web_regions (region_id,city_id,region) values (460205,4602,'ÑÂÖİÇø');
-insert into web_regions (region_id,city_id,region) values (460321,4603,'Î÷É³Èºµº');
-insert into web_regions (region_id,city_id,region) values (460322,4603,'ÄÏÉ³Èºµº');
-insert into web_regions (region_id,city_id,region) values (460323,4603,'ÖĞÉ³Èºµº');
-insert into web_regions (region_id,city_id,region) values (469001,4690,'ÎåÖ¸É½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (469002,4690,'Çíº£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (469003,4690,'ÙÙÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (469005,4690,'ÎÄ²ıÊĞ');
-insert into web_regions (region_id,city_id,region) values (469006,4690,'ÍòÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (469007,4690,'¶«·½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (469021,4690,'¶¨°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (469022,4690,'ÍÍ²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (469023,4690,'³ÎÂõÏØ');
-insert into web_regions (region_id,city_id,region) values (469024,4690,'ÁÙ¸ßÏØ');
-insert into web_regions (region_id,city_id,region) values (469025,4690,'°×É³Àè×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (469026,4690,'²ı½­Àè×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (469027,4690,'ÀÖ¶«Àè×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (469028,4690,'ÁêË®Àè×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (469029,4690,'±£Í¤Àè×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (469030,4690,'ÇíÖĞÀè×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (500101,5001,'ÍòÖİÇø');
-insert into web_regions (region_id,city_id,region) values (500102,5001,'¸¢ÁêÇø');
-insert into web_regions (region_id,city_id,region) values (500103,5001,'ÓåÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (500104,5001,'´ó¶É¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (500105,5001,'½­±±Çø');
-insert into web_regions (region_id,city_id,region) values (500106,5001,'É³Æº°ÓÇø');
-insert into web_regions (region_id,city_id,region) values (500107,5001,'¾ÅÁúÆÂÇø');
-insert into web_regions (region_id,city_id,region) values (500108,5001,'ÄÏ°¶Çø');
-insert into web_regions (region_id,city_id,region) values (500109,5001,'±±íÕÇø');
-insert into web_regions (region_id,city_id,region) values (500110,5001,'ôë½­Çø');
-insert into web_regions (region_id,city_id,region) values (500111,5001,'´ó×ãÇø');
-insert into web_regions (region_id,city_id,region) values (500112,5001,'Óå±±Çø');
-insert into web_regions (region_id,city_id,region) values (500113,5001,'°ÍÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (500114,5001,'Ç­½­Çø');
-insert into web_regions (region_id,city_id,region) values (500115,5001,'³¤ÊÙÇø');
-insert into web_regions (region_id,city_id,region) values (500116,5001,'½­½òÇø');
-insert into web_regions (region_id,city_id,region) values (500117,5001,'ºÏ´¨Çø');
-insert into web_regions (region_id,city_id,region) values (500118,5001,'ÓÀ´¨Çø');
-insert into web_regions (region_id,city_id,region) values (500119,5001,'ÄÏ´¨Çø');
-insert into web_regions (region_id,city_id,region) values (500120,5001,'èµÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (500151,5001,'Í­ÁºÇø');
-insert into web_regions (region_id,city_id,region) values (500223,5001,'äüÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (500226,5001,'ÈÙ²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (500228,5001,'ÁºÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (500229,5001,'³Ç¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (500230,5001,'·á¶¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (500231,5001,'µæ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (500232,5001,'ÎäÂ¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (500233,5001,'ÖÒÏØ');
-insert into web_regions (region_id,city_id,region) values (500234,5001,'¿ªÏØ');
-insert into web_regions (region_id,city_id,region) values (500235,5001,'ÔÆÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (500236,5001,'·î½ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (500237,5001,'Î×É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (500238,5001,'Î×ÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (500240,5001,'Ê¯ÖùÍÁ¼Ò×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (500241,5001,'ĞãÉ½ÍÁ¼Ò×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (500242,5001,'ÓÏÑôÍÁ¼Ò×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (500243,5001,'ÅíË®Ãç×åÍÁ¼Ò×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (500301,5003,'±±²¿ĞÂÇø');
-insert into web_regions (region_id,city_id,region) values (500302,5003,'±£Ë°¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (500303,5003,'¹¤ÒµÔ°Çø');
-insert into web_regions (region_id,city_id,region) values (510104,5101,'½õ½­Çø');
-insert into web_regions (region_id,city_id,region) values (510105,5101,'ÇàÑòÇø');
-insert into web_regions (region_id,city_id,region) values (510106,5101,'½ğÅ£Çø');
-insert into web_regions (region_id,city_id,region) values (510107,5101,'ÎäºîÇø');
-insert into web_regions (region_id,city_id,region) values (510108,5101,'³É»ªÇø');
-insert into web_regions (region_id,city_id,region) values (510112,5101,'ÁúÈªæäÇø');
-insert into web_regions (region_id,city_id,region) values (510113,5101,'Çà°×½­Çø');
-insert into web_regions (region_id,city_id,region) values (510114,5101,'ĞÂ¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (510115,5101,'ÎÂ½­Çø');
-insert into web_regions (region_id,city_id,region) values (510121,5101,'½ğÌÃÏØ');
-insert into web_regions (region_id,city_id,region) values (510122,5101,'Ë«Á÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (510124,5101,'Û¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (510129,5101,'´óÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (510131,5101,'ÆÑ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (510132,5101,'ĞÂ½òÏØ');
-insert into web_regions (region_id,city_id,region) values (510181,5101,'¶¼½­ÑßÊĞ');
-insert into web_regions (region_id,city_id,region) values (510182,5101,'ÅíÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (510183,5101,'ÚöáÁÊĞ');
-insert into web_regions (region_id,city_id,region) values (510184,5101,'³çÖİÊĞ');
-insert into web_regions (region_id,city_id,region) values (510302,5103,'×ÔÁ÷¾®Çø');
-insert into web_regions (region_id,city_id,region) values (510303,5103,'¹±¾®Çø');
-insert into web_regions (region_id,city_id,region) values (510304,5103,'´ó°²Çø');
-insert into web_regions (region_id,city_id,region) values (510311,5103,'ÑØÌ²Çø');
-insert into web_regions (region_id,city_id,region) values (510321,5103,'ÈÙÏØ');
-insert into web_regions (region_id,city_id,region) values (510322,5103,'¸»Ë³ÏØ');
-insert into web_regions (region_id,city_id,region) values (510402,5104,'¶«Çø');
-insert into web_regions (region_id,city_id,region) values (510403,5104,'Î÷Çø');
-insert into web_regions (region_id,city_id,region) values (510411,5104,'ÈÊºÍÇø');
-insert into web_regions (region_id,city_id,region) values (510421,5104,'Ã×Ò×ÏØ');
-insert into web_regions (region_id,city_id,region) values (510422,5104,'ÑÎ±ßÏØ');
-insert into web_regions (region_id,city_id,region) values (510502,5105,'½­ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (510503,5105,'ÄÉÏªÇø');
-insert into web_regions (region_id,city_id,region) values (510504,5105,'ÁúÂíÌ¶Çø');
-insert into web_regions (region_id,city_id,region) values (510521,5105,'ãòÏØ');
-insert into web_regions (region_id,city_id,region) values (510522,5105,'ºÏ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (510524,5105,'ĞğÓÀÏØ');
-insert into web_regions (region_id,city_id,region) values (510525,5105,'¹ÅİşÏØ');
-insert into web_regions (region_id,city_id,region) values (510603,5106,'ìºÑôÇø');
-insert into web_regions (region_id,city_id,region) values (510623,5106,'ÖĞ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (510626,5106,'ÂŞ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (510681,5106,'¹ãººÊĞ');
-insert into web_regions (region_id,city_id,region) values (510682,5106,'Ê²ÚúÊĞ');
-insert into web_regions (region_id,city_id,region) values (510683,5106,'ÃàÖñÊĞ');
-insert into web_regions (region_id,city_id,region) values (510703,5107,'¸¢³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (510704,5107,'ÓÎÏÉÇø');
-insert into web_regions (region_id,city_id,region) values (510722,5107,'ÈıÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (510723,5107,'ÑÎÍ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (510724,5107,'°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (510725,5107,'è÷äüÏØ');
-insert into web_regions (region_id,city_id,region) values (510726,5107,'±±´¨Ç¼×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (510727,5107,'Æ½ÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (510781,5107,'½­ÓÍÊĞ');
-insert into web_regions (region_id,city_id,region) values (510802,5108,'ÀûÖİÇø');
-insert into web_regions (region_id,city_id,region) values (510811,5108,'ÕÑ»¯Çø');
-insert into web_regions (region_id,city_id,region) values (510812,5108,'³¯ÌìÇø');
-insert into web_regions (region_id,city_id,region) values (510821,5108,'Íú²ÔÏØ');
-insert into web_regions (region_id,city_id,region) values (510822,5108,'Çà´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (510823,5108,'½£¸óÏØ');
-insert into web_regions (region_id,city_id,region) values (510824,5108,'²ÔÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (510903,5109,'´¬É½Çø');
-insert into web_regions (region_id,city_id,region) values (510904,5109,'°²¾ÓÇø');
-insert into web_regions (region_id,city_id,region) values (510921,5109,'ÅîÏªÏØ');
-insert into web_regions (region_id,city_id,region) values (510922,5109,'ÉäºéÏØ');
-insert into web_regions (region_id,city_id,region) values (510923,5109,'´óÓ¢ÏØ');
-insert into web_regions (region_id,city_id,region) values (511002,5110,'ÊĞÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (511011,5110,'¶«ĞËÇø');
-insert into web_regions (region_id,city_id,region) values (511024,5110,'ÍşÔ¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (511025,5110,'×ÊÖĞÏØ');
-insert into web_regions (region_id,city_id,region) values (511028,5110,'Â¡²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (511102,5111,'ÊĞÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (511111,5111,'É³ÍåÇø');
-insert into web_regions (region_id,city_id,region) values (511112,5111,'ÎåÍ¨ÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (511113,5111,'½ğ¿ÚºÓÇø');
-insert into web_regions (region_id,city_id,region) values (511123,5111,'êùÎªÏØ');
-insert into web_regions (region_id,city_id,region) values (511124,5111,'¾®ÑĞÏØ');
-insert into web_regions (region_id,city_id,region) values (511126,5111,'¼Ğ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (511129,5111,'ãå´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (511132,5111,'¶ë±ßÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (511133,5111,'Âí±ßÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (511181,5111,'¶ëÃ¼É½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (511302,5113,'Ë³ÇìÇø');
-insert into web_regions (region_id,city_id,region) values (511303,5113,'¸ßÆºÇø');
-insert into web_regions (region_id,city_id,region) values (511304,5113,'¼ÎÁêÇø');
-insert into web_regions (region_id,city_id,region) values (511321,5113,'ÄÏ²¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (511322,5113,'ÓªÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (511323,5113,'Åî°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (511324,5113,'ÒÇÂ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (511325,5113,'Î÷³äÏØ');
-insert into web_regions (region_id,city_id,region) values (511381,5113,'ãÏÖĞÊĞ');
-insert into web_regions (region_id,city_id,region) values (511402,5114,'¶«ÆÂÇø');
-insert into web_regions (region_id,city_id,region) values (511403,5114,'ÅíÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (511421,5114,'ÈÊÊÙÏØ');
-insert into web_regions (region_id,city_id,region) values (511423,5114,'ºéÑÅÏØ');
-insert into web_regions (region_id,city_id,region) values (511424,5114,'µ¤ÀâÏØ');
-insert into web_regions (region_id,city_id,region) values (511425,5114,'ÇàÉñÏØ');
-insert into web_regions (region_id,city_id,region) values (511502,5115,'´äÆÁÇø');
-insert into web_regions (region_id,city_id,region) values (511503,5115,'ÄÏÏªÇø');
-insert into web_regions (region_id,city_id,region) values (511521,5115,'ÒË±öÏØ');
-insert into web_regions (region_id,city_id,region) values (511523,5115,'½­°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (511524,5115,'³¤ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (511525,5115,'¸ßÏØ');
-insert into web_regions (region_id,city_id,region) values (511526,5115,'çîÏØ');
-insert into web_regions (region_id,city_id,region) values (511527,5115,'óŞÁ¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (511528,5115,'ĞËÎÄÏØ');
-insert into web_regions (region_id,city_id,region) values (511529,5115,'ÆÁÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (511602,5116,'¹ã°²Çø');
-insert into web_regions (region_id,city_id,region) values (511603,5116,'Ç°·æÇø');
-insert into web_regions (region_id,city_id,region) values (511621,5116,'ÔÀ³ØÏØ');
-insert into web_regions (region_id,city_id,region) values (511622,5116,'ÎäÊ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (511623,5116,'ÁÚË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (511681,5116,'»ªİöÊĞ');
-insert into web_regions (region_id,city_id,region) values (511702,5117,'Í¨´¨Çø');
-insert into web_regions (region_id,city_id,region) values (511703,5117,'´ï´¨Çø');
-insert into web_regions (region_id,city_id,region) values (511722,5117,'ĞûººÏØ');
-insert into web_regions (region_id,city_id,region) values (511723,5117,'¿ª½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (511724,5117,'´óÖñÏØ');
-insert into web_regions (region_id,city_id,region) values (511725,5117,'ÇşÏØ');
-insert into web_regions (region_id,city_id,region) values (511781,5117,'ÍòÔ´ÊĞ');
-insert into web_regions (region_id,city_id,region) values (511802,5118,'Óê³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (511803,5118,'ÃûÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (511822,5118,'Üş¾­ÏØ');
-insert into web_regions (region_id,city_id,region) values (511823,5118,'ººÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (511824,5118,'Ê¯ÃŞÏØ');
-insert into web_regions (region_id,city_id,region) values (511825,5118,'ÌìÈ«ÏØ');
-insert into web_regions (region_id,city_id,region) values (511826,5118,'Â«É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (511827,5118,'±¦ĞËÏØ');
-insert into web_regions (region_id,city_id,region) values (511902,5119,'°ÍÖİÇø');
-insert into web_regions (region_id,city_id,region) values (511903,5119,'¶÷ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (511921,5119,'Í¨½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (511922,5119,'ÄÏ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (511923,5119,'Æ½²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (512002,5120,'Ñã½­Çø');
-insert into web_regions (region_id,city_id,region) values (512021,5120,'°²ÔÀÏØ');
-insert into web_regions (region_id,city_id,region) values (512022,5120,'ÀÖÖÁÏØ');
-insert into web_regions (region_id,city_id,region) values (512081,5120,'¼òÑôÊĞ');
-insert into web_regions (region_id,city_id,region) values (513221,5132,'ãë´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (513222,5132,'ÀíÏØ');
-insert into web_regions (region_id,city_id,region) values (513223,5132,'Ã¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (513224,5132,'ËÉÅËÏØ');
-insert into web_regions (region_id,city_id,region) values (513225,5132,'¾ÅÕ¯¹µÏØ');
-insert into web_regions (region_id,city_id,region) values (513226,5132,'½ğ´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (513227,5132,'Ğ¡½ğÏØ');
-insert into web_regions (region_id,city_id,region) values (513228,5132,'ºÚË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (513229,5132,'Âí¶û¿µÏØ');
-insert into web_regions (region_id,city_id,region) values (513230,5132,'ÈÀÌÁÏØ');
-insert into web_regions (region_id,city_id,region) values (513231,5132,'°¢°ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (513232,5132,'Èô¶û¸ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (513233,5132,'ºìÔ­ÏØ');
-insert into web_regions (region_id,city_id,region) values (513321,5133,'¿µ¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (513322,5133,'ãò¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (513323,5133,'µ¤°ÍÏØ');
-insert into web_regions (region_id,city_id,region) values (513324,5133,'¾ÅÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (513325,5133,'ÑÅ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (513326,5133,'µÀæÚÏØ');
-insert into web_regions (region_id,city_id,region) values (513327,5133,'Â¯»ôÏØ');
-insert into web_regions (region_id,city_id,region) values (513328,5133,'¸Ê×ÎÏØ');
-insert into web_regions (region_id,city_id,region) values (513329,5133,'ĞÂÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (513330,5133,'µÂ¸ñÏØ');
-insert into web_regions (region_id,city_id,region) values (513331,5133,'°×ÓñÏØ');
-insert into web_regions (region_id,city_id,region) values (513332,5133,'Ê¯ÇşÏØ');
-insert into web_regions (region_id,city_id,region) values (513333,5133,'É«´ïÏØ');
-insert into web_regions (region_id,city_id,region) values (513334,5133,'ÀíÌÁÏØ');
-insert into web_regions (region_id,city_id,region) values (513335,5133,'°ÍÌÁÏØ');
-insert into web_regions (region_id,city_id,region) values (513336,5133,'Ïç³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (513337,5133,'µ¾³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (513338,5133,'µÃÈÙÏØ');
-insert into web_regions (region_id,city_id,region) values (513401,5134,'Î÷²ıÊĞ');
-insert into web_regions (region_id,city_id,region) values (513422,5134,'Ä¾Àï²Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (513423,5134,'ÑÎÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (513424,5134,'µÂ²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (513425,5134,'»áÀíÏØ');
-insert into web_regions (region_id,city_id,region) values (513426,5134,'»á¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (513427,5134,'ÄşÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (513428,5134,'ÆÕ¸ñÏØ');
-insert into web_regions (region_id,city_id,region) values (513429,5134,'²¼ÍÏÏØ');
-insert into web_regions (region_id,city_id,region) values (513430,5134,'½ğÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (513431,5134,'ÕÑ¾õÏØ');
-insert into web_regions (region_id,city_id,region) values (513432,5134,'Ï²µÂÏØ');
-insert into web_regions (region_id,city_id,region) values (513433,5134,'ÃáÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (513434,5134,'Ô½Î÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (513435,5134,'¸ÊÂåÏØ');
-insert into web_regions (region_id,city_id,region) values (513436,5134,'ÃÀ¹ÃÏØ');
-insert into web_regions (region_id,city_id,region) values (513437,5134,'À×²¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (520102,5201,'ÄÏÃ÷Çø');
-insert into web_regions (region_id,city_id,region) values (520103,5201,'ÔÆÑÒÇø');
-insert into web_regions (region_id,city_id,region) values (520111,5201,'»¨ÏªÇø');
-insert into web_regions (region_id,city_id,region) values (520112,5201,'ÎÚµ±Çø');
-insert into web_regions (region_id,city_id,region) values (520113,5201,'°×ÔÆÇø');
-insert into web_regions (region_id,city_id,region) values (520115,5201,'¹ÛÉ½ºşÇø');
-insert into web_regions (region_id,city_id,region) values (520121,5201,'¿ªÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (520122,5201,'Ï¢·éÏØ');
-insert into web_regions (region_id,city_id,region) values (520123,5201,'ĞŞÎÄÏØ');
-insert into web_regions (region_id,city_id,region) values (520181,5201,'ÇåÕòÊĞ');
-insert into web_regions (region_id,city_id,region) values (520201,5202,'ÖÓÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (520203,5202,'ÁùÖ¦ÌØÇø');
-insert into web_regions (region_id,city_id,region) values (520221,5202,'Ë®³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (520222,5202,'ÅÌÏØ');
-insert into web_regions (region_id,city_id,region) values (520302,5203,'ºì»¨¸ÚÇø');
-insert into web_regions (region_id,city_id,region) values (520303,5203,'»ã´¨Çø');
-insert into web_regions (region_id,city_id,region) values (520321,5203,'×ñÒåÏØ');
-insert into web_regions (region_id,city_id,region) values (520322,5203,'Í©è÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (520323,5203,'ËçÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (520324,5203,'Õı°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (520325,5203,'µÀÕæØîÀĞ×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520326,5203,'Îñ´¨ØîÀĞ×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520327,5203,'·ï¸ÔÏØ');
-insert into web_regions (region_id,city_id,region) values (520328,5203,'äØÌ¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (520329,5203,'ÓàÇìÏØ');
-insert into web_regions (region_id,city_id,region) values (520330,5203,'Ï°Ë®ÏØ');
-insert into web_regions (region_id,city_id,region) values (520381,5203,'³àË®ÊĞ');
-insert into web_regions (region_id,city_id,region) values (520382,5203,'ÈÊ»³ÊĞ');
-insert into web_regions (region_id,city_id,region) values (520402,5204,'Î÷ĞãÇø');
-insert into web_regions (region_id,city_id,region) values (520421,5204,'Æ½°ÓÇø');
-insert into web_regions (region_id,city_id,region) values (520422,5204,'ÆÕ¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (520423,5204,'ÕòÄş²¼ÒÀ×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520424,5204,'¹ØÁë²¼ÒÀ×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520425,5204,'×ÏÔÆÃç×å²¼ÒÀ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520502,5205,'ÆßĞÇ¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (520521,5205,'´ó·½ÏØ');
-insert into web_regions (region_id,city_id,region) values (520522,5205,'Ç­Î÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (520523,5205,'½ğÉ³ÏØ');
-insert into web_regions (region_id,city_id,region) values (520524,5205,'Ö¯½ğÏØ');
-insert into web_regions (region_id,city_id,region) values (520525,5205,'ÄÉÓºÏØ');
-insert into web_regions (region_id,city_id,region) values (520526,5205,'ÍşÄşÒÍ×å»Ø×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520527,5205,'ºÕÕÂÏØ');
-insert into web_regions (region_id,city_id,region) values (520602,5206,'±Ì½­Çø');
-insert into web_regions (region_id,city_id,region) values (520603,5206,'ÍòÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (520621,5206,'½­¿ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (520622,5206,'ÓñÆÁ¶±×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520623,5206,'Ê¯ÚäÏØ');
-insert into web_regions (region_id,city_id,region) values (520624,5206,'Ë¼ÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (520625,5206,'Ó¡½­ÍÁ¼Ò×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520626,5206,'µÂ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (520627,5206,'ÑØºÓÍÁ¼Ò×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (520628,5206,'ËÉÌÒÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (522301,5223,'ĞËÒåÊĞ ');
-insert into web_regions (region_id,city_id,region) values (522322,5223,'ĞËÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (522323,5223,'ÆÕ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (522324,5223,'ÇçÂ¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (522325,5223,'Õê·áÏØ');
-insert into web_regions (region_id,city_id,region) values (522326,5223,'ÍûÚÓÏØ');
-insert into web_regions (region_id,city_id,region) values (522327,5223,'²áºàÏØ');
-insert into web_regions (region_id,city_id,region) values (522328,5223,'°²ÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (522601,5226,'¿­ÀïÊĞ');
-insert into web_regions (region_id,city_id,region) values (522622,5226,'»ÆÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (522623,5226,'Ê©±üÏØ');
-insert into web_regions (region_id,city_id,region) values (522624,5226,'ÈıËëÏØ');
-insert into web_regions (region_id,city_id,region) values (522625,5226,'ÕòÔ¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (522626,5226,'á¯¹®ÏØ');
-insert into web_regions (region_id,city_id,region) values (522627,5226,'ÌìÖùÏØ');
-insert into web_regions (region_id,city_id,region) values (522628,5226,'½õÆÁÏØ');
-insert into web_regions (region_id,city_id,region) values (522629,5226,'½£ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (522630,5226,'Ì¨½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (522631,5226,'ÀèÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (522632,5226,'éÅ½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (522633,5226,'´Ó½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (522634,5226,'À×É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (522635,5226,'Âé½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (522636,5226,'µ¤Õ¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (522701,5227,'¶¼ÔÈÊĞ');
-insert into web_regions (region_id,city_id,region) values (522702,5227,'¸£ÈªÊĞ');
-insert into web_regions (region_id,city_id,region) values (522722,5227,'Àó²¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (522723,5227,'¹ó¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (522725,5227,'ÎÍ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (522726,5227,'¶ÀÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (522727,5227,'Æ½ÌÁÏØ');
-insert into web_regions (region_id,city_id,region) values (522728,5227,'ÂŞµéÏØ');
-insert into web_regions (region_id,city_id,region) values (522729,5227,'³¤Ë³ÏØ');
-insert into web_regions (region_id,city_id,region) values (522730,5227,'ÁúÀïÏØ');
-insert into web_regions (region_id,city_id,region) values (522731,5227,'»İË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (522732,5227,'Èı¶¼Ë®×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530102,5301,'Îå»ªÇø');
-insert into web_regions (region_id,city_id,region) values (530103,5301,'ÅÌÁúÇø');
-insert into web_regions (region_id,city_id,region) values (530111,5301,'¹Ù¶ÉÇø');
-insert into web_regions (region_id,city_id,region) values (530112,5301,'Î÷É½Çø');
-insert into web_regions (region_id,city_id,region) values (530113,5301,'¶«´¨Çø');
-insert into web_regions (region_id,city_id,region) values (530114,5301,'³Ê¹±Çø');
-insert into web_regions (region_id,city_id,region) values (530122,5301,'½úÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (530124,5301,'¸»ÃñÏØ');
-insert into web_regions (region_id,city_id,region) values (530125,5301,'ÒËÁ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (530126,5301,'Ê¯ÁÖÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530127,5301,'áÔÃ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (530128,5301,'Â»È°ÒÍ×åÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530129,5301,'Ñ°µé»Ø×åÒÍ×å×ÔÖÎÏØ ');
-insert into web_regions (region_id,city_id,region) values (530181,5301,'°²ÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (530302,5303,'÷è÷ëÇø');
-insert into web_regions (region_id,city_id,region) values (530321,5303,'ÂíÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (530322,5303,'Â½Á¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (530323,5303,'Ê¦×ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (530324,5303,'ÂŞÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (530325,5303,'¸»Ô´ÏØ');
-insert into web_regions (region_id,city_id,region) values (530326,5303,'»áÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (530328,5303,'Õ´ÒæÏØ');
-insert into web_regions (region_id,city_id,region) values (530381,5303,'ĞûÍşÊĞ');
-insert into web_regions (region_id,city_id,region) values (530402,5304,'ºìËşÇø');
-insert into web_regions (region_id,city_id,region) values (530421,5304,'½­´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (530422,5304,'³Î½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (530423,5304,'Í¨º£ÏØ');
-insert into web_regions (region_id,city_id,region) values (530424,5304,'»ªÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (530425,5304,'Ò×ÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (530426,5304,'¶ëÉ½ÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530427,5304,'ĞÂÆ½ÒÍ×å´ö×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530428,5304,'Ôª½­¹şÄá×åÒÍ×å´ö×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530502,5305,'Â¡ÑôÇø');
-insert into web_regions (region_id,city_id,region) values (530521,5305,'Ê©µéÏØ');
-insert into web_regions (region_id,city_id,region) values (530522,5305,'ÌÚ³åÏØ');
-insert into web_regions (region_id,city_id,region) values (530523,5305,'ÁúÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (530524,5305,'²ıÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (530602,5306,'ÕÑÑôÇø');
-insert into web_regions (region_id,city_id,region) values (530621,5306,'Â³µéÏØ');
-insert into web_regions (region_id,city_id,region) values (530622,5306,'ÇÉ¼ÒÏØ');
-insert into web_regions (region_id,city_id,region) values (530623,5306,'ÑÎ½òÏØ');
-insert into web_regions (region_id,city_id,region) values (530624,5306,'´ó¹ØÏØ');
-insert into web_regions (region_id,city_id,region) values (530625,5306,'ÓÀÉÆÏØ');
-insert into web_regions (region_id,city_id,region) values (530626,5306,'Ëç½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (530627,5306,'ÕòĞÛÏØ');
-insert into web_regions (region_id,city_id,region) values (530628,5306,'ÒÍÁ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (530629,5306,'ÍşĞÅÏØ');
-insert into web_regions (region_id,city_id,region) values (530630,5306,'Ë®¸»ÏØ');
-insert into web_regions (region_id,city_id,region) values (530702,5307,'¹Å³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (530721,5307,'ÓñÁúÄÉÎ÷×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530722,5307,'ÓÀÊ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (530723,5307,'»ªÆºÏØ');
-insert into web_regions (region_id,city_id,region) values (530724,5307,'ÄşİõÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530802,5308,'Ë¼Ã©Çø');
-insert into web_regions (region_id,city_id,region) values (530821,5308,'Äş¶ı¹şÄá×åÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530822,5308,'Ä«½­¹şÄá×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530823,5308,'¾°¶«ÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530824,5308,'¾°¹È´ö×åÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530825,5308,'ÕòãäÒÍ×å¹şÄá×åÀ­ìï×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530826,5308,'½­³Ç¹şÄá×åÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530827,5308,'ÃÏÁ¬´ö×åÀ­ìï×åØô×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530828,5308,'À½²×À­ìï×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530829,5308,'Î÷ÃËØô×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530902,5309,'ÁÙÏèÇø');
-insert into web_regions (region_id,city_id,region) values (530921,5309,'·ïÇìÏØ');
-insert into web_regions (region_id,city_id,region) values (530922,5309,'ÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (530923,5309,'ÓÀµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (530924,5309,'Õò¿µÏØ');
-insert into web_regions (region_id,city_id,region) values (530925,5309,'Ë«½­À­ìï×åØô×å²¼ÀÊ×å´ö×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530926,5309,'¹¢Âí´ö×åØô×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (530927,5309,'²×Ô´Øô×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532301,5323,'³şĞÛÊĞ');
-insert into web_regions (region_id,city_id,region) values (532322,5323,'Ë«°ØÏØ');
-insert into web_regions (region_id,city_id,region) values (532323,5323,'Ä²¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (532324,5323,'ÄÏ»ªÏØ');
-insert into web_regions (region_id,city_id,region) values (532325,5323,'Ò¦°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (532326,5323,'´óÒ¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (532327,5323,'ÓÀÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (532328,5323,'ÔªÄ±ÏØ');
-insert into web_regions (region_id,city_id,region) values (532329,5323,'Îä¶¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (532331,5323,'Â»·áÏØ');
-insert into web_regions (region_id,city_id,region) values (532501,5325,'¸ö¾ÉÊĞ');
-insert into web_regions (region_id,city_id,region) values (532502,5325,'¿ªÔ¶ÊĞ');
-insert into web_regions (region_id,city_id,region) values (532503,5325,'ÃÉ×ÔÊĞ');
-insert into web_regions (region_id,city_id,region) values (532504,5325,'ÃÖÀÕÊĞ');
-insert into web_regions (region_id,city_id,region) values (532523,5325,'ÆÁ±ßÃç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532524,5325,'½¨Ë®ÏØ');
-insert into web_regions (region_id,city_id,region) values (532525,5325,'Ê¯ÆÁÏØ');
-insert into web_regions (region_id,city_id,region) values (532527,5325,'ãòÎ÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (532528,5325,'ÔªÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (532529,5325,'ºìºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (532530,5325,'½ğÆ½Ãç×åÑş×å´ö×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532531,5325,'ÂÌ´ºÏØ');
-insert into web_regions (region_id,city_id,region) values (532532,5325,'ºÓ¿ÚÑş×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532601,5326,'ÎÄÉ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (532622,5326,'ÑâÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (532623,5326,'Î÷³ëÏØ');
-insert into web_regions (region_id,city_id,region) values (532624,5326,'ÂéÀõÆÂÏØ');
-insert into web_regions (region_id,city_id,region) values (532625,5326,'Âí¹ØÏØ');
-insert into web_regions (region_id,city_id,region) values (532626,5326,'Çğ±±ÏØ');
-insert into web_regions (region_id,city_id,region) values (532627,5326,'¹ãÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (532628,5326,'¸»ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (532801,5328,'¾°ºéÊĞ');
-insert into web_regions (region_id,city_id,region) values (532822,5328,'ÛÂº£ÏØ');
-insert into web_regions (region_id,city_id,region) values (532823,5328,'ÛÂÀ°ÏØ');
-insert into web_regions (region_id,city_id,region) values (532901,5329,'´óÀíÊĞ');
-insert into web_regions (region_id,city_id,region) values (532922,5329,'Ñúå¨ÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532923,5329,'ÏéÔÆÏØ');
-insert into web_regions (region_id,city_id,region) values (532924,5329,'±ö´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (532925,5329,'ÃÖ¶ÉÏØ');
-insert into web_regions (region_id,city_id,region) values (532926,5329,'ÄÏ½§ÒÍ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532927,5329,'Î¡É½ÒÍ×å»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (532928,5329,'ÓÀÆ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (532929,5329,'ÔÆÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (532930,5329,'¶ıÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (532931,5329,'½£´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (532932,5329,'º×ÇìÏØ');
-insert into web_regions (region_id,city_id,region) values (533102,5331,'ÈğÀöÊĞ');
-insert into web_regions (region_id,city_id,region) values (533103,5331,'Ã¢ÊĞ');
-insert into web_regions (region_id,city_id,region) values (533122,5331,'ÁººÓÏØ');
-insert into web_regions (region_id,city_id,region) values (533123,5331,'Ó¯½­ÏØ');
-insert into web_regions (region_id,city_id,region) values (533124,5331,'Â¤´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (533321,5333,'ãòË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (533323,5333,'¸£¹±ÏØ');
-insert into web_regions (region_id,city_id,region) values (533324,5333,'¹±É½¶ÀÁú×åÅ­×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (533325,5333,'À¼Æº°××åÆÕÃ××å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (533421,5334,'Ïã¸ñÀïÀ­ÊĞ');
-insert into web_regions (region_id,city_id,region) values (533422,5334,'µÂÇÕÏØ');
-insert into web_regions (region_id,city_id,region) values (533423,5334,'Î¬Î÷ÀüËÛ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (540102,5401,'³Ç¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (540121,5401,'ÁÖÖÜÏØ');
-insert into web_regions (region_id,city_id,region) values (540122,5401,'µ±ĞÛÏØ');
-insert into web_regions (region_id,city_id,region) values (540123,5401,'ÄáÄ¾ÏØ');
-insert into web_regions (region_id,city_id,region) values (540124,5401,'ÇúË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (540125,5401,'¶ÑÁúµÂÇìÏØ');
-insert into web_regions (region_id,city_id,region) values (540126,5401,'´ï×ÎÏØ');
-insert into web_regions (region_id,city_id,region) values (540127,5401,'Ä«Öñ¹¤¿¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (540202,5402,'É£Öé×ÎÇø');
-insert into web_regions (region_id,city_id,region) values (540221,5402,'ÄÏÄ¾ÁÖÏØ');
-insert into web_regions (region_id,city_id,region) values (540222,5402,'½­×ÎÏØ');
-insert into web_regions (region_id,city_id,region) values (540223,5402,'¶¨ÈÕÏØ');
-insert into web_regions (region_id,city_id,region) values (540224,5402,'ÈøåÈÏØ');
-insert into web_regions (region_id,city_id,region) values (540225,5402,'À­×ÎÏØ');
-insert into web_regions (region_id,city_id,region) values (540226,5402,'°ºÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (540227,5402,'Ğ»Í¨ÃÅÏØ');
-insert into web_regions (region_id,city_id,region) values (540228,5402,'°×ÀÊÏØ');
-insert into web_regions (region_id,city_id,region) values (540229,5402,'ÈÊ²¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (540230,5402,'¿µÂíÏØ');
-insert into web_regions (region_id,city_id,region) values (540231,5402,'¶¨½áÏØ');
-insert into web_regions (region_id,city_id,region) values (540232,5402,'ÖÙ°ÍÏØ');
-insert into web_regions (region_id,city_id,region) values (540233,5402,'ÑÇ¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (540234,5402,'¼ªÂ¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (540235,5402,'ÄôÀ­Ä¾ÏØ');
-insert into web_regions (region_id,city_id,region) values (540236,5402,'Èø¸ÂÏØ');
-insert into web_regions (region_id,city_id,region) values (540237,5402,'¸Ú°ÍÏØ');
-insert into web_regions (region_id,city_id,region) values (540302,5403,'¿¨ÈôÇø');
-insert into web_regions (region_id,city_id,region) values (540321,5403,'½­´ïÏØ');
-insert into web_regions (region_id,city_id,region) values (540322,5403,'¹±¾õÏØ');
-insert into web_regions (region_id,city_id,region) values (540323,5403,'ÀàÎÚÆëÏØ');
-insert into web_regions (region_id,city_id,region) values (540324,5403,'¶¡ÇàÏØ');
-insert into web_regions (region_id,city_id,region) values (540325,5403,'²ìÑÅÏØ');
-insert into web_regions (region_id,city_id,region) values (540326,5403,'°ËËŞÏØ');
-insert into web_regions (region_id,city_id,region) values (540327,5403,'×ó¹±ÏØ');
-insert into web_regions (region_id,city_id,region) values (540328,5403,'Ã¢¿µÏØ');
-insert into web_regions (region_id,city_id,region) values (540329,5403,'ÂåÂ¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (540330,5403,'±ß°ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (542221,5422,'ÄË¶«ÏØ');
-insert into web_regions (region_id,city_id,region) values (542222,5422,'ÔúÄÒÏØ');
-insert into web_regions (region_id,city_id,region) values (542223,5422,'¹±¸ÂÏØ');
-insert into web_regions (region_id,city_id,region) values (542224,5422,'É£ÈÕÏØ');
-insert into web_regions (region_id,city_id,region) values (542225,5422,'Çí½áÏØ');
-insert into web_regions (region_id,city_id,region) values (542226,5422,'ÇúËÉÏØ');
-insert into web_regions (region_id,city_id,region) values (542227,5422,'´ëÃÀÏØ');
-insert into web_regions (region_id,city_id,region) values (542228,5422,'ÂåÔúÏØ');
-insert into web_regions (region_id,city_id,region) values (542229,5422,'¼Ó²éÏØ');
-insert into web_regions (region_id,city_id,region) values (542231,5422,'Â¡×ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (542232,5422,'´íÄÇÏØ');
-insert into web_regions (region_id,city_id,region) values (542233,5422,'ÀË¿¨×ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (542421,5424,'ÄÇÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (542422,5424,'¼ÎÀèÏØ');
-insert into web_regions (region_id,city_id,region) values (542423,5424,'±ÈÈçÏØ');
-insert into web_regions (region_id,city_id,region) values (542424,5424,'ÄôÈÙÏØ');
-insert into web_regions (region_id,city_id,region) values (542425,5424,'°²¶àÏØ');
-insert into web_regions (region_id,city_id,region) values (542426,5424,'ÉêÔúÏØ');
-insert into web_regions (region_id,city_id,region) values (542427,5424,'Ë÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (542428,5424,'°à¸êÏØ');
-insert into web_regions (region_id,city_id,region) values (542429,5424,'°ÍÇàÏØ');
-insert into web_regions (region_id,city_id,region) values (542430,5424,'ÄáÂêÏØ');
-insert into web_regions (region_id,city_id,region) values (542431,5424,'Ë«ºşÏØ');
-insert into web_regions (region_id,city_id,region) values (542521,5425,'ÆÕÀ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (542522,5425,'Ôı´ïÏØ');
-insert into web_regions (region_id,city_id,region) values (542523,5425,'¸Á¶ûÏØ');
-insert into web_regions (region_id,city_id,region) values (542524,5425,'ÈÕÍÁÏØ');
-insert into web_regions (region_id,city_id,region) values (542525,5425,'¸ï¼ªÏØ');
-insert into web_regions (region_id,city_id,region) values (542526,5425,'¸ÄÔòÏØ');
-insert into web_regions (region_id,city_id,region) values (542527,5425,'´ëÇÚÏØ');
-insert into web_regions (region_id,city_id,region) values (542621,5426,'ÁÖÖ¥ÏØ');
-insert into web_regions (region_id,city_id,region) values (542622,5426,'¹¤²¼½­´ïÏØ');
-insert into web_regions (region_id,city_id,region) values (542623,5426,'Ã×ÁÖÏØ');
-insert into web_regions (region_id,city_id,region) values (542624,5426,'Ä«ÍÑÏØ');
-insert into web_regions (region_id,city_id,region) values (542625,5426,'²¨ÃÜÏØ');
-insert into web_regions (region_id,city_id,region) values (542626,5426,'²ìÓçÏØ');
-insert into web_regions (region_id,city_id,region) values (542627,5426,'ÀÊÏØ');
-insert into web_regions (region_id,city_id,region) values (610102,6101,'ĞÂ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (610103,6101,'±®ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (610104,6101,'Á«ºşÇø');
-insert into web_regions (region_id,city_id,region) values (610111,6101,'å±ÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (610112,6101,'Î´ÑëÇø');
-insert into web_regions (region_id,city_id,region) values (610113,6101,'ÑãËşÇø');
-insert into web_regions (region_id,city_id,region) values (610114,6101,'ÑÖÁ¼Çø');
-insert into web_regions (region_id,city_id,region) values (610115,6101,'ÁÙäüÇø');
-insert into web_regions (region_id,city_id,region) values (610116,6101,'³¤°²Çø');
-insert into web_regions (region_id,city_id,region) values (610122,6101,'À¶ÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (610124,6101,'ÖÜÖÁÏØ');
-insert into web_regions (region_id,city_id,region) values (610125,6101,'»§ÏØ');
-insert into web_regions (region_id,city_id,region) values (610126,6101,'¸ßÁêÇø');
-insert into web_regions (region_id,city_id,region) values (610202,6102,'ÍõÒæÇø');
-insert into web_regions (region_id,city_id,region) values (610203,6102,'Ó¡Ì¨Çø');
-insert into web_regions (region_id,city_id,region) values (610204,6102,'Ò«ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (610222,6102,'ÒË¾ıÏØ');
-insert into web_regions (region_id,city_id,region) values (610302,6103,'Î¼±õÇø');
-insert into web_regions (region_id,city_id,region) values (610303,6103,'½ğÌ¨Çø');
-insert into web_regions (region_id,city_id,region) values (610304,6103,'³Â²ÖÇø');
-insert into web_regions (region_id,city_id,region) values (610322,6103,'·ïÏèÏØ');
-insert into web_regions (region_id,city_id,region) values (610323,6103,'áªÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (610324,6103,'·ö·çÏØ');
-insert into web_regions (region_id,city_id,region) values (610326,6103,'Ã¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (610327,6103,'Â¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (610328,6103,'Ç§ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (610329,6103,'÷ëÓÎÏØ');
-insert into web_regions (region_id,city_id,region) values (610330,6103,'·ïÏØ');
-insert into web_regions (region_id,city_id,region) values (610331,6103,'Ì«°×ÏØ');
-insert into web_regions (region_id,city_id,region) values (610402,6104,'ÇØ¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (610403,6104,'ÑîÁêÇø');
-insert into web_regions (region_id,city_id,region) values (610404,6104,'Î¼³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (610422,6104,'ÈıÔ­ÏØ');
-insert into web_regions (region_id,city_id,region) values (610423,6104,'ãşÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (610424,6104,'Ç¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (610425,6104,'ÀñÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (610426,6104,'ÓÀÊÙÏØ');
-insert into web_regions (region_id,city_id,region) values (610427,6104,'±òÏØ');
-insert into web_regions (region_id,city_id,region) values (610428,6104,'³¤ÎäÏØ');
-insert into web_regions (region_id,city_id,region) values (610429,6104,'Ñ®ÒØÏØ');
-insert into web_regions (region_id,city_id,region) values (610430,6104,'´¾»¯ÏØ');
-insert into web_regions (region_id,city_id,region) values (610431,6104,'Îä¹¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (610481,6104,'ĞËÆ½ÊĞ');
-insert into web_regions (region_id,city_id,region) values (610502,6105,'ÁÙÎ¼Çø');
-insert into web_regions (region_id,city_id,region) values (610521,6105,'»ªÏØ');
-insert into web_regions (region_id,city_id,region) values (610522,6105,'äü¹ØÏØ');
-insert into web_regions (region_id,city_id,region) values (610523,6105,'´óÀóÏØ');
-insert into web_regions (region_id,city_id,region) values (610524,6105,'ºÏÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (610525,6105,'³Î³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (610526,6105,'ÆÑ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (610527,6105,'°×Ë®ÏØ');
-insert into web_regions (region_id,city_id,region) values (610528,6105,'¸»Æ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (610581,6105,'º«³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (610582,6105,'»ªÒõÊĞ');
-insert into web_regions (region_id,city_id,region) values (610602,6106,'±¦ËşÇø');
-insert into web_regions (region_id,city_id,region) values (610621,6106,'ÑÓ³¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (610622,6106,'ÑÓ´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (610623,6106,'×Ó³¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (610624,6106,'°²ÈûÏØ');
-insert into web_regions (region_id,city_id,region) values (610625,6106,'Ö¾µ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (610626,6106,'ÎâÆğÏØ');
-insert into web_regions (region_id,city_id,region) values (610627,6106,'¸ÊÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (610628,6106,'¸»ÏØ');
-insert into web_regions (region_id,city_id,region) values (610629,6106,'Âå´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (610630,6106,'ÒË´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (610631,6106,'»ÆÁúÏØ');
-insert into web_regions (region_id,city_id,region) values (610632,6106,'»ÆÁêÏØ');
-insert into web_regions (region_id,city_id,region) values (610702,6107,'ººÌ¨Çø');
-insert into web_regions (region_id,city_id,region) values (610721,6107,'ÄÏÖ£ÏØ');
-insert into web_regions (region_id,city_id,region) values (610722,6107,'³Ç¹ÌÏØ');
-insert into web_regions (region_id,city_id,region) values (610723,6107,'ÑóÏØ');
-insert into web_regions (region_id,city_id,region) values (610724,6107,'Î÷ÏçÏØ');
-insert into web_regions (region_id,city_id,region) values (610725,6107,'ÃãÏØ');
-insert into web_regions (region_id,city_id,region) values (610726,6107,'ÄşÇ¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (610727,6107,'ÂÔÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (610728,6107,'Õò°ÍÏØ');
-insert into web_regions (region_id,city_id,region) values (610729,6107,'Áô°ÓÏØ');
-insert into web_regions (region_id,city_id,region) values (610730,6107,'·ğÆºÏØ');
-insert into web_regions (region_id,city_id,region) values (610802,6108,'ÓÜÑôÇø');
-insert into web_regions (region_id,city_id,region) values (610821,6108,'ÉñÄ¾ÏØ');
-insert into web_regions (region_id,city_id,region) values (610822,6108,'¸®¹ÈÏØ');
-insert into web_regions (region_id,city_id,region) values (610823,6108,'ºáÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (610824,6108,'¾¸±ßÏØ');
-insert into web_regions (region_id,city_id,region) values (610825,6108,'¶¨±ßÏØ');
-insert into web_regions (region_id,city_id,region) values (610826,6108,'ËçµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (610827,6108,'Ã×Ö¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (610828,6108,'¼ÑÏØ');
-insert into web_regions (region_id,city_id,region) values (610829,6108,'Îâ±¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (610830,6108,'Çå½§ÏØ');
-insert into web_regions (region_id,city_id,region) values (610831,6108,'×ÓÖŞÏØ');
-insert into web_regions (region_id,city_id,region) values (610902,6109,'ºº±õÇø');
-insert into web_regions (region_id,city_id,region) values (610921,6109,'ººÒõÏØ');
-insert into web_regions (region_id,city_id,region) values (610922,6109,'Ê¯ÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (610923,6109,'ÄşÉÂÏØ');
-insert into web_regions (region_id,city_id,region) values (610924,6109,'×ÏÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (610925,6109,'á°¸ŞÏØ');
-insert into web_regions (region_id,city_id,region) values (610926,6109,'Æ½ÀûÏØ');
-insert into web_regions (region_id,city_id,region) values (610927,6109,'ÕòÆºÏØ');
-insert into web_regions (region_id,city_id,region) values (610928,6109,'Ñ®ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (610929,6109,'°×ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (611002,6110,'ÉÌÖİÇø');
-insert into web_regions (region_id,city_id,region) values (611021,6110,'ÂåÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (611022,6110,'µ¤·ïÏØ');
-insert into web_regions (region_id,city_id,region) values (611023,6110,'ÉÌÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (611024,6110,'É½ÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (611025,6110,'Õò°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (611026,6110,'×õË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (611101,6111,'¿Õ¸ÛĞÂ³Ç');
-insert into web_regions (region_id,city_id,region) values (611102,6111,'ãã¶«ĞÂ³Ç');
-insert into web_regions (region_id,city_id,region) values (611103,6111,'ÇØººĞÂ³Ç');
-insert into web_regions (region_id,city_id,region) values (611104,6111,'ããÎ÷ĞÂ³Ç');
-insert into web_regions (region_id,city_id,region) values (611105,6111,'ãşºÓĞÂ³Ç');
-insert into web_regions (region_id,city_id,region) values (620102,6201,'³Ç¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (620103,6201,'ÆßÀïºÓÇø');
-insert into web_regions (region_id,city_id,region) values (620104,6201,'Î÷¹ÌÇø');
-insert into web_regions (region_id,city_id,region) values (620105,6201,'°²ÄşÇø');
-insert into web_regions (region_id,city_id,region) values (620111,6201,'ºì¹ÅÇø');
-insert into web_regions (region_id,city_id,region) values (620121,6201,'ÓÀµÇÏØ');
-insert into web_regions (region_id,city_id,region) values (620122,6201,'¸ŞÀ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (620123,6201,'ÓÜÖĞÏØ');
-insert into web_regions (region_id,city_id,region) values (620201,6202,'ĞÛ¹ØÇø');
-insert into web_regions (region_id,city_id,region) values (620202,6202,'³¤³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (620203,6202,'¾µÌúÇø');
-insert into web_regions (region_id,city_id,region) values (620302,6203,'½ğ´¨Çø');
-insert into web_regions (region_id,city_id,region) values (620321,6203,'ÓÀ²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (620402,6204,'°×ÒøÇø');
-insert into web_regions (region_id,city_id,region) values (620403,6204,'Æ½´¨Çø');
-insert into web_regions (region_id,city_id,region) values (620421,6204,'¾¸Ô¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (620422,6204,'»áÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (620423,6204,'¾°Ì©ÏØ');
-insert into web_regions (region_id,city_id,region) values (620502,6205,'ÇØÖİÇø');
-insert into web_regions (region_id,city_id,region) values (620503,6205,'Âó»ıÇø');
-insert into web_regions (region_id,city_id,region) values (620521,6205,'ÇåË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (620522,6205,'ÇØ°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (620523,6205,'¸Ê¹ÈÏØ');
-insert into web_regions (region_id,city_id,region) values (620524,6205,'ÎäÉ½ÏØ');
-insert into web_regions (region_id,city_id,region) values (620525,6205,'ÕÅ¼Ò´¨»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (620602,6206,'Á¹ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (620621,6206,'ÃñÇÚÏØ');
-insert into web_regions (region_id,city_id,region) values (620622,6206,'¹ÅÀËÏØ');
-insert into web_regions (region_id,city_id,region) values (620623,6206,'Ìì×£²Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (620702,6207,'¸ÊÖİÇø');
-insert into web_regions (region_id,city_id,region) values (620721,6207,'ËàÄÏÔ£¹Ì×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (620722,6207,'ÃñÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (620723,6207,'ÁÙÔóÏØ');
-insert into web_regions (region_id,city_id,region) values (620724,6207,'¸ßÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (620725,6207,'É½µ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (620802,6208,'áÇá¼Çø');
-insert into web_regions (region_id,city_id,region) values (620821,6208,'ãş´¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (620822,6208,'ÁéÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (620823,6208,'³çĞÅÏØ');
-insert into web_regions (region_id,city_id,region) values (620824,6208,'»ªÍ¤ÏØ');
-insert into web_regions (region_id,city_id,region) values (620825,6208,'×¯ÀËÏØ');
-insert into web_regions (region_id,city_id,region) values (620826,6208,'¾²ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (620902,6209,'ËàÖİÇø');
-insert into web_regions (region_id,city_id,region) values (620921,6209,'½ğËşÏØ');
-insert into web_regions (region_id,city_id,region) values (620922,6209,'¹ÏÖİÏØ');
-insert into web_regions (region_id,city_id,region) values (620923,6209,'Ëà±±ÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (620924,6209,'°¢¿ËÈû¹şÈø¿Ë×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (620981,6209,'ÓñÃÅÊĞ');
-insert into web_regions (region_id,city_id,region) values (620982,6209,'¶Ø»ÍÊĞ');
-insert into web_regions (region_id,city_id,region) values (621002,6210,'Î÷·åÇø');
-insert into web_regions (region_id,city_id,region) values (621021,6210,'Çì³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (621022,6210,'»·ÏØ');
-insert into web_regions (region_id,city_id,region) values (621023,6210,'»ª³ØÏØ');
-insert into web_regions (region_id,city_id,region) values (621024,6210,'ºÏË®ÏØ');
-insert into web_regions (region_id,city_id,region) values (621025,6210,'ÕıÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (621026,6210,'ÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (621027,6210,'ÕòÔ­ÏØ');
-insert into web_regions (region_id,city_id,region) values (621102,6211,'°²¶¨Çø');
-insert into web_regions (region_id,city_id,region) values (621121,6211,'Í¨Î¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (621122,6211,'Â¤Î÷ÏØ');
-insert into web_regions (region_id,city_id,region) values (621123,6211,'Î¼Ô´ÏØ');
-insert into web_regions (region_id,city_id,region) values (621124,6211,'ÁÙä¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (621125,6211,'ÕÄÏØ');
-insert into web_regions (region_id,city_id,region) values (621126,6211,'áºÏØ');
-insert into web_regions (region_id,city_id,region) values (621202,6212,'Îä¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (621221,6212,'³ÉÏØ');
-insert into web_regions (region_id,city_id,region) values (621222,6212,'ÎÄÏØ');
-insert into web_regions (region_id,city_id,region) values (621223,6212,'å´²ıÏØ');
-insert into web_regions (region_id,city_id,region) values (621224,6212,'¿µÏØ');
-insert into web_regions (region_id,city_id,region) values (621225,6212,'Î÷ºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (621226,6212,'ÀñÏØ');
-insert into web_regions (region_id,city_id,region) values (621227,6212,'»ÕÏØ');
-insert into web_regions (region_id,city_id,region) values (621228,6212,'Á½µ±ÏØ');
-insert into web_regions (region_id,city_id,region) values (622901,6229,'ÁÙÏÄÊĞ');
-insert into web_regions (region_id,city_id,region) values (622921,6229,'ÁÙÏÄÏØ');
-insert into web_regions (region_id,city_id,region) values (622922,6229,'¿µÀÖÏØ');
-insert into web_regions (region_id,city_id,region) values (622923,6229,'ÓÀ¾¸ÏØ');
-insert into web_regions (region_id,city_id,region) values (622924,6229,'¹ãºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (622925,6229,'ºÍÕşÏØ');
-insert into web_regions (region_id,city_id,region) values (622926,6229,'¶«Ïç×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (622927,6229,'»ıÊ¯É½±£°²×å¶«Ïç×åÈöÀ­×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (623001,6230,'ºÏ×÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (623021,6230,'ÁÙÌ¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (623022,6230,'×¿ÄáÏØ');
-insert into web_regions (region_id,city_id,region) values (623023,6230,'ÖÛÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (623024,6230,'µü²¿ÏØ');
-insert into web_regions (region_id,city_id,region) values (623025,6230,'ÂêÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (623026,6230,'ÂµÇúÏØ');
-insert into web_regions (region_id,city_id,region) values (623027,6230,'ÏÄºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (630102,6301,'³Ç¶«Çø');
-insert into web_regions (region_id,city_id,region) values (630103,6301,'³ÇÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (630104,6301,'³ÇÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (630105,6301,'³Ç±±Çø');
-insert into web_regions (region_id,city_id,region) values (630121,6301,'´óÍ¨»Ø×åÍÁ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (630122,6301,'äÒÖĞÏØ');
-insert into web_regions (region_id,city_id,region) values (630123,6301,'äÒÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (630202,6302,'ÀÖ¶¼Çø');
-insert into web_regions (region_id,city_id,region) values (630221,6302,'Æ½°²ÏØ');
-insert into web_regions (region_id,city_id,region) values (630222,6302,'ÃñºÍ»Ø×åÍÁ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (630223,6302,'»¥ÖúÍÁ×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (630224,6302,'»¯Â¡»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (630225,6302,'Ñ­»¯ÈöÀ­×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (632221,6322,'ÃÅÔ´»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (632222,6322,'ÆîÁ¬ÏØ');
-insert into web_regions (region_id,city_id,region) values (632223,6322,'º£êÌÏØ');
-insert into web_regions (region_id,city_id,region) values (632224,6322,'¸Õ²ìÏØ');
-insert into web_regions (region_id,city_id,region) values (632321,6323,'Í¬ÈÊÏØ');
-insert into web_regions (region_id,city_id,region) values (632322,6323,'¼âÔúÏØ');
-insert into web_regions (region_id,city_id,region) values (632323,6323,'Ôó¿âÏØ');
-insert into web_regions (region_id,city_id,region) values (632324,6323,'ºÓÄÏÃÉ¹Å×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (632521,6325,'¹²ºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (632522,6325,'Í¬µÂÏØ');
-insert into web_regions (region_id,city_id,region) values (632523,6325,'¹óµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (632524,6325,'ĞËº£ÏØ');
-insert into web_regions (region_id,city_id,region) values (632525,6325,'¹óÄÏÏØ');
-insert into web_regions (region_id,city_id,region) values (632621,6326,'ÂêÇßÏØ');
-insert into web_regions (region_id,city_id,region) values (632622,6326,'°àÂêÏØ');
-insert into web_regions (region_id,city_id,region) values (632623,6326,'¸ÊµÂÏØ');
-insert into web_regions (region_id,city_id,region) values (632624,6326,'´ïÈÕÏØ');
-insert into web_regions (region_id,city_id,region) values (632625,6326,'¾ÃÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (632626,6326,'Âê¶àÏØ');
-insert into web_regions (region_id,city_id,region) values (632701,6327,'ÓñÊ÷ÊĞ');
-insert into web_regions (region_id,city_id,region) values (632722,6327,'ÔÓ¶àÏØ');
-insert into web_regions (region_id,city_id,region) values (632723,6327,'³Æ¶àÏØ');
-insert into web_regions (region_id,city_id,region) values (632724,6327,'ÖÎ¶àÏØ');
-insert into web_regions (region_id,city_id,region) values (632725,6327,'ÄÒÇ«ÏØ');
-insert into web_regions (region_id,city_id,region) values (632726,6327,'ÇúÂéÀ³ÏØ');
-insert into web_regions (region_id,city_id,region) values (632801,6328,'¸ñ¶ûÄ¾ÊĞ');
-insert into web_regions (region_id,city_id,region) values (632802,6328,'µÂÁî¹şÊĞ');
-insert into web_regions (region_id,city_id,region) values (632821,6328,'ÎÚÀ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (632822,6328,'¶¼À¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (632823,6328,'Ìì¾şÏØ');
-insert into web_regions (region_id,city_id,region) values (640104,6401,'ĞËÇìÇø');
-insert into web_regions (region_id,city_id,region) values (640105,6401,'Î÷ÏÄÇø');
-insert into web_regions (region_id,city_id,region) values (640106,6401,'½ğ·ïÇø');
-insert into web_regions (region_id,city_id,region) values (640121,6401,'ÓÀÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (640122,6401,'ºØÀ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (640181,6401,'ÁéÎäÊĞ');
-insert into web_regions (region_id,city_id,region) values (640202,6402,'´óÎä¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (640205,6402,'»İÅ©Çø');
-insert into web_regions (region_id,city_id,region) values (640221,6402,'Æ½ÂŞÏØ');
-insert into web_regions (region_id,city_id,region) values (640302,6403,'ÀûÍ¨Çø');
-insert into web_regions (region_id,city_id,region) values (640303,6403,'ºìËÂ±¤Çø');
-insert into web_regions (region_id,city_id,region) values (640323,6403,'ÑÎ³ØÏØ');
-insert into web_regions (region_id,city_id,region) values (640324,6403,'Í¬ĞÄÏØ');
-insert into web_regions (region_id,city_id,region) values (640381,6403,'ÇàÍ­Ï¿ÊĞ');
-insert into web_regions (region_id,city_id,region) values (640402,6404,'Ô­ÖİÇø');
-insert into web_regions (region_id,city_id,region) values (640422,6404,'Î÷¼ªÏØ');
-insert into web_regions (region_id,city_id,region) values (640423,6404,'Â¡µÂÏØ');
-insert into web_regions (region_id,city_id,region) values (640424,6404,'ãşÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (640425,6404,'ÅíÑôÏØ');
-insert into web_regions (region_id,city_id,region) values (640502,6405,'É³ÆÂÍ·Çø');
-insert into web_regions (region_id,city_id,region) values (640521,6405,'ÖĞÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (640522,6405,'º£Ô­ÏØ');
-insert into web_regions (region_id,city_id,region) values (650102,6501,'ÌìÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (650103,6501,'É³ÒÀ°Í¿ËÇø');
-insert into web_regions (region_id,city_id,region) values (650104,6501,'ĞÂÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (650105,6501,'Ë®Ä¥¹µÇø');
-insert into web_regions (region_id,city_id,region) values (650106,6501,'Í·ÍÍºÓÇø');
-insert into web_regions (region_id,city_id,region) values (650107,6501,'´ïÛà³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (650109,6501,'Ã×¶«Çø');
-insert into web_regions (region_id,city_id,region) values (650121,6501,'ÎÚÂ³Ä¾ÆëÏØ');
-insert into web_regions (region_id,city_id,region) values (650202,6502,'¶ÀÉ½×ÓÇø');
-insert into web_regions (region_id,city_id,region) values (650203,6502,'¿ËÀ­ÂêÒÀÇø');
-insert into web_regions (region_id,city_id,region) values (650204,6502,'°×¼îÌ²Çø');
-insert into web_regions (region_id,city_id,region) values (650205,6502,'ÎÚ¶ûºÌÇø');
-insert into web_regions (region_id,city_id,region) values (652101,6521,'ÍÂÂ³·¬ÊĞ');
-insert into web_regions (region_id,city_id,region) values (652122,6521,'Û·ÉÆÏØ');
-insert into web_regions (region_id,city_id,region) values (652123,6521,'ÍĞ¿ËÑ·ÏØ');
-insert into web_regions (region_id,city_id,region) values (652201,6522,'¹şÃÜÊĞ');
-insert into web_regions (region_id,city_id,region) values (652222,6522,'°ÍÀïÀ¤¹şÈø¿Ë×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (652223,6522,'ÒÁÎáÏØ');
-insert into web_regions (region_id,city_id,region) values (652301,6523,'²ı¼ªÊĞ');
-insert into web_regions (region_id,city_id,region) values (652302,6523,'¸·¿µÊĞ');
-insert into web_regions (region_id,city_id,region) values (652323,6523,'ºôÍ¼±ÚÏØ');
-insert into web_regions (region_id,city_id,region) values (652324,6523,'ÂêÄÉË¹ÏØ');
-insert into web_regions (region_id,city_id,region) values (652325,6523,'ÆæÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (652327,6523,'¼ªÄ¾Èø¶ûÏØ');
-insert into web_regions (region_id,city_id,region) values (652328,6523,'Ä¾Àİ¹şÈø¿Ë×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (652701,6527,'²©ÀÖÊĞ');
-insert into web_regions (region_id,city_id,region) values (652702,6527,'°¢À­É½¿ÚÊĞ');
-insert into web_regions (region_id,city_id,region) values (652722,6527,'¾«ºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (652723,6527,'ÎÂÈªÏØ');
-insert into web_regions (region_id,city_id,region) values (652801,6528,'¿â¶ûÀÕÊĞ');
-insert into web_regions (region_id,city_id,region) values (652822,6528,'ÂÖÌ¨ÏØ');
-insert into web_regions (region_id,city_id,region) values (652823,6528,'Î¾ÀçÏØ');
-insert into web_regions (region_id,city_id,region) values (652824,6528,'ÈôÇ¼ÏØ');
-insert into web_regions (region_id,city_id,region) values (652825,6528,'ÇÒÄ©ÏØ');
-insert into web_regions (region_id,city_id,region) values (652826,6528,'ÑÉêÈ»Ø×å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (652827,6528,'ºÍ¾²ÏØ');
-insert into web_regions (region_id,city_id,region) values (652828,6528,'ºÍË¶ÏØ');
-insert into web_regions (region_id,city_id,region) values (652829,6528,'²©ºşÏØ');
-insert into web_regions (region_id,city_id,region) values (652901,6529,'°¢¿ËËÕÊĞ');
-insert into web_regions (region_id,city_id,region) values (652922,6529,'ÎÂËŞÏØ');
-insert into web_regions (region_id,city_id,region) values (652923,6529,'¿â³µÏØ');
-insert into web_regions (region_id,city_id,region) values (652924,6529,'É³ÑÅÏØ');
-insert into web_regions (region_id,city_id,region) values (652925,6529,'ĞÂºÍÏØ');
-insert into web_regions (region_id,city_id,region) values (652926,6529,'°İ³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (652927,6529,'ÎÚÊ²ÏØ');
-insert into web_regions (region_id,city_id,region) values (652928,6529,'°¢ÍßÌáÏØ');
-insert into web_regions (region_id,city_id,region) values (652929,6529,'¿ÂÆºÏØ');
-insert into web_regions (region_id,city_id,region) values (653001,6530,'°¢Í¼Ê²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (653022,6530,'°¢¿ËÌÕÏØ');
-insert into web_regions (region_id,city_id,region) values (653023,6530,'°¢ºÏÆæÏØ');
-insert into web_regions (region_id,city_id,region) values (653024,6530,'ÎÚÇ¡ÏØ');
-insert into web_regions (region_id,city_id,region) values (653101,6531,'¿¦Ê²ÊĞ');
-insert into web_regions (region_id,city_id,region) values (653121,6531,'Êè¸½ÏØ');
-insert into web_regions (region_id,city_id,region) values (653122,6531,'ÊèÀÕÏØ');
-insert into web_regions (region_id,city_id,region) values (653123,6531,'Ó¢¼ªÉ³ÏØ');
-insert into web_regions (region_id,city_id,region) values (653124,6531,'ÔóÆÕÏØ');
-insert into web_regions (region_id,city_id,region) values (653125,6531,'É¯³µÏØ');
-insert into web_regions (region_id,city_id,region) values (653126,6531,'Ò¶³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (653127,6531,'Âó¸ÇÌáÏØ');
-insert into web_regions (region_id,city_id,region) values (653128,6531,'ÔÀÆÕºşÏØ');
-insert into web_regions (region_id,city_id,region) values (653129,6531,'Ù¤Ê¦ÏØ');
-insert into web_regions (region_id,city_id,region) values (653130,6531,'°Í³şÏØ');
-insert into web_regions (region_id,city_id,region) values (653131,6531,'ËşÊ²¿â¶û¸ÉËş¼ª¿Ë×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (653201,6532,'ºÍÌïÊĞ');
-insert into web_regions (region_id,city_id,region) values (653221,6532,'ºÍÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (653222,6532,'Ä«ÓñÏØ');
-insert into web_regions (region_id,city_id,region) values (653223,6532,'Æ¤É½ÏØ');
-insert into web_regions (region_id,city_id,region) values (653224,6532,'ÂåÆÖÏØ');
-insert into web_regions (region_id,city_id,region) values (653225,6532,'²ßÀÕÏØ');
-insert into web_regions (region_id,city_id,region) values (653226,6532,'ÓÚÌïÏØ');
-insert into web_regions (region_id,city_id,region) values (653227,6532,'Ãñ·áÏØ');
-insert into web_regions (region_id,city_id,region) values (654002,6540,'ÒÁÄşÊĞ');
-insert into web_regions (region_id,city_id,region) values (654003,6540,'¿üÍÍÊĞ');
-insert into web_regions (region_id,city_id,region) values (654004,6540,'»ô¶û¹ûË¹ÊĞ');
-insert into web_regions (region_id,city_id,region) values (654021,6540,'ÒÁÄşÏØ');
-insert into web_regions (region_id,city_id,region) values (654022,6540,'²ì²¼²é¶ûÎı²®×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (654023,6540,'»ô³ÇÏØ');
-insert into web_regions (region_id,city_id,region) values (654024,6540,'¹®ÁôÏØ');
-insert into web_regions (region_id,city_id,region) values (654025,6540,'ĞÂÔ´ÏØ');
-insert into web_regions (region_id,city_id,region) values (654026,6540,'ÕÑËÕÏØ');
-insert into web_regions (region_id,city_id,region) values (654027,6540,'ÌØ¿ËË¹ÏØ');
-insert into web_regions (region_id,city_id,region) values (654028,6540,'ÄáÀÕ¿ËÏØ');
-insert into web_regions (region_id,city_id,region) values (654201,6542,'Ëş³ÇÊĞ');
-insert into web_regions (region_id,city_id,region) values (654202,6542,'ÎÚËÕÊĞ');
-insert into web_regions (region_id,city_id,region) values (654221,6542,'¶îÃôÏØ');
-insert into web_regions (region_id,city_id,region) values (654223,6542,'É³ÍåÏØ');
-insert into web_regions (region_id,city_id,region) values (654224,6542,'ÍĞÀïÏØ');
-insert into web_regions (region_id,city_id,region) values (654225,6542,'Ô£ÃñÏØ');
-insert into web_regions (region_id,city_id,region) values (654226,6542,'ºÍ²¼¿ËÈü¶ûÃÉ¹Å×ÔÖÎÏØ');
-insert into web_regions (region_id,city_id,region) values (654301,6543,'°¢ÀÕÌ©ÊĞ');
-insert into web_regions (region_id,city_id,region) values (654321,6543,'²¼¶û½òÏØ');
-insert into web_regions (region_id,city_id,region) values (654322,6543,'¸»ÔÌÏØ');
-insert into web_regions (region_id,city_id,region) values (654323,6543,'¸£º£ÏØ');
-insert into web_regions (region_id,city_id,region) values (654324,6543,'¹ş°ÍºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (654325,6543,'ÇàºÓÏØ');
-insert into web_regions (region_id,city_id,region) values (654326,6543,'¼ªÄ¾ÄËÏØ');
-insert into web_regions (region_id,city_id,region) values (659001,6590,'Ê¯ºÓ×ÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (659002,6590,'°¢À­¶ûÊĞ');
-insert into web_regions (region_id,city_id,region) values (659003,6590,'Í¼Ä¾Êæ¿ËÊĞ');
-insert into web_regions (region_id,city_id,region) values (659004,6590,'Îå¼ÒÇşÊĞ');
-insert into web_regions (region_id,city_id,region) values (659005,6590,'±±ÍÍÊĞ');
-insert into web_regions (region_id,city_id,region) values (659006,6590,'ÌúÃÅ¹ØÊĞ');
-insert into web_regions (region_id,city_id,region) values (659007,6590,'Ë«ºÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (710101,7101,'ËÉÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710102,7101,'ĞÅÒåÇø');
-insert into web_regions (region_id,city_id,region) values (710103,7101,'´ó°²Çø');
-insert into web_regions (region_id,city_id,region) values (710104,7101,'ÖĞÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710105,7101,'ÖĞÕıÇø');
-insert into web_regions (region_id,city_id,region) values (710106,7101,'´óÍ¬Çø');
-insert into web_regions (region_id,city_id,region) values (710107,7101,'Íò»ªÇø');
-insert into web_regions (region_id,city_id,region) values (710108,7101,'ÎÄÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710109,7101,'ÄÏ¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (710110,7101,'ÄÚºşÇø');
-insert into web_regions (region_id,city_id,region) values (710111,7101,'Ê¿ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (710112,7101,'±±Í¶Çø');
-insert into web_regions (region_id,city_id,region) values (710201,7102,'ÑÎÛôÇø');
-insert into web_regions (region_id,city_id,region) values (710202,7102,'¹ÄÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710203,7102,'×óÓªÇø');
-insert into web_regions (region_id,city_id,region) values (710204,7102,'éªè÷Çø');
-insert into web_regions (region_id,city_id,region) values (710205,7102,'ÈıÃñÇø');
-insert into web_regions (region_id,city_id,region) values (710206,7102,'ĞÂĞËÇø');
-insert into web_regions (region_id,city_id,region) values (710207,7102,'Ç°½ğÇø');
-insert into web_regions (region_id,city_id,region) values (710208,7102,'ÜßÑÅÇø');
-insert into web_regions (region_id,city_id,region) values (710209,7102,'Ç°ÕòÇø');
-insert into web_regions (region_id,city_id,region) values (710210,7102,'Æì½òÇø');
-insert into web_regions (region_id,city_id,region) values (710211,7102,'Ğ¡¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (710212,7102,'·ïÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710213,7102,'ÁÖÔ°Çø');
-insert into web_regions (region_id,city_id,region) values (710214,7102,'´óå¼Çø');
-insert into web_regions (region_id,city_id,region) values (710215,7102,'´óÊ÷Çø');
-insert into web_regions (region_id,city_id,region) values (710216,7102,'´óÉçÇø');
-insert into web_regions (region_id,city_id,region) values (710217,7102,'ÈÊÎäÇø');
-insert into web_regions (region_id,city_id,region) values (710218,7102,'ÄñËÉÇø');
-insert into web_regions (region_id,city_id,region) values (710219,7102,'¸ÔÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710220,7102,'ÇÅÍ·Çø');
-insert into web_regions (region_id,city_id,region) values (710221,7102,'Ñà³²Çø');
-insert into web_regions (region_id,city_id,region) values (710222,7102,'Ìïå¼Çø');
-insert into web_regions (region_id,city_id,region) values (710223,7102,'°¢Á«Çø');
-insert into web_regions (region_id,city_id,region) values (710224,7102,'Â·ÖñÇø');
-insert into web_regions (region_id,city_id,region) values (710225,7102,'ºşÄÚÇø');
-insert into web_regions (region_id,city_id,region) values (710226,7102,'ÇÑÈbÇø');
-insert into web_regions (region_id,city_id,region) values (710227,7102,'ÓÀ°²Çø');
-insert into web_regions (region_id,city_id,region) values (710228,7102,'ÃÖÍÓÇø');
-insert into web_regions (region_id,city_id,region) values (710229,7102,'è÷¹ÙÇø');
-insert into web_regions (region_id,city_id,region) values (710230,7102,'ÆìÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710231,7102,'ÃÀÅ¨Çø');
-insert into web_regions (region_id,city_id,region) values (710232,7102,'Áù¹êÇø');
-insert into web_regions (region_id,city_id,region) values (710233,7102,'¼×ÏÉÇø');
-insert into web_regions (region_id,city_id,region) values (710234,7102,'É¼ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (710235,7102,'ÄÚÃÅÇø');
-insert into web_regions (region_id,city_id,region) values (710236,7102,'Ã¯ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (710237,7102,'ÌÒÔ´Çø');
-insert into web_regions (region_id,city_id,region) values (710238,7102,'ÄÇÂêÏÄÇø');
-insert into web_regions (region_id,city_id,region) values (710301,7103,'ÖĞÕıÇø');
-insert into web_regions (region_id,city_id,region) values (710302,7103,'Æß¶ÂÇø');
-insert into web_regions (region_id,city_id,region) values (710303,7103,'Å¯Å¯Çø');
-insert into web_regions (region_id,city_id,region) values (710304,7103,'ÈÊ°®Çø');
-insert into web_regions (region_id,city_id,region) values (710305,7103,'ÖĞÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710306,7103,'°²ÀÖÇø');
-insert into web_regions (region_id,city_id,region) values (710307,7103,'ĞÅÒåÇø');
-insert into web_regions (region_id,city_id,region) values (710401,7104,'ÖĞÇø');
-insert into web_regions (region_id,city_id,region) values (710402,7104,'¶«Çø');
-insert into web_regions (region_id,city_id,region) values (710403,7104,'ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (710404,7104,'Î÷Çø');
-insert into web_regions (region_id,city_id,region) values (710405,7104,'±±Çø');
-insert into web_regions (region_id,city_id,region) values (710406,7104,'Î÷ÍÍÇø');
-insert into web_regions (region_id,city_id,region) values (710407,7104,'ÄÏÍÍÇø');
-insert into web_regions (region_id,city_id,region) values (710408,7104,'±±ÍÍÇø');
-insert into web_regions (region_id,city_id,region) values (710409,7104,'·áÔ­Çø');
-insert into web_regions (region_id,city_id,region) values (710410,7104,'¶«ÊÆÇø');
-insert into web_regions (region_id,city_id,region) values (710411,7104,'´ó¼×Çø');
-insert into web_regions (region_id,city_id,region) values (710412,7104,'ÇåË®Çø');
-insert into web_regions (region_id,city_id,region) values (710413,7104,'É³Â¹Çø');
-insert into web_regions (region_id,city_id,region) values (710414,7104,'ÎàÆÜÇø');
-insert into web_regions (region_id,city_id,region) values (710415,7104,'ºóÀïÇø');
-insert into web_regions (region_id,city_id,region) values (710416,7104,'Éñ¸ÔÇø');
-insert into web_regions (region_id,city_id,region) values (710417,7104,'Ì¶×ÓÇø');
-insert into web_regions (region_id,city_id,region) values (710418,7104,'´óÑÅÇø');
-insert into web_regions (region_id,city_id,region) values (710419,7104,'ĞÂÉçÇø');
-insert into web_regions (region_id,city_id,region) values (710420,7104,'Ê¯¸ÔÇø');
-insert into web_regions (region_id,city_id,region) values (710421,7104,'ÍâÆÒÇø');
-insert into web_regions (region_id,city_id,region) values (710422,7104,'´ó°²Çø');
-insert into web_regions (region_id,city_id,region) values (710423,7104,'ÎÚÈÕÇø');
-insert into web_regions (region_id,city_id,region) values (710424,7104,'´ó¶ÇÇø');
-insert into web_regions (region_id,city_id,region) values (710425,7104,'Áú¾®Çø');
-insert into web_regions (region_id,city_id,region) values (710426,7104,'Îí·åÇø');
-insert into web_regions (region_id,city_id,region) values (710427,7104,'Ì«Æ½Çø');
-insert into web_regions (region_id,city_id,region) values (710428,7104,'´óÀïÇø');
-insert into web_regions (region_id,city_id,region) values (710429,7104,'ºÍÆ½Çø');
-insert into web_regions (region_id,city_id,region) values (710501,7105,'¶«Çø');
-insert into web_regions (region_id,city_id,region) values (710502,7105,'ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (710504,7105,'±±Çø');
-insert into web_regions (region_id,city_id,region) values (710506,7105,'°²ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (710507,7105,'°²Æ½Çø');
-insert into web_regions (region_id,city_id,region) values (710508,7105,'ÖĞÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (710509,7105,'ĞÂÓªÇø');
-insert into web_regions (region_id,city_id,region) values (710510,7105,'ÑÎË®Çø');
-insert into web_regions (region_id,city_id,region) values (710511,7105,'°×ºÓÇø');
-insert into web_regions (region_id,city_id,region) values (710512,7105,'ÁøÓªÇø');
-insert into web_regions (region_id,city_id,region) values (710513,7105,'ºó±ÚÇø');
-insert into web_regions (region_id,city_id,region) values (710514,7105,'¶«É½Çø');
-insert into web_regions (region_id,city_id,region) values (710515,7105,'Âé¶¹Çø');
-insert into web_regions (region_id,city_id,region) values (710516,7105,'ÏÂÓªÇø');
-insert into web_regions (region_id,city_id,region) values (710517,7105,'Áù¼×Çø');
-insert into web_regions (region_id,city_id,region) values (710518,7105,'¹ÙÌïÇø');
-insert into web_regions (region_id,city_id,region) values (710519,7105,'´óÄÚÇø');
-insert into web_regions (region_id,city_id,region) values (710520,7105,'¼ÑÀïÇø');
-insert into web_regions (region_id,city_id,region) values (710521,7105,'Ñ§¼×Çø');
-insert into web_regions (region_id,city_id,region) values (710522,7105,'Î÷¸ÛÇø');
-insert into web_regions (region_id,city_id,region) values (710523,7105,'Æß¹ÉÇø');
-insert into web_regions (region_id,city_id,region) values (710524,7105,'½«¾üÇø');
-insert into web_regions (region_id,city_id,region) values (710525,7105,'±±ÃÅÇø');
-insert into web_regions (region_id,city_id,region) values (710526,7105,'ĞÂ»¯Çø');
-insert into web_regions (region_id,city_id,region) values (710527,7105,'ÉÆ»¯Çø');
-insert into web_regions (region_id,city_id,region) values (710528,7105,'ĞÂÊĞÇø');
-insert into web_regions (region_id,city_id,region) values (710529,7105,'°²¶¨Çø');
-insert into web_regions (region_id,city_id,region) values (710530,7105,'É½ÉÏÇø');
-insert into web_regions (region_id,city_id,region) values (710531,7105,'Óñ¾®Çø');
-insert into web_regions (region_id,city_id,region) values (710532,7105,'éªÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (710533,7105,'ÄÏ»¯Çø');
-insert into web_regions (region_id,city_id,region) values (710534,7105,'×óÕòÇø');
-insert into web_regions (region_id,city_id,region) values (710535,7105,'ÈÊµÂÇø');
-insert into web_regions (region_id,city_id,region) values (710536,7105,'¹éÈÊÇø');
-insert into web_regions (region_id,city_id,region) values (710537,7105,'¹ØÃíÇø');
-insert into web_regions (region_id,city_id,region) values (710538,7105,'ÁúÆéÇø');
-insert into web_regions (region_id,city_id,region) values (710539,7105,'ÓÀ¿µÇø');
-insert into web_regions (region_id,city_id,region) values (710601,7106,'¶«Çø');
-insert into web_regions (region_id,city_id,region) values (710602,7106,'±±Çø');
-insert into web_regions (region_id,city_id,region) values (710603,7106,'ÏãÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710701,7107,'¶«Çø');
-insert into web_regions (region_id,city_id,region) values (710702,7107,'Î÷Çø');
-insert into web_regions (region_id,city_id,region) values (710801,7108,'°åÇÅÇø');
-insert into web_regions (region_id,city_id,region) values (710802,7108,'ÈıÖØÇø');
-insert into web_regions (region_id,city_id,region) values (710803,7108,'ÖĞºÍÇø');
-insert into web_regions (region_id,city_id,region) values (710804,7108,'ÓÀºÍÇø');
-insert into web_regions (region_id,city_id,region) values (710805,7108,'ĞÂ×¯Çø');
-insert into web_regions (region_id,city_id,region) values (710806,7108,'ĞÂµêÇø');
-insert into web_regions (region_id,city_id,region) values (710807,7108,'Ê÷ÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (710808,7108,'İº¸èÇø');
-insert into web_regions (region_id,city_id,region) values (710809,7108,'ÈıÏ¿Çø');
-insert into web_regions (region_id,city_id,region) values (710810,7108,'µ­Ë®Çø');
-insert into web_regions (region_id,city_id,region) values (710811,7108,'Ï«Ö¹Çø');
-insert into web_regions (region_id,city_id,region) values (710812,7108,'Èğ·¼Çø');
-insert into web_regions (region_id,city_id,region) values (710813,7108,'ÍÁ³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (710814,7108,'Â«ÖŞÇø');
-insert into web_regions (region_id,city_id,region) values (710815,7108,'Îå¹ÉÇø');
-insert into web_regions (region_id,city_id,region) values (710816,7108,'Ì©É½Çø');
-insert into web_regions (region_id,city_id,region) values (710817,7108,'ÁÖ¿ÚÇø');
-insert into web_regions (region_id,city_id,region) values (710818,7108,'Éî¿ÓÇø');
-insert into web_regions (region_id,city_id,region) values (710819,7108,'Ê¯íÖÇø');
-insert into web_regions (region_id,city_id,region) values (710820,7108,'ÆºÁÖÇø');
-insert into web_regions (region_id,city_id,region) values (710821,7108,'ÈıÖ¥Çø');
-insert into web_regions (region_id,city_id,region) values (710822,7108,'Ê¯ÃÅÇø');
-insert into web_regions (region_id,city_id,region) values (710823,7108,'°ËÀïÇø');
-insert into web_regions (region_id,city_id,region) values (710824,7108,'Æ½ÏªÇø');
-insert into web_regions (region_id,city_id,region) values (710825,7108,'Ë«ÏªÇø');
-insert into web_regions (region_id,city_id,region) values (710826,7108,'¹±å¼Çø');
-insert into web_regions (region_id,city_id,region) values (710827,7108,'½ğÉ½Çø');
-insert into web_regions (region_id,city_id,region) values (710828,7108,'ÍòÀïÇø');
-insert into web_regions (region_id,city_id,region) values (710829,7108,'ÎÚÀ´Çø');
-insert into web_regions (region_id,city_id,region) values (712201,7122,'ÒËÀ¼ÊĞ');
-insert into web_regions (region_id,city_id,region) values (712221,7122,'ÂŞ¶«Õò');
-insert into web_regions (region_id,city_id,region) values (712222,7122,'ËÕ°ÄÕò');
-insert into web_regions (region_id,city_id,region) values (712223,7122,'Í·³ÇÕò');
-insert into web_regions (region_id,city_id,region) values (712224,7122,'½¸ÏªÏç');
-insert into web_regions (region_id,city_id,region) values (712225,7122,'×³Î§Ïç');
-insert into web_regions (region_id,city_id,region) values (712226,7122,'Ô±É½Ïç');
-insert into web_regions (region_id,city_id,region) values (712227,7122,'¶¬É½Ïç');
-insert into web_regions (region_id,city_id,region) values (712228,7122,'Îå½áÏç');
-insert into web_regions (region_id,city_id,region) values (712229,7122,'ÈıĞÇÏç');
-insert into web_regions (region_id,city_id,region) values (712230,7122,'´óÍ¬Ïç');
-insert into web_regions (region_id,city_id,region) values (712231,7122,'ÄÏ°ÄÏç');
-insert into web_regions (region_id,city_id,region) values (712301,7123,'ÌÒÔ°ÊĞ');
-insert into web_regions (region_id,city_id,region) values (712302,7123,'ÖĞÛŞÊĞ');
-insert into web_regions (region_id,city_id,region) values (712303,7123,'Æ½ÕòÊĞ');
-insert into web_regions (region_id,city_id,region) values (712304,7123,'°ËµÂÊĞ');
-insert into web_regions (region_id,city_id,region) values (712305,7123,'ÑîÃ·ÊĞ');
-insert into web_regions (region_id,city_id,region) values (712306,7123,'Â«ÖñÊĞ');
-insert into web_regions (region_id,city_id,region) values (712321,7123,'´óÏªÕò');
-insert into web_regions (region_id,city_id,region) values (712324,7123,'´óÔ°Ïç');
-insert into web_regions (region_id,city_id,region) values (712325,7123,'¹êÉ½Ïç');
-insert into web_regions (region_id,city_id,region) values (712327,7123,'ÁúÌ¶Ïç');
-insert into web_regions (region_id,city_id,region) values (712329,7123,'ĞÂÎİÏç');
-insert into web_regions (region_id,city_id,region) values (712330,7123,'¹ÛÒôÏç');
-insert into web_regions (region_id,city_id,region) values (712331,7123,'¸´ĞËÏç');
-insert into web_regions (region_id,city_id,region) values (712401,7124,'Öñ±±ÊĞ');
-insert into web_regions (region_id,city_id,region) values (712421,7124,'Öñ¶«Õò');
-insert into web_regions (region_id,city_id,region) values (712422,7124,'ĞÂÆÒÕò');
-insert into web_regions (region_id,city_id,region) values (712423,7124,'¹ØÎ÷Õò');
-insert into web_regions (region_id,city_id,region) values (712424,7124,'ºş¿ÚÏç');
-insert into web_regions (region_id,city_id,region) values (712425,7124,'ĞÂ·áÏç');
-insert into web_regions (region_id,city_id,region) values (712426,7124,'ÜºÁÖÏç');
-insert into web_regions (region_id,city_id,region) values (712427,7124,'ºáÉ½Ïç');
-insert into web_regions (region_id,city_id,region) values (712428,7124,'±±ÆÒÏç');
-insert into web_regions (region_id,city_id,region) values (712429,7124,'±¦É½Ïç');
-insert into web_regions (region_id,city_id,region) values (712430,7124,'¶ëÃ¼Ïç');
-insert into web_regions (region_id,city_id,region) values (712431,7124,'¼âÊ¯Ïç');
-insert into web_regions (region_id,city_id,region) values (712432,7124,'Îå·åÏç');
-insert into web_regions (region_id,city_id,region) values (712501,7125,'ÃçÀõÊĞ');
-insert into web_regions (region_id,city_id,region) values (712521,7125,'Ô·ÀïÕò');
-insert into web_regions (region_id,city_id,region) values (712522,7125,'Í¨ÏöÕò');
-insert into web_regions (region_id,city_id,region) values (712523,7125,'ÖñÄÏÕò');
-insert into web_regions (region_id,city_id,region) values (712524,7125,'Í··İÕò');
-insert into web_regions (region_id,city_id,region) values (712525,7125,'ºóÁúÕò');
-insert into web_regions (region_id,city_id,region) values (712526,7125,'×¿À¼Õò');
-insert into web_regions (region_id,city_id,region) values (712527,7125,'´óºşÏç');
-insert into web_regions (region_id,city_id,region) values (712528,7125,'¹«¹İÏç');
-insert into web_regions (region_id,city_id,region) values (712529,7125,'Í­ÂàÏç');
-insert into web_regions (region_id,city_id,region) values (712530,7125,'ÄÏ×¯Ïç');
-insert into web_regions (region_id,city_id,region) values (712531,7125,'Í·ÎİÏç');
-insert into web_regions (region_id,city_id,region) values (712532,7125,'ÈıÒåÏç');
-insert into web_regions (region_id,city_id,region) values (712533,7125,'Î÷ºşÏç');
-insert into web_regions (region_id,city_id,region) values (712534,7125,'ÔìÇÅÏç');
-insert into web_regions (region_id,city_id,region) values (712535,7125,'ÈıÍåÏç');
-insert into web_regions (region_id,city_id,region) values (712536,7125,'Ê¨Ì¶Ïç');
-insert into web_regions (region_id,city_id,region) values (712537,7125,'Ì©°²Ïç');
-insert into web_regions (region_id,city_id,region) values (712701,7127,'ÕÃ»¯ÊĞ');
-insert into web_regions (region_id,city_id,region) values (712721,7127,'Â¹¸ÛÕò');
-insert into web_regions (region_id,city_id,region) values (712722,7127,'ºÍÃÀÕò');
-insert into web_regions (region_id,city_id,region) values (712723,7127,'ÏßÎ÷Ïç');
-insert into web_regions (region_id,city_id,region) values (712724,7127,'Éì¸ÛÏç');
-insert into web_regions (region_id,city_id,region) values (712725,7127,'¸£ĞËÏç');
-insert into web_regions (region_id,city_id,region) values (712726,7127,'ĞãË®Ïç');
-insert into web_regions (region_id,city_id,region) values (712727,7127,'»¨Ì³Ïç');
-insert into web_regions (region_id,city_id,region) values (712728,7127,'·ÒÔ°Ïç');
-insert into web_regions (region_id,city_id,region) values (712729,7127,'Ô±ÁÖÕò');
-insert into web_regions (region_id,city_id,region) values (712730,7127,'ÏªºşÕò');
-insert into web_regions (region_id,city_id,region) values (712731,7127,'ÌïÖĞÕò');
-insert into web_regions (region_id,city_id,region) values (712732,7127,'´ó´åÏç');
-insert into web_regions (region_id,city_id,region) values (712733,7127,'ÆÒÑÎÏç');
-insert into web_regions (region_id,city_id,region) values (712734,7127,'ÆÒĞÄÏç');
-insert into web_regions (region_id,city_id,region) values (712735,7127,'ÓÀ¾¸Ïç');
-insert into web_regions (region_id,city_id,region) values (712736,7127,'ÉçÍ·Ïç');
-insert into web_regions (region_id,city_id,region) values (712737,7127,'¶şË®Ïç');
-insert into web_regions (region_id,city_id,region) values (712738,7127,'±±¶·Õò');
-insert into web_regions (region_id,city_id,region) values (712739,7127,'¶şÁÖÕò');
-insert into web_regions (region_id,city_id,region) values (712740,7127,'ÌïÎ²Ïç');
-insert into web_regions (region_id,city_id,region) values (712741,7127,'ÛıÍ·Ïç');
-insert into web_regions (region_id,city_id,region) values (712742,7127,'·¼Ô·Ïç');
-insert into web_regions (region_id,city_id,region) values (712743,7127,'´ó³ÇÏç');
-insert into web_regions (region_id,city_id,region) values (712744,7127,'ÖñÌÁÏç');
-insert into web_regions (region_id,city_id,region) values (712745,7127,'ÏªÖİÏç');
-insert into web_regions (region_id,city_id,region) values (712801,7128,'ÄÏÍ¶ÊĞ');
-insert into web_regions (region_id,city_id,region) values (712821,7128,'ÆÒÀïÕò');
-insert into web_regions (region_id,city_id,region) values (712822,7128,'²İÍÍÕò');
-insert into web_regions (region_id,city_id,region) values (712823,7128,'ÖñÉ½Õò');
-insert into web_regions (region_id,city_id,region) values (712824,7128,'¼¯¼¯Õò');
-insert into web_regions (region_id,city_id,region) values (712825,7128,'Ãû¼äÏç');
-insert into web_regions (region_id,city_id,region) values (712826,7128,'Â¹¹ÈÏç');
-insert into web_regions (region_id,city_id,region) values (712827,7128,'ÖĞå¼Ïç');
-insert into web_regions (region_id,city_id,region) values (712828,7128,'Óã³ØÏç');
-insert into web_regions (region_id,city_id,region) values (712829,7128,'¹úĞÕÏç');
-insert into web_regions (region_id,city_id,region) values (712830,7128,'Ë®ÀïÏç');
-insert into web_regions (region_id,city_id,region) values (712831,7128,'ĞÅÒåÏç');
-insert into web_regions (region_id,city_id,region) values (712832,7128,'ÈÊ°®Ïç');
-insert into web_regions (region_id,city_id,region) values (712901,7129,'¶·ÁùÊĞ');
-insert into web_regions (region_id,city_id,region) values (712921,7129,'¶·ÄÏÕò');
-insert into web_regions (region_id,city_id,region) values (712922,7129,'»¢Î²Õò');
-insert into web_regions (region_id,city_id,region) values (712923,7129,'Î÷ÂİÕò');
-insert into web_regions (region_id,city_id,region) values (712924,7129,'ÍÁ¿âÕò');
-insert into web_regions (region_id,city_id,region) values (712925,7129,'±±¸ÛÕò');
-insert into web_regions (region_id,city_id,region) values (712926,7129,'¹Å¿ÓÏç');
-insert into web_regions (region_id,city_id,region) values (712927,7129,'´óÛıÏç');
-insert into web_regions (region_id,city_id,region) values (712928,7129,'Ç„Í©Ïç');
-insert into web_regions (region_id,city_id,region) values (712929,7129,'ÁÖÄÚÏç');
-insert into web_regions (region_id,city_id,region) values (712930,7129,'¶şÂØÏç');
-insert into web_regions (region_id,city_id,region) values (712931,7129,'ÂØ±³Ïç');
-insert into web_regions (region_id,city_id,region) values (712932,7129,'Âóå¼Ïç');
-insert into web_regions (region_id,city_id,region) values (712933,7129,'¶«ÊÆÏç');
-insert into web_regions (region_id,city_id,region) values (712934,7129,'°ıÖÒÏç');
-insert into web_regions (region_id,city_id,region) values (712935,7129,'Ì¨Î÷Ïç');
-insert into web_regions (region_id,city_id,region) values (712936,7129,'Ôª³¤Ïç');
-insert into web_regions (region_id,city_id,region) values (712937,7129,'ËÄºşÏç');
-insert into web_regions (region_id,city_id,region) values (712938,7129,'¿ÚºşÏç');
-insert into web_regions (region_id,city_id,region) values (712939,7129,'Ë®ÁÖÏç');
-insert into web_regions (region_id,city_id,region) values (713001,7130,'Ì«±£ÊĞ');
-insert into web_regions (region_id,city_id,region) values (713002,7130,'ÆÓ×ÓÊĞ');
-insert into web_regions (region_id,city_id,region) values (713023,7130,'²¼´üÕò');
-insert into web_regions (region_id,city_id,region) values (713024,7130,'´óÁÖÕò');
-insert into web_regions (region_id,city_id,region) values (713025,7130,'ÃñĞÛÏç');
-insert into web_regions (region_id,city_id,region) values (713026,7130,'Ïª¿ÚÏç');
-insert into web_regions (region_id,city_id,region) values (713027,7130,'ĞÂ¸ÛÏç');
-insert into web_regions (region_id,city_id,region) values (713028,7130,'Áù½ÅÏç');
-insert into web_regions (region_id,city_id,region) values (713029,7130,'¶«Ê¯Ïç');
-insert into web_regions (region_id,city_id,region) values (713030,7130,'ÒåÖñÏç');
-insert into web_regions (region_id,city_id,region) values (713031,7130,'Â¹²İÏç');
-insert into web_regions (region_id,city_id,region) values (713032,7130,'Ë®ÉÏÏç');
-insert into web_regions (region_id,city_id,region) values (713033,7130,'ÖĞÆÒÏç');
-insert into web_regions (region_id,city_id,region) values (713034,7130,'ÖñÆéÏç');
-insert into web_regions (region_id,city_id,region) values (713035,7130,'Ã·É½Ïç');
-insert into web_regions (region_id,city_id,region) values (713036,7130,'·¬Â·Ïç');
-insert into web_regions (region_id,city_id,region) values (713037,7130,'´óÆÒÏç');
-insert into web_regions (region_id,city_id,region) values (713038,7130,'°¢ÀïÉ½Ïç');
-insert into web_regions (region_id,city_id,region) values (713301,7133,'ÆÁ¶«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (713321,7133,'³±ÖİÕò');
-insert into web_regions (region_id,city_id,region) values (713322,7133,'¶«¸ÛÕò');
-insert into web_regions (region_id,city_id,region) values (713323,7133,'ºã´ºÕò');
-insert into web_regions (region_id,city_id,region) values (713324,7133,'Íòµ¤Ïç');
-insert into web_regions (region_id,city_id,region) values (713325,7133,'³¤ÖÎÏç');
-insert into web_regions (region_id,city_id,region) values (713326,7133,'÷ëÂåÏç');
-insert into web_regions (region_id,city_id,region) values (713327,7133,'¾ÅÈçÏç');
-insert into web_regions (region_id,city_id,region) values (713328,7133,'Àï¸ÛÏç');
-insert into web_regions (region_id,city_id,region) values (713329,7133,'ÑÎÆÒÏç');
-insert into web_regions (region_id,city_id,region) values (713330,7133,'¸ßÊ÷Ïç');
-insert into web_regions (region_id,city_id,region) values (713331,7133,'ÍòÂÍÏç');
-insert into web_regions (region_id,city_id,region) values (713332,7133,'ÄÚÆÒÏç');
-insert into web_regions (region_id,city_id,region) values (713333,7133,'ÖñÌïÏç');
-insert into web_regions (region_id,city_id,region) values (713334,7133,'ĞÂÛıÏç');
-insert into web_regions (region_id,city_id,region) values (713335,7133,'èÊå¼Ïç');
-insert into web_regions (region_id,city_id,region) values (713336,7133,'ĞÂÔ°Ïç');
-insert into web_regions (region_id,city_id,region) values (713337,7133,'€¶¥Ïç');
-insert into web_regions (region_id,city_id,region) values (713338,7133,'ÁÖ±ßÏç');
-insert into web_regions (region_id,city_id,region) values (713339,7133,'ÄÏÖİÏç');
-insert into web_regions (region_id,city_id,region) values (713340,7133,'¼Ñ¶¬Ïç');
-insert into web_regions (region_id,city_id,region) values (713341,7133,'ÁğÇòÏç');
-insert into web_regions (region_id,city_id,region) values (713342,7133,'³µ³ÇÏç');
-insert into web_regions (region_id,city_id,region) values (713343,7133,'ÂúÖİÏç');
-insert into web_regions (region_id,city_id,region) values (713344,7133,'èÊÉ½Ïç');
-insert into web_regions (region_id,city_id,region) values (713345,7133,'ÈıµØÃÅÏç');
-insert into web_regions (region_id,city_id,region) values (713346,7133,'ÎíÌ¨Ïç');
-insert into web_regions (region_id,city_id,region) values (713347,7133,'Âê¼ÒÏç');
-insert into web_regions (region_id,city_id,region) values (713348,7133,'Ì©ÎäÏç');
-insert into web_regions (region_id,city_id,region) values (713349,7133,'À´ÒåÏç');
-insert into web_regions (region_id,city_id,region) values (713350,7133,'´ºÈÕÏç');
-insert into web_regions (region_id,city_id,region) values (713351,7133,'Ê¨×ÓÏç');
-insert into web_regions (region_id,city_id,region) values (713352,7133,'Äµµ¤Ïç');
-insert into web_regions (region_id,city_id,region) values (713401,7134,'Ì¨¶«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (713421,7134,'³É¹¦Õò');
-insert into web_regions (region_id,city_id,region) values (713422,7134,'¹ØÉ½Õò');
-insert into web_regions (region_id,city_id,region) values (713423,7134,'±°ÄÏÏç');
-insert into web_regions (region_id,city_id,region) values (713424,7134,'Â¹Ò°Ïç');
-insert into web_regions (region_id,city_id,region) values (713425,7134,'³ØÉÏÏç');
-insert into web_regions (region_id,city_id,region) values (713426,7134,'¶«ºÓÏç');
-insert into web_regions (region_id,city_id,region) values (713427,7134,'³¤±õÏç');
-insert into web_regions (region_id,city_id,region) values (713428,7134,'Ì«ÂéÀïÏç');
-insert into web_regions (region_id,city_id,region) values (713429,7134,'´óÎäÏç');
-insert into web_regions (region_id,city_id,region) values (713430,7134,'ÂÌµºÏç');
-insert into web_regions (region_id,city_id,region) values (713431,7134,'º£¶ËÏç');
-insert into web_regions (region_id,city_id,region) values (713432,7134,'ÑÓÆ½Ïç');
-insert into web_regions (region_id,city_id,region) values (713433,7134,'½ğ·åÏç');
-insert into web_regions (region_id,city_id,region) values (713434,7134,'´ïÈÊÏç');
-insert into web_regions (region_id,city_id,region) values (713435,7134,'À¼ÓìÏç');
-insert into web_regions (region_id,city_id,region) values (713501,7135,'»¨Á«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (713521,7135,'·ïÁÖÕò');
-insert into web_regions (region_id,city_id,region) values (713522,7135,'ÓñÀïÕò');
-insert into web_regions (region_id,city_id,region) values (713523,7135,'ĞÂ³ÇÏç');
-insert into web_regions (region_id,city_id,region) values (713524,7135,'¼ª°²Ïç');
-insert into web_regions (region_id,city_id,region) values (713525,7135,'ÊÙ·áÏç');
-insert into web_regions (region_id,city_id,region) values (713526,7135,'¹â¸´Ïç');
-insert into web_regions (region_id,city_id,region) values (713527,7135,'·á±õÏç');
-insert into web_regions (region_id,city_id,region) values (713528,7135,'ÈğËëÏç');
-insert into web_regions (region_id,city_id,region) values (713529,7135,'¸»ÀïÏç');
-insert into web_regions (region_id,city_id,region) values (713530,7135,'ĞãÁÖÏç');
-insert into web_regions (region_id,city_id,region) values (713531,7135,'ÍòÈÙÏç');
-insert into web_regions (region_id,city_id,region) values (713532,7135,'×¿ÏªÏç');
-insert into web_regions (region_id,city_id,region) values (713601,7136,'Âí¹«ÊĞ');
-insert into web_regions (region_id,city_id,region) values (713621,7136,'ºşÎ÷Ïç');
-insert into web_regions (region_id,city_id,region) values (713622,7136,'°×É³Ïç');
-insert into web_regions (region_id,city_id,region) values (713623,7136,'Î÷ÓìÏç');
-insert into web_regions (region_id,city_id,region) values (713624,7136,'Íû°²Ïç');
-insert into web_regions (region_id,city_id,region) values (713625,7136,'ÆßÃÀÏç');
-insert into web_regions (region_id,city_id,region) values (713701,7137,'½ğ³ÇÕò');
-insert into web_regions (region_id,city_id,region) values (713702,7137,'½ğºşÕò');
-insert into web_regions (region_id,city_id,region) values (713703,7137,'½ğÉ³Õò');
-insert into web_regions (region_id,city_id,region) values (713704,7137,'½ğÄşÏç');
-insert into web_regions (region_id,city_id,region) values (713705,7137,'ÁÒÓìÏç');
-insert into web_regions (region_id,city_id,region) values (713706,7137,'ÎÚÇğÏç');
-insert into web_regions (region_id,city_id,region) values (713801,7138,'ÄÏ¸ÍÏç');
-insert into web_regions (region_id,city_id,region) values (713802,7138,'±±¸ÍÏç');
-insert into web_regions (region_id,city_id,region) values (713803,7138,'Üì¹âÏç');
-insert into web_regions (region_id,city_id,region) values (713804,7138,'¶«ÒıÏç');
-insert into web_regions (region_id,city_id,region) values (810101,8101,'ÖĞÎ÷Çø');
-insert into web_regions (region_id,city_id,region) values (810102,8101,'Íå×ĞÇø');
-insert into web_regions (region_id,city_id,region) values (810103,8101,'¶«Çø');
-insert into web_regions (region_id,city_id,region) values (810104,8101,'ÄÏÇø');
-insert into web_regions (region_id,city_id,region) values (810201,8102,'ÓÍ¼âÍúÇø');
-insert into web_regions (region_id,city_id,region) values (810202,8102,'ÉîË®ˆ¶Çø');
-insert into web_regions (region_id,city_id,region) values (810203,8102,'¾ÅÁú³ÇÇø');
-insert into web_regions (region_id,city_id,region) values (810204,8102,'»Æ´óÏÉÇø');
-insert into web_regions (region_id,city_id,region) values (810205,8102,'¹ÛÌÁÇø');
-insert into web_regions (region_id,city_id,region) values (810301,8103,'ÜõÍåÇø');
-insert into web_regions (region_id,city_id,region) values (810302,8103,'ÍÍÃÅÇø');
-insert into web_regions (region_id,city_id,region) values (810303,8103,'ÔªÀÊÇø');
-insert into web_regions (region_id,city_id,region) values (810304,8103,'±±Çø');
-insert into web_regions (region_id,city_id,region) values (810305,8103,'´óÆÒÇø');
-insert into web_regions (region_id,city_id,region) values (810306,8103,'Î÷¹±Çø');
-insert into web_regions (region_id,city_id,region) values (810307,8103,'É³ÌïÇø');
-insert into web_regions (region_id,city_id,region) values (810308,8103,'¿ûÇàÇø');
-insert into web_regions (region_id,city_id,region) values (810309,8103,'ÀëµºÇø');
-insert into web_regions (region_id,city_id,region) values (820101,8201,'»¨µØÂêÌÃÇø');
-insert into web_regions (region_id,city_id,region) values (820102,8201,'Ê¥°²¶àÄáÌÃÇø');
-insert into web_regions (region_id,city_id,region) values (820103,8201,'´óÌÃÇø');
-insert into web_regions (region_id,city_id,region) values (820104,8201,'ÍûµÂÌÃÇø');
-insert into web_regions (region_id,city_id,region) values (820105,8201,'·çË³ÌÃÇø');
-insert into web_regions (region_id,city_id,region) values (820201,8202,'¼ÎÄ£ÌÃÇø');
-insert into web_regions (region_id,city_id,region) values (820301,8203,'Ê¥·½¼Ã¸÷ÌÃÇø');
 
 
-update web_cities set city='ĞÂ½®Î¬Îá¶ûÖ±Ï½ÏØ¼¶' where city_id=6590;
-  update web_cities set city='ºÓÄÏÖ±Ï½ÏØ¼¶' where city_id=4190;
-  update web_cities set city='º£ÄÏÖ±Ï½ÏØ¼¶' where city_id=4690;
-  update web_cities set city='ºş±±Ö±Ï½ÏØ¼¶' where city_id=4290;
+
+
+
+
+
+
+/*provinceåˆå§‹æ•°æ®*/
+
+insert into web_province (province_id,province) values (11,'åŒ—äº¬');
+
+insert into web_province (province_id,province) values (12,'å¤©æ´¥');
+
+insert into web_province (province_id,province) values (13,'æ²³åŒ—çœ');
+
+insert into web_province (province_id,province) values (14,'å±±è¥¿çœ');
+
+insert into web_province (province_id,province) values (15,'å†…è’™å¤è‡ªæ²»åŒº');
+
+insert into web_province (province_id,province) values (21,'è¾½å®çœ');
+
+insert into web_province (province_id,province) values (22,'å‰æ—çœ');
+
+insert into web_province (province_id,province) values (23,'é»‘é¾™æ±Ÿçœ');
+
+insert into web_province (province_id,province) values (31,'ä¸Šæµ·');
+
+insert into web_province (province_id,province) values (32,'æ±Ÿè‹çœ');
+
+insert into web_province (province_id,province) values (33,'æµ™æ±Ÿçœ');
+
+insert into web_province (province_id,province) values (34,'å®‰å¾½çœ');
+
+insert into web_province (province_id,province) values (35,'ç¦å»ºçœ');
+
+insert into web_province (province_id,province) values (36,'æ±Ÿè¥¿çœ');
+
+insert into web_province (province_id,province) values (37,'å±±ä¸œçœ');
+
+insert into web_province (province_id,province) values (41,'æ²³å—çœ');
+
+insert into web_province (province_id,province) values (42,'æ¹–åŒ—çœ');
+
+insert into web_province (province_id,province) values (43,'æ¹–å—çœ');
+
+insert into web_province (province_id,province) values (44,'å¹¿ä¸œçœ');
+
+insert into web_province (province_id,province) values (45,'å¹¿è¥¿å£®æ—è‡ªæ²»åŒº');
+
+insert into web_province (province_id,province) values (46,'æµ·å—çœ');
+
+insert into web_province (province_id,province) values (50,'é‡åº†');
+
+insert into web_province (province_id,province) values (51,'å››å·çœ');
+
+insert into web_province (province_id,province) values (52,'è´µå·çœ');
+
+insert into web_province (province_id,province) values (53,'äº‘å—çœ');
+
+insert into web_province (province_id,province) values (54,'è¥¿è—è‡ªæ²»åŒº');
+
+insert into web_province (province_id,province) values (61,'é™•è¥¿çœ');
+
+insert into web_province (province_id,province) values (62,'ç”˜è‚ƒçœ');
+
+insert into web_province (province_id,province) values (63,'é’æµ·çœ');
+
+insert into web_province (province_id,province) values (64,'å®å¤å›æ—è‡ªæ²»åŒº');
+
+insert into web_province (province_id,province) values (65,'æ–°ç–†ç»´å¾å°”è‡ªæ²»åŒº');
+
+insert into web_province (province_id,province) values (71,'å°æ¹¾');
+
+insert into web_province (province_id,province) values (81,'é¦™æ¸¯ç‰¹åˆ«è¡Œæ”¿åŒº');
+
+insert into web_province (province_id,province) values (82,'æ¾³é—¨ç‰¹åˆ«è¡Œæ”¿åŒº');
+
+insert into web_province (province_id,province) values (90,'é’“é±¼å²›');
+
+
+
+/*web_cityåˆå§‹æ•°æ®*/
+
+insert into web_cities (city_id,province_id,city) values (1101,11,'åŒ—äº¬å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1201,12,'å¤©æ´¥å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1301,13,'çŸ³å®¶åº„å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1302,13,'å”å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1303,13,'ç§¦çš‡å²›å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1304,13,'é‚¯éƒ¸å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1305,13,'é‚¢å°å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1306,13,'ä¿å®šå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1307,13,'å¼ å®¶å£å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1308,13,'æ‰¿å¾·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1309,13,'æ²§å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1310,13,'å»ŠåŠå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1311,13,'è¡¡æ°´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1401,14,'å¤ªåŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1402,14,'å¤§åŒå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1403,14,'é˜³æ³‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1404,14,'é•¿æ²»å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1405,14,'æ™‹åŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1406,14,'æœ”å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1407,14,'æ™‹ä¸­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1408,14,'è¿åŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1409,14,'å¿»å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1410,14,'ä¸´æ±¾å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1411,14,'å•æ¢å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1501,15,'å‘¼å’Œæµ©ç‰¹å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1502,15,'åŒ…å¤´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1503,15,'ä¹Œæµ·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1504,15,'èµ¤å³°å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1505,15,'é€šè¾½å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1506,15,'é„‚å°”å¤šæ–¯å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1507,15,'å‘¼ä¼¦è´å°”å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1508,15,'å·´å½¦æ·–å°”å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1509,15,'ä¹Œå…°å¯Ÿå¸ƒå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (1522,15,'å…´å®‰ç›Ÿ');
+
+insert into web_cities (city_id,province_id,city) values (1525,15,'é”¡æ—éƒ­å‹’ç›Ÿ');
+
+insert into web_cities (city_id,province_id,city) values (1529,15,'é˜¿æ‹‰å–„ç›Ÿ');
+
+insert into web_cities (city_id,province_id,city) values (2101,21,'æ²ˆé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2102,21,'å¤§è¿å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2103,21,'éå±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2104,21,'æŠšé¡ºå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2105,21,'æœ¬æºªå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2106,21,'ä¸¹ä¸œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2107,21,'é”¦å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2108,21,'è¥å£å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2109,21,'é˜œæ–°å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2110,21,'è¾½é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2111,21,'ç›˜é”¦å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2112,21,'é“å²­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2113,21,'æœé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2114,21,'è‘«èŠ¦å²›å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2115,21,'é‡‘æ™®æ–°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (2201,22,'é•¿æ˜¥å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2202,22,'å‰æ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2203,22,'å››å¹³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2204,22,'è¾½æºå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2205,22,'é€šåŒ–å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2206,22,'ç™½å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2207,22,'æ¾åŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2208,22,'ç™½åŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2224,22,'å»¶è¾¹æœé²œæ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (2301,23,'å“ˆå°”æ»¨å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2302,23,'é½é½å“ˆå°”å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2303,23,'é¸¡è¥¿å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2304,23,'é¹¤å²—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2305,23,'åŒé¸­å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2306,23,'å¤§åº†å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2307,23,'ä¼Šæ˜¥å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2308,23,'ä½³æœ¨æ–¯å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2309,23,'ä¸ƒå°æ²³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2310,23,'ç‰¡ä¸¹æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2311,23,'é»‘æ²³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2312,23,'ç»¥åŒ–å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (2327,23,'å¤§å…´å®‰å²­åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (3101,31,'ä¸Šæµ·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3201,32,'å—äº¬å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3202,32,'æ— é”¡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3203,32,'å¾å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3204,32,'å¸¸å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3205,32,'è‹å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3206,32,'å—é€šå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3207,32,'è¿äº‘æ¸¯å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3208,32,'æ·®å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3209,32,'ç›åŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3210,32,'æ‰¬å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3211,32,'é•‡æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3212,32,'æ³°å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3213,32,'å®¿è¿å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3301,33,'æ­å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3302,33,'å®æ³¢å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3303,33,'æ¸©å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3304,33,'å˜‰å…´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3305,33,'æ¹–å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3306,33,'ç»å…´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3307,33,'é‡‘åå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3308,33,'è¡¢å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3309,33,'èˆŸå±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3310,33,'å°å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3311,33,'ä¸½æ°´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3312,33,'èˆŸå±±ç¾¤å²›æ–°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (3401,34,'åˆè‚¥å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3402,34,'èŠœæ¹–å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3403,34,'èšŒåŸ å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3404,34,'æ·®å—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3405,34,'é©¬éå±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3406,34,'æ·®åŒ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3407,34,'é“œé™µå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3408,34,'å®‰åº†å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3410,34,'é»„å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3411,34,'æ»å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3412,34,'é˜œé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3413,34,'å®¿å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3415,34,'å…­å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3416,34,'äº³å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3417,34,'æ± å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3418,34,'å®£åŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3501,35,'ç¦å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3502,35,'å¦é—¨å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3503,35,'è†ç”°å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3504,35,'ä¸‰æ˜å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3505,35,'æ³‰å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3506,35,'æ¼³å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3507,35,'å—å¹³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3508,35,'é¾™å²©å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3509,35,'å®å¾·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3601,36,'å—æ˜Œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3602,36,'æ™¯å¾·é•‡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3603,36,'èä¹¡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3604,36,'ä¹æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3605,36,'æ–°ä½™å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3606,36,'é¹°æ½­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3607,36,'èµ£å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3608,36,'å‰å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3609,36,'å®œæ˜¥å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3610,36,'æŠšå·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3611,36,'ä¸Šé¥¶å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3701,37,'æµå—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3702,37,'é’å²›å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3703,37,'æ·„åšå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3704,37,'æ£åº„å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3705,37,'ä¸œè¥å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3706,37,'çƒŸå°å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3707,37,'æ½åŠå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3708,37,'æµå®å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3709,37,'æ³°å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3710,37,'å¨æµ·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3711,37,'æ—¥ç…§å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3712,37,'è±èŠœå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3713,37,'ä¸´æ²‚å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3714,37,'å¾·å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3715,37,'èŠåŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3716,37,'æ»¨å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (3717,37,'èæ³½å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4101,41,'éƒ‘å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4102,41,'å¼€å°å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4103,41,'æ´›é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4104,41,'å¹³é¡¶å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4105,41,'å®‰é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4106,41,'é¹¤å£å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4107,41,'æ–°ä¹¡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4108,41,'ç„¦ä½œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4109,41,'æ¿®é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4110,41,'è®¸æ˜Œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4111,41,'æ¼¯æ²³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4112,41,'ä¸‰é—¨å³¡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4113,41,'å—é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4114,41,'å•†ä¸˜å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4115,41,'ä¿¡é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4116,41,'å‘¨å£å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4117,41,'é©»é©¬åº—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4190,41,'ç›´è¾–å¿çº§');
+
+insert into web_cities (city_id,province_id,city) values (4201,42,'æ­¦æ±‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4202,42,'é»„çŸ³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4203,42,'åå °å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4205,42,'å®œæ˜Œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4206,42,'è¥„é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4207,42,'é„‚å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4208,42,'è†é—¨å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4209,42,'å­æ„Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4210,42,'è†å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4211,42,'é»„å†ˆå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4212,42,'å’¸å®å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4213,42,'éšå·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4228,42,'æ©æ–½åœŸå®¶æ—è‹—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (4290,42,'ç›´è¾–å¿çº§');
+
+insert into web_cities (city_id,province_id,city) values (4301,43,'é•¿æ²™å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4302,43,'æ ªæ´²å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4303,43,'æ¹˜æ½­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4304,43,'è¡¡é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4305,43,'é‚µé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4306,43,'å²³é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4307,43,'å¸¸å¾·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4308,43,'å¼ å®¶ç•Œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4309,43,'ç›Šé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4310,43,'éƒ´å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4311,43,'æ°¸å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4312,43,'æ€€åŒ–å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4313,43,'å¨„åº•å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4331,43,'æ¹˜è¥¿åœŸå®¶æ—è‹—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (4401,44,'å¹¿å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4402,44,'éŸ¶å…³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4403,44,'æ·±åœ³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4404,44,'ç æµ·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4405,44,'æ±•å¤´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4406,44,'ä½›å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4407,44,'æ±Ÿé—¨å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4408,44,'æ¹›æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4409,44,'èŒ‚åå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4412,44,'è‚‡åº†å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4413,44,'æƒ å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4414,44,'æ¢…å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4415,44,'æ±•å°¾å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4416,44,'æ²³æºå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4417,44,'é˜³æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4418,44,'æ¸…è¿œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4419,44,'ä¸œèå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4420,44,'ä¸­å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4451,44,'æ½®å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4452,44,'æ­é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4453,44,'äº‘æµ®å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4501,45,'å—å®å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4502,45,'æŸ³å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4503,45,'æ¡‚æ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4504,45,'æ¢§å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4505,45,'åŒ—æµ·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4506,45,'é˜²åŸæ¸¯å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4507,45,'é’¦å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4508,45,'è´µæ¸¯å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4509,45,'ç‰æ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4510,45,'ç™¾è‰²å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4511,45,'è´ºå·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4512,45,'æ²³æ± å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4513,45,'æ¥å®¾å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4514,45,'å´‡å·¦å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4601,46,'æµ·å£å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4602,46,'ä¸‰äºšå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4603,46,'ä¸‰æ²™å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (4690,46,'ç›´è¾–å¿çº§');
+
+insert into web_cities (city_id,province_id,city) values (5001,50,'é‡åº†å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5003,50,'ä¸¤æ±Ÿæ–°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (5101,51,'æˆéƒ½å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5103,51,'è‡ªè´¡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5104,51,'æ”€æèŠ±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5105,51,'æ³¸å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5106,51,'å¾·é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5107,51,'ç»µé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5108,51,'å¹¿å…ƒå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5109,51,'é‚å®å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5110,51,'å†…æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5111,51,'ä¹å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5113,51,'å—å……å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5114,51,'çœ‰å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5115,51,'å®œå®¾å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5116,51,'å¹¿å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5117,51,'è¾¾å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5118,51,'é›…å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5119,51,'å·´ä¸­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5120,51,'èµ„é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5132,51,'é˜¿åè—æ—ç¾Œæ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5133,51,'ç”˜å­œè—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5134,51,'å‡‰å±±å½æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5201,52,'è´µé˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5202,52,'å…­ç›˜æ°´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5203,52,'éµä¹‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5204,52,'å®‰é¡ºå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5205,52,'æ¯•èŠ‚å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5206,52,'é“œä»å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5223,52,'é»”è¥¿å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5226,52,'é»”ä¸œå—è‹—æ—ä¾—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5227,52,'é»”å—å¸ƒä¾æ—è‹—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5301,53,'æ˜†æ˜å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5303,53,'æ›²é–å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5304,53,'ç‰æºªå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5305,53,'ä¿å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5306,53,'æ˜­é€šå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5307,53,'ä¸½æ±Ÿå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5308,53,'æ™®æ´±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5309,53,'ä¸´æ²§å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5323,53,'æ¥šé›„å½æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5325,53,'çº¢æ²³å“ˆå°¼æ—å½æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5326,53,'æ–‡å±±å£®æ—è‹—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5328,53,'è¥¿åŒç‰ˆçº³å‚£æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5329,53,'å¤§ç†ç™½æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5331,53,'å¾·å®å‚£æ—æ™¯é¢‡æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5333,53,'æ€’æ±Ÿå‚ˆåƒ³æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5334,53,'è¿ªåº†è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (5401,54,'æ‹‰è¨å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5402,54,'æ—¥å–€åˆ™å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5403,54,'æ˜Œéƒ½å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (5422,54,'å±±å—åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (5424,54,'é‚£æ›²åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (5425,54,'é˜¿é‡Œåœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (5426,54,'æ—èŠåœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6101,61,'è¥¿å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6102,61,'é“œå·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6103,61,'å®é¸¡å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6104,61,'å’¸é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6105,61,'æ¸­å—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6106,61,'å»¶å®‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6107,61,'æ±‰ä¸­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6108,61,'æ¦†æ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6109,61,'å®‰åº·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6110,61,'å•†æ´›å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6111,61,'è¥¿å’¸æ–°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6201,62,'å…°å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6202,62,'å˜‰å³ªå…³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6203,62,'é‡‘æ˜Œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6204,62,'ç™½é“¶å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6205,62,'å¤©æ°´å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6206,62,'æ­¦å¨å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6207,62,'å¼ æ–å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6208,62,'å¹³å‡‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6209,62,'é…’æ³‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6210,62,'åº†é˜³å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6211,62,'å®šè¥¿å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6212,62,'é™‡å—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6229,62,'ä¸´å¤å›æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6230,62,'ç”˜å—è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6301,63,'è¥¿å®å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6302,63,'æµ·ä¸œå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6322,63,'æµ·åŒ—è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6323,63,'é»„å—è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6325,63,'æµ·å—è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6326,63,'æœæ´›è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6327,63,'ç‰æ ‘è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6328,63,'æµ·è¥¿è’™å¤æ—è—æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6401,64,'é“¶å·å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6402,64,'çŸ³å˜´å±±å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6403,64,'å´å¿ å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6404,64,'å›ºåŸå¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6405,64,'ä¸­å«å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6501,65,'ä¹Œé²æœ¨é½å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6502,65,'å…‹æ‹‰ç›ä¾å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (6521,65,'åé²ç•ªåœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6522,65,'å“ˆå¯†åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6523,65,'æ˜Œå‰å›æ—è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6527,65,'åšå°”å¡”æ‹‰è’™å¤è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6528,65,'å·´éŸ³éƒ­æ¥è’™å¤è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6529,65,'é˜¿å…‹è‹åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6530,65,'å…‹å­œå‹’è‹æŸ¯å°”å…‹å­œè‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6531,65,'å–€ä»€åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6532,65,'å’Œç”°åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6540,65,'ä¼ŠçŠå“ˆè¨å…‹è‡ªæ²»å·');
+
+insert into web_cities (city_id,province_id,city) values (6542,65,'å¡”åŸåœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6543,65,'é˜¿å‹’æ³°åœ°åŒº');
+
+insert into web_cities (city_id,province_id,city) values (6590,65,'ç›´è¾–å¿çº§');
+
+insert into web_cities (city_id,province_id,city) values (7101,71,'å°åŒ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7102,71,'é«˜é›„å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7103,71,'åŸºéš†å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7104,71,'å°ä¸­å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7105,71,'å°å—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7106,71,'æ–°ç«¹å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7107,71,'å˜‰ä¹‰å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7108,71,'æ–°åŒ—å¸‚');
+
+insert into web_cities (city_id,province_id,city) values (7122,71,'å®œå…°å¿');
+
+insert into web_cities (city_id,province_id,city) values (7123,71,'æ¡ƒå›­å¿');
+
+insert into web_cities (city_id,province_id,city) values (7124,71,'æ–°ç«¹å¿');
+
+insert into web_cities (city_id,province_id,city) values (7125,71,'è‹—æ —å¿');
+
+insert into web_cities (city_id,province_id,city) values (7127,71,'å½°åŒ–å¿');
+
+insert into web_cities (city_id,province_id,city) values (7128,71,'å—æŠ•å¿');
+
+insert into web_cities (city_id,province_id,city) values (7129,71,'äº‘æ—å¿');
+
+insert into web_cities (city_id,province_id,city) values (7130,71,'å˜‰ä¹‰å¿');
+
+insert into web_cities (city_id,province_id,city) values (7133,71,'å±ä¸œå¿');
+
+insert into web_cities (city_id,province_id,city) values (7134,71,'å°ä¸œå¿');
+
+insert into web_cities (city_id,province_id,city) values (7135,71,'èŠ±è²å¿');
+
+insert into web_cities (city_id,province_id,city) values (7136,71,'æ¾æ¹–å¿');
+
+insert into web_cities (city_id,province_id,city) values (7137,71,'é‡‘é—¨å¿');
+
+insert into web_cities (city_id,province_id,city) values (7138,71,'è¿æ±Ÿå¿');
+
+insert into web_cities (city_id,province_id,city) values (8101,81,'é¦™æ¸¯å²›');
+
+insert into web_cities (city_id,province_id,city) values (8102,81,'ä¹é¾™');
+
+insert into web_cities (city_id,province_id,city) values (8103,81,'æ–°ç•Œ');
+
+insert into web_cities (city_id,province_id,city) values (8201,82,'æ¾³é—¨åŠå²›');
+
+insert into web_cities (city_id,province_id,city) values (8202,82,'æ°¹ä»”å²›');
+
+insert into web_cities (city_id,province_id,city) values (8203,82,'è·¯ç¯å²›');
+
+
+
+/*web_regionsåˆå§‹æ•°æ®*/
+
+insert into web_regions (region_id,city_id,region) values (110101,1101,'ä¸œåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (110102,1101,'è¥¿åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (110105,1101,'æœé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110106,1101,'ä¸°å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110107,1101,'çŸ³æ™¯å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110108,1101,'æµ·æ·€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110109,1101,'é—¨å¤´æ²ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (110111,1101,'æˆ¿å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110112,1101,'é€šå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110113,1101,'é¡ºä¹‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110114,1101,'æ˜Œå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110115,1101,'å¤§å…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110116,1101,'æ€€æŸ”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110117,1101,'å¹³è°·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (110228,1101,'å¯†äº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (110229,1101,'å»¶åº†å¿');
+
+insert into web_regions (region_id,city_id,region) values (120101,1201,'å’Œå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120102,1201,'æ²³ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (120103,1201,'æ²³è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120104,1201,'å—å¼€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120105,1201,'æ²³åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120106,1201,'çº¢æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120110,1201,'ä¸œä¸½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120111,1201,'è¥¿é’åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120112,1201,'æ´¥å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120113,1201,'åŒ—è¾°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120114,1201,'æ­¦æ¸…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120115,1201,'å®å»åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120116,1201,'æ»¨æµ·æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (120221,1201,'å®æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (120223,1201,'é™æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (120225,1201,'è“Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (130102,1301,'é•¿å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130104,1301,'æ¡¥è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130105,1301,'æ–°ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (130107,1301,'äº•é™‰çŸ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130108,1301,'è£•ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (130109,1301,'è—åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (130110,1301,'é¹¿æ³‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130111,1301,'æ ¾åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (130121,1301,'äº•é™‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130123,1301,'æ­£å®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (130125,1301,'è¡Œå”å¿');
+
+insert into web_regions (region_id,city_id,region) values (130126,1301,'çµå¯¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (130127,1301,'é«˜é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (130128,1301,'æ·±æ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (130129,1301,'èµçš‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (130130,1301,'æ— æå¿');
+
+insert into web_regions (region_id,city_id,region) values (130131,1301,'å¹³å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (130132,1301,'å…ƒæ°å¿');
+
+insert into web_regions (region_id,city_id,region) values (130133,1301,'èµµå¿');
+
+insert into web_regions (region_id,city_id,region) values (130181,1301,'è¾›é›†å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130183,1301,'æ™‹å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130184,1301,'æ–°ä¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130202,1302,'è·¯å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130203,1302,'è·¯åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130204,1302,'å¤å†¶åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130205,1302,'å¼€å¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130207,1302,'ä¸°å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130208,1302,'ä¸°æ¶¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130209,1302,'æ›¹å¦ƒç”¸åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130223,1302,'æ»¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (130224,1302,'æ»¦å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (130225,1302,'ä¹äº­å¿');
+
+insert into web_regions (region_id,city_id,region) values (130227,1302,'è¿è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (130229,1302,'ç‰ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (130281,1302,'éµåŒ–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130283,1302,'è¿å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130302,1303,'æµ·æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130303,1303,'å±±æµ·å…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130304,1303,'åŒ—æˆ´æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130321,1303,'é’é¾™æ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130322,1303,'æ˜Œé»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130323,1303,'æŠšå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (130324,1303,'å¢é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (130402,1304,'é‚¯å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130403,1304,'ä¸›å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130404,1304,'å¤å…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130406,1304,'å³°å³°çŸ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130421,1304,'é‚¯éƒ¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (130423,1304,'ä¸´æ¼³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130424,1304,'æˆå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130425,1304,'å¤§åå¿');
+
+insert into web_regions (region_id,city_id,region) values (130426,1304,'æ¶‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130427,1304,'ç£å¿');
+
+insert into web_regions (region_id,city_id,region) values (130428,1304,'è‚¥ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (130429,1304,'æ°¸å¹´å¿');
+
+insert into web_regions (region_id,city_id,region) values (130430,1304,'é‚±å¿');
+
+insert into web_regions (region_id,city_id,region) values (130431,1304,'é¸¡æ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (130432,1304,'å¹¿å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130433,1304,'é¦†é™¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (130434,1304,'é­å¿');
+
+insert into web_regions (region_id,city_id,region) values (130435,1304,'æ›²å‘¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (130481,1304,'æ­¦å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130502,1305,'æ¡¥ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (130503,1305,'æ¡¥è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130521,1305,'é‚¢å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (130522,1305,'ä¸´åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (130523,1305,'å†…ä¸˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (130524,1305,'æŸä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (130525,1305,'éš†å°§å¿');
+
+insert into web_regions (region_id,city_id,region) values (130526,1305,'ä»»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130527,1305,'å—å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (130528,1305,'å®æ™‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (130529,1305,'å·¨é¹¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (130530,1305,'æ–°æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130531,1305,'å¹¿å®—å¿');
+
+insert into web_regions (region_id,city_id,region) values (130532,1305,'å¹³ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (130533,1305,'å¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (130534,1305,'æ¸…æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130535,1305,'ä¸´è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (130581,1305,'å—å®«å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130582,1305,'æ²™æ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130602,1306,'æ–°å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130603,1306,'åŒ—å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130604,1306,'å—å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130621,1306,'æ»¡åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (130622,1306,'æ¸…è‹‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (130623,1306,'æ¶æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (130624,1306,'é˜œå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130625,1306,'å¾æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (130626,1306,'å®šå…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (130627,1306,'å”å¿');
+
+insert into web_regions (region_id,city_id,region) values (130628,1306,'é«˜é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130629,1306,'å®¹åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (130630,1306,'æ¶æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (130631,1306,'æœ›éƒ½å¿');
+
+insert into web_regions (region_id,city_id,region) values (130632,1306,'å®‰æ–°å¿');
+
+insert into web_regions (region_id,city_id,region) values (130633,1306,'æ˜“å¿');
+
+insert into web_regions (region_id,city_id,region) values (130634,1306,'æ›²é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130635,1306,'è ¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (130636,1306,'é¡ºå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130637,1306,'åšé‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (130638,1306,'é›„å¿');
+
+insert into web_regions (region_id,city_id,region) values (130681,1306,'æ¶¿å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130682,1306,'å®šå·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130683,1306,'å®‰å›½å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130684,1306,'é«˜ç¢‘åº—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130702,1307,'æ¡¥ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (130703,1307,'æ¡¥è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130705,1307,'å®£åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130706,1307,'ä¸‹èŠ±å›­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130721,1307,'å®£åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (130722,1307,'å¼ åŒ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (130723,1307,'åº·ä¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (130724,1307,'æ²½æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (130725,1307,'å°šä¹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130726,1307,'è”šå¿');
+
+insert into web_regions (region_id,city_id,region) values (130727,1307,'é˜³åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (130728,1307,'æ€€å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130729,1307,'ä¸‡å…¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (130730,1307,'æ€€æ¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (130731,1307,'æ¶¿é¹¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (130732,1307,'èµ¤åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (130733,1307,'å´‡ç¤¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (130802,1308,'åŒæ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130803,1308,'åŒæ»¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130804,1308,'é¹°æ‰‹è¥å­çŸ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130821,1308,'æ‰¿å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (130822,1308,'å…´éš†å¿');
+
+insert into web_regions (region_id,city_id,region) values (130823,1308,'å¹³æ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130824,1308,'æ»¦å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (130825,1308,'éš†åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (130826,1308,'ä¸°å®æ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130827,1308,'å®½åŸæ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130828,1308,'å›´åœºæ»¡æ—è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130902,1309,'æ–°ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (130903,1309,'è¿æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (130921,1309,'æ²§å¿');
+
+insert into web_regions (region_id,city_id,region) values (130922,1309,'é’å¿');
+
+insert into web_regions (region_id,city_id,region) values (130923,1309,'ä¸œå…‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (130924,1309,'æµ·å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (130925,1309,'ç›å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (130926,1309,'è‚ƒå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (130927,1309,'å—çš®å¿');
+
+insert into web_regions (region_id,city_id,region) values (130928,1309,'å´æ¡¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (130929,1309,'çŒ®å¿');
+
+insert into web_regions (region_id,city_id,region) values (130930,1309,'å­Ÿæ‘å›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (130981,1309,'æ³Šå¤´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130982,1309,'ä»»ä¸˜å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130983,1309,'é»„éª…å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (130984,1309,'æ²³é—´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (131002,1310,'å®‰æ¬¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (131003,1310,'å¹¿é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (131022,1310,'å›ºå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (131023,1310,'æ°¸æ¸…å¿');
+
+insert into web_regions (region_id,city_id,region) values (131024,1310,'é¦™æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (131025,1310,'å¤§åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (131026,1310,'æ–‡å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (131028,1310,'å¤§å‚å›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (131081,1310,'éœ¸å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (131082,1310,'ä¸‰æ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (131102,1311,'æ¡ƒåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (131121,1311,'æ£å¼ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (131122,1311,'æ­¦é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (131123,1311,'æ­¦å¼ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (131124,1311,'é¥¶é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (131125,1311,'å®‰å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (131126,1311,'æ•…åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (131127,1311,'æ™¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (131128,1311,'é˜œåŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (131181,1311,'å†€å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (131182,1311,'æ·±å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140105,1401,'å°åº—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140106,1401,'è¿æ³½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140107,1401,'æèŠ±å²­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140108,1401,'å°–è‰åªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140109,1401,'ä¸‡æŸæ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140110,1401,'æ™‹æºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140121,1401,'æ¸…å¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (140122,1401,'é˜³æ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (140123,1401,'å¨„çƒ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (140181,1401,'å¤äº¤å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140202,1402,'åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140203,1402,'çŸ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140211,1402,'å—éƒŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140212,1402,'æ–°è£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140221,1402,'é˜³é«˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (140222,1402,'å¤©é•‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (140223,1402,'å¹¿çµå¿');
+
+insert into web_regions (region_id,city_id,region) values (140224,1402,'çµä¸˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (140225,1402,'æµ‘æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (140226,1402,'å·¦äº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (140227,1402,'å¤§åŒå¿');
+
+insert into web_regions (region_id,city_id,region) values (140302,1403,'åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140303,1403,'çŸ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140311,1403,'éƒŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140321,1403,'å¹³å®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (140322,1403,'ç›‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (140402,1404,'åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140411,1404,'éƒŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140421,1404,'é•¿æ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (140423,1404,'è¥„å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (140424,1404,'å±¯ç•™å¿');
+
+insert into web_regions (region_id,city_id,region) values (140425,1404,'å¹³é¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (140426,1404,'é»åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (140427,1404,'å£¶å…³å¿');
+
+insert into web_regions (region_id,city_id,region) values (140428,1404,'é•¿å­å¿');
+
+insert into web_regions (region_id,city_id,region) values (140429,1404,'æ­¦ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (140430,1404,'æ²å¿');
+
+insert into web_regions (region_id,city_id,region) values (140431,1404,'æ²æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (140481,1404,'æ½åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140502,1405,'åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140521,1405,'æ²æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (140522,1405,'é˜³åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (140524,1405,'é™µå·å¿');
+
+insert into web_regions (region_id,city_id,region) values (140525,1405,'æ³½å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (140581,1405,'é«˜å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140602,1406,'æœ”åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140603,1406,'å¹³é²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140621,1406,'å±±é˜´å¿');
+
+insert into web_regions (region_id,city_id,region) values (140622,1406,'åº”å¿');
+
+insert into web_regions (region_id,city_id,region) values (140623,1406,'å³ç‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (140624,1406,'æ€€ä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (140702,1407,'æ¦†æ¬¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140721,1407,'æ¦†ç¤¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (140722,1407,'å·¦æƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (140723,1407,'å’Œé¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (140724,1407,'æ˜”é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (140725,1407,'å¯¿é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (140726,1407,'å¤ªè°·å¿');
+
+insert into web_regions (region_id,city_id,region) values (140727,1407,'ç¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (140728,1407,'å¹³é¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (140729,1407,'çµçŸ³å¿');
+
+insert into web_regions (region_id,city_id,region) values (140781,1407,'ä»‹ä¼‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140802,1408,'ç›æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (140821,1408,'ä¸´çŒ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (140822,1408,'ä¸‡è£å¿');
+
+insert into web_regions (region_id,city_id,region) values (140823,1408,'é—»å–œå¿');
+
+insert into web_regions (region_id,city_id,region) values (140824,1408,'ç¨·å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (140825,1408,'æ–°ç»›å¿');
+
+insert into web_regions (region_id,city_id,region) values (140826,1408,'ç»›å¿');
+
+insert into web_regions (region_id,city_id,region) values (140827,1408,'å£æ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (140828,1408,'å¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (140829,1408,'å¹³é™†å¿');
+
+insert into web_regions (region_id,city_id,region) values (140830,1408,'èŠ®åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (140881,1408,'æ°¸æµå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140882,1408,'æ²³æ´¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (140902,1409,'å¿»åºœåŒº');
+
+insert into web_regions (region_id,city_id,region) values (140921,1409,'å®šè¥„å¿');
+
+insert into web_regions (region_id,city_id,region) values (140922,1409,'äº”å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (140923,1409,'ä»£å¿');
+
+insert into web_regions (region_id,city_id,region) values (140924,1409,'ç¹å³™å¿');
+
+insert into web_regions (region_id,city_id,region) values (140925,1409,'å®æ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (140926,1409,'é™ä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (140927,1409,'ç¥æ± å¿');
+
+insert into web_regions (region_id,city_id,region) values (140928,1409,'äº”å¯¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (140929,1409,'å²¢å²šå¿');
+
+insert into web_regions (region_id,city_id,region) values (140930,1409,'æ²³æ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (140931,1409,'ä¿å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (140932,1409,'åå…³å¿');
+
+insert into web_regions (region_id,city_id,region) values (140981,1409,'åŸå¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (141002,1410,'å°§éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (141021,1410,'æ›²æ²ƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (141022,1410,'ç¿¼åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (141023,1410,'è¥„æ±¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (141024,1410,'æ´ªæ´å¿');
+
+insert into web_regions (region_id,city_id,region) values (141025,1410,'å¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (141026,1410,'å®‰æ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (141027,1410,'æµ®å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (141028,1410,'å‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (141029,1410,'ä¹¡å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (141030,1410,'å¤§å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (141031,1410,'éš°å¿');
+
+insert into web_regions (region_id,city_id,region) values (141032,1410,'æ°¸å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (141033,1410,'è’²å¿');
+
+insert into web_regions (region_id,city_id,region) values (141034,1410,'æ±¾è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (141081,1410,'ä¾¯é©¬å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (141082,1410,'éœå·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (141102,1411,'ç¦»çŸ³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (141121,1411,'æ–‡æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (141122,1411,'äº¤åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (141123,1411,'å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (141124,1411,'ä¸´å¿');
+
+insert into web_regions (region_id,city_id,region) values (141125,1411,'æŸ³æ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (141126,1411,'çŸ³æ¥¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (141127,1411,'å²šå¿');
+
+insert into web_regions (region_id,city_id,region) values (141128,1411,'æ–¹å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (141129,1411,'ä¸­é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (141130,1411,'äº¤å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (141181,1411,'å­ä¹‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (141182,1411,'æ±¾é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150102,1501,'æ–°åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (150103,1501,'å›æ°‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150104,1501,'ç‰æ³‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150105,1501,'èµ›ç½•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150121,1501,'åœŸé»˜ç‰¹å·¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (150122,1501,'æ‰˜å…‹æ‰˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (150123,1501,'å’Œæ—æ ¼å°”å¿');
+
+insert into web_regions (region_id,city_id,region) values (150124,1501,'æ¸…æ°´æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (150125,1501,'æ­¦å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (150202,1502,'ä¸œæ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150203,1502,'æ˜†éƒ½ä»‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150204,1502,'é’å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150205,1502,'çŸ³æ‹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150206,1502,'ç™½äº‘é„‚åšçŸ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150207,1502,'ä¹åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (150221,1502,'åœŸé»˜ç‰¹å³æ——');
+
+insert into web_regions (region_id,city_id,region) values (150222,1502,'å›ºé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (150223,1502,'è¾¾å°”ç½•èŒ‚æ˜å®‰è”åˆæ——');
+
+insert into web_regions (region_id,city_id,region) values (150302,1503,'æµ·å‹ƒæ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150303,1503,'æµ·å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150304,1503,'ä¹Œè¾¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150402,1504,'çº¢å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150403,1504,'å…ƒå®å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150404,1504,'æ¾å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150421,1504,'é˜¿é²ç§‘å°”æ²æ——');
+
+insert into web_regions (region_id,city_id,region) values (150422,1504,'å·´æ—å·¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (150423,1504,'å·´æ—å³æ——');
+
+insert into web_regions (region_id,city_id,region) values (150424,1504,'æ—è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (150425,1504,'å…‹ä»€å…‹è…¾æ——');
+
+insert into web_regions (region_id,city_id,region) values (150426,1504,'ç¿ç‰›ç‰¹æ——');
+
+insert into web_regions (region_id,city_id,region) values (150428,1504,'å–€å–‡æ²æ——');
+
+insert into web_regions (region_id,city_id,region) values (150429,1504,'å®åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (150430,1504,'æ•–æ±‰æ——');
+
+insert into web_regions (region_id,city_id,region) values (150502,1505,'ç§‘å°”æ²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150521,1505,'ç§‘å°”æ²å·¦ç¿¼ä¸­æ——');
+
+insert into web_regions (region_id,city_id,region) values (150522,1505,'ç§‘å°”æ²å·¦ç¿¼åæ——');
+
+insert into web_regions (region_id,city_id,region) values (150523,1505,'å¼€é²å¿');
+
+insert into web_regions (region_id,city_id,region) values (150524,1505,'åº“ä¼¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (150525,1505,'å¥ˆæ›¼æ——');
+
+insert into web_regions (region_id,city_id,region) values (150526,1505,'æ‰é²ç‰¹æ——');
+
+insert into web_regions (region_id,city_id,region) values (150581,1505,'éœæ—éƒ­å‹’å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150602,1506,'ä¸œèƒœåŒº');
+
+insert into web_regions (region_id,city_id,region) values (150621,1506,'è¾¾æ‹‰ç‰¹æ——');
+
+insert into web_regions (region_id,city_id,region) values (150622,1506,'å‡†æ ¼å°”æ——');
+
+insert into web_regions (region_id,city_id,region) values (150623,1506,'é„‚æ‰˜å…‹å‰æ——');
+
+insert into web_regions (region_id,city_id,region) values (150624,1506,'é„‚æ‰˜å…‹æ——');
+
+insert into web_regions (region_id,city_id,region) values (150625,1506,'æ­é”¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (150626,1506,'ä¹Œå®¡æ——');
+
+insert into web_regions (region_id,city_id,region) values (150627,1506,'ä¼Šé‡‘éœæ´›æ——');
+
+insert into web_regions (region_id,city_id,region) values (150702,1507,'æµ·æ‹‰å°”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150703,1507,'æ‰èµ‰è¯ºå°”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150721,1507,'é˜¿è£æ——');
+
+insert into web_regions (region_id,city_id,region) values (150722,1507,'è«åŠ›è¾¾ç“¦è¾¾æ–¡å°”æ—è‡ªæ²»æ——');
+
+insert into web_regions (region_id,city_id,region) values (150723,1507,'é„‚ä¼¦æ˜¥è‡ªæ²»æ——');
+
+insert into web_regions (region_id,city_id,region) values (150724,1507,'é„‚æ¸©å…‹æ—è‡ªæ²»æ——');
+
+insert into web_regions (region_id,city_id,region) values (150725,1507,'é™ˆå·´å°”è™æ——');
+
+insert into web_regions (region_id,city_id,region) values (150726,1507,'æ–°å·´å°”è™å·¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (150727,1507,'æ–°å·´å°”è™å³æ——');
+
+insert into web_regions (region_id,city_id,region) values (150781,1507,'æ»¡æ´²é‡Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150782,1507,'ç‰™å…‹çŸ³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150783,1507,'æ‰å…°å±¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150784,1507,'é¢å°”å¤çº³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150785,1507,'æ ¹æ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (150802,1508,'ä¸´æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150821,1508,'äº”åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (150822,1508,'ç£´å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (150823,1508,'ä¹Œæ‹‰ç‰¹å‰æ——');
+
+insert into web_regions (region_id,city_id,region) values (150824,1508,'ä¹Œæ‹‰ç‰¹ä¸­æ——');
+
+insert into web_regions (region_id,city_id,region) values (150825,1508,'ä¹Œæ‹‰ç‰¹åæ——');
+
+insert into web_regions (region_id,city_id,region) values (150826,1508,'æ­é”¦åæ——');
+
+insert into web_regions (region_id,city_id,region) values (150902,1509,'é›†å®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (150921,1509,'å“èµ„å¿');
+
+insert into web_regions (region_id,city_id,region) values (150922,1509,'åŒ–å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (150923,1509,'å•†éƒ½å¿');
+
+insert into web_regions (region_id,city_id,region) values (150924,1509,'å…´å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (150925,1509,'å‡‰åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (150926,1509,'å¯Ÿå“ˆå°”å³ç¿¼å‰æ——');
+
+insert into web_regions (region_id,city_id,region) values (150927,1509,'å¯Ÿå“ˆå°”å³ç¿¼ä¸­æ——');
+
+insert into web_regions (region_id,city_id,region) values (150928,1509,'å¯Ÿå“ˆå°”å³ç¿¼åæ——');
+
+insert into web_regions (region_id,city_id,region) values (150929,1509,'å››å­ç‹æ——');
+
+insert into web_regions (region_id,city_id,region) values (150981,1509,'ä¸°é•‡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (152201,1522,'ä¹Œå…°æµ©ç‰¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (152202,1522,'é˜¿å°”å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (152221,1522,'ç§‘å°”æ²å³ç¿¼å‰æ——');
+
+insert into web_regions (region_id,city_id,region) values (152222,1522,'ç§‘å°”æ²å³ç¿¼ä¸­æ——');
+
+insert into web_regions (region_id,city_id,region) values (152223,1522,'æ‰èµ‰ç‰¹æ——');
+
+insert into web_regions (region_id,city_id,region) values (152224,1522,'çªæ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (152501,1525,'äºŒè¿æµ©ç‰¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (152502,1525,'é”¡æ—æµ©ç‰¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (152522,1525,'é˜¿å·´å˜æ——');
+
+insert into web_regions (region_id,city_id,region) values (152523,1525,'è‹å°¼ç‰¹å·¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (152524,1525,'è‹å°¼ç‰¹å³æ——');
+
+insert into web_regions (region_id,city_id,region) values (152525,1525,'ä¸œä¹Œç ç©†æ²æ——');
+
+insert into web_regions (region_id,city_id,region) values (152526,1525,'è¥¿ä¹Œç ç©†æ²æ——');
+
+insert into web_regions (region_id,city_id,region) values (152527,1525,'å¤ªä»†å¯ºæ——');
+
+insert into web_regions (region_id,city_id,region) values (152528,1525,'é•¶é»„æ——');
+
+insert into web_regions (region_id,city_id,region) values (152529,1525,'æ­£é•¶ç™½æ——');
+
+insert into web_regions (region_id,city_id,region) values (152530,1525,'æ­£è“æ——');
+
+insert into web_regions (region_id,city_id,region) values (152531,1525,'å¤šä¼¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (152921,1529,'é˜¿æ‹‰å–„å·¦æ——');
+
+insert into web_regions (region_id,city_id,region) values (152922,1529,'é˜¿æ‹‰å–„å³æ——');
+
+insert into web_regions (region_id,city_id,region) values (152923,1529,'é¢æµçº³æ——');
+
+insert into web_regions (region_id,city_id,region) values (210102,2101,'å’Œå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210103,2101,'æ²ˆæ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210104,2101,'å¤§ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210105,2101,'çš‡å§‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210106,2101,'é“è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210111,2101,'è‹å®¶å±¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210112,2101,'æµ‘å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210113,2101,'æ²ˆåŒ—æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210114,2101,'äºæ´ªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210122,2101,'è¾½ä¸­å¿');
+
+insert into web_regions (region_id,city_id,region) values (210123,2101,'åº·å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (210124,2101,'æ³•åº“å¿');
+
+insert into web_regions (region_id,city_id,region) values (210181,2101,'æ–°æ°‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210202,2102,'ä¸­å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210203,2102,'è¥¿å²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210204,2102,'æ²™æ²³å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210211,2102,'ç”˜äº•å­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210212,2102,'æ—…é¡ºå£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210213,2102,'é‡‘å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210224,2102,'é•¿æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (210281,2102,'ç“¦æˆ¿åº—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210282,2102,'æ™®å…°åº—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210283,2102,'åº„æ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210302,2103,'é“ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210303,2103,'é“è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210304,2103,'ç«‹å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210311,2103,'åƒå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210321,2103,'å°å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (210323,2103,'å²«å²©æ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210381,2103,'æµ·åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210402,2104,'æ–°æŠšåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210403,2104,'ä¸œæ´²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210404,2104,'æœ›èŠ±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210411,2104,'é¡ºåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210421,2104,'æŠšé¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (210422,2104,'æ–°å®¾æ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210423,2104,'æ¸…åŸæ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210502,2105,'å¹³å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210503,2105,'æºªæ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210504,2105,'æ˜å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210505,2105,'å—èŠ¬åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210521,2105,'æœ¬æºªæ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210522,2105,'æ¡“ä»æ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210602,2106,'å…ƒå®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210603,2106,'æŒ¯å…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210604,2106,'æŒ¯å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210624,2106,'å®½ç”¸æ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210681,2106,'ä¸œæ¸¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210682,2106,'å‡¤åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210702,2107,'å¤å¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210703,2107,'å‡Œæ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210711,2107,'å¤ªå’ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210726,2107,'é»‘å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (210727,2107,'ä¹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (210781,2107,'å‡Œæµ·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210782,2107,'åŒ—é•‡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210802,2108,'ç«™å‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210803,2108,'è¥¿å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210804,2108,'é²…é±¼åœˆåŒº');
+
+insert into web_regions (region_id,city_id,region) values (210811,2108,'è€è¾¹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210881,2108,'ç›–å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210882,2108,'å¤§çŸ³æ¡¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (210902,2109,'æµ·å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210903,2109,'æ–°é‚±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210904,2109,'å¤ªå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210905,2109,'æ¸…æ²³é—¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210911,2109,'ç»†æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (210921,2109,'é˜œæ–°è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (210922,2109,'å½°æ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (211002,2110,'ç™½å¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211003,2110,'æ–‡åœ£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211004,2110,'å®ä¼ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (211005,2110,'å¼“é•¿å²­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211011,2110,'å¤ªå­æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211021,2110,'è¾½é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (211081,2110,'ç¯å¡”å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (211102,2111,'åŒå°å­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211103,2111,'å…´éš†å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211121,2111,'å¤§æ´¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (211122,2111,'ç›˜å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (211202,2112,'é“¶å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211204,2112,'æ¸…æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211221,2112,'é“å²­å¿');
+
+insert into web_regions (region_id,city_id,region) values (211223,2112,'è¥¿ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (211224,2112,'æ˜Œå›¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (211281,2112,'è°ƒå…µå±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (211282,2112,'å¼€åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (211302,2113,'åŒå¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211303,2113,'é¾™åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (211321,2113,'æœé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (211322,2113,'å»ºå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (211324,2113,'å–€å–‡æ²å·¦ç¿¼è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (211381,2113,'åŒ—ç¥¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (211382,2113,'å‡Œæºå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (211402,2114,'è¿å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211403,2114,'é¾™æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211404,2114,'å—ç¥¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211421,2114,'ç»¥ä¸­å¿');
+
+insert into web_regions (region_id,city_id,region) values (211422,2114,'å»ºæ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (211481,2114,'å…´åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (211501,2115,'é‡‘å·æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211502,2115,'æ™®æ¹¾æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (211503,2115,'ä¿ç¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220102,2201,'å—å…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220103,2201,'å®½åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220104,2201,'æœé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220105,2201,'äºŒé“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220106,2201,'ç»¿å›­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220112,2201,'åŒé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220113,2201,'ä¹å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220122,2201,'å†œå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (220182,2201,'æ¦†æ ‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220183,2201,'å¾·æƒ å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220202,2202,'æ˜Œé‚‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220203,2202,'é¾™æ½­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220204,2202,'èˆ¹è¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220211,2202,'ä¸°æ»¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220221,2202,'æ°¸å‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (220281,2202,'è›Ÿæ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220282,2202,'æ¡¦ç”¸å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220283,2202,'èˆ’å…°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220284,2202,'ç£çŸ³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220302,2203,'é“è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220303,2203,'é“ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220322,2203,'æ¢¨æ ‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (220323,2203,'ä¼Šé€šæ»¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (220381,2203,'å…¬ä¸»å²­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220382,2203,'åŒè¾½å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220402,2204,'é¾™å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220403,2204,'è¥¿å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220421,2204,'ä¸œä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (220422,2204,'ä¸œè¾½å¿');
+
+insert into web_regions (region_id,city_id,region) values (220502,2205,'ä¸œæ˜ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220503,2205,'äºŒé“æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220521,2205,'é€šåŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (220523,2205,'è¾‰å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (220524,2205,'æŸ³æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (220581,2205,'æ¢…æ²³å£å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220582,2205,'é›†å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220602,2206,'æµ‘æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220605,2206,'æ±ŸæºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220621,2206,'æŠšæ¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (220622,2206,'é–å®‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (220623,2206,'é•¿ç™½æœé²œæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (220681,2206,'ä¸´æ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220702,2207,'å®æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (220721,2207,'å‰éƒ­å°”ç½—æ–¯è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (220722,2207,'é•¿å²­å¿');
+
+insert into web_regions (region_id,city_id,region) values (220723,2207,'ä¹¾å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (220781,2207,'æ‰¶ä½™å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220802,2208,'æ´®åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (220821,2208,'é•‡èµ‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (220822,2208,'é€šæ¦†å¿');
+
+insert into web_regions (region_id,city_id,region) values (220881,2208,'æ´®å—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (220882,2208,'å¤§å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222401,2224,'å»¶å‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222402,2224,'å›¾ä»¬å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222403,2224,'æ•¦åŒ–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222404,2224,'ç²æ˜¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222405,2224,'é¾™äº•å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222406,2224,'å’Œé¾™å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (222424,2224,'æ±ªæ¸…å¿');
+
+insert into web_regions (region_id,city_id,region) values (222426,2224,'å®‰å›¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (230102,2301,'é“é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230103,2301,'å—å²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230104,2301,'é“å¤–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230108,2301,'å¹³æˆ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230109,2301,'æ¾åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230110,2301,'é¦™åŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230111,2301,'å‘¼å…°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230112,2301,'é˜¿åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230113,2301,'åŒåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230123,2301,'ä¾å…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (230124,2301,'æ–¹æ­£å¿');
+
+insert into web_regions (region_id,city_id,region) values (230125,2301,'å®¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (230126,2301,'å·´å½¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (230127,2301,'æœ¨å…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (230128,2301,'é€šæ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (230129,2301,'å»¶å¯¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (230183,2301,'å°šå¿—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230184,2301,'äº”å¸¸å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230202,2302,'é¾™æ²™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230203,2302,'å»ºååŒº');
+
+insert into web_regions (region_id,city_id,region) values (230204,2302,'é“é”‹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230205,2302,'æ˜‚æ˜‚æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230206,2302,'å¯Œæ‹‰å°”åŸºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230207,2302,'ç¢¾å­å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230208,2302,'æ¢…é‡Œæ–¯è¾¾æ–¡å°”æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230221,2302,'é¾™æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (230223,2302,'ä¾å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (230224,2302,'æ³°æ¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (230225,2302,'ç”˜å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (230227,2302,'å¯Œè£•å¿');
+
+insert into web_regions (region_id,city_id,region) values (230229,2302,'å…‹å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (230230,2302,'å…‹ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (230231,2302,'æ‹œæ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (230281,2302,'è®·æ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230302,2303,'é¸¡å† åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230303,2303,'æ’å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230304,2303,'æ»´é“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230305,2303,'æ¢¨æ ‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230306,2303,'åŸå­æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230307,2303,'éº»å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230321,2303,'é¸¡ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (230381,2303,'è™æ—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230382,2303,'å¯†å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230402,2304,'å‘é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230403,2304,'å·¥å†œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230404,2304,'å—å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230405,2304,'å…´å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230406,2304,'ä¸œå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230407,2304,'å…´å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230421,2304,'èåŒ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (230422,2304,'ç»¥æ»¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (230502,2305,'å°–å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230503,2305,'å²­ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230505,2305,'å››æ–¹å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230506,2305,'å®å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230521,2305,'é›†è´¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (230522,2305,'å‹è°Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (230523,2305,'å®æ¸…å¿');
+
+insert into web_regions (region_id,city_id,region) values (230524,2305,'é¥¶æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (230602,2306,'è¨å°”å›¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230603,2306,'é¾™å‡¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230604,2306,'è®©èƒ¡è·¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230605,2306,'çº¢å²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230606,2306,'å¤§åŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230621,2306,'è‚‡å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (230622,2306,'è‚‡æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (230623,2306,'æ—ç”¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (230624,2306,'æœå°”ä¼¯ç‰¹è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (230702,2307,'ä¼Šæ˜¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230703,2307,'å—å²”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230704,2307,'å‹å¥½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230705,2307,'è¥¿æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230706,2307,'ç¿ å³¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230707,2307,'æ–°é’åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230708,2307,'ç¾æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230709,2307,'é‡‘å±±å±¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230710,2307,'äº”è¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230711,2307,'ä¹Œé©¬æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230712,2307,'æ±¤æ—ºæ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230713,2307,'å¸¦å²­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230714,2307,'ä¹Œä¼Šå²­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230715,2307,'çº¢æ˜ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230716,2307,'ä¸Šç”˜å²­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230722,2307,'å˜‰è«å¿');
+
+insert into web_regions (region_id,city_id,region) values (230781,2307,'é“åŠ›å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230803,2308,'å‘é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230804,2308,'å‰è¿›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230805,2308,'ä¸œé£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230811,2308,'éƒŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (230822,2308,'æ¡¦å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (230826,2308,'æ¡¦å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (230828,2308,'æ±¤åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (230833,2308,'æŠšè¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (230881,2308,'åŒæ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230882,2308,'å¯Œé”¦å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (230902,2309,'æ–°å…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230903,2309,'æ¡ƒå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230904,2309,'èŒ„å­æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (230921,2309,'å‹ƒåˆ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (231002,2310,'ä¸œå®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (231003,2310,'é˜³æ˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (231004,2310,'çˆ±æ°‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (231005,2310,'è¥¿å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (231024,2310,'ä¸œå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (231025,2310,'æ—å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (231081,2310,'ç»¥èŠ¬æ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231083,2310,'æµ·æ—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231084,2310,'å®å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231085,2310,'ç©†æ£±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231102,2311,'çˆ±è¾‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (231121,2311,'å«©æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (231123,2311,'é€Šå…‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (231124,2311,'å­™å´å¿');
+
+insert into web_regions (region_id,city_id,region) values (231181,2311,'åŒ—å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231182,2311,'äº”å¤§è¿æ± å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231202,2312,'åŒ—æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (231221,2312,'æœ›å¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (231222,2312,'å…°è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (231223,2312,'é’å†ˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (231224,2312,'åº†å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (231225,2312,'æ˜æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (231226,2312,'ç»¥æ£±å¿');
+
+insert into web_regions (region_id,city_id,region) values (231281,2312,'å®‰è¾¾å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231282,2312,'è‚‡ä¸œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (231283,2312,'æµ·ä¼¦å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (232701,2327,'åŠ æ ¼è¾¾å¥‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (232702,2327,'æ–°æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (232703,2327,'æ¾å²­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (232704,2327,'å‘¼ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (232721,2327,'å‘¼ç›å¿');
+
+insert into web_regions (region_id,city_id,region) values (232722,2327,'å¡”æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (232723,2327,'æ¼ æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (310101,3101,'é»„æµ¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310104,3101,'å¾æ±‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310105,3101,'é•¿å®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310106,3101,'é™å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310107,3101,'æ™®é™€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310108,3101,'é—¸åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310109,3101,'è™¹å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310110,3101,'æ¨æµ¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310112,3101,'é—µè¡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (310113,3101,'å®å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310114,3101,'å˜‰å®šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (310115,3101,'æµ¦ä¸œæ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310116,3101,'é‡‘å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310117,3101,'æ¾æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (310118,3101,'é’æµ¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310120,3101,'å¥‰è´¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (310230,3101,'å´‡æ˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (320102,3201,'ç„æ­¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320104,3201,'ç§¦æ·®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320105,3201,'å»ºé‚ºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (320106,3201,'é¼“æ¥¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320111,3201,'æµ¦å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320113,3201,'æ –éœåŒº');
+
+insert into web_regions (region_id,city_id,region) values (320114,3201,'é›¨èŠ±å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320115,3201,'æ±Ÿå®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320116,3201,'å…­åˆåŒº');
+
+insert into web_regions (region_id,city_id,region) values (320117,3201,'æº§æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320118,3201,'é«˜æ·³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320202,3202,'å´‡å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320203,3202,'å—é•¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320204,3202,'åŒ—å¡˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320205,3202,'é”¡å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320206,3202,'æƒ å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320211,3202,'æ»¨æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320281,3202,'æ±Ÿé˜´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320282,3202,'å®œå…´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320302,3203,'é¼“æ¥¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320303,3203,'äº‘é¾™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320305,3203,'è´¾æ±ªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (320311,3203,'æ³‰å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320312,3203,'é“œå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320321,3203,'ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (320322,3203,'æ²›å¿');
+
+insert into web_regions (region_id,city_id,region) values (320324,3203,'ç¢å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (320381,3203,'æ–°æ²‚å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320382,3203,'é‚³å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320402,3204,'å¤©å®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320404,3204,'é’Ÿæ¥¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320405,3204,'æˆšå¢…å °åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320411,3204,'æ–°åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320412,3204,'æ­¦è¿›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320481,3204,'æº§é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320482,3204,'é‡‘å›å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320505,3205,'è™ä¸˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320506,3205,'å´ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320507,3205,'ç›¸åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (320508,3205,'å§‘è‹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320509,3205,'å´æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (320581,3205,'å¸¸ç†Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320582,3205,'å¼ å®¶æ¸¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320583,3205,'æ˜†å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320585,3205,'å¤ªä»“å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320602,3206,'å´‡å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320611,3206,'æ¸¯é—¸åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320612,3206,'é€šå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320621,3206,'æµ·å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (320623,3206,'å¦‚ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (320681,3206,'å¯ä¸œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320682,3206,'å¦‚çš‹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320684,3206,'æµ·é—¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320703,3207,'è¿äº‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320706,3207,'æµ·å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320707,3207,'èµ£æ¦†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320722,3207,'ä¸œæµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (320723,3207,'çŒäº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (320724,3207,'çŒå—å¿');
+
+insert into web_regions (region_id,city_id,region) values (320802,3208,'æ¸…æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320803,3208,'æ·®å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320804,3208,'æ·®é˜´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320811,3208,'æ¸…æµ¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320826,3208,'æ¶Ÿæ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (320829,3208,'æ´ªæ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (320830,3208,'ç›±çœ™å¿');
+
+insert into web_regions (region_id,city_id,region) values (320831,3208,'é‡‘æ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (320902,3209,'äº­æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320903,3209,'ç›éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (320921,3209,'å“æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (320922,3209,'æ»¨æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (320923,3209,'é˜œå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (320924,3209,'å°„é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (320925,3209,'å»ºæ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (320981,3209,'ä¸œå°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (320982,3209,'å¤§ä¸°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321002,3210,'å¹¿é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (321003,3210,'é‚—æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (321012,3210,'æ±Ÿéƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321023,3210,'å®åº”å¿');
+
+insert into web_regions (region_id,city_id,region) values (321081,3210,'ä»ªå¾å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321084,3210,'é«˜é‚®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321102,3211,'äº¬å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321111,3211,'æ¶¦å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321112,3211,'ä¸¹å¾’åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321181,3211,'ä¸¹é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321182,3211,'æ‰¬ä¸­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321183,3211,'å¥å®¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321202,3212,'æµ·é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (321203,3212,'é«˜æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321204,3212,'å§œå °åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321281,3212,'å…´åŒ–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321282,3212,'é–æ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321283,3212,'æ³°å…´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (321302,3213,'å®¿åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (321311,3213,'å®¿è±«åŒº');
+
+insert into web_regions (region_id,city_id,region) values (321322,3213,'æ²­é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (321323,3213,'æ³—é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (321324,3213,'æ³—æ´ªå¿');
+
+insert into web_regions (region_id,city_id,region) values (330102,3301,'ä¸ŠåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330103,3301,'ä¸‹åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330104,3301,'æ±Ÿå¹²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330105,3301,'æ‹±å¢…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330106,3301,'è¥¿æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330108,3301,'æ»¨æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330109,3301,'è§å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330110,3301,'ä½™æ­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330122,3301,'æ¡åºå¿');
+
+insert into web_regions (region_id,city_id,region) values (330127,3301,'æ·³å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (330182,3301,'å»ºå¾·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330183,3301,'å¯Œé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330185,3301,'ä¸´å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330203,3302,'æµ·æ›™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330204,3302,'æ±Ÿä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330205,3302,'æ±ŸåŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330206,3302,'åŒ—ä»‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330211,3302,'é•‡æµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330212,3302,'é„å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330225,3302,'è±¡å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (330226,3302,'å®æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (330281,3302,'ä½™å§šå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330282,3302,'æ…ˆæºªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330283,3302,'å¥‰åŒ–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330302,3303,'é¹¿åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330303,3303,'é¾™æ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330304,3303,'ç“¯æµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330322,3303,'æ´å¤´å¿');
+
+insert into web_regions (region_id,city_id,region) values (330324,3303,'æ°¸å˜‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (330326,3303,'å¹³é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (330327,3303,'è‹å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (330328,3303,'æ–‡æˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (330329,3303,'æ³°é¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (330381,3303,'ç‘å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330382,3303,'ä¹æ¸…å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330402,3304,'å—æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330411,3304,'ç§€æ´²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330421,3304,'å˜‰å–„å¿');
+
+insert into web_regions (region_id,city_id,region) values (330424,3304,'æµ·ç›å¿');
+
+insert into web_regions (region_id,city_id,region) values (330481,3304,'æµ·å®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330482,3304,'å¹³æ¹–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330483,3304,'æ¡ä¹¡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330502,3305,'å´å…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330503,3305,'å—æµ”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330521,3305,'å¾·æ¸…å¿');
+
+insert into web_regions (region_id,city_id,region) values (330522,3305,'é•¿å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (330523,3305,'å®‰å‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (330602,3306,'è¶ŠåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330603,3306,'æŸ¯æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330604,3306,'ä¸Šè™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330624,3306,'æ–°æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (330681,3306,'è¯¸æš¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330683,3306,'åµŠå·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330702,3307,'å©ºåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330703,3307,'é‡‘ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330723,3307,'æ­¦ä¹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (330726,3307,'æµ¦æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (330727,3307,'ç£å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (330781,3307,'å…°æºªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330782,3307,'ä¹‰ä¹Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330783,3307,'ä¸œé˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330784,3307,'æ°¸åº·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330802,3308,'æŸ¯åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330803,3308,'è¡¢æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (330822,3308,'å¸¸å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (330824,3308,'å¼€åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (330825,3308,'é¾™æ¸¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (330881,3308,'æ±Ÿå±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (330902,3309,'å®šæµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330903,3309,'æ™®é™€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (330921,3309,'å²±å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (330922,3309,'åµŠæ³—å¿');
+
+insert into web_regions (region_id,city_id,region) values (331002,3310,'æ¤’æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (331003,3310,'é»„å²©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (331004,3310,'è·¯æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (331021,3310,'ç‰ç¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (331022,3310,'ä¸‰é—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (331023,3310,'å¤©å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (331024,3310,'ä»™å±…å¿');
+
+insert into web_regions (region_id,city_id,region) values (331081,3310,'æ¸©å²­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (331082,3310,'ä¸´æµ·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (331102,3311,'è²éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (331121,3311,'é’ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (331122,3311,'ç¼™äº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (331123,3311,'é‚æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (331124,3311,'æ¾é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (331125,3311,'äº‘å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (331126,3311,'åº†å…ƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (331127,3311,'æ™¯å®ç•²æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (331181,3311,'é¾™æ³‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (331201,3312,'é‡‘å¡˜å²›');
+
+insert into web_regions (region_id,city_id,region) values (331202,3312,'å…­æ¨ªå²›');
+
+insert into web_regions (region_id,city_id,region) values (331203,3312,'è¡¢å±±å²›');
+
+insert into web_regions (region_id,city_id,region) values (331204,3312,'èˆŸå±±æœ¬å²›è¥¿åŒ—éƒ¨');
+
+insert into web_regions (region_id,city_id,region) values (331205,3312,'å²±å±±å²›è¥¿å—éƒ¨');
+
+insert into web_regions (region_id,city_id,region) values (331206,3312,'æ³—ç¤å²›');
+
+insert into web_regions (region_id,city_id,region) values (331207,3312,'æœ±å®¶å°–å²›');
+
+insert into web_regions (region_id,city_id,region) values (331208,3312,'æ´‹å±±å²›');
+
+insert into web_regions (region_id,city_id,region) values (331209,3312,'é•¿æ¶‚å²›');
+
+insert into web_regions (region_id,city_id,region) values (331210,3312,'è™¾å³™å²›');
+
+insert into web_regions (region_id,city_id,region) values (340102,3401,'ç‘¶æµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340103,3401,'åºé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340104,3401,'èœ€å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340111,3401,'åŒ…æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340121,3401,'é•¿ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (340122,3401,'è‚¥ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (340123,3401,'è‚¥è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (340124,3401,'åºæ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (340181,3401,'å·¢æ¹–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (340202,3402,'é•œæ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340203,3402,'å¼‹æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340207,3402,'é¸ æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340208,3402,'ä¸‰å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340221,3402,'èŠœæ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (340222,3402,'ç¹æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (340223,3402,'å—é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (340225,3402,'æ— ä¸ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (340302,3403,'é¾™å­æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340303,3403,'èšŒå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340304,3403,'ç¦¹ä¼šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340311,3403,'æ·®ä¸ŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340321,3403,'æ€€è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (340322,3403,'äº”æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (340323,3403,'å›ºé•‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (340402,3404,'å¤§é€šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340403,3404,'ç”°å®¶åºµåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340404,3404,'è°¢å®¶é›†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340405,3404,'å…«å…¬å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340406,3404,'æ½˜é›†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340421,3404,'å‡¤å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (340503,3405,'èŠ±å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340504,3405,'é›¨å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340506,3405,'åšæœ›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340521,3405,'å½“æ¶‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (340522,3405,'å«å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (340523,3405,'å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (340602,3406,'æœé›†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340603,3406,'ç›¸å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340604,3406,'çƒˆå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340621,3406,'æ¿‰æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (340702,3407,'é“œå®˜å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340703,3407,'ç‹®å­å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340711,3407,'éƒŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340721,3407,'é“œé™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (340802,3408,'è¿æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (340803,3408,'å¤§è§‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340811,3408,'å®œç§€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (340822,3408,'æ€€å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (340823,3408,'æé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (340824,3408,'æ½œå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (340825,3408,'å¤ªæ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (340826,3408,'å®¿æ¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (340827,3408,'æœ›æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (340828,3408,'å²³è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (340881,3408,'æ¡åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (341002,3410,'å±¯æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (341003,3410,'é»„å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341004,3410,'å¾½å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341021,3410,'æ­™å¿');
+
+insert into web_regions (region_id,city_id,region) values (341022,3410,'ä¼‘å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (341023,3410,'é»Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (341024,3410,'ç¥é—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (341102,3411,'ç…çŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (341103,3411,'å—è°¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341122,3411,'æ¥å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (341124,3411,'å…¨æ¤’å¿');
+
+insert into web_regions (region_id,city_id,region) values (341125,3411,'å®šè¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (341126,3411,'å‡¤é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (341181,3411,'å¤©é•¿å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (341182,3411,'æ˜å…‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (341202,3412,'é¢å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341203,3412,'é¢ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (341204,3412,'é¢æ³‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341221,3412,'ä¸´æ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (341222,3412,'å¤ªå’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (341225,3412,'é˜œå—å¿');
+
+insert into web_regions (region_id,city_id,region) values (341226,3412,'é¢ä¸Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (341282,3412,'ç•Œé¦–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (341302,3413,'åŸ‡æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341321,3413,'ç €å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (341322,3413,'è§å¿');
+
+insert into web_regions (region_id,city_id,region) values (341323,3413,'çµç’§å¿');
+
+insert into web_regions (region_id,city_id,region) values (341324,3413,'æ³—å¿');
+
+insert into web_regions (region_id,city_id,region) values (341502,3415,'é‡‘å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341503,3415,'è£•å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341521,3415,'å¯¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (341522,3415,'éœé‚±å¿');
+
+insert into web_regions (region_id,city_id,region) values (341523,3415,'èˆ’åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (341524,3415,'é‡‘å¯¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (341525,3415,'éœå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (341602,3416,'è°¯åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (341621,3416,'æ¶¡é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (341622,3416,'è’™åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (341623,3416,'åˆ©è¾›å¿');
+
+insert into web_regions (region_id,city_id,region) values (341702,3417,'è´µæ± åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341721,3417,'ä¸œè‡³å¿');
+
+insert into web_regions (region_id,city_id,region) values (341722,3417,'çŸ³å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (341723,3417,'é’é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (341802,3418,'å®£å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (341821,3418,'éƒæºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (341822,3418,'å¹¿å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (341823,3418,'æ³¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (341824,3418,'ç»©æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (341825,3418,'æ—Œå¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (341881,3418,'å®å›½å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350102,3501,'é¼“æ¥¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350103,3501,'å°æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350104,3501,'ä»“å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350105,3501,'é©¬å°¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350111,3501,'æ™‹å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350121,3501,'é—½ä¾¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (350122,3501,'è¿æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (350123,3501,'ç½—æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (350124,3501,'é—½æ¸…å¿');
+
+insert into web_regions (region_id,city_id,region) values (350125,3501,'æ°¸æ³°å¿');
+
+insert into web_regions (region_id,city_id,region) values (350128,3501,'å¹³æ½­å¿');
+
+insert into web_regions (region_id,city_id,region) values (350181,3501,'ç¦æ¸…å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350182,3501,'é•¿ä¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350203,3502,'æ€æ˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350205,3502,'æµ·æ²§åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350206,3502,'æ¹–é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350211,3502,'é›†ç¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350212,3502,'åŒå®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350213,3502,'ç¿”å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350302,3503,'åŸå¢åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350303,3503,'æ¶µæ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350304,3503,'è”åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350305,3503,'ç§€å±¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350322,3503,'ä»™æ¸¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (350402,3504,'æ¢…åˆ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350403,3504,'ä¸‰å…ƒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350421,3504,'æ˜æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (350423,3504,'æ¸…æµå¿');
+
+insert into web_regions (region_id,city_id,region) values (350424,3504,'å®åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (350425,3504,'å¤§ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (350426,3504,'å°¤æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (350427,3504,'æ²™å¿');
+
+insert into web_regions (region_id,city_id,region) values (350428,3504,'å°†ä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (350429,3504,'æ³°å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (350430,3504,'å»ºå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (350481,3504,'æ°¸å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350502,3505,'é²¤åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350503,3505,'ä¸°æ³½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350504,3505,'æ´›æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350505,3505,'æ³‰æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350521,3505,'æƒ å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (350524,3505,'å®‰æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (350525,3505,'æ°¸æ˜¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (350526,3505,'å¾·åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (350527,3505,'é‡‘é—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (350581,3505,'çŸ³ç‹®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350582,3505,'æ™‹æ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350583,3505,'å—å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350602,3506,'èŠ—åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350603,3506,'é¾™æ–‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350622,3506,'äº‘éœ„å¿');
+
+insert into web_regions (region_id,city_id,region) values (350623,3506,'æ¼³æµ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (350624,3506,'è¯å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (350625,3506,'é•¿æ³°å¿');
+
+insert into web_regions (region_id,city_id,region) values (350626,3506,'ä¸œå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (350627,3506,'å—é–å¿');
+
+insert into web_regions (region_id,city_id,region) values (350628,3506,'å¹³å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (350629,3506,'åå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (350681,3506,'é¾™æµ·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350702,3507,'å»¶å¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350703,3507,'å»ºé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350721,3507,'é¡ºæ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (350722,3507,'æµ¦åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (350723,3507,'å…‰æ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (350724,3507,'æ¾æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (350725,3507,'æ”¿å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (350781,3507,'é‚µæ­¦å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350782,3507,'æ­¦å¤·å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350783,3507,'å»ºç“¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350802,3508,'æ–°ç½—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (350821,3508,'é•¿æ±€å¿');
+
+insert into web_regions (region_id,city_id,region) values (350822,3508,'æ°¸å®šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350823,3508,'ä¸Šæ­å¿');
+
+insert into web_regions (region_id,city_id,region) values (350824,3508,'æ­¦å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (350825,3508,'è¿åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (350881,3508,'æ¼³å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350902,3509,'è•‰åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (350921,3509,'éœæµ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (350922,3509,'å¤ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (350923,3509,'å±å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (350924,3509,'å¯¿å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (350925,3509,'å‘¨å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (350926,3509,'æŸ˜è£å¿');
+
+insert into web_regions (region_id,city_id,region) values (350981,3509,'ç¦å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (350982,3509,'ç¦é¼å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360102,3601,'ä¸œæ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360103,3601,'è¥¿æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360104,3601,'é’äº‘è°±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360105,3601,'æ¹¾é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (360111,3601,'é’å±±æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360121,3601,'å—æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360122,3601,'æ–°å»ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (360123,3601,'å®‰ä¹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (360124,3601,'è¿›è´¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (360202,3602,'æ˜Œæ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (360203,3602,'ç å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360222,3602,'æµ®æ¢å¿');
+
+insert into web_regions (region_id,city_id,region) values (360281,3602,'ä¹å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360302,3603,'å®‰æºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (360313,3603,'æ¹˜ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (360321,3603,'è²èŠ±å¿');
+
+insert into web_regions (region_id,city_id,region) values (360322,3603,'ä¸Šæ —å¿');
+
+insert into web_regions (region_id,city_id,region) values (360323,3603,'èŠ¦æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (360402,3604,'åºå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360403,3604,'æµ”é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360421,3604,'ä¹æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (360423,3604,'æ­¦å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (360424,3604,'ä¿®æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (360425,3604,'æ°¸ä¿®å¿');
+
+insert into web_regions (region_id,city_id,region) values (360426,3604,'å¾·å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (360427,3604,'æ˜Ÿå­å¿');
+
+insert into web_regions (region_id,city_id,region) values (360428,3604,'éƒ½æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360429,3604,'æ¹–å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (360430,3604,'å½­æ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (360481,3604,'ç‘æ˜Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360482,3604,'å…±é’åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360502,3605,'æ¸æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360521,3605,'åˆ†å®œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360602,3606,'æœˆæ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360622,3606,'ä½™æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (360681,3606,'è´µæºªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360702,3607,'ç« è´¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360703,3607,'å—åº·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360721,3607,'èµ£å¿');
+
+insert into web_regions (region_id,city_id,region) values (360722,3607,'ä¿¡ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (360723,3607,'å¤§ä½™å¿');
+
+insert into web_regions (region_id,city_id,region) values (360724,3607,'ä¸ŠçŠ¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (360725,3607,'å´‡ä¹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (360726,3607,'å®‰è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360727,3607,'é¾™å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (360728,3607,'å®šå—å¿');
+
+insert into web_regions (region_id,city_id,region) values (360729,3607,'å…¨å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (360730,3607,'å®éƒ½å¿');
+
+insert into web_regions (region_id,city_id,region) values (360731,3607,'äºéƒ½å¿');
+
+insert into web_regions (region_id,city_id,region) values (360732,3607,'å…´å›½å¿');
+
+insert into web_regions (region_id,city_id,region) values (360733,3607,'ä¼šæ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360734,3607,'å¯»ä¹Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360735,3607,'çŸ³åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (360781,3607,'ç‘é‡‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360802,3608,'å‰å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360803,3608,'é’åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (360821,3608,'å‰å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (360822,3608,'å‰æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (360823,3608,'å³¡æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (360824,3608,'æ–°å¹²å¿');
+
+insert into web_regions (region_id,city_id,region) values (360825,3608,'æ°¸ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (360826,3608,'æ³°å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (360827,3608,'é‚å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (360828,3608,'ä¸‡å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (360829,3608,'å®‰ç¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (360830,3608,'æ°¸æ–°å¿');
+
+insert into web_regions (region_id,city_id,region) values (360881,3608,'äº•å†ˆå±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360902,3609,'è¢å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (360921,3609,'å¥‰æ–°å¿');
+
+insert into web_regions (region_id,city_id,region) values (360922,3609,'ä¸‡è½½å¿');
+
+insert into web_regions (region_id,city_id,region) values (360923,3609,'ä¸Šé«˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (360924,3609,'å®œä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (360925,3609,'é–å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (360926,3609,'é“œé¼“å¿');
+
+insert into web_regions (region_id,city_id,region) values (360981,3609,'ä¸°åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360982,3609,'æ¨Ÿæ ‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (360983,3609,'é«˜å®‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (361002,3610,'ä¸´å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (361021,3610,'å—åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (361022,3610,'é»å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (361023,3610,'å—ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (361024,3610,'å´‡ä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (361025,3610,'ä¹å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (361026,3610,'å®œé»„å¿');
+
+insert into web_regions (region_id,city_id,region) values (361027,3610,'é‡‘æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (361028,3610,'èµ„æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (361029,3610,'ä¸œä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (361030,3610,'å¹¿æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (361102,3611,'ä¿¡å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (361121,3611,'ä¸Šé¥¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (361122,3611,'å¹¿ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (361123,3611,'ç‰å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (361124,3611,'é“…å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (361125,3611,'æ¨ªå³°å¿');
+
+insert into web_regions (region_id,city_id,region) values (361126,3611,'å¼‹é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (361127,3611,'ä½™å¹²å¿');
+
+insert into web_regions (region_id,city_id,region) values (361128,3611,'é„±é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (361129,3611,'ä¸‡å¹´å¿');
+
+insert into web_regions (region_id,city_id,region) values (361130,3611,'å©ºæºå¿');
+
+insert into web_regions (region_id,city_id,region) values (361181,3611,'å¾·å…´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370102,3701,'å†ä¸‹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370103,3701,'å¸‚ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370104,3701,'æ§è«åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370105,3701,'å¤©æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370112,3701,'å†åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (370113,3701,'é•¿æ¸…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370124,3701,'å¹³é˜´å¿');
+
+insert into web_regions (region_id,city_id,region) values (370125,3701,'æµé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (370126,3701,'å•†æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (370181,3701,'ç« ä¸˜å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370202,3702,'å¸‚å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370203,3702,'å¸‚åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370211,3702,'é»„å²›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370212,3702,'å´‚å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370213,3702,'ææ²§åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370214,3702,'åŸé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370281,3702,'èƒ¶å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370282,3702,'å³å¢¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370283,3702,'å¹³åº¦å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370285,3702,'è±è¥¿å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370286,3702,'è¥¿æµ·å²¸æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370302,3703,'æ·„å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370303,3703,'å¼ åº—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370304,3703,'åšå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370305,3703,'ä¸´æ·„åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370306,3703,'å‘¨æ‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370321,3703,'æ¡“å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (370322,3703,'é«˜é’å¿');
+
+insert into web_regions (region_id,city_id,region) values (370323,3703,'æ²‚æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (370402,3704,'å¸‚ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370403,3704,'è–›åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (370404,3704,'å³„åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (370405,3704,'å°å„¿åº„åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370406,3704,'å±±äº­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370481,3704,'æ»•å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370502,3705,'ä¸œè¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370503,3705,'æ²³å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370521,3705,'å¦åˆ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (370522,3705,'åˆ©æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (370523,3705,'å¹¿é¥¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (370602,3706,'èŠç½˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370611,3706,'ç¦å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370612,3706,'ç‰Ÿå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370613,3706,'è±å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370634,3706,'é•¿å²›å¿');
+
+insert into web_regions (region_id,city_id,region) values (370681,3706,'é¾™å£å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370682,3706,'è±é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370683,3706,'è±å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370684,3706,'è“¬è±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370685,3706,'æ‹›è¿œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370686,3706,'æ –éœå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370687,3706,'æµ·é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370702,3707,'æ½åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (370703,3707,'å¯’äº­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370704,3707,'åŠå­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370705,3707,'å¥æ–‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370724,3707,'ä¸´æœå¿');
+
+insert into web_regions (region_id,city_id,region) values (370725,3707,'æ˜Œä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (370781,3707,'é’å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370782,3707,'è¯¸åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370783,3707,'å¯¿å…‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370784,3707,'å®‰ä¸˜å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370785,3707,'é«˜å¯†å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370786,3707,'æ˜Œé‚‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370811,3708,'ä»»åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (370812,3708,'å…–å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370826,3708,'å¾®å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (370827,3708,'é±¼å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (370828,3708,'é‡‘ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (370829,3708,'å˜‰ç¥¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (370830,3708,'æ±¶ä¸Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (370831,3708,'æ³—æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (370832,3708,'æ¢å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (370881,3708,'æ›²é˜œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370883,3708,'é‚¹åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370902,3709,'æ³°å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370911,3709,'å²±å²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (370921,3709,'å®é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (370923,3709,'ä¸œå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (370982,3709,'æ–°æ³°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (370983,3709,'è‚¥åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (371002,3710,'ç¯ç¿ åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371003,3710,'æ–‡ç™»åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371082,3710,'è£æˆå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (371083,3710,'ä¹³å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (371102,3711,'ä¸œæ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371103,3711,'å²šå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371121,3711,'äº”è²å¿');
+
+insert into web_regions (region_id,city_id,region) values (371122,3711,'è’å¿');
+
+insert into web_regions (region_id,city_id,region) values (371202,3712,'è±åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371203,3712,'é’¢åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371302,3713,'å…°å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371311,3713,'ç½—åº„åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371312,3713,'æ²³ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371321,3713,'æ²‚å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (371322,3713,'éƒ¯åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (371323,3713,'æ²‚æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (371324,3713,'å…°é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (371325,3713,'è´¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (371326,3713,'å¹³é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (371327,3713,'è’å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (371328,3713,'è’™é˜´å¿');
+
+insert into web_regions (region_id,city_id,region) values (371329,3713,'ä¸´æ²­å¿');
+
+insert into web_regions (region_id,city_id,region) values (371402,3714,'å¾·åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371403,3714,'é™µåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371422,3714,'å®æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (371423,3714,'åº†äº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (371424,3714,'ä¸´é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (371425,3714,'é½æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (371426,3714,'å¹³åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (371427,3714,'å¤æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (371428,3714,'æ­¦åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (371481,3714,'ä¹é™µå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (371482,3714,'ç¦¹åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (371502,3715,'ä¸œæ˜ŒåºœåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371521,3715,'é˜³è°·å¿');
+
+insert into web_regions (region_id,city_id,region) values (371522,3715,'è˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (371523,3715,'èŒŒå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (371524,3715,'ä¸œé˜¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (371525,3715,'å† å¿');
+
+insert into web_regions (region_id,city_id,region) values (371526,3715,'é«˜å”å¿');
+
+insert into web_regions (region_id,city_id,region) values (371581,3715,'ä¸´æ¸…å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (371602,3716,'æ»¨åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (371603,3716,'æ²¾åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371621,3716,'æƒ æ°‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (371622,3716,'é˜³ä¿¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (371623,3716,'æ— æ££å¿');
+
+insert into web_regions (region_id,city_id,region) values (371625,3716,'åšå…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (371626,3716,'é‚¹å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (371627,3716,'åŒ—æµ·æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371702,3717,'ç‰¡ä¸¹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (371721,3717,'æ›¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (371722,3717,'å•å¿');
+
+insert into web_regions (region_id,city_id,region) values (371723,3717,'æˆæ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (371724,3717,'å·¨é‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (371725,3717,'éƒ“åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (371726,3717,'é„„åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (371727,3717,'å®šé™¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (371728,3717,'ä¸œæ˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (410102,4101,'ä¸­åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (410103,4101,'äºŒä¸ƒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (410104,4101,'ç®¡åŸå›æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410105,4101,'é‡‘æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410106,4101,'ä¸Šè¡—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410108,4101,'æƒ æµåŒº');
+
+insert into web_regions (region_id,city_id,region) values (410122,4101,'ä¸­ç‰Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (410181,4101,'å·©ä¹‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410182,4101,'è¥é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410183,4101,'æ–°å¯†å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410184,4101,'æ–°éƒ‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410185,4101,'ç™»å°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410202,4102,'é¾™äº­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410203,4102,'é¡ºæ²³å›æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410204,4102,'é¼“æ¥¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410205,4102,'ç¦¹ç‹å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410212,4102,'ç¥¥ç¬¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410221,4102,'æå¿');
+
+insert into web_regions (region_id,city_id,region) values (410222,4102,'é€šè®¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (410223,4102,'å°‰æ°å¿');
+
+insert into web_regions (region_id,city_id,region) values (410225,4102,'å…°è€ƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (410302,4103,'è€åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (410303,4103,'è¥¿å·¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410304,4103,'ç€æ²³å›æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410305,4103,'æ¶§è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410306,4103,'å‰åˆ©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410311,4103,'æ´›é¾™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410322,4103,'å­Ÿæ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (410323,4103,'æ–°å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (410324,4103,'æ ¾å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (410325,4103,'åµ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (410326,4103,'æ±é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (410327,4103,'å®œé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (410328,4103,'æ´›å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (410329,4103,'ä¼Šå·å¿');
+
+insert into web_regions (region_id,city_id,region) values (410381,4103,'åƒå¸ˆå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410402,4104,'æ–°ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (410403,4104,'å«ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (410404,4104,'çŸ³é¾™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410411,4104,'æ¹›æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410421,4104,'å®ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (410422,4104,'å¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (410423,4104,'é²å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (410425,4104,'éƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (410481,4104,'èˆé’¢å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410482,4104,'æ±å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410502,4105,'æ–‡å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410503,4105,'åŒ—å…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410505,4105,'æ®·éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410506,4105,'é¾™å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410522,4105,'å®‰é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (410523,4105,'æ±¤é˜´å¿');
+
+insert into web_regions (region_id,city_id,region) values (410526,4105,'æ»‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (410527,4105,'å†…é»„å¿');
+
+insert into web_regions (region_id,city_id,region) values (410581,4105,'æ—å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410602,4106,'é¹¤å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410603,4106,'å±±åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (410611,4106,'æ·‡æ»¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410621,4106,'æµšå¿');
+
+insert into web_regions (region_id,city_id,region) values (410622,4106,'æ·‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (410702,4107,'çº¢æ——åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410703,4107,'å«æ»¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410704,4107,'å‡¤æ³‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410711,4107,'ç‰§é‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410721,4107,'æ–°ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (410724,4107,'è·å˜‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (410725,4107,'åŸé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (410726,4107,'å»¶æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (410727,4107,'å°ä¸˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (410728,4107,'é•¿å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (410781,4107,'å«è¾‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410782,4107,'è¾‰å¿å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410802,4108,'è§£æ”¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410803,4108,'ä¸­ç«™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410804,4108,'é©¬æ‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410811,4108,'å±±é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410821,4108,'ä¿®æ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (410822,4108,'åšçˆ±å¿');
+
+insert into web_regions (region_id,city_id,region) values (410823,4108,'æ­¦é™Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (410825,4108,'æ¸©å¿');
+
+insert into web_regions (region_id,city_id,region) values (410882,4108,'æ²é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410883,4108,'å­Ÿå·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (410902,4109,'åé¾™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (410922,4109,'æ¸…ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (410923,4109,'å—ä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (410926,4109,'èŒƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (410927,4109,'å°å‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (410928,4109,'æ¿®é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411002,4110,'é­éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411023,4110,'è®¸æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (411024,4110,'é„¢é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (411025,4110,'è¥„åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411081,4110,'ç¦¹å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411082,4110,'é•¿è‘›å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411102,4111,'æºæ±‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411103,4111,'éƒ¾åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (411104,4111,'å¬é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (411121,4111,'èˆé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411122,4111,'ä¸´é¢å¿');
+
+insert into web_regions (region_id,city_id,region) values (411202,4112,'æ¹–æ»¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411221,4112,'æ¸‘æ± å¿');
+
+insert into web_regions (region_id,city_id,region) values (411222,4112,'é™•å¿');
+
+insert into web_regions (region_id,city_id,region) values (411224,4112,'å¢æ°å¿');
+
+insert into web_regions (region_id,city_id,region) values (411281,4112,'ä¹‰é©¬å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411282,4112,'çµå®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411302,4113,'å®›åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (411303,4113,'å§é¾™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411321,4113,'å—å¬å¿');
+
+insert into web_regions (region_id,city_id,region) values (411322,4113,'æ–¹åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411323,4113,'è¥¿å³¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (411324,4113,'é•‡å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411325,4113,'å†…ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (411326,4113,'æ·…å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (411327,4113,'ç¤¾æ——å¿');
+
+insert into web_regions (region_id,city_id,region) values (411328,4113,'å”æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411329,4113,'æ–°é‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (411330,4113,'æ¡æŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411381,4113,'é‚“å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411402,4114,'æ¢å›­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411403,4114,'ç¢é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411421,4114,'æ°‘æƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (411422,4114,'ç¢å¿');
+
+insert into web_regions (region_id,city_id,region) values (411423,4114,'å®é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (411424,4114,'æŸ˜åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411425,4114,'è™åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411426,4114,'å¤é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (411481,4114,'æ°¸åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411502,4115,'æµ‰æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411503,4115,'å¹³æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411521,4115,'ç½—å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (411522,4115,'å…‰å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (411523,4115,'æ–°å¿');
+
+insert into web_regions (region_id,city_id,region) values (411524,4115,'å•†åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411525,4115,'å›ºå§‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (411526,4115,'æ½¢å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (411527,4115,'æ·®æ»¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (411528,4115,'æ¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (411602,4116,'å·æ±‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (411621,4116,'æ‰¶æ²Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (411622,4116,'è¥¿åå¿');
+
+insert into web_regions (region_id,city_id,region) values (411623,4116,'å•†æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (411624,4116,'æ²ˆä¸˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (411625,4116,'éƒ¸åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (411626,4116,'æ·®é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411627,4116,'å¤ªåº·å¿');
+
+insert into web_regions (region_id,city_id,region) values (411628,4116,'é¹¿é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (411681,4116,'é¡¹åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (411702,4117,'é©¿åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (411721,4117,'è¥¿å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411722,4117,'ä¸Šè”¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (411723,4117,'å¹³èˆ†å¿');
+
+insert into web_regions (region_id,city_id,region) values (411724,4117,'æ­£é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411725,4117,'ç¡®å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (411726,4117,'æ³Œé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411727,4117,'æ±å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (411728,4117,'é‚å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (411729,4117,'æ–°è”¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (419001,4190,'æµæºå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420102,4201,'æ±Ÿå²¸åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420103,4201,'æ±Ÿæ±‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420104,4201,'ç¡šå£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420105,4201,'æ±‰é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420106,4201,'æ­¦æ˜ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (420107,4201,'é’å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420111,4201,'æ´ªå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420112,4201,'ä¸œè¥¿æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420113,4201,'æ±‰å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420114,4201,'è”¡ç”¸åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420115,4201,'æ±Ÿå¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420116,4201,'é»„é™‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420117,4201,'æ–°æ´²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420202,4202,'é»„çŸ³æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420203,4202,'è¥¿å¡å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420204,4202,'ä¸‹é™†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420205,4202,'é“å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420222,4202,'é˜³æ–°å¿');
+
+insert into web_regions (region_id,city_id,region) values (420281,4202,'å¤§å†¶å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420302,4203,'èŒ…ç®­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420303,4203,'å¼ æ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420304,4203,'éƒ§é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420322,4203,'éƒ§è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (420323,4203,'ç«¹å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (420324,4203,'ç«¹æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (420325,4203,'æˆ¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (420381,4203,'ä¸¹æ±Ÿå£å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420502,4205,'è¥¿é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (420503,4205,'ä¼å®¶å²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420504,4205,'ç‚¹å†›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420505,4205,'çŒ‡äº­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420506,4205,'å¤·é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (420525,4205,'è¿œå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (420526,4205,'å…´å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (420527,4205,'ç§­å½’å¿');
+
+insert into web_regions (region_id,city_id,region) values (420528,4205,'é•¿é˜³åœŸå®¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (420529,4205,'äº”å³°åœŸå®¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (420581,4205,'å®œéƒ½å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420582,4205,'å½“é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420583,4205,'ææ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420602,4206,'è¥„åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (420606,4206,'æ¨ŠåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (420607,4206,'è¥„å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420624,4206,'å—æ¼³å¿');
+
+insert into web_regions (region_id,city_id,region) values (420625,4206,'è°·åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (420626,4206,'ä¿åº·å¿');
+
+insert into web_regions (region_id,city_id,region) values (420682,4206,'è€æ²³å£å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420683,4206,'æ£é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420684,4206,'å®œåŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420702,4207,'æ¢å­æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420703,4207,'åå®¹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420704,4207,'é„‚åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (420802,4208,'ä¸œå®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420804,4208,'æ‡åˆ€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420821,4208,'äº¬å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (420822,4208,'æ²™æ´‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (420881,4208,'é’Ÿç¥¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420902,4209,'å­å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (420921,4209,'å­æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (420922,4209,'å¤§æ‚Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (420923,4209,'äº‘æ¢¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (420981,4209,'åº”åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420982,4209,'å®‰é™†å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (420984,4209,'æ±‰å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421002,4210,'æ²™å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (421003,4210,'è†å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (421022,4210,'å…¬å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (421023,4210,'ç›‘åˆ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (421024,4210,'æ±Ÿé™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (421081,4210,'çŸ³é¦–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421083,4210,'æ´ªæ¹–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421087,4210,'æ¾æ»‹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421102,4211,'é»„å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (421121,4211,'å›¢é£å¿');
+
+insert into web_regions (region_id,city_id,region) values (421122,4211,'çº¢å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (421123,4211,'ç½—ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (421124,4211,'è‹±å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (421125,4211,'æµ æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (421126,4211,'è•²æ˜¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (421127,4211,'é»„æ¢…å¿');
+
+insert into web_regions (region_id,city_id,region) values (421181,4211,'éº»åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421182,4211,'æ­¦ç©´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421202,4212,'å’¸å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (421221,4212,'å˜‰é±¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (421222,4212,'é€šåŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (421223,4212,'å´‡é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (421224,4212,'é€šå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (421281,4212,'èµ¤å£å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (421303,4213,'æ›¾éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (421321,4213,'éšå¿');
+
+insert into web_regions (region_id,city_id,region) values (421381,4213,'å¹¿æ°´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (422801,4228,'æ©æ–½å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (422802,4228,'åˆ©å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (422822,4228,'å»ºå§‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (422823,4228,'å·´ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (422825,4228,'å®£æ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (422826,4228,'å’¸ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (422827,4228,'æ¥å‡¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (422828,4228,'é¹¤å³°å¿');
+
+insert into web_regions (region_id,city_id,region) values (429004,4290,'ä»™æ¡ƒå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (429005,4290,'æ½œæ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (429006,4290,'å¤©é—¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (429021,4290,'ç¥å†œæ¶æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430102,4301,'èŠ™è“‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430103,4301,'å¤©å¿ƒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430104,4301,'å²³éº“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430105,4301,'å¼€ç¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430111,4301,'é›¨èŠ±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430112,4301,'æœ›åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430121,4301,'é•¿æ²™å¿');
+
+insert into web_regions (region_id,city_id,region) values (430124,4301,'å®ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (430181,4301,'æµé˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430202,4302,'è·å¡˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430203,4302,'èŠ¦æ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430204,4302,'çŸ³å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430211,4302,'å¤©å…ƒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430221,4302,'æ ªæ´²å¿');
+
+insert into web_regions (region_id,city_id,region) values (430223,4302,'æ”¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (430224,4302,'èŒ¶é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (430225,4302,'ç‚é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (430281,4302,'é†´é™µå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430302,4303,'é›¨æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430304,4303,'å²³å¡˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430321,4303,'æ¹˜æ½­å¿');
+
+insert into web_regions (region_id,city_id,region) values (430381,4303,'æ¹˜ä¹¡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430382,4303,'éŸ¶å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430405,4304,'ç æ™–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430406,4304,'é›å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430407,4304,'çŸ³é¼“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430408,4304,'è’¸æ¹˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430412,4304,'å—å²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430421,4304,'è¡¡é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (430422,4304,'è¡¡å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (430423,4304,'è¡¡å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (430424,4304,'è¡¡ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (430426,4304,'ç¥ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (430481,4304,'è€’é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430482,4304,'å¸¸å®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430502,4305,'åŒæ¸…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430503,4305,'å¤§ç¥¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430511,4305,'åŒ—å¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430521,4305,'é‚µä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (430522,4305,'æ–°é‚µå¿');
+
+insert into web_regions (region_id,city_id,region) values (430523,4305,'é‚µé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (430524,4305,'éš†å›å¿');
+
+insert into web_regions (region_id,city_id,region) values (430525,4305,'æ´å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (430527,4305,'ç»¥å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (430528,4305,'æ–°å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (430529,4305,'åŸæ­¥è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (430581,4305,'æ­¦å†ˆå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430602,4306,'å²³é˜³æ¥¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430603,4306,'äº‘æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430611,4306,'å›å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430621,4306,'å²³é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (430623,4306,'åå®¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (430624,4306,'æ¹˜é˜´å¿');
+
+insert into web_regions (region_id,city_id,region) values (430626,4306,'å¹³æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (430681,4306,'æ±¨ç½—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430682,4306,'ä¸´æ¹˜å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430702,4307,'æ­¦é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430703,4307,'é¼åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430721,4307,'å®‰ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (430722,4307,'æ±‰å¯¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (430723,4307,'æ¾§å¿');
+
+insert into web_regions (region_id,city_id,region) values (430724,4307,'ä¸´æ¾§å¿');
+
+insert into web_regions (region_id,city_id,region) values (430725,4307,'æ¡ƒæºå¿');
+
+insert into web_regions (region_id,city_id,region) values (430726,4307,'çŸ³é—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (430781,4307,'æ´¥å¸‚å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (430802,4308,'æ°¸å®šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430811,4308,'æ­¦é™µæºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (430821,4308,'æ…ˆåˆ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (430822,4308,'æ¡‘æ¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (430902,4309,'èµ„é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430903,4309,'èµ«å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (430921,4309,'å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (430922,4309,'æ¡ƒæ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (430923,4309,'å®‰åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (430981,4309,'æ²…æ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (431002,4310,'åŒ—æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (431003,4310,'è‹ä»™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (431021,4310,'æ¡‚é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (431022,4310,'å®œç« å¿');
+
+insert into web_regions (region_id,city_id,region) values (431023,4310,'æ°¸å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (431024,4310,'å˜‰ç¦¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (431025,4310,'ä¸´æ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (431026,4310,'æ±åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (431027,4310,'æ¡‚ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (431028,4310,'å®‰ä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431081,4310,'èµ„å…´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (431102,4311,'é›¶é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (431103,4311,'å†·æ°´æ»©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (431121,4311,'ç¥é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (431122,4311,'ä¸œå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (431123,4311,'åŒç‰Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (431124,4311,'é“å¿');
+
+insert into web_regions (region_id,city_id,region) values (431125,4311,'æ±Ÿæ°¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (431126,4311,'å®è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (431127,4311,'è“å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (431128,4311,'æ–°ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (431129,4311,'æ±Ÿåç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431202,4312,'é¹¤åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (431221,4312,'ä¸­æ–¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (431222,4312,'æ²…é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (431223,4312,'è¾°æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (431224,4312,'æº†æµ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (431225,4312,'ä¼šåŒå¿');
+
+insert into web_regions (region_id,city_id,region) values (431226,4312,'éº»é˜³è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431227,4312,'æ–°æ™ƒä¾—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431228,4312,'èŠ·æ±Ÿä¾—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431229,4312,'é–å·è‹—æ—ä¾—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431230,4312,'é€šé“ä¾—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (431281,4312,'æ´ªæ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (431302,4313,'å¨„æ˜ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (431321,4313,'åŒå³°å¿');
+
+insert into web_regions (region_id,city_id,region) values (431322,4313,'æ–°åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (431381,4313,'å†·æ°´æ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (431382,4313,'æ¶Ÿæºå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (433101,4331,'å‰é¦–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (433122,4331,'æ³¸æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (433123,4331,'å‡¤å‡°å¿');
+
+insert into web_regions (region_id,city_id,region) values (433124,4331,'èŠ±å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (433125,4331,'ä¿é–å¿');
+
+insert into web_regions (region_id,city_id,region) values (433126,4331,'å¤ä¸ˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (433127,4331,'æ°¸é¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (433130,4331,'é¾™å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (440103,4401,'è”æ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440104,4401,'è¶Šç§€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440105,4401,'æµ·ç åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440106,4401,'å¤©æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440111,4401,'ç™½äº‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440112,4401,'é»„åŸ”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440113,4401,'ç•ªç¦ºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440114,4401,'èŠ±éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440115,4401,'å—æ²™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440117,4401,'ä»åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440118,4401,'å¢åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440119,4401,'èå²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440203,4402,'æ­¦æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440204,4402,'æµˆæ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440205,4402,'æ›²æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440222,4402,'å§‹å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (440224,4402,'ä»åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (440229,4402,'ç¿æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (440232,4402,'ä¹³æºç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (440233,4402,'æ–°ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (440281,4402,'ä¹æ˜Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440282,4402,'å—é›„å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440303,4403,'ç½—æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440304,4403,'ç¦ç”°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440305,4403,'å—å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440306,4403,'å®å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440307,4403,'é¾™å²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440308,4403,'ç›ç”°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440309,4403,'å…‰æ˜æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440310,4403,'åªå±±æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440311,4403,'å¤§é¹æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440312,4403,'é¾™åæ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440402,4404,'é¦™æ´²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440403,4404,'æ–—é—¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440404,4404,'é‡‘æ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440507,4405,'é¾™æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440511,4405,'é‡‘å¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440512,4405,'æ¿ æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440513,4405,'æ½®é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440514,4405,'æ½®å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440515,4405,'æ¾„æµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440523,4405,'å—æ¾³å¿');
+
+insert into web_regions (region_id,city_id,region) values (440604,4406,'ç¦…åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440605,4406,'å—æµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440606,4406,'é¡ºå¾·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440607,4406,'ä¸‰æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440608,4406,'é«˜æ˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440703,4407,'è“¬æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440704,4407,'æ±Ÿæµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440705,4407,'æ–°ä¼šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (440781,4407,'å°å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440783,4407,'å¼€å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440784,4407,'é¹¤å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440785,4407,'æ©å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440802,4408,'èµ¤ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (440803,4408,'éœå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440804,4408,'å¡å¤´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440811,4408,'éº»ç« åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440823,4408,'é‚æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (440825,4408,'å¾é—»å¿');
+
+insert into web_regions (region_id,city_id,region) values (440881,4408,'å»‰æ±Ÿå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440882,4408,'é›·å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440883,4408,'å´å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440902,4409,'èŒ‚å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440904,4409,'ç”µç™½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (440981,4409,'é«˜å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440982,4409,'åŒ–å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (440983,4409,'ä¿¡å®œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441202,4412,'ç«¯å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (441203,4412,'é¼æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (441223,4412,'å¹¿å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (441224,4412,'æ€€é›†å¿');
+
+insert into web_regions (region_id,city_id,region) values (441225,4412,'å°å¼€å¿');
+
+insert into web_regions (region_id,city_id,region) values (441226,4412,'å¾·åº†å¿');
+
+insert into web_regions (region_id,city_id,region) values (441283,4412,'é«˜è¦å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441284,4412,'å››ä¼šå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441302,4413,'æƒ åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441303,4413,'æƒ é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (441322,4413,'åšç½—å¿');
+
+insert into web_regions (region_id,city_id,region) values (441323,4413,'æƒ ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (441324,4413,'é¾™é—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (441402,4414,'æ¢…æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441403,4414,'æ¢…å¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (441422,4414,'å¤§åŸ”å¿');
+
+insert into web_regions (region_id,city_id,region) values (441423,4414,'ä¸°é¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (441424,4414,'äº”åå¿');
+
+insert into web_regions (region_id,city_id,region) values (441426,4414,'å¹³è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (441427,4414,'è•‰å²­å¿');
+
+insert into web_regions (region_id,city_id,region) values (441481,4414,'å…´å®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441502,4415,'åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441521,4415,'æµ·ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (441523,4415,'é™†æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (441581,4415,'é™†ä¸°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441602,4416,'æºåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441621,4416,'ç´«é‡‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (441622,4416,'é¾™å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (441623,4416,'è¿å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (441624,4416,'å’Œå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (441625,4416,'ä¸œæºå¿');
+
+insert into web_regions (region_id,city_id,region) values (441702,4417,'æ±ŸåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441704,4417,'é˜³ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441721,4417,'é˜³è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (441781,4417,'é˜³æ˜¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441802,4418,'æ¸…åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441803,4418,'æ¸…æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (441821,4418,'ä½›å†ˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (441823,4418,'é˜³å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (441825,4418,'è¿å±±å£®æ—ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (441826,4418,'è¿å—ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (441881,4418,'è‹±å¾·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441882,4418,'è¿å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (441901,4419,'èåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441902,4419,'å—åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441904,4419,'ä¸‡æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (441905,4419,'çŸ³ç¢£é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441906,4419,'çŸ³é¾™é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441907,4419,'èŒ¶å±±é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441908,4419,'çŸ³æ’é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441909,4419,'ä¼çŸ³é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441910,4419,'æ¨ªæ²¥é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441911,4419,'æ¡¥å¤´é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441912,4419,'è°¢å²—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441913,4419,'ä¸œå‘é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441914,4419,'å¸¸å¹³é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441915,4419,'å¯®æ­¥é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441916,4419,'å¤§æœ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441917,4419,'éº»æ¶Œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (441918,4419,'ä¸­å ‚é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441919,4419,'é«˜åŸ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441920,4419,'æ¨Ÿæœ¨å¤´é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441921,4419,'å¤§å²­å±±é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441922,4419,'æœ›ç‰›å¢©é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441923,4419,'é»„æ±Ÿé•‡');
+
+insert into web_regions (region_id,city_id,region) values (441924,4419,'æ´ªæ¢…é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441925,4419,'æ¸…æºªé•‡');
+
+insert into web_regions (region_id,city_id,region) values (441926,4419,'æ²™ç”°é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441927,4419,'é“æ»˜é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441928,4419,'å¡˜å¦é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441929,4419,'è™é—¨é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441930,4419,'åšè¡—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441931,4419,'å‡¤å²—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (441932,4419,'é•¿å®‰é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442001,4420,'çŸ³å²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (442004,4420,'å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (442005,4420,'äº”æ¡‚å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (442006,4420,'ç«ç‚¬å¼€å‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (442007,4420,'é»„åœƒé•‡');
+
+insert into web_regions (region_id,city_id,region) values (442008,4420,'å—å¤´é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442009,4420,'ä¸œå‡¤é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442010,4420,'é˜œæ²™é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442011,4420,'å°æ¦„é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442012,4420,'ä¸œå‡é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442013,4420,'å¤é•‡é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442014,4420,'æ¨ªæ é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442015,4420,'ä¸‰è§’é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442016,4420,'æ°‘ä¼—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442017,4420,'å—æœ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442018,4420,'æ¸¯å£é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442019,4420,'å¤§æ¶Œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (442020,4420,'æ²™æºªé•‡');
+
+insert into web_regions (region_id,city_id,region) values (442021,4420,'ä¸‰ä¹¡é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442022,4420,'æ¿èŠ™é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442023,4420,'ç¥æ¹¾é•‡');
+
+insert into web_regions (region_id,city_id,region) values (442024,4420,'å¦æ´²é•‡');
+
+insert into web_regions (region_id,city_id,region) values (445102,4451,'æ¹˜æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (445103,4451,'æ½®å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (445122,4451,'é¥¶å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (445202,4452,'æ¦•åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (445203,4452,'æ­ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (445222,4452,'æ­è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (445224,4452,'æƒ æ¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (445281,4452,'æ™®å®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (445302,4453,'äº‘åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (445303,4453,'äº‘å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (445321,4453,'æ–°å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (445322,4453,'éƒå—å¿');
+
+insert into web_regions (region_id,city_id,region) values (445381,4453,'ç½—å®šå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (450102,4501,'å…´å®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450103,4501,'é’ç§€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450105,4501,'æ±Ÿå—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450107,4501,'è¥¿ä¹¡å¡˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450108,4501,'è‰¯åº†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450109,4501,'é‚•å®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450122,4501,'æ­¦é¸£å¿');
+
+insert into web_regions (region_id,city_id,region) values (450123,4501,'éš†å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (450124,4501,'é©¬å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (450125,4501,'ä¸Šæ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (450126,4501,'å®¾é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (450127,4501,'æ¨ªå¿');
+
+insert into web_regions (region_id,city_id,region) values (450128,4501,'åŸŒä¸œæ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450202,4502,'åŸä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450203,4502,'é±¼å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450204,4502,'æŸ³å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450205,4502,'æŸ³åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450221,4502,'æŸ³æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (450222,4502,'æŸ³åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (450223,4502,'é¹¿å¯¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (450224,4502,'èå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (450225,4502,'èæ°´è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (450226,4502,'ä¸‰æ±Ÿä¾—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (450227,4502,'æŸ³ä¸œæ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450302,4503,'ç§€å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450303,4503,'å å½©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450304,4503,'è±¡å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450305,4503,'ä¸ƒæ˜ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (450311,4503,'é›å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450312,4503,'ä¸´æ¡‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450321,4503,'é˜³æœ”å¿');
+
+insert into web_regions (region_id,city_id,region) values (450323,4503,'çµå·å¿');
+
+insert into web_regions (region_id,city_id,region) values (450324,4503,'å…¨å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (450325,4503,'å…´å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (450326,4503,'æ°¸ç¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (450327,4503,'çŒé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (450328,4503,'é¾™èƒœå„æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (450329,4503,'èµ„æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (450330,4503,'å¹³ä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (450331,4503,'è”æµ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (450332,4503,'æ­åŸç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (450403,4504,'ä¸‡ç§€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450405,4504,'é•¿æ´²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450406,4504,'é¾™åœ©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450421,4504,'è‹æ¢§å¿');
+
+insert into web_regions (region_id,city_id,region) values (450422,4504,'è—¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (450423,4504,'è’™å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (450481,4504,'å²‘æºªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (450502,4505,'æµ·åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (450503,4505,'é“¶æµ·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450512,4505,'é“å±±æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450521,4505,'åˆæµ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (450602,4506,'æ¸¯å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450603,4506,'é˜²åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (450621,4506,'ä¸Šæ€å¿');
+
+insert into web_regions (region_id,city_id,region) values (450681,4506,'ä¸œå…´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (450702,4507,'é’¦å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450703,4507,'é’¦åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450721,4507,'çµå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (450722,4507,'æµ¦åŒ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (450802,4508,'æ¸¯åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450803,4508,'æ¸¯å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450804,4508,'è¦ƒå¡˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450821,4508,'å¹³å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (450881,4508,'æ¡‚å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (450902,4509,'ç‰å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450903,4509,'ç¦ç»µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (450904,4509,'ç‰ä¸œæ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (450921,4509,'å®¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (450922,4509,'é™†å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (450923,4509,'åšç™½å¿');
+
+insert into web_regions (region_id,city_id,region) values (450924,4509,'å…´ä¸šå¿');
+
+insert into web_regions (region_id,city_id,region) values (450981,4509,'åŒ—æµå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (451002,4510,'å³æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (451021,4510,'ç”°é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (451022,4510,'ç”°ä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (451023,4510,'å¹³æœå¿');
+
+insert into web_regions (region_id,city_id,region) values (451024,4510,'å¾·ä¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (451025,4510,'é–è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (451026,4510,'é‚£å¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (451027,4510,'å‡Œäº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (451028,4510,'ä¹ä¸šå¿');
+
+insert into web_regions (region_id,city_id,region) values (451029,4510,'ç”°æ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (451030,4510,'è¥¿æ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (451031,4510,'éš†æ—å„æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451102,4511,'å…«æ­¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (451121,4511,'æ˜­å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (451122,4511,'é’Ÿå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (451123,4511,'å¯Œå·ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451124,4511,'å¹³æ¡‚ç®¡ç†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (451202,4512,'é‡‘åŸæ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (451221,4512,'å—ä¸¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (451222,4512,'å¤©å³¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (451223,4512,'å‡¤å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (451224,4512,'ä¸œå…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (451225,4512,'ç½—åŸä»«ä½¬æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451226,4512,'ç¯æ±Ÿæ¯›å—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451227,4512,'å·´é©¬ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451228,4512,'éƒ½å®‰ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451229,4512,'å¤§åŒ–ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451281,4512,'å®œå·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (451302,4513,'å…´å®¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (451321,4513,'å¿»åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (451322,4513,'è±¡å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (451323,4513,'æ­¦å®£å¿');
+
+insert into web_regions (region_id,city_id,region) values (451324,4513,'é‡‘ç§€ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (451381,4513,'åˆå±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (451402,4514,'æ±Ÿå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (451421,4514,'æ‰¶ç»¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (451422,4514,'å®æ˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (451423,4514,'é¾™å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (451424,4514,'å¤§æ–°å¿');
+
+insert into web_regions (region_id,city_id,region) values (451425,4514,'å¤©ç­‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (451481,4514,'å‡­ç¥¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (460105,4601,'ç§€è‹±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460106,4601,'é¾™ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (460107,4601,'ç¼å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460108,4601,'ç¾å…°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460202,4602,'æµ·æ£ åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460203,4602,'å‰é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460204,4602,'å¤©æ¶¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460205,4602,'å´–å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (460321,4603,'è¥¿æ²™ç¾¤å²›');
+
+insert into web_regions (region_id,city_id,region) values (460322,4603,'å—æ²™ç¾¤å²›');
+
+insert into web_regions (region_id,city_id,region) values (460323,4603,'ä¸­æ²™ç¾¤å²›');
+
+insert into web_regions (region_id,city_id,region) values (469001,4690,'äº”æŒ‡å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (469002,4690,'ç¼æµ·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (469003,4690,'å„‹å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (469005,4690,'æ–‡æ˜Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (469006,4690,'ä¸‡å®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (469007,4690,'ä¸œæ–¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (469021,4690,'å®šå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (469022,4690,'å±¯æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (469023,4690,'æ¾„è¿ˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (469024,4690,'ä¸´é«˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (469025,4690,'ç™½æ²™é»æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (469026,4690,'æ˜Œæ±Ÿé»æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (469027,4690,'ä¹ä¸œé»æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (469028,4690,'é™µæ°´é»æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (469029,4690,'ä¿äº­é»æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (469030,4690,'ç¼ä¸­é»æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (500101,5001,'ä¸‡å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500102,5001,'æ¶ªé™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (500103,5001,'æ¸ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500104,5001,'å¤§æ¸¡å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500105,5001,'æ±ŸåŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500106,5001,'æ²™åªååŒº');
+
+insert into web_regions (region_id,city_id,region) values (500107,5001,'ä¹é¾™å¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500108,5001,'å—å²¸åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500109,5001,'åŒ—ç¢šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (500110,5001,'ç¶¦æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (500111,5001,'å¤§è¶³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500112,5001,'æ¸åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500113,5001,'å·´å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500114,5001,'é»”æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (500115,5001,'é•¿å¯¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500116,5001,'æ±Ÿæ´¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500117,5001,'åˆå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500118,5001,'æ°¸å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500119,5001,'å—å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500120,5001,'ç’§å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500151,5001,'é“œæ¢åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500223,5001,'æ½¼å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (500226,5001,'è£æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (500228,5001,'æ¢å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (500229,5001,'åŸå£å¿');
+
+insert into web_regions (region_id,city_id,region) values (500230,5001,'ä¸°éƒ½å¿');
+
+insert into web_regions (region_id,city_id,region) values (500231,5001,'å«æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (500232,5001,'æ­¦éš†å¿');
+
+insert into web_regions (region_id,city_id,region) values (500233,5001,'å¿ å¿');
+
+insert into web_regions (region_id,city_id,region) values (500234,5001,'å¼€å¿');
+
+insert into web_regions (region_id,city_id,region) values (500235,5001,'äº‘é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (500236,5001,'å¥‰èŠ‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (500237,5001,'å·«å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (500238,5001,'å·«æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (500240,5001,'çŸ³æŸ±åœŸå®¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (500241,5001,'ç§€å±±åœŸå®¶æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (500242,5001,'é…‰é˜³åœŸå®¶æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (500243,5001,'å½­æ°´è‹—æ—åœŸå®¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (500301,5003,'åŒ—éƒ¨æ–°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500302,5003,'ä¿ç¨æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (500303,5003,'å·¥ä¸šå›­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510104,5101,'é”¦æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510105,5101,'é’ç¾ŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510106,5101,'é‡‘ç‰›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510107,5101,'æ­¦ä¾¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510108,5101,'æˆååŒº');
+
+insert into web_regions (region_id,city_id,region) values (510112,5101,'é¾™æ³‰é©¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510113,5101,'é’ç™½æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510114,5101,'æ–°éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510115,5101,'æ¸©æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510121,5101,'é‡‘å ‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (510122,5101,'åŒæµå¿');
+
+insert into web_regions (region_id,city_id,region) values (510124,5101,'éƒ«å¿');
+
+insert into web_regions (region_id,city_id,region) values (510129,5101,'å¤§é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (510131,5101,'è’²æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (510132,5101,'æ–°æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (510181,5101,'éƒ½æ±Ÿå °å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510182,5101,'å½­å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510183,5101,'é‚›å´ƒå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510184,5101,'å´‡å·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510302,5103,'è‡ªæµäº•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510303,5103,'è´¡äº•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510304,5103,'å¤§å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510311,5103,'æ²¿æ»©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510321,5103,'è£å¿');
+
+insert into web_regions (region_id,city_id,region) values (510322,5103,'å¯Œé¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (510402,5104,'ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510403,5104,'è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510411,5104,'ä»å’ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510421,5104,'ç±³æ˜“å¿');
+
+insert into web_regions (region_id,city_id,region) values (510422,5104,'ç›è¾¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (510502,5105,'æ±Ÿé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510503,5105,'çº³æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510504,5105,'é¾™é©¬æ½­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510521,5105,'æ³¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (510522,5105,'åˆæ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (510524,5105,'å™æ°¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (510525,5105,'å¤è”ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (510603,5106,'æ—Œé˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510623,5106,'ä¸­æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (510626,5106,'ç½—æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (510681,5106,'å¹¿æ±‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510682,5106,'ä»€é‚¡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510683,5106,'ç»µç«¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510703,5107,'æ¶ªåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (510704,5107,'æ¸¸ä»™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510722,5107,'ä¸‰å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (510723,5107,'ç›äº­å¿');
+
+insert into web_regions (region_id,city_id,region) values (510724,5107,'å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (510725,5107,'æ¢“æ½¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (510726,5107,'åŒ—å·ç¾Œæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (510727,5107,'å¹³æ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (510781,5107,'æ±Ÿæ²¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (510802,5108,'åˆ©å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510811,5108,'æ˜­åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510812,5108,'æœå¤©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510821,5108,'æ—ºè‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (510822,5108,'é’å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (510823,5108,'å‰‘é˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (510824,5108,'è‹æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (510903,5109,'èˆ¹å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510904,5109,'å®‰å±…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (510921,5109,'è“¬æºªå¿');
+
+insert into web_regions (region_id,city_id,region) values (510922,5109,'å°„æ´ªå¿');
+
+insert into web_regions (region_id,city_id,region) values (510923,5109,'å¤§è‹±å¿');
+
+insert into web_regions (region_id,city_id,region) values (511002,5110,'å¸‚ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511011,5110,'ä¸œå…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511024,5110,'å¨è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (511025,5110,'èµ„ä¸­å¿');
+
+insert into web_regions (region_id,city_id,region) values (511028,5110,'éš†æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (511102,5111,'å¸‚ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511111,5111,'æ²™æ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511112,5111,'äº”é€šæ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511113,5111,'é‡‘å£æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511123,5111,'çŠä¸ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (511124,5111,'äº•ç ”å¿');
+
+insert into web_regions (region_id,city_id,region) values (511126,5111,'å¤¹æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (511129,5111,'æ²å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (511132,5111,'å³¨è¾¹å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (511133,5111,'é©¬è¾¹å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (511181,5111,'å³¨çœ‰å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (511302,5113,'é¡ºåº†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511303,5113,'é«˜åªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (511304,5113,'å˜‰é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (511321,5113,'å—éƒ¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (511322,5113,'è¥å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (511323,5113,'è“¬å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (511324,5113,'ä»ªé™‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (511325,5113,'è¥¿å……å¿');
+
+insert into web_regions (region_id,city_id,region) values (511381,5113,'é˜†ä¸­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (511402,5114,'ä¸œå¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511403,5114,'å½­å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511421,5114,'ä»å¯¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (511423,5114,'æ´ªé›…å¿');
+
+insert into web_regions (region_id,city_id,region) values (511424,5114,'ä¸¹æ£±å¿');
+
+insert into web_regions (region_id,city_id,region) values (511425,5114,'é’ç¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (511502,5115,'ç¿ å±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511503,5115,'å—æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (511521,5115,'å®œå®¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (511523,5115,'æ±Ÿå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (511524,5115,'é•¿å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (511525,5115,'é«˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (511526,5115,'ç™å¿');
+
+insert into web_regions (region_id,city_id,region) values (511527,5115,'ç­ è¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (511528,5115,'å…´æ–‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (511529,5115,'å±å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (511602,5116,'å¹¿å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511603,5116,'å‰é”‹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511621,5116,'å²³æ± å¿');
+
+insert into web_regions (region_id,city_id,region) values (511622,5116,'æ­¦èƒœå¿');
+
+insert into web_regions (region_id,city_id,region) values (511623,5116,'é‚»æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (511681,5116,'åè“¥å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (511702,5117,'é€šå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511703,5117,'è¾¾å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511722,5117,'å®£æ±‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (511723,5117,'å¼€æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (511724,5117,'å¤§ç«¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (511725,5117,'æ¸ å¿');
+
+insert into web_regions (region_id,city_id,region) values (511781,5117,'ä¸‡æºå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (511802,5118,'é›¨åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (511803,5118,'åå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511822,5118,'è¥ç»å¿');
+
+insert into web_regions (region_id,city_id,region) values (511823,5118,'æ±‰æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (511824,5118,'çŸ³æ£‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (511825,5118,'å¤©å…¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (511826,5118,'èŠ¦å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (511827,5118,'å®å…´å¿');
+
+insert into web_regions (region_id,city_id,region) values (511902,5119,'å·´å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511903,5119,'æ©é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (511921,5119,'é€šæ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (511922,5119,'å—æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (511923,5119,'å¹³æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (512002,5120,'é›æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (512021,5120,'å®‰å²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (512022,5120,'ä¹è‡³å¿');
+
+insert into web_regions (region_id,city_id,region) values (512081,5120,'ç®€é˜³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (513221,5132,'æ±¶å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (513222,5132,'ç†å¿');
+
+insert into web_regions (region_id,city_id,region) values (513223,5132,'èŒ‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (513224,5132,'æ¾æ½˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (513225,5132,'ä¹å¯¨æ²Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (513226,5132,'é‡‘å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (513227,5132,'å°é‡‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (513228,5132,'é»‘æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (513229,5132,'é©¬å°”åº·å¿');
+
+insert into web_regions (region_id,city_id,region) values (513230,5132,'å£¤å¡˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (513231,5132,'é˜¿åå¿');
+
+insert into web_regions (region_id,city_id,region) values (513232,5132,'è‹¥å°”ç›–å¿');
+
+insert into web_regions (region_id,city_id,region) values (513233,5132,'çº¢åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (513321,5133,'åº·å®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (513322,5133,'æ³¸å®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (513323,5133,'ä¸¹å·´å¿');
+
+insert into web_regions (region_id,city_id,region) values (513324,5133,'ä¹é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (513325,5133,'é›…æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (513326,5133,'é“å­šå¿');
+
+insert into web_regions (region_id,city_id,region) values (513327,5133,'ç‚‰éœå¿');
+
+insert into web_regions (region_id,city_id,region) values (513328,5133,'ç”˜å­œå¿');
+
+insert into web_regions (region_id,city_id,region) values (513329,5133,'æ–°é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (513330,5133,'å¾·æ ¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (513331,5133,'ç™½ç‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (513332,5133,'çŸ³æ¸ å¿');
+
+insert into web_regions (region_id,city_id,region) values (513333,5133,'è‰²è¾¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (513334,5133,'ç†å¡˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (513335,5133,'å·´å¡˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (513336,5133,'ä¹¡åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (513337,5133,'ç¨»åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (513338,5133,'å¾—è£å¿');
+
+insert into web_regions (region_id,city_id,region) values (513401,5134,'è¥¿æ˜Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (513422,5134,'æœ¨é‡Œè—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (513423,5134,'ç›æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (513424,5134,'å¾·æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (513425,5134,'ä¼šç†å¿');
+
+insert into web_regions (region_id,city_id,region) values (513426,5134,'ä¼šä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (513427,5134,'å®å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (513428,5134,'æ™®æ ¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (513429,5134,'å¸ƒæ‹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (513430,5134,'é‡‘é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (513431,5134,'æ˜­è§‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (513432,5134,'å–œå¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (513433,5134,'å†•å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (513434,5134,'è¶Šè¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (513435,5134,'ç”˜æ´›å¿');
+
+insert into web_regions (region_id,city_id,region) values (513436,5134,'ç¾å§‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (513437,5134,'é›·æ³¢å¿');
+
+insert into web_regions (region_id,city_id,region) values (520102,5201,'å—æ˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520103,5201,'äº‘å²©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520111,5201,'èŠ±æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (520112,5201,'ä¹Œå½“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520113,5201,'ç™½äº‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520115,5201,'è§‚å±±æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520121,5201,'å¼€é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (520122,5201,'æ¯çƒ½å¿');
+
+insert into web_regions (region_id,city_id,region) values (520123,5201,'ä¿®æ–‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (520181,5201,'æ¸…é•‡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (520201,5202,'é’Ÿå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520203,5202,'å…­æç‰¹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520221,5202,'æ°´åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (520222,5202,'ç›˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (520302,5203,'çº¢èŠ±å²—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520303,5203,'æ±‡å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520321,5203,'éµä¹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (520322,5203,'æ¡æ¢“å¿');
+
+insert into web_regions (region_id,city_id,region) values (520323,5203,'ç»¥é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (520324,5203,'æ­£å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (520325,5203,'é“çœŸä»¡ä½¬æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520326,5203,'åŠ¡å·ä»¡ä½¬æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520327,5203,'å‡¤å†ˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (520328,5203,'æ¹„æ½­å¿');
+
+insert into web_regions (region_id,city_id,region) values (520329,5203,'ä½™åº†å¿');
+
+insert into web_regions (region_id,city_id,region) values (520330,5203,'ä¹ æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (520381,5203,'èµ¤æ°´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (520382,5203,'ä»æ€€å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (520402,5204,'è¥¿ç§€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520421,5204,'å¹³ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (520422,5204,'æ™®å®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (520423,5204,'é•‡å®å¸ƒä¾æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520424,5204,'å…³å²­å¸ƒä¾æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520425,5204,'ç´«äº‘è‹—æ—å¸ƒä¾æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520502,5205,'ä¸ƒæ˜Ÿå…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520521,5205,'å¤§æ–¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (520522,5205,'é»”è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (520523,5205,'é‡‘æ²™å¿');
+
+insert into web_regions (region_id,city_id,region) values (520524,5205,'ç»‡é‡‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (520525,5205,'çº³é›å¿');
+
+insert into web_regions (region_id,city_id,region) values (520526,5205,'å¨å®å½æ—å›æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520527,5205,'èµ«ç« å¿');
+
+insert into web_regions (region_id,city_id,region) values (520602,5206,'ç¢§æ±ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (520603,5206,'ä¸‡å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (520621,5206,'æ±Ÿå£å¿');
+
+insert into web_regions (region_id,city_id,region) values (520622,5206,'ç‰å±ä¾—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520623,5206,'çŸ³é˜¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (520624,5206,'æ€å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (520625,5206,'å°æ±ŸåœŸå®¶æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520626,5206,'å¾·æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (520627,5206,'æ²¿æ²³åœŸå®¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (520628,5206,'æ¾æ¡ƒè‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (522301,5223,'å…´ä¹‰å¸‚ ');
+
+insert into web_regions (region_id,city_id,region) values (522322,5223,'å…´ä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (522323,5223,'æ™®å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (522324,5223,'æ™´éš†å¿');
+
+insert into web_regions (region_id,city_id,region) values (522325,5223,'è´ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (522326,5223,'æœ›è°Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (522327,5223,'å†Œäº¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (522328,5223,'å®‰é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (522601,5226,'å‡¯é‡Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (522622,5226,'é»„å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (522623,5226,'æ–½ç§‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (522624,5226,'ä¸‰ç©—å¿');
+
+insert into web_regions (region_id,city_id,region) values (522625,5226,'é•‡è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (522626,5226,'å²‘å·©å¿');
+
+insert into web_regions (region_id,city_id,region) values (522627,5226,'å¤©æŸ±å¿');
+
+insert into web_regions (region_id,city_id,region) values (522628,5226,'é”¦å±å¿');
+
+insert into web_regions (region_id,city_id,region) values (522629,5226,'å‰‘æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (522630,5226,'å°æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (522631,5226,'é»å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (522632,5226,'æ¦•æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (522633,5226,'ä»æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (522634,5226,'é›·å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (522635,5226,'éº»æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (522636,5226,'ä¸¹å¯¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (522701,5227,'éƒ½åŒ€å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (522702,5227,'ç¦æ³‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (522722,5227,'è”æ³¢å¿');
+
+insert into web_regions (region_id,city_id,region) values (522723,5227,'è´µå®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (522725,5227,'ç“®å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (522726,5227,'ç‹¬å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (522727,5227,'å¹³å¡˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (522728,5227,'ç½—ç”¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (522729,5227,'é•¿é¡ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (522730,5227,'é¾™é‡Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (522731,5227,'æƒ æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (522732,5227,'ä¸‰éƒ½æ°´æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530102,5301,'äº”ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (530103,5301,'ç›˜é¾™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530111,5301,'å®˜æ¸¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530112,5301,'è¥¿å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530113,5301,'ä¸œå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530114,5301,'å‘ˆè´¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530122,5301,'æ™‹å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (530124,5301,'å¯Œæ°‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (530125,5301,'å®œè‰¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (530126,5301,'çŸ³æ—å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530127,5301,'åµ©æ˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (530128,5301,'ç¦„åŠå½æ—è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530129,5301,'å¯»ç”¸å›æ—å½æ—è‡ªæ²»å¿ ');
+
+insert into web_regions (region_id,city_id,region) values (530181,5301,'å®‰å®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (530302,5303,'éº’éºŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (530321,5303,'é©¬é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (530322,5303,'é™†è‰¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (530323,5303,'å¸ˆå®—å¿');
+
+insert into web_regions (region_id,city_id,region) values (530324,5303,'ç½—å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (530325,5303,'å¯Œæºå¿');
+
+insert into web_regions (region_id,city_id,region) values (530326,5303,'ä¼šæ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (530328,5303,'æ²¾ç›Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (530381,5303,'å®£å¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (530402,5304,'çº¢å¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530421,5304,'æ±Ÿå·å¿');
+
+insert into web_regions (region_id,city_id,region) values (530422,5304,'æ¾„æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (530423,5304,'é€šæµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (530424,5304,'åå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (530425,5304,'æ˜“é—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (530426,5304,'å³¨å±±å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530427,5304,'æ–°å¹³å½æ—å‚£æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530428,5304,'å…ƒæ±Ÿå“ˆå°¼æ—å½æ—å‚£æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530502,5305,'éš†é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530521,5305,'æ–½ç”¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (530522,5305,'è…¾å†²å¿');
+
+insert into web_regions (region_id,city_id,region) values (530523,5305,'é¾™é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (530524,5305,'æ˜Œå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (530602,5306,'æ˜­é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530621,5306,'é²ç”¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (530622,5306,'å·§å®¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (530623,5306,'ç›æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (530624,5306,'å¤§å…³å¿');
+
+insert into web_regions (region_id,city_id,region) values (530625,5306,'æ°¸å–„å¿');
+
+insert into web_regions (region_id,city_id,region) values (530626,5306,'ç»¥æ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (530627,5306,'é•‡é›„å¿');
+
+insert into web_regions (region_id,city_id,region) values (530628,5306,'å½è‰¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (530629,5306,'å¨ä¿¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (530630,5306,'æ°´å¯Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (530702,5307,'å¤åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (530721,5307,'ç‰é¾™çº³è¥¿æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530722,5307,'æ°¸èƒœå¿');
+
+insert into web_regions (region_id,city_id,region) values (530723,5307,'ååªå¿');
+
+insert into web_regions (region_id,city_id,region) values (530724,5307,'å®è’—å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530802,5308,'æ€èŒ…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530821,5308,'å®æ´±å“ˆå°¼æ—å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530822,5308,'å¢¨æ±Ÿå“ˆå°¼æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530823,5308,'æ™¯ä¸œå½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530824,5308,'æ™¯è°·å‚£æ—å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530825,5308,'é•‡æ²…å½æ—å“ˆå°¼æ—æ‹‰ç¥œæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530826,5308,'æ±ŸåŸå“ˆå°¼æ—å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530827,5308,'å­Ÿè¿å‚£æ—æ‹‰ç¥œæ—ä½¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530828,5308,'æ¾œæ²§æ‹‰ç¥œæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530829,5308,'è¥¿ç›Ÿä½¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530902,5309,'ä¸´ç¿”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (530921,5309,'å‡¤åº†å¿');
+
+insert into web_regions (region_id,city_id,region) values (530922,5309,'äº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (530923,5309,'æ°¸å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (530924,5309,'é•‡åº·å¿');
+
+insert into web_regions (region_id,city_id,region) values (530925,5309,'åŒæ±Ÿæ‹‰ç¥œæ—ä½¤æ—å¸ƒæœ—æ—å‚£æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530926,5309,'è€¿é©¬å‚£æ—ä½¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (530927,5309,'æ²§æºä½¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532301,5323,'æ¥šé›„å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532322,5323,'åŒæŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (532323,5323,'ç‰Ÿå®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (532324,5323,'å—åå¿');
+
+insert into web_regions (region_id,city_id,region) values (532325,5323,'å§šå®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (532326,5323,'å¤§å§šå¿');
+
+insert into web_regions (region_id,city_id,region) values (532327,5323,'æ°¸ä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532328,5323,'å…ƒè°‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (532329,5323,'æ­¦å®šå¿');
+
+insert into web_regions (region_id,city_id,region) values (532331,5323,'ç¦„ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (532501,5325,'ä¸ªæ—§å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532502,5325,'å¼€è¿œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532503,5325,'è’™è‡ªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532504,5325,'å¼¥å‹’å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532523,5325,'å±è¾¹è‹—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532524,5325,'å»ºæ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (532525,5325,'çŸ³å±å¿');
+
+insert into web_regions (region_id,city_id,region) values (532527,5325,'æ³¸è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (532528,5325,'å…ƒé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (532529,5325,'çº¢æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (532530,5325,'é‡‘å¹³è‹—æ—ç‘¶æ—å‚£æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532531,5325,'ç»¿æ˜¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (532532,5325,'æ²³å£ç‘¶æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532601,5326,'æ–‡å±±å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532622,5326,'ç šå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (532623,5326,'è¥¿ç•´å¿');
+
+insert into web_regions (region_id,city_id,region) values (532624,5326,'éº»æ —å¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (532625,5326,'é©¬å…³å¿');
+
+insert into web_regions (region_id,city_id,region) values (532626,5326,'ä¸˜åŒ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (532627,5326,'å¹¿å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (532628,5326,'å¯Œå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (532801,5328,'æ™¯æ´ªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532822,5328,'å‹æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (532823,5328,'å‹è…Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (532901,5329,'å¤§ç†å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (532922,5329,'æ¼¾æ¿å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532923,5329,'ç¥¥äº‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (532924,5329,'å®¾å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (532925,5329,'å¼¥æ¸¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (532926,5329,'å—æ¶§å½æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532927,5329,'å·å±±å½æ—å›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (532928,5329,'æ°¸å¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (532929,5329,'äº‘é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (532930,5329,'æ´±æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (532931,5329,'å‰‘å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (532932,5329,'é¹¤åº†å¿');
+
+insert into web_regions (region_id,city_id,region) values (533102,5331,'ç‘ä¸½å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (533103,5331,'èŠ’å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (533122,5331,'æ¢æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (533123,5331,'ç›ˆæ±Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (533124,5331,'é™‡å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (533321,5333,'æ³¸æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (533323,5333,'ç¦è´¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (533324,5333,'è´¡å±±ç‹¬é¾™æ—æ€’æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (533325,5333,'å…°åªç™½æ—æ™®ç±³æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (533421,5334,'é¦™æ ¼é‡Œæ‹‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (533422,5334,'å¾·é’¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (533423,5334,'ç»´è¥¿å‚ˆåƒ³æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (540102,5401,'åŸå…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (540121,5401,'æ—å‘¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (540122,5401,'å½“é›„å¿');
+
+insert into web_regions (region_id,city_id,region) values (540123,5401,'å°¼æœ¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (540124,5401,'æ›²æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (540125,5401,'å †é¾™å¾·åº†å¿');
+
+insert into web_regions (region_id,city_id,region) values (540126,5401,'è¾¾å­œå¿');
+
+insert into web_regions (region_id,city_id,region) values (540127,5401,'å¢¨ç«¹å·¥å¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (540202,5402,'æ¡‘ç å­œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (540221,5402,'å—æœ¨æ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (540222,5402,'æ±Ÿå­œå¿');
+
+insert into web_regions (region_id,city_id,region) values (540223,5402,'å®šæ—¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (540224,5402,'è¨è¿¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (540225,5402,'æ‹‰å­œå¿');
+
+insert into web_regions (region_id,city_id,region) values (540226,5402,'æ˜‚ä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (540227,5402,'è°¢é€šé—¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (540228,5402,'ç™½æœ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (540229,5402,'ä»å¸ƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (540230,5402,'åº·é©¬å¿');
+
+insert into web_regions (region_id,city_id,region) values (540231,5402,'å®šç»“å¿');
+
+insert into web_regions (region_id,city_id,region) values (540232,5402,'ä»²å·´å¿');
+
+insert into web_regions (region_id,city_id,region) values (540233,5402,'äºšä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (540234,5402,'å‰éš†å¿');
+
+insert into web_regions (region_id,city_id,region) values (540235,5402,'è‚æ‹‰æœ¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (540236,5402,'è¨å˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (540237,5402,'å²—å·´å¿');
+
+insert into web_regions (region_id,city_id,region) values (540302,5403,'å¡è‹¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (540321,5403,'æ±Ÿè¾¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (540322,5403,'è´¡è§‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (540323,5403,'ç±»ä¹Œé½å¿');
+
+insert into web_regions (region_id,city_id,region) values (540324,5403,'ä¸é’å¿');
+
+insert into web_regions (region_id,city_id,region) values (540325,5403,'å¯Ÿé›…å¿');
+
+insert into web_regions (region_id,city_id,region) values (540326,5403,'å…«å®¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (540327,5403,'å·¦è´¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (540328,5403,'èŠ’åº·å¿');
+
+insert into web_regions (region_id,city_id,region) values (540329,5403,'æ´›éš†å¿');
+
+insert into web_regions (region_id,city_id,region) values (540330,5403,'è¾¹åå¿');
+
+insert into web_regions (region_id,city_id,region) values (542221,5422,'ä¹ƒä¸œå¿');
+
+insert into web_regions (region_id,city_id,region) values (542222,5422,'æ‰å›Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (542223,5422,'è´¡å˜å¿');
+
+insert into web_regions (region_id,city_id,region) values (542224,5422,'æ¡‘æ—¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (542225,5422,'ç¼ç»“å¿');
+
+insert into web_regions (region_id,city_id,region) values (542226,5422,'æ›²æ¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (542227,5422,'æªç¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (542228,5422,'æ´›æ‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (542229,5422,'åŠ æŸ¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (542231,5422,'éš†å­å¿');
+
+insert into web_regions (region_id,city_id,region) values (542232,5422,'é”™é‚£å¿');
+
+insert into web_regions (region_id,city_id,region) values (542233,5422,'æµªå¡å­å¿');
+
+insert into web_regions (region_id,city_id,region) values (542421,5424,'é‚£æ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (542422,5424,'å˜‰é»å¿');
+
+insert into web_regions (region_id,city_id,region) values (542423,5424,'æ¯”å¦‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (542424,5424,'è‚è£å¿');
+
+insert into web_regions (region_id,city_id,region) values (542425,5424,'å®‰å¤šå¿');
+
+insert into web_regions (region_id,city_id,region) values (542426,5424,'ç”³æ‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (542427,5424,'ç´¢å¿');
+
+insert into web_regions (region_id,city_id,region) values (542428,5424,'ç­æˆˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (542429,5424,'å·´é’å¿');
+
+insert into web_regions (region_id,city_id,region) values (542430,5424,'å°¼ç›å¿');
+
+insert into web_regions (region_id,city_id,region) values (542431,5424,'åŒæ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (542521,5425,'æ™®å…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (542522,5425,'æœ­è¾¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (542523,5425,'å™¶å°”å¿');
+
+insert into web_regions (region_id,city_id,region) values (542524,5425,'æ—¥åœŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (542525,5425,'é©å‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (542526,5425,'æ”¹åˆ™å¿');
+
+insert into web_regions (region_id,city_id,region) values (542527,5425,'æªå‹¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (542621,5426,'æ—èŠå¿');
+
+insert into web_regions (region_id,city_id,region) values (542622,5426,'å·¥å¸ƒæ±Ÿè¾¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (542623,5426,'ç±³æ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (542624,5426,'å¢¨è„±å¿');
+
+insert into web_regions (region_id,city_id,region) values (542625,5426,'æ³¢å¯†å¿');
+
+insert into web_regions (region_id,city_id,region) values (542626,5426,'å¯Ÿéš…å¿');
+
+insert into web_regions (region_id,city_id,region) values (542627,5426,'æœ—å¿');
+
+insert into web_regions (region_id,city_id,region) values (610102,6101,'æ–°åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (610103,6101,'ç¢‘æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610104,6101,'è²æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610111,6101,'çæ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610112,6101,'æœªå¤®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610113,6101,'é›å¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610114,6101,'é˜è‰¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610115,6101,'ä¸´æ½¼åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610116,6101,'é•¿å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610122,6101,'è“ç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (610124,6101,'å‘¨è‡³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610125,6101,'æˆ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610126,6101,'é«˜é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (610202,6102,'ç‹ç›ŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (610203,6102,'å°å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610204,6102,'è€€å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610222,6102,'å®œå›å¿');
+
+insert into web_regions (region_id,city_id,region) values (610302,6103,'æ¸­æ»¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610303,6103,'é‡‘å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610304,6103,'é™ˆä»“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610322,6103,'å‡¤ç¿”å¿');
+
+insert into web_regions (region_id,city_id,region) values (610323,6103,'å²å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (610324,6103,'æ‰¶é£å¿');
+
+insert into web_regions (region_id,city_id,region) values (610326,6103,'çœ‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (610327,6103,'é™‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (610328,6103,'åƒé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610329,6103,'éºŸæ¸¸å¿');
+
+insert into web_regions (region_id,city_id,region) values (610330,6103,'å‡¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (610331,6103,'å¤ªç™½å¿');
+
+insert into web_regions (region_id,city_id,region) values (610402,6104,'ç§¦éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610403,6104,'æ¨é™µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (610404,6104,'æ¸­åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (610422,6104,'ä¸‰åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (610423,6104,'æ³¾é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610424,6104,'ä¹¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (610425,6104,'ç¤¼æ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (610426,6104,'æ°¸å¯¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (610427,6104,'å½¬å¿');
+
+insert into web_regions (region_id,city_id,region) values (610428,6104,'é•¿æ­¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (610429,6104,'æ—¬é‚‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (610430,6104,'æ·³åŒ–å¿');
+
+insert into web_regions (region_id,city_id,region) values (610431,6104,'æ­¦åŠŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (610481,6104,'å…´å¹³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (610502,6105,'ä¸´æ¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610521,6105,'åå¿');
+
+insert into web_regions (region_id,city_id,region) values (610522,6105,'æ½¼å…³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610523,6105,'å¤§è”å¿');
+
+insert into web_regions (region_id,city_id,region) values (610524,6105,'åˆé˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610525,6105,'æ¾„åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (610526,6105,'è’²åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (610527,6105,'ç™½æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (610528,6105,'å¯Œå¹³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610581,6105,'éŸ©åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (610582,6105,'åé˜´å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (610602,6106,'å®å¡”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610621,6106,'å»¶é•¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (610622,6106,'å»¶å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610623,6106,'å­é•¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (610624,6106,'å®‰å¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (610625,6106,'å¿—ä¸¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (610626,6106,'å´èµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610627,6106,'ç”˜æ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (610628,6106,'å¯Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (610629,6106,'æ´›å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610630,6106,'å®œå·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610631,6106,'é»„é¾™å¿');
+
+insert into web_regions (region_id,city_id,region) values (610632,6106,'é»„é™µå¿');
+
+insert into web_regions (region_id,city_id,region) values (610702,6107,'æ±‰å°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610721,6107,'å—éƒ‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (610722,6107,'åŸå›ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (610723,6107,'æ´‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (610724,6107,'è¥¿ä¹¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (610725,6107,'å‹‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (610726,6107,'å®å¼ºå¿');
+
+insert into web_regions (region_id,city_id,region) values (610727,6107,'ç•¥é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610728,6107,'é•‡å·´å¿');
+
+insert into web_regions (region_id,city_id,region) values (610729,6107,'ç•™åå¿');
+
+insert into web_regions (region_id,city_id,region) values (610730,6107,'ä½›åªå¿');
+
+insert into web_regions (region_id,city_id,region) values (610802,6108,'æ¦†é˜³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610821,6108,'ç¥æœ¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (610822,6108,'åºœè°·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610823,6108,'æ¨ªå±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (610824,6108,'é–è¾¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (610825,6108,'å®šè¾¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (610826,6108,'ç»¥å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (610827,6108,'ç±³è„‚å¿');
+
+insert into web_regions (region_id,city_id,region) values (610828,6108,'ä½³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610829,6108,'å´å ¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (610830,6108,'æ¸…æ¶§å¿');
+
+insert into web_regions (region_id,city_id,region) values (610831,6108,'å­æ´²å¿');
+
+insert into web_regions (region_id,city_id,region) values (610902,6109,'æ±‰æ»¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (610921,6109,'æ±‰é˜´å¿');
+
+insert into web_regions (region_id,city_id,region) values (610922,6109,'çŸ³æ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (610923,6109,'å®é™•å¿');
+
+insert into web_regions (region_id,city_id,region) values (610924,6109,'ç´«é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610925,6109,'å²šçš‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (610926,6109,'å¹³åˆ©å¿');
+
+insert into web_regions (region_id,city_id,region) values (610927,6109,'é•‡åªå¿');
+
+insert into web_regions (region_id,city_id,region) values (610928,6109,'æ—¬é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (610929,6109,'ç™½æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (611002,6110,'å•†å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (611021,6110,'æ´›å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (611022,6110,'ä¸¹å‡¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (611023,6110,'å•†å—å¿');
+
+insert into web_regions (region_id,city_id,region) values (611024,6110,'å±±é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (611025,6110,'é•‡å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (611026,6110,'æŸæ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (611101,6111,'ç©ºæ¸¯æ–°åŸ');
+
+insert into web_regions (region_id,city_id,region) values (611102,6111,'æ²£ä¸œæ–°åŸ');
+
+insert into web_regions (region_id,city_id,region) values (611103,6111,'ç§¦æ±‰æ–°åŸ');
+
+insert into web_regions (region_id,city_id,region) values (611104,6111,'æ²£è¥¿æ–°åŸ');
+
+insert into web_regions (region_id,city_id,region) values (611105,6111,'æ³¾æ²³æ–°åŸ');
+
+insert into web_regions (region_id,city_id,region) values (620102,6201,'åŸå…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620103,6201,'ä¸ƒé‡Œæ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620104,6201,'è¥¿å›ºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (620105,6201,'å®‰å®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620111,6201,'çº¢å¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620121,6201,'æ°¸ç™»å¿');
+
+insert into web_regions (region_id,city_id,region) values (620122,6201,'çš‹å…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (620123,6201,'æ¦†ä¸­å¿');
+
+insert into web_regions (region_id,city_id,region) values (620201,6202,'é›„å…³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620202,6202,'é•¿åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (620203,6202,'é•œé“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620302,6203,'é‡‘å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620321,6203,'æ°¸æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (620402,6204,'ç™½é“¶åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620403,6204,'å¹³å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620421,6204,'é–è¿œå¿');
+
+insert into web_regions (region_id,city_id,region) values (620422,6204,'ä¼šå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (620423,6204,'æ™¯æ³°å¿');
+
+insert into web_regions (region_id,city_id,region) values (620502,6205,'ç§¦å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620503,6205,'éº¦ç§¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620521,6205,'æ¸…æ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (620522,6205,'ç§¦å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (620523,6205,'ç”˜è°·å¿');
+
+insert into web_regions (region_id,city_id,region) values (620524,6205,'æ­¦å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (620525,6205,'å¼ å®¶å·å›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (620602,6206,'å‡‰å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620621,6206,'æ°‘å‹¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (620622,6206,'å¤æµªå¿');
+
+insert into web_regions (region_id,city_id,region) values (620623,6206,'å¤©ç¥è—æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (620702,6207,'ç”˜å·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620721,6207,'è‚ƒå—è£•å›ºæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (620722,6207,'æ°‘ä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (620723,6207,'ä¸´æ³½å¿');
+
+insert into web_regions (region_id,city_id,region) values (620724,6207,'é«˜å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (620725,6207,'å±±ä¸¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (620802,6208,'å´†å³’åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620821,6208,'æ³¾å·å¿');
+
+insert into web_regions (region_id,city_id,region) values (620822,6208,'çµå°å¿');
+
+insert into web_regions (region_id,city_id,region) values (620823,6208,'å´‡ä¿¡å¿');
+
+insert into web_regions (region_id,city_id,region) values (620824,6208,'åäº­å¿');
+
+insert into web_regions (region_id,city_id,region) values (620825,6208,'åº„æµªå¿');
+
+insert into web_regions (region_id,city_id,region) values (620826,6208,'é™å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (620902,6209,'è‚ƒå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (620921,6209,'é‡‘å¡”å¿');
+
+insert into web_regions (region_id,city_id,region) values (620922,6209,'ç“œå·å¿');
+
+insert into web_regions (region_id,city_id,region) values (620923,6209,'è‚ƒåŒ—è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (620924,6209,'é˜¿å…‹å¡å“ˆè¨å…‹æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (620981,6209,'ç‰é—¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (620982,6209,'æ•¦ç…Œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (621002,6210,'è¥¿å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (621021,6210,'åº†åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (621022,6210,'ç¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (621023,6210,'åæ± å¿');
+
+insert into web_regions (region_id,city_id,region) values (621024,6210,'åˆæ°´å¿');
+
+insert into web_regions (region_id,city_id,region) values (621025,6210,'æ­£å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (621026,6210,'å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (621027,6210,'é•‡åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (621102,6211,'å®‰å®šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (621121,6211,'é€šæ¸­å¿');
+
+insert into web_regions (region_id,city_id,region) values (621122,6211,'é™‡è¥¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (621123,6211,'æ¸­æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (621124,6211,'ä¸´æ´®å¿');
+
+insert into web_regions (region_id,city_id,region) values (621125,6211,'æ¼³å¿');
+
+insert into web_regions (region_id,city_id,region) values (621126,6211,'å²·å¿');
+
+insert into web_regions (region_id,city_id,region) values (621202,6212,'æ­¦éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (621221,6212,'æˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (621222,6212,'æ–‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (621223,6212,'å®•æ˜Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (621224,6212,'åº·å¿');
+
+insert into web_regions (region_id,city_id,region) values (621225,6212,'è¥¿å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (621226,6212,'ç¤¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (621227,6212,'å¾½å¿');
+
+insert into web_regions (region_id,city_id,region) values (621228,6212,'ä¸¤å½“å¿');
+
+insert into web_regions (region_id,city_id,region) values (622901,6229,'ä¸´å¤å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (622921,6229,'ä¸´å¤å¿');
+
+insert into web_regions (region_id,city_id,region) values (622922,6229,'åº·ä¹å¿');
+
+insert into web_regions (region_id,city_id,region) values (622923,6229,'æ°¸é–å¿');
+
+insert into web_regions (region_id,city_id,region) values (622924,6229,'å¹¿æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (622925,6229,'å’Œæ”¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (622926,6229,'ä¸œä¹¡æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (622927,6229,'ç§¯çŸ³å±±ä¿å®‰æ—ä¸œä¹¡æ—æ’’æ‹‰æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (623001,6230,'åˆä½œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (623021,6230,'ä¸´æ½­å¿');
+
+insert into web_regions (region_id,city_id,region) values (623022,6230,'å“å°¼å¿');
+
+insert into web_regions (region_id,city_id,region) values (623023,6230,'èˆŸæ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (623024,6230,'è¿­éƒ¨å¿');
+
+insert into web_regions (region_id,city_id,region) values (623025,6230,'ç›æ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (623026,6230,'ç¢Œæ›²å¿');
+
+insert into web_regions (region_id,city_id,region) values (623027,6230,'å¤æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (630102,6301,'åŸä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (630103,6301,'åŸä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (630104,6301,'åŸè¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (630105,6301,'åŸåŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (630121,6301,'å¤§é€šå›æ—åœŸæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (630122,6301,'æ¹Ÿä¸­å¿');
+
+insert into web_regions (region_id,city_id,region) values (630123,6301,'æ¹Ÿæºå¿');
+
+insert into web_regions (region_id,city_id,region) values (630202,6302,'ä¹éƒ½åŒº');
+
+insert into web_regions (region_id,city_id,region) values (630221,6302,'å¹³å®‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (630222,6302,'æ°‘å’Œå›æ—åœŸæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (630223,6302,'äº’åŠ©åœŸæ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (630224,6302,'åŒ–éš†å›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (630225,6302,'å¾ªåŒ–æ’’æ‹‰æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (632221,6322,'é—¨æºå›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (632222,6322,'ç¥è¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (632223,6322,'æµ·æ™å¿');
+
+insert into web_regions (region_id,city_id,region) values (632224,6322,'åˆšå¯Ÿå¿');
+
+insert into web_regions (region_id,city_id,region) values (632321,6323,'åŒä»å¿');
+
+insert into web_regions (region_id,city_id,region) values (632322,6323,'å°–æ‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (632323,6323,'æ³½åº“å¿');
+
+insert into web_regions (region_id,city_id,region) values (632324,6323,'æ²³å—è’™å¤æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (632521,6325,'å…±å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (632522,6325,'åŒå¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (632523,6325,'è´µå¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (632524,6325,'å…´æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (632525,6325,'è´µå—å¿');
+
+insert into web_regions (region_id,city_id,region) values (632621,6326,'ç›æ²å¿');
+
+insert into web_regions (region_id,city_id,region) values (632622,6326,'ç­ç›å¿');
+
+insert into web_regions (region_id,city_id,region) values (632623,6326,'ç”˜å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (632624,6326,'è¾¾æ—¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (632625,6326,'ä¹…æ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (632626,6326,'ç›å¤šå¿');
+
+insert into web_regions (region_id,city_id,region) values (632701,6327,'ç‰æ ‘å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (632722,6327,'æ‚å¤šå¿');
+
+insert into web_regions (region_id,city_id,region) values (632723,6327,'ç§°å¤šå¿');
+
+insert into web_regions (region_id,city_id,region) values (632724,6327,'æ²»å¤šå¿');
+
+insert into web_regions (region_id,city_id,region) values (632725,6327,'å›Šè°¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (632726,6327,'æ›²éº»è±å¿');
+
+insert into web_regions (region_id,city_id,region) values (632801,6328,'æ ¼å°”æœ¨å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (632802,6328,'å¾·ä»¤å“ˆå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (632821,6328,'ä¹Œå…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (632822,6328,'éƒ½å…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (632823,6328,'å¤©å³»å¿');
+
+insert into web_regions (region_id,city_id,region) values (640104,6401,'å…´åº†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640105,6401,'è¥¿å¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640106,6401,'é‡‘å‡¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640121,6401,'æ°¸å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (640122,6401,'è´ºå…°å¿');
+
+insert into web_regions (region_id,city_id,region) values (640181,6401,'çµæ­¦å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (640202,6402,'å¤§æ­¦å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640205,6402,'æƒ å†œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (640221,6402,'å¹³ç½—å¿');
+
+insert into web_regions (region_id,city_id,region) values (640302,6403,'åˆ©é€šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (640303,6403,'çº¢å¯ºå ¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640323,6403,'ç›æ± å¿');
+
+insert into web_regions (region_id,city_id,region) values (640324,6403,'åŒå¿ƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (640381,6403,'é’é“œå³¡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (640402,6404,'åŸå·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640422,6404,'è¥¿å‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (640423,6404,'éš†å¾·å¿');
+
+insert into web_regions (region_id,city_id,region) values (640424,6404,'æ³¾æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (640425,6404,'å½­é˜³å¿');
+
+insert into web_regions (region_id,city_id,region) values (640502,6405,'æ²™å¡å¤´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (640521,6405,'ä¸­å®å¿');
+
+insert into web_regions (region_id,city_id,region) values (640522,6405,'æµ·åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (650102,6501,'å¤©å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650103,6501,'æ²™ä¾å·´å…‹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650104,6501,'æ–°å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650105,6501,'æ°´ç£¨æ²ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (650106,6501,'å¤´å±¯æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650107,6501,'è¾¾å‚åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (650109,6501,'ç±³ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (650121,6501,'ä¹Œé²æœ¨é½å¿');
+
+insert into web_regions (region_id,city_id,region) values (650202,6502,'ç‹¬å±±å­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650203,6502,'å…‹æ‹‰ç›ä¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650204,6502,'ç™½ç¢±æ»©åŒº');
+
+insert into web_regions (region_id,city_id,region) values (650205,6502,'ä¹Œå°”ç¦¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (652101,6521,'åé²ç•ªå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652122,6521,'é„¯å–„å¿');
+
+insert into web_regions (region_id,city_id,region) values (652123,6521,'æ‰˜å…‹é€Šå¿');
+
+insert into web_regions (region_id,city_id,region) values (652201,6522,'å“ˆå¯†å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652222,6522,'å·´é‡Œå¤å“ˆè¨å…‹è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (652223,6522,'ä¼Šå¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (652301,6523,'æ˜Œå‰å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652302,6523,'é˜œåº·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652323,6523,'å‘¼å›¾å£å¿');
+
+insert into web_regions (region_id,city_id,region) values (652324,6523,'ç›çº³æ–¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (652325,6523,'å¥‡å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (652327,6523,'å‰æœ¨è¨å°”å¿');
+
+insert into web_regions (region_id,city_id,region) values (652328,6523,'æœ¨å’å“ˆè¨å…‹è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (652701,6527,'åšä¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652702,6527,'é˜¿æ‹‰å±±å£å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652722,6527,'ç²¾æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (652723,6527,'æ¸©æ³‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (652801,6528,'åº“å°”å‹’å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652822,6528,'è½®å°å¿');
+
+insert into web_regions (region_id,city_id,region) values (652823,6528,'å°‰çŠå¿');
+
+insert into web_regions (region_id,city_id,region) values (652824,6528,'è‹¥ç¾Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (652825,6528,'ä¸”æœ«å¿');
+
+insert into web_regions (region_id,city_id,region) values (652826,6528,'ç„‰è€†å›æ—è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (652827,6528,'å’Œé™å¿');
+
+insert into web_regions (region_id,city_id,region) values (652828,6528,'å’Œç¡•å¿');
+
+insert into web_regions (region_id,city_id,region) values (652829,6528,'åšæ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (652901,6529,'é˜¿å…‹è‹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (652922,6529,'æ¸©å®¿å¿');
+
+insert into web_regions (region_id,city_id,region) values (652923,6529,'åº“è½¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (652924,6529,'æ²™é›…å¿');
+
+insert into web_regions (region_id,city_id,region) values (652925,6529,'æ–°å’Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (652926,6529,'æ‹œåŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (652927,6529,'ä¹Œä»€å¿');
+
+insert into web_regions (region_id,city_id,region) values (652928,6529,'é˜¿ç“¦æå¿');
+
+insert into web_regions (region_id,city_id,region) values (652929,6529,'æŸ¯åªå¿');
+
+insert into web_regions (region_id,city_id,region) values (653001,6530,'é˜¿å›¾ä»€å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (653022,6530,'é˜¿å…‹é™¶å¿');
+
+insert into web_regions (region_id,city_id,region) values (653023,6530,'é˜¿åˆå¥‡å¿');
+
+insert into web_regions (region_id,city_id,region) values (653024,6530,'ä¹Œæ°å¿');
+
+insert into web_regions (region_id,city_id,region) values (653101,6531,'å–€ä»€å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (653121,6531,'ç–é™„å¿');
+
+insert into web_regions (region_id,city_id,region) values (653122,6531,'ç–å‹’å¿');
+
+insert into web_regions (region_id,city_id,region) values (653123,6531,'è‹±å‰æ²™å¿');
+
+insert into web_regions (region_id,city_id,region) values (653124,6531,'æ³½æ™®å¿');
+
+insert into web_regions (region_id,city_id,region) values (653125,6531,'èè½¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (653126,6531,'å¶åŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (653127,6531,'éº¦ç›–æå¿');
+
+insert into web_regions (region_id,city_id,region) values (653128,6531,'å²³æ™®æ¹–å¿');
+
+insert into web_regions (region_id,city_id,region) values (653129,6531,'ä¼½å¸ˆå¿');
+
+insert into web_regions (region_id,city_id,region) values (653130,6531,'å·´æ¥šå¿');
+
+insert into web_regions (region_id,city_id,region) values (653131,6531,'å¡”ä»€åº“å°”å¹²å¡”å‰å…‹è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (653201,6532,'å’Œç”°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (653221,6532,'å’Œç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (653222,6532,'å¢¨ç‰å¿');
+
+insert into web_regions (region_id,city_id,region) values (653223,6532,'çš®å±±å¿');
+
+insert into web_regions (region_id,city_id,region) values (653224,6532,'æ´›æµ¦å¿');
+
+insert into web_regions (region_id,city_id,region) values (653225,6532,'ç­–å‹’å¿');
+
+insert into web_regions (region_id,city_id,region) values (653226,6532,'äºç”°å¿');
+
+insert into web_regions (region_id,city_id,region) values (653227,6532,'æ°‘ä¸°å¿');
+
+insert into web_regions (region_id,city_id,region) values (654002,6540,'ä¼Šå®å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (654003,6540,'å¥å±¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (654004,6540,'éœå°”æœæ–¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (654021,6540,'ä¼Šå®å¿');
+
+insert into web_regions (region_id,city_id,region) values (654022,6540,'å¯Ÿå¸ƒæŸ¥å°”é”¡ä¼¯è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (654023,6540,'éœåŸå¿');
+
+insert into web_regions (region_id,city_id,region) values (654024,6540,'å·©ç•™å¿');
+
+insert into web_regions (region_id,city_id,region) values (654025,6540,'æ–°æºå¿');
+
+insert into web_regions (region_id,city_id,region) values (654026,6540,'æ˜­è‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (654027,6540,'ç‰¹å…‹æ–¯å¿');
+
+insert into web_regions (region_id,city_id,region) values (654028,6540,'å°¼å‹’å…‹å¿');
+
+insert into web_regions (region_id,city_id,region) values (654201,6542,'å¡”åŸå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (654202,6542,'ä¹Œè‹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (654221,6542,'é¢æ•å¿');
+
+insert into web_regions (region_id,city_id,region) values (654223,6542,'æ²™æ¹¾å¿');
+
+insert into web_regions (region_id,city_id,region) values (654224,6542,'æ‰˜é‡Œå¿');
+
+insert into web_regions (region_id,city_id,region) values (654225,6542,'è£•æ°‘å¿');
+
+insert into web_regions (region_id,city_id,region) values (654226,6542,'å’Œå¸ƒå…‹èµ›å°”è’™å¤è‡ªæ²»å¿');
+
+insert into web_regions (region_id,city_id,region) values (654301,6543,'é˜¿å‹’æ³°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (654321,6543,'å¸ƒå°”æ´¥å¿');
+
+insert into web_regions (region_id,city_id,region) values (654322,6543,'å¯Œè•´å¿');
+
+insert into web_regions (region_id,city_id,region) values (654323,6543,'ç¦æµ·å¿');
+
+insert into web_regions (region_id,city_id,region) values (654324,6543,'å“ˆå·´æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (654325,6543,'é’æ²³å¿');
+
+insert into web_regions (region_id,city_id,region) values (654326,6543,'å‰æœ¨ä¹ƒå¿');
+
+insert into web_regions (region_id,city_id,region) values (659001,6590,'çŸ³æ²³å­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (659002,6590,'é˜¿æ‹‰å°”å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (659003,6590,'å›¾æœ¨èˆ’å…‹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (659004,6590,'äº”å®¶æ¸ å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (659005,6590,'åŒ—å±¯å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (659006,6590,'é“é—¨å…³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (659007,6590,'åŒæ²³å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (710101,7101,'æ¾å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710102,7101,'ä¿¡ä¹‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710103,7101,'å¤§å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710104,7101,'ä¸­å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710105,7101,'ä¸­æ­£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710106,7101,'å¤§åŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710107,7101,'ä¸‡ååŒº');
+
+insert into web_regions (region_id,city_id,region) values (710108,7101,'æ–‡å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710109,7101,'å—æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710110,7101,'å†…æ¹–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710111,7101,'å£«æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710112,7101,'åŒ—æŠ•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710201,7102,'ç›åŸ•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710202,7102,'é¼“å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710203,7102,'å·¦è¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710204,7102,'æ¥ æ¢“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710205,7102,'ä¸‰æ°‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710206,7102,'æ–°å…´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710207,7102,'å‰é‡‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710208,7102,'è‹“é›…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710209,7102,'å‰é•‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710210,7102,'æ——æ´¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710211,7102,'å°æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710212,7102,'å‡¤å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710213,7102,'æ—å›­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710214,7102,'å¤§å¯®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710215,7102,'å¤§æ ‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710216,7102,'å¤§ç¤¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710217,7102,'ä»æ­¦åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710218,7102,'é¸Ÿæ¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710219,7102,'å†ˆå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710220,7102,'æ¡¥å¤´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710221,7102,'ç‡•å·¢åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710222,7102,'ç”°å¯®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710223,7102,'é˜¿è²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710224,7102,'è·¯ç«¹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710225,7102,'æ¹–å†…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710226,7102,'èŒ„è£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710227,7102,'æ°¸å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710228,7102,'å¼¥é™€åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710229,7102,'æ¢“å®˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710230,7102,'æ——å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710231,7102,'ç¾æµ“åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710232,7102,'å…­é¾ŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710233,7102,'ç”²ä»™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710234,7102,'æ‰æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710235,7102,'å†…é—¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710236,7102,'èŒ‚æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710237,7102,'æ¡ƒæºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710238,7102,'é‚£ç›å¤åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710301,7103,'ä¸­æ­£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710302,7103,'ä¸ƒå µåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710303,7103,'æš–æš–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710304,7103,'ä»çˆ±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710305,7103,'ä¸­å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710306,7103,'å®‰ä¹åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710307,7103,'ä¿¡ä¹‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710401,7104,'ä¸­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710402,7104,'ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710403,7104,'å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710404,7104,'è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710405,7104,'åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710406,7104,'è¥¿å±¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710407,7104,'å—å±¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710408,7104,'åŒ—å±¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710409,7104,'ä¸°åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710410,7104,'ä¸œåŠ¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710411,7104,'å¤§ç”²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710412,7104,'æ¸…æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710413,7104,'æ²™é¹¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710414,7104,'æ¢§æ –åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710415,7104,'åé‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710416,7104,'ç¥å†ˆåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710417,7104,'æ½­å­åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710418,7104,'å¤§é›…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710419,7104,'æ–°ç¤¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710420,7104,'çŸ³å†ˆåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710421,7104,'å¤–åŸ”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710422,7104,'å¤§å®‰åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710423,7104,'ä¹Œæ—¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710424,7104,'å¤§è‚šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710425,7104,'é¾™äº•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710426,7104,'é›¾å³°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710427,7104,'å¤ªå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710428,7104,'å¤§é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710429,7104,'å’Œå¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710501,7105,'ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710502,7105,'å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710504,7105,'åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710506,7105,'å®‰å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710507,7105,'å®‰å¹³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710508,7105,'ä¸­è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710509,7105,'æ–°è¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710510,7105,'ç›æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710511,7105,'ç™½æ²³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710512,7105,'æŸ³è¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710513,7105,'åå£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710514,7105,'ä¸œå±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710515,7105,'éº»è±†åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710516,7105,'ä¸‹è¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710517,7105,'å…­ç”²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710518,7105,'å®˜ç”°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710519,7105,'å¤§å†…åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710520,7105,'ä½³é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710521,7105,'å­¦ç”²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710522,7105,'è¥¿æ¸¯åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710523,7105,'ä¸ƒè‚¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710524,7105,'å°†å†›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710525,7105,'åŒ—é—¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710526,7105,'æ–°åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710527,7105,'å–„åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710528,7105,'æ–°å¸‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710529,7105,'å®‰å®šåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710530,7105,'å±±ä¸ŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710531,7105,'ç‰äº•åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710532,7105,'æ¥ è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710533,7105,'å—åŒ–åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710534,7105,'å·¦é•‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710535,7105,'ä»å¾·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710536,7105,'å½’ä»åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710537,7105,'å…³åº™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710538,7105,'é¾™å´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710539,7105,'æ°¸åº·åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710601,7106,'ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710602,7106,'åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710603,7106,'é¦™å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710701,7107,'ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710702,7107,'è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710801,7108,'æ¿æ¡¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710802,7108,'ä¸‰é‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710803,7108,'ä¸­å’ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710804,7108,'æ°¸å’ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710805,7108,'æ–°åº„åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710806,7108,'æ–°åº—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710807,7108,'æ ‘æ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710808,7108,'èºæ­ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710809,7108,'ä¸‰å³¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710810,7108,'æ·¡æ°´åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710811,7108,'æ±æ­¢åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710812,7108,'ç‘èŠ³åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710813,7108,'åœŸåŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710814,7108,'èŠ¦æ´²åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710815,7108,'äº”è‚¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710816,7108,'æ³°å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710817,7108,'æ—å£åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710818,7108,'æ·±å‘åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710819,7108,'çŸ³ç¢‡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710820,7108,'åªæ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710821,7108,'ä¸‰èŠåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710822,7108,'çŸ³é—¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710823,7108,'å…«é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710824,7108,'å¹³æºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710825,7108,'åŒæºªåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710826,7108,'è´¡å¯®åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710827,7108,'é‡‘å±±åŒº');
+
+insert into web_regions (region_id,city_id,region) values (710828,7108,'ä¸‡é‡ŒåŒº');
+
+insert into web_regions (region_id,city_id,region) values (710829,7108,'ä¹Œæ¥åŒº');
+
+insert into web_regions (region_id,city_id,region) values (712201,7122,'å®œå…°å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712221,7122,'ç½—ä¸œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712222,7122,'è‹æ¾³é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712223,7122,'å¤´åŸé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712224,7122,'ç¤æºªä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712225,7122,'å£®å›´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712226,7122,'å‘˜å±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712227,7122,'å†¬å±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712228,7122,'äº”ç»“ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712229,7122,'ä¸‰æ˜Ÿä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712230,7122,'å¤§åŒä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712231,7122,'å—æ¾³ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712301,7123,'æ¡ƒå›­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712302,7123,'ä¸­åœå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712303,7123,'å¹³é•‡å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712304,7123,'å…«å¾·å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712305,7123,'æ¨æ¢…å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712306,7123,'èŠ¦ç«¹å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712321,7123,'å¤§æºªé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712324,7123,'å¤§å›­ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712325,7123,'é¾Ÿå±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712327,7123,'é¾™æ½­ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712329,7123,'æ–°å±‹ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712330,7123,'è§‚éŸ³ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712331,7123,'å¤å…´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712401,7124,'ç«¹åŒ—å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712421,7124,'ç«¹ä¸œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712422,7124,'æ–°åŸ”é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712423,7124,'å…³è¥¿é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712424,7124,'æ¹–å£ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712425,7124,'æ–°ä¸°ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712426,7124,'èŠæ—ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712427,7124,'æ¨ªå±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712428,7124,'åŒ—åŸ”ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712429,7124,'å®å±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712430,7124,'å³¨çœ‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712431,7124,'å°–çŸ³ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712432,7124,'äº”å³°ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712501,7125,'è‹—æ —å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712521,7125,'è‹‘é‡Œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712522,7125,'é€šéœ„é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712523,7125,'ç«¹å—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712524,7125,'å¤´ä»½é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712525,7125,'åé¾™é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712526,7125,'å“å…°é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712527,7125,'å¤§æ¹–ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712528,7125,'å…¬é¦†ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712529,7125,'é“œé”£ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712530,7125,'å—åº„ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712531,7125,'å¤´å±‹ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712532,7125,'ä¸‰ä¹‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712533,7125,'è¥¿æ¹–ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712534,7125,'é€ æ¡¥ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712535,7125,'ä¸‰æ¹¾ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712536,7125,'ç‹®æ½­ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712537,7125,'æ³°å®‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712701,7127,'å½°åŒ–å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712721,7127,'é¹¿æ¸¯é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712722,7127,'å’Œç¾é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712723,7127,'çº¿è¥¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712724,7127,'ä¼¸æ¸¯ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712725,7127,'ç¦å…´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712726,7127,'ç§€æ°´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712727,7127,'èŠ±å›ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712728,7127,'èŠ¬å›­ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712729,7127,'å‘˜æ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712730,7127,'æºªæ¹–é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712731,7127,'ç”°ä¸­é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712732,7127,'å¤§æ‘ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712733,7127,'åŸ”ç›ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712734,7127,'åŸ”å¿ƒä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712735,7127,'æ°¸é–ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712736,7127,'ç¤¾å¤´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712737,7127,'äºŒæ°´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712738,7127,'åŒ—æ–—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712739,7127,'äºŒæ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712740,7127,'ç”°å°¾ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712741,7127,'åŸ¤å¤´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712742,7127,'èŠ³è‹‘ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712743,7127,'å¤§åŸä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712744,7127,'ç«¹å¡˜ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712745,7127,'æºªå·ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712801,7128,'å—æŠ•å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712821,7128,'åŸ”é‡Œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712822,7128,'è‰å±¯é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712823,7128,'ç«¹å±±é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712824,7128,'é›†é›†é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712825,7128,'åé—´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712826,7128,'é¹¿è°·ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712827,7128,'ä¸­å¯®ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712828,7128,'é±¼æ± ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712829,7128,'å›½å§“ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712830,7128,'æ°´é‡Œä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712831,7128,'ä¿¡ä¹‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712832,7128,'ä»çˆ±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712901,7129,'æ–—å…­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (712921,7129,'æ–—å—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712922,7129,'è™å°¾é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712923,7129,'è¥¿èºé•‡');
+
+insert into web_regions (region_id,city_id,region) values (712924,7129,'åœŸåº“é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712925,7129,'åŒ—æ¸¯é•‡');
+
+insert into web_regions (region_id,city_id,region) values (712926,7129,'å¤å‘ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712927,7129,'å¤§åŸ¤ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712928,7129,'è¿æ¡ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712929,7129,'æ—å†…ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712930,7129,'äºŒä»‘ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712931,7129,'ä»‘èƒŒä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712932,7129,'éº¦å¯®ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712933,7129,'ä¸œåŠ¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712934,7129,'è¤’å¿ ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712935,7129,'å°è¥¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712936,7129,'å…ƒé•¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712937,7129,'å››æ¹–ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712938,7129,'å£æ¹–ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (712939,7129,'æ°´æ—ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713001,7130,'å¤ªä¿å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (713002,7130,'æœ´å­å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (713023,7130,'å¸ƒè¢‹é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713024,7130,'å¤§æ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713025,7130,'æ°‘é›„ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713026,7130,'æºªå£ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713027,7130,'æ–°æ¸¯ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713028,7130,'å…­è„šä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713029,7130,'ä¸œçŸ³ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713030,7130,'ä¹‰ç«¹ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713031,7130,'é¹¿è‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713032,7130,'æ°´ä¸Šä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713033,7130,'ä¸­åŸ”ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713034,7130,'ç«¹å´ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713035,7130,'æ¢…å±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713036,7130,'ç•ªè·¯ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713037,7130,'å¤§åŸ”ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713038,7130,'é˜¿é‡Œå±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713301,7133,'å±ä¸œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (713321,7133,'æ½®å·é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713322,7133,'ä¸œæ¸¯é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713323,7133,'æ’æ˜¥é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713324,7133,'ä¸‡ä¸¹ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713325,7133,'é•¿æ²»ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713326,7133,'éºŸæ´›ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713327,7133,'ä¹å¦‚ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713328,7133,'é‡Œæ¸¯ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713329,7133,'ç›åŸ”ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713330,7133,'é«˜æ ‘ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713331,7133,'ä¸‡å³¦ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713332,7133,'å†…åŸ”ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713333,7133,'ç«¹ç”°ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713334,7133,'æ–°åŸ¤ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713335,7133,'æ‹å¯®ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713336,7133,'æ–°å›­ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713337,7133,'å´é¡¶ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713338,7133,'æ—è¾¹ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713339,7133,'å—å·ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713340,7133,'ä½³å†¬ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713341,7133,'ç‰çƒä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713342,7133,'è½¦åŸä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713343,7133,'æ»¡å·ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713344,7133,'æ‹å±±ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713345,7133,'ä¸‰åœ°é—¨ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713346,7133,'é›¾å°ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713347,7133,'ç›å®¶ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713348,7133,'æ³°æ­¦ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713349,7133,'æ¥ä¹‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713350,7133,'æ˜¥æ—¥ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713351,7133,'ç‹®å­ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713352,7133,'ç‰¡ä¸¹ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713401,7134,'å°ä¸œå¸‚');
+
+insert into web_regions (region_id,city_id,region) values (713421,7134,'æˆåŠŸé•‡');
+
+insert into web_regions (region_id,city_id,region) values (713422,7134,'å…³å±±é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713423,7134,'å‘å—ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713424,7134,'é¹¿é‡ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713425,7134,'æ± ä¸Šä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713426,7134,'ä¸œæ²³ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713427,7134,'é•¿æ»¨ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713428,7134,'å¤ªéº»é‡Œä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713429,7134,'å¤§æ­¦ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713430,7134,'ç»¿å²›ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713431,7134,'æµ·ç«¯ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713432,7134,'å»¶å¹³ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713433,7134,'é‡‘å³°ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713434,7134,'è¾¾ä»ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713435,7134,'å…°å±¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713501,7135,'èŠ±è²å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (713521,7135,'å‡¤æ—é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713522,7135,'ç‰é‡Œé•‡');
+
+insert into web_regions (region_id,city_id,region) values (713523,7135,'æ–°åŸä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713524,7135,'å‰å®‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713525,7135,'å¯¿ä¸°ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713526,7135,'å…‰å¤ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713527,7135,'ä¸°æ»¨ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713528,7135,'ç‘ç©—ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713529,7135,'å¯Œé‡Œä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713530,7135,'ç§€æ—ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713531,7135,'ä¸‡è£ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713532,7135,'å“æºªä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713601,7136,'é©¬å…¬å¸‚');
+
+insert into web_regions (region_id,city_id,region) values (713621,7136,'æ¹–è¥¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713622,7136,'ç™½æ²™ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713623,7136,'è¥¿å±¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713624,7136,'æœ›å®‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713625,7136,'ä¸ƒç¾ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713701,7137,'é‡‘åŸé•‡');
+
+insert into web_regions (region_id,city_id,region) values (713702,7137,'é‡‘æ¹–é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713703,7137,'é‡‘æ²™é•‡');
+
+insert into web_regions (region_id,city_id,region) values (713704,7137,'é‡‘å®ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713705,7137,'çƒˆå±¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713706,7137,'ä¹Œä¸˜ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713801,7138,'å—ç«¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713802,7138,'åŒ—ç«¿ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713803,7138,'è’å…‰ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (713804,7138,'ä¸œå¼•ä¹¡');
+
+insert into web_regions (region_id,city_id,region) values (810101,8101,'ä¸­è¥¿åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810102,8101,'æ¹¾ä»”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810103,8101,'ä¸œåŒº');
+
+insert into web_regions (region_id,city_id,region) values (810104,8101,'å—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810201,8102,'æ²¹å°–æ—ºåŒº');
+
+insert into web_regions (region_id,city_id,region) values (810202,8102,'æ·±æ°´åŸ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810203,8102,'ä¹é¾™åŸåŒº');
+
+insert into web_regions (region_id,city_id,region) values (810204,8102,'é»„å¤§ä»™åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810205,8102,'è§‚å¡˜åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810301,8103,'èƒæ¹¾åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810302,8103,'å±¯é—¨åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810303,8103,'å…ƒæœ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810304,8103,'åŒ—åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810305,8103,'å¤§åŸ”åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810306,8103,'è¥¿è´¡åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810307,8103,'æ²™ç”°åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810308,8103,'è‘µé’åŒº');
+
+insert into web_regions (region_id,city_id,region) values (810309,8103,'ç¦»å²›åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820101,8201,'èŠ±åœ°ç›å ‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820102,8201,'åœ£å®‰å¤šå°¼å ‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820103,8201,'å¤§å ‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820104,8201,'æœ›å¾·å ‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820105,8201,'é£é¡ºå ‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820201,8202,'å˜‰æ¨¡å ‚åŒº');
+
+insert into web_regions (region_id,city_id,region) values (820301,8203,'åœ£æ–¹æµå„å ‚åŒº');
+
+
+
+
+
+update web_cities set city='æ–°ç–†ç»´å¾å°”ç›´è¾–å¿çº§' where city_id=6590;
+
+  update web_cities set city='æ²³å—ç›´è¾–å¿çº§' where city_id=4190;
+
+  update web_cities set city='æµ·å—ç›´è¾–å¿çº§' where city_id=4690;
+
+  update web_cities set city='æ¹–åŒ—ç›´è¾–å¿çº§' where city_id=4290;

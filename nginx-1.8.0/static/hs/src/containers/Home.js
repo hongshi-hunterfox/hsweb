@@ -1,8 +1,10 @@
+/* global wx */
 import "./home.css"
 import './detail.css'
 import DocumentTitle from "react-document-title"
 import "slick-carousel/slick/slick.css"
 var React = require("react")
+var request = require('superagent')
 import Big from 'big.js'
 import Icon from '../components/Icon'
 import CartBtn from "./CartBtn"
@@ -13,6 +15,7 @@ import ProductGroup from "./ProductGroup"
 var HomeUtil = require('../utils/HomeUtil.js');
 import req from 'superagent'
 var fto = require('form_to_object')
+
 class HomeCarousel extends React.Component {
   render() {
     var slickSettings = {
@@ -200,6 +203,9 @@ class Home extends React.Component {
     super(props)
     this.state = {
       groups: [],
+      stores: [],
+      logoUrl:'',
+      signName:'',
       banner:[],
       quickNavis:[],
       specifications:[],
@@ -222,10 +228,54 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+  	  req.get('/uclee-user-web/storeList').end((err, res) => {
+			if (err) {
+				return err
+			}
+			var c = JSON.parse(res.text)
+			console.log(c.storeList)
+			this.setState({
+				logoUrl:c.logoUrl,
+				signName:c.signName
+			})
+		})
+  	req
+			.get('/uclee-user-web/wxConfig')
+			.query({
+				url: window.location.href.split('#')[0]
+			})
+			.end((err, res) => {
+				var c = JSON.parse(res.text)
+				wx.config({
+					debug: false,
+					appId: c.appId,
+					timestamp: c.timestamp,
+					nonceStr: c.noncestr,
+					signature: c.signature,
+					jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
+				})
+
+				wx.ready(() => {
+					wx.onMenuShareAppMessage({
+					title: '好店推荐: '+this.state.signName, // 分享标题
+					desc: '发现了一家好店: '+this.state.signName+',快来逛逛吧.', // 分享描述
+					link: window.location.href, // 分享链接
+					imgUrl: this.state.logoUrl, // 分享图标
+					success: function() {},
+					cancel: function() {}
+				})
+				wx.onMenuShareTimeline({
+					title: '好店推荐: '+this.state.signName, // 分享标题
+					link: window.location.href, // 分享链接
+					imgUrl: this.state.logoUrl, // 分享图标
+					success: function() {},
+					cancel: function() {}
+				   })
+				})
+			})
     HomeUtil.home(function (res) {
       this.setState(res)
     }.bind(this))
-
     if(this.props.location.query.serialNum!==null){
       req
         .get('/uclee-user-web/invitation?serialNum='+this.props.location.query.serialNum)
@@ -453,14 +503,15 @@ class Home extends React.Component {
           </div>
       );
     });
+          
     return (
       <DocumentTitle title="首页">
           <div className="home">
-          {/*<SearchBar/>*/}
+         {/*<SearchBar/>*/}
             {
               this.state.banner.length ? 
               <HomeCarousel banner={this.state.banner}/> : null
-            }
+            }            
             <HomeNav quickNavis={this.state.quickNavis}/>
             {groups}
             <CartBtn />

@@ -30,8 +30,27 @@ public class PaymentOrder {
     private Boolean isSync;
     
     private List<Order> orders;
+    private Integer checkCount;
 
-	public Integer getPayType() {
+    private Integer version;
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public Integer getCheckCount() {
+        return checkCount;
+    }
+
+    public void setCheckCount(Integer checkCount) {
+        this.checkCount = checkCount;
+    }
+
+    public Integer getPayType() {
 		return payType;
 	}
 

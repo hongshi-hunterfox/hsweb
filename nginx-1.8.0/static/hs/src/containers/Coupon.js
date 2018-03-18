@@ -5,38 +5,38 @@ import './order.css'
 import Navi from './Navi'
 import req from 'superagent'
 class Coupon extends React.Component{
-	 constructor(props) {
+	constructor(props) {
 	    super(props)
 	    this.state = {
 	      coupons: [],
 	      voucherCode:'',
 	      voucherText:''
 	    }
-	  }
+	}
 
-	  componentDidMount() {
-	    	req
-		      .get('/uclee-user-web/getCoupon')
-		      .end((err, res) => {
-		        if (err) {
-		          return err
-		        }
-		        var resJson = JSON.parse(res.text);
-		        this.setState({
-		          coupons:resJson.coupons
-		        })
-		      })
-		      if(sessionStorage.getItem('voucher')!=null){
-		      	this.setState({
-		          voucherCode: JSON.parse(sessionStorage.getItem('voucher'))
-		        })
-		      }
-		      if(sessionStorage.getItem('voucher_text')!=null){
-		      	this.setState({
-		          voucherText: JSON.parse(sessionStorage.getItem('voucher_text'))
-		        })
-		      }
-	  }
+    componentDidMount() {
+        	req
+              .get('/uclee-user-web/getCoupon')
+              .end((err, res) => {
+                if (err) {
+                  return err
+                }
+                var resJson = JSON.parse(res.text);
+                this.setState({
+                coupons:resJson.coupons
+                })
+              })
+              if(sessionStorage.getItem('voucher')!=null){
+      	        this.setState({
+                  voucherCode: JSON.parse(sessionStorage.getItem('voucher'))
+                })
+              }
+              if(sessionStorage.getItem('voucher_text')!=null){
+                this.setState({
+                voucherText: JSON.parse(sessionStorage.getItem('voucher_text'))
+                })
+              }
+	}
 
 	  render(){
 	  	var coupons = this.state.coupons.map((item, index) => {

@@ -22,6 +22,7 @@ import ErrorMsg from '../components/ErrorMsg'
 
 import ValueGroup from '../components/ValueGroup'
 
+
 class Freight extends React.Component {
   constructor(props) {
     super(props)
@@ -45,19 +46,17 @@ class Freight extends React.Component {
         initValue: data.data
       })
       console.log(this.state.initValue);
-    })
+    }) 
   }
-  
   render() {
     return (
       <DocumentTitle title="运费设置">
         <div className="freight">
-          {/* 类名加上页面前缀防止冲突 */}
+      {/* 类名加上页面前缀防止冲突 */}
           <form onSubmit={this._submit} className="form-horizontal">
-            <div className="form-group ">
+            <div className="form-group">
               <label className="control-label col-md-3">设置费用梯度：</label>
               <div className="col-md-9">
-
                 {/*
                   如果 initValue 的值来自 api
                   等拿到值再渲染
@@ -68,7 +67,6 @@ class Freight extends React.Component {
                     null
                   }                  
                 */}
-
                 {this.state.initValue
                   ? <ValueGroup
                       condition={'大于>km'}
@@ -94,7 +92,13 @@ class Freight extends React.Component {
       </DocumentTitle>
     )
   }
-
+    _change = (e) => {
+    var c = Object.assign({}, this.state.config)
+    c[e.target.name] = e.target.value
+    this.setState({
+      config: c
+    })
+  }
   _submit = e => {
     e.preventDefault()
     var data = fto(e.target)
@@ -113,9 +117,6 @@ class Freight extends React.Component {
     this.setState({
       err: null
     })
-
-    // return
-
     req.post('/uclee-backend-web/freightHandler').send(data).end((err, res) => {
       if (err) {
         return err

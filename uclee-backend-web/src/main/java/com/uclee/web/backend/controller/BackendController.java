@@ -124,6 +124,31 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
+	@RequestMapping("/evaluationConfiguration")
+	public @ResponseBody Map<String,Object> evaluationConfiguration(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<EvaluationGifts> evaluationGifts = backendService.selectAllEvaluationGifts();
+		int i = 0;
+		if(evaluationGifts.size()==0){
+			EvaluationGifts evaluationGift = new EvaluationGifts();
+			evaluationGift.setPoint(0);
+			evaluationGift.setMoney(new BigDecimal(0));
+			evaluationGift.setVoucherCode("");
+			evaluationGift.setAmount(0);
+			evaluationGifts.add(evaluationGift);
+		}
+		for(EvaluationGifts item : evaluationGifts){
+			map.put("myKey[" + i + "]", item.getPoint());
+			map.put("myValue0[" + i +"]", item.getMoney());
+			map.put("myValue[" + i + "]", item.getVoucherCode());
+			map.put("myValue1[" + i + "]", item.getAmount());
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+	}
 	@RequestMapping("/fullCut")
 	public @ResponseBody Map<String,Object> fullCut(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();

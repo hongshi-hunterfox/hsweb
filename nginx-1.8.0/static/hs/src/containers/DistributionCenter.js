@@ -173,7 +173,7 @@ class DistributionCenter extends React.Component {
 
 	_clickHandle = (b,serialNum) => {
 		console.log(serialNum);
-		/*if(serialNum!==null){
+		if(serialNum!==null){
 			var q = {}
 			q.url = window.location.href.split('#')[0]
 			request.get('/uclee-user-web/wxConfig').query(q).end(function(err, res) {
@@ -192,20 +192,20 @@ class DistributionCenter extends React.Component {
 				wx.onMenuShareAppMessage({
 					title: '吃着蛋糕赚着钱，快来管理你自己的收益团队吧', // 分享标题
 					desc: '你的团队你做主', // 分享描述
-					link: 'hs.uclee.com?serialNum=' + serialNum+'&merchantCode='+localStorage.getItem('merchantCode'), // 分享链接
+					link: 'wsc.in80s.com?serialNum=' + serialNum+'&merchantCode='+localStorage.getItem('merchantCode'), // 分享链接
 					imgUrl: 'http://120.25.193.220/group1/M00/31/AC/eBnB3Fk1emuAHOamAABR62NdkwM71.file', // 分享图标
 					success: function() {},
 					cancel: function() {}
 				})
 				wx.onMenuShareTimeline({
 					title: '吃着蛋糕赚着钱，快来管理你自己的收益团队吧', // 分享标题
-					link: 'hs.uclee.com?serialNum=' + serialNum+'&merchantCode='+localStorage.getItem('merchantCode'), // 分享链接
+					link: 'wsc.in80s.com?serialNum=' + serialNum+'&merchantCode='+localStorage.getItem('merchantCode'), // 分享链接
 					imgUrl: 'http://120.25.193.220/group1/M00/31/AC/eBnB3Fk1emuAHOamAABR62NdkwM71.file', // 分享图标
 					success: function() {},
 					cancel: function() {}
 				})
 			})
-		}*/
+		}
 		this.setState({
 			isShareShow:b
 		})

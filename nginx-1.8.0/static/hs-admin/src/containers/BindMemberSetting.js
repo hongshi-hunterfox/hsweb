@@ -139,9 +139,14 @@ class BindMemberSetting extends React.Component {
       })
       return;
     }
+    if(values(data.myValue1)<1){
+      this.setState({
+        err: "数量不能为0"
+      })
+      return;
+    }
     data.myKey = values1(data.myKey)
     data.myValue = values1(data.myValue)
-    
     this.setState({
       err: null
     })

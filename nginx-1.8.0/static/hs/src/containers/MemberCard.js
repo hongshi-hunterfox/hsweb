@@ -21,14 +21,11 @@ const NoItem = () => {
 const MemberCardItem = (props) => {
   return (
     <div className="member-card-item clearfix">
-      <div className="member-card-item-code">卡号：{props.code}
-      </div>
+      <div className="member-card-item-code">卡号：{props.code}</div>
       <div className="member-card-item-balance">余额：{props.balance} 元</div>
-      
-        <div className="member-card-item-recharge">
+      <div className="member-card-item-recharge">
         <div onClick={props._clickHander.bind(this,"/seller/recharge",props.cardStatus)} className="btn btn-success">充值</div>
       </div>
-      
     </div>
   )
 }
@@ -41,7 +38,7 @@ class MemberCard extends React.Component {
       cVipCode: null,
       image: '',
       nickName: '',
-      
+      config:{},
       vipImage:'',
       allowRecharge:true,
       vipJbarcode:'',
@@ -58,7 +55,17 @@ class MemberCard extends React.Component {
           nickName: res.body.nickName
         })
       })
-	
+    
+    req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config: data.config
+      })
+    })
+    
     req
       .get('/uclee-user-web/getVipInfo')
       .end((err, res) => {
@@ -71,8 +78,8 @@ class MemberCard extends React.Component {
         }
       })
       
-		  
-
+  	  
+  
   }
   _clickHander=(url,cardStatus)=>{
     if(this.state.allowRecharge){
@@ -95,7 +102,7 @@ class MemberCard extends React.Component {
                 <span>{this.state.nickName}</span>
                 {
                   !this.state.cVipCode ?
-                  <span className="member-card-setting-link">设置 ></span>
+                  <span className="member-card-setting-link">绑定会员卡 ></span>
                   : null
                 }
               </div>
@@ -116,20 +123,23 @@ class MemberCard extends React.Component {
               <div className="member-card-item-code">电子会员卡:
               <span onClick={() => { 
               	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
-          	if(!conf){
-          		return;
-          	}else{
-              req
-		  					.get('/uclee-user-web/changeVip')
-		  					.end((err, res) => {
-		  						          
-                 						alert("解绑成功,请返回页面刷新!")
-                 						window.location.reload();
-                    				return;
-                    				window.location.reload();
-                  })}
-		  					}}className="member-card-item-Unbundling"><button type="submit" className="btn btn-warning btn-sm" >解除绑定</button>
-		  				</span>    
+          	    if(!conf){
+          	     return;
+          	    }   
+          	    else{
+                 req
+                 .get('/uclee-user-web/changeVip')
+                 .end((err, res) => {				          
+                 	alert("解绑成功,请返回页面刷新!")
+                 	window.location.reload();
+                    return;
+                    window.location.reload();
+                 })
+                }   
+		  	  }}
+              className="member-card-item-Unbundling">
+                <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout">解除绑定</a></button>
+		  	  </span>    
               </div>
               {
                 this.state.vipJbarcode&&this.state.vipJbarcode!==''?
@@ -139,7 +149,6 @@ class MemberCard extends React.Component {
                 this.state.vipImage&&this.state.vipImage!==''?
                   <div className='member-card-image'><img src={this.state.vipImage} className="member-card-image-item" alt=""/></div>:null
               }
-             
             </div>
           </div>
         </div>
@@ -149,9 +158,25 @@ class MemberCard extends React.Component {
 
   _setting = () => {
     if (!this.state.cVipCode) {
+    	var cc = this.state.config.startUp;
+    if(cc ==3){
+    	alert("未启用此功能")
+    }else{
+   	 if(cc == 0){
       browserHistory.push({
         pathname: '/member-setting'
       })
+     }else if(cc == 1){
+     browserHistory.push({
+        pathname: '/member-setting1'
+     })
+     }
+     else{
+     browserHistory.push({
+        pathname: '/member-setting2'
+     })	
+     }
+     }
     }
   }
 }

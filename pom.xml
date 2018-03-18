@@ -26,7 +26,7 @@
 		<module>Application</module>
 	</modules>
 	<properties>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<java.encoding>UTF-8</java.encoding>
 		<webx-version>3.2.4</webx-version>
 		<springext-plugin-version>1.2</springext-plugin-version>

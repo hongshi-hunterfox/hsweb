@@ -6,6 +6,7 @@ import com.backend.service.BackendServiceI;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
+import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
@@ -21,20 +22,18 @@ import com.uclee.user.util.JwtUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 
 import joptsimple.internal.Strings;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -66,6 +65,10 @@ public class UserController extends CommonUserHandler{
 	@Autowired
 	private HongShiMapper hongShiMapper;
 	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
+	@Autowired
+	private ProductMapper productMapper;
+	@Autowired
 	private FullCutMapper fullCutMapper;
 	@Autowired
 	private ShippingFullCutMapper shippingFullCutMapper;
@@ -75,6 +78,8 @@ public class UserController extends CommonUserHandler{
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
+	@Autowired
+	private EvaluationGiftsMapper evaluationGiftsMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -166,7 +171,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String,String> config = userService.getSMSConfig();
-		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
+		return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"), config.get("signName"), config.get("templateCode"));
 	}
 	/** 
 	* @Title: checkVerifyCode 
@@ -269,7 +274,7 @@ public class UserController extends CommonUserHandler{
 		if(keyword!=null){
 			keyword = "%"+keyword+"%";
 		}
-		List<ProductDto> products = duobaoService.getAllProduct(categoryId,isSaleDesc,isPriceDesc,keyword,naviId);
+		List<ProductDto> products = duobaoService.getAllProduct(categoryId, isSaleDesc, isPriceDesc, keyword, naviId);
 		map.put("products", products);
 		return map;
 	}
@@ -288,6 +293,15 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<HongShiOrder> orders = userService.getHongShiOrder(userId,isEnd);
+		//因为邓彪不修改存储过程，取回来的department是ID，不是名字。所以要修改一下by chiangpan
+		for(int i=0;i<orders.size();i++){
+			HongShiOrder hongShiOrder=orders.get(i);
+			if(hongShiOrder.getDepartment()!=null){
+				//根据hsCode获得到店铺名称
+				String storeName = backendService.getHongShiStoreName(hongShiOrder.getDepartment());
+				hongShiOrder.setDepartment(storeName);
+			}
+		}
 		map.put("orders", orders);
 		return map;
 	}
@@ -336,7 +350,41 @@ public class UserController extends CommonUserHandler{
 		map.put("coupons", coupons);
 		return map;
 	}
-
+	
+	/**
+	 * 新绑定会员赠送优惠券数据
+	 *@param @param request
+	* @param @return    设定文件 
+	* @return Map<String,Object>    返回类型 
+	* @throws 
+    */
+	@RequestMapping("/getShowCoupon")
+	public @ResponseBody Map<String,Object> getShowCoupon(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
+		map.put("coupons", coupons);
+		return map;
+	}
+	/**
+	 * 获取评论赠送提示内容
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getCommentText")
+	public @ResponseBody Map<String,Object> getCommentText(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Config config = userService.getConfigByTag(WebConfig.commentText);
+		if(config!=null){
+			map.put("commentText", config.getValue());
+		}else {
+			map.put("commentText", "");
+		}
+		return map;
+	}
+	
 	/**
 	 * 获取会员绑定的配置文安
 	 * @param request
@@ -373,6 +421,23 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 
+	@RequestMapping("/Commentary")
+	public @ResponseBody Map<String,Object> Commentary(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<EvaluationGifts> evaluationGift = evaluationGiftsMapper.selectOne();
+		if(evaluationGift!=null&&evaluationGift.size()>=1){
+			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGift.get(0).getVoucherCode());
+			if(coupon.size()<evaluationGift.get(0).getAmount()){
+				map.put("result",false);
+				return map;
+			}
+		}
+	map.put("result",true);
+	return map;
+	}
+	
 	/** 
 	* @Title: order 
 	* @Description: 提交订单页面的数据处理
@@ -657,7 +722,7 @@ public class UserController extends CommonUserHandler{
 	public @ResponseBody List<CartDto> cart(HttpServletRequest request,Integer storeId){
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		return userService.getUserCart(userId,storeId);
+		return userService.getUserCart(userId, storeId);
 	}
 	
 	/** 
@@ -675,7 +740,13 @@ public class UserController extends CommonUserHandler{
 		System.out.println(JSON.toJSONString(productDto));
 		return productDto;
 	}
-	
+
+	@RequestMapping("/productDetailImg")
+	public @ResponseBody ProductDto productDetailImg(HttpServletRequest request,Integer productId){
+		ProductDto productDto = productMapper.getProductById(productId);
+		productDto.setDescription(FileUtil.UrlRequest(productDto.getDescription()));
+		return productDto;
+	}
 	/** 
 	* @Title:  
 	* @Description: 获取微信appid配置 
@@ -1268,17 +1339,81 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * 
+	 * @Description: 小助手数据接口
 	 */
-	@RequestMapping("/assistant")
+	@RequestMapping("/DataView")
 	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName){
-//		Map<String, Object>  ret = new HashMap<String, Object>();
-//		ret.put("info",QueryName);
-//		@SuppressWarnings("rawtypes")
-//		List<Map> itema = hongShiMapper.getmobJect(QueryName);
-//		ret.put("itema", itema);
-//		return ret;	
 		return userService.getMobJect(QueryName);
 	}
+	
+	/**
+	 * @Description: 评论赠送接口skx
+	 */
+	@RequestMapping("/zengSong")
+	public @ResponseBody HongShiCommonResult zengsong(HttpServletRequest request,String oauthId,Integer point,String tag){
+		//1、更新券数量 原来的券数量加上现在的web_evaluation_config里面的amount就可以了。
+		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		
+		List<EvaluationGifts> evaluationGifts = evaluationGiftsMapper.selectOne();
+		//判断赠送数量
+		for(int i=0;i<evaluationGifts.get(0).getAmount();i++){
+		List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGifts.get(0).getVoucherCode());
+		if(coupon!=null && !coupon.isEmpty()){
+			if(coupon != null && coupon.size()>0){
+				coupon.get(0);                       
+				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode());
+				if(a>0){
+					System.out.println("发送成功");
+				}else{
+					System.out.println("发送失败");
+				}
+				
+			}
+		}else{
+			System.out.println("券被抢光了");
+		}
+		}
+		hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),evaluationGifts.get(0).getPoint(),"评论赠积分");	
+		//评论送金额
+		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(evaluationGifts.get(0).getMoney());
+		hongShiVipService.hongShiRecharge(dd);
+		
+	    return null;		
+			
+
+
+	}
+
+
+
+	/**
+	 * @Description : 订单详情页面 by chiangpan
+	 */
+	@RequestMapping(value="/getMyOrderDetail")
+	public @ResponseBody Map<String,Object> getMyOrderDetail(HttpServletRequest request,String outerOrderCode){
+		Map<String,Object> orderMap=new TreeMap<String,Object>();
+		//根据微商城订单号取得订单
+		Order order=userService.getOrderListSerailNum(outerOrderCode);
+
+		if(order!=null){
+			NapaStore napaStore=userService.getNapaStore(order.getStoreId());//下单部门
+			if(napaStore!=null){
+				order.setStoreName(napaStore.getStoreName());//设置下单部门
+			}
+
+			order.setCreateTimeStr(DateUtils.format(order.getCreateTime(),DateUtils.FORMAT_LONG_CN));//下单时间
+			order.setPickDateStr(DateUtils.format(order.getPickTime(),DateUtils.FORMAT_LONG_CN));//取货时间
+
+		}
+
+		orderMap.put("order",order);
+		return orderMap;
+	}
+	
+	
 	
  }

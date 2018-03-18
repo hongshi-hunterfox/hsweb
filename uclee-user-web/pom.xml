@@ -10,7 +10,7 @@
     <artifactId>uclee-user-web</artifactId>
     <name>Cooka User Application</name>
     <properties>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <java.encoding>UTF-8</java.encoding>
     </properties>
     <dependencies>

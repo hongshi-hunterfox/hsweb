@@ -166,7 +166,7 @@ public class DataSourceFacade implements DataSource {
             beanDefinitionBuilder.addPropertyValue("timeBetweenEvictionRunsMillis",60000);
             beanDefinitionBuilder.addPropertyValue("minEvictableIdleTimeMillis",25200000);
             beanDefinitionBuilder.addPropertyValue("removeAbandoned",true);
-            beanDefinitionBuilder.addPropertyValue("removeAbandonedTimeout",1800);
+            beanDefinitionBuilder.addPropertyValue("removeAbandonedTimeout",180);
             beanDefinitionBuilder.addPropertyValue("logAbandoned",true);
             beanDefinitionBuilder.addPropertyValue("filters","mergeStat");
 

@@ -1,7 +1,7 @@
 var request = require('superagent');
 
 module.exports = {
-	getData: function(query, cb) {
+	getData: function(query, cb){
 		query.pageSize = 10;
 		request
 			.get('/uclee-user-web/addrList')

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author lm
+ * @author 
  *
  */
 public interface UserServiceI {
@@ -116,7 +116,9 @@ public interface UserServiceI {
 	int insertPaymentOrder(PaymentOrder paymentOrder);
 
 	boolean WechatNotifyHandle(String out_trade_no, String transaction_id, String attach);
-	
+
+	boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin);
+
 	Boolean sendWXMessage(String openId,String templateId,String url ,String firstData,String[] key,String[] value,String remarkData);
 
 	ProductDto getProductDtoById(Integer productId);
@@ -270,5 +272,11 @@ public interface UserServiceI {
 	Map<String, Object> getMobile(String phone, String hsCode);
 	
 	Map<String, Object> getMobJect(String QueryName);
-	
+	//根据微商城订单号取得订单的所有信息by chiangpan
+	Order getOrderListSerailNum(String outerOrderCode);
+
+
+	List<PaymentOrder> selectForTimer();
+
+	Map<String,String> wxInitiativeCheck(PaymentOrder paymentOrder);
 }

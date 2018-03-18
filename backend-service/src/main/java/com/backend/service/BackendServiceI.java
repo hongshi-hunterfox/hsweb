@@ -112,6 +112,8 @@ public interface BackendServiceI {
 	boolean updateFullCut(FreightPost freightPost);
 
 	List<BindingRewards> selectAllBindingRewards();
+	
+	List<EvaluationGifts> selectAllEvaluationGifts();
 
 	boolean updateBindingRewards(FreightPost freightPost);
 
@@ -126,4 +128,6 @@ public interface BackendServiceI {
     boolean updateActivityConfig(ConfigPost configPost);
 
 	boolean systemConfigHandler(ConfigPost configPost);
+
+	boolean updateEvaluationGifts(FreightPost freightPost);
 }

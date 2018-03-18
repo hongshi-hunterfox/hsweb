@@ -30,7 +30,11 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.uclee.user.model.MessageUtil;
+import com.uclee.user.model.WxUnifiedRequest;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -42,25 +46,9 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.h2.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//import org.springframework.cache.annotation.Cacheable;
 import com.alibaba.fastjson.JSON;
 import com.backend.service.ProductManageServiceI;
 import com.github.pagehelper.PageHelper;
@@ -214,6 +202,8 @@ public class UserServiceImpl implements UserServiceI {
 	private FullCutMapper fullCutMapper;
 	@Autowired
 	private ShippingFullCutMapper shippingFullCutMapper;
+	@Autowired
+	private ProductsSpecificationsValuesLinkMapper productsSpecificationsValuesLinkMapper;
 	@Autowired
 	private DataSourceFacade datasource;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
@@ -1067,6 +1057,10 @@ public class UserServiceImpl implements UserServiceI {
 	*/
 	public UniteOrderResult getWCPayResult(String openId, String paymentSerialNum,String money,String body,String detail) {
 		try {
+		if(body!=null && body.length()>30){
+			body=body.substring(0,29)+"...";
+		}
+
 		Map<String,String> weixinConfig = getWeixinConfig();
 		UniteOrder order = new UniteOrder();
 		order.setAttach(datasource.getDataSourceStr());
@@ -1090,7 +1084,7 @@ public class UserServiceImpl implements UserServiceI {
 		order.setProduct_id(paymentSerialNum);
 		String reqXML = PayImpl.generateXML(order,weixinConfig.get(WechatMerchantInfo.AppSecret_CONFIG));
 		reqXML = new String(reqXML.getBytes("UTF-8"), "UTF-8");
-		System.out.println("reqXML:" + reqXML);
+		logger.info("reqXML:" + reqXML);
 		
 		String respXML = PayImpl.requestWechat(wc_general_order, reqXML);
 		 //String respXML =HttpsPost.httpsPost(reqXML);			
@@ -1536,7 +1530,7 @@ public class UserServiceImpl implements UserServiceI {
 			paymentOrder.setTransactionId(transaction_id);
 			paymentOrder.setIsCompleted(true);
 			paymentOrder.setCompleteTime(new Date());
-			if(paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder)>0){
+			if(paymentOrderMapper.updatePaymentResult(paymentOrder)>0){
 				//TODO 调用存储过程
 				OauthLogin oauthLogin = getOauthLoginInfoByUserId(paymentOrder.getUserId());
 				if(oauthLogin!=null){
@@ -1590,7 +1584,8 @@ public class UserServiceImpl implements UserServiceI {
 	* @return boolean    返回类型 
 	* @throws 
 	*/
-	private boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
+	@Override
+	public boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
 		//更新订单状态
 		List<Order> orders = this.selectOrderByPaymentSerialNum(paymentOrder.getUserId(), paymentOrder.getPaymentSerialNum());
 		for(Order order:orders){
@@ -1606,12 +1601,15 @@ public class UserServiceImpl implements UserServiceI {
 					logger.info("加盟店不存在");
 				}
 				createOrderData.setCallNumber(order.getPhone());
-				if(order.getIsSelfPick()){
+				if(!order.getIsSelfPick()){
 					createOrderData.setDestination(order.getProvince()+order.getCity()+order.getRegion()+order.getAddrDetail()+"(收货人:" + order.getName()+")");
 				}
 				createOrderData.setOrderCode(null);
+				BigDecimal total = order.getTotalPrice();
+
+				createOrderData.setPickUpTime(order.getPickTime());
+				createOrderData.setCallNumber(order.getPhone());
 				createOrderData.setRemarks(order.getRemark());
-				BigDecimal total = order.getTotalPrice(); 
 				createOrderData.setWeiXinCode(oauthLogin.getOauthId());
 				createOrderData.setWSC_TardNo(order.getOrderSerialNum());
 				createOrderData.setPayment(new BigDecimal(0));
@@ -1625,7 +1623,12 @@ public class UserServiceImpl implements UserServiceI {
 				}else{
 					createOrderData.setVoucher(new BigDecimal(0));
 				}
+				total = total.add(order.getShippingCost());
 				createOrderData.setTotalAmount(total);
+				createOrderData.setOauthId(oauthLogin.getOauthId());
+				createOrderData.setShipping(order.getShippingCost());
+				createOrderData.setDeducted(order.getCut());
+				System.out.println("订单： " + JSON.toJSONString(createOrderData));
 				CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 				//回收礼券
 				try {
@@ -1647,11 +1650,12 @@ public class UserServiceImpl implements UserServiceI {
 					if(value!=null){
 						createOrderItem.setGoodsCode(value.getHsGoodsCode());
 					}
+					createOrderItem.setProductId(item.getProductId());
 					createOrderItem.setGoodsCount(item.getAmount().intValue());
 					createOrderItem.setpId(createOrderResult.getOrderID());
 					createOrderItem.setPrice(item.getPrice());
 					createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
-					System.out.println(JSON.toJSONString(createOrderItem));
+					System.out.println("订单明细： " + JSON.toJSONString(createOrderItem));
 					hongShiMapper.createOrderItem(createOrderItem);
 				}
 			} catch (Exception e) {
@@ -1727,7 +1731,7 @@ public class UserServiceImpl implements UserServiceI {
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
 			Config config3 = configMapper.getByTag(WebConfig.signName);
-			if(config!=null) {
+			if(config!=null&&config1!=null&&config2!=null&&config3!=null&&oauthLogin!=null) {
 				sendWXMessage(oauthLogin.getOauthId(), config.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), "尊敬的会员，您有一笔订单已经支付成功", key, value, "感谢您的惠顾");
 			}
 		}
@@ -1943,7 +1947,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public ProductDto getProductDtoById(Integer productId) {
 		ProductDto productDto = productMapper.getProductById(productId);
-		productDto.setDescription(FileUtil.UrlRequest(productDto.getDescription()));
+		productDto.setDescription("");
 		List<ProductImageLink> images = productImageLinkMapper.selectByProductId(productId);
 		productDto.setImages(images);
 		List<Specification> specifications = specificationMapper.getByProductId(productId);
@@ -1971,6 +1975,11 @@ public class UserServiceImpl implements UserServiceI {
 		for(FullCut fullCut:fullCuts){
 			String tmp = "";
 			tmp = count + ". 整单满" + fullCut.getCondition()+"元减"+fullCut.getCut()+"元";
+			try {
+				tmp = new String(tmp.getBytes("UTF-8"),"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			count++;
 			salesInfo.add(tmp);
 		}
@@ -2654,10 +2663,11 @@ public class UserServiceImpl implements UserServiceI {
 				BigDecimal discount = new BigDecimal(0);
 				BigDecimal total = new BigDecimal(0);
 				List<HongShiOrderItem> orderItems = hongShiMapper.getHongShiOrderItems(order.getId());
+				logger.info("取出来的订单明细： " + JSON.toJSONString(orderItems));
 				for (HongShiOrderItem item : orderItems) {
 					HongShiGoods goods = hongShiMapper.getHongShiGoods(item.getCode());
 					if (goods != null) {
-						ProductImageLink link = productImageLinkMapper.selectByHongShiGoodsCodeLimit(goods.getCode());
+						ProductImageLink link = productImageLinkMapper.selectByProductIdLimit(item.getProductId());
 						if (link != null) {
 							goods.setImage(link.getImageUrl());
 						}
@@ -2719,7 +2729,13 @@ public class UserServiceImpl implements UserServiceI {
 				order.setDiscount(discount);
 				order.setTotalAmount(total.doubleValue());
 				BigDecimal account = total.add(order.getShippingCost()).subtract(discount);
-				account = account.subtract(order.getCut());
+				if(order.getCut()==null ){
+					System.out.println("订单的属性Cut为null");
+				}else{
+					account = account.subtract(order.getCut());
+				}
+
+
 				order.setAccounts(account.doubleValue());
 			}
 			List<HongShiOrder> ordersRet = new ArrayList<HongShiOrder>();
@@ -2971,6 +2987,9 @@ public class UserServiceImpl implements UserServiceI {
 
 					total = total.add(order.getShippingCost());
 					createOrderData.setTotalAmount(total);
+					createOrderData.setOauthId(oauthLogin.getOauthId());
+					createOrderData.setShipping(order.getShippingCost());
+					createOrderData.setDeducted(order.getCut());
 					CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 					//回收礼券
 					try {
@@ -2993,6 +3012,7 @@ public class UserServiceImpl implements UserServiceI {
 						if(value!=null){
 							createOrderItem.setGoodsCode(value.getHsGoodsCode());
 						}
+						createOrderItem.setProductId(item.getProductId());
 						createOrderItem.setGoodsCount(item.getAmount().intValue());
 						createOrderItem.setpId(createOrderResult.getOrderID());
 						createOrderItem.setPrice(item.getPrice());
@@ -3480,36 +3500,21 @@ public class UserServiceImpl implements UserServiceI {
 			}
 		}
 		ret.put("items", items);
-		
 		List<MobileItem> itemo = hongShiMapper.selectMobile(hsCode,userId);
 		ret.put("itemo", itemo);
 		ret.put("result", true);
 		return ret;
 	}
 	/**
-	 * 
+	 * @Title:getMobJect
+	 * @Description:老板助手二级页面数据
+	 * @param @param QueryName
+	 * @param @return    设定文件
 	 */
 	@Override
 	public  Map<String, Object> getMobJect(String QueryName){
 		HashMap<String,Object> ret = new HashMap<String, Object>();
 		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName);
-//		List<List<Object>> allList = new ArrayList<List<Object>>();
-//		int index = 0;
-//		for (Map<String, Object> kv : itema) {  
-//		    List<Object> key = new ArrayList<Object>();  
-//		    List<Object> value = new ArrayList<Object>();  
-//		    for (Map.Entry<String, Object> entry : kv.entrySet()) {  
-//		        if (index == 0) {   
-//		            key.add(entry.getKey());  
-//		        }  
-//		        value.add(entry.getValue());  
-//		    }  
-//		    if (index == 0) {  
-//		        allList.add(key);  
-//		    }  
-//		    allList.add(value);  
-//		    index++;  
-//		}  
 		ret.put("info",QueryName);
 		ret.put("itema", itema);
 		return ret;
@@ -3822,12 +3827,76 @@ public class UserServiceImpl implements UserServiceI {
 		// TODO Auto-generated method stub
 		return null;
 	}
-//
-//	@SuppressWarnings("rawtypes")
-//	@Override
-//	public List<Map> getMobJect(String QueryName) {
-//		// TODO Auto-generated method stub
-//		return hongShiMapper.getmobJect(QueryName);
-//	}
+
+	@Override
+	//根据微商城订单号生成订单的所有信息
+	public Order getOrderListSerailNum(String outerOrderCode) {
+		Order order=orderMapper.getOrderListByOrderSerailNum(outerOrderCode);
+		return order;
+	}
+
+	@Override
+	public List<PaymentOrder> selectForTimer() {
+		Date target = DateUtils.addSecond(new Date(),-5);
+		List<PaymentOrder> paymentOrderLIst = paymentOrderMapper.selectForTimer(target);
+		return paymentOrderLIst;
+	}
+
+	protected String joinKeyValue(Map<String, Object> map, String prefix, String suffix, String separator, boolean ignoreEmptyValue, String... ignoreKeys) {
+		List<String> list = new ArrayList<String>();
+		if (map != null) {
+			for (Entry<String, Object> entry : map.entrySet()) {
+				String key = entry.getKey();
+				String value = ConvertUtils.convert(entry.getValue());
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(key) && !ArrayUtils.contains(ignoreKeys, key) && (!ignoreEmptyValue || org.apache.commons.lang3.StringUtils.isNotEmpty(value))) {
+					list.add(key + "=" + (value != null ? value : ""));
+				}
+			}
+		}
+		return (prefix != null ? prefix : "") + org.apache.commons.lang3.StringUtils.join(list, separator) + (suffix != null ? suffix : "");
+	}
+	private String generateSignForPay(Map<String, ?> parameterMap) {
+		Map<String,String> weixinConfig = getWeixinConfig();
+		String str = joinKeyValue(new TreeMap<String, Object>(parameterMap), null, "&key=" + weixinConfig.get(WechatMerchantInfo.APPKEY_CONFIG), "&", true, "sign");
+		try {
+			return MyTool.getMD5(str.getBytes("iso-8859-1")).toUpperCase();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return "";
+		}
+		//return DigestUtils.md5Hex().toUpperCase();
+	}
+	@Override
+	public Map<String, String> wxInitiativeCheck(PaymentOrder paymentOrder) {
+		Map<String,String> weixinConfig = getWeixinConfig();
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("appid", weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
+		parameterMap.put("mch_id", weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
+		long time = System.currentTimeMillis();
+		String nonceStr = String.valueOf(time);
+		parameterMap.put("nonce_str", nonceStr);
+		parameterMap.put("out_trade_no", paymentOrder.getPaymentSerialNum());
+		String sign = generateSignForPay(parameterMap);
+		parameterMap.put("sign",sign);
+		WxUnifiedRequest wxUnifiedRequest = new WxUnifiedRequest();
+		wxUnifiedRequest.setAppid(weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
+		wxUnifiedRequest.setMch_id(weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
+		wxUnifiedRequest.setNonce_str(nonceStr);
+		wxUnifiedRequest.setOut_trade_no(paymentOrder.getPaymentSerialNum());
+		wxUnifiedRequest.setSign(sign);
+		String xmlString = MessageUtil.wxUnifiedRequestToXml(wxUnifiedRequest).replaceAll("__", "_");
+		try {
+			String retXml = new String(HttpClientUtil.httpsPost("https://api.mch.weixin.qq.com/pay/orderquery", xmlString).getBytes(), "ISO-8859-1");
+			Map<String,String> ret = MessageUtil.parseXml(retXml);
+			logger.info("微信公众号主动查询结果： " + JSON.toJSONString(ret));
+			return ret;
+		} catch (UnsupportedEncodingException e) {
+			logger.error("数据解析错误");
+		} catch (Exception e) {
+			logger.error("数据解析错误");
+		}
+		return new HashMap<>();
+	}
+
 
 }

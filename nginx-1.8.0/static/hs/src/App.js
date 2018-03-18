@@ -157,7 +157,10 @@ class App extends Component {
     return (
       <div className="app">
         {this.state.loading
-          ? <div className="text-center">微信授权中...</div>
+          ? <div className="text-center">
+          					微信授权中
+          <i className="fa fa-spinner fa-pulse"></i>
+          </div>
           : <div className="main">
               {showStoreBar ? <StoreBar /> : null}
 

@@ -6,6 +6,7 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import ErrorMessage from './ErrorMessage'
 var fto = require('form_to_object')
+import { browserHistory } from 'react-router'
 import req from 'superagent'
 class Comment extends React.Component{
 
@@ -16,7 +17,10 @@ class Comment extends React.Component{
 			err:'',
 			delStar:0,
 			serStar:0,
-			quaStar:0
+			quaStar:0,
+			oauthId:'',
+			point:0
+			
 		}
 	}
 
@@ -83,7 +87,7 @@ class Comment extends React.Component{
 							<input name="service" value={this.state.serStar} type='hidden'/>
 							<input name="quality" value={this.state.quaStar} type='hidden'/>
 							<div className="form-group">
-								<textarea className="comment-textarea" rows="8" cols="20" placeholder="请写下对订单的宝贵意见" name='title' onChange={this._handleChange.bind(this, 'title')} onFocus={this._f}
+								<textarea className="comment-textarea" rows="8" cols="20" placeholder="请填写你对本订单的评价" name='title' onChange={this._handleChange.bind(this, 'title')} onFocus={this._f}
 								onBlur={this._b}>
 
 								</textarea>
@@ -156,6 +160,13 @@ class Comment extends React.Component{
 			})
 			return false
 		}*/
+		req
+			.get('/uclee-user-web/zengSong')
+			.end((err, res) => {
+				if (err) {
+					return err
+				}
+			})
 		req.post('/uclee-user-web/commentHandler').send(data).end((err, res) => {
         if (err) {
           return err

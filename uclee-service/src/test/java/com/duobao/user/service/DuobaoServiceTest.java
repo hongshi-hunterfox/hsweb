@@ -147,8 +147,36 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	@Test
 	public void point(){
-		hongShiMapper.saleVoucher("83001","oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "10011");
+		hongShiMapper.saleVoucher("83001", "oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "10011");
 		//hongShiMapper.recoverVoucher(6, "oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "订单消费");
+	}
+
+
+	@Test
+	public void PaymentSuccess(){
+		dataSource.switchDataSource("fcx");
+		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15210876566425517");
+		paymentOrder.setIsCompleted(true);
+		paymentOrder.setCompleteTime(new Date());
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(8359);
+		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
+	}
+
+	@Test
+	public void wxInitiativeCheck(){
+		dataSource.switchDataSource("kf");
+		List<PaymentOrder> paymentOrders = userService.selectForTimer();
+		for(PaymentOrder paymentOrder : paymentOrders){
+			paymentOrder.setCheckCount(paymentOrder.getCheckCount()+1);
+			paymentOrderMapper.updateByPrimaryKeySelective(paymentOrder);
+
+			Map<String,String> ret = userService.wxInitiativeCheck(paymentOrder);
+
+			if(ret.get("trade_state")!=null&&ret.get("trade_state").equals("SUCCESS")){
+				logger.info("支付成功");
+				userService.WechatNotifyHandle(paymentOrder.getPaymentSerialNum(),ret.get("transaction_id"),"kf");
+			}
+		}
 	}
 	@Test
 	public void testChoujiang(){
@@ -289,7 +317,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	private Balance getBalance(Integer userId) {
 		Balance balance = balanceMapper.selectByUserId(userId);
-		if(balance==null){
+		if(balance==null) {
 			Balance tmp = new Balance();
 			tmp.setBalance(new BigDecimal(0));
 			tmp.setUserId(userId);
@@ -393,21 +421,22 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	
 	@Test
 	public void testUpdateWXAccessToken(){
+		//dataSource.switchDataSource("jyzc"); hyp's code annotation by chiangpan
 		logger.info("更新微信Token:  " + duobaoService.getGolbalAccessToken());
 	}
-	
+
 	@Test
-	public void testRecharge(){
+	public void testRecharge() {
 		dataSource.switchDataSource("kf");
 		HongShiRecharge dd = new HongShiRecharge().setcWeiXinCode("ocydnwkicQdKQgz5x4Pedh5LpFUM")
 				.setcWeiXinOrderCode("微商城积分抽奖赠送余额").setnAddMoney(new BigDecimal(10));
 		Integer res = hongShiVipService.hongShiRecharge(dd);
 	}
 	@Test
-	public void testPaymentMessage(){
+	public void testPaymentMessage() {
 		dataSource.switchDataSource("kf");
 		String[] key = {"keyword1","keyword2","keyword3","keyword4"};
-		String[] value = {"test","2017-09-13","2元","微信支付"};
+		String[] value = {"test", "2017-09-13", "2元","微信支付"};
 		userService.sendWXMessage("ocydnwkicQdKQgz5x4Pedh5LpFUM", "XKZJz1iRLSDOZIbvjXs0CJekeW7UeEkxJWwDF395Evk", "hs.uclee.com/order-list", "尊敬的会员，您有一笔订单已经支付成功", key,value, "感谢您的惠顾");
 	}
 	
@@ -447,7 +476,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 			map.put("reason", "参数错误");
 		}
 		Product product = userService.getProductById(cart.getProductId());
-		if(product==null||!product.getIsActive()){
+		if (product == null || !product.getIsActive()) {
 			map.put("reason", "产品已下架");
 		}
 		SpecificationValue specificationValue = userService.getSpecificationValue(cart.getProductId(),cart.getSpecificationValueId());

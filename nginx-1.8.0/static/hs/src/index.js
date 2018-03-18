@@ -12,6 +12,8 @@ import UnpayOrderList from './containers/UnpayOrderList'
 import OrderList from './containers/OrderList'
 import MemberCard from './containers/MemberCard'
 import MemberSetting from './containers/MemberSetting'
+import MemberSetting1 from './containers/MemberSetting1'
+import MemberSetting2 from './containers/MemberSetting2'
 import RechargeList from './containers/RechargeList'
 import Detail from './containers/Detail'
 import Cart from './containers/Cart'
@@ -32,10 +34,10 @@ import AllProduct from './containers/AllProduct'
 import ShakeMonitor from './containers/ShakeMonitor'
 import Comment from './containers/Comment'
 import CommentDetail from './containers/CommentDetail'
-import Assistant from './containers/Assistant'
+import DataView from './containers/DataView'
+import ShowCoupon from './containers/ShowCoupon'
+import MyOrderDetail from './containers/MyOrderDetail.js'
 import NotFound from './containers/NotFound'
-
-
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
 ReactDOM.render(
@@ -49,6 +51,8 @@ ReactDOM.render(
       <Route path="boss-center" component={BossCenter} />
       <Route path="member-card" component={MemberCard} />
       <Route path="member-setting" component={MemberSetting} />
+      <Route path="member-setting1" component={MemberSetting1} />
+      <Route path="member-setting2" component={MemberSetting2} />
       <Route path="recharge-list" component={RechargeList} />
       <Route path="seller/recharge" component={Recharge} />
       <Route path="unpay-order-list" component={UnpayOrderList} />
@@ -69,7 +73,9 @@ ReactDOM.render(
       <Route path="coupon" component={Coupon} />
       <Route path="order" component={Order} />
       <Route path="storeList" component={StoreList} />
-      <Route path="assistant" component={Assistant} />
+      <Route path="dataView" component={DataView} />
+      <Route path="ShowCoupon" component={ShowCoupon} />
+      <Route path="myOrderDetail/:id" component={MyOrderDetail} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

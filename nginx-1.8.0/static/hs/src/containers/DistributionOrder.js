@@ -82,7 +82,7 @@ class DistributionOrder extends React.Component{
                             <div className="money">收益余额</div>
                             <div className='number'>{this.state.money}</div>
                         </div>
-                        <div className="transfer pull-right" onClick={this._transHandler}>转进会员卡</div>
+                        {/*<div className="transfer pull-right" onClick={this._transHandler}>转进会员卡</div>*/}
                     </div>
                     {orders}
                     <div className="bottom-text">

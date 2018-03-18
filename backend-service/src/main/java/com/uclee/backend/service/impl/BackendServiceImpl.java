@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.uclee.fundation.data.mybatis.mapping.*;
@@ -39,6 +40,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private FullCutMapper fullCutMapper;
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
+	@Autowired
+	private EvaluationGiftsMapper evaluationGiftsMapper;
 	@Autowired
 	private CategoryMapper categoryMapper;
 	@Autowired
@@ -87,6 +90,7 @@ public class BackendServiceImpl implements BackendServiceI {
 	private UserProfileMapper userProfileMapper;
 	@Autowired
 	private VarMapper varMapper;
+	@SuppressWarnings("unused")
 	@Override
 	public boolean updateConfig(ConfigPost configPost) { 
 		
@@ -107,6 +111,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		if(!(configMapper.updateByTag(WebConfig.FIRST_COUNT, configPost.getFirstCount())>0)) flag=false;
 		if(!(configMapper.updateByTag(WebConfig.SECOND_COUNT, configPost.getSecondCount())>0)) flag=false;
 		if(!(configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getThirdCount())>0)) flag=false;
+		if(!(configMapper.updateByTag(WebConfig.THIRD_COUNT, configPost.getRestrictedDistance())>0)) flag=false;
 		if (configPost.getAlipayNotifyUrl()!=null) {
 			configMapper.updateByTag(WebConfig.alipayNotifyUrl, configPost.getAlipayNotifyUrl());
 		}else{
@@ -172,6 +177,11 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.bindText, "");
 		}
+		if (configPost.getCommentText()!=null) {
+			configMapper.updateByTag(WebConfig.commentText, configPost.getCommentText());
+		}else{
+			configMapper.updateByTag(WebConfig.commentText, "");
+		}
 		if (configPost.getSupportDeliver()!=null) {
 			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
 		}else{
@@ -196,6 +206,16 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.ucenterImg, configPost.getUcenterImg());
 		}else{
 			configMapper.updateByTag(WebConfig.ucenterImg, "");
+		}
+		if (configPost.getRestrictedDistance()!=null) {
+			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
+		}else{
+			configMapper.updateByTag(WebConfig.restrictedDistance, "");
+		}
+		if (configPost.getStartUp()!=null) {
+			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
+		}else{
+			configMapper.updateByTag(WebConfig.startUp, "");
 		}
 		return true;
 	}
@@ -290,6 +310,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getBindText()!=null) {
 			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
 		}
+		if (configPost.getCommentText()!=null) {
+			configMapper.updateByTag(WebConfig.commentText, configPost.getCommentText());
+		}
 		if (configPost.getSupportDeliver()!=null) {
 			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
 		}
@@ -310,6 +333,12 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getSalesText()!=null) {
 			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
+		}
+		if (configPost.getRestrictedDistance()!=null) {
+			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
+		}
+		if (configPost.getStartUp()!=null) {
+			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
 		}
 		return true;
 	}
@@ -404,6 +433,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getBindText()!=null) {
 			configMapper.updateByTag(WebConfig.bindText, configPost.getBindText());
 		}
+		if (configPost.getCommentText()!=null) {
+			configMapper.updateByTag(WebConfig.commentText, configPost.getCommentText());
+		}
 		if (configPost.getSupportDeliver()!=null) {
 			configMapper.updateByTag(WebConfig.supportDeliver, configPost.getSupportDeliver());
 		}
@@ -425,6 +457,12 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getSalesText()!=null) {
 			configMapper.updateByTag(WebConfig.salesText, configPost.getSalesText());
 		}
+		if (configPost.getRestrictedDistance()!=null) {
+			configMapper.updateByTag(WebConfig.restrictedDistance, configPost.getRestrictedDistance());
+		}
+		if (configPost.getStartUp()!=null) {
+			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
+		}
 		return true;
 	}
 	@Override
@@ -441,6 +479,12 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<BindingRewards> selectAllBindingRewards() {
 
 		return bindingRewardsMapper.selectOne();
+	}
+	
+	@Override
+	public List<EvaluationGifts> selectAllEvaluationGifts() {
+
+		return evaluationGiftsMapper.selectOne();
 	}
 
 	@Override
@@ -501,6 +545,27 @@ public class BackendServiceImpl implements BackendServiceI {
 			bindingRewards.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
 			bindingRewards.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
 			bindingRewardsMapper.insertSelective(bindingRewards);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateEvaluationGifts(FreightPost freightPost) {
+		int delAll = evaluationGiftsMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0||freightPost.getMyValue0()==null||freightPost.getMyValue0().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			EvaluationGifts evaluationGifts = new EvaluationGifts();
+			evaluationGifts.setPoint(entry.getValue().intValue());
+			evaluationGifts.setMoney(new BigDecimal(freightPost.getMyValue0().get(entry.getKey())));
+			evaluationGifts.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			evaluationGifts.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
+			evaluationGiftsMapper.insertSelective(evaluationGifts);
 		}
 		return true;
 	}
@@ -616,6 +681,8 @@ public class BackendServiceImpl implements BackendServiceI {
 		ProductForm productForm = new ProductForm();
 		Product product = productMapper.selectByPrimaryKey(productId);
 		if(product!=null){
+			productForm.setIsShow(product.getIsShow());
+			productForm.setExplain(product.getExplain());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
 			productForm.setDescription(FileUtil.UrlRequest(product.getDescription()));
@@ -738,7 +805,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if(start==null||end==null){
 			return new ArrayList<UserProfile>();
 		}
-		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(start,end);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+		Date date = new Date();
+		List<UserProfile> userProfile = userProfileMapper.getUserListForBirth(start,end,sdf.format(date));
 		for(UserProfile item : userProfile){
 			item.setBirthStr(DateUtils.format(item.getBirth(), DateUtils.FORMAT_SHORT));
 		}
@@ -816,6 +885,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setRechargeTemId(config.getValue());
 			}else if(config.getTag().equals(WebConfig.bindText)){
 				configPost.setBindText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.commentText)){
+				configPost.setCommentText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.supportDeliver)){
 				configPost.setSupportDeliver(config.getValue());
 			}else if(config.getTag().equals(WebConfig.domain)){
@@ -830,8 +901,11 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBirthText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.salesText)){
 				configPost.setSalesText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.restrictedDistance)){
+				configPost.setRestrictedDistance(config.getValue());
+			}else if(config.getTag().equals(WebConfig.startUp)){
+				configPost.setStartUp(config.getValue());
 			}
-
 		}
 		return configPost;
 	}

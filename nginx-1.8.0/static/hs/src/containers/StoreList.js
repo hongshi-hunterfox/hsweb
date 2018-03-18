@@ -2,6 +2,7 @@
 import './store-list.css'
 import React from 'react'
 import DocumentTitle from 'react-document-title'
+var request = require('superagent')
 
 // req 用于发送 AJAX 请求
 import req from 'superagent'
@@ -51,7 +52,7 @@ class StoreList extends React.Component {
 					timestamp: c.timestamp,
 					nonceStr: c.noncestr,
 					signature: c.signature,
-					jsApiList: ['getLocation']
+					jsApiList: ['getLocation','onMenuShareTimeline','onMenuShareAppMessage']
 				})
 
 				wx.ready(() => {
@@ -60,6 +61,8 @@ class StoreList extends React.Component {
 						success: res => {
 							var latitude = res.latitude
 							var longitude = res.longitude
+							console.log("latitude: " + latitude)
+							console.log("longitude: " + longitude)
 							this.setState({
 								userLocation: {
 									latitude: latitude,
@@ -68,11 +71,28 @@ class StoreList extends React.Component {
 							})
 						}
 					})
+					wx.onMenuShareAppMessage({
+					title: '好店推荐: '+this.state.signName, // 分享标题
+					desc: '发现了一家好店: '+this.state.signName+',快来逛逛吧.', // 分享描述
+					link: window.location.href, // 分享链接
+					imgUrl: this.state.logoUrl, // 分享图标
+					success: function() {},
+					cancel: function() {}
+				})
+				   wx.onMenuShareTimeline({
+					title: '发现了一家好店: '+this.state.signName+',快来逛逛吧.', // 分享标题
+					link: window.location.href, // 分享链接
+					imgUrl: this.state.logoUrl, // 分享图标
+					success: function() {},
+					cancel: function() {}
+				   })
 				})
 			})
 	}
 	render() {
 		var preItems=this.state.stores.map((item, index) => {
+			console.log("latitude1: " + this.state.userLocation.latitude)
+			console.log("longitude1: " + this.state.userLocation.longitude)
 			var distance = Math.round(
 				qq.maps.geometry.spherical.computeDistanceBetween(
 					new qq.maps.LatLng(
@@ -101,7 +121,7 @@ class StoreList extends React.Component {
 							item.storeName,
 							item.storeId,
 							item.latitude,
-							item.longitude
+							item.longitude,
 						)}
 					>
 						<div className="store-list-item-top">
@@ -115,7 +135,7 @@ class StoreList extends React.Component {
 							<div className="addr">
 								{item.province}{item.city}{item.region}{item.addrDetail}
 							</div>
-							<div className="fa fa-chevron-right right" />
+							<div className="fa fa-chevron-right right"/>
 						</div>
 					</div>
 				</div>
@@ -142,7 +162,6 @@ class StoreList extends React.Component {
 		localStorage.setItem('storeId', storeId)
 		localStorage.setItem('latitude', latitude)
 		localStorage.setItem('longitude', longitude)
-
 		window.location = localStorage.getItem('store_id_prev_href')
 	}
 }

@@ -50,6 +50,5 @@ public interface UserManageServiceI {
     
     List<Role> getUserRoles(Integer userId,boolean isInList);
 
-
 	List<UserProfile> getUsersByPhone(UserProfile userProfile);
 }

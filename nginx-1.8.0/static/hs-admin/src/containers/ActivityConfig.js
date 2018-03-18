@@ -99,13 +99,13 @@ class ActivityConfig extends React.Component {
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 {/*<input type="text" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}/>*/}
-                <textarea rows="6" cols="20" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}>
+                <textarea rows="3" cols="20" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 {/*<input type="text" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}/>*/}
-                <textarea rows="6" cols="20" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}>
+                <textarea rows="3" cols="20" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否支持配送：</label>
@@ -115,9 +115,27 @@ class ActivityConfig extends React.Component {
                   <option value="yes">支持</option>
                 </select>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定会员：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="startUp" value={this.state.config.startUp?this.state.config.startUp:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">默认</option>
+                  <option value="1">启用无线下会员</option>
+                  <option value="2">启用有线下会员</option>
+                  <option value="3">停用会员绑定</option>
+                </select>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>配送距离限制km：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
-                <textarea rows="6" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
+                <textarea rows="3" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>评论赠送提示内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <textarea rows="3" cols="20" value={this.state.config.commentText} name="commentText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
             </div>
@@ -393,6 +411,11 @@ _onChooseUcenterImage = fe => {
         err: '抽奖数不能大于奖池数'
       })
     }
+    if(!data.restrictedDistance) {
+      return this.setState({
+        err: '请填写配送距离限制km!'
+      })
+    }
     this.setState({
       err: null
     })
@@ -412,9 +435,6 @@ _onChooseUcenterImage = fe => {
         }
         console.log(res.body)
       })
-
-
-
   }
 }
 

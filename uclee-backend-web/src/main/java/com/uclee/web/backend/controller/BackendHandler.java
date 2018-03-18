@@ -78,6 +78,10 @@ public class BackendHandler {
 	public @ResponseBody boolean bindMemberHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateBindingRewards(freightPost);
 	}
+	@RequestMapping("/evaluationConfigurationHandler")
+	public @ResponseBody boolean evaluationConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateEvaluationGifts(freightPost);
+	}
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		return backendService.updateBirthVoucher(birthVoucherPost);

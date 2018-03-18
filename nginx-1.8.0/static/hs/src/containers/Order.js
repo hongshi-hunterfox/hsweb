@@ -7,6 +7,7 @@ var geocoder = null
 var qq = window.qq
 import Icon from '../components/Icon'
 import validator from 'validator'
+import "./order-list.css"
 var fto = require('form_to_object')
 var errMap = {
   data_error: '非法数据',
@@ -14,7 +15,8 @@ var errMap = {
   picktime_error: '请选择取货时间',
   phone_error: '手机格式错误',
   phone_empty: '自提请输入联系手机',
-  isSelfPick_error: '请选择是否自提'
+  isSelfPick_error: '请选择是否自提',
+  Distribution_error: '不在配送范围内'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -40,7 +42,9 @@ class Order extends React.Component {
       supportDeliver:true,
       salesInfoShow:false,
       salesInfo:[],
-      cut:0
+      cut:0,
+      distance:0,
+      config:{}
     }
     this.lat = 23
     this.lng = 113
@@ -164,6 +168,16 @@ class Order extends React.Component {
       }
     })
     console.log('isSelfPick: ' + this.state.isSelfPick);
+    req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config: data.config
+      })
+      console.log(this.state.config)
+    })
   }
 
   render() {
@@ -186,7 +200,6 @@ class Order extends React.Component {
                 {/*<select
                   name="isSelfPick"
                   value={this.state.isSelfPick}
-                  
                 >
                   <option value="">请选择</option>
                   <option value="false">配送</option>
@@ -215,6 +228,8 @@ class Order extends React.Component {
                             console.log('this.state.isShippingfree:' + this.state.isShippingfree)
                             if(!this.state.isShippingfree){
                               geocoder.getLocation(addr,this.state.total)
+                            }else{
+                            	geocoder.getLocation(addr,this.state.total)
                             }
                           }
                         }
@@ -263,7 +278,8 @@ class Order extends React.Component {
               storeAddr={this.state.storeAddr}
             />
             <div className="order-store">
-              <span className="" /> {localStorage.getItem('storeName')}
+              <span className="fa fa-home fa-lg" />{localStorage.getItem('storeName')}
+              <span className="number">(配送范围：{this.state.config.restrictedDistance}公里内)</span>
             </div>
             <OrderItem cartItems={this.state.cartItems} />
             <input
@@ -355,9 +371,9 @@ class Order extends React.Component {
               <input
                 type="hidden"
                 name="shippingFee"
-                value={this.state.shippingFee}
+                value={this.state.isShippingfree ? 0 : this.state.shippingFee}
               />
-              运费：<span className="money">￥{this.state.shippingFee}</span>
+              运费：<span className="money">￥{this.state.isShippingfree ? 0 : this.state.shippingFee}</span>
             </div>
             <div
               className="order-coupon"
@@ -386,7 +402,6 @@ class Order extends React.Component {
                      <div onClick={this.salesInfoShowClick} className='order-sales-top'>
                       <span className='order-sales-tag'>
                         营销
-                          
                       </span>
                       <span className='order-sales-text'>
                             {this.state.salesInfo[0]}...
@@ -402,23 +417,19 @@ class Order extends React.Component {
                         )
                       })}
                     </div>
-                    
                   </div>
                   :null
                 }
-                
-                
-              
             <div className="order-submit">
               合计：¥
               {this.state.total -
                 this.state.voucherText +
-                this.state.shippingFee -
+                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
                 this.state.cut >
                 0
                 ? (this.state.total -
                     this.state.voucherText +
-                    this.state.shippingFee-
+                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
                     this.state.cut).toFixed(2)
                 : 0}
               <button type="submit" className="button">提交订单</button>
@@ -453,7 +464,6 @@ salesInfoShowClick=()=>{
       isSelfPick: a,
       shippingFee: 0
     })
-
     if (
       !a &&
       localStorage.getItem('latitude') != null &&
@@ -487,7 +497,7 @@ salesInfoShowClick=()=>{
         var distance = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
-            new qq.maps.LatLng(
+            new qq.maps.LatLng( 
               Number(localStorage.getItem('latitude')),
               Number(localStorage.getItem('longitude'))
             )
@@ -519,6 +529,21 @@ salesInfoShowClick=()=>{
     if (!data.isSelfPick) {
       this.setState({
         error: errMap['isSelfPick_error']
+      })
+      return false
+    }
+          var distance = Math.round(
+          qq.maps.geometry.spherical.computeDistanceBetween(
+            new qq.maps.LatLng(this.lat, this.lng),
+            new qq.maps.LatLng( 
+              Number(localStorage.getItem('latitude')),
+              Number(localStorage.getItem('longitude'))
+            )
+          ) / 100
+          )/10
+     if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
+      this.setState({
+        error: errMap['Distribution_error']
       })
       return false
     }

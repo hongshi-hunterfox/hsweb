@@ -98,7 +98,6 @@ class ShakeMonitor extends React.Component {
               })}
             </Scrollbar>
           </div>
-
           <div className="shake-monitor-prize clearfix">
             <div className="shake-monitor-prize-title">一等奖(设奖名额：{this.state.level1Config.value})</div>
             <div className="shake-monitor-prize-items">

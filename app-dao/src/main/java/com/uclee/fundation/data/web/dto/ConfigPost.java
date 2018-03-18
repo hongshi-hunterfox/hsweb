@@ -32,17 +32,16 @@ public class ConfigPost {
 	private String payTemId;
 	private String rechargeTemId;
 	private String bindText;
+	private String commentText;
 	private String supportDeliver;
 	private String domain;
-
 	private String hsMerchantCode;
-
-	private String logoUrl;
-
+    private String logoUrl;
 	private String ucenterImg;
-
 	private String birthText;
 	private String salesText;
+	private String restrictedDistance;
+	private String startUp;
 
 	public String getBirthText() {
 		return birthText;
@@ -98,6 +97,14 @@ public class ConfigPost {
 
 	public void setBindText(String bindText) {
 		this.bindText = bindText;
+	}
+	
+	public String getCommentText() {
+		return commentText;
+	}
+
+	public void setCommentText(String commentText) {
+		this.commentText = commentText;
 	}
 
 	public String getSupportDeliver() {
@@ -298,5 +305,19 @@ public class ConfigPost {
 	public void setNotifyUrl(String notifyUrl) {
 		this.notifyUrl = notifyUrl;
 	}
-	
+
+	public String getRestrictedDistance() {
+		return restrictedDistance;
+	}
+
+	public void setRestrictedDistance(String restrictedDistance) {
+		this.restrictedDistance = restrictedDistance;
+	}
+	public String getStartUp() {
+		return startUp;
+	}
+	public void setStartUp(String startUp) {
+		this.startUp = startUp;
+	}
+
 }
