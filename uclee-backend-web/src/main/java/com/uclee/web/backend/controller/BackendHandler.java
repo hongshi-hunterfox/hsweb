@@ -4,10 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.uclee.fundation.data.mybatis.model.Category;
-import com.uclee.fundation.data.mybatis.model.Comment;
-import com.uclee.fundation.data.mybatis.model.HomeQuickNavi;
-import com.uclee.fundation.data.mybatis.model.RechargeConfig;
+import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -157,4 +154,14 @@ public class BackendHandler {
 	public @ResponseBody int updateStoreInfo(HttpServletRequest request,@RequestBody ProductForm productForm) {
 		return backendService.updateStoreInfo(productForm.getDescription());
 	}
+
+
+	@RequestMapping("/orderSettingPickHandler")
+	public  @ResponseBody boolean orderSettingPickHandler(HttpServletRequest request, @RequestBody OrderSettingPick  orderSettingPick){
+		return backendService.updateOrderSettingPick(orderSettingPick);
+	}
+
+
+
+
 }

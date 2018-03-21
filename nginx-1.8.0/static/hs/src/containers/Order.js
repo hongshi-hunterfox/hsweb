@@ -16,7 +16,9 @@ var errMap = {
   phone_error: '手机格式错误',
   phone_empty: '自提请输入联系手机',
   isSelfPick_error: '请选择是否自提',
-  Distribution_error: '不在配送范围内'
+  Distribution_error: '不在配送范围内',
+  closeDate_error:'我们歇业了',
+  businesstime_error:'我们打烊睡觉了'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -44,7 +46,11 @@ class Order extends React.Component {
       salesInfo:[],
       cut:0,
       distance:0,
-      config:{}
+      config:{},
+      closeStartDateStr:'',
+      closeEndDateStr:'',
+      businessStartTime:'',
+      businessEndTime:''
     }
     this.lat = 23
     this.lng = 113
@@ -177,6 +183,21 @@ class Order extends React.Component {
         config: data.config
       })
       console.log(this.state.config)
+    })
+
+
+    req.get('uclee-backend-web/orderSettingPick').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      console.log(data);
+      this.setState({
+        closeStartDateStr:data.data.closeStartDateStr,
+        closeEndDateStr:data.data.closeEndDateStr,
+        businessStartTime:data.data.businessStartTime,
+        businessEndTime:data.data.businessEndTime
+      })
     })
   }
 
@@ -580,6 +601,27 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+
+    if(Date.parse(data.pickDateStr)>=Date.parse(this.state.closeStartDateStr)
+          &&
+          Date.parse(data.pickDateStr)<=Date.parse(this.state.closeEndDateStr)){
+
+      this.setState({
+        error:errMap['closeDate_error']
+      })
+      return false;
+    }
+
+
+    if(data.pickTimeStr<this.state.businessStartTime || data.pickTimeStr>this.state.businessEndTime){
+      this.setState({
+        error:errMap['businesstime_error']
+      })
+      return false;
+    }
+
+
+
     req.post('/uclee-user-web/orderHandler').send(data).end((err, res) => {
       if (err) {
         return err

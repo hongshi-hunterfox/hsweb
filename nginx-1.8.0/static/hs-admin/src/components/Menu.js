@@ -74,6 +74,10 @@ class Menu extends React.Component {
            <Link to={'/system-config?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             系统配置
           </Link>
+
+          <Link to={'/orderSettingPick?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            设定歇业时间和营业时间
+          </Link>
         </div>
       </div>
       )

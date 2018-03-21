@@ -426,5 +426,33 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
+
+	/*
+		copy by chiangpan
+	*/
+	@RequestMapping("/orderSettingPick")
+	public @ResponseBody Map<String,Object> orderSettingPick(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<OrderSettingPick> orderSettingPick = backendService.selectAllOrderSettingPick();
+
+		if(orderSettingPick!=null && orderSettingPick.size()>0){
+			map.put("closeStartDateStr",DateUtils.format(orderSettingPick.get(0).getCloseStartDate(),DateUtils.FORMAT_SHORT));
+			map.put("closeEndDateStr",DateUtils.format(orderSettingPick.get(0).getCloseEndDate(),DateUtils.FORMAT_SHORT));
+			map.put("businessStartTime", orderSettingPick.get(0).getBusinessStartTime());
+			map.put("businessEndTime",orderSettingPick.get(0).getBusinessEndTime());
+			result.put("size",1);
+		}else{
+			//以下是默认日期
+			String year=DateUtils.getYear(new Date());
+			map.put("closeStartDateStr",year+"-01-01");
+			map.put("closeEndDateStr",year+"-01-01");
+			map.put("businessStartTime", "00:00");
+			map.put("businessEndTime","23:59");
+			result.put("size",0);
+		}
+		result.put("data", map);
+		return result;
+	}
 	
 }
