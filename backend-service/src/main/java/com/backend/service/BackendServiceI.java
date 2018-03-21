@@ -130,4 +130,11 @@ public interface BackendServiceI {
 	boolean systemConfigHandler(ConfigPost configPost);
 
 	boolean updateEvaluationGifts(FreightPost freightPost);
+
+	//add by chiangpan for pickTime
+	List<OrderSettingPick> selectAllOrderSettingPick();
+
+	boolean updateOrderSettingPick(OrderSettingPick orderSettingPick);
+
+
 }

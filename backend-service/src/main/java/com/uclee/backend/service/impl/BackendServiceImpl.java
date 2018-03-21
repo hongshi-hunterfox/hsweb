@@ -90,6 +90,10 @@ public class BackendServiceImpl implements BackendServiceI {
 	private UserProfileMapper userProfileMapper;
 	@Autowired
 	private VarMapper varMapper;
+
+	@Autowired
+	private OrderSettingPickMapper orderSettingPickMapper;
+
 	@SuppressWarnings("unused")
 	@Override
 	public boolean updateConfig(ConfigPost configPost) { 
@@ -1438,4 +1442,22 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<BirthVoucher> selectAllBirthVoucher() {
 		return birthVoucherMapper.selectAll();
 	}
+
+	@Override
+	public List<OrderSettingPick> selectAllOrderSettingPick() {
+		return orderSettingPickMapper.selectAll();
+	}
+
+	@Override
+	public boolean updateOrderSettingPick(OrderSettingPick  orderSettingPick) {
+		int delAll =orderSettingPickMapper.deleteAll();
+		orderSettingPick.setCloseStartDate(DateUtils.parse(orderSettingPick.getCloseStartDateStr(), DateUtils.FORMAT_SHORT));
+		orderSettingPick.setCloseEndDate(DateUtils.parse(orderSettingPick.getCloseEndDateStr(), DateUtils.FORMAT_SHORT));
+		orderSettingPickMapper.insertSelective(orderSettingPick);
+
+		return true;
+
+	}
+
+
 }

@@ -44,6 +44,7 @@ import EvaluationConfiguration from './containers/EvaluationConfiguration'
 import SystemConfig from './containers/SystemConfig'
 import ActivityConfig from './containers/ActivityConfig'
 import RechargeConfigList from './containers/RechargeConfigList'
+import OrderSettingPick from './containers/OrderSettingPick'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -91,6 +92,7 @@ ReactDOM.render(
       <Route path="editPhoneUser" component={EditPhoneUser} />
       <Route path="phoneUserList" component={PhoneUserList} />
       <Route path="editProductGroup" component={EditProductGroup} />
+      <Route path="orderSettingPick" component={OrderSettingPick}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

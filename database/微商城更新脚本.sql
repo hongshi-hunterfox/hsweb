@@ -60,6 +60,15 @@ Begin
  alter table web_payment_orders add version int not null default 0;
 End
 
+If Object_id('web_orders_setting_picktime','U') Is Null
+BEGIN
+create table web_orders_setting_picktime(
+id int identity (1,1) primary key,
+pickStartTime datetime,
+pickEndTime datetime
+)
+END
+
 
 go
 declare @def varchar(100),@SQL Nvarchar(100)
@@ -80,6 +89,8 @@ begin
 end
 
 go
+
+
 
 
 
