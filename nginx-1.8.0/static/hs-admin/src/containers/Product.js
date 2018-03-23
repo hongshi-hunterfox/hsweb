@@ -8,7 +8,9 @@ import ErrorMsg from '../components/ErrorMsg'
 
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
+import './input-moment/input-moment.less'
+import InputMoment from 'input-moment'
+import moment from 'moment';
 class Product extends React.Component {
   constructor(props) {
     super(props)
@@ -31,7 +33,7 @@ class Product extends React.Component {
       explain: '',
       categoryId: '',
       images: [],
-      sale:0
+      sale:0,
     }
 
     this.hongShiProductById = {}
@@ -50,7 +52,10 @@ class Product extends React.Component {
 
   render() {
     var { id } = this.props.params
-
+    var begin = this.state.currentSpec.startTimeStr
+    var end = this.state.currentSpec.endTimeStr
+    var date1 = new Date(begin).getTime()
+    var date2 = new Date(end).getTime()
     return (
       <DocumentTitle title={id ? '编辑产品' : '新增产品'}>
         <div className="product">
@@ -323,6 +328,32 @@ class Product extends React.Component {
                                           )}
                                         />
                                       </div>
+                                       <div className="input-group input-group-sm">
+                                        <span className="input-group-addon">
+                                          促销价：
+                                        </span>
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          value={item.promotionPrice}
+                                          onChange={this._changePromotionPrice.bind(
+                                            this,
+                                            item
+                                          )}
+                                        />
+                                      </div>
+                                      <div className="input-group input-group-sm">
+                                        <span className="input-group-addon">
+                                          促销开始：
+                                        </span>
+                                        <input type='text' className="form-control" placeholder="格式1997-01-16 00:00:00" value={item.startTimeStr} onChange={this._changeStartTime.bind(this,item)}/>
+                                      </div>
+                                        <div className="input-group input-group-sm">
+                                        <span className="input-group-addon">
+                                          促销结束：
+                                        </span>
+                                        <input type='text' className="form-control"  placeholder="格式1997-01-16 00:00:00"value={item.endTimeStr} onChange={this._changeEndTime.bind(this,item)}/>
+                                      </div>
                                     </div>
                                   : null}
                               </div>
@@ -347,9 +378,8 @@ class Product extends React.Component {
                           />
                         </div>
                       </div>
-                      <div className="panel-body product-specs">
-                        <span>当前规格：{this.state.currentSpec.name}</span>
-
+                      <div className="panel-body product-specs">                       
+                        <span>当前规格：{this.state.currentSpec.name}</span> 
                         {this.state.store.map((item, index) => {
                           return (
                             <div className="checkbox" key={index}>
@@ -582,6 +612,55 @@ class Product extends React.Component {
     })
   }
 
+ _changePromotionPrice = (item, e) => {
+    var nhongShiProduct = this.state.hongShiProduct.slice()
+    var changedItem = null
+
+    nhongShiProduct.forEach((a, index) => {
+      if (a.id === item.id) {
+        nhongShiProduct[index].promotionPrice = e.target.value
+        changedItem = nhongShiProduct[index]
+      }
+    })
+    this.setState({
+      currentSpec: changedItem,
+      hongShiProduct: nhongShiProduct
+    })
+  }
+ 
+  _changeStartTime = (item, e) => {
+    var nhongShiProduct = this.state.hongShiProduct.slice()
+    var changedItem = null
+
+    nhongShiProduct.forEach((a, index) => {
+      if (a.id === item.id) {
+        nhongShiProduct[index].startTimeStr = e.target.value
+        changedItem = nhongShiProduct[index]
+      }
+    })
+    this.setState({
+      currentSpec: changedItem,
+      hongShiProduct: nhongShiProduct
+    })
+  }
+  
+   _changeEndTime = (item, e) => {
+    var nhongShiProduct = this.state.hongShiProduct.slice()
+    var changedItem = null
+    nhongShiProduct.forEach((a, index) => {
+      if (a.id === item.id) {
+        nhongShiProduct[index].endTimeStr = e.target.value
+        changedItem = nhongShiProduct[index]
+      }
+    })
+    this.setState({
+      currentSpec: changedItem,
+      hongShiProduct: nhongShiProduct
+    })
+  }
+
+
+
   _changeSpec = (item, e) => {
     var nhongShiProduct = this.state.hongShiProduct.slice()
     var changedItem = null
@@ -737,6 +816,14 @@ class Product extends React.Component {
         err: '库存不能为空'
       })
     }
+    
+    data.valuePost.every(item => {
+    if (item.startTime>item.endTime) {
+      return this.setState({
+        err: '起始时间不能大于结束时间'
+      })
+    }
+    })
 
     var foundWrongPrice = false
     data.valuePost.every(item => {

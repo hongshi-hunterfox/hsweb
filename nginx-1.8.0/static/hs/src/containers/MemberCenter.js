@@ -91,7 +91,6 @@ class MemberCenter extends React.Component {
             <img src={this.state.ucenterImg} alt=""/>
             <div className="member-center-info">
               <div>尊贵的 {this.state.nickName}</div>
-              {/*<div>您拥有本店积分：{0}</div>*/}
             </div>
           </div>
 

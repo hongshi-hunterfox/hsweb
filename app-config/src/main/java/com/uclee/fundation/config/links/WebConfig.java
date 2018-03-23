@@ -42,5 +42,6 @@ public interface WebConfig {
 	String salesText = "salesText";
 	String restrictedDistance = "restrictedDistance";
 	String startUp = "startUp";
+	String full = "full";
 
 }                      

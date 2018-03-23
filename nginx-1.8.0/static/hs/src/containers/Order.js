@@ -8,6 +8,9 @@ var qq = window.qq
 import Icon from '../components/Icon'
 import validator from 'validator'
 import "./order-list.css"
+import Big from 'big.js'
+var myDate = new Date()
+var Date1 = new Date(myDate).getTime()
 var fto = require('form_to_object')
 var errMap = {
   data_error: '非法数据',
@@ -211,6 +214,17 @@ class Order extends React.Component {
         window.location = '/unpay-order-list'
       }
     }
+    var Total = (this.state.total -
+                this.state.voucherText +
+                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
+                this.state.cut >
+                0
+                ? (this.state.total -
+                    this.state.voucherText +
+                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
+                    this.state.cut).toFixed(2)
+                : 0)
+   var Difference = this.state.config.full - this.state.total
     return (
       <DocumentTitle title="提交订单">
         <div className="order">
@@ -300,7 +314,9 @@ class Order extends React.Component {
             />
             <div className="order-store">
               <span className="fa fa-home fa-lg" />{localStorage.getItem('storeName')}
+              {this.state.isSelfPick == 'false' ?
               <span className="number">(配送范围：{this.state.config.restrictedDistance}公里内)</span>
+              :null}
             </div>
             <OrderItem cartItems={this.state.cartItems} />
             <input
@@ -416,7 +432,10 @@ class Order extends React.Component {
              <div className="order-total">
               满减：<span className="money">¥{this.state.cut}</span>
             </div>
-
+            {this.state.isSelfPick === 'false' ?
+            <div className="order-total">
+              满额起送：<span className="money">¥{this.state.config.full>0?this.state.config.full:0}</span>
+            </div>:null}
                 {
                   this.state.salesInfo.length>=1?
                   <div className="order-sales">
@@ -440,20 +459,15 @@ class Order extends React.Component {
                     </div>
                   </div>
                   :null
-                }
+                }   
             <div className="order-submit">
-              合计：¥
-              {this.state.total -
-                this.state.voucherText +
-                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
-                this.state.cut >
-                0
-                ? (this.state.total -
-                    this.state.voucherText +
-                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
-                    this.state.cut).toFixed(2)
-                : 0}
-              <button type="submit" className="button">提交订单</button>
+            合计：¥{Total}
+            {this.state.isSelfPick === 'false'?
+            (Difference>0?
+					  <span className="button">还需：{Difference}元起送!</span>
+					  :
+            <button type="submit" className="button">提交订单</button>)
+            :<button type="submit" className="button">提交订单</button>}
             </div>
             <ErrorMessage error={this.state.error} />
           </form>
@@ -562,7 +576,7 @@ salesInfoShowClick=()=>{
             )
           ) / 100
           )/10
-     if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
+    if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
       this.setState({
         error: errMap['Distribution_error']
       })
@@ -746,7 +760,7 @@ class OrderItem extends React.Component {
           <div className="title">{item.title}</div>
           <div className="sku-info">
             <span className="sku">{item.specification}</span>
-            <span className="count pull-right">单价：￥{item.money}</span>
+            <span className="count pull-right">{((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?"单价：￥"+item.money:"促销单价：￥"+item.promotion}</span>  
           </div>
           <div className="other">
             <span className="price pull-right">数量：x {item.amount}</span>

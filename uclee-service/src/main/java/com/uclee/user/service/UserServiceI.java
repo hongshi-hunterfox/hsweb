@@ -12,6 +12,8 @@ import com.uclee.user.model.UserForm;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
@@ -271,11 +273,11 @@ public interface UserServiceI {
 
 	Map<String, Object> getMobile(String phone, String hsCode);
 	
-	Map<String, Object> getMobJect(String QueryName);
+    //Map<String, Object> getMobJect(String QueryName);
 	//根据微商城订单号取得订单的所有信息by chiangpan
 	Order getOrderListSerailNum(String outerOrderCode);
 
-
+	Map<String, Object> getMobJect(String QueryName,String phone,String hsCode);
 	List<PaymentOrder> selectForTimer();
 
 	Map<String,String> wxInitiativeCheck(PaymentOrder paymentOrder);

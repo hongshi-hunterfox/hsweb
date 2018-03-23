@@ -1,6 +1,7 @@
 package com.uclee.fundation.data.web.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public class ValuePost {
@@ -18,6 +19,48 @@ public class ValuePost {
 	private List<Integer> storeIds;
 	
 	private BigDecimal prePrice;
+
+	private BigDecimal promotionPrice;
+	
+	private Date startTime;
+	
+	private Date endTime;
+	
+	private String startTimeStr;
+	
+	private String endTimeStr;
+	
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+	
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 
 	public BigDecimal getPrePrice() {
 		return prePrice;
@@ -74,5 +117,16 @@ public class ValuePost {
 	public void setStoreIds(List<Integer> storeIds) {
 		this.storeIds = storeIds;
 	}
+
+	public void setPromotionPrice(BigDecimal promotionPrice) {
+		this.promotionPrice = promotionPrice;
+		
+	}
+
+	public BigDecimal getPromotionPrice() {
+		// TODO Auto-generated method stub
+		return promotionPrice;
+	}
+
 	
 }

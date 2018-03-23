@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.model.ProductForm;
 import com.backend.service.ProductManageServiceI;
+import com.uclee.date.util.DateUtils;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.data.mybatis.mapping.ProductCategoryLinkMapper;
 import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
@@ -92,6 +93,11 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsGoodsPrice(item.getHsPrice());
 			value.setHsStock(item.getHsStock());
 			value.setPrePrice(item.getPrePrice());
+			value.setPromotionPrice(item.getPromotionPrice());
+			value.setStartTime(item.getStartTime());
+			value.setEndTime(item.getEndTime());
+			value.setStartTimeStr(DateUtils.format(item.getStartTime(), DateUtils.FORMAT_LONG));
+			value.setEndTimeStr(DateUtils.format(item.getEndTime(), DateUtils.FORMAT_LONG));
 			value.setSpecificationId(1);
 			value.setValue(item.getName());
 			if(specificationValueMapper.insertSelective(value)>0){
@@ -125,6 +131,10 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsGoodsPrice(item.getHsPrice());
 			value.setHsStock(item.getHsStock());
 			value.setPrePrice(item.getPrePrice());
+			value.setPromotionPrice(item.getPromotionPrice());
+			//提交时转换类型
+			value.setStartTime(DateUtils.parse(item.getStartTimeStr()));
+			value.setEndTime(DateUtils.parse(item.getEndTimeStr()));
 			value.setSpecificationId(1);
 			value.setValue(item.getName());
 			if(specificationValueMapper.insertSelective(value)>0){

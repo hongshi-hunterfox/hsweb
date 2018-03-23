@@ -6,6 +6,8 @@ import req from 'superagent'
 import CheckBox from '../components/CheckBox'
 import Counter from '../components/Counter'
 import Big from 'big.js'
+var myDate = new Date()
+var Date1 = new Date(myDate).getTime()
 
 const CartEmpty = props => {
   return (
@@ -65,9 +67,15 @@ class Cart extends React.Component {
     var totalPrice = Big(0)
     list.forEach(item => {
       if (item.checked) {
-        totalPrice = totalPrice.add(Big(item.money).times(Big(item.amount)))
+        totalPrice = 
+        (Date1<item.startTime||Date1>item.endTime||item.promotion===null) ?
+        totalPrice.add(Big(item.money).times(Big(item.amount)))
+        :
+        totalPrice.add(Big(item.promotion).times(Big(item.amount)))	
       }
     })
+    
+
 
     return (
       <DocumentTitle title="购物车">
@@ -156,8 +164,17 @@ class Cart extends React.Component {
                                     checked: !item.checked
                                   }
                                 })
-                              }}>
-                                {'¥ ' + item.money}
+                              }}>                               
+                    {
+            	        ((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?
+                      <div>
+                      {'在售价¥ ' + item.money}
+                     </div>	
+              	     : 
+                     <div>
+                      {'促销价¥ ' + item.promotion}
+                      </div>
+                    } 
                               </div>
                               {this.state.editMode
                                 ? null
@@ -182,8 +199,8 @@ class Cart extends React.Component {
                     </div>
 
                     <div className="cart-settle">
-                      <div className="cart-settle-price">
-                        {'合计：¥' + totalPrice.toString()}
+                      <div className="cart-settle-price">           
+                      {'合计：¥' + (totalPrice.toString())}
                       </div>
                       <div className="cart-settle-info">不含运费</div>
                       <div className="cart-settle-go left" onClick={()=>{window.location='/'}}>
@@ -226,7 +243,16 @@ class Cart extends React.Component {
                           {item.specification}
                         </div>
                         <div className="cart-item-price">
-                          {'¥ ' + item.money}
+                            {
+            	        ((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?
+                      <div>
+                      {'在售价¥ ' + item.money}
+                     </div>	
+              	     : 
+                     <div>
+                      {'促销价¥ ' + item.promotion}
+                      </div>
+                    } 
                         </div>
                       </div>
                     </div>

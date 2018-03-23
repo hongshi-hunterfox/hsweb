@@ -42,6 +42,15 @@ public class ConfigPost {
 	private String salesText;
 	private String restrictedDistance;
 	private String startUp;
+	private String full;
+
+	public String getFull() {
+		return full;
+	}
+
+	public void setFull(String full) {
+		this.full = full;
+	}
 
 	public String getBirthText() {
 		return birthText;
