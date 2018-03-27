@@ -2,6 +2,7 @@ package com.uclee.web.user.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.domain.Data;
 import com.backend.service.BackendServiceI;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
@@ -12,8 +13,10 @@ import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.hongshi.service.HongShiServiceI;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.sms.util.VerifyCode;
 import com.uclee.user.service.DuobaoServiceI;
@@ -54,6 +57,8 @@ public class UserController extends CommonUserHandler{
 	private BackendServiceI backendService;
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
+	@Autowired
+	private HongShiServiceI hongShiService;
 	@Autowired
 	private DataSourceFacade datasource;
 	@Autowired
@@ -458,7 +463,32 @@ public class UserController extends CommonUserHandler{
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
 		for(CartDto item:carts){
-			total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+			Date date = new Date();
+			long value = date.getTime();
+			long value1 = 0;
+            if(item.getStartTime()!=null){
+            value1=item.getStartTime().getTime();
+            }
+            long value2 = 0;
+			if(item.getEndTime()!=null){
+			value2 = item.getEndTime().getTime();
+			}
+			logger.info("skx--------value2="+value2);
+			//判断提交订单商品是否有促销价--skx
+			if(value1!=0||value2!=0){
+				logger.info("skx--------value="+value);
+				logger.info("skx--------value1="+value1);
+				logger.info("skx--------value2="+value2);
+				if(item.getPromotion()!=null && value>value1 && value<value2){
+					total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
+				}else{
+					total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));	
+				}
+			}else{
+				total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+			}
+
+					
 			Product product = userService.getProductById(item.getProductId());
 			if(product!=null&&!product.getShippingFree()){
 				isShippingFree=false;
@@ -502,6 +532,11 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 	
+	private Date Date() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/** 
 	* @Title: payment 
 	* @Description: 支付页面的数据接口，返回支付方式，订单信息
@@ -735,7 +770,7 @@ public class UserController extends CommonUserHandler{
 	* @throws 
 	*/
 	@RequestMapping("/productDetail")
-	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
+	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId,Integer tid){
 		ProductDto productDto = userService.getProductDtoById(productId);
 		System.out.println(JSON.toJSONString(productDto));
 		return productDto;
@@ -1339,11 +1374,11 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * @Description: 小助手数据接口
+	 * @Description: 小助手数据接口-skx
 	 */
 	@RequestMapping("/DataView")
-	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName){
-		return userService.getMobJect(QueryName);
+	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName,String phone,String hsCode){
+		return userService.getMobJect(QueryName,phone,hsCode);
 	}
 	
 	/**

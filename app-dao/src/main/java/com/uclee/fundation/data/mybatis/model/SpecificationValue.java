@@ -1,6 +1,7 @@
 package com.uclee.fundation.data.mybatis.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class SpecificationValue {
     private Integer valueId;
@@ -16,8 +17,58 @@ public class SpecificationValue {
     private Integer hsStock;
     
     private BigDecimal prePrice;
+    
+    private BigDecimal promotionPrice;
+    
+    private Date startTime;
+    
+    private String startTimeStr;
+    
+    private Date endTime;
+    
+    private String endTimeStr;
 
-    public BigDecimal getPrePrice() {
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+	
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	
+	public BigDecimal getPromotionPrice() {
+		return promotionPrice;
+	}
+
+	public void setPromotionPrice(BigDecimal promotionPrice) {
+		this.promotionPrice = promotionPrice;
+	}
+
+	public BigDecimal getPrePrice() {
 		return prePrice;
 	}
 

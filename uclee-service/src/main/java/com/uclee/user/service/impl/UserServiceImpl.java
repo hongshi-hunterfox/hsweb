@@ -1020,6 +1020,8 @@ public class UserServiceImpl implements UserServiceI {
 		
 		String moneyPost = "";
 		moneyPost = money.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_UP).toString();
+		
+		System.out.print("moneypost = "+ moneyPost);
 		Map<String,String> weixinConfig = getWeixinConfig();
 		UniteOrderResult result = getWCPayResult(openId, paymentSerialNum, moneyPost,new String(title.getBytes("UTF-8"), "UTF-8"),new String(title.getBytes("UTF-8"), "UTF-8"));
 		System.out.println("result:" + JSON.toJSONString(result));
@@ -2052,6 +2054,9 @@ public class UserServiceImpl implements UserServiceI {
 				specifcationStr = specifcationStr + "：" + specificationValue.getValue();
 				Specification specification = specificationMapper.selectByPrimaryKey(specificationValue.getSpecificationId());
 				cart.setMoney(specificationValue.getHsGoodsPrice());
+				cart.setPromotion(specificationValue.getPromotionPrice());
+				cart.setStartTime(specificationValue.getStartTime());
+				cart.setEndTime(specificationValue.getEndTime());
 				if(specification!=null){
 					specifcationStr = specification.getSpecification() +  specifcationStr;
 				}
@@ -2314,14 +2319,32 @@ public class UserServiceImpl implements UserServiceI {
 			item.setValueId(cart.getSpecificationValueId());
 			item.setValue("款式：" + value.getValue());
 			item.setItemSerialNum(NumberUtil.generateSerialNum());
-			item.setPrice(value.getHsGoodsPrice());
+			Date date = new Date();
+			long value0 = date.getTime();
+			long value1 = value.getStartTime().getTime();
+			long value2 = value.getEndTime().getTime();
+			if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
+				item.setPrice(value.getPromotionPrice());
+			}else{
+				item.setPrice(value.getHsGoodsPrice());	
+			}
+			if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
+				item.setPrice(value.getPromotionPrice());
+			}else{
+				item.setPrice(value.getHsGoodsPrice());
+			}
 			item.setProductId(cart.getProductId());
 			item.setStoreId(orderPost.getStoreId());
 			ProductImageLink productImageLink = productImageLinkMapper.selectByProductIdLimit(cart.getProductId());
 			if(productImageLink!=null){
 				item.setImageUrl(productImageLink.getImageUrl());
 			}
+			//判断是否是带促销价的商品总价
+			if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
+				totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getPromotionPrice()));
+			}else{
 			totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+			}
 			//记录销量
 			try {
 				ProductSale tmp = productSaleMapper.selectByProductId(cart.getProductId());
@@ -2340,7 +2363,7 @@ public class UserServiceImpl implements UserServiceI {
 			}
 			orderItem.add(item);
 		}
-		order.setTotalPrice(totalMoney);
+		order.setTotalPrice(totalMoney);	
 		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
 		BigDecimal cut = new BigDecimal(0);
 		for(FullCut fullCut:fullCuts){
@@ -2588,6 +2611,9 @@ public class UserServiceImpl implements UserServiceI {
 					tmp.setStock(specificationValue.getHsStock());
 					specifcationStr = specifcationStr + "" + specificationValue.getValue();
 					tmp.setMoney(specificationValue.getHsGoodsPrice());
+					tmp.setPromotion(specificationValue.getPromotionPrice());
+					tmp.setStartTime(specificationValue.getStartTime());
+					tmp.setEndTime(specificationValue.getEndTime());
 					tmp.setSpecification(specifcationStr);
 				}
 				List<ProductDto> products  = productMapper.selectOneImage(tmp.getProductId());
@@ -3512,9 +3538,25 @@ public class UserServiceImpl implements UserServiceI {
 	 * @param @return    设定文件
 	 */
 	@Override
-	public  Map<String, Object> getMobJect(String QueryName){
+	public  Map<String, Object> getMobJect(String QueryName,String phone,String hsCode){
 		HashMap<String,Object> ret = new HashMap<String, Object>();
-		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName);
+		Integer userId = null;
+		//
+		ret.put("result", false);
+//		if(phone==null&&hsCode==null){
+//			ret.put("reason", "param_error");
+//			return ret;
+//		}
+		
+		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
+		if(napaStores!=null&&napaStores.size()>0){
+			ret.put("napaStores", napaStores);
+		}else{
+			ret.put("reason", "no_department");
+			return ret;
+		}
+		//
+		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName,hsCode,userId);
 		ret.put("info",QueryName);
 		ret.put("itema", itema);
 		return ret;

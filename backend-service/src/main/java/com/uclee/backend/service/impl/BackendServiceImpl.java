@@ -344,6 +344,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getStartUp()!=null) {
 			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
 		}
+		if (configPost.getFull()!=null) {
+			configMapper.updateByTag(WebConfig.full, configPost.getFull());
+		}
 		return true;
 	}
 	@Override
@@ -466,6 +469,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getStartUp()!=null) {
 			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
+		}
+		if (configPost.getFull()!=null) {
+			configMapper.updateByTag(WebConfig.full, configPost.getFull());
 		}
 		return true;
 	}
@@ -712,6 +718,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			tmp.setHsPrice(value.getHsGoodsPrice());
 			tmp.setName(value.getValue());
 			tmp.setPrePrice(value.getPrePrice());
+			tmp.setPromotionPrice(value.getPromotionPrice());
+			tmp.setStartTime(value.getStartTime());
+			tmp.setEndTime(value.getEndTime());
+			tmp.setStartTimeStr(DateUtils.format(value.getStartTime(), DateUtils.FORMAT_LONG));
+			tmp.setEndTimeStr(DateUtils.format(value.getEndTime(), DateUtils.FORMAT_LONG));	
 			List<Integer> storeIds = new ArrayList<Integer>();
 			List<NapaStore> stores = napaStoreMapper.selectByValueId(value.getValueId());
 			for(NapaStore store:stores){
@@ -909,6 +920,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setRestrictedDistance(config.getValue());
 			}else if(config.getTag().equals(WebConfig.startUp)){
 				configPost.setStartUp(config.getValue());
+			}else if(config.getTag().equals(WebConfig.full)){
+				configPost.setFull(config.getValue());
 			}
 		}
 		return configPost;

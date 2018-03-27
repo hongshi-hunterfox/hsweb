@@ -9,6 +9,8 @@ import Loading from '../components/Loading'
 import req from 'superagent'
 import Big from 'big.js'
 var request = require('superagent')
+var myDate = new Date()
+var Date1 = new Date(myDate).getTime()
 
 const DetailCarousel = (props) => {
   var slickSetting = {
@@ -55,8 +57,7 @@ const DetailInfo = (props) => {
           <span>¥ {props.minPrice}</span>
           :
           <span>¥ {props.minPrice} - {props.maxPrice}</span>
-        }
-         
+        }         
       </div>
       </div>
       <div className="detail-info-stat">
@@ -144,7 +145,22 @@ const DetailPicker = (props) => {
             <div className="detail-picker-header-info">
               <div className="detail-picker-header-title">{props.title}</div>
               <div className="detail-picker-header-price">
-                ¥ {props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              {
+              	((Date1)<(props.startTime)||(Date1)>(props.endTime)) ?
+              <div>
+              在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              </div>	
+              	: 
+              <div>
+              	{((props.promotionPrice)==='-') ? 
+              	<div>
+              	在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              	</div> :
+              	<div>
+              	促销价：¥{props.promotionPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce} 在售价：¥{props.totalPrice}</span>:null}
+              	</div>
+              	}
+              </div>}
               </div>
             </div>
           </div>
@@ -247,10 +263,18 @@ class Detail extends React.Component {
     this.specValueMap = {}
     this.specPrePriceMap = {}
     this.specPreValueMap = {}
+    this.specProPriceMap = {}
+    this.specProValueMap = {}
+    this.specStartTimeMap = {}
+    this.specStaValueMap = {}
+    this.specEndTimeMap = {}
+    this.specEndValueMap = {}
     this.minPrice = 0
     this.maxPrice = 0
     this.preMinPrice = 0
     this.preMaxPrice = 0
+    this.proMinPrice = 0
+    this.proMaxPrice = 0
   }
 
   componentDidMount() {
@@ -265,7 +289,7 @@ class Detail extends React.Component {
         }
         this.setState({
           loading: false,
-          ...res.body
+          ...res.body,
         })
       req.get('/uclee-user-web/storeList').end((err, res) => {
 			if (err) {
@@ -352,10 +376,27 @@ class Detail extends React.Component {
 
           return item.prePrice
         })
+        var promotionPrice = spec.values.map((item) =>{
+        	this.specProPriceMap[`_${item.valueId}`] = item.promotionPrice
+        	this.specProValueMap[`_${item.valueId}`] = item.value
+        	return item.promotionPrice
+        })
+        var startTime = spec.values.map((item) =>{
+        	this.specStartTimeMap[`_${item.valueId}`] = item.startTime
+        	this.specStaValueMap[`_${item.valueId}`] = item.value
+        	return item.startTime
+        })
+        var endTime = spec.values.map((item) =>{
+        	this.specEndTimeMap[`_${item.valueId}`] = item.endTime
+        	this.specEndValueMap[`_${item.valueId}`] = item.value
+        	return item.endTime
+        })
         this.minPrice = Math.min.apply(null, prices)
         this.maxPrice = Math.max.apply(null, prices)
         this.preMinPrice = Math.min.apply(null, prePrices)
         this.preMaxPrice = Math.max.apply(null, prePrices)
+        this.proMinPrice = Math.min.apply(null, promotionPrice)
+        this.proMaxPrice = Math.max.apply(null, promotionPrice)
         console.log(prePrices)
     }
 
@@ -367,7 +408,18 @@ class Detail extends React.Component {
     if (this.specPrePriceMap[`_${this.state.currentSpecValudId}`]) {
       prePirce = new Big(this.specPrePriceMap[`_${this.state.currentSpecValudId}`]).toString()
     }
-
+    var promotionPrice='-'
+    if (this.specProPriceMap[`_${this.state.currentSpecValudId}`]) {
+      promotionPrice = new Big(this.specProPriceMap[`_${this.state.currentSpecValudId}`]).toString()
+    }
+		var startTime='00:00'
+    if (this.specStartTimeMap[`_${this.state.currentSpecValudId}`]) {
+      startTime = new Big(this.specStartTimeMap[`_${this.state.currentSpecValudId}`]).toString()
+    }
+    var endTime='00:00'
+    if (this.specEndTimeMap[`_${this.state.currentSpecValudId}`]) {
+      endTime = new Big(this.specEndTimeMap[`_${this.state.currentSpecValudId}`]).toString()
+    }
     return (
       <DocumentTitle title="商品详情">
         {
@@ -384,7 +436,9 @@ class Detail extends React.Component {
               minPrice={this.minPrice}
               maxPrice={this.maxPrice}
               preMinPrice={this.preMinPrice}
-              preMaxPrice={this.preMaxPrice}/>
+              preMaxPrice={this.preMaxPrice}
+              proMinPrice={this.proMinPrice}
+              proMaxPrice={this.proMaxPrice}/>
               {
                 this.state.salesInfo.length>=1?
                 <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
@@ -410,6 +464,9 @@ class Detail extends React.Component {
               onClickNext={this._clickNext}
               pickType={this.state.pickType}
               prePirce={prePirce}
+              promotionPrice={promotionPrice}
+              startTime = {startTime}
+              endTime = {endTime}
               />
             <DetailRich description={this.state.description}/>
             <DetailActions onClickCart={this._clickCartAdd} onClickBuy={this._clickBuyNow}/>
