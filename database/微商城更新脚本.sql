@@ -11,17 +11,17 @@ End
 
 If Not Exists(Select * From web_config where tag='restrictedDistance')
 Begin
-  insert into web_config (tag,value) values ('restrictedDistance','50'); --���ͷ�Χ
+  insert into web_config (tag,value) values ('restrictedDistance','50'); --配送范围
 End
 
 If Not Exists(Select * From web_config where tag='commentText')
 Begin
-  insert into web_config(tag,value) values('commentText','�����о�ϲŶ~~');--����������ʾ����
+  insert into web_config(tag,value) values('commentText','评论有惊喜哦');--评论赠送提示内容
 End
 
 If Not Exists(Select * From web_config where tag='startUp')
 Begin
-  insert into web_config (tag,value) values('startUp',0);--�Ƿ�����Ա��
+  insert into web_config (tag,value) values('startUp',0);--是否开启会员绑定
 End
 
 
@@ -87,6 +87,12 @@ else
 begin
   alter table web_binding_rewards add default(1) for amount
 end
+
+
+
+alter table web_products add  sort_value  int not null ;
+
+
 
 go
 
