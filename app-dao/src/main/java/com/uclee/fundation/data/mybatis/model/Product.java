@@ -24,6 +24,8 @@ public class Product {
 
     private Boolean isShow;
 
+    private Integer sortValue;
+
     public Boolean getShippingFree() {
         return isShippingFree;
     }
@@ -110,5 +112,13 @@ public class Product {
 
     public void setIsShow(Boolean isShow) {
         this.isShow = isShow;
+    }
+
+    public Integer getSortValue() {
+        return sortValue;
+    }
+
+    public void setSortValue(Integer sortValue) {
+        this.sortValue = sortValue;
     }
 }

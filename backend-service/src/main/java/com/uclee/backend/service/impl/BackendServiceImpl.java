@@ -996,6 +996,10 @@ public class BackendServiceImpl implements BackendServiceI {
 		ProductGroupLink linkTmp = new ProductGroupLink();
 		linkTmp.setGroupId(productGroupPost.getGroupId());
 		linkTmp.setProductId(productGroupPost.getProductId());
+		//新增时设定该产品的postion值 by chiangpan
+		int maxPosition=productGroupLinkMapper.getMaxPosition(productGroupPost.getGroupId());
+		maxPosition+=1;
+		linkTmp.setPosition(maxPosition);
 		productGroupLinkMapper.insertSelective(linkTmp);
 		return true;
 	}
@@ -1470,6 +1474,11 @@ public class BackendServiceImpl implements BackendServiceI {
 
 		return true;
 
+	}
+
+	@Override
+	public int updateProductGroupPosition(Integer groupId, Integer productId, Integer position) {
+		return productGroupLinkMapper.updateProductGroupPosition(groupId,productId,position);
 	}
 
 

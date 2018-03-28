@@ -70,6 +70,14 @@ pickEndTime datetime
 END
 
 
+
+If Not Exists(Select * From syscolumns where name='sort_value' And id=Object_id('web_products','U'))
+	Begin
+		alter table web_products add  sort_value  int not null ;
+	End
+
+
+
 go
 declare @def varchar(100),@SQL Nvarchar(100)
 if exists(select [name]
@@ -89,8 +97,6 @@ begin
 end
 
 
-
-alter table web_products add  sort_value  int not null ;
 
 
 

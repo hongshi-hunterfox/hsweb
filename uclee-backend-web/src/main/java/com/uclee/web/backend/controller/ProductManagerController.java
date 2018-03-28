@@ -182,4 +182,20 @@ public class ProductManagerController {
 		return ss;
 	}
 
+	@RequestMapping(value="sortProduct")
+	public @ResponseBody Boolean sortProduct(HttpSession session,Integer productId,Integer sortValue){
+		boolean flag=false;
+		ProductDto product = productMapper.getProductById(productId);
+		if(productId!=null){
+			product.setSortValue(sortValue);
+			productMapper.updateByPrimaryKeySelective(product);
+			flag=true;
+			return flag;
+		}else{
+			return flag;
+		}
+
+	}
+
+
 }

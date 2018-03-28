@@ -52,9 +52,9 @@ public interface BackendServiceI {
 
 	int updateStoreInfo(String description);
 
-	List<UserProfile> getUserListForBirth(String start,String end);
+	List<UserProfile> getUserListForBirth(String start, String end);
 
-	boolean sendBirthMsg(Integer userId,boolean sendVoucher);
+	boolean sendBirthMsg(Integer userId, boolean sendVoucher);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
@@ -136,5 +136,6 @@ public interface BackendServiceI {
 
 	boolean updateOrderSettingPick(OrderSettingPick orderSettingPick);
 
-
+    //add by chiangpan for sort
+	int updateProductGroupPosition(Integer groupId, Integer productId, Integer position);
 }

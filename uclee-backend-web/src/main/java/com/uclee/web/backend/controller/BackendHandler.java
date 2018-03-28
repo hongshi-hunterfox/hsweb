@@ -161,7 +161,10 @@ public class BackendHandler {
 		return backendService.updateOrderSettingPick(orderSettingPick);
 	}
 
-
+	@RequestMapping("/productGroupSortPosition")
+	public @ResponseBody int productGroupSortPosition(HttpServletRequest request,Integer groupId,Integer productId,Integer position){
+		return backendService.updateProductGroupPosition(groupId,productId,position);
+	}
 
 
 }

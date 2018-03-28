@@ -22,7 +22,7 @@ public interface ProductMapper {
 
 	List<ProductDto> selectOneImage(Integer productId);
 
-	List<ProductDto> getAllProduct(@Param("categoryId") Integer categoryId, @Param("isSaleDesc") Boolean isSaleDesc, @Param("isPriceDesc") Boolean isPriceDesc, @Param("keyword") String keyword, @Param("naviId")Integer naviId);
+	List<ProductDto> getAllProduct(@Param("categoryId") Integer categoryId, @Param("isSaleDesc") Boolean isSaleDesc, @Param("isPriceDesc") Boolean isPriceDesc, @Param("keyword") String keyword, @Param("naviId") Integer naviId);
 
     List<ProductDto> selectQuickNaviProduct(Integer naviId);
 
@@ -31,4 +31,7 @@ public interface ProductMapper {
     Product selectByTitle(String title);
     
     Product selectByExplain(String explain);
+
+    int getMaxSortValue();
+
 }

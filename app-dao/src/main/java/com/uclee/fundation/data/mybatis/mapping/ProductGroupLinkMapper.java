@@ -15,9 +15,14 @@ public interface ProductGroupLinkMapper {
 
 	List<ProductGroupLink> selectAll();
 
-	int del(@Param("groupId")Integer groupId, @Param("productId")Integer productId);
+	int del(@Param("groupId") Integer groupId, @Param("productId") Integer productId);
 
-	ProductGroupLink selectByGroupIdAndProductId(@Param("groupId")Integer preGroupId, @Param("productId")Integer preProductId);
+	ProductGroupLink selectByGroupIdAndProductId(@Param("groupId") Integer preGroupId, @Param("productId") Integer preProductId);
 
 	List<ProductGroupLink> selectByTag(String tag);
+
+	//新增时获得排序值的最大值
+	int getMaxPosition(Integer groupId);
+
+	int updateProductGroupPosition(@Param("groupId") Integer groupId, @Param("productId") Integer productId, @Param("position") Integer position);
 }
