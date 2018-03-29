@@ -86,7 +86,8 @@ public class HongShiVipController {
 
 		//以下就是邓彪要求的值
 		String preFixStr=String.valueOf(dayChar[0]).concat(String.valueOf(hourChar[0]));//11
-		String endFixStr=String.valueOf(dayChar[1]).concat(String.valueOf(hourChar[1]));//45
+		String barcodeEndFixStr=String.valueOf(dayChar[1])+"+"+String.valueOf(hourChar[1]);//条形码是4+5
+		String vipEndFixStr=String.valueOf(dayChar[1]).concat(String.valueOf(hourChar[1]));//二维码是45
 
 		if(userId!=null){
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
@@ -96,11 +97,11 @@ public class HongShiVipController {
 				if(ret!=null&&ret.size()>0){
 					if(userProfile!=null){
 
-							ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(endFixStr),userId));
+						    ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
 
 						try{
 
-							ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(endFixStr),userId));
+							ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
 
 						}catch (Exception e){
 							e.printStackTrace();
