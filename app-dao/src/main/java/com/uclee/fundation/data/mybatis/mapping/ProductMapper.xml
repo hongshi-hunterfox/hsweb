@@ -97,26 +97,24 @@
 
     order by
     <if test="isPriceDesc != null and isPriceDesc == 1 " >
-      A.price asc
+      A.price asc,
     </if>
     <if test="isPriceDesc != null and isPriceDesc == 0 " >
-      A.price desc
+      A.price desc,
     </if>
     <if test="isPriceDesc != null and isSaleDesc != null and isSaleDesc == 1 " >
-      ,C.count asc
+      C.count asc,
     </if>
     <if test="isPriceDesc != null and isSaleDesc != null and isSaleDesc == 0 " >
-      ,C.count desc
+      C.count desc,
     </if>
     <if test="isPriceDesc == null and isSaleDesc != null and isSaleDesc == 1 " >
-      C.count asc
+      C.count asc,
     </if>
     <if test="isPriceDesc == null and isSaleDesc != null and isSaleDesc == 0 " >
-      C.count desc
+      C.count desc,
     </if>
-    <if test="isPriceDesc ==null and isSaleDesc ==null  and  categoryId==null and naviId==null and keyword==null">
-      A.sort_value ASC
-    </if>
+    A.sort_value ASC
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_products
