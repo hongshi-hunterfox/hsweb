@@ -29,8 +29,7 @@
 		<result column="BonusPoints" property="bonusPoints" jdbcType="INTEGER" />
 		<result column="Integral" property="integral" jdbcType="INTEGER" />
 	</resultMap>
-	<resultMap id="HongShiVipInfo"
-		type="com.uclee.fundation.data.mybatis.model.HongShiVip">
+	<resultMap id="HongShiVipInfo" type="com.uclee.fundation.data.mybatis.model.HongShiVip">
 		<result column="电话" property="cMobileNumber" jdbcType="VARCHAR" />
 		<result column="名称" property="cName" jdbcType="VARCHAR" />
 		<result column="生日" property="cBirthday" jdbcType="VARCHAR" />
@@ -41,6 +40,13 @@
 	<resultMap id="AddVipResult" type="com.uclee.fundation.data.mybatis.model.AddVipResult">
 		<result column="ret" property="msg" jdbcType="VARCHAR" />
 		<result column="retcode" property="retcode" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="Lnsurance" type="com.uclee.fundation.data.mybatis.model.Lnsurance">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="vip_id" property="vipId" jdbcType="INTEGER" />
+		<result column="oauth_id" property="oauthId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode
@@ -64,5 +70,14 @@
 	</select>
     <select id="changeVip" parameterType="java.lang.Integer" statementType="CALLABLE" >
     	CALL ChangeVipLinks(#{cVipLk})
+    </select>
+     <select id="selectVip" resultMap="HongShiVip">
+    	select 电话,名称,生日,是否农历,编号,卡余额  from 会员  where 电话=#{cMobileNumber,jdbcType=VARCHAR}
+    </select>
+    <select id="selectUsers" resultMap="Lnsurance">
+    	select id,vip_id,oauth_id,create_time,phone from web_user_list where phone=#{phone,jdbcType=VARCHAR}
+    </select>
+    <select id="getUsers" resultMap="Lnsurance">
+    	select id,vip_id,oauth_id,create_time,phone from web_user_list where oauth_id=#{oauthId,jdbcType=VARCHAR}
     </select>
 </mapper>

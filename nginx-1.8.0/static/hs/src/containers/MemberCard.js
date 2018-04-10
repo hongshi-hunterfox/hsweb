@@ -37,7 +37,8 @@ class MemberCard extends React.Component {
       balance: null,
       cVipCode: null,
       image: '',
-      nickName: '',
+      cMobileNumber: '',
+      phones: '',
       config:{},
       vipImage:'',
       allowRecharge:true,
@@ -49,11 +50,13 @@ class MemberCard extends React.Component {
   componentDidMount() {
     req
       .get('/uclee-user-web/getUserInfo/')
+      .query({
+        t: new Date().getTime()
+      })
       .end((err, res) => {
-        this.setState({
-          image: res.body.image,
-          nickName: res.body.nickName
-        })
+ 		if (res.text) {
+          this.setState(res.body)
+        }
       })
     
     req.get('/uclee-backend-web/config').end((err, res) => {
@@ -121,6 +124,7 @@ class MemberCard extends React.Component {
           <div className="member-card-list">
             <div className="member-card-item">
               <div className="member-card-item-code">电子会员卡:
+              {this.state.config.unbundling==0 ?
               <span onClick={() => { 
               	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
           	    if(!conf){
@@ -139,7 +143,7 @@ class MemberCard extends React.Component {
 		  	  }}
               className="member-card-item-Unbundling">
                 <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout"><font color="white">解除绑定</font></a></button>
-		  	  </span>    
+		  	  </span>   : null} 
               </div>
               {
                 this.state.vipJbarcode&&this.state.vipJbarcode!==''?

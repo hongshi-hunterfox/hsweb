@@ -43,6 +43,15 @@ public class ConfigPost {
 	private String restrictedDistance;
 	private String startUp;
 	private String full;
+	private String unbundling;
+
+	public String getUnbundling() {
+		return unbundling;
+	}
+
+	public void setUnbundling(String unbundling) {
+		this.unbundling = unbundling;
+	}
 
 	public String getFull() {
 		return full;

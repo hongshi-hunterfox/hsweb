@@ -4,6 +4,7 @@ import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
 import com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord;
 import com.uclee.fundation.data.mybatis.model.HongShiVip;
+import com.uclee.fundation.data.mybatis.model.Lnsurance;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface HongShiVipServiceI {
 	Integer hongShiRecharge(HongShiRecharge params);
 	
 	Integer changeVip(Integer cVipLk);
+	
+	List<Lnsurance> selectUsers(String phone);
 }

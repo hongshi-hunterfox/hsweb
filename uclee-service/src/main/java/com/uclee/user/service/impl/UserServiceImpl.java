@@ -151,6 +151,8 @@ public class UserServiceImpl implements UserServiceI {
 	private HongShiMapper hongShiMapper;
 	
 	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
+	@Autowired
 	private HongShiVipServiceI hongShiVipService;
 	@Autowired
 	private PaymentMapper paymentMapper;
@@ -3938,6 +3940,17 @@ public class UserServiceImpl implements UserServiceI {
 			logger.error("数据解析错误");
 		}
 		return new HashMap<>();
+	}
+
+	@Override
+	public List<HongShiVip> selectVip(String cMobileNumber) {
+		// TODO Auto-generated method stub
+		return hongShiVipMapper.selectVip(cMobileNumber);
+	}
+
+	@Override
+	public List<Lnsurance> getUsers(String oauthId) {
+		return hongShiVipMapper.getUsers(oauthId);
 	}
 
 

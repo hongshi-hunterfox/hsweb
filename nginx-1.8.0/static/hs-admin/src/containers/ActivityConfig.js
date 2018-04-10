@@ -132,6 +132,13 @@ class ActivityConfig extends React.Component {
                   <option value="3">停用会员绑定</option>
                 </select>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用会员解绑：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="unbundling" value={this.state.config.unbundling?this.state.config.unbundling:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">启用</option>
+                  <option value="1">停用</option>
+                </select>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <textarea rows="3" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>

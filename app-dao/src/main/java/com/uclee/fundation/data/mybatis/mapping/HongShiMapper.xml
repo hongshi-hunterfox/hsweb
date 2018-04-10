@@ -141,7 +141,7 @@
 	    select id,parent,name,caption,comment,orders,types,enabled,command from mobile_object where [types] like 'web:%'
 	</select>
 	<select id="getmobJect" parameterType="java.util.Map" resultType="java.util.Map">
- 		<![CDATA[exec QueryFormMObject #{QueryName,jdbcType=VARCHAR},#{hsCode,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER}]]>
+ 		exec QueryFormMObject #{QueryName,jdbcType=VARCHAR},#{hsCode,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER}
     </select>
    
 </mapper>

@@ -43,5 +43,5 @@ public interface WebConfig {
 	String restrictedDistance = "restrictedDistance";
 	String startUp = "startUp";
 	String full = "full";
-
+	String unbundling = "unbundling";
 }                      

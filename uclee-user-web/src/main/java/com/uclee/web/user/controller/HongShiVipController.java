@@ -32,12 +32,13 @@ import java.util.*;
 /**
  * @author Administrator
  * 洪石会员相关接口
+ * @param <phone>
  *
  */
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/uclee-user-web/")
-public class HongShiVipController {
+public class HongShiVipController<phone> {
 	@Autowired
 	private UserServiceI userService;
 
@@ -189,6 +190,38 @@ public class HongShiVipController {
 		}
 		if(userId!=null){
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
+
+			
+			
+			//判断是否注册过会员	
+			List<Lnsurance> lnsurance = hongShiVipService.selectUsers(vip.getcMobileNumber());
+			logger.info("size----="+lnsurance.size());
+			
+			//如果list不为null长度大于0就说明该会员已有绑定记录
+			if(lnsurance!=null&&lnsurance.size()>0){
+				logger.info("ssss-----="+lnsurance.get(0).getPhone());
+				System.out.println("该外键有绑定会员卡记录");
+				if(tt!=null){
+					vip.setcWeiXinCode(tt.getOauthId());
+					try{
+						AddVipResult res=hongShiVipService.addHongShiVipInfo(vip);
+						logger.info("addVipInfo res:"+JSON.toJSONString(res));
+						if(res!=null&&res.getRetcode()!=0){
+							ret.put("reason", res.getMsg());
+							ret.put("result", "fail");
+							return ret;
+						}
+					}catch (Exception e){
+						ret.put("reason", "网络繁忙，请稍后重试");
+						ret.put("result", "fail");
+						e.printStackTrace();
+						return ret;
+					}	
+					ret.put("result", "success");
+					return ret;
+				}
+			}
+			
 			if(tt!=null){
 				vip.setcWeiXinCode(tt.getOauthId());
 				try{
@@ -204,10 +237,10 @@ public class HongShiVipController {
 					ret.put("result", "fail");
 					e.printStackTrace();
 					return ret;
-				}
-				ret.put("result", "success");
+				}	
 				try{
 					//赠送积分处理
+					logger.info("user_id-----="+userId);
 					UserProfile userProfile = userService.getBasicUserProfile(userId);
 					if(userProfile!=null){
 						userProfile.setRegistTime(new Date());
@@ -234,6 +267,8 @@ public class HongShiVipController {
 
 					e.printStackTrace();
 				}
+				ret.put("result", "success");
+				return ret;
 			}
 		}
 		logger.info("rec:"+JSON.toJSONString(vip));

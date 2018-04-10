@@ -1,57 +1,54 @@
 @import '../public.less';
 .show-btn{
-    background: url(/images/coupon/bg-ShowCoupon2.png) no-repeat;
-    padding: 2px;
-    &-items{
-    background-color: #FFC125;
-    color: white;
-    padding: 15px;
-    font-size: 24px;
-    text-align: center;
-    width: 80%;
-    margin: 20px auto;
-    border-radius: 40px;
-    border: 3px solid #C0392B;
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
-    }
+  background-color: #EE6363;
+  background-size: 100% 100%;
+  margin: 5px auto; 
+  &-items{
+  background-color: #FFD700;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+  margin: 20px auto;
+  border-radius: 25px;
+  border: 1px solid #F39C12;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+  clear: both;  
+  display: block;  
+  text-align: center;   
+  bottom: 15px;  
+  width: 100%;
+  position: fixed;
+}
 }
 .show-coupon{
-    background: url(/images/coupon/bg-ShowCoupon.png) no-repeat;
+    background-color: #EE6363;
     background-size: 100% 100%;
-    padding-bottom: 0px;
-    &-upper{
-        text-align: center;
-        color: #ffffff;
-        font-size: 30px; 
+    border-radius: 5px;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
+    &-up{
+       text-align: center;
+       font-size: 18px; 
     }
     &-vipcode{
         text-align: center;
-        color: #ffffff;
-        font-size: 15px; 
+        font-size: 16px; 
     }
-    &-items{
-        background-color: #FFC125;
-        color: white;
-        padding: 15px;
-        font-size: 24px;
-        text-align: center;
-        width: 80%;
-        margin: 20px auto;
-        border-radius: 40px;
-        border: 3px solid #C0392B;
-        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
-    }
-    &-roll{
-          margin-bottom: 5px;
-          overflow-y: scroll;
-          overflow-x: scroll;
-          width: 350px;
-          height: 400px;
+    &-foll{
+        margin-bottom: 5px;
+        overflow-y: scroll;
+        overflow-x: scroll;
+        width: 90px;
+        height: 75px;
     }
     &-item{
+        text-align: center;
         margin: 10px;
         background: url(/images/coupon/show-coupon.png) no-repeat;
         background-size: 100% 100%;
+        border-radius: 5px;
+        border: 1px solid #e5e5e5;
+        box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5);
         .clearfix();
         .top-line{
             .clearfix();
@@ -85,19 +82,6 @@
             padding: 5px;
             color: #0cd60c;
             font-size: 15px;
-        }
-    }
-    &-bottom{
-        position: fixed;
-        background-color: white;
-        left: 0;
-        right: 0;
-        width: 100%;
-        bottom: 55px;
-        border-top: 1px solid #ddd;
-        &-button{
-        float: center;
-        padding: 10px 20px;
         }
     }
 }

@@ -34,6 +34,7 @@ class Product extends React.Component {
       categoryId: '',
       images: [],
       sale:0,
+      
     }
 
     this.hongShiProductById = {}
@@ -56,6 +57,7 @@ class Product extends React.Component {
     var end = this.state.currentSpec.endTimeStr
     var date1 = new Date(begin).getTime()
     var date2 = new Date(end).getTime()
+    var moren = '格式：1997-01-16 00:00:00'
     return (
       <DocumentTitle title={id ? '编辑产品' : '新增产品'}>
         <div className="product">
@@ -346,13 +348,13 @@ class Product extends React.Component {
                                         <span className="input-group-addon">
                                           促销开始：
                                         </span>
-                                        <input type='text' className="form-control" placeholder="格式1997-01-16 00:00:00" value={item.startTimeStr} onChange={this._changeStartTime.bind(this,item)}/>
+                                        <input type='text' className="form-control" placeholder="格式1997-01-16 00:00:00" value={item.startTimeStr==null ? moren : item.startTimeStr} onChange={this._changeStartTime.bind(this,item)}/>
                                       </div>
                                         <div className="input-group input-group-sm">
                                         <span className="input-group-addon">
                                           促销结束：
                                         </span>
-                                        <input type='text' className="form-control"  placeholder="格式1997-01-16 00:00:00"value={item.endTimeStr} onChange={this._changeEndTime.bind(this,item)}/>
+                                        <input type='text' className="form-control"  placeholder="格式1997-01-16 00:00:00"value={item.endTimeStr==null ? moren : item.endTimeStr} onChange={this._changeEndTime.bind(this,item)}/>
                                       </div>
                                     </div>
                                   : null}
@@ -756,13 +758,7 @@ class Product extends React.Component {
       return this.setState({
         err: '请填写产品名称'
       })
-    }
-     if (!data.explain) {
-      return this.setState({
-        err: '请填写分享描述'
-      })
-    }
-    
+    }    
     if (Number(data.sale)<0) {
       return this.setState({
         err: '销量不可以为负数'
@@ -817,13 +813,47 @@ class Product extends React.Component {
       })
     }
     
+  var foundWrongCuxiaoJia = false
     data.valuePost.every(item => {
-    if (item.startTime>item.endTime) {
+      if (!item.promotionPrice) {
+        foundWrongCuxiaoJia = true
+        return false
+      }
+      return true
+    })
+    if (foundWrongCuxiaoJia) {
       return this.setState({
-        err: '起始时间不能大于结束时间'
+        err: '促销价不能为空'
       })
     }
+    
+    var foundWrongStartTime = false
+    data.valuePost.every(item => {
+      if (!item.startTimeStr) {
+        foundWrongStartTime = true
+        return false
+      }
+      return true
     })
+    if (foundWrongStartTime) {
+      return this.setState({
+        err: '开始时间不能为空'
+      })
+    }
+    
+    var foundWrongEndTime = false
+    data.valuePost.every(item => {
+      if (!item.endTimeStr) {
+        foundWrongEndTime = true
+        return false
+      }
+      return true
+    })
+    if (foundWrongEndTime) {
+      return this.setState({
+        err: '结束时间不能为空'
+      })
+    }
 
     var foundWrongPrice = false
     data.valuePost.every(item => {

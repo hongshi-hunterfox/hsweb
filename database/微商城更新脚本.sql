@@ -24,7 +24,27 @@ Begin
   insert into web_config (tag,value) values('startUp',0);--是否开启会员绑定
 End
 
+If Not Exists(Select * From web_config where tag='full')
+Begin
+  insert into web_config (tag,value) values('full',0);
+End
+If Not Exists(Select * From web_config where tag='unbundling')
+Begin
+  insert into web_config (tag,value) values('unbundling',0);
+End
+ 
 
+
+If Object_id('web_user_list','U') Is Null
+Begin
+	CREATE TABLE web_user_list(
+	id int identity(1,1) primary key,
+	vip_id int,
+	oauth_id varchar(255),
+	create_time datetime,
+	phone varchar(25)
+)
+End
 
 If Object_id('web_evaluation_config','U') Is Null
 Begin
@@ -46,6 +66,25 @@ CREATE TABLE web_payment_callback_data (
   payment_serial_num varchar(255) NOT NULL,
   create_time DATETIME DEFAULT(GETDATE())
 ) ;
+End
+
+
+If Not Exists(Select * From syscolumns where name='promotion_price' And id=Object_id('web_specification_values','U'))
+Begin
+  alter table web_specification_values add promotion_price decimal(20, 2);
+  update web_specification_values set promotion_price=0;
+End
+
+If Not Exists(Select * From syscolumns where name='start_time' And id=Object_id('web_specification_values','U'))
+Begin
+ alter table web_specification_values add start_time datetime;
+ update web_specification_values set start_time='1997-01-16 00:00:00';
+End
+
+If Not Exists(Select * From syscolumns where name='end_time' And id=Object_id('web_specification_values','U'))
+Begin
+ alter table web_specification_values add end_time datetime;
+ update web_specification_values set end_time='1997-01-16 00:00:00';
 End
 
 

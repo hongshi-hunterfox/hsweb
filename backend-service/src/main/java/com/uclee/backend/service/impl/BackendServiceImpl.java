@@ -347,6 +347,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getFull()!=null) {
 			configMapper.updateByTag(WebConfig.full, configPost.getFull());
 		}
+		if (configPost.getUnbundling()!=null) {
+			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
+		}
 		return true;
 	}
 	@Override
@@ -472,6 +475,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getFull()!=null) {
 			configMapper.updateByTag(WebConfig.full, configPost.getFull());
+		}
+		if (configPost.getUnbundling()!=null) {
+			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
 		}
 		return true;
 	}
@@ -922,6 +928,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setStartUp(config.getValue());
 			}else if(config.getTag().equals(WebConfig.full)){
 				configPost.setFull(config.getValue());
+			}else if(config.getTag().equals(WebConfig.unbundling)){
+				configPost.setUnbundling(config.getValue());
 			}
 		}
 		return configPost;

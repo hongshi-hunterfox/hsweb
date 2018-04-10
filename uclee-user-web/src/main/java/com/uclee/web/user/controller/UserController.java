@@ -368,7 +368,23 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
+		List<HongShiCoupon> coupons = userService.selectCouponById(userId);		
+		if(userId!=null){
+			logger.info("cccc0---="+userId);		
+			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);			
+			logger.info("cccc1---="+tt.getOauthId());
+			List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
+			if(lnsurance!=null){
+			List<Lnsurance> lnsurances = hongShiVipService.selectUsers(lnsurance.get(0).getPhone());
+			if(lnsurances!=null&&lnsurances.size()>1){
+				logger.info("cccc2---="+lnsurances.size());
+
+				System.out.println("此会员以赠送过，不再显示！");
+				return map;
+			}
+			}
+			
+			}
 		map.put("coupons", coupons);
 		return map;
 	}
@@ -413,6 +429,26 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		
+
+		if(userId!=null){
+			logger.info("cccc0---="+userId);
+			//根据会员表有没有此手机号来决定跳转
+			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
+			logger.info("cccc1---="+tt.getOauthId());
+					List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
+					if(lnsurance!=null&&lnsurance.size()>0){
+						logger.info("cccc2---="+lnsurance.get(0).getPhone());
+						List<HongShiVip> Vip = userService.selectVip(lnsurance.get(0).getPhone());
+						if(Vip!=null&&Vip.size()>0){
+							map.put("result",false);
+							return map;
+						}
+					}
+				
+				}
+
+		
 		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 		if(bindingRewards!=null&&bindingRewards.size()>=1){
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());

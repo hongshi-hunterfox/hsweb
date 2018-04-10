@@ -281,4 +281,8 @@ public interface UserServiceI {
 	List<PaymentOrder> selectForTimer();
 
 	Map<String,String> wxInitiativeCheck(PaymentOrder paymentOrder);
+	
+	List<HongShiVip> selectVip(String cMobileNumber);
+	
+	List<Lnsurance> getUsers(String oauthId);
 }

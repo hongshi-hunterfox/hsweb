@@ -5,6 +5,7 @@ import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
 import com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord;
 import com.uclee.fundation.data.mybatis.model.HongShiVip;
+import com.uclee.fundation.data.mybatis.model.Lnsurance;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,11 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	@Override
 	public Integer changeVip(Integer cVipLk) {
 		return hongShiVipMapper.changeVip(cVipLk);
+	}
+
+	@Override
+	public List<Lnsurance> selectUsers(String phone) {
+		return hongShiVipMapper.selectUsers(phone);
 	}
 
 }
