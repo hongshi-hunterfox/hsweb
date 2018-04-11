@@ -2846,6 +2846,7 @@ public class UserServiceImpl implements UserServiceI {
 			profile.setVipImage(vipImage);
 			userProfileMapper.updateByPrimaryKeySelective(profile);
 		}
+		file.delete();
 		return vipImage;
 	}
 	@Override
