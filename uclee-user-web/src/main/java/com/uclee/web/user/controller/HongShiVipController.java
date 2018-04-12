@@ -96,17 +96,22 @@ public class HongShiVipController {
 				
 				if(ret!=null&&ret.size()>0){
 					if(userProfile!=null){
-
-						    ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
-
-						try{
-
-							ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
-
-						}catch (Exception e){
-							e.printStackTrace();
-						}
-
+							Integer a = hongShiVipService.getCodeSwitching();
+							if(a!=0){
+									ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
+									try{
+										ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
+									}catch (Exception e){
+										e.printStackTrace();
+									}
+							}else{
+									ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
+									try{
+										ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+									}catch (Exception e){
+										e.printStackTrace();
+									}
+							}
 						ret.get(0).setAllowRecharge(true);
 						ret.get(0).setAllowPayment(true);
 						if(ret.get(0).getState()==0){

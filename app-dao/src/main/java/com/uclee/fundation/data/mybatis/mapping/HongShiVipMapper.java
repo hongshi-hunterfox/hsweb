@@ -17,5 +17,7 @@ public interface HongShiVipMapper {
 	int hongShiRecharge(HongShiRecharge params);
 
 	Integer changeVip(Integer cVipLk);
+
+	Integer getCodeSwitching();
 	
 }

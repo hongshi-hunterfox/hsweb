@@ -42,4 +42,10 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 		return hongShiVipMapper.changeVip(cVipLk);
 	}
 
+	@Override
+	public Integer getCodeSwitching() {
+		// TODO Auto-generated method stub
+		return hongShiVipMapper.getCodeSwitching();
+	}
+
 }

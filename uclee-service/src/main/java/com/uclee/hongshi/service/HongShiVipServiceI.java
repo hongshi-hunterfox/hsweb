@@ -17,4 +17,6 @@ public interface HongShiVipServiceI {
 	Integer hongShiRecharge(HongShiRecharge params);
 	
 	Integer changeVip(Integer cVipLk);
+
+	Integer getCodeSwitching();
 }

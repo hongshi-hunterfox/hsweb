@@ -65,4 +65,9 @@
     <select id="changeVip" parameterType="java.lang.Integer" statementType="CALLABLE" >
     	CALL ChangeVipLinks(#{cVipLk})
     </select>
+
+	<select id="getCodeSwitching" resultType="Integer"
+			statementType="CALLABLE">
+		CALL Get_WordVal (会员扫码定时变)
+	</select>
 </mapper>
