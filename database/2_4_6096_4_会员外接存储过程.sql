@@ -2766,6 +2766,33 @@ Begin
   Select @Return As retcode, @msg As Msg
 End
 Go
+
+--
+Function Get_WordVal
+获取字典表数据
+
+
+ If Object_id('[Get_WordVal]','P') Is Not Null 
+  
+ Drop Procedure Get_WordVal
+Go
+Create procedure Get_WordVal(@bookname varchar(50))
+as
+begin
+  declare @Value Varchar(1), 
+ @WordVal Varchar(1)
+  if Exists (select wordval from 字典 where bookname=@bookname )
+  begin
+    
+ select @WordVal = wordval from 字典 where bookname=@bookname
+    
+ set @Value = @WordVal
+  end
+  else
+    set @Value = '0'
+  select @Value
+end
+go
 --------------------------------------------------------------------------------
 --检查分销树以确认两个会员可以建立分销父子关系
 --返回集0则可以建立分销关系
@@ -3332,4 +3359,8 @@ Go
 2018-01-24
   存储过程【[WSC_GetOrdersList]】【GetOrdersList】【WSC_CreateOrder】【CreateOrder】
   在插入订单时插入会员外键到orders表的“客户编号”，获取订单时可通过查询orders表的“客户编号”
+
+2018-11-02
+  新增存储过程Get_WordVal
+获取字典表数据
 */
