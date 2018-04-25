@@ -1967,6 +1967,8 @@ public class UserServiceImpl implements UserServiceI {
 				productDto.setCurrentSpecValudId(null);
 			}
 		}
+		List<ProductParameters> parameters = productMapper.getParameters(productId);
+		productDto.setParameters(parameters);
 		ProductSale sale = productSaleMapper.selectByProductId(productDto.getProductId());
 		if(sale!=null){
 			productDto.setSalesAmount(sale.getCount());
@@ -2050,6 +2052,12 @@ public class UserServiceImpl implements UserServiceI {
 				cart.setTitle(products.get(0).getTitle());
 				cart.setImage(products.get(0).getImage());
 			}
+	
+			List<ProductParameters> csshuxing = productMapper.obtainParameters(cart.getCanshuValueId());
+			if(csshuxing!=null&&csshuxing.size()>0){
+				cart.setCsshuxing(csshuxing.get(0).getSname());
+			}
+			
 			SpecificationValue specificationValue = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
 			if(specificationValue!=null){
 				cart.setStock(specificationValue.getHsStock());
@@ -2276,7 +2284,19 @@ public class UserServiceImpl implements UserServiceI {
 		}else{
 			order.setPhone(orderPost.getPhone());
 		}
-		order.setRemark(orderPost.getRemark());
+
+		String[] cartIdss = orderPost.getCartIds().split(",");
+		for(String cartId : cartIdss){
+			Cart cart = cartMapper.selectByUserIdAndCartId(userId,Integer.valueOf(cartId));
+			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
+			List<ProductParameters> csshuxing = productMapper.obtainParameters(cart.getCanshuValueId());
+			if(csshuxing!=null&&csshuxing.size()>0){
+				logger.info("aaaaaaaa+sname====="+csshuxing.get(0).getSname());
+				order.setRemark("款式："+value.getValue()+"("+csshuxing.get(0).getSname()+")"+"["+orderPost.getRemark()+"]");
+			}			
+		}
+	
+//		order.setRemark(orderPost.getRemark());
 		order.setPickTimeStr(orderPost.getPickDateStr() + " " + orderPost.getPickTimeStr()+":00");
 		logger.info(order.getPickTimeStr());
 		order.setPickTime(DateUtils.parse(order.getPickTimeStr(), DateUtils.FORMAT_LONG));
@@ -2604,7 +2624,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public List<CartDto> selectCartByIds(Integer userId,List<CartDto> cart) {
 		List<CartDto> result = new ArrayList<CartDto>();
-		for(CartDto item:cart){
+		for(CartDto item:cart){			
 			CartDto tmp = cartMapper.selectByUserIdAndCartId(userId, item.getCartId());
 			if(tmp!=null){
 				String specifcationStr = "款式：";
@@ -2617,6 +2637,10 @@ public class UserServiceImpl implements UserServiceI {
 					tmp.setStartTime(specificationValue.getStartTime());
 					tmp.setEndTime(specificationValue.getEndTime());
 					tmp.setSpecification(specifcationStr);
+				}				
+				List<ProductParameters> csshuxing = productMapper.obtainParameters(item.getCanshuValueId());
+				if(csshuxing!=null&&csshuxing.size()>0){
+					tmp.setCsshuxing(csshuxing.get(0).getSname());
 				}
 				List<ProductDto> products  = productMapper.selectOneImage(tmp.getProductId());
 				if(products.size()>0){
@@ -2874,6 +2898,7 @@ public class UserServiceImpl implements UserServiceI {
 			profile.setVipImage(vipImage);
 			userProfileMapper.updateByPrimaryKeySelective(profile);
 		}
+		file.delete();
 		return vipImage;
 	}
 	@Override
@@ -3543,12 +3568,9 @@ public class UserServiceImpl implements UserServiceI {
 	public  Map<String, Object> getMobJect(String QueryName,String phone,String hsCode){
 		HashMap<String,Object> ret = new HashMap<String, Object>();
 		Integer userId = null;
-		//
+
 		ret.put("result", false);
-//		if(phone==null&&hsCode==null){
-//			ret.put("reason", "param_error");
-//			return ret;
-//		}
+
 		
 		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
 		if(napaStores!=null&&napaStores.size()>0){
@@ -3557,7 +3579,6 @@ public class UserServiceImpl implements UserServiceI {
 			ret.put("reason", "no_department");
 			return ret;
 		}
-		//
 		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName,hsCode,userId);
 		ret.put("info",QueryName);
 		ret.put("itema", itema);
@@ -3856,19 +3877,16 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public Map<String, Object> getMobile(String phone, String hsCode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Map<String, Object> selectMobile(String phone, String hsCode) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Map<String, Object> getVersion(String version) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -3944,13 +3962,17 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public List<HongShiVip> selectVip(String cMobileNumber) {
-		// TODO Auto-generated method stub
 		return hongShiVipMapper.selectVip(cMobileNumber);
 	}
 
 	@Override
 	public List<Lnsurance> getUsers(String oauthId) {
 		return hongShiVipMapper.getUsers(oauthId);
+	}
+
+	@Override
+	public List<ProductParameters> obtainParameters(Integer id) {
+		return productMapper.obtainParameters(id);
 	}
 
 

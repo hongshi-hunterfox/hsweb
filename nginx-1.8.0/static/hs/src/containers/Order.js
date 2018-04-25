@@ -759,7 +759,7 @@ class OrderItem extends React.Component {
           <img className="image" src={item.image} alt="" />
           <div className="title">{item.title}</div>
           <div className="sku-info">
-            <span className="sku">{item.specification}</span>
+            <span className="sku">{item.specification}({item.csshuxing})</span>
             <span className="count pull-right">{((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?"单价：￥"+item.money:"促销单价：￥"+item.promotion}</span>  
           </div>
           <div className="other">

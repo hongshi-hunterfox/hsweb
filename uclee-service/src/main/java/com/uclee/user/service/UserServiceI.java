@@ -285,4 +285,6 @@ public interface UserServiceI {
 	List<HongShiVip> selectVip(String cMobileNumber);
 	
 	List<Lnsurance> getUsers(String oauthId);
+	
+	List<ProductParameters> obtainParameters(Integer id);
 }

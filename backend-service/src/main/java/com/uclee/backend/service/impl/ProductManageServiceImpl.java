@@ -21,6 +21,7 @@ import com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMappe
 import com.uclee.fundation.data.mybatis.model.ProductCategoryLink;
 import com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey;
 import com.uclee.fundation.data.mybatis.model.ProductImageLink;
+import com.uclee.fundation.data.mybatis.model.ProductParameters;
 import com.uclee.fundation.data.mybatis.model.ProductSale;
 import com.uclee.fundation.data.mybatis.model.ProductsSpecificationsValuesLink;
 import com.uclee.fundation.data.mybatis.model.SpecificationValue;
@@ -76,6 +77,11 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			sale.setCount(0);
 			sale.setProductId(product.getProductId());
 			productSaleMapper.insertSelective(sale);
+			}
+			List<ProductParameters> itema = productMapper.selectParameters(product.getProductId());
+			if(itema==null){
+			ProductParameters parameters = new ProductParameters();
+			productMapper.insertParameters(parameters);
 			}
 			logger.info("productId:" + product.getProductId());
 			// 插入
@@ -288,21 +294,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		return url;
 	}
 
-	/*@Override
-	public boolean updateProduct(ProductForm productForm) {
-		descriptionHandler(productForm);
-		if(productMapper.updateByPrimaryKeySelective(productForm)>0){
-			logger.info("productId:" + productForm.getProductId());
-			// category link
-			updateCategoryHandler(productForm);
-			
-			//image 
-			updateImageHandler(productForm);
-			
-			return true;
-		}
-		return false;
-	}*/
+
 	@Override
 	public boolean updateProduct(ProductForm product) {	
 		//description 
@@ -321,6 +313,60 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 					productSaleMapper.insertSelective(tmp);
 				}
 			}
+
+			List<ProductParameters> parameters  = productMapper.selectParameters(product.getProductId());		
+			if(parameters!=null){
+				//更新同一产品下的不同参数属性名称
+				ProductParameters iems=new  ProductParameters();
+				iems.setProductId(product.getProductId());
+				
+				iems.setId(parameters.get(0).getId());
+				iems.setSname(product.getAttribute1());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(1).getId());
+				iems.setSname(product.getAttribute2());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(2).getId());
+				iems.setSname(product.getAttribute3());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(3).getId());
+				iems.setSname(product.getAttribute4());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(4).getId());
+				iems.setSname(product.getAttribute5());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(5).getId());
+				iems.setSname(product.getAttribute6());
+				productMapper.updateParameters(iems);
+				
+			}else{
+				ProductParameters itema = new ProductParameters();
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute1());
+					productMapper.insertParameters(itema);	
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute2());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute3());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute4());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute5());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute6());
+					productMapper.insertParameters(itema);
+			}
+
+			
 			logger.info("productId:" + product.getProductId());
 			// 插入
 			updateCategoryHandler(product);

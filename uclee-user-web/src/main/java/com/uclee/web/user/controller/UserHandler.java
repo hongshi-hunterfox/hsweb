@@ -252,8 +252,14 @@ public class UserHandler {
 		HttpSession session = request.getSession();
 		map.put("result", false);
 		if(cart.getAmount()==null||cart.getProductId()==null||cart.getSpecificationValueId()==null){
-			map.put("reason", "参数错误");
+			map.put("reason", "请选择规格");
 			return map;
+		}
+		if(cart.getParamete()!=null){
+		if(cart.getCanshuValueId()==null){
+			map.put("reason", "请选择"+cart.getParamete());
+			return map;
+		}
 		}
 		Product product = userService.getProductById(cart.getProductId());
 		if(product==null||!product.getIsActive()){

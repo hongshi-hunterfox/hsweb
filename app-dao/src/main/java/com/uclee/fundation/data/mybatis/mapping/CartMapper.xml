@@ -8,6 +8,8 @@
     <result column="specification_value_id" property="specificationValueId" jdbcType="INTEGER" />
     <result column="amount" property="amount" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="paramete" property="paramete" jdbcType="VARCHAR" />
+    <result column="canshu_value_id" property="canshuValueId" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="CartDto" type="com.uclee.fundation.data.web.dto.CartDto" >
     <id column="cart_id" property="cartId" jdbcType="INTEGER" />
@@ -16,9 +18,11 @@
     <result column="specification_value_id" property="specificationValueId" jdbcType="INTEGER" />
     <result column="amount" property="amount" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="paramete" property="paramete" jdbcType="VARCHAR" />
+    <result column="canshu_value_id" property="canshuValueId" jdbcType="INTEGER" />  
   </resultMap>
   <sql id="Base_Column_List" >
-    cart_id, user_id, product_id, specification_value_id, amount ,create_time
+    cart_id, user_id, product_id, specification_value_id, amount ,create_time, paramete, canshu_value_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -51,9 +55,9 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Cart" useGeneratedKeys="true"
     keyProperty="cartId">
     insert into web_cart (cart_id, user_id, product_id, 
-      specification_value_id, amount, create_time)
+      specification_value_id, amount, create_time, canshu_value_id, parameter)
     values (#{cartId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{specificationValueId,jdbcType=INTEGER},#{amount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+      #{specificationValueId,jdbcType=INTEGER},#{amount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{paramete,jdbcType=VARCHAR}, #{canshuValueId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Cart" useGeneratedKeys="true"
     keyProperty="cartId">
@@ -77,6 +81,8 @@
       <if test="amount != null" >
         amount,
       </if>
+        paramete,
+        canshu_value_id,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="cartId != null" >
@@ -97,6 +103,8 @@
       <if test="amount != null" >
         #{amount,jdbcType=INTEGER},
       </if>
+     	#{paramete,jdbcType=VARCHAR},
+        #{canshuValueId,jdbcType=INTEGER},
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Cart" >
@@ -117,6 +125,8 @@
       <if test="amount != null" >
         amount = #{amount,jdbcType=INTEGER},
       </if>
+        paramete = #{paramete,jdbcType=VARCHAR},
+        canshu_value_id = #{canshuValueId,jdbcType=INTEGER},       
     </set>
     where cart_id = #{cartId,jdbcType=INTEGER}
   </update>
@@ -126,7 +136,9 @@
       product_id = #{productId,jdbcType=INTEGER},
       specification_value_id = #{specificationValueId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      amount = #{amount,jdbcType=INTEGER}
+      amount = #{amount,jdbcType=INTEGER},
+      paramete = #{paramete,jdbcType=VARCHAR},
+      canshu_value_id = #{canshuValueId,jdbcType=INTEGER}      
     where cart_id = #{cartId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -1,4 +1,4 @@
---20180315 update script for fxc
+﻿--20180315 update script for fxc
 If Not Exists(Select * From syscolumns where name='is_show' And id=Object_id('web_products','U'))
 Begin
   alter table web_products add is_show bit not null default 1;
@@ -7,6 +7,11 @@ End
 If Not Exists(Select * From syscolumns where name='Explain' And id=Object_id('web_products','U'))
 Begin
   alter table web_products add Explain varchar(255);
+End
+
+If Not Exists(Select * From syscolumns where name='parameter' And id=Object_id('web_products','U'))
+Begin
+  alter table web_products add parameter varchar(50);
 End
 
 If Not Exists(Select * From web_config where tag='restrictedDistance')
@@ -43,7 +48,16 @@ Begin
 	oauth_id varchar(255),
 	create_time datetime,
 	phone varchar(25)
-)
+	)
+End
+
+If Object_id('web_product_parameters','U') Is Null
+Begin
+	CREATE TABLE web_product_parameters(
+	id int IDENTITY(1,1) primary key NOT NULL,
+	product_id int NULL,
+	sname varchar(50) NULL,
+	)
 End
 
 If Object_id('web_evaluation_config','U') Is Null
@@ -114,10 +128,8 @@ If Not Exists(Select * From syscolumns where name='sort_value' And id=Object_id(
 	Begin
 		alter table web_products add  sort_value  int not null ;
 	End
-
-
-
 go
+
 declare @def varchar(100),@SQL Nvarchar(100)
 if exists(select [name]
 	from sysobjects t

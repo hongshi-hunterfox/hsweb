@@ -54,9 +54,9 @@ const DetailInfo = (props) => {
       <div className="detail-info-price-rprice">
         {
           props.minPrice === props.maxPrice ? 
-          <span>¥ {props.minPrice}</span>
+          <span>¥ {props.proMinPrice > props.minPrice ? props.minPrice : props.proMinPrice}</span>
           :
-          <span>¥ {props.minPrice} - {props.maxPrice}</span>
+          <span>¥ {props.proMinPrice > props.minPrice ? props.minPrice : props.proMinPrice} - {props.maxPrice}</span>
         }         
       </div>
       </div>
@@ -175,6 +175,7 @@ const DetailPicker = (props) => {
                       key={item.valueId}
                       onClick={() => {
                         props.pickSpec(item.valueId)
+
                       }}
                       className={'detail-picker-spec-value' + (item.valueId === props.currentSpecValudId ? ' active' : '')}>
                       {item.value}
@@ -182,6 +183,20 @@ const DetailPicker = (props) => {
                     )
                 })
               }
+            </div>
+            <div className="detail-picker-spec-name">{props.parameter!==null ? (props.parameter)+'：': null}</div>
+            <div className="detail-picker-spec-values clearfix">           
+              {props.canshu.map((item)=>{
+       					return(	
+      			 				<div key={item.id}  
+      			 					onClick={() => {
+          	      			props.param(item.id)
+                			}} 
+                			className={(item.sname !==null ? 'detail-picker-spec-value' + (item.id === props.ValudId ? ' active' : ''): null)}>
+         							{item.sname}
+        						</div>
+        				);  
+    					})}        
             </div>
           </div>
 
@@ -246,12 +261,15 @@ class Detail extends React.Component {
       text: '',
       description: null,
       specifications: [],
+      parameters:[],
       title: null,
+      parameter: '',
       explain: null,
       shippingFree:false,
       loading: true,
       showPick: false,
       currentSpecValudId: null,
+      ValudId: null,
       currentAmount: 1,
       salesAmount:0,
       pickType: 'add_to_cart', // 'add_to_cart' || 'buy_now'
@@ -357,6 +375,7 @@ class Detail extends React.Component {
 	}
 
   render() {
+  	var canshu = this.state.parameters
     var { specifications } = this.state
     if (specifications.length) {
         // take the first one only
@@ -454,9 +473,12 @@ class Detail extends React.Component {
               closePick={this._closePick}
               image={this.state.images[0].imageUrl}
               title={this.state.title}
+              parameter={this.state.parameter}
               totalPrice={totalPrice}
               spec={spec}
               pickSpec={this._pickSpec}
+              param={this._param}
+              ValudId={this.state.ValudId}
               currentSpecValudId={this.state.currentSpecValudId}
               currentAmount={this.state.currentAmount}
               subAmount={this._subAmount}
@@ -467,6 +489,7 @@ class Detail extends React.Component {
               promotionPrice={promotionPrice}
               startTime = {startTime}
               endTime = {endTime}
+              canshu = {canshu}
               />
             <DetailRich description={this.state.description}/>
             <DetailActions onClickCart={this._clickCartAdd} onClickBuy={this._clickBuyNow}/>
@@ -517,6 +540,14 @@ class Detail extends React.Component {
     })
   }
 
+  _param  = (id) => {
+    this.setState((prevState) => {
+      return {
+        ValudId: id,
+      }
+    })
+  }
+
   _clickCartAdd = () => {
     this.setState({
       pickType: 'add_to_cart'
@@ -531,6 +562,29 @@ class Detail extends React.Component {
     this._showPick()
   }
 
+  _buyClick=(productId)=>{
+    req
+      .get('/uclee-user-web/productDetail?productId=' + productId)
+      .end((err, res) => {
+        alert('here:' + res.body.currentSpecValudId)
+        if (err) {
+          return err
+        }
+        alert('here:' + res.body.currentSpecValudId)
+        this.setState({
+          showPick: true,
+          parameter: res.body.parameter,
+          parameters:res.body.parameters,
+          specifications:res.body.specifications,
+          images:res.body.images,
+          currentSpecValudId:res.body.currentSpecValudId,
+          ValudId:res.body.ValudId
+        })
+      })
+  }
+
+
+
   _clickNext = () => {
     // 加入购物车
     req
@@ -538,8 +592,11 @@ class Detail extends React.Component {
       .send({
         amount: this.state.currentAmount,
         productId: parseInt(this.props.params.id, 10),
-        specificationValueId: this.state.currentSpecValudId
-      })
+        specificationValueId: this.state.currentSpecValudId,
+        paramete: this.state.parameter,
+        canshuValueId: this.state.ValudId
+        
+      }) 
       .end((err, res) => {
         if (err) {
           return err

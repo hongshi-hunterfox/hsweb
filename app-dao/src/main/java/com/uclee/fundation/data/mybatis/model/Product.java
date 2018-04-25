@@ -25,6 +25,16 @@ public class Product {
     private Boolean isShow;
 
     private Integer sortValue;
+    
+    private String parameter;
+
+	public String getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
 
     public Boolean getShippingFree() {
         return isShippingFree;

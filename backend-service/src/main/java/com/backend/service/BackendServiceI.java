@@ -138,4 +138,6 @@ public interface BackendServiceI {
 
     //add by chiangpan for sort
 	int updateProductGroupPosition(Integer groupId, Integer productId, Integer position);
+	
+	List<ProductParameters> getParameters(Integer productId);
 }

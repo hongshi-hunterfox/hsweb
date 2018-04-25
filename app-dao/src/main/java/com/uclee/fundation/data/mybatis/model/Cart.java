@@ -19,6 +19,36 @@ public class Cart {
     private BigDecimal price;
     
     private String image;
+    
+    private String paramete;
+    
+    private Integer canshuValueId;
+    
+    private String csshuxing;
+
+    public String getCsshuxing() {
+		return csshuxing;
+	}
+
+	public void setCsshuxing(String csshuxing) {
+		this.csshuxing = csshuxing;
+	}
+
+	public String getParamete() {
+		return paramete;
+	}
+
+	public void setParamete(String paramete) {
+		this.paramete = paramete;
+	}
+
+	public Integer getCanshuValueId() {
+		return canshuValueId;
+	}
+
+	public void setCanshuValueId(Integer canshuValueId) {
+		this.canshuValueId = canshuValueId;
+	}
 
     public String getImage() {
 		return image;

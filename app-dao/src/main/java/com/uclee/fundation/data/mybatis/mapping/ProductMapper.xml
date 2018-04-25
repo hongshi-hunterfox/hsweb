@@ -13,6 +13,7 @@
     <result column="Explain" property="explain" jdbcType="VARCHAR" />
     <result column="is_show" property="isShow" jdbcType="BIT" />
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
+    <result column="parameter" property="parameter" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ProductDto" type="com.uclee.fundation.data.web.dto.ProductDto" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -27,8 +28,13 @@
     <result column="is_show" property="isShow" jdbcType="BIT" />
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
   </resultMap>
+  <resultMap id="ProductParameters" type="com.uclee.fundation.data.mybatis.model.ProductParameters" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="sname" property="sname" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value
+    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value,parameter
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -127,7 +133,7 @@
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT},
-      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER}
+      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
@@ -167,6 +173,9 @@
       <if test="sortValue !=null">
         sort_value,
       </if>
+      <if test="parameter !=null">
+      	parameter,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -201,6 +210,9 @@
       </if>
       <if test="sortValue !=null">
         #{sortValue,jdbcType=INTEGER},
+      </if>
+      <if test="parameter !=null">
+      	 #{parameter,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -237,6 +249,9 @@
       <if test="sortValue !=null">
         sort_value = #{sortValue,jdbcType=INTEGER},
       </if>
+      <if test="parameter !=null">
+      	parameter = #{parameter,jdbcType=VARCHAR},
+      </if>
     </set>
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
@@ -251,7 +266,8 @@
       is_active = #{isActive,jdbcType=BIT},
       Explain = #{explain,jdbcType=VARCHAR},
       is_show = #{isShow,jdbcType=BIT},
-      sort_value = #{sortValue,jdbcType=INTEGER}
+      sort_value = #{sortValue,jdbcType=INTEGER},
+      parameter = #{parameter,jdbcType=VARCHAR}
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
 
@@ -260,5 +276,39 @@
       FROM
       web_products
   </select>
-
+  
+  <select id="getParameters" resultMap="ProductParameters" parameterType="java.lang.Integer">
+    select 
+    id,product_id,sname
+    from web_product_parameters
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectParameters" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+    select 
+    id,product_id,sname
+    from web_product_parameters
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+    <select id="obtainParameters" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+    select 
+    id,product_id,sname
+    from web_product_parameters
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   <insert id="insertParameters" parameterType="com.uclee.fundation.data.mybatis.model.ProductParameters" useGeneratedKeys="true"
+    keyProperty="productId">
+    insert into web_product_parameters
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        product_id,
+        sname,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{productId,jdbcType=INTEGER},
+        #{sname,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+    <update id="updateParameters" parameterType="com.uclee.fundation.data.mybatis.model.ProductParameters">
+    update web_product_parameters  set sname = #{sname,jdbcType=VARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER} and id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

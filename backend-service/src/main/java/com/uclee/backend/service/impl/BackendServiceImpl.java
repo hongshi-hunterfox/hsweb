@@ -698,6 +698,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		Product product = productMapper.selectByPrimaryKey(productId);
 		if(product!=null){
 			productForm.setIsShow(product.getIsShow());
+			productForm.setParameter(product.getParameter());
 			productForm.setExplain(product.getExplain());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
@@ -1487,6 +1488,10 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public int updateProductGroupPosition(Integer groupId, Integer productId, Integer position) {
 		return productGroupLinkMapper.updateProductGroupPosition(groupId,productId,position);
+	}
+	@Override
+	public List<ProductParameters> getParameters(Integer productId) {
+		return productMapper.getParameters(productId);
 	}
 
 

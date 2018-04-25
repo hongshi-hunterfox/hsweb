@@ -96,7 +96,10 @@ public class HongShiVipController<phone> {
 				
 				if(ret!=null&&ret.size()>0){
 					if(userProfile!=null){
-
+						Integer a = hongShiVipService.getCodeSwitching();
+						logger.info("status---="+a);
+						if(a!=0){
+							logger.info("status1---="+a);
 							ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
 
 						try{
@@ -106,7 +109,18 @@ public class HongShiVipController<phone> {
 						}catch (Exception e){
 							e.printStackTrace();
 						}
+						}else{
+							logger.info("status2---="+a);
+							ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
 
+							try{
+
+								ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+
+							}catch (Exception e){
+								e.printStackTrace();
+							}
+						}
 						ret.get(0).setAllowRecharge(true);
 						ret.get(0).setAllowPayment(true);
 						if(ret.get(0).getState()==0){

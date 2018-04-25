@@ -1,6 +1,7 @@
 package com.uclee.fundation.data.mybatis.mapping;
 
 import java.util.List;
+import java.util.Map;
 
 import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
@@ -24,5 +25,7 @@ public interface HongShiVipMapper {
 	List<Lnsurance> selectUsers(String phone);
 	
 	List<HongShiVip> selectVip(String cMobileNumber);
+	
+	Integer getCodeSwitching(); 
 	
 }

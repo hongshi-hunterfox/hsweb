@@ -7,6 +7,7 @@ import com.uclee.fundation.data.mybatis.model.HongShiVip;
 import com.uclee.fundation.data.mybatis.model.Lnsurance;
 
 import java.util.List;
+import java.util.Map;
 
 public interface HongShiVipServiceI {
 	AddVipResult addHongShiVipInfo(HongShiVip params);
@@ -20,4 +21,6 @@ public interface HongShiVipServiceI {
 	Integer changeVip(Integer cVipLk);
 	
 	List<Lnsurance> selectUsers(String phone);
+	
+	Integer getCodeSwitching();
 }

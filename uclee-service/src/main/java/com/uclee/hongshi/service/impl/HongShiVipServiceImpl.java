@@ -11,6 +11,7 @@ import com.uclee.hongshi.service.HongShiVipServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 
 public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	
@@ -46,6 +47,11 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	@Override
 	public List<Lnsurance> selectUsers(String phone) {
 		return hongShiVipMapper.selectUsers(phone);
+	}
+
+	@Override
+	public Integer getCodeSwitching() {
+		return hongShiVipMapper.getCodeSwitching();
 	}
 
 }

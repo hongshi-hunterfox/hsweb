@@ -59,6 +59,11 @@
 		statementType="CALLABLE" resultMap="HongShiVip">
 		CALL WSC_GetVipInfo(#{cWeiXinCode})
 	</select>
+	
+	<select id="getCodeSwitching" resultType="Integer" 
+		statementType="CALLABLE">
+		CALL Get_WordVal (会员扫码定时变)
+	</select>
 
 	<select id="getVipRechargeLog" parameterType="java.lang.Integer"
 		statementType="CALLABLE" resultMap="HongShiRechargeRecord">

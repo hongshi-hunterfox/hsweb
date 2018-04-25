@@ -156,7 +156,8 @@ class Cart extends React.Component {
                                   }
                                 })
                               }}>
-                                {item.specification}
+                                {item.specification}<br />
+                                {item.paramete}：{item.csshuxing}
                               </div>
                               <div className="cart-item-price" onClick={e => {
                                 this._toggleItem(item.cartId, {
@@ -240,7 +241,8 @@ class Cart extends React.Component {
                           <a href={'/detail/' + item.productId}>{item.title}</a>
                         </div>
                         <div className="cart-item-spec">
-                          {item.specification}
+                          {item.specification}<br />
+                          {item.paramete}：{item.csshuxing}
                         </div>
                         <div className="cart-item-price">
                             {
@@ -403,7 +405,7 @@ class Cart extends React.Component {
 
       var data = {};
       data.cartIds = checkedCartIds;
-
+			console.log("aaaaaaaa===="+data)
       req.post('/uclee-user-web/stockCheck').send(data).end((err, res) => {
         if (err) {
           return err

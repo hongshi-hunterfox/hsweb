@@ -31,9 +31,16 @@ class Product extends React.Component {
       text: '',
       title: '',
       explain: '',
+      parameter: '',
       categoryId: '',
       images: [],
       sale:0,
+      attribute1:'',
+      attribute2:'',
+      attribute3:'',
+      attribute4:'',
+      attribute5:'',
+      attribute6:''
       
     }
 
@@ -57,7 +64,7 @@ class Product extends React.Component {
     var end = this.state.currentSpec.endTimeStr
     var date1 = new Date(begin).getTime()
     var date2 = new Date(end).getTime()
-    var moren = '格式：1997-01-16 00:00:00'
+    var moren = '1997-01-16 00:00:00'
     return (
       <DocumentTitle title={id ? '编辑产品' : '新增产品'}>
         <div className="product">
@@ -409,8 +416,71 @@ class Product extends React.Component {
                   </div>
                 </div>
               </div>
+                <label className="control-label col-md-3">规格参数名称：</label>
+						  		<div className="col-md-9">
+						  		 <div className="input-group input-group-sm">
+                		<input 
+                  		type="text"
+                  		name="parameter"
+                  		className="form-control"
+                  		value={this.state.parameter}
+                  		onChange={this._simpleInputChange}
+                		/>
+                	 </div>
+              		</div>
             </div>
-
+            <div className="form-group">
+            	<label className="control-label col-md-3">规格参数属性：</label>
+						  	<div className="col-md-9">
+						  		<table>
+						  		 <tr>
+                		<td cellspacing="2px"><span className="input-group input-group-sm">
+                		<input type="text" name="attribute1" className="form-control"
+                			value={this.state.attribute1}
+                  		onChange={this._simpleInputChange}
+                		/>
+                		</span></td>
+                		&nbsp;&nbsp;
+                		<td cellspacing="2px"><span className="input-group input-group-sm">
+                		 <input type="text" name="attribute2" className="form-control" 
+                			value={this.state.attribute2}
+                  		onChange={this._simpleInputChange}
+                		 />
+                	  </span></td>
+                	  &nbsp;&nbsp;
+                	  <td><span className="input-group input-group-sm">
+                		 <input type="text" name="attribute3" className="form-control" 
+                			value={this.state.attribute3}
+                  		onChange={this._simpleInputChange}
+                		 />
+                	  </span></td>
+                	 </tr>
+                	 <tr>
+                		<td cellspacing="2px"><span className="input-group input-group-sm">
+                		<input type="text" name="attribute4" className="form-control"
+                			value={this.state.attribute4}
+                  		onChange={this._simpleInputChange}
+                		/>
+                		</span></td>
+                		&nbsp;&nbsp;
+                		<td cellspacing="2px"><span className="input-group input-group-sm">
+                		 <input type="text" name="attribute5" className="form-control" 
+                			value={this.state.attribute5}
+                  		onChange={this._simpleInputChange}
+                		 />
+                	  </span></td>
+										&nbsp;&nbsp;
+                	  <td><span className="input-group input-group-sm">
+                		 <input type="text" name="attribute6" className="form-control" 
+                			value={this.state.attribute6}
+                  		onChange={this._simpleInputChange}
+                		 />
+                	  </span></td>
+                	 </tr>
+                	</table> 
+              	</div>
+            </div>
+            
             <div className="form-group">
               <label className="control-label col-md-3">描述：</label>
               <div className="col-md-9">
@@ -484,6 +554,7 @@ class Product extends React.Component {
           shippingFree:res.body.productForm.shippingFree,
           title: res.body.productForm.title,
           explain: res.body.productForm.explain,
+          parameter: res.body.productForm.parameter,
           categoryId: res.body.productForm.categoryId,
           //images: res.body.productForm.images,
           images: res.body.productForm.images.filter((item) => (item !== null)),
@@ -491,11 +562,15 @@ class Product extends React.Component {
           hongShiProduct: hongShiProduct,
           store: res.body.store,
           text: res.body.productForm.description,
-          sale:res.body.sale
-        })
-        console.log(this.state.shippingFree)
-        console.log("skx="+this.state.explain)
-        console.log("this.state="+this.state.isShow);
+          sale:res.body.sale,
+          attribute1:res.body.attribute1,
+          attribute2:res.body.attribute2,
+          attribute3:res.body.attribute3,
+          attribute4:res.body.attribute4,
+          attribute5:res.body.attribute5,
+          attribute6:res.body.attribute6,
+          
+        })       
         hongShiProduct.forEach(item => {
           this.hongShiProductById[item.id] = item
         })

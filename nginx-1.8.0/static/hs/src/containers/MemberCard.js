@@ -135,9 +135,8 @@ class MemberCard extends React.Component {
                  .get('/uclee-user-web/changeVip')
                  .end((err, res) => {				          
                  	alert("解绑成功,请返回页面刷新!")
-                 	window.location.reload();
-                    return;
-                    window.location.reload();
+					window.location="/member-card";
+                    //window.location.reload();
                  })
                 }   
 		  	  }}

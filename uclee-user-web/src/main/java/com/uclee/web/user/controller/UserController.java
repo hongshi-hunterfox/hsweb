@@ -432,13 +432,10 @@ public class UserController extends CommonUserHandler{
 		
 
 		if(userId!=null){
-			logger.info("cccc0---="+userId);
 			//根据会员表有没有此手机号来决定跳转
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
-			logger.info("cccc1---="+tt.getOauthId());
 					List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
 					if(lnsurance!=null&&lnsurance.size()>0){
-						logger.info("cccc2---="+lnsurance.get(0).getPhone());
 						List<HongShiVip> Vip = userService.selectVip(lnsurance.get(0).getPhone());
 						if(Vip!=null&&Vip.size()>0){
 							map.put("result",false);
@@ -496,6 +493,7 @@ public class UserController extends CommonUserHandler{
 		DeliverAddr defaultAddr = userService.getDefaultAddrByUserId(userId);
 		map.put("defaultAddr", defaultAddr);
 		List<CartDto> carts = userService.selectCartByIds(userId,cart);
+		logger.info("cart post====="+JSON.toJSONString(carts));
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
 		for(CartDto item:carts){
@@ -509,12 +507,8 @@ public class UserController extends CommonUserHandler{
 			if(item.getEndTime()!=null){
 			value2 = item.getEndTime().getTime();
 			}
-			logger.info("skx--------value2="+value2);
 			//判断提交订单商品是否有促销价--skx
 			if(value1!=0||value2!=0){
-				logger.info("skx--------value="+value);
-				logger.info("skx--------value1="+value1);
-				logger.info("skx--------value2="+value2);
 				if(item.getPromotion()!=null && value>value1 && value<value2){
 					total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
 				}else{
@@ -529,6 +523,11 @@ public class UserController extends CommonUserHandler{
 			if(product!=null&&!product.getShippingFree()){
 				isShippingFree=false;
 			}
+			List<ProductParameters> csshuxings = userService.obtainParameters(carts.get(0).getCanshuValueId());
+			if(csshuxings!=null&&csshuxings.size()>0){
+				item.setCsshuxing(csshuxings.get(0).getSname());
+			}
+			
 		}
 		map.put("cartItems", carts);
 		map.put("isShippingFree", isShippingFree);
@@ -1469,6 +1468,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> orderMap=new TreeMap<String,Object>();
 		//根据微商城订单号取得订单
 		Order order=userService.getOrderListSerailNum(outerOrderCode);
+		System.out.println("order==============="+JSON.toJSONString(order));
 
 		if(order!=null){
 			NapaStore napaStore=userService.getNapaStore(order.getStoreId());//下单部门

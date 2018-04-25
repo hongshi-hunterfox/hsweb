@@ -170,6 +170,15 @@ public class ProductManagerController {
 		}else{
 			map.put("sale",0);
 		}
+		List<ProductParameters> parameters = productMapper.getParameters(productId);
+		if(parameters!=null&&parameters.size()>0){
+				map.put("attribute1",parameters.get(0).getSname());
+				map.put("attribute2",parameters.get(1).getSname());
+				map.put("attribute3",parameters.get(2).getSname());
+				map.put("attribute4",parameters.get(3).getSname());	
+				map.put("attribute5",parameters.get(4).getSname());
+				map.put("attribute6",parameters.get(5).getSname());	
+		}	
 		ProductForm productForm = backendService.getProductForm(productId);
 		map.put("productForm", productForm);
 		return map;
