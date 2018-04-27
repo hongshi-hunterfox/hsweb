@@ -37,6 +37,7 @@ import CommentDetail from './containers/CommentDetail'
 import DataView from './containers/DataView'
 import ShowCoupon from './containers/ShowCoupon'
 import MyOrderDetail from './containers/MyOrderDetail.js'
+import Refund from './containers/Refund.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -76,6 +77,7 @@ ReactDOM.render(
       <Route path="dataView" component={DataView} />
       <Route path="ShowCoupon" component={ShowCoupon} />
       <Route path="myOrderDetail/:id" component={MyOrderDetail} />
+      <Route path="seller/refund" component={Refund}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

@@ -7,7 +7,9 @@ import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.payment.exception.PaymentHandlerException;
+import com.uclee.payment.exception.RefundHandlerException;
 import com.uclee.user.model.PaymentStrategyResult;
+import com.uclee.user.model.RefundStrategyResult;
 import com.uclee.user.model.UserForm;
 
 import javax.servlet.http.HttpServletRequest;
@@ -287,4 +289,21 @@ public interface UserServiceI {
 	List<Lnsurance> getUsers(String oauthId);
 	
 	List<ProductParameters> obtainParameters(Integer id);
+
+	//退款 by chiangpan
+	Map<String,Object> applyRefund(String outerOrderCode, Integer userId);
+
+	RefundOrder selectRefundOrderBySerialNum(String refundSerialNum);
+
+	RefundStrategyResult getWCRefund(String openId, RefundOrder refundOrder) throws RefundHandlerException;
+
+	//获得微信证书配置
+	Map<String,String> getWeixinZhengshuConfig();
+
+	//支付宝退款
+	RefundStrategyResult getAlipayForRefund(RefundOrder refundOrder);
+
+	int updateRefundOrder(RefundOrder refundOrder);
+	//调用存储过程插入到线下表order_trace表
+	int insertOrderTrace(Map pramMap);
 }

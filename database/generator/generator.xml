@@ -9,7 +9,7 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 （定制修改）-->
-        <jdbcConnection driverClass="net.sourceforge.jtds.jdbc.Driver" connectionURL="jdbc:jtds:sqlserver://112.74.108.24:9630/modeldb2"
+        <jdbcConnection driverClass="net.sourceforge.jtds.jdbc.Driver" connectionURL="jdbc:jtds:sqlserver://112.74.108.24:9630/modeldb"
                         userId="sa" password="to119,0002"></jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -31,11 +31,10 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!-- 要生成那些表(更改tableName和domainObjectName就可以，多个表的话复制table标签在后边排列即可) -->
-<<<<<<< HEAD
-        <table tableName="db_datasource" domainObjectName="Datasource" enableCountByExample="false"
-=======
+
+        <table tableName="db_datasource" domainObjectName="Datasource" enableCountByExample="false"/>
+
         <table tableName="web_napa_stores" domainObjectName="NapaStore" enableCountByExample="false"
->>>>>>> cbccba3897d93284a2dcac56df5836305dd6d1f0
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"/>
     </context>

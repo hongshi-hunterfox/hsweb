@@ -45,6 +45,9 @@ public class ConfigPost {
 	private String full;
 	private String unbundling;
 
+	private String zhengshu;
+	private String zhengshuPassword;
+
 	public String getUnbundling() {
 		return unbundling;
 	}
@@ -338,4 +341,19 @@ public class ConfigPost {
 		this.startUp = startUp;
 	}
 
+	public String getZhengshu() {
+		return zhengshu;
+	}
+
+	public void setZhengshu(String zhengshu) {
+		this.zhengshu = zhengshu;
+	}
+
+	public String getZhengshuPassword() {
+		return zhengshuPassword;
+	}
+
+	public void setZhengshuPassword(String zhengshuPassword) {
+		this.zhengshuPassword = zhengshuPassword;
+	}
 }

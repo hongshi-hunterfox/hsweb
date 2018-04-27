@@ -48,6 +48,27 @@ class OrderList extends React.Component {
 			barcode:url2
 		})
 	}
+
+	_inValid=(outerOrderCode)=>{
+		var conf = confirm('确认要作废订单吗？');
+		if(conf){
+			req.get('/uclee-user-web/applyRefund?outerOrderCode='+outerOrderCode).end((err, res) => {
+				if (err) {
+					return err
+				}
+				if(res.body.result){
+					var resJson = JSON.parse(res.text)
+					window.location = 'seller/refund?refundSerialNum=' + resJson.refundSerialNum
+				}else{
+					alert("该订单已经退款");
+				}
+			})
+		}
+	}
+
+
+
+
 	render() {
 		var items = this.state.orders.map((item, index) => {
 			return (
@@ -97,6 +118,7 @@ class OrderList extends React.Component {
 					
           			<div>
 						<span onClick={()=>{window.location="/myOrderDetail/" + item.outerOrderCode}} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单详情</span>
+						<span onClick={this._inValid.bind(this,item.outerOrderCode)} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单作废</span>
 					</div>
 
 						{!item.isEnd&&!item.void?

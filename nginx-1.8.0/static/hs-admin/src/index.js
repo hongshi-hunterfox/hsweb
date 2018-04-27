@@ -45,6 +45,8 @@ import SystemConfig from './containers/SystemConfig'
 import ActivityConfig from './containers/ActivityConfig'
 import RechargeConfigList from './containers/RechargeConfigList'
 import OrderSettingPick from './containers/OrderSettingPick'
+import AuditRefund from './containers/AuditRefund'
+import AuditRefundOrderDetail from './containers/AuditRefundOrderDetail'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -93,6 +95,9 @@ ReactDOM.render(
       <Route path="phoneUserList" component={PhoneUserList} />
       <Route path="editProductGroup" component={EditProductGroup} />
       <Route path="orderSettingPick" component={OrderSettingPick}/>
+      <Route path="auditRefund" component={AuditRefund} />
+      <Route path="auditRefundOrderDetail" component={AuditRefundOrderDetail} />
+      <Route path="auditRefundOrderDetail/:id" component={AuditRefundOrderDetail} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

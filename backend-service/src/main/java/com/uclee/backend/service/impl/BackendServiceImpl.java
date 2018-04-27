@@ -94,6 +94,9 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private OrderSettingPickMapper orderSettingPickMapper;
 
+	@Autowired
+	private RefundOrderMapper refundOrderMapper;
+
 	@SuppressWarnings("unused")
 	@Override
 	public boolean updateConfig(ConfigPost configPost) { 
@@ -1494,5 +1497,16 @@ public class BackendServiceImpl implements BackendServiceI {
 		return productMapper.getParameters(productId);
 	}
 
+	@Override
+	public List<AuditRefundDto> getRefundOrderList(String orderSerialNum) {
+		return refundOrderMapper.getRefundOrderList(orderSerialNum);
+
+	}
+
+	@Override
+	public Order getOrderBySeialNum(String orderSerialNum) {
+		Order order=orderMapper.getOrderListByOrderSerailNum(orderSerialNum);
+		return order;
+	}
 
 }

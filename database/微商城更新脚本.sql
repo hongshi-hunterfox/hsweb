@@ -149,6 +149,72 @@ end
 
 
 
+go
+If Object_id('web_refund_orders','U') Is Null
+	BEGIN
+		CREATE TABLE web_refund_orders(
+			refund_order_id int IDENTITY(1,1) NOT NULL,
+			user_id int NOT NULL,
+			payment_id int NOT NULL,
+			payment_order_id int NOT NULL,
+			payment_serial_num varchar(255) NOT NULL,
+			refund_serial_num varchar(255) NOT NULL,
+			transaction_id varchar(255) NOT NULL DEFAULT ('') ,
+			transaction_type smallint NOT NULL,
+			totalFree decimal(20, 2) NOT NULL DEFAULT ('0.00') ,
+			refundFree decimal(20, 2) NOT NULL DEFAULT ('0.00') ,
+			create_time datetime NULL DEFAULT (getdate()),
+			complete_time datetime NULL  DEFAULT (null),
+			is_completed BIT not NULL DEFAULT (0),
+			refundDesc varchar(500),
+			flag int not null DEFAULT 0
+		)
+	END
+
+
+If Not Exists(Select * From web_config where tag='zhengshu')
+	Begin
+		insert into web_config (tag,value) values ('zhengshu','D:\zhengshu\hs\apiclient_cert.p12'); --证书路径
+	End
+
+
+
+If Not Exists(Select * From web_config where tag='zhengshuPassword')
+	Begin
+		insert into web_config (tag,value) values ('zhengshuPassword','to119,0002'); --证书的密码(一般是web_config表中的merchantcode值,如果不是的话也需要写入到数据库中)
+	End
+
+if not EXISTS (select * from sysObjects where  id=object_id (N'[dbo].[WSC_insertOrderTrace]'))
+	BEGIN
+						CREATE PROCEDURE  [dbo].[WSC_insertOrderTrace]
+							@paymentSerialNum varchar(50),
+							@openId varchar(100),
+							@flag int
+
+						AS
+						BEGIN
+							SET NOCOUNT ON;
+							Declare @orderSeialNum varchar(30),@orderId int,@num varchar(10)
+
+							select @orderSeialNum=A.order_serial_num from web_orders A left join web_payment_orders B
+							on A.payment_order_id=B.payment_order_id where B.payment_serial_num=@paymentSerialNum
+
+
+							select @orderId=ID FROM orders where 商户订单号=@orderSeialNum
+							select @num=单号 from orders where 商户订单号=@orderSeialNum
+
+							if @flag=1
+							begin
+								insert into orders_trace(订单id,订单单号,状态,建立日期,操作人)
+								values(@orderId,@num,'申请退款中',getDate(),@openId)
+							end
+							else if @flag=3
+							begin
+								insert into orders_trace(订单id,订单单号,状态,建立日期,操作人)
+								values(@orderId,@num,'退款成功',getDate(),@openId)
+							end
+						END
+	END
 
 
 go

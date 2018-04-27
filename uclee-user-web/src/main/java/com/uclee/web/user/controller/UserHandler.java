@@ -1,5 +1,6 @@
 package com.uclee.web.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import com.uclee.fundation.data.mybatis.mapping.CommentMapper;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.payment.strategy.RefundHandlerStrategy;
+import com.uclee.user.model.RefundStrategyResult;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -532,5 +535,131 @@ public class UserHandler {
 	public @ResponseBody boolean resetDraw(HttpServletRequest request) {
 		
 		return userService.resetDraw();
+	}
+
+	@RequestMapping(value="/applyRefund")
+	//订单列表上面点击开始退款按钮by chiangpan
+	public @ResponseBody Map<String,Object> applyRefund(HttpServletRequest request,String outerOrderCode) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		logger.info("outerOrderCode: " + JSON.toJSONString(outerOrderCode));
+		map = userService.applyRefund(outerOrderCode, userId);
+		return map;
+	}
+
+
+	/**
+	 * @Title: refundHandler
+	 * @Description: 处理微信退款，会员卡退款，支付宝退款预处理请求(目前暂时只弄微信支付和支付宝支付)
+	 * @param @param request
+	 * @param @param refundOrderPost post过来的退款单数据
+	 * @param @return    设定文件
+	 * @return     返回类型
+	 * @throws
+	 */
+
+	@RequestMapping(value="/seller/refundHandler",method = RequestMethod.POST)
+	public @ResponseBody RefundStrategyResult refundHandler(HttpServletRequest request,@RequestBody RefundOrder refundOrderPost) {
+		RefundStrategyResult refundStrategyResult = new RefundStrategyResult();
+		logger.info(JSON.toJSONString(refundOrderPost));
+
+		RefundOrder refundOrder=userService.selectRefundOrderBySerialNum(refundOrderPost.getRefundSerialNum());
+		if(refundOrder==null){
+			refundStrategyResult.setReason("noSuchOrder");
+			refundStrategyResult.setResult(false);
+			return refundStrategyResult;
+		}
+		if(refundOrder.isCompleted()){
+			refundStrategyResult.setReason("illegel");
+			refundStrategyResult.setResult(false);
+			return refundStrategyResult;
+		}
+		if(refundOrder.getFlag()==3){
+			refundStrategyResult.setReason("AllredaySuccessRefund");
+			refundStrategyResult.setResult(false);
+			return refundStrategyResult;
+		}
+		Payment payment = userService.getPaymentMethodById(refundOrder.getPaymentId());
+		if(payment!=null){
+			//这里以后再完善
+			RefundHandlerStrategy refundHandlerStrategy;
+			if(payment.getPaymentId()==2){
+				//会员卡退款
+				refundStrategyResult.setReason("notSupportMemberCard");
+				refundStrategyResult.setResult(false);
+			}else if(payment.getPaymentId()==3){
+				//支付宝退款
+				String reflectName="AlipayRefundStrategy";
+				try{
+					refundHandlerStrategy = (RefundHandlerStrategy) Class.forName("com.uclee.payment.strategy." + reflectName).newInstance();
+					refundStrategyResult = refundHandlerStrategy.refundHandler(refundOrder);
+				}catch (InstantiationException | IllegalAccessException | ClassNotFoundException e){
+					e.printStackTrace();
+				}
+			}else{
+				//微信退款  WCJSAPIRefundStrategy.refundHandler(refundOrder)
+				String reflectName="WCJSAPIRefundStrategy";
+				try {
+					refundHandlerStrategy = (RefundHandlerStrategy) Class
+							.forName("com.uclee.payment.strategy." + reflectName).newInstance();
+					refundStrategyResult = refundHandlerStrategy.refundHandler(refundOrder);
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		}else{
+			refundStrategyResult.setReason("noPaymentMethod");
+			refundStrategyResult.setResult(false);
+		}
+
+		return refundStrategyResult;
+	}
+
+	@RequestMapping(value="/seller/refundApplyHandler",method = RequestMethod.POST)
+	public @ResponseBody Map<String,Object> refundApplyHandler(HttpServletRequest request,@RequestBody RefundOrder refundOrderPost){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		RefundOrder refundOrder=userService.selectRefundOrderBySerialNum(refundOrderPost.getRefundSerialNum());
+		if(refundOrder==null){
+			map.put("reason", "noSuchOrder");
+			map.put("result", false);
+			return map;
+		}
+		if(refundOrder.isCompleted()){
+			map.put("reason","illegel");
+			map.put("result", false);
+			return map;
+		}
+		if(refundOrder.getFlag()==1){
+			map.put("reason","allreadyApply");
+			map.put("result", false);
+			return map;
+		}
+		if(refundOrder.getPaymentId()==2){
+			map.put("reason","notSupportMemberCard");
+			map.put("result",false);
+			return map;
+		}
+
+		//1设定为已经申请退款
+		refundOrder.setFlag(1);
+		refundOrder.setRefundDesc(refundOrderPost.getRefundDesc());
+		//更新状态为1，同时插入到
+		userService.updateRefundOrder(refundOrder);
+		String openId ="";
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(refundOrder.getUserId());
+		if(oauthLogin !=null){
+			openId=oauthLogin.getOauthId();//外键
+			Map pramMap=new HashMap();
+			pramMap.put("paymentSerialNum",refundOrder.getPaymentSerialNum());
+			pramMap.put("openId",openId);
+			pramMap.put("flag",1);
+			userService.insertOrderTrace(pramMap);
+			map.put("result", true);
+		}else{
+			map.put("result",false);
+			map.put("reson","notLogin");
+		}
+		return map;
 	}
 }

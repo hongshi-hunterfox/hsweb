@@ -140,4 +140,9 @@ public interface BackendServiceI {
 	int updateProductGroupPosition(Integer groupId, Integer productId, Integer position);
 	
 	List<ProductParameters> getParameters(Integer productId);
+
+	//add by chiangpan for operator Audit refund list
+	List<AuditRefundDto> getRefundOrderList(String orderSerialNum);
+
+	Order getOrderBySeialNum(String orderSerialNum);
 }

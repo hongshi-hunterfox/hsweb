@@ -22,7 +22,11 @@ public class ApplicationRefund implements Serializable {
 	
 	// 唯一标识
 	private String applicationRefundId ;
-	
+
+	//商家数据包
+	@Column(name = "ATTACH")
+	private String attach ;
+
 	// 公众账号ID
 	@Column(name = "APPID")
 	private String appid ;
@@ -74,7 +78,14 @@ public class ApplicationRefund implements Serializable {
 	// 更新时间
 	@Column(name = "UPDATEDATE")
 	private String updateDate ;
-	
+
+	//操作员ID
+	@Column(name = "OPENID")
+	private String openid ;
+
+	//退款原因
+	@Column(name="REFUND_DESC")
+	private String refund_desc;
 	
 	/**
 	 * 
@@ -115,7 +126,15 @@ public class ApplicationRefund implements Serializable {
 		
 		return applicationRefund ;
 	}
-	
+
+	public String getAttach() {
+		return attach;
+	}
+
+	public void setAttach(String attach) {
+		this.attach = attach;
+	}
+
 	public String getApplicationRefundId() {
 		return applicationRefundId;
 	}
@@ -228,10 +247,24 @@ public class ApplicationRefund implements Serializable {
 		this.updateDate = updateDate;
 	}
 
-	
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public String getRefund_desc() {
+		return refund_desc;
+	}
+
+	public void setRefund_desc(String refund_desc) {
+		this.refund_desc = refund_desc;
+	}
 
 	public ApplicationRefund() {
-		
+
 	}
 	
 }

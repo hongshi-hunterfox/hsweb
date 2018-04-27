@@ -3,11 +3,9 @@ package com.uclee.payment.strategy.alipay.util;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.uclee.date.util.DateUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -111,7 +109,55 @@ public class AlipaySubmit {
 
         return sbHtml.toString();
     }
-    
+
+    //退款的buildRequest by chiangpan
+    public static String buildRefundRequest(String strMethod,String strButtonName,String tranctionId,String total_fee,String refundDesc,String notify_url,Map<String, String> config) {
+        Map<String, String> sParaTemp = new HashMap<String, String>();
+        sParaTemp.put("service", AlipayConfig.refund_service);
+        sParaTemp.put("partner", config.get("partner"));
+        sParaTemp.put("_input_charset", AlipayConfig.input_charset);
+        sParaTemp.put("notify_url",notify_url);
+        sParaTemp.put("seller_user_id", config.get("sellerId"));
+        sParaTemp.put("refund_date", DateUtils.format(new Date()));
+        sParaTemp.put("batch_no", UtilDate.getOrderNum());
+        sParaTemp.put("batch_num", new String("1"));
+        //下面的协商退款其实是退款原因页面上要捞过来
+        sParaTemp.put("detail_data",tranctionId+"^"+total_fee+"^"+refundDesc);
+        //待请求参数数组
+        Map<String, String> sPara = buildRequestPara(sParaTemp,config);
+        List<String> keys = new ArrayList<String>(sPara.keySet());
+
+        StringBuffer sbHtml = new StringBuffer();
+
+        sbHtml.append("<form id=\"alipaysubmit\" name=\"alipaysubmit\" action=\"" + ALIPAY_GATEWAY_NEW
+                + "_input_charset=" + AlipayConfig.input_charset + "\" method=\"" + strMethod
+                + "\">");
+
+        for (int i = 0; i < keys.size(); i++) {
+            String name = (String) keys.get(i);
+            String value = (String) sPara.get(name);
+
+            sbHtml.append("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value + "\"/>");
+        }
+
+        //submit按钮控件请不要含有name属性
+        sbHtml.append("<input type=\"submit\" value=\"" + strButtonName + "\" style=\"display:none;\"></form>");
+
+        return sbHtml.toString();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
  
     
     /**

@@ -1484,6 +1484,37 @@ public class UserController extends CommonUserHandler{
 		orderMap.put("order",order);
 		return orderMap;
 	}
+
+	@RequestMapping("refund")
+	public @ResponseBody Map<String,Object> refund(HttpServletRequest request,String refundSerialNum){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		RefundOrder fund = userService.selectRefundOrderBySerialNum(refundSerialNum);
+
+		Payment payment=userService.getPaymentMethodById(fund.getPaymentId());
+
+		PaymentOrder paymentOrder=userService.getPaymentOrderBySerialNum(fund.getPaymentSerialNum());
+
+		List<Order> orders=userService.selectOrderByPaymentSerialNum(userId,paymentOrder.getPaymentSerialNum());
+		Order order=new Order();
+		if(orders!=null && orders.size()>0){
+			order=orders.get(0);
+			String createTimeStr=DateUtils.format(order.getCreateTime());
+			//下单时间
+			order.setCreateTimeStr(createTimeStr);
+			//下单部门
+			NapaStore napaStore=userService.getNapaStore(order.getStoreId());
+
+			order.setStoreName(napaStore.getStoreName());
+		}
+
+		map.put("order",order);
+		map.put("payment", payment);
+		map.put("paymentOrder", paymentOrder);
+		map.put("refund",fund);
+		return map;
+	}
 	
 	
 	

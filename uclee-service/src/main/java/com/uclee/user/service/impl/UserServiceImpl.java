@@ -30,8 +30,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.uclee.user.model.MessageUtil;
-import com.uclee.user.model.WxUnifiedRequest;
+import com.uclee.payment.exception.RefundHandlerException;
+import com.uclee.user.model.*;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -79,8 +79,6 @@ import com.uclee.payment.strategy.alipay.util.AlipayNotify;
 import com.uclee.payment.strategy.alipay.util.AlipaySubmit;
 import com.uclee.payment.strategy.wcPaymetnTools.*;
 //import com.uclee.payment.strategy.wcPaymetnTools.config.MerchantInfo;
-import com.uclee.user.model.PaymentStrategyResult;
-import com.uclee.user.model.UserForm;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import com.uclee.user.util.EndecryptUtils;
@@ -208,10 +206,13 @@ public class UserServiceImpl implements UserServiceI {
 	private ProductsSpecificationsValuesLinkMapper productsSpecificationsValuesLinkMapper;
 	@Autowired
 	private DataSourceFacade datasource;
+	@Autowired
+	private RefundOrderMapper refundOrderMapper;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
 	private String alipay_return_url = "http://cooka.vicp.cc/fastpaysuccess/";
 
 	private String wc_general_order = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	private static String RERUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund" ;
 	// 微信JSSDK的AccessToken请求URL地址
 	final static String weixin_jssdk_acceToken_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx68abe3fb2a71dcc7&secret=00030b62032af67f83e535223616a0d6";
 	// 微信JSSDK的ticket请求URL地址
@@ -1213,6 +1214,10 @@ public class UserServiceImpl implements UserServiceI {
 		String total_fee = null;
 		String seller_id = null;
 		String body = null;
+		//add by chiangpan for adjust refund and payment
+		String notify_type=null;
+		String success_num=null;
+		String result_details=null;
 		try {
 			out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
 			// 支付宝交易号
@@ -1227,11 +1232,16 @@ public class UserServiceImpl implements UserServiceI {
 			total_fee = new String(request.getParameter("total_fee").getBytes("ISO-8859-1"), "UTF-8");
 
 			seller_id = new String(request.getParameter("seller_id").getBytes("ISO-8859-1"), "UTF-8");
+
+			notify_type=new String(request.getParameter("notify_type").getBytes("ISO-8859-1"),"UTF-8");
+
+			success_num=new String(request.getParameter("success_num").getBytes("ISO-8859-1"),"UTF-8");
+
+			result_details=new String(request.getParameter("result_details").getBytes("ISO-8859-1"),"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		// 获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
 		Map<String,String> config = getAlipayConfig();
 		if (AlipayNotify.verify(params,config)) {// 验证成功
@@ -1239,31 +1249,62 @@ public class UserServiceImpl implements UserServiceI {
 			// 请在这里加上商户的业务逻辑程序代码
 
 			// ——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+			if(notify_type!=null && !"".equals(notify_type)&& "batch_refund_notify".equalsIgnoreCase(notify_type)){
+				//退款的通知
+				if(success_num!=null && !"".equals(success_num) && Integer.parseInt(success_num)>0){
+					//必须要取出来result_details,根据tranction_id查询出来退款表里面的记录
+					// 执行更新web_refund_orders表，同时执行存储过程
+					if(result_details!=null && !"".equals(result_details)){
+						String[] resultDetailArray=result_details.split("^");
+						String tranctionId=resultDetailArray[0];
+						logger.info("支付宝退款回掉函数返回的原交易单号:"+tranctionId);
 
-			if (trade_status.equals("TRADE_FINISHED")) {
-				// 判断该笔订单是否在商户网站中已经做过处理
-				// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-				// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
-				// 如果有做过处理，不执行商户的业务程序
+						RefundOrder refundOrder=refundOrderMapper.selectByTransactionId(tranctionId);
+						//设定flag状态为3,isCompleted为已完成
+						refundOrder.setFlag(3);
+						refundOrder.setIsCompleted(true);
+						updateRefundOrder(refundOrder);
 
-				// 注意：
-				// 退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
-			} else if (trade_status.equals("TRADE_SUCCESS")) {
-				// 判断该笔订单是否在商户网站中已经做过处理
-				// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-				// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
-				// 如果有做过处理，不执行商户的业务程序
-				datasource.switchDataSource(body);
-				logger.info("支付宝回调datasource: " + body);
-				if (alipayNotifySuccessHandle(out_trade_no, total_fee, seller_id,trade_no,body)) {
-					return "success";
+						String openId ="";
+						OauthLogin oauthLogin = getOauthLoginInfoByUserId(refundOrder.getUserId());
+						if(oauthLogin !=null){
+							openId=oauthLogin.getOauthId();//外键
+							Map pramMap=new HashMap();
+							pramMap.put("paymentSerialNum",refundOrder.getPaymentSerialNum());
+							pramMap.put("openId",openId);
+							pramMap.put("flag",3);
+							insertOrderTrace(pramMap);
+						}
+						//这里还需要执行一个存储过程orders_invalid，因为存储过程暂时还未完成。
+						return "success";
+					}
 				}
-				// 注意：
-				// 付款完成后，支付宝系统发送该交易状态通知
 			}
+			if("trade_status_sync".equalsIgnoreCase(notify_type)){
+				//支付的通知
+				if (trade_status.equals("TRADE_FINISHED")) {
+					// 判断该笔订单是否在商户网站中已经做过处理
+					// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+					// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+					// 如果有做过处理，不执行商户的业务程序
 
+					// 注意：
+					// 退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+				} else if (trade_status.equals("TRADE_SUCCESS")) {
+					// 判断该笔订单是否在商户网站中已经做过处理
+					// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+					// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+					// 如果有做过处理，不执行商户的业务程序
+					datasource.switchDataSource(body);
+					logger.info("支付宝回调datasource: " + body);
+					if (alipayNotifySuccessHandle(out_trade_no, total_fee, seller_id,trade_no,body)) {
+						return "success";
+					}
+					// 注意：
+					// 付款完成后，支付宝系统发送该交易状态通知
+				}
+			}
 			// ——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-
 			//////////////////////////////////////////////////////////////////////////////////////////
 		} else {// 验证失败
 			return "fail";
@@ -3975,5 +4016,198 @@ public class UserServiceImpl implements UserServiceI {
 		return productMapper.obtainParameters(id);
 	}
 
+	@Override
+	//申请退款 by chiangpan
+	public Map<String, Object> applyRefund(String outerOrderCode, Integer userId) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+
+		//退款的时候有很多的业务是需要处理的，因为暂时不清楚到底要处理哪些业务
+		//所以暂时只专注于完成退款的核心实现
+		//1、取得该订单
+		Order order=orderMapper.selectBySerialNum(outerOrderCode);
+
+		//2、取得该支付单
+		PaymentOrder paymentOrder=paymentOrderMapper.selectByPrimaryKey(order.getPaymentOrderId());
+
+		//3、创建退款单
+		RefundOrder refundOrder=new RefundOrder();
+		refundOrder.setUserId(userId);
+		refundOrder.setPaymentId(paymentOrder.getPaymentId());//支付方式Id
+		refundOrder.setPaymentOrderId(paymentOrder.getPaymentOrderId());//支付表主键ID
+		refundOrder.setPaymentSerialNum(paymentOrder.getPaymentSerialNum());//支付单号
+		refundOrder.setRefundSerialNum(NumberUtil.generateSerialNum());//退款单号
+		refundOrder.setTransactionId(paymentOrder.getTransactionId());//微信订单号
+		refundOrder.setTotalFree(paymentOrder.getMoney());
+		refundOrder.setIsCompleted(false);
+
+		//默认退款金额与支付一致(即一下子全部退完)
+		refundOrder.setRefundFree(paymentOrder.getMoney());
+
+		//首先判断是否存在
+		List<RefundOrder> existList=refundOrderMapper.selectExistByPaymentSerialNum(paymentOrder.getPaymentSerialNum());
+		if(existList!=null && existList.size()>0){
+			map.put("result", false);
+			map.put("reason","已经存在该退款单了");
+		}else{
+			if(refundOrderMapper.insertSelective(refundOrder)>0){
+				logger.info(DateUtils.getNow()+"插入退款表web_refund_orders 退款单号:"+refundOrder.getRefundSerialNum());
+				map.put("result",true);
+				map.put("refundSerialNum", refundOrder.getRefundSerialNum());
+				map.put("order",order);
+				map.put("paymentOrder",paymentOrder);
+
+			} else {
+				map.put("result", false);
+				map.put("reason", "网络繁忙，请稍后重试");
+				return map;
+			}
+		}
+		return map;
+	}
+
+	@Override
+	public RefundOrder selectRefundOrderBySerialNum(String refundSerialNum) {
+		RefundOrder fund=refundOrderMapper.selectByRefundSerialNum(refundSerialNum);
+		return fund;
+	}
+
+	@Override
+	public RefundStrategyResult getWCRefund(String openId, RefundOrder refundOrder) throws RefundHandlerException {
+		RefundStrategyResult wcRefundResult = new RefundStrategyResult();
+		if(openId==null){
+			wcRefundResult.setResult(false);
+			logger.info("openid为空");
+			return wcRefundResult;
+		}
+		logger.info("退款,openid : " + openId);
+		try {
+
+			String totalFreeStr = "";
+			totalFreeStr = refundOrder.getTotalFree().multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_UP).toString();
+			String refundFreeStr="";
+			refundFreeStr = refundOrder.getRefundFree().multiply(new BigDecimal(100)).setScale(0,BigDecimal.ROUND_UP).toString();
+
+			Map<String,String> weixinConfig = getWeixinConfig();
+			ApplicationRefundResult result = getWCRefundResult(openId, refundOrder.getPaymentSerialNum(), refundOrder.getRefundSerialNum(), totalFreeStr, refundFreeStr);
+			logger.info("ApplicationRefundResult:" + JSON.toJSONString(result));
+			if(result.getReturn_code().equals("SUCCESS") && result.getResult_code().equals("OK")){
+				//这里暂时是这样随便设定的，以后弄清楚了再修改(主要是弄不清楚这个RefundStrategyResult 与ApplicationRefundResult之间的区别)
+				//这些东西是返回到前端进行判定时要使用的,设定为成功就可以了
+				wcRefundResult.setResult(true);
+				wcRefundResult.setAppId(weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
+				wcRefundResult.setTimeStamp(Long.toString(System.currentTimeMillis()));
+				wcRefundResult.setNonceStr(result.getNonce_str());
+				wcRefundResult.setSignType("MD5");
+				wcRefundResult.setRefundSerialNum(refundOrder.getRefundSerialNum());
+
+				//在这里需要变更web_refund_orders表中的isCompleted为已完成,flag变为3,同时调用存储过程orders_invalid
+				refundOrder.setIsCompleted(true);
+				refundOrder.setFlag(3);
+				updateRefundOrder(refundOrder);
+
+				OauthLogin oauthLogin =getOauthLoginInfoByUserId(refundOrder.getUserId());
+				if(oauthLogin !=null){
+					openId=oauthLogin.getOauthId();//外键
+					Map pramMap=new HashMap();
+					pramMap.put("paymentSerialNum",refundOrder.getPaymentSerialNum());
+					pramMap.put("openId",openId);
+					pramMap.put("flag",3);
+					insertOrderTrace(pramMap);
+				}
+				return wcRefundResult;
+			}
+			return wcRefundResult;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	//获得证书
+	public Map<String, String> getWeixinZhengshuConfig() {
+		Map<String,String> map = new HashMap<String,String>();
+		List<Config> configs = configMapper.getWeixinCertificateConfig();
+		for(Config config:configs){
+			map.put(config.getTag(), config.getValue());
+		}
+		return map;
+	}
+
+	//调用微信的退款请求，并将返回回来的数据转换成ApplicationRefundResult
+	private ApplicationRefundResult getWCRefundResult(String openId, String paymentSerialNum, String refundSerialNum, String totalFreeStr, String refundFreeStr) {
+		try {
+
+			Map<String,String> weixinConfig = getWeixinConfig();
+			ApplicationRefund refund = new ApplicationRefund();
+			//refund.setAttach(datasource.getDataSourceStr());
+			refund.setAppid(weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
+			refund.setMch_id(weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
+			//refund.setOpenid(openId.toString());
+			//refund.setDevice_info(PaymentTools.getServerIP());
+			refund.setNonce_str(PayMD5.GetMD5nonce_str());
+
+			refund.setOut_trade_no(paymentSerialNum);
+			refund.setOut_refund_no(refundSerialNum);
+
+			refund.setTotal_fee(totalFreeStr);
+			refund.setRefund_fee(refundFreeStr);
+
+			refund.setRefund_fee_type("CNY");
+			//这里还需要设定退款原因
+
+			Map<String,String> zhengshuConfig=getWeixinZhengshuConfig();
+
+			String reqXML = PayImpl.generateXML(refund,weixinConfig.get(WechatMerchantInfo.AppSecret_CONFIG));
+
+			reqXML = new String(reqXML.getBytes("UTF-8"), "UTF-8");
+			logger.info("退款时请求的xml:" + reqXML);
+
+			//密码为to***,****
+			//String respXML = PayImpl.requestWechat(RERUND_URL, reqXML,zhengshuConfig.get(WechatMerchantInfo.ZHENGSHU),zhengshuConfig.get(WechatMerchantInfo.ZHENGSHU_PASSWORD));
+
+			//密码为默认的密码
+			String respXML = PayImpl.requestWechat(RERUND_URL, reqXML,zhengshuConfig.get(WechatMerchantInfo.ZHENGSHU),weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
+
+
+			logger.info("退款时微信返回给我们的xml: " + JSON.toJSONString(respXML));
+
+			ApplicationRefundResult result = (ApplicationRefundResult) PayImpl.turnObject(ApplicationRefundResult.class, respXML);
+
+			logger.info("退款时将微信返回的xml封装成ApplicationRefundResult: " + JSON.toJSONString(result));
+
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	@Override
+	//支付宝退款请求实现 by chiangpan
+	public RefundStrategyResult getAlipayForRefund(RefundOrder refundOrder) {
+		RefundStrategyResult refundStrategyResult=new RefundStrategyResult();
+		Map<String,String> config = getAlipayConfig();
+		//这里还需要斟酌是否传递回掉函数。
+		String notify_url = config.get("alipayNotifyUrl");
+		refundStrategyResult.setHtml(AlipaySubmit.buildRefundRequest("get", "确认", refundOrder.getTransactionId(), refundOrder.getTotalFree().toString(),refundOrder.getRefundDesc(), notify_url, config));
+		refundStrategyResult.setType("alipay");
+		refundStrategyResult.setResult(true);
+		return refundStrategyResult;
+	}
+
+	@Override
+	public int updateRefundOrder(RefundOrder refundOrder) {
+		return refundOrderMapper.updateByPrimaryKeySelective(refundOrder);
+	}
+
+
+	@Override
+	public int insertOrderTrace(Map paraMap) {
+		return refundOrderMapper.insertOrderTrace(paraMap);
+	}
 
 }

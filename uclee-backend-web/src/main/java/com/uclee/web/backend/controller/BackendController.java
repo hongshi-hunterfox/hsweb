@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.AuditRefundDto;
 import org.apache.commons.collections.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -454,5 +455,33 @@ public class BackendController {
 		result.put("data", map);
 		return result;
 	}
+
+	@RequestMapping("/refundList")
+	public @ResponseBody  Map<String,Object> refundList(HttpServletRequest Request){
+
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<AuditRefundDto> refundList = backendService.getRefundOrderList("");
+
+		map.put("refunds", refundList);
+		map.put("size", refundList.size());
+		return map;
+	}
+
+	//审核退款单时的订单详情
+	@RequestMapping(value="/getAduitRefundDetail")
+	public @ResponseBody Map<String,Object> getAduitRefundDetail(HttpServletRequest request,String orderSerialNum){
+		Map<String,Object> orderMap=new TreeMap<String,Object>();
+		//为了不影响页面效果而死命的查询，牺牲性能
+		AuditRefundDto auditRefundDto=new AuditRefundDto();
+		List<AuditRefundDto> refundList = backendService.getRefundOrderList(orderSerialNum);
+		if(refundList!=null && refundList.size()>0){
+			 auditRefundDto=refundList.get(0);
+		}
+		Order order=backendService.getOrderBySeialNum(orderSerialNum);
+		orderMap.put("order",order);
+		orderMap.put("refundDesc",auditRefundDto.getRefundDesc());
+		return orderMap;
+	}
+
 	
 }

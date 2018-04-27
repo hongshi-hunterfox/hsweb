@@ -44,4 +44,7 @@ public interface WebConfig {
 	String startUp = "startUp";
 	String full = "full";
 	String unbundling = "unbundling";
+
+	String zhengshu="zhengshu";
+	String zhengshuPassword="zhengshuPassword";
 }                      
