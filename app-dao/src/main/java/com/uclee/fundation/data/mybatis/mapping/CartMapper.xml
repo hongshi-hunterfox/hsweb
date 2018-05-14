@@ -141,4 +141,7 @@
       canshu_value_id = #{canshuValueId,jdbcType=INTEGER}      
     where cart_id = #{cartId,jdbcType=INTEGER}
   </update>
+  <select id="selectValueId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+ 	 select specification_value_id from web_cart where cart_id = #{cartId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

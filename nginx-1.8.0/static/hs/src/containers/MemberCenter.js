@@ -62,30 +62,9 @@ class MemberCenter extends React.Component {
                 alert("请先绑定会员。");
                 return ;
               }
-              req
-                .get('/uclee-user-web/signInHandler')
-                .end((err, res) => {
-                  var data = JSON.parse(res.text);
-                  if(data.existed){
-                    alert("今天已经签到过了哦~")
-                    return;
-                  }
-                  if(data.result){
-                    this.setState({
-                      point : Number(this.state.point) + Number(data.point),
-                      isSigned:true
-                    })
-                    alert("签到成功，积分+" + data.point)
-                    return;
-                  }
-                  if(!data.result){
-                    alert("网络繁忙请稍后重试")
-                    return;
-                  }
-                  
-                })
 
-            }}>签到获取积分</span>:
+
+            }}><a href="/CheckTable">签到获取积分</a></span>:
             <span className="member-center-check-in">今日已签到</span>
           }
             <img src={this.state.ucenterImg} alt=""/>

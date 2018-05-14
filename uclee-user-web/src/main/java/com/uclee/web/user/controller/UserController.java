@@ -85,6 +85,8 @@ public class UserController extends CommonUserHandler{
 	private BindingRewardsMapper bindingRewardsMapper;
 	@Autowired
 	private EvaluationGiftsMapper evaluationGiftsMapper;
+	@Autowired
+	private IntegralInGiftsMapper integralinGiftsMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -374,7 +376,7 @@ public class UserController extends CommonUserHandler{
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);			
 			logger.info("cccc1---="+tt.getOauthId());
 			List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
-			if(lnsurance!=null){
+			if(lnsurance!=null&&lnsurance.size()>0){
 			List<Lnsurance> lnsurances = hongShiVipService.selectUsers(lnsurance.get(0).getPhone());
 			if(lnsurances!=null&&lnsurances.size()>1){
 				logger.info("cccc2---="+lnsurances.size());
@@ -420,6 +422,24 @@ public class UserController extends CommonUserHandler{
 			map.put("bindText", config.getValue());
 		}else {
 			map.put("bindText", "");
+		}
+		return map;
+	}
+	
+	/**
+	 * 获取签到奖品规则的配置文安
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getSignText")
+	public @ResponseBody Map<String,Object> getSignText(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Config config = userService.getConfigByTag(WebConfig.signText);
+		if(config!=null){
+			map.put("signText", config.getValue());
+		}else {
+			map.put("signText", "");
 		}
 		return map;
 	}
@@ -523,12 +543,26 @@ public class UserController extends CommonUserHandler{
 			if(product!=null&&!product.getShippingFree()){
 				isShippingFree=false;
 			}
-			List<ProductParameters> csshuxings = userService.obtainParameters(carts.get(0).getCanshuValueId());
-			if(csshuxings!=null&&csshuxings.size()>0){
-				item.setCsshuxing(csshuxings.get(0).getSname());
+
+			ProductParameters csshuxings = userService.obtainParameters(item.getCanshuValueId());	
+			if(csshuxings!=null&&csshuxings.getSname()!=null){
+				item.setCsshuxing(csshuxings.getSname());
 			}
-			
 		}
+		logger.info("carts.size============="+carts.size());
+		//把goodscode以字符串格式拼接在一起put到前台-skx
+		String a="";
+		for(int i=0;i<carts.size();i++){
+			logger.info("item.getCartId()============="+carts.get(i).getCartId());
+			Cart valueid=userService.selectValueId(userId, carts.get(i).getCartId());
+			SpecificationValue hsgooscode = userService.selectGoods(valueid.getSpecificationValueId());
+			a=a+hsgooscode.getHsGoodsCode()+",";
+			logger.info("item.getCartId()============="+hsgooscode.getHsGoodsCode());
+		}
+
+		logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa="+JSON.toJSONString(a)); 
+		
+		map.put("hsgooscode",JSON.toJSONString(a));
 		map.put("cartItems", carts);
 		map.put("isShippingFree", isShippingFree);
 		map.put("total", total);
@@ -565,11 +599,6 @@ public class UserController extends CommonUserHandler{
 		}
 		map.put("salesInfo",salesInfo);
 		return map;
-	}
-	
-	private Date Date() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/** 
@@ -1185,6 +1214,18 @@ public class UserController extends CommonUserHandler{
 				map.put("result","success");
 			}
 		}
+		
+		SignRecord accumulations = userService.selectAccumulation(userId);
+		if(accumulations!=null){
+			map.put("accumulations",accumulations.getAccumulation());
+		}
+		
+		SignRecord accumulation = userService.getAccumulation(userId);
+			if(accumulation!=null){
+				map.put("accumulation", accumulation.getAccumulation());
+				logger.info("accumulation.getAccumulation()==="+accumulation.getAccumulation());
+			}
+		
 		OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
 		if(tt!=null){
 			List<HongShiVip> ret= hongShiVipService.getVipInfo(tt.getOauthId());//openid 去拿信息
@@ -1451,10 +1492,91 @@ public class UserController extends CommonUserHandler{
 		//评论送金额
 		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(evaluationGifts.get(0).getMoney());
 		hongShiVipService.hongShiRecharge(dd);
-		
-	    return null;		
+	    return null;				
+	}
+	/**
+	 * @Description: 签到赠送接口sjx
+	 */
+	@RequestMapping("/SigningGift")
+	public @ResponseBody HongShiCommonResult SigningGift(HttpServletRequest request,String oauthId,Integer point,String tag){		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);		
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		List<IntegralInGifts> integralinGifts = integralinGiftsMapper.selectOne();
+		//判断是否在最大赠送活动天数内
+		List<IntegralInGifts> daylist = integralinGiftsMapper.selectDay();
+		SignRecord Accumulation = signRecordMapper.selectAccumulation(userId);
+		if(Accumulation==null){
+		int	accumulation = 1;
+			if(accumulation <= daylist.get(0).getDay()){
+				for(int i=0;i<integralinGifts.size();i++){					
+					if(accumulation==integralinGifts.get(i).getDay()){
+						logger.info("integralinGifts.get(i).getDay()======"+integralinGifts.get(i).getDay());
+						//获取优惠券赠送数量
+						int amount=integralinGifts.get(i).getAmount();
+						for(int j=0;j<amount;j++){
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(integralinGifts.get(i).getVoucherCode());
+							if(coupon!=null && !coupon.isEmpty()){
+								if(coupon != null && coupon.size()>0){
+					
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode());
+									if(s>0){
+										System.out.println("发送成功");
+									}else{
+										System.out.println("发送失败");
+									}					
+								}
+							}else{
+								System.out.println("券被抢光了");
+							}
 			
+						}
+							
+						//签到送金额	
+						HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(integralinGifts.get(i).getMoney());
+						hongShiVipService.hongShiRecharge(dd);
+					}
+				}
+			}
+			return null;
+		}
 
+		
+		if(Accumulation!=null){
+			if(Accumulation.getAccumulation()+1 <= daylist.get(0).getDay()){
+
+				for(int i=0;i<integralinGifts.size();i++){
+				
+					if(Accumulation.getAccumulation()+1==integralinGifts.get(i).getDay()){
+						logger.info("integralinGifts.get(i).getDay()======"+integralinGifts.get(i).getDay());
+						//获取优惠券赠送数量
+						int amount=integralinGifts.get(i).getAmount();
+						for(int j=0;j<amount;j++){
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(integralinGifts.get(i).getVoucherCode());
+							if(coupon!=null && !coupon.isEmpty()){
+								if(coupon != null && coupon.size()>0){
+					
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode());
+									if(s>0){
+										System.out.println("发送成功");
+									}else{
+										System.out.println("发送失败");
+									}					
+								}
+							}else{
+								System.out.println("券被抢光了");
+							}
+			
+						}
+							
+						//签到送金额	
+						HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(integralinGifts.get(i).getMoney());
+						hongShiVipService.hongShiRecharge(dd);
+					}
+				}
+			}
+		}
+		return null;	
 
 	}
 

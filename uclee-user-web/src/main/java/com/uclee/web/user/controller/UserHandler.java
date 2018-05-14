@@ -114,9 +114,11 @@ public class UserHandler {
 	public @ResponseBody Map<String,Object> orderHandler(HttpServletRequest request,@RequestBody OrderPost orderPost) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
+//		orderPost.
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		logger.info("orderPost: " + JSON.toJSONString(orderPost));
 		map = userService.orderHandler(orderPost,userId);
+		logger.info("orderPost=======: " + JSON.toJSONString(map));
 		return map;
 	}
 	
@@ -253,6 +255,7 @@ public class UserHandler {
 	public @ResponseBody Map<String,Object> cartHandler(HttpServletRequest request,@RequestBody Cart cart) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
+		logger.info("cart=========="+JSON.toJSONString(cart));
 		map.put("result", false);
 		if(cart.getAmount()==null||cart.getProductId()==null||cart.getSpecificationValueId()==null){
 			map.put("reason", "请选择规格");

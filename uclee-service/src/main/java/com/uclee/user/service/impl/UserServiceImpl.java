@@ -147,7 +147,8 @@ public class UserServiceImpl implements UserServiceI {
 	
 	@Autowired
 	private HongShiMapper hongShiMapper;
-	
+	@Autowired
+	private IntegralInGiftsMapper integralinGiftsMapper;	
 	@Autowired
 	private HongShiVipMapper hongShiVipMapper;
 	@Autowired
@@ -851,6 +852,8 @@ public class UserServiceImpl implements UserServiceI {
 	public UserProfile getBasicUserProfile(Integer userId) {
 		UserProfile search = new UserProfile();
 		search.setUserId(userId);
+		
+		logger.info("search=============="+JSON.toJSONString(search));
 		UserProfile userProfile = userProfileMapper.selectByUserProfile(search);
 		return userProfile;
 	}
@@ -2094,9 +2097,9 @@ public class UserServiceImpl implements UserServiceI {
 				cart.setImage(products.get(0).getImage());
 			}
 	
-			List<ProductParameters> csshuxing = productMapper.obtainParameters(cart.getCanshuValueId());
-			if(csshuxing!=null&&csshuxing.size()>0){
-				cart.setCsshuxing(csshuxing.get(0).getSname());
+			ProductParameters csshuxing = productMapper.obtainParameters(cart.getCanshuValueId());
+			if(csshuxing!=null&&csshuxing.getSname()!=null){
+				cart.setCsshuxing(csshuxing.getSname());
 			}
 			
 			SpecificationValue specificationValue = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
@@ -2325,18 +2328,6 @@ public class UserServiceImpl implements UserServiceI {
 		}else{
 			order.setPhone(orderPost.getPhone());
 		}
-
-		String[] cartIdss = orderPost.getCartIds().split(",");
-		for(String cartId : cartIdss){
-			Cart cart = cartMapper.selectByUserIdAndCartId(userId,Integer.valueOf(cartId));
-			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
-			List<ProductParameters> csshuxing = productMapper.obtainParameters(cart.getCanshuValueId());
-			if(csshuxing!=null&&csshuxing.size()>0){
-				logger.info("aaaaaaaa+sname====="+csshuxing.get(0).getSname());
-				order.setRemark("款式："+value.getValue()+"("+csshuxing.get(0).getSname()+")"+"["+orderPost.getRemark()+"]");
-			}			
-		}
-	
 //		order.setRemark(orderPost.getRemark());
 		order.setPickTimeStr(orderPost.getPickDateStr() + " " + orderPost.getPickTimeStr()+":00");
 		logger.info(order.getPickTimeStr());
@@ -2346,6 +2337,8 @@ public class UserServiceImpl implements UserServiceI {
 		//订单项处理
 		List<OrderItem> orderItem = new ArrayList<OrderItem>();
 		String[] cartIds = orderPost.getCartIds().split(",");
+		//拼接备注插入产品的规格口味--kx
+		String a="";
 		for(String cartId : cartIds){
 			Cart cart = cartMapper.selectByUserIdAndCartId(userId,Integer.valueOf(cartId));
 			if(cart==null){
@@ -2355,6 +2348,8 @@ public class UserServiceImpl implements UserServiceI {
 			}
 			Product product = productMapper.selectByPrimaryKey(cart.getProductId());
 			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
+//			List<ProductParameters> csshuxing = productMapper.obtainParameter(cart.getCanshuValueId());
+			ProductParameters csshuxing1 = productMapper.obtainParameters(cart.getCanshuValueId());
 			if(value==null){
 				map.put("result", false);
 				map.put("reason", "非法数据，请返回购物车重新提交");
@@ -2377,10 +2372,17 @@ public class UserServiceImpl implements UserServiceI {
 				map.put("reason", "非法数据，请返回购物车重新提交");
 				return map;
 			}
+			//拼接备注插入产品的规格口味--kx
+			if(csshuxing1!=null&&csshuxing1.getSname()!=null){
+				a=a+"款式："+value.getValue()+"("+csshuxing1.getSname()+")"+",";
+			}
+			
 			OrderItem item = new OrderItem();
 			item.setAmount(cart.getAmount().shortValue());
 			item.setValueId(cart.getSpecificationValueId());
-			item.setValue("款式：" + value.getValue());
+			if(csshuxing1!=null&&csshuxing1.getSname()!=null){
+				item.setValue("款式：" + value.getValue() +"("+ csshuxing1.getSname()+")");
+			}
 			item.setItemSerialNum(NumberUtil.generateSerialNum());
 			Date date = new Date();
 			long value0 = date.getTime();
@@ -2426,6 +2428,8 @@ public class UserServiceImpl implements UserServiceI {
 			}
 			orderItem.add(item);
 		}
+		//拼接备注插入产品的规格口味--kx
+		order.setRemark(a+"备注；"+orderPost.getRemark());
 		order.setTotalPrice(totalMoney);	
 		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
 		BigDecimal cut = new BigDecimal(0);
@@ -2679,9 +2683,9 @@ public class UserServiceImpl implements UserServiceI {
 					tmp.setEndTime(specificationValue.getEndTime());
 					tmp.setSpecification(specifcationStr);
 				}				
-				List<ProductParameters> csshuxing = productMapper.obtainParameters(item.getCanshuValueId());
-				if(csshuxing!=null&&csshuxing.size()>0){
-					tmp.setCsshuxing(csshuxing.get(0).getSname());
+				ProductParameters csshuxing = productMapper.obtainParameters(item.getCanshuValueId());
+				if(csshuxing!=null){
+					tmp.setCsshuxing(csshuxing.getSname());
 				}
 				List<ProductDto> products  = productMapper.selectOneImage(tmp.getProductId());
 				if(products.size()>0){
@@ -2868,6 +2872,9 @@ public class UserServiceImpl implements UserServiceI {
 					}
 				}
 			}
+			//获取goods表名称---skx
+			HongShiCoupon couponName = hongShiMapper.getCouponName(coupon.getProductNumber());
+			coupon.setName(couponName.getName());
 		}
 		return couponsRet;
 	}
@@ -2879,26 +2886,46 @@ public class UserServiceImpl implements UserServiceI {
 	* @param @return    设定文件  
 	* @throws 
 	*/
+	@SuppressWarnings("unused")
 	@Override
 	public Map<String,Object> signInHandler(Integer userId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
+		logger.info("today================="+today);
 		SignRecord existed = signRecordMapper.selectToday(userId,today);
+		logger.info("existed================="+existed);
 		if(existed!=null){
 			map.put("existed", true);
 			return map;
 		}
 		SignRecord record = new SignRecord();
+		logger.info("record============="+JSON.toJSONString(record));
 		Config config = configMapper.getByTag(WebConfig.signInPoint);
 		record.setUserId(userId);
 		try {
 			record.setPoint(Integer.parseInt(config.getValue()));
+			SignRecord Accumulation = signRecordMapper.selectAccumulation(userId);
+			
+			List<IntegralInGifts> daylist = integralinGiftsMapper.selectDay();		
+			if(Accumulation==null){
+				record.setAccumulation(1);
+			}
+			if(Accumulation!=null){
+				int accumulation = Accumulation.getAccumulation()+1;
+				if(accumulation>daylist.get(0).getDay()){
+					record.setAccumulation(1);
+				}
+				else{
+					record.setAccumulation(Accumulation.getAccumulation()+1);
+				}
+			}
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			map.put("result", false);
 			return map;
 		}
+		logger.info("record22============="+JSON.toJSONString(record));
 		if(signRecordMapper.insertSelective(record)>0){
 			//同步积分到洪石系统
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
@@ -3607,6 +3634,7 @@ public class UserServiceImpl implements UserServiceI {
 	 */
 	@Override
 	public  Map<String, Object> getMobJect(String QueryName,String phone,String hsCode){
+//		LinkedHashMap<String,Object> ret = new LinkedHashMap<String, Object>();
 		HashMap<String,Object> ret = new HashMap<String, Object>();
 		Integer userId = null;
 
@@ -4012,7 +4040,7 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	@Override
-	public List<ProductParameters> obtainParameters(Integer id) {
+	public ProductParameters obtainParameters(Integer id) {
 		return productMapper.obtainParameters(id);
 	}
 
@@ -4209,5 +4237,31 @@ public class UserServiceImpl implements UserServiceI {
 	public int insertOrderTrace(Map paraMap) {
 		return refundOrderMapper.insertOrderTrace(paraMap);
 	}
+	
+	@Override
+	public SignRecord getAccumulation(Integer userId) {
+		return signRecordMapper.getAccumulation(userId);
+	}
+
+	@Override
+	public SignRecord selectAccumulation(Integer userId) {
+		return signRecordMapper.selectAccumulation(userId);
+	}
+
+	@Override
+	public List<SpecificationValue> selectByHsGoods(Integer valueId) {
+		return specificationValueMapper.selectByHsGoods(valueId);
+	}
+
+	@Override
+	public Cart selectValueId(Integer userId, Integer cartId) {
+		return cartMapper.selectValueId(userId, cartId);
+	}
+
+	@Override
+	public SpecificationValue selectGoods(Integer valueId) {
+		return specificationValueMapper.selectGoods(valueId);
+	}
 
 }
+

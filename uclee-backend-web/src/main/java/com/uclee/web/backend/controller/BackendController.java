@@ -150,6 +150,31 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
+	@RequestMapping("/integralinConfiguration")
+	public @ResponseBody Map<String,Object> integralinConfiguration(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<IntegralInGifts> integralinGifts = backendService.selectAllIntegralInGifts();
+		int i = 0;
+		if(integralinGifts.size()==0){
+			IntegralInGifts integralinGift = new IntegralInGifts();
+			integralinGift.setDay(0);
+			integralinGift.setMoney(new BigDecimal(0));
+			integralinGift.setVoucherCode("");
+			integralinGift.setAmount(0);
+			integralinGifts.add(integralinGift);
+		}
+		for(IntegralInGifts item : integralinGifts){
+			map.put("myKey[" + i + "]", item.getDay());
+			map.put("myValue0[" + i +"]", item.getMoney());
+			map.put("myValue[" + i + "]", item.getVoucherCode());
+			map.put("myValue1[" + i + "]", item.getAmount());
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+	}
 	@RequestMapping("/fullCut")
 	public @ResponseBody Map<String,Object> fullCut(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();

@@ -22,6 +22,18 @@
     from web_specification_values
     where value_id = #{valueId,jdbcType=INTEGER}
   </select>
+  <select id="selectByHsGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   	select 
+    hs_goods_code
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
   <select id="selectByProductIdLimit" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select  TOP 1
     A.*
@@ -40,6 +52,10 @@
     from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
     where B.product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	select hs_goods_code from web_specification_values where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+ 
   <select id="selectByProductIdAndValueId" resultMap="BaseResultMap" >
     select 
     A.* 

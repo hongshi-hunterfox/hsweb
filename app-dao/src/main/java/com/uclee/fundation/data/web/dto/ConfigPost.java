@@ -44,9 +44,17 @@ public class ConfigPost {
 	private String startUp;
 	private String full;
 	private String unbundling;
+	private String signText;
 
 	private String zhengshu;
 	private String zhengshuPassword;
+	public String getSignText() {
+		return signText;
+	}
+
+	public void setSignText(String signText) {
+		this.signText = signText;
+	}
 
 	public String getUnbundling() {
 		return unbundling;

@@ -114,6 +114,7 @@ public interface BackendServiceI {
 	List<BindingRewards> selectAllBindingRewards();
 	
 	List<EvaluationGifts> selectAllEvaluationGifts();
+	List<IntegralInGifts> selectAllIntegralInGifts();
 
 	boolean updateBindingRewards(FreightPost freightPost);
 
@@ -130,6 +131,7 @@ public interface BackendServiceI {
 	boolean systemConfigHandler(ConfigPost configPost);
 
 	boolean updateEvaluationGifts(FreightPost freightPost);
+	boolean updateIntegralInGifts(FreightPost freightPost);
 
 	//add by chiangpan for pickTime
 	List<OrderSettingPick> selectAllOrderSettingPick();

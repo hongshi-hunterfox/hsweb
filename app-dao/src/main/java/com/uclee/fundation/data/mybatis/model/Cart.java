@@ -26,7 +26,7 @@ public class Cart {
     
     private String csshuxing;
 
-    public String getCsshuxing() {
+	public String getCsshuxing() {
 		return csshuxing;
 	}
 

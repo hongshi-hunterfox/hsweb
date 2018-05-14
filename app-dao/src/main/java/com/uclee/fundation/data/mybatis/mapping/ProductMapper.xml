@@ -289,9 +289,15 @@
     from web_product_parameters
     where product_id = #{productId,jdbcType=INTEGER}
   </select>
-    <select id="obtainParameters" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+  <select id="obtainParameters" resultMap="ProductParameters" parameterType="java.lang.Integer" >
     select 
-    id,product_id,sname
+    sname
+    from web_product_parameters
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="obtainParameter" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+    select 
+    *
     from web_product_parameters
     where id = #{id,jdbcType=INTEGER}
   </select>

@@ -25,5 +25,7 @@ public interface CartMapper {
 	List<CartDto> selectUserCart(Integer userId);
 
 	CartDto selectByUserIdAndCartId(@Param("userId")Integer userId, @Param("cartId")Integer cartId);
+	
+	Cart selectValueId(@Param("userId")Integer userId, @Param("cartId")Integer cartId);
 
 }

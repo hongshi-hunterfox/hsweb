@@ -10,7 +10,9 @@ class Coupon extends React.Component{
 	    this.state = {
 	      coupons: [],
 	      voucherCode:'',
-	      voucherText:''
+	      voucherText:'',
+	      fullamount:'',
+	      convertibleGoods:''
 	    }
 	}
 
@@ -31,9 +33,19 @@ class Coupon extends React.Component{
                   voucherCode: JSON.parse(sessionStorage.getItem('voucher'))
                 })
               }
+              if(sessionStorage.getItem('fullamount')!=null){
+      	        this.setState({
+                  fullamount: JSON.parse(sessionStorage.getItem('fullamount'))
+                })
+              }
               if(sessionStorage.getItem('voucher_text')!=null){
                 this.setState({
                 voucherText: JSON.parse(sessionStorage.getItem('voucher_text'))
+                })
+              }
+               if(sessionStorage.getItem('convertibleGoods')!=null){
+                this.setState({
+                convertibleGoods: JSON.parse(sessionStorage.getItem('convertibleGoods'))
                 })
               }
 	}
@@ -43,16 +55,19 @@ class Coupon extends React.Component{
             return(
             	<div className={
 						"coupon-item"
-					} key={index} onClick={this._pickvoucher.bind(this,item.vouchersCode,item.payQuota)}>
+					} key={index} onClick={this._pickvoucher.bind(this,item.vouchersCode,item.payQuota,item.fullamount,item.convertibleGoods)}>
 	            	<div className='top-line'>
-	            		<div className="title">{item.payQuota}元现金礼券</div>
+	            		<div className="title">{item.name}</div>
 	            		<div className="condition">优惠券号:{item.barCode}</div>
 	            	</div> 
 	            	<div className='center-line'>
-	            		<div className="money">￥<span className='number'>{item.payQuota}</span></div>
-	            	</div> 
+	            		<div className="money">
+	            		￥<span className='number'>{item.payQuota}</span>
+	            		</div>
+	            	</div>
 	            	<div className='bottom-line'>
-	            		<div className="date">有效期截止至：{item.endTime}</div>
+	            		<div className="date">有效期截止至：{item.endTime}</div>	            		
+	            		<div className="date">{item.remarks}</div>
 	            		{this.state.voucherCode === item.vouchersCode&&this.props.location.query.isFromOrder?<span className="fa fa-check icon-check tag" />:<span className="tag" />}
 	            	</div> 
 	            	
@@ -97,16 +112,20 @@ class Coupon extends React.Component{
         	</DocumentTitle>
         );
 	  }
-	  _pickvoucher = (code,money) =>{
+	  _pickvoucher = (code,money,amount,Goods) =>{
 	  	if(this.state.voucherCode!==code){
 	  		this.setState({
 		  		voucherCode: code,
-		  		voucherText:money
+		  		voucherText:money,
+		  		fullamount:amount,
+		  		convertibleGoods:Goods
 		  	})	
 	  	}else{
 	  		this.setState({
 		  		voucherCode: '',
-		  		voucherText:''
+		  		voucherText:'',
+		  		fullamount:'',
+		  		convertibleGoods:''
 		  	})	
 	  	}
 	  	
@@ -116,6 +135,9 @@ class Coupon extends React.Component{
 	  	if(this.props.location.query.isFromOrder){
 			sessionStorage.setItem('voucher', JSON.stringify(this.state.voucherCode));
 			sessionStorage.setItem('voucher_text', JSON.stringify(this.state.voucherText));
+			sessionStorage.setItem('fullamount', JSON.stringify(this.state.fullamount));
+			sessionStorage.setItem('convertibleGoods', JSON.stringify(this.state.convertibleGoods));
+			
 		}
 		window.location='/order'
 	  }

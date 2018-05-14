@@ -36,8 +36,10 @@ import Comment from './containers/Comment'
 import CommentDetail from './containers/CommentDetail'
 import DataView from './containers/DataView'
 import ShowCoupon from './containers/ShowCoupon'
+import CheckTable from './containers/CheckTable'
 import MyOrderDetail from './containers/MyOrderDetail.js'
 import Refund from './containers/Refund.js'
+import ChouJiang from './containers/ChouJiang.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -76,8 +78,10 @@ ReactDOM.render(
       <Route path="storeList" component={StoreList} />
       <Route path="dataView" component={DataView} />
       <Route path="ShowCoupon" component={ShowCoupon} />
+      <Route path="CheckTable" component={CheckTable} />
       <Route path="myOrderDetail/:id" component={MyOrderDetail} />
       <Route path="seller/refund" component={Refund}/>
+      <Route path="luck_draw" component={ChouJiang}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

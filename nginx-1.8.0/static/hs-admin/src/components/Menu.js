@@ -50,6 +50,9 @@ class Menu extends React.Component {
           <Link to={'/recharge-config-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             充值赠送设置
           </Link>
+          <Link to={'/integralinConfiguration?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            签到赠送礼品设置
+          </Link>
           <Link to={'/comment-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             评论管理
           </Link>

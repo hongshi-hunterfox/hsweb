@@ -21,7 +21,8 @@ var errMap = {
   isSelfPick_error: '请选择是否自提',
   Distribution_error: '不在配送范围内',
   closeDate_error:'我们歇业了',
-  businesstime_error:'我们打烊睡觉了'
+  businesstime_error:'我们打烊睡觉了',
+  fullamunt_error:'不满足优惠券使用条件'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -37,6 +38,8 @@ class Order extends React.Component {
       cartIds: [],
       voucherCode: '',
       voucherText: 0,
+      fullamount: 0,
+      convertibleGoods: '',
       isDataError: false,
       shippingFee: 0,
       phone: '',
@@ -53,7 +56,8 @@ class Order extends React.Component {
       closeStartDateStr:'',
       closeEndDateStr:'',
       businessStartTime:'',
-      businessEndTime:''
+      businessEndTime:'',
+      hsgooscode: []
     }
     this.lat = 23
     this.lng = 113
@@ -129,7 +133,8 @@ class Order extends React.Component {
         supportDeliver:resJson.supportDeliver,
         isSelfPick:resJson.isSelfPick?resJson.isSelfPick:sessionStorage.getItem('isSelfPick') || '',
         salesInfo:resJson.salesInfo,
-        cut:resJson.cut
+        cut:resJson.cut,
+        hsgooscode:resJson.hsgooscode
       })
       sessionStorage.setItem('total', resJson.total);
       if (sessionStorage.getItem('addr') != null) {
@@ -164,6 +169,16 @@ class Order extends React.Component {
           voucherText: JSON.parse(sessionStorage.getItem('voucher_text'))
         })
       }
+      if (sessionStorage.getItem('fullamount') != null) {
+        this.setState({
+          fullamount: JSON.parse(sessionStorage.getItem('fullamount'))
+        })
+      }
+       if (sessionStorage.getItem('convertibleGoods') != null) {
+        this.setState({
+          convertibleGoods: JSON.parse(sessionStorage.getItem('convertibleGoods'))
+        })
+      }
       if (!this.state.cartItems || this.state.cartItems.length <= 0) {
         this.setState({
           isDataError: true
@@ -187,21 +202,21 @@ class Order extends React.Component {
       })
       console.log(this.state.config)
     })
-
-
-    req.get('uclee-backend-web/orderSettingPick').end((err, res) => {
-      if (err) {
-        return err
-      }
-      var data = JSON.parse(res.text)
-      console.log(data);
-      this.setState({
-        closeStartDateStr:data.data.closeStartDateStr,
-        closeEndDateStr:data.data.closeEndDateStr,
-        businessStartTime:data.data.businessStartTime,
-        businessEndTime:data.data.businessEndTime
-      })
-    })
+    req
+    	.get('uclee-backend-web/orderSettingPick')
+    	.end((err, res) => {
+      	if (err) {
+        	return err
+      	}
+      	var data = JSON.parse(res.text)
+      	console.log(data);
+      	this.setState({
+        	closeStartDateStr:data.data.closeStartDateStr,
+        	closeEndDateStr:data.data.closeEndDateStr,
+        	businessStartTime:data.data.businessStartTime,
+        	businessEndTime:data.data.businessEndTime
+      	})
+    	})
   }
 
   render() {
@@ -225,6 +240,16 @@ class Order extends React.Component {
                     this.state.cut).toFixed(2)
                 : 0)
    var Difference = this.state.config.full - this.state.total
+   
+// var hsgooscode = this.state.hsgooscode.map((item, index) => {
+//          return(
+//          	<div>
+//         			<span>
+//         				{item.hsGoodsCode}
+//         			</span>
+//         		</div>
+//          )
+//    })
     return (
       <DocumentTitle title="提交订单">
         <div className="order">
@@ -420,7 +445,7 @@ class Order extends React.Component {
             >
               优惠券：
               {this.state.voucherText && this.state.voucherText !== ''
-                ? this.state.voucherText + ' 现金优惠券'
+                ? this.state.voucherText + '元现金优惠券   x 1 单笔满' + this.state.fullamount + '元使用'
                 : null}
               <span className="icon fa fa-chevron-right" />
             </div>
@@ -615,6 +640,35 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    console.log("aaaaa"+this.state.convertibleGoods)
+    console.log("aaaaa"+this.state.hsgooscode)
+    if (this.state.total<this.state.fullamount) {
+      this.setState({
+        error: errMap['fullamunt_error']
+      })
+      return false
+    }
+    
+    var a=this.state.hsgooscode
+		var convertibleGoods=this.state.convertibleGoods;
+		var result=convertibleGoods.split(",");
+		var bb = 0;
+		for(var i=0;i<result.length;i++){
+  		console.log("aaaaaaa===="+a)
+  		
+  		if(a.lastIndexOf((result[i]+","))===-1){			
+  			console.log("aaaaaaa===="+result[i])
+  		}else{
+  			bb = 1;
+  		}
+  	}
+			console.log("aaaaaaa===="+bb)
+    	if(this.state.convertibleGoods!==null&&bb===0){
+    		this.setState({
+        	error: errMap['fullamunt_error']
+      	})
+      	return false
+    	}
 
     if(Date.parse(data.pickDateStr)>=Date.parse(this.state.closeStartDateStr)
           &&
@@ -625,17 +679,12 @@ salesInfoShowClick=()=>{
       })
       return false;
     }
-
-
     if(data.pickTimeStr<this.state.businessStartTime || data.pickTimeStr>this.state.businessEndTime){
       this.setState({
         error:errMap['businesstime_error']
       })
       return false;
     }
-
-
-
     req.post('/uclee-user-web/orderHandler').send(data).end((err, res) => {
       if (err) {
         return err
@@ -650,6 +699,8 @@ salesInfoShowClick=()=>{
         sessionStorage.removeItem('addr')
         sessionStorage.removeItem('voucher')
         sessionStorage.removeItem('voucher_text')
+        sessionStorage.removeItem('fullamount')
+        sessionStorage.removeItem('convertibleGoods')
         sessionStorage.removeItem('remark')
         sessionStorage.removeItem('isSelfPick')
         sessionStorage.removeItem('isFromCart')

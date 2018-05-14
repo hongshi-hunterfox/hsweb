@@ -10,6 +10,16 @@ public class SignRecord {
     private Date signTime;
 
     private Integer point;
+    
+    private Integer accumulation;
+
+    public Integer getAccumulation() {
+		return accumulation;
+	}
+
+	public void setAccumulation(Integer accumulation) {
+		this.accumulation = accumulation;
+	}
 
     public Integer getId() {
         return id;

@@ -38,6 +38,11 @@
 		<result column="EndTime" property="endTime" jdbcType="VARCHAR" />
 		<result column="BarCode" property="barCode" jdbcType="VARCHAR" />
 		<result column="GoodsCode" property="goodsCode" jdbcType="VARCHAR" />
+		<result column="FullAmount" property="fullamount" jdbcType="DECIMAL" />
+		<result column="ConvertibleGoods" property="convertibleGoods" jdbcType="VARCHAR" />
+		<result column="Remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="ProductNumber" property="productNumber" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="HongShiOrder" type="com.uclee.fundation.data.mybatis.model.HongShiOrder">
 		<id column="ID" property="id" jdbcType="INTEGER" />
@@ -142,6 +147,8 @@
 	</select>
 	<select id="getmobJect" parameterType="java.util.Map" resultType="java.util.Map">
  		exec QueryFormMObject #{QueryName,jdbcType=VARCHAR},#{hsCode,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER}
-    </select>
-   
+    </select> 
+    <select id="getCouponName" resultMap="HongShiCoupon">
+		select 名称  as name from goods where  编号=#{productNumber,jdbcType=VARCHAR}
+	</select> 
 </mapper>

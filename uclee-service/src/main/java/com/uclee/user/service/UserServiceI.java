@@ -288,7 +288,11 @@ public interface UserServiceI {
 	
 	List<Lnsurance> getUsers(String oauthId);
 	
-	List<ProductParameters> obtainParameters(Integer id);
+	ProductParameters obtainParameters(Integer id);
+	
+	SignRecord selectAccumulation(Integer userId);
+	
+	SignRecord getAccumulation(Integer userId);
 
 	//退款 by chiangpan
 	Map<String,Object> applyRefund(String outerOrderCode, Integer userId);
@@ -306,4 +310,10 @@ public interface UserServiceI {
 	int updateRefundOrder(RefundOrder refundOrder);
 	//调用存储过程插入到线下表order_trace表
 	int insertOrderTrace(Map pramMap);
+	
+	List<SpecificationValue> selectByHsGoods(Integer valueId);
+	
+	Cart selectValueId(Integer userId, Integer cartId);
+	
+	SpecificationValue selectGoods(Integer valueId);
 }

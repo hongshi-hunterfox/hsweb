@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface HongShiVipServiceI {
+	
 	AddVipResult addHongShiVipInfo(HongShiVip params);
 	
 	List<HongShiVip> getVipInfo(String cWeiXinCode);

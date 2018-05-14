@@ -79,6 +79,10 @@ public class BackendHandler {
 	public @ResponseBody boolean evaluationConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateEvaluationGifts(freightPost);
 	}
+	@RequestMapping("/integralinConfigurationHandler")
+	public @ResponseBody boolean integralinConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateIntegralInGifts(freightPost);
+	}
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		return backendService.updateBirthVoucher(birthVoucherPost);

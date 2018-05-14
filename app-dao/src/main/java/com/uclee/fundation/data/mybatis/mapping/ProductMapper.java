@@ -44,5 +44,7 @@ public interface ProductMapper {
     
     int updateParameters(ProductParameters record);
     
-    List<ProductParameters> obtainParameters(Integer id);
+    ProductParameters obtainParameters(Integer id);
+    
+    List<ProductParameters> obtainParameter(Integer id);
 }

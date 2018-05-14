@@ -41,6 +41,7 @@ import BirthVoucher from './containers/BirthVoucher'
 import FullCut from './containers/FullCut'
 import BindMemberSetting from './containers/BindMemberSetting'
 import EvaluationConfiguration from './containers/EvaluationConfiguration'
+import IntegralInConfiguration from './containers/IntegralInConfiguration'
 import SystemConfig from './containers/SystemConfig'
 import ActivityConfig from './containers/ActivityConfig'
 import RechargeConfigList from './containers/RechargeConfigList'
@@ -74,6 +75,7 @@ ReactDOM.render(
       <Route path="fullCutShipping" component={FullCutShipping} />
       <Route path="bindMemberSetting" component={BindMemberSetting} />
       <Route path="evaluationConfiguration" component={EvaluationConfiguration} />
+      <Route path="integralinConfiguration" component={IntegralInConfiguration} />
       <Route path="FullCut" component={FullCut} />
       <Route path="user-unbuy-list" component={UserUnBuyList} />
       <Route path="user-birth-list" component={UserBirthList} />

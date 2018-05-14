@@ -53,10 +53,7 @@ const DetailInfo = (props) => {
       </div>
       <div className="detail-info-price-rprice">
         {
-          props.minPrice === props.maxPrice ? 
-          <span>¥ {props.proMinPrice > props.minPrice ? props.minPrice : props.proMinPrice}</span>
-          :
-          <span>¥ {props.proMinPrice > props.minPrice ? props.minPrice : props.proMinPrice} - {props.maxPrice}</span>
+         	<span>¥ {(Date1>props.endtime) ? props.minPrice : props.proMinPrice < props.minPrice ? props.proMinPrice : props.minPrice} - {props.maxPrice}</span>
         }         
       </div>
       </div>
@@ -293,6 +290,7 @@ class Detail extends React.Component {
     this.preMaxPrice = 0
     this.proMinPrice = 0
     this.proMaxPrice = 0
+    this.endtime = 0
   }
 
   componentDidMount() {
@@ -416,6 +414,7 @@ class Detail extends React.Component {
         this.preMaxPrice = Math.max.apply(null, prePrices)
         this.proMinPrice = Math.min.apply(null, promotionPrice)
         this.proMaxPrice = Math.max.apply(null, promotionPrice)
+        this.endtime = endTime
         console.log(prePrices)
     }
 
@@ -457,7 +456,8 @@ class Detail extends React.Component {
               preMinPrice={this.preMinPrice}
               preMaxPrice={this.preMaxPrice}
               proMinPrice={this.proMinPrice}
-              proMaxPrice={this.proMaxPrice}/>
+              proMaxPrice={this.proMaxPrice}
+              endtime={this.endtime}/>
               {
                 this.state.salesInfo.length>=1?
                 <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>

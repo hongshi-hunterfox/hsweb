@@ -43,6 +43,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private EvaluationGiftsMapper evaluationGiftsMapper;
 	@Autowired
+	private IntegralInGiftsMapper integralinGiftsMapper;
+	@Autowired
 	private CategoryMapper categoryMapper;
 	@Autowired
 	private HomeQuickNaviMapper homeQuickNaviMapper;
@@ -224,6 +226,11 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.startUp, "");
 		}
+		if (configPost.getSignText()!=null) {
+			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
+		}else{
+			configMapper.updateByTag(WebConfig.signText, "");
+		}
 		return true;
 	}
 	@Override
@@ -352,6 +359,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getUnbundling()!=null) {
 			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
+		}
+		if (configPost.getSignText()!=null) {
+			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
 		return true;
 	}
@@ -482,6 +492,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getUnbundling()!=null) {
 			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
 		}
+		if (configPost.getSignText()!=null) {
+			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
+		}
 		return true;
 	}
 	@Override
@@ -504,6 +517,12 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<EvaluationGifts> selectAllEvaluationGifts() {
 
 		return evaluationGiftsMapper.selectOne();
+	}
+
+	@Override
+	public List<IntegralInGifts> selectAllIntegralInGifts() {
+
+		return integralinGiftsMapper.selectOne();
 	}
 
 	@Override
@@ -585,6 +604,27 @@ public class BackendServiceImpl implements BackendServiceI {
 			evaluationGifts.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
 			evaluationGifts.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
 			evaluationGiftsMapper.insertSelective(evaluationGifts);
+		}
+		return true;
+	}
+	@Override
+	public boolean updateIntegralInGifts(FreightPost freightPost) {
+		int delAll = integralinGiftsMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0||freightPost.getMyValue0()==null||freightPost.getMyValue0().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			IntegralInGifts integralinGifts = new IntegralInGifts();
+			integralinGifts.setDay(entry.getValue().intValue());
+			integralinGifts.setMoney(new BigDecimal(freightPost.getMyValue0().get(entry.getKey())));
+			integralinGifts.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			integralinGifts.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
+			integralinGiftsMapper.insertSelective(integralinGifts);
 		}
 		return true;
 	}
@@ -934,6 +974,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setFull(config.getValue());
 			}else if(config.getTag().equals(WebConfig.unbundling)){
 				configPost.setUnbundling(config.getValue());
+			}else if(config.getTag().equals(WebConfig.signText)){
+				configPost.setSignText(config.getValue());
 			}
 		}
 		return configPost;

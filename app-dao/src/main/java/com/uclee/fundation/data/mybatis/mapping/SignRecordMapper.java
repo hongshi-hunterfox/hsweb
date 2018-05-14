@@ -20,5 +20,9 @@ public interface SignRecordMapper {
     int updateByPrimaryKey(SignRecord record);
 
 	SignRecord selectToday(@Param("userId")Integer userId, @Param("signTime")Date signTime);
+	
+	SignRecord selectAccumulation(Integer userId);
+	
+	SignRecord getAccumulation(Integer userId);
 
 }
