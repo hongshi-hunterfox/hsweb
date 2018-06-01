@@ -12,6 +12,8 @@
     <result column="promotion_price" property="promotionPrice" jdbcType="DECIMAL" />
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTimeStr" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTimeStr" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     value_id, specification_id, value, hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time
@@ -189,5 +191,10 @@
         end_time = #{endTime,jdbcType=INTEGER},
         hs_stock = #{hsStock,jdbcType=INTEGER}
     where value_id = #{valueId,jdbcType=INTEGER}
+  </update>
+  <update id="updateGuiGe" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+  	update web_specification_values
+  	 set  promotion_price = #{promotionPrice, jdbcType=DECIMAL}, start_time= #{startTimeStr,jdbcType=VARCHAR}, end_time= #{endTimeStr,jdbcType=VARCHAR}
+  	 where value_id=#{valueId,jdbcType=INTEGER}
   </update>
 </mapper>

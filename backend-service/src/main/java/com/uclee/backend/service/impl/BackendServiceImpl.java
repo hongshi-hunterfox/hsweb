@@ -1396,6 +1396,27 @@ public class BackendServiceImpl implements BackendServiceI {
 		if(category.getCategoryId()!=null){
 			Category tmp = categoryMapper.selectByPrimaryKey(category.getCategoryId());
 			Category tmp2 = categoryMapper.selectByName(category.getCategory());
+			List<Category> tmp3 = categoryMapper.selectBybatchDiscount(category.getCategory());
+			List<ProductGe> productguige = productMapper.selectProductsCategories(category.getCategoryId());
+			
+			if(productguige!=null){
+				for(int i=0;i<productguige.size();i++){
+					System.out.println("6666======"+productguige.get(i).getValueId());
+					SpecificationValue Value = specificationValueMapper.selectByPrimaryKey(productguige.get(i).getValueId());
+				    System.out.println("在售价============"+ Value.getHsGoodsPrice());
+				    BigDecimal prePrice = Value.getHsGoodsPrice().multiply(category.getBatchDiscount());	
+				    System.out.println("折扣价============"+ prePrice);
+					Value.setPromotionPrice(prePrice);
+					System.out.println("开始时间============"+ category.getStartTimeStrs());
+					Value.setStartTimeStr(category.getStartTimeStrs());
+					System.out.println("结束时间============"+ category.getEndTimeStrs());
+					Value.setEndTimeStr(category.getEndTimeStrs());
+					
+					specificationValueMapper.updateGuiGe(Value);
+					
+				}
+			}
+			
 			if(tmp2!=null&&tmp2.getCategoryId()!=category.getCategoryId()){
 				ret.put("result",false);
 				ret.put("reason","该类别已经存在，不可重复添加");
@@ -1549,6 +1570,11 @@ public class BackendServiceImpl implements BackendServiceI {
 	public Order getOrderBySeialNum(String orderSerialNum) {
 		Order order=orderMapper.getOrderListByOrderSerailNum(orderSerialNum);
 		return order;
+	}
+	
+	@Override
+	public List<Category> selectBybatchDiscount(String category) {
+		return  categoryMapper.selectBybatchDiscount(category);
 	}
 
 }

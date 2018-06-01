@@ -329,4 +329,100 @@ public class HongShiVipController<phone> {
 		}
 		return ret;
 	}
+	@RequestMapping("/vipRecordDetail")
+	public @ResponseBody Map<String,Object>  vipRecordDetail(HttpSession session,String billCode,String Source){
+		Map<String,Object> map=new HashMap<String,Object>();
+		String[] strs=billCode.split(",");
+		 billCode = "";
+		 Source = "";
+		for(int i=0,len=strs.length;i<len;i++){
+			billCode=strs[0].toString();
+			Source=strs[1].toString();
+			System.out.println(strs[i].toString());
+		}
+		
+		System.out.println("billCode=============="+billCode);
+		System.out.println("Source=============="+Source);
+	if(Source.equals("线上订单")){
+		List<Orders> orders = hongShiVipService.selectOrders(billCode);
+			if(orders!=null){
+				for(int j =0; j<orders.size();j++){
+					System.out.println("xiaxia----"+orders.get(j).getNames());
+					System.out.println("xiaxia----"+orders.get(j).getGuige());
+					System.out.println("xiaxia----"+orders.get(j).getBeizhu());
+					System.out.println("xiaxia----"+JSON.toJSONString(orders));	
+					map.put("orders",orders);
+				}
+				System.out.println("billCode=============="+orders.get(0).getStoreName());
+				map.put("danhao",orders.get(0).getDanhao());
+				map.put("storeName",orders.get(0).getStoreName());
+				map.put("beizhu",orders.get(0).getBeizhu());
+				map.put("huijine",orders.get(0).getHuijine());
+				map.put("songhuo",orders.get(0).getSonghuo());
+				map.put("riqi",orders.get(0).getRiqi());
+				map.put("jine",orders.get(0).getJine());
+			
+			}
+	}else if(Source.equals("线下订单")){
+		List<Orders> order = hongShiVipService.selectOrders(billCode);
+		if(order!=null){
+			for(int j =0; j<order.size();j++){
+				List<UnderlineOrders> orders = hongShiVipService.selectUnderlineOrders(order.get(j).getDanhao());
+				System.out.println("xiaxia----"+orders.get(j).getNames());
+				System.out.println("xiaxia----"+orders.get(j).getGuige());
+				map.put("orders",orders);
+			}
+			System.out.println("billCode=============="+order.get(0).getStoreName());
+			map.put("danhao",order.get(0).getDanhao());
+			map.put("storeName",order.get(0).getStoreName());
+			map.put("beizhu",order.get(0).getBeizhu());
+			map.put("jine",order.get(0).getJine());
+			map.put("songhuo",order.get(0).getSonghuo());
+			map.put("huijine",order.get(0).getHuijine());
+			map.put("riqi",order.get(0).getRiqi());
+		}	
+	}else if(Source.equals("零售")){
+		List<RetailDetails> dingdan = hongShiVipService.selectRetailDetails(billCode);
+		if(dingdan!=null){
+			for(int j =0; j<dingdan.size();j++){
+//				System.out.println("sunsun----"+dingdan.get(j).getDanhao());
+				List<RetailDetails> orders = hongShiVipService.selectRetailDetails(dingdan.get(j).getDanhao());
+//				System.out.println("xiaxia----"+orders.get(j).getBeizhu());
+//				System.out.println("xiaxia----"+orders.get(j).getGuige());
+				map.put("orders",dingdan);
+			}
+			System.out.println("huujj=============="+dingdan.get(0).getStoreName());
+			map.put("danhao",dingdan.get(0).getDanhao());
+			map.put("storeName",dingdan.get(0).getStoreName());
+			map.put("beizhu",dingdan.get(0).getBeizhu());
+			map.put("jine",dingdan.get(0).getJine());
+			map.put("riqi",dingdan.get(0).getRiqi());
+			map.put("huijine",dingdan.get(0).getHuijine());
+		}	
+	
+	}else if(Source.equals("充值")){
+		List<ChongzhiDetailed> chongzhi = hongShiVipService.selectChongzhiDetailed(billCode);
+		if(chongzhi!=null){
+			for(int j =0; j<chongzhi.size();j++){
+				List<ChongzhiDetailed> orders = hongShiVipService.selectChongzhiDetailed(chongzhi.get(j).getDanhao());
+				System.out.println("xiaxia----"+orders.get(j).getJine());
+				System.out.println("xiaxia----"+orders.get(j).getRiqi());
+				map.put("orders",orders);
+			}
+		}	
+	}else if(Source.equals("积分充值")){
+		List<IntegralRecharge> jifenchongzhi = hongShiVipService.selectIntegralRecharge(billCode);
+		if(jifenchongzhi!=null){
+			for(int j =0; j<jifenchongzhi.size();j++){
+				List<IntegralRecharge> orders = hongShiVipService.selectIntegralRecharge(jifenchongzhi.get(j).getDanhao());
+				System.out.println("xiaxia----"+orders.get(j).getBeizhu());
+//				System.out.println("xiaxia----"+orders.get(j).getDanhao());
+				map.put("orders",orders);
+			}
+		}	
+	}
+		return map;
+	}
+	
+	
 }

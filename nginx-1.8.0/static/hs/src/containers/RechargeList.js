@@ -19,21 +19,26 @@ const NoItem = () => {
 const RechargeListItem = (props) => {
   return (
     <div className="recharge-list-item ">
-      <div className='top '>
-        <div className='left'>
-            <div className='tag'><span className='left'>{props.source}：  </span><span className='right'>{props.value}</span></div>
+    {props.source!=="绑卡送积分"&&props.source!=="签到送积分"&&props.source!=="抽奖扣积分" ?
+			<div  className="top"
+      	onClick={()=>{window.location='/OnlineOrder?billCode=' + props.billCode + ',' + props.source}}> 
+            <span className="left">{props.source}：</span>
+            <span className="right">{props.billCode}</span>   
+      </div>
+      :
+        <div className="top">
+            <span className="left">{props.source}：</span>
+            <span className="right">{props.billCode}</span>
         </div>
-        <div className='right'>
-            <span className="recharge-list-point pull-right" >余额：{props.balance}</span>
-        </div>
+     }
+   
+     	<div className="bottom">
+        <span className='left'>消费金额:{props.value}</span>
+        <span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
       </div>
       <div className='bottom '>
-         <div className='left'>
-            <span className="time"><span className='left'>{props.billCode}</span><span className='bonusPoints' className='right'>{props.bonusPoints}</span></span>
-          </div>
-        <div className='right'>
-            <span className="recharge-list-balance">积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
-        </div>
+          <span className='left'>变动积分:{props.bonusPoints}</span>
+          <span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
       </div>
       
     </div>
@@ -68,7 +73,7 @@ class RechargeList extends React.Component {
 
   render() {
     return (
-      <DocumentTitle title="会员交易明细">
+      <DocumentTitle title="会员交易记录">
         <div className="recharge-list">
           {
             this.state.list.length ?

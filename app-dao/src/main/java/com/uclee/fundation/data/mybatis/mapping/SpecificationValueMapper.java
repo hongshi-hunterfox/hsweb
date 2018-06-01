@@ -21,6 +21,8 @@ public interface SpecificationValueMapper {
     int updateByPrimaryKeySelective(SpecificationValue record);
 
     int updateByPrimaryKey(SpecificationValue record);
+    
+    int updateGuiGe(SpecificationValue record);
 
 	SpecificationValue selectByProductIdAndValueId(@Param("productId")Integer productId,@Param("valueId") Integer valueId);
 

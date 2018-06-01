@@ -1,5 +1,6 @@
 package com.backend.service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -140,6 +141,8 @@ public interface BackendServiceI {
 
     //add by chiangpan for sort
 	int updateProductGroupPosition(Integer groupId, Integer productId, Integer position);
+
+	List<Category> selectBybatchDiscount(String category);
 	
 	List<ProductParameters> getParameters(Integer productId);
 

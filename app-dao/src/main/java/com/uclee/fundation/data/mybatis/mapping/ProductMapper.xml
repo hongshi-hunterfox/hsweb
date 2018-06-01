@@ -15,6 +15,12 @@
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
     <result column="parameter" property="parameter" jdbcType="VARCHAR" />
   </resultMap>
+   <resultMap id="ProductGe" type="com.uclee.fundation.data.mybatis.model.ProductGe" >
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="specification_id" property="specificationId" jdbcType="INTEGER" />
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />    
+  </resultMap>  
   <resultMap id="ProductDto" type="com.uclee.fundation.data.web.dto.ProductDto" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
@@ -66,6 +72,9 @@
     from web_products
     where product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectProductsCategories" resultMap="ProductGe" parameterType="java.lang.Integer" >
+   select * from  web_products_categories_link as b left join web_products_specifications_values_link as c on b.product_id=c.product_id where b.category_id=#{categoryId,jdbcType=INTEGER}
+   </select>
   <select id="selectQuickNaviProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
     select
     A.*
