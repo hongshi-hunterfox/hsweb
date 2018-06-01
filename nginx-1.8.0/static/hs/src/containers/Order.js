@@ -59,8 +59,10 @@ class Order extends React.Component {
       businessEndTime:'',
       hsgooscode: []
     }
-    this.lat = 23
-    this.lng = 113
+    
+    this.lat = 21.908
+    
+    this.lng = 110.85
   }
 
   componentDidMount() {
@@ -553,16 +555,24 @@ salesInfoShowClick=()=>{
             '  ff  ' +
             Number(localStorage.getItem('longitude'))
         )
-
-        var distance = Math.round(
+				
+			
+        var distances = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
             new qq.maps.LatLng( 
               Number(localStorage.getItem('latitude')),
               Number(localStorage.getItem('longitude'))
+            
             )
           ) / 100
           )/10
+          if(distances < 1){
+          	var distance = 1
+          }else{
+          	var distance = distances
+          }
+         console.log("aaaa==="+distance)
         req
           .get('/uclee-user-web/getShippingFee?distance=' + distance + '&total=' + (sessionStorage.getItem('total')?sessionStorage.getItem('total'):0))
           .end((err, res) => {

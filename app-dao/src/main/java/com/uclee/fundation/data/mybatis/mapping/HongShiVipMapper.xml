@@ -116,6 +116,11 @@
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<result column="phone" property="phone" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="VipVoucher" type="com.uclee.fundation.data.mybatis.model.VipVoucher">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="voucher" property="voucher" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="INTEGER" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode
 	</sql>
@@ -127,7 +132,11 @@
 		statementType="CALLABLE" resultMap="HongShiVip">
 		CALL WSC_GetVipInfo(#{cWeiXinCode})
 	</select>
-	
+	<select id="selectAll" resultMap="VipVoucher" parameterType="java.lang.Integer" >
+    select
+    id,voucher,amount
+    from web_vip_voucher
+  	</select>
 	<select id="getCodeSwitching" resultType="Integer" 
 		statementType="CALLABLE">
 		CALL Get_WordVal (会员扫码定时变)
@@ -175,4 +184,27 @@
     <select id="getUsers" resultMap="Lnsurance">
     	select id,vip_id,oauth_id,create_time,phone from web_user_list where oauth_id=#{oauthId,jdbcType=VARCHAR}
     </select>
+    <delete id="deleteAll">
+    truncate table  web_vip_voucher
+  </delete>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.VipVoucher" >
+    insert into web_vip_voucher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="voucher != null" >
+        voucher,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="voucher != null" >
+        #{voucher,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
 </mapper>

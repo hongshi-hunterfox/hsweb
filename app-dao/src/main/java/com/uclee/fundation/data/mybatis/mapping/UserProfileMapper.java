@@ -1,6 +1,7 @@
 package com.uclee.fundation.data.mybatis.mapping;
 
  
+import java.util.Date;
 import java.util.List;
 
 import com.uclee.fundation.data.mybatis.model.UserProfile;
@@ -30,10 +31,16 @@ public interface UserProfileMapper {
 	List<UserProfile> selectListByUserProfile(UserProfile userProfile);
 
 	List<UserProfile> selectAllProfileList();
+	
+	List<UserProfile> selectAllVipList();
 
 	List<UserProfile> getUserListForBirth(@Param("start") String start, @Param("end")String end,@Param("year")String year);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
     UserProfile selectByName(String name);
+    
+    List<UserProfile> selectByVips(@Param("start") Date start, @Param("end") Date end);
+    
+    List<UserProfile> selectCardPhoneVips(String cartphone);
 }

@@ -1,5 +1,5 @@
 package com.backend.service;
-
+import java.text.ParseException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +32,8 @@ public interface BackendServiceI {
 	List<HongShiOrder> getHongShiOrder(Boolean isEnd);
 
 	List<UserProfile> getUserList();
+	
+	List<UserProfile> getVipList(Date start,Date end) throws ParseException;
 
 	ConfigPost getConfig();
 
@@ -101,8 +103,12 @@ public interface BackendServiceI {
 	boolean delRechargeConfig(Integer id);
 
 	List<BirthVoucher> selectAllBirthVoucher();
+	
+	List<VipVoucher> selectAllVipVoucher();
 
 	boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost);
+	
+	boolean updateVipVoucher(VipVoucherPost vipVoucherPost);
 
     List<ShippingFullCut> selectAllShippingFullCut();
 
@@ -122,11 +128,15 @@ public interface BackendServiceI {
 	NapaStore getHongShiStore(String hsCode);
 
 	Map<String,Object> isVoucherLimit(Integer amount);
+	
+	Map<String,Object> isCouponAmount(Integer amount);
 
 	boolean delComment(Integer id);
 
 	boolean truncateBirthVoucherHandler();
 
+	boolean truncateVipVoucherHandler();
+	
     boolean updateActivityConfig(ConfigPost configPost);
 
 	boolean systemConfigHandler(ConfigPost configPost);
@@ -150,4 +160,10 @@ public interface BackendServiceI {
 	List<AuditRefundDto> getRefundOrderList(String orderSerialNum);
 
 	Order getOrderBySeialNum(String orderSerialNum);
+	
+	List<UserProfile> selectCardPhoneVips(String cartphone);
+	
+	List<UserProfile> selectAllVipList();
+
+	boolean sendViphMsg(Integer userId, boolean sendVoucher);
 }

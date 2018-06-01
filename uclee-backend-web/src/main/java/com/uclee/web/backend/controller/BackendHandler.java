@@ -33,6 +33,7 @@ public class BackendHandler {
 	}
 	@RequestMapping("/activityConfigHandler")
 	public @ResponseBody boolean activityConfigHandler(HttpServletRequest request,@RequestBody ConfigPost configPost) {
+		System.out.println(JSON.toJSON(configPost));
 		return backendService.updateActivityConfig(configPost);
 	}
 	@RequestMapping("/systemConfigHandler")
@@ -41,11 +42,23 @@ public class BackendHandler {
 	}
 	@RequestMapping("/sendBirthMsg")
 	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
+		System.out.println("sssssss=================="+userId);
+		System.out.println("sssssss=================="+sendVoucher);
 		return backendService.sendBirthMsg(userId,sendVoucher);
+	}
+	@RequestMapping("/sendVipMsg")
+	public @ResponseBody boolean sendViphMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
+		System.out.println("sssssss=================="+userId);
+		System.out.println("sssssss=================="+sendVoucher);
+		return backendService.sendViphMsg(userId,sendVoucher);
 	}
 	@RequestMapping("/isVoucherLimit")
 	public @ResponseBody Map<String,Object> isVoucherLimit(HttpServletRequest request,Integer amount) {
 		return backendService.isVoucherLimit(amount);
+	}
+	@RequestMapping("/isCouponAmount")
+	public @ResponseBody Map<String,Object> isCouponAmount(HttpServletRequest request,Integer amount) {
+		return backendService.isCouponAmount(amount);
 	}
 	@RequestMapping("/sendUnbuyMsg")
 	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId) {
@@ -83,6 +96,7 @@ public class BackendHandler {
 	public @ResponseBody boolean integralinConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateIntegralInGifts(freightPost);
 	}
+	//更新生日推送礼券设置
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		return backendService.updateBirthVoucher(birthVoucherPost);
@@ -91,6 +105,17 @@ public class BackendHandler {
 	public @ResponseBody boolean truncateBirthVoucherHandler(HttpServletRequest request) {
 		return backendService.truncateBirthVoucherHandler();
 	}
+	
+	//更新会员派送礼券设置
+	@RequestMapping("/vipVoucherHandler")
+	public @ResponseBody boolean vipVoucherHandler(HttpServletRequest request,@RequestBody VipVoucherPost vipVoucherPost) {
+		return backendService.updateVipVoucher(vipVoucherPost);
+	}
+	@RequestMapping("/truncateVipVoucherHandler")
+	public @ResponseBody boolean truncateVipVoucherHandler(HttpServletRequest request) {
+		return backendService.truncateVipVoucherHandler();
+	}
+	
 	@RequestMapping("/lotteryHandler")
 	public @ResponseBody boolean lotteryHandler(HttpServletRequest request,@RequestBody LotteryConfigPost post) {
 		System.out.println(JSON.toJSONString(post));

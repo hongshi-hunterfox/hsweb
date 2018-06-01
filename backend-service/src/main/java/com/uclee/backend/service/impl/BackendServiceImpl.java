@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -32,6 +33,8 @@ public class BackendServiceImpl implements BackendServiceI {
 
 	@Autowired
 	private CommentMapper commentMapper;
+	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
 	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
@@ -363,6 +366,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getSignText()!=null) {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
+		if (configPost.getVoucherSendInformation()!=null) {
+			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+		}
 		return true;
 	}
 	@Override
@@ -494,6 +500,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getSignText()!=null) {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
+		}
+		if (configPost.getVoucherSendInformation()!=null) {
+			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
 		}
 		return true;
 	}
@@ -671,6 +680,33 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public boolean truncateBirthVoucherHandler() {
 		int delAll = birthVoucherMapper.deleteAll();
+
+		return true;
+	}
+
+	@Override
+	public boolean updateVipVoucher(VipVoucherPost vipVoucherPost) {
+		@SuppressWarnings("unused")
+		int delAll = hongShiVipMapper.deleteAll();
+		if(vipVoucherPost.getMyKey()==null||vipVoucherPost.getMyValue()==null||vipVoucherPost.getMyKey().size()==0||vipVoucherPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, String> entry : vipVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||vipVoucherPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, String> entry : vipVoucherPost.getMyKey().entrySet()){
+			VipVoucher tmp = new VipVoucher();
+			tmp.setAmount(Integer.parseInt(vipVoucherPost.getMyValue().get(entry.getKey())));
+			tmp.setVoucher(entry.getValue().toString());
+			hongShiVipMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+	@Override
+	public boolean truncateVipVoucherHandler() {
+		int delAll = hongShiVipMapper.deleteAll();
 
 		return true;
 	}
@@ -865,6 +901,23 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return userProfile;
 	}
+	
+	@Override
+	public List<UserProfile> getVipList(Date start, Date end) throws ParseException {
+		return userProfileMapper.selectByVips(start, end);
+	}
+	@Override
+	public List<UserProfile> selectCardPhoneVips(String cartphone) {
+		if(cartphone==null){
+			return new ArrayList<UserProfile>();
+		}
+		List<UserProfile> viplist = userProfileMapper.selectCardPhoneVips(cartphone);
+		for(UserProfile item:viplist){
+			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+		}
+		return viplist;
+	}
+	
 	@Override
 	public List<UserProfile> getUserListForBirth(String start,String end) {
 		if(start==null||end==null){
@@ -976,6 +1029,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setUnbundling(config.getValue());
 			}else if(config.getTag().equals(WebConfig.signText)){
 				configPost.setSignText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.VoucherSendInformation)){
+				configPost.setVoucherSendInformation(config.getValue());
 			}
 		}
 		return configPost;
@@ -1163,6 +1218,57 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return false;
 	}
+	@Override
+	public boolean sendViphMsg(Integer userId,boolean sendVoucher) {
+		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+		System.out.println("sssssss=================="+userId);
+		System.out.println("sssssss=================="+sendVoucher);
+		if(login!=null){
+			String nickName="";
+			UserProfile profile = userProfileMapper.selectByUserId(userId);
+			if(profile!=null){
+				nickName = profile.getNickName();
+			}
+			String[] key = {"keyword1","keyword2","keyword3"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"优惠券派送提醒"};
+			//使用生日短信模板--skx
+			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
+			//联动送礼券
+			if(sendVoucher) {
+				try {
+					List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();
+					for(VipVoucher vipVoucher:vipVouchers) {
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(vipVoucher.getVoucher());
+						if (coupon != null && coupon.size() > 0) {
+							try {
+								for(int i=0;i<vipVoucher.getAmount();i++) {
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), vipVoucher.getVoucher());
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	public String sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
 		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
 		sendData.put("touser", openId);
@@ -1338,6 +1444,35 @@ public class BackendServiceImpl implements BackendServiceI {
 						ret.put("text", "券（商品券号：" + coupon.get(0).getGoodsCode() + "），剩余张数为" + coupon.size() + "还差" + (birthVoucher.getAmount() * amount-coupon.size()) + "张");
 					}else{
 						ret.put("text", "券（商品券号：" + birthVoucher.getVoucherCode() + "），剩余张数为0张" + "还差" + (birthVoucher.getAmount() * amount) + "张");
+					}
+					return ret;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			ret.put("result",false);
+			return ret;
+		}
+		ret.put("result",true);
+		return ret;
+	}
+	
+	@Override
+	public Map<String,Object> isCouponAmount(Integer amount) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(amount==null){
+			amount=1;
+		}
+		try {
+			List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();
+			for(VipVoucher vipVoucher:vipVouchers) {
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(vipVoucher.getVoucher());
+				if(coupon!=null&&coupon.size()<(vipVoucher.getAmount()*amount)){
+					ret.put("result",false);
+					if(coupon.size()>0) {
+						ret.put("text", "券（商品券号：" + coupon.get(0).getGoodsCode() + "），剩余张数为" + coupon.size() + "还差" + (vipVoucher.getAmount() * amount-coupon.size()) + "张");
+					}else{
+						ret.put("text", "券（商品券号：" + vipVoucher.getVoucher() + "），剩余张数为0张" + "还差" + (vipVoucher.getAmount() * amount) + "张");
 					}
 					return ret;
 				}
@@ -1534,7 +1669,12 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<BirthVoucher> selectAllBirthVoucher() {
 		return birthVoucherMapper.selectAll();
 	}
-
+	
+	@Override
+	public List<VipVoucher> selectAllVipVoucher() {
+		return hongShiVipMapper.selectAll();
+	}
+	
 	@Override
 	public List<OrderSettingPick> selectAllOrderSettingPick() {
 		return orderSettingPickMapper.selectAll();
@@ -1575,6 +1715,11 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public List<Category> selectBybatchDiscount(String category) {
 		return  categoryMapper.selectBybatchDiscount(category);
+	}
+	
+	@Override
+	public List<UserProfile> selectAllVipList() {
+		return userProfileMapper.selectAllVipList();
 	}
 
 }

@@ -72,7 +72,7 @@ class CheckTable extends React.Component {
 		var myDate = new Date()
 		var date=myDate.toLocaleDateString();
         return(
-        	<DocumentTitle title="签到礼包">
+        	<DocumentTitle title="签到">
         	<div className="check-table">
         		<div className="check-table-co">
                  	今日日期:{date}
@@ -85,70 +85,58 @@ class CheckTable extends React.Component {
         		<div className="check-table-vipcode">
         			目前你的积分为: {this.state.point}
         		</div>
-        		<div className="check-table-vipcode">
-        			连续签到次数为: {(this.state.accumulation==0 ? this.state.accumulations : this.state.accumulation)}
-        		</div>
-        		<div className="check-table-roll">
-            		<div className="check-table-code">
-            			<div className="check-table-de">
-           					<div className="member-center-heros">
-            					<span  onClick={() =>{
-            						if(this.state.cVipCode===null){
-                						alert("请先绑定会员。");
-                						return ;
-              						}
-            						req.get('/uclee-user-web/SigningGift')
-									   .end((err, res) => {
-											if (err) {
-												return err
-											}
-										})
-              						req.get('/uclee-user-web/signInHandler')
-					                    .end((err, res) => {
-                  							var data = JSON.parse(res.text);
-                  							if(data.existed){
-                    							alert("今天已经签到过了哦~")
-                    							return;
-                  							}
-              								if(data.result){
-                    							this.setState({
-                      								point : Number(this.state.point) + Number(data.point),
-                      								isSigned:true
-                    							})
-                    							alert("签到成功，积分+" + data.point+"，连续签到次数:+"+1+"!")
-                    							window.location="/CheckTable"
-                    							return;
-                           					}
-                  							if(!data.result){
-                    							alert("网络繁忙请稍后重试")
-                    							return;
-                  							}
-                						})
-
-            					}}>
-            						<table>
-            							<tr>
-            								<td className="check-table-wrap">
-            									<img src='/images/co.gif' />
-            								</td>
-            								<td>
-            									{!this.state.isSigned? "签到啦 " : "已签到"}
-            								</td>
-            							</tr>
-            						</table>
-            					</span>
-          					</div>
-        				</div>
-        			</div>
-        				<div className="check-table-on">
-        					<span>签到规则说明</span>
+           		<div className="check-table-vipcode" onClick={() =>{
+            		if(this.state.cVipCode===null){
+                		alert("请先绑定会员。");
+                			return ;
+              		}
+            		req.get('/uclee-user-web/SigningGift')
+					   .end((err, res) => {
+							if (err) {
+								return err
+							}
+						})
+              		req.get('/uclee-user-web/signInHandler')
+					    .end((err, res) => {
+                  			var data = JSON.parse(res.text);
+                  			if(data.existed){
+                    			alert("今天已经签到过了哦~")
+                    			return;
+                  			}
+              				if(data.result){
+                    			this.setState({
+                      				point : Number(this.state.point) + Number(data.point),
+                      				isSigned:true
+                    			})
+                    			alert("签到成功，积分+" + data.point+"，连续签到次数:+"+1+"!")
+                    			window.location="/CheckTable"
+                    			return;
+                           	}
+                  			if(!data.result){
+                    			alert("网络繁忙请稍后重试")
+                    			return;
+                  			}
+                		})
+            		}}>  	
+            			<div className="check-wrap">
+            				<button type="button" className="check-btn-wrap" >
+            					<span>{!this.state.isSigned? "点击签到 " : "今日已签"}</span>
+							</button>
+            			</div> 
+          			</div>
+          			<div className="check-table-vipcode">
+          				<div className="check-limits">
+            				<span>连续签到第{(this.state.accumulation==0 ? this.state.accumulations : this.state.accumulation)}天</span>
+            			</div>
+            		</div>
+        			<div className="check-table-on">
+        				<span>签到规则说明</span>
         					<div className="check-table-dui">	
 								<span style={{padding:'10px',lineHeight:'25px',whiteSpace: 'pre-line'}}>
 									{this.state.signText}
 								</span>
 							</div>
-        		</div>
-        		</div>
+        			</div>
         	</div>
         	</DocumentTitle>
         );

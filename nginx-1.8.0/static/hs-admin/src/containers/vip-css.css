@@ -1,0 +1,42 @@
+.user-list:before,
+.user-list:after {
+  content: "";
+  display: table;
+}
+.user-list:after {
+  clear: both;
+}
+.user-list-add {
+  float: right;
+  margin: 30px 0;
+}
+.user-list-select {
+  margin: 30px 0;
+}
+.user-list-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #dadada;
+}
+.user-list-item:before,
+.user-list-item:after {
+  content: "";
+  display: table;
+}
+.user-list-item:after {
+  clear: both;
+}
+.user-list-item .image {
+  width: 80px;
+  text-align: center;
+}
+.user-list-item .title {
+  text-align: center;
+}
+.user-list-item .edit {
+  text-align: center;
+}
+.user-list .searchTime {
+  width: 20%;
+  float: left;
+  margin-right: 10px;
+}

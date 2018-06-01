@@ -20,18 +20,45 @@
  } 
  .member-center-heros {
   position: relative;
-  text-align: center;
+  text-align: right;
 }
  .check-table-in{
       text-align: right;
       background-color: #FF7256;
     }
+.check-wrap{
+    margin-top: 30px;
+    padding-left: 15px;
+    text-align: center;
+    }
+.check-btn-wrap {
+  margin: auto;
+  display: block;
+  width: 6em;
+  height: 6em;
+  background-color: #EEAD0E;
+  border: 1px solid #FFB90F;
+  color: #BCEE68;
+  font-size: 18px;
+  border-radius: 50%;
+  padding: 15px;
+  position: relative;
+  outline: 0;
+}
+.check-limits {
+  background-color: red;
+  margin-top: 30px;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+}
 .check-table{
     background: url(/images/checktable.png) no-repeat;
     background-size: 100% 100%;
     display: block;
     height: 100px;
     max-width: 100%;
+    padding: 15px;
     &-upper{
         color: #ffffff;
         font-size: 18px; 
@@ -57,11 +84,6 @@
         color: #FFD700;
         font-size: 20px; 
         padding: 8px;
-    }
-    &-wrap{
-        height: 250px;
-        padding-left:60%;
-        padding-right:40%;
     }
     &-de{
         padding: 8px;
@@ -99,9 +121,11 @@
           text-align: center;
     }
     &-on{
+        margin-top: 30px;
         padding: 5px 5px;
         width: 350px;
         height: 165px;
+        text-align: center;
          
     }
     &-in{

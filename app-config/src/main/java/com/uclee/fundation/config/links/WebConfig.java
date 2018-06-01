@@ -47,4 +47,5 @@ public interface WebConfig {
 	String signText = "signText";
 	String zhengshu="zhengshu";
 	String zhengshuPassword="zhengshuPassword";
+	String VoucherSendInformation="VoucherSendInformation";
 }                      

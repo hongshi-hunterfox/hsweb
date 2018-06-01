@@ -29,6 +29,11 @@ Begin
   insert into web_config (tag,value) values('startUp',0);--是否开启会员绑定
 End
 
+If Not Exists(Select * From web_config where tag='ACardMoreMembers')
+Begin
+  insert into web_config (tag,value) values('ACardMoreMembers',1);--是否开启多个微信可绑定一张卡(默认开启)
+End
+
 If Not Exists(Select * From web_config where tag='full')
 Begin
   insert into web_config (tag,value) values('full',0);
@@ -122,7 +127,32 @@ pickEndTime datetime
 )
 END
 
+If Object_id('web_integralin_config','U') Is Null
+BEGIN
+CREATE TABLE [dbo].[web_integralin_config](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[day] [int] NOT NULL,
+	[money] [decimal](20, 2) NULL,
+	[voucher_code] [varchar](255) NULL,
+	[amount] [int] NULL
+)
+END
 
+
+If Object_id('web_vip_voucher','U') Is Null
+BEGIN
+CREATE TABLE [dbo].[web_vip_voucher](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[voucher] [varchar](255) NOT NULL,
+	[amount] [int] NOT NULL,
+)
+
+END
+
+If Not Exists(Select * From syscolumns where name='accumulation' And id=Object_id('web_sign_record','U'))
+Begin
+ alter table web_sign_record add accumulation int;
+End
 
 If Not Exists(Select * From syscolumns where name='sort_value' And id=Object_id('web_products','U'))
 	Begin

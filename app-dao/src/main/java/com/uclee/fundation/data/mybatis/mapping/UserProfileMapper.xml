@@ -52,6 +52,20 @@
 C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID
     order by profile_id asc
   </select>
+  <select id="selectAllVipList" resultMap="UserProfile">
+    select A.user_id,A.regist_time,A.image,A.name,convert(nvarchar(10),D.生日,120) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID where D.电话 !=''
+    order by profile_id asc
+  </select>
+  <select id="selectByVips" resultMap="UserProfile">
+    select A.user_id,A.regist_time,A.image,A.name,convert(nvarchar(10),D.生日,120) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID where D.电话 !='' and A.regist_time between #{start,jdbcType=TIMESTAMP} and #{end,jdbcType=TIMESTAMP}
+    order by profile_id asc
+  </select>
+  <select id="selectCardPhoneVips" resultMap="UserProfile">
+    select A.user_id,A.regist_time,A.image,A.name,convert(nvarchar(10),D.生日,120) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID where D.电话 !='' and (D.电话 = #{cartphone,jdbcType=VARCHAR} or D.编号 = #{cartphone,jdbcType=VARCHAR})
+  </select>
   <select id="selectByUserId" resultMap="UserProfile" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />

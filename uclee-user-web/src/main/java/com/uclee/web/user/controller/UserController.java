@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.domain.Data;
 import com.backend.service.BackendServiceI;
+import com.taobao.api.internal.toplink.logging.LogUtil;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
@@ -39,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @EnableAutoConfiguration
@@ -161,6 +164,35 @@ public class UserController extends CommonUserHandler{
 			return map;
 		}
 		map.put("isPaid", paymentOrder.getIsCompleted());
+		return map;
+	}
+	
+	/**
+	 * 
+	 * 校验手机号码--skx
+	 */
+	@RequestMapping("/isphone")
+	public @ResponseBody Map<String,Object> isphone(String phone,HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		@SuppressWarnings("unused")
+		HttpSession session = request.getSession();
+		String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[6])|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+		    if (phone.length() != 11) {
+		    	System.out.println("手机号应为11位数");
+		        map.put("fail","手机号应为11位数");
+		    } else {
+		        Pattern p = Pattern.compile(regex);
+		        Matcher m = p.matcher(phone);
+		        boolean isMatch = m.matches();
+		        System.out.println(isMatch);
+		        if (!isMatch) {
+		        	System.out.println("请填入正确的手机号");
+		        	map.put("fail","请填入正确的手机号");
+		        }else{
+		        	System.out.println("正确的手机号");
+		        	map.put("fail","adopt");
+		        }
+		    }   
 		return map;
 	}
 
@@ -1072,6 +1104,7 @@ public class UserController extends CommonUserHandler{
 		boolean isFullCut=false;
 		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
 		for(ShippingFullCut shippingFullCut:shippingFullCuts){
+			logger.info("shippingFullCut.getuLimit()======"+shippingFullCut.getuLimit());
 			if(shippingFullCut.getsLimit()<=distance&&shippingFullCut.getuLimit()>distance){
 				if(total.compareTo(shippingFullCut.getCondition())>=0){
 					money=0.0;
@@ -1080,10 +1113,13 @@ public class UserController extends CommonUserHandler{
 				}
 			}
 		}
+		logger.info("isFullCut======"+isFullCut);
 		if(!isFullCut) {
+			logger.info("isFullCut======"+isFullCut);
 			List<Freight> freights = userService.getAllFreightConfig();
 			for (Freight freight : freights) {
-				if (distance > freight.getCondition()) {
+				logger.info("freight.getCondition()======"+freight.getCondition());
+				if (distance >= freight.getCondition()) {
 					logger.info(freight.getMoney());
 					money = freight.getMoney().doubleValue();
 					logger.info(money);

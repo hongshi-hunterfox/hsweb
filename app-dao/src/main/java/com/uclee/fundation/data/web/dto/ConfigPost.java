@@ -48,6 +48,15 @@ public class ConfigPost {
 
 	private String zhengshu;
 	private String zhengshuPassword;
+	private String voucherSendInformation;
+	public String getVoucherSendInformation() {
+		return voucherSendInformation;
+	}
+
+	public void setVoucherSendInformation(String voucherSendInformation) {
+		this.voucherSendInformation = voucherSendInformation;
+	}
+
 	public String getSignText() {
 		return signText;
 	}

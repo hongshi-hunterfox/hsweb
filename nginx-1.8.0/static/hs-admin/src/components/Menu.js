@@ -11,6 +11,9 @@ class Menu extends React.Component {
           <Link to={'/user-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             用户列表
           </Link> 
+          <Link to={'/vip-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            会员列表
+          </Link> 
           <Link to={'/phoneUserList?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             加盟商管理
           </Link>

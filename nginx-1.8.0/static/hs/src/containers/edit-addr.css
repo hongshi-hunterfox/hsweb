@@ -29,6 +29,10 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+.edit-address .map-container {
+  _height: 400px;
+  min-height: 400px;
+}
 .edit-address .form-group {
   margin-bottom: 15px;
 }

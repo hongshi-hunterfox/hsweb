@@ -48,6 +48,8 @@ import RechargeConfigList from './containers/RechargeConfigList'
 import OrderSettingPick from './containers/OrderSettingPick'
 import AuditRefund from './containers/AuditRefund'
 import AuditRefundOrderDetail from './containers/AuditRefundOrderDetail'
+import VipList from './containers/VipList'
+import VoucherDelivery from './containers/VoucherDelivery'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -100,6 +102,8 @@ ReactDOM.render(
       <Route path="auditRefund" component={AuditRefund} />
       <Route path="auditRefundOrderDetail" component={AuditRefundOrderDetail} />
       <Route path="auditRefundOrderDetail/:id" component={AuditRefundOrderDetail} />
+      <Route path="vip-list" component={VipList} />
+      <Route path= "voucher-delivery" component={VoucherDelivery} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,
