@@ -77,8 +77,8 @@ public class UserController extends CommonUserHandler{
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
-	
-	
+
+
 	@RequestMapping("/getPageTitle")
 	public @ResponseBody DataSourceInfo getShakePageData(HttpServletRequest request,String mCode) {
 		dataSource.switchDataSource("master");
@@ -88,34 +88,34 @@ public class UserController extends CommonUserHandler{
 		}
 		return null;
 	}
-	
+
 	@RequestMapping("/getShakePageData")
 	public @ResponseBody Map<String,Object> getShakePageData(HttpServletRequest request) {
-		
+
 		return userService.getShakePageData();
 	}
-	/** 
-	* @Title: getShakeRecord 
-	* @Description: 摇一摇记录接口 
+	/**
+	* @Title: getShakeRecord
+	* @Description: 摇一摇记录接口
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getShakeRecord")
 	public @ResponseBody Map<String,Object> getShakeRecord(HttpServletRequest request) {
-		
+
 		return userService.getShakeRecord();
 	}
-	
-	/** 
+
+	/**
 	* @Title: prePaymentForAlipay
-	* @Description: 微信里面使用支付宝支付预处理 
+	* @Description: 微信里面使用支付宝支付预处理
 	* @param @param request
 	* @param @param paymentSerialNum 支付单号
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/prePaymentForAlipay")
 	public @ResponseBody Map<String,Object> prePaymentForAlipay(HttpServletRequest request,String paymentSerialNum) {
@@ -129,17 +129,17 @@ public class UserController extends CommonUserHandler{
 		map.put("isWC", userService.isWC(request));
 		return map;
 	}
-	
-	/** 
-	* @Title: getPaymentResult 
+
+	/**
+	* @Title: getPaymentResult
 	* @Description: 微信里面使用支付宝预处理，定时取支付结果
 	* @param @param model
 	* @param @param request
 	* @param @param response
 	* @param @param paymentSerialNum
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/getPaymentResult")
 	@ResponseBody
@@ -154,14 +154,14 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 
-	/** 
-	* @Title: verifyCode 
-	* @Description: 验证码发送类 
+	/**
+	* @Title: verifyCode
+	* @Description: 验证码发送类
 	* @param @param phone 目标手机
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Boolean    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Boolean    返回类型
+	* @throws
 	*/
 	@RequestMapping("/verifyCode")
 	public @ResponseBody Boolean verifyCode(String phone,HttpServletRequest request) {
@@ -170,14 +170,14 @@ public class UserController extends CommonUserHandler{
 		Map<String,String> config = userService.getSMSConfig();
 		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
 	}
-	/** 
-	* @Title: checkVerifyCode 
-	* @Description: 检验用户输入的验证码正确性 
+	/**
+	* @Title: checkVerifyCode
+	* @Description: 检验用户输入的验证码正确性
 	* @param @param vip
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Boolean    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Boolean    返回类型
+	* @throws
 	*/
 	@RequestMapping("/checkVerifyCode")
 	public @ResponseBody Boolean checkVerifyCode(@RequestBody HongShiVip vip,HttpServletRequest request) {
@@ -197,15 +197,15 @@ public class UserController extends CommonUserHandler{
 		}
 		return false;
 	}
-	
-	/** 
-	* @Title: checkNapaStorePhone 
-	* @Description: 老板助手登陆，验证用户输入的登陆手机号是否已非配到对应的老板 
+
+	/**
+	* @Title: checkNapaStorePhone
+	* @Description: 老板助手登陆，验证用户输入的登陆手机号是否已非配到对应的老板
 	* @param @param phone
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Boolean    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Boolean    返回类型
+	* @throws
 	*/
 	@RequestMapping("/checkNapaStorePhone")
 	public @ResponseBody Boolean checkNapaStorePhone(String phone,HttpServletRequest request) {
@@ -213,14 +213,14 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		return userService.getNapaStoreByPhone(phone);
 	}
-	
-	/** 
-	* @Title: choujiang 
+
+	/**
+	* @Title: choujiang
 	* @Description: 轮盘抽奖类，暂时废弃，改用下面的lotteryConfig
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/choujiang")
 	public @ResponseBody Map<String,Object> choujiang(HttpServletRequest request) {
@@ -231,14 +231,14 @@ public class UserController extends CommonUserHandler{
 		map.put("result", result);
 		return map;
 	}
-	
-	/** 
-	* @Title: home 
-	* @Description: 取得微商城首页的banner和产品数据 
+
+	/**
+	* @Title: home
+	* @Description: 取得微商城首页的banner和产品数据
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/home")
 	public @ResponseBody Map<String,Object> home(HttpServletRequest request) {
@@ -252,16 +252,16 @@ public class UserController extends CommonUserHandler{
 		map.put("quickNavis", quickNavis);
 		return map;
 	}
-	/** 
-	* @Title: getAllProduct 
+	/**
+	* @Title: getAllProduct
 	* @Description: 根据筛选条件取得全部商品列表
 	* @param @param request
 	* @param @param categoryId 用户所选分类id
 	* @param @param isSaleDesc	是否按照销量倒叙
 	* @param @param isPriceDesc	是否按照价格倒叙
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getAllProduct")
 	public @ResponseBody Map<String,Object> getAllProduct(HttpServletRequest request,Integer categoryId,Boolean isSaleDesc,Boolean isPriceDesc,String keyword,Integer naviId) {
@@ -275,14 +275,14 @@ public class UserController extends CommonUserHandler{
 		map.put("products", products);
 		return map;
 	}
-	/** 
-	* @Title: getOrderList 
+	/**
+	* @Title: getOrderList
 	* @Description: 对接洪石订单，取得配送中或者结单的订单
 	* @param @param request
 	* @param @param isEnd 是否结单
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getOrderList")
 	public @ResponseBody Map<String,Object> getOrderList(HttpServletRequest request,Boolean isEnd) {
@@ -293,41 +293,41 @@ public class UserController extends CommonUserHandler{
 		map.put("orders", orders);
 		return map;
 	}
-	/** 
-	* @Title: getAddrById 
+	/**
+	* @Title: getAddrById
 	* @Description: 根据地址id取得对应的地址信息
 	* @param @param request
 	* @param @param addrId  地址id
-	* @param @return    设定文件 
-	* @return DeliverAddr    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return DeliverAddr    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getAddrById")
 	public @ResponseBody DeliverAddr getAddrById(HttpServletRequest request,Integer addrId) {
 		return userService.selectAddrById(addrId);
 	}
-	
-	/** 
-	* @Title: getStoreAddr 
+
+	/**
+	* @Title: getStoreAddr
 	* @Description: 取得当前所选加盟店对应的地理位置信息，用于地图api的调用
 	* @param @param request
 	* @param @param storeId
-	* @param @return    设定文件 
-	* @return NapaStore    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return NapaStore    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getStoreAddr")
 	public @ResponseBody NapaStore getStoreAddr(HttpServletRequest request,Integer storeId) {
 		NapaStore store = userService.getNapaStore(storeId);
 		return store;
 	}
-	/** 
-	* @Title: getCoupon 
-	* @Description: 根据用户id取得当前用户可使用的优惠券列表 
+	/**
+	* @Title: getCoupon
+	* @Description: 根据用户id取得当前用户可使用的优惠券列表
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getCoupon")
 	public @ResponseBody Map<String,Object> getCoupon(HttpServletRequest request) {
@@ -375,14 +375,14 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 
-	/** 
-	* @Title: order 
+	/**
+	* @Title: order
 	* @Description: 提交订单页面的数据处理
 	* @param @param request
 	* @param @param cart 已选的购物车id集合
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/order")
 	public @ResponseBody Map<String,Object> order(HttpServletRequest request,@RequestBody List<CartDto> cart){
@@ -438,15 +438,15 @@ public class UserController extends CommonUserHandler{
 		map.put("salesInfo",salesInfo);
 		return map;
 	}
-	
-	/** 
-	* @Title: payment 
+
+	/**
+	* @Title: payment
 	* @Description: 支付页面的数据接口，返回支付方式，订单信息
 	* @param @param request
 	* @param @param paymentSerialNum 支付单号
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("payment")
 	public @ResponseBody Map<String,Object> payment(HttpServletRequest request,String paymentSerialNum){
@@ -454,6 +454,9 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		PaymentOrder paymentOrder = userService.selectPaymentOrderBySerialNum(paymentSerialNum);
+		paymentOrder.setCheckCount(0);
+		paymentOrder.setCreateTime(new Date());
+		userService.updatePaymentOrder(paymentOrder);
 		List<Payment> payments = new ArrayList<Payment>();
 		if(paymentOrder!=null&&paymentOrder.getMoney().compareTo(new BigDecimal(0))>0){
 			payments = userService.selectAllPayment();
@@ -470,14 +473,14 @@ public class UserController extends CommonUserHandler{
 		map.put("paymentOrder", paymentOrder);
 		return map;
 	}
-	
-	/** 
-	* @Title: unpayOrderList 
+
+	/**
+	* @Title: unpayOrderList
 	* @Description: 根据用户id选择待支付订单列表信息
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("unpayOrderList")
 	public @ResponseBody Map<String,Object> unpayOrderList(HttpServletRequest request){
@@ -488,17 +491,17 @@ public class UserController extends CommonUserHandler{
 		map.put("orders", orders);
 		return map;
 	}
-	
-	/** 
-	* @Title: wxConfig 
-	* @Description: 调用微信jssdk的工具接口，取得必要的参数信息 
+
+	/**
+	* @Title: wxConfig
+	* @Description: 调用微信jssdk的工具接口，取得必要的参数信息
 	* @param @param model
 	* @param @param request
 	* @param @param response
 	* @param @param url
-	* @param @return    设定文件 
-	* @return Map<String,String>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,String>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/wxConfig")
 	@ResponseBody
@@ -507,14 +510,14 @@ public class UserController extends CommonUserHandler{
 		url = url.replaceAll("\\+", "&");
 		return userService.WCScan(url, request);
 	}
-	
-	/** 
-	* @Title: distCenter 
-	* @Description: 根据用户id取得对应的分销中心的数据接口 
+
+	/**
+	* @Title: distCenter
+	* @Description: 根据用户id取得对应的分销中心的数据接口
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/distCenter")
 	@ResponseBody
@@ -526,14 +529,14 @@ public class UserController extends CommonUserHandler{
 		logger.info(JSON.toJSONString(map));
 		return map;
 	}
-	/** 
-	* @Title: distUser 
-	* @Description: 根据用户id取得对应的下级用户列表 
-	* @param @param request 
+	/**
+	* @Title: distUser
+	* @Description: 根据用户id取得对应的下级用户列表
+	* @param @param request
 	* @param @param userId 指定的用户id
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/distUser")
 	@ResponseBody
@@ -547,13 +550,13 @@ public class UserController extends CommonUserHandler{
 		map.put("users", users);
 		return map;
 	}
-	/** 
-	* @Title: distOrder 
-	* @Description: 根据用户id取得其下级，下下级的订单列表 
+	/**
+	* @Title: distOrder
+	* @Description: 根据用户id取得其下级，下下级的订单列表
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/distOrder")
 	@ResponseBody
@@ -569,15 +572,15 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	
-	/** 
-	* @Title: invitation 
+
+	/**
+	* @Title: invitation
 	* @Description: 根据用户id取得对应的下级用户列表 ，已废弃，改为上述的 distUser
 	* @param @param request
 	* @param @param userId
-	* @param @return    设定文件 
-	* @return List<UserInvitedLink>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return List<UserInvitedLink>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/invitationList")
 	public @ResponseBody List<UserInvitedLink> invitation(HttpServletRequest request,Integer userId){
@@ -587,14 +590,14 @@ public class UserController extends CommonUserHandler{
 		}
 		return userService.getInvitationList(userId);
 	}
-	/** 
-	* @Title: invitationOrder 
+	/**
+	* @Title: invitationOrder
 	* @Description: 根据用户id取得对应的下级订单列表 ，已废弃，改为上述的distOrder
 	* @param @param request
 	* @param @param serialNum
-	* @param @return    设定文件 
-	* @return List<Order>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return List<Order>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/invitationOrder")
 	public @ResponseBody List<Order> invitationOrder(HttpServletRequest request,String serialNum){
@@ -602,15 +605,15 @@ public class UserController extends CommonUserHandler{
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		return userService.getInvitationOrder(userId);
 	}
-	
-	/** 
-	* @Title: editAddr 
+
+	/**
+	* @Title: editAddr
 	* @Description: 编辑或者新增地址页面数据接口
 	* @param @param request
 	* @param @param deliverAddrId 如果是编辑，就传对应的地址id，得到源数据
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/editAddr")
 	public @ResponseBody Map<String,Object> editAddr(HttpServletRequest request,Integer deliverAddrId) {
@@ -629,15 +632,15 @@ public class UserController extends CommonUserHandler{
 		map.put("province", province);
 		return map;
 	}
-	
-	/** 
-	* @Title: addrList 
-	* @Description: 获取用户的地址列表数据 
+
+	/**
+	* @Title: addrList
+	* @Description: 获取用户的地址列表数据
 	* @param @param request
 	* @param @param productId
-	* @param @return    设定文件 
-	* @return List<DeliverAddr>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return List<DeliverAddr>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/addrList")
 	public @ResponseBody List<DeliverAddr> addrList(HttpServletRequest request,Integer productId){
@@ -645,15 +648,15 @@ public class UserController extends CommonUserHandler{
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		return userService.getDeliverAddrList(userId);
 	}
-	
-	/** 
-	* @Title: cart 
-	* @Description: 根据userId和storeId获取当期用户的购物车数据 
+
+	/**
+	* @Title: cart
+	* @Description: 根据userId和storeId获取当期用户的购物车数据
 	* @param @param request
 	* @param @param storeId 所选加盟店id，用于判断购物车商品是否被当前加盟店支持
-	* @param @return    设定文件 
-	* @return List<CartDto>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return List<CartDto>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/cart")
 	public @ResponseBody List<CartDto> cart(HttpServletRequest request,Integer storeId){
@@ -661,15 +664,15 @@ public class UserController extends CommonUserHandler{
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		return userService.getUserCart(userId,storeId);
 	}
-	
-	/** 
-	* @Title: productDetail 
-	* @Description: 产品详情单页的数据接口 
+
+	/**
+	* @Title: productDetail
+	* @Description: 产品详情单页的数据接口
 	* @param @param request
 	* @param @param productId 产品id
-	* @param @return    设定文件 
-	* @return ProductDto    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return ProductDto    返回类型
+	* @throws
 	*/
 	@RequestMapping("/productDetail")
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
@@ -684,27 +687,27 @@ public class UserController extends CommonUserHandler{
 		productDto.setDescription(FileUtil.UrlRequest(productDto.getDescription()));
 		return productDto;
 	}
-	/** 
-	* @Title:  
-	* @Description: 获取微信appid配置 
+	/**
+	* @Title:
+	* @Description: 获取微信appid配置
 	* @param @param request
-	* @param @return    设定文件 
-	* @return String    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return String    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getAppId")
 	public @ResponseBody String getAppId(HttpServletRequest request,String merchantCode){
 		return userService.getAppId(merchantCode);
 	}
-	
-	
-	/** 
-	* @Title: shakeHandler 
+
+
+	/**
+	* @Title: shakeHandler
 	* @Description: 摇一摇数据处理
 	* @param @param request
-	* @param @return    设定文件 
-	* @return boolean    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return boolean    返回类型
+	* @throws
 	*/
 	@RequestMapping("/shakeHandler")
 	public @ResponseBody boolean shakeHandler(HttpServletRequest request){
@@ -737,12 +740,12 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 	/**
-	* @Title: getLotteryConfig 
-	* @Description: 积分抽奖页面数据接口，获得积分抽奖配置等信息 
+	* @Title: getLotteryConfig
+	* @Description: 积分抽奖页面数据接口，获得积分抽奖配置等信息
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getLotteryConfig")
 	public @ResponseBody Map<String,Object> getLotteryConfig(HttpServletRequest request){
@@ -799,14 +802,14 @@ public class UserController extends CommonUserHandler{
 		}
 		return result;
 	}
-	
-	/** 
-	* @Title: recharge 
-	* @Description: 充值页面数据接口 
+
+	/**
+	* @Title: recharge
+	* @Description: 充值页面数据接口
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/seller/recharge")
 	public @ResponseBody Map<String,Object> recharge(HttpServletRequest request) {
@@ -874,14 +877,14 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	
-	/** 
-	* @Title: getProvince 
-	* @Description: 获取省份数据 
+
+	/**
+	* @Title: getProvince
+	* @Description: 获取省份数据
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getProvinces")
 	public @ResponseBody Map<String,Object> getProvince(HttpServletRequest request) {
@@ -891,15 +894,15 @@ public class UserController extends CommonUserHandler{
 		map.put("state", state);
 		return map;
 	}
-	
-	/** 
-	* @Title: getShippingFee 
-	* @Description: 根据距离获取两地址的运费 
+
+	/**
+	* @Title: getShippingFee
+	* @Description: 根据距离获取两地址的运费
 	* @param @param request
 	* @param @param distance
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getShippingFee")
 	public @ResponseBody Map<String,Object> getShippingFee(HttpServletRequest request,double distance,BigDecimal total) {
@@ -938,15 +941,15 @@ public class UserController extends CommonUserHandler{
 		map.put("money", money);
 		return map;
 	}
-	
-	/** 
-	* @Title: getCities 
-	* @Description: 根据省份id获取对应的城市列表 
+
+	/**
+	* @Title: getCities
+	* @Description: 根据省份id获取对应的城市列表
 	* @param @param request
 	* @param @param provinceId 省份id
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getCities")
 	public @ResponseBody Map<String,Object> getCities(HttpServletRequest request,Integer provinceId) {
@@ -960,15 +963,15 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	
-	/** 
-	* @Title: getCities 
-	* @Description: 根据省份名称获取对应城市列表 
+
+	/**
+	* @Title: getCities
+	* @Description: 根据省份名称获取对应城市列表
 	* @param @param request
 	* @param @param stateId 省份名称
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getCitiesByStr")
 	public @ResponseBody Map<String,Object> getCities(HttpServletRequest request,String stateId) {
@@ -982,15 +985,15 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	
-	/** 
-	* @Title: getRegions 
+
+	/**
+	* @Title: getRegions
 	* @Description:根据城市id获取对应区列表
 	* @param @param request
 	* @param @param cityId 城市id
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getRegions")
 	public @ResponseBody Map<String,Object> getRegions(HttpServletRequest request,Integer cityId) {
@@ -1003,14 +1006,14 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	/** 
-	* @Title: getRegionsByStr 
+	/**
+	* @Title: getRegionsByStr
 	* @Description: 根据城市名称获取对应的区列表
 	* @param @param request
 	* @param @param cityId
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getRegionsByStr")
 	public @ResponseBody Map<String,Object> getRegionsByStr(HttpServletRequest request,String cityId) {
@@ -1024,15 +1027,15 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 
-	
-	/** 
-	* @Title: getUserInfo 
-	* @Description: 获取用户的基本信息 
+
+	/**
+	* @Title: getUserInfo
+	* @Description: 获取用户的基本信息
 	* @param @param request
 	* @param @param response
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/getUserInfo")
 	@ResponseBody
@@ -1091,14 +1094,14 @@ public class UserController extends CommonUserHandler{
 	}
 
 
-	/** 
-	* @Title: tokenLogin 
-	* @Description: 用token来长期保存登陆状态 
+	/**
+	* @Title: tokenLogin
+	* @Description: 用token来长期保存登陆状态
 	* @param @param token
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/tokenLogin")
 	@ResponseBody
@@ -1120,15 +1123,15 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	
-	/** 
-	* @Title: ipAddr 
+
+	/**
+	* @Title: ipAddr
 	* @Description: 获取当前请求的ip
 	* @param @param request
 	* @param @param cityId
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/ipAddr")
 	public @ResponseBody Map<String,Object> ipAddr(HttpServletRequest request,Integer cityId) {
@@ -1137,14 +1140,14 @@ public class UserController extends CommonUserHandler{
 		map.put("ipAddr", ipAddr);
 		return map;
 	}
-	
-	/** 
-	* @Title: isSubscribe 
-	* @Description:判断当前用户是否关注公众号 
+
+	/**
+	* @Title: isSubscribe
+	* @Description:判断当前用户是否关注公众号
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/isSubscribe")
 	public @ResponseBody Map<String,Object> isSubscribe(HttpServletRequest request) {
@@ -1155,13 +1158,13 @@ public class UserController extends CommonUserHandler{
 		map.put("isSubscribe", isSubscribe);
 		return map;
 	}
-	/** 
-	* @Title: getSerialNum 
-	* @Description: 根据用户id获取其对应的用户序列号 
+	/**
+	* @Title: getSerialNum
+	* @Description: 根据用户id获取其对应的用户序列号
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/getSerialNum")
 	public @ResponseBody Map<String,Object> getSerialNum(HttpServletRequest request) {
@@ -1176,16 +1179,16 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
-	
-	/** 
-	* @Title: isWC 
+
+	/**
+	* @Title: isWC
 	* @Description: 根据请求头判断当前请求是否属于微信请求
 	* @param @param model
 	* @param @param request
 	* @param @param response
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/isWC")
 	@ResponseBody
@@ -1205,16 +1208,16 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 
-	/** 
-	* @Title: fastPaymentScan 
+	/**
+	* @Title: fastPaymentScan
 	* @Description: 方法已废弃
 	* @param @param model
 	* @param @param request
 	* @param @param response
 	* @param @param url
-	* @param @return    设定文件 
-	* @return Map<String,String>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,String>    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/fastPaymentScan")
 	@ResponseBody
@@ -1225,16 +1228,16 @@ public class UserController extends CommonUserHandler{
 		url = url.replaceAll("\\+", "&");
 		return userService.WCScan(url, request);
 	}
-	/** 
-	* @Title: wCVerify 
+	/**
+	* @Title: wCVerify
 	* @Description: 测试方法，请忽略
 	* @param @param model
 	* @param @param request
 	* @param @param response
 	* @param @param echostr
-	* @param @return    设定文件 
-	* @return String    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return String    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/wCVerify")
 	@ResponseBody
@@ -1242,17 +1245,17 @@ public class UserController extends CommonUserHandler{
 			HttpServletResponse response,String echostr) {
 		return echostr;
 	}
-	
-	
-	/** 
-	* @Title: testWXMessage 
-	* @Description: 测试发送微信短信 
+
+
+	/**
+	* @Title: testWXMessage
+	* @Description: 测试发送微信短信
 	* @param @param model
 	* @param @param request
 	* @param @param response
-	* @param @return    设定文件 
-	* @return String    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return String    返回类型
+	* @throws
 	*/
 	@RequestMapping(value = "/testWXMessage")
 	@ResponseBody
@@ -1261,20 +1264,20 @@ public class UserController extends CommonUserHandler{
 		duobaoService.sendWXMessageSuccess(105,5,"14782464907416592");
 		return "";
 	}
-	
-	/** 
-	* @Title: bossCenter 
-	* @Description: 老板助手数据接口 
+
+	/**
+	* @Title: bossCenter
+	* @Description: 老板助手数据接口
 	* @param @param request
 	* @param @param phone
 	* @param @param hsCode
-	* @param @return    设定文件 
-	* @return Map<String,Object>    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Map<String,Object>    返回类型
+	* @throws
 	*/
 	@RequestMapping("/bossCenter")
 	public @ResponseBody Map<String, Object> bossCenter(HttpServletRequest request,String phone,String hsCode){
-		
+
 		return userService.getBossCenter(phone,hsCode);
 	}
 }
