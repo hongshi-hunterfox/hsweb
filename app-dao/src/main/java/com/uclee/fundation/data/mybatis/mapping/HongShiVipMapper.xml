@@ -18,6 +18,10 @@
 		<result column="IsVoucher" property="isVoucher" jdbcType="INTEGER" />
 		<result column="VipType" property="vipType" jdbcType="INTEGER" />
 		<result column="EndTime" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="IdNumber" property="cIdNumber" jdbcType="VARCHAR" />
+		<result column="Company" property="cCompany" jdbcType="VARCHAR" />
+		<result column="Sex" property="cSex" jdbcType="VARCHAR" />
+		
 	</resultMap>
 	<resultMap id="HongShiRechargeRecord"
 		type="com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord">
@@ -96,14 +100,20 @@
    	    <result column="金额合计" property="hejijine" jdbcType="DECIMAL" />
    	    <result column="备注" property="beizhu" jdbcType="VARCHAR" />
    	    <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
-	    </resultMap>
-	<resultMap id="HongShiVipInfo" type="com.uclee.fundation.data.mybatis.model.HongShiVip">
-	<result column="电话" property="cMobileNumber" jdbcType="VARCHAR" />
+   	    
+	</resultMap>
+	<resultMap id="HongShiVipInfo"
+		type="com.uclee.fundation.data.mybatis.model.HongShiVip">
+		<result column="电话" property="cMobileNumber" jdbcType="VARCHAR" />
 		<result column="名称" property="cName" jdbcType="VARCHAR" />
 		<result column="生日" property="cBirthday" jdbcType="VARCHAR" />
 		<result column="是否农历" property="bIsLunar" jdbcType="BIT" />
 		<result column="编号" property="cVipCode" jdbcType="VARCHAR" />
 		<result column="卡余额" property="balance" jdbcType="DECIMAL" />
+		<result column="身份证号" property="cIdNumber" jdbcType="VARCHAR" />
+		<result column="工作单位" property="cCompany" jdbcType="VARCHAR" />
+		<result column="性别" property="cSex" jdbcType="VARCHAR" />
+		
 	</resultMap>
 	<resultMap id="AddVipResult" type="com.uclee.fundation.data.mybatis.model.AddVipResult">
 		<result column="ret" property="msg" jdbcType="VARCHAR" />
@@ -122,11 +132,11 @@
 		<result column="amount" property="amount" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode
+		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode,cIdNumber,cCompany,cSex
 	</sql>
 	<select id="addVipInfo" parameterType="com.uclee.fundation.data.mybatis.model.HongShiVip"
 		statementType="CALLABLE" resultMap="AddVipResult">
-		CALL WSC_AddVip(#{cWeiXinCode},#{cMobileNumber},#{cName},#{cBirthday},#{bIsLunar},#{cVipCode})
+		CALL WSC_AddVip(#{cWeiXinCode},#{cMobileNumber},#{cName},#{cBirthday},#{bIsLunar},#{cVipCode},#{cIdNumber},#{cCompany},#{cSex})
 	</select>
 	<select id="getVipInfo" parameterType="java.lang.String"
 		statementType="CALLABLE" resultMap="HongShiVip">
@@ -176,7 +186,7 @@
     	CALL ChangeVipLinks(#{cVipLk})
     </select>
      <select id="selectVip" resultMap="HongShiVip">
-    	select 电话,名称,生日,是否农历,编号,卡余额  from 会员  where 电话=#{cMobileNumber,jdbcType=VARCHAR}
+    	select 电话,名称,生日,是否农历,编号,卡余额,性别  from 会员  where 电话=#{cMobileNumber,jdbcType=VARCHAR}
     </select>
     <select id="selectUsers" resultMap="Lnsurance">
     	select id,vip_id,oauth_id,create_time,phone from web_user_list where phone=#{phone,jdbcType=VARCHAR}

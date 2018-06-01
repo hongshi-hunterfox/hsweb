@@ -192,7 +192,8 @@ public class UserServiceImpl implements UserServiceI {
 	private BannerMapper bannerMapper;
 	@Autowired
 	private CommentMapper commentMapper;
-	
+	@Autowired
+	private HsVipMapper hsVipMapper;	
 	@Autowired
 	private LotteryRecordMapper lotteryRecordMapper;
 	@Autowired
@@ -207,6 +208,8 @@ public class UserServiceImpl implements UserServiceI {
 	private ProductsSpecificationsValuesLinkMapper productsSpecificationsValuesLinkMapper;
 	@Autowired
 	private DataSourceFacade datasource;
+	@Autowired
+	private CategoryMapper categoryMapper;
 	@Autowired
 	private RefundOrderMapper refundOrderMapper;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
@@ -4028,11 +4031,29 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return new HashMap<>();
 	}
+	
+		public List<HsVip> selecthsVip(String vCode) {
+		return hsVipMapper.selecthsVip(vCode);
+		
+	}
+
+	@Override
+	public int updateVips(String vCode, HsVip hsVip) {
+		logger.info("124----="+JSON.toJSONString(hsVip));
+		return hsVipMapper.updateVips(hsVip);
+	}
+		public List<HsVip> selectVips(String vNumber) {	
+		return hsVipMapper.selectVips(vNumber);
+		}
 
 	@Override
 	public List<HongShiVip> selectVip(String cMobileNumber) {
 		return hongShiVipMapper.selectVip(cMobileNumber);
 	}
+	@Override
+	public List<UserProfile> selectAllProfileLists(Integer userId) {
+				return userProfileMapper.selectAllProfileLists(userId);
+							}
 
 	@Override
 	public List<Lnsurance> getUsers(String oauthId) {

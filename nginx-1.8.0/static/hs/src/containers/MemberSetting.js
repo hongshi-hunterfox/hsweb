@@ -21,10 +21,13 @@ class MemberSetting extends React.Component {
       showNoti: false,
  	  config:{},
       cName: '',
+      cSex: '1',
       cMobileNumber: '',
       fail: '',
       code: '',
       cBirthday: '',
+      cIdNumber: '',
+      cCompany: '',
       bIsLunar: '0',
       cVipCode: '',
       type: '1',
@@ -51,9 +54,23 @@ class MemberSetting extends React.Component {
         cMobileNumber: d.cMobileNumber,
         cBirthday: moment(d.cBirthday).format('YYYY-MM-DD'),
         bIsLunar: d.bIsLunar,
-        cVipCode: d.cVipCode
+        cVipCode: d.cVipCode,
+        cIdNumber: d.cIdNumber,
+        cCompany: d.cCompany,
+        cSex: d.cSex
       })
     })
+    
+    req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config: data.config
+      })
+    })
+    
     req.get('/uclee-user-web/getBindText').end((err, res) => {
       if (err) {
         return err
@@ -191,6 +208,56 @@ class MemberSetting extends React.Component {
                       </select>
                     </div>
                   </div>
+                  
+                  <div className="form-group">
+              <label className="control-label col-xs-3 trim-right">
+              性别
+              </label>
+              <div className="col-xs-9">
+                <select
+                  name="cSex"
+                  className="form-control"
+                  value={this.state.cSex}
+                  placeholder="请输入性别"
+                  onChange={this._change}
+                >
+                 
+                  <option value='1'>男</option>
+                  <option value='2'>女</option>
+                </select>
+              </div>
+            </div>
+                  
+                  <div className="form-group">
+                    <label className="control-label col-xs-3 trim-right">
+                      身份证号
+                    </label>
+                    <div className="col-xs-9">
+                      <input
+                        type="tel"
+                        name="cIdNumber"
+                        className="form-control"
+                        placeholder="#可不填"
+                        value={this.state.cIdNumber}
+                        onChange={this._change}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="control-label col-xs-3 trim-right">
+                      工作单位
+                    </label>
+                    <div className="col-xs-9">
+                      <input
+                        type="tel"
+                        name="cCompany"
+                        className="form-control"
+                        placeholder="#可不填"
+                        value={this.state.cCompany}
+                        onChange={this._change}
+                      />
+                    </div>
+                  </div>
                 </div>
               : <div>
                   <div className="form-group">
@@ -242,6 +309,8 @@ class MemberSetting extends React.Component {
               <button type="submit" className="btn btn-success btn-block" disabled={this.state.disabled}>
                 保存
               </button>
+             <div onClick={this._setting} className="member-card-setting">
+            </div>
             </div>
 
           </form>
@@ -392,6 +461,24 @@ class MemberSetting extends React.Component {
                   })
                  return err
                }
+               
+               if (!this.state.force) {
+    	         var cc = this.state.config.force;
+                     if(cc ==1){
+    	            browserHistory.push({
+                   pathname: '/forces'
+                })
+    	            return
+                    }else{
+   	             if(cc ==2){
+                     browserHistory.push({
+                      pathname: '/member-center'
+                 })
+                     return
+                }
+             }
+          }
+    
                if (res.body.result === 'fail') {
                  this.setState({
                    error: res.body.reason,

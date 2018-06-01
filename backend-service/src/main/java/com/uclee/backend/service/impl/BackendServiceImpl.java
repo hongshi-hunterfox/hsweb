@@ -234,6 +234,12 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.signText, "");
 		}
+		if (configPost.getForce()!=null) {
+			configMapper.updateByTag(WebConfig.force, configPost.getForce());
+		}else{
+			configMapper.updateByTag(WebConfig.force, "");
+		}
+		
 		return true;
 	}
 	@Override
@@ -369,6 +375,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getVoucherSendInformation()!=null) {
 			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
 		}
+		if (configPost.getForce()!=null) {
+			configMapper.updateByTag(WebConfig.force, configPost.getForce());
+		}
 		return true;
 	}
 	@Override
@@ -503,6 +512,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getVoucherSendInformation()!=null) {
 			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+		}
+		if (configPost.getForce()!=null) {
+			configMapper.updateByTag(WebConfig.force, configPost.getForce());
 		}
 		return true;
 	}
@@ -1031,6 +1043,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setSignText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.VoucherSendInformation)){
 				configPost.setVoucherSendInformation(config.getValue());
+			}else if(config.getTag().equals(WebConfig.force)){
+				configPost.setForce(config.getValue());
 			}
 		}
 		return configPost;

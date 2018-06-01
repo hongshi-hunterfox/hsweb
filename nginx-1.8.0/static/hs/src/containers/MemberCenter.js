@@ -124,6 +124,7 @@ class MemberCenter extends React.Component {
             <LinkGroupItem icon="smile-o" text="积分抽奖" href="/lottery"/>
             <LinkGroupItem icon="smile-o" text="我的优惠券" onClick={() => { window.location='/coupon' }}/>
             <LinkGroupItem icon="smile-o" text="分销中心" onClick={() => { window.location='/distribution-center?serialNum='+this.state.serialNum+'&merchantCode='+localStorage.getItem('merchantCode')}}/>
+            <LinkGroupItem icon="smile-o" text="个人信息" onClick={() => { window.location='/information' }}/>
           </LinkGroup>
 
           <LinkGroup>

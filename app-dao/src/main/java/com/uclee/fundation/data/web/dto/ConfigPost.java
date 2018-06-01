@@ -45,6 +45,7 @@ public class ConfigPost {
 	private String full;
 	private String unbundling;
 	private String signText;
+	private String force;
 
 	private String zhengshu;
 	private String zhengshuPassword;
@@ -71,6 +72,14 @@ public class ConfigPost {
 
 	public void setUnbundling(String unbundling) {
 		this.unbundling = unbundling;
+	}
+
+	public String getForce() {
+		return force;
+	}
+
+	public void setForce(String force) {
+		this.force = force;
 	}
 
 	public String getFull() {

@@ -284,6 +284,14 @@ public interface UserServiceI {
 
 	Map<String,String> wxInitiativeCheck(PaymentOrder paymentOrder);
 	
+	List<HsVip> selecthsVip(String vCode);
+
+	int updateVips(String vCode, HsVip hsVip);
+	
+	List<HsVip> selectVips(String vNumber);
+	
+	List<UserProfile> selectAllProfileLists(Integer userId);
+	
 	List<HongShiVip> selectVip(String cMobileNumber);
 	
 	List<Lnsurance> getUsers(String oauthId);

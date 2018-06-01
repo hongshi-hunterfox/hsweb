@@ -35,6 +35,7 @@ import com.uclee.fundation.dfs.fastdfs.data.Result;
 import com.uclee.number.util.NumberUtil;
 import com.uclee.payment.exception.PaymentHandlerException;
 import com.uclee.payment.strategy.PaymentHandlerStrategy;
+import com.uclee.sms.util.VerifyCode;
 import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
@@ -312,6 +313,80 @@ public class UserHandler {
 		boolean result = userService.updateProfile(userId,userProfile);
 		map.put("result", result);
 		return map;
+	}
+	
+	/** 
+	* @Title: doUpdateVips 
+	* @Description: 更新用户信息， 
+	* @param @param request
+	* @param @param userProfile
+	* @param @return    设定文件 
+	* @return Map<String,Object>    返回类型 
+	* @throws 
+	*/
+	@RequestMapping("doUpdateVips")
+	public @ResponseBody Map<String,Object> doUpdateVips(@RequestBody HsVip hsVip, HttpServletRequest request){
+		
+		HttpSession session = request.getSession();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		
+		logger.info("hsVip:"+JSON.toJSONString(hsVip));
+		HsVip up=new HsVip();
+		up.setvName(hsVip.getvName());
+		up.setvNumber(hsVip.getvNumber());
+		up.setvBirthday(hsVip.getvBirthday());
+		up.setvIdNumber(hsVip.getvIdNumber());
+		up.setvCompany(hsVip.getvCompany());
+		up.setvCode(hsVip.getvCode());
+		up.setvSex(hsVip.getvSex());
+		List<HsVip> vip = userService.selectVips(hsVip.getvNumber());	
+		
+			if(!VerifyCode.checkVerifyCode(session,hsVip.getvNumber(),hsVip.getCode())){
+				map.put("result", "fail");	
+				if(hsVip.getvCode()!= vip.get(0).getvCode()){
+					
+				
+				if(hsVip.getCode()==null){
+					map.put("reason", "请输入验证码");
+					
+				}else{
+					  
+						map.put("reason", "验证码错误");
+						logger.info("验证码错误");
+						
+						return map;
+						
+				}
+				}
+				
+			}
+//		}
+			
+
+			map.put("result", "success");
+			if(vip.size()==0){			
+				userService.updateVips(hsVip.getvCode(), up);			
+				return map;
+			}		
+			
+			String hVip = hsVip.getvCode();
+			String sVip = vip.get(0).getvCode();
+			map.put("result", "success");
+			if(vip.size()!=0&&hVip.equals(sVip)){
+				logger.info("hsVip.getvCode()----="+hsVip.getvCode());
+				logger.info("vip.get(0).getvCode()----="+vip.get(0).getvCode());						
+				userService.updateVips(hsVip.getvCode(), up);	
+				map.put("result", "success");
+			}else{
+					
+				map.put("reason","手机号已与其他会员卡绑定，不能修改！");
+				map.put("result", "fail");	
+			}
+//		}
+		
+	
+			
+		return map; 
 	}
 	
 	/** 

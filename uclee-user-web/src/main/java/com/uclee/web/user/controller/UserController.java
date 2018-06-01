@@ -209,9 +209,60 @@ public class UserController extends CommonUserHandler{
 	public @ResponseBody Boolean verifyCode(String phone,HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
-		Map<String,String> config = userService.getSMSConfig();
-		return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"), config.get("signName"), config.get("templateCode"));
+		Map<String, String> config = userService.getSMSConfig();
+		logger.info("12345"+phone);
+		
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
+		logger.info("12345"+numbers.get(0).getPhone());
+		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
+			logger.info("12345"+numbers.get(0).getPhone());
+			if(numbers.get(0).getPhone().equals(phone)){
+				System.out.println("没有修改手机号");	
+				
+	
+			}else{
+				
+				return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"),
+						config.get("signName"), config.get("templateCode"));
+			}
+			
+		}else{
+			//第一次使用商城绑定会员卡，根据user_id取不到手机号执行下面代码
+			return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"),
+					config.get("signName"), config.get("templateCode"));
+		}
+		
+		return false;
 	}
+	
+		/**
+	 * @Title: verifyCodes 
+	 * @value: 判断是否校验验证码
+	 */
+	@RequestMapping("/verifyCodes")
+	public @ResponseBody Boolean verifyCodes(String phone, HttpServletRequest request) {
+		Map<String, Object> map = new TreeMap<String, Object>();
+		HttpSession session = request.getSession();
+		Map<String, String> config = userService.getSMSConfig();
+		logger.info("12345"+phone);
+		
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
+		logger.info("12345"+numbers.get(0).getPhone());
+		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
+			logger.info("12345"+numbers.get(0).getPhone());
+			if(numbers.get(0).getPhone().equals(phone)){
+				System.out.println("没有修改手机号");	
+	
+			}else{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	/** 
 	* @Title: checkVerifyCode 
 	* @Description: 检验用户输入的验证码正确性 
@@ -1642,6 +1693,57 @@ public class UserController extends CommonUserHandler{
 		orderMap.put("order",order);
 		return orderMap;
 	}
+	
+		/**
+	 * @Description : 个人信息详情页面
+	 */
+	@RequestMapping("/getVips")
+	public @ResponseBody HsVip getVips(HttpServletRequest request, String vNumber) {
+		HsVip res=new HsVip();
+		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		logger.info("sjx------="+oauthLogin.getOauthId());
+		List<HongShiVip> ret= hongShiVipService.getVipInfo(oauthLogin.getOauthId());
+		if(ret!=null&&ret.size()>0){
+			logger.info("sjx------="+ret.get(0).getcVipCode());
+
+			List<HsVip> Vips = userService.selecthsVip(ret.get(0).getcVipCode());
+			Map<String,Object> map = new TreeMap<String,Object>();
+			for(HsVip item:Vips){
+				String vName =item.getvName();
+				logger.info("name----="+vName);
+				String Number = item.getvNumber();
+				logger.info("phone----="+Number);
+				String vBirthday= item.getvBirthday();
+				logger.info("vBirthday----="+vBirthday);
+				String vIdNumber = item.getvIdNumber();
+				logger.info("vIdNumber----="+vIdNumber);
+				String vCompany = item.getvCompany();
+				logger.info("vCompany---="+vCompany);
+				String vCode=item.getvCode();
+				logger.info("vcode-----="+vCode);
+				String vSex=item.getvSex();
+				logger.info("111111vsex-----="+vSex);
+				res.setvName(vName);
+				res.setvNumber(Number);
+				res.setvBirthday(vBirthday);
+				res.setvIdNumber(vIdNumber);
+				res.setvCompany(vCompany);
+				res.setvCode(vCode);
+				res.setvSex(vSex);
+				map.put("item", item);
+			}
+	
+
+
+		}
+
+		return res;
+		
+	}
+
 
 	@RequestMapping("refund")
 	public @ResponseBody Map<String,Object> refund(HttpServletRequest request,String refundSerialNum){

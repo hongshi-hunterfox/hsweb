@@ -33,6 +33,8 @@ public interface UserProfileMapper {
 	List<UserProfile> selectAllProfileList();
 	
 	List<UserProfile> selectAllVipList();
+	
+	 
 
 	List<UserProfile> getUserListForBirth(@Param("start") String start, @Param("end")String end,@Param("year")String year);
 
@@ -43,4 +45,6 @@ public interface UserProfileMapper {
     List<UserProfile> selectByVips(@Param("start") Date start, @Param("end") Date end);
     
     List<UserProfile> selectCardPhoneVips(String cartphone);
+	
+	List<UserProfile> selectAllProfileLists(Integer userId);
 }
