@@ -140,13 +140,14 @@ class ActivityConfig extends React.Component {
                 </select>
               </div>
 
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定强制弹出个人信息：</label>
+              {/*<label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定强制弹个人信息：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <select name="force" value={this.state.config.force?this.state.config.force:'1'} style={{padding:'5px'}} onChange={this._change}>    
                   <option value="1">启用</option>
                   <option value="2">不启用</option>                
                 </select>
               </div>
+             */}
 
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>

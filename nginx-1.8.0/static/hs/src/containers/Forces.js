@@ -182,7 +182,7 @@ _tab = t => {
        
         	var a=confirm("提交成功,点击确定返回个人资料信息");
         	if(a){
-        		window.location="/information"
+        		window.location="/ShowCoupon"
         	}else{
         		window.location="/member-center"
         	}

@@ -209,11 +209,9 @@ public class HongShiVipController<phone> {
 			
 			//判断是否注册过会员	
 			List<Lnsurance> lnsurance = hongShiVipService.selectUsers(vip.getcMobileNumber());
-			logger.info("size----="+lnsurance.size());
 			
 			//如果list不为null长度大于0就说明该会员已有绑定记录
 			if(lnsurance!=null&&lnsurance.size()>0){
-				logger.info("ssss-----="+lnsurance.get(0).getPhone());
 				System.out.println("该外键有绑定会员卡记录");
 				if(tt!=null){
 					vip.setcWeiXinCode(tt.getOauthId());
@@ -420,6 +418,7 @@ public class HongShiVipController<phone> {
 				map.put("orders",orders);
 			}
 		}	
+	
 	}
 		return map;
 	}

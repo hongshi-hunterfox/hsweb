@@ -1,5 +1,6 @@
 package com.uclee.hongshi.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
 import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.ChongzhiDetailed;
@@ -83,5 +84,6 @@ public class HongShiVipServiceImpl implements HongShiVipServiceI{
 	public List<IntegralRecharge> selectIntegralRecharge(String danhao) {
 		return hongShiVipMapper.selectIntegralRecharge(danhao);
 	}
+	
 
 }

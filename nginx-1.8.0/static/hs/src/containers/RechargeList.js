@@ -19,7 +19,9 @@ const NoItem = () => {
 const RechargeListItem = (props) => {
   return (
     <div className="recharge-list-item ">
-    {props.source!=="绑卡送积分"&&props.source!=="签到送积分"&&props.source!=="抽奖扣积分" ?
+    {props.source!=="评论赠积分" ?
+    
+    (props.source!=="绑卡送积分"&&props.source!=="签到送积分"&&props.source!=="抽奖扣积分" ?
 			<div  className="top"
       	onClick={()=>{window.location='/OnlineOrder?billCode=' + props.billCode + ',' + props.source}}> 
             <span className="left">{props.source}：</span>
@@ -30,10 +32,16 @@ const RechargeListItem = (props) => {
             <span className="left">{props.source}：</span>
             <span className="right">{props.billCode}</span>
         </div>
+       )
+    :
+    <div className="top">
+            <span className="left">{props.source}：</span>
+            <span className="right">{props.billCode}</span>
+    </div>
      }
    
      	<div className="bottom">
-        <span className='left'>消费金额:{props.value}</span>
+        <span className='left'>变动金额:{props.value}</span>
         <span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
       </div>
       <div className='bottom '>

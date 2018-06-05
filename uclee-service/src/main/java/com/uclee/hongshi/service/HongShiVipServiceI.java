@@ -39,4 +39,5 @@ public interface HongShiVipServiceI {
 	List<ChongzhiDetailed> selectChongzhiDetailed(String danhao);
 	
 	List<IntegralRecharge> selectIntegralRecharge(String danhao);
+	
 }

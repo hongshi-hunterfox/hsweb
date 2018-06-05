@@ -50,4 +50,5 @@ public interface HongShiVipMapper {
 	int insertSelective(VipVoucher record);
 	
 	List<IntegralRecharge> selectIntegralRecharge(String danhao);
+	
 }

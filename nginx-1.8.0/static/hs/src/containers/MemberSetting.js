@@ -462,22 +462,7 @@ class MemberSetting extends React.Component {
                  return err
                }
                
-               if (!this.state.force) {
-    	         var cc = this.state.config.force;
-                     if(cc ==1){
-    	            browserHistory.push({
-                   pathname: '/forces'
-                })
-    	            return
-                    }else{
-   	             if(cc ==2){
-                     browserHistory.push({
-                      pathname: '/member-center'
-                 })
-                     return
-                }
-             }
-          }
+              
     
                if (res.body.result === 'fail') {
                  this.setState({
@@ -489,6 +474,7 @@ class MemberSetting extends React.Component {
                this.setState({
                  showNoti: true
                })
+                
                console.log(sessionStorage.getItem('isBackToCart'));
                console.log(sessionStorage.getItem('isBackToCart')===1);
                if(sessionStorage.getItem('isBackToCart')&&sessionStorage.getItem('isBackToCart')==='1'){
