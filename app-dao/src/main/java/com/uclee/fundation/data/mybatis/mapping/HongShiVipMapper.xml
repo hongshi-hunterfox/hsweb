@@ -131,6 +131,12 @@
 		<result column="voucher" property="voucher" jdbcType="VARCHAR" />
 		<result column="amount" property="amount" jdbcType="INTEGER" />
 	</resultMap>
+	<resultMap id="VipLog" type="com.uclee.fundation.data.mybatis.model.VipLog">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="vcode" property="vcode" jdbcType="VARCHAR" />
+		<result column="foreign_key" property="foreignKey" jdbcType="VARCHAR" />
+		<result column="recording_time" property="recordingTime" jdbcType="VARCHAR" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode,cIdNumber,cCompany,cSex
 	</sql>
@@ -216,5 +222,10 @@
       </if>
     </trim>
   </insert>
-  
+  <insert id="insertVipLog" parameterType="com.uclee.fundation.data.mybatis.model.VipLog" >
+    insert into web_viplog (vcode, foreign_key
+      )
+    values (#{vcode,jdbcType=VARCHAR}, #{foreignKey,jdbcType=VARCHAR}
+      )
+   </insert>
 </mapper>

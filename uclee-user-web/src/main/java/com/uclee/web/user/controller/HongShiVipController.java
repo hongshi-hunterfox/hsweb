@@ -6,6 +6,7 @@ import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
 import com.uclee.fundation.data.mybatis.mapping.EvaluationGiftsMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
+import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
 import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.hongshi.service.HongShiVipServiceI;
@@ -44,6 +45,9 @@ public class HongShiVipController<phone> {
 
 	@Autowired
 	private HongShiMapper hongShiMapper;
+	
+	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
 
 	@Autowired
 	private OauthLoginMapper oauthLoginMapper;
@@ -146,6 +150,18 @@ public class HongShiVipController<phone> {
 							ret.get(0).setAllowPayment(false);
 							ret.get(0).setCardStatus("会员卡已超过使用期限");
 						}
+				//插入记录到viplog表--shenkaixin
+						logger.info("aaaaaa========="+tt.getOauthId());
+						logger.info("aaaaaa========="+ret.get(0).getCardCode());
+//						//精确到毫秒--shenkaixin or HH 为24小时
+//						String Vday = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss:SSS").format(new Date());
+//						logger.info("aaaaaa========="+Vday);
+						VipLog vipLog = new VipLog();
+						vipLog.setVcode(ret.get(0).getCardCode());
+						vipLog.setForeignKey(tt.getOauthId());
+//						vipLog.setRecordingTime(Vday);
+//						logger.info("aaaaaa========="+vipLog.getRecordingTime());
+						hongShiVipMapper.insertVipLog(vipLog);
 					}
 					logger.info(JSON.toJSONString(ret.get(0)));
 					return ret.get(0);

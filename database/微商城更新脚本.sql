@@ -70,6 +70,18 @@ Begin
 	)
 End
 
+If Object_id('web_viplog','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_viplog](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[vcode] [varchar](255) NULL,
+	[foreign_key] [varchar](255) NULL,
+	[recording_time] [datetime] NULL,
+	[timestamp] [timestamp] NULL
+)
+
+ALTER TABLE [dbo].[web_viplog] ADD  CONSTRAINT [DF_web_viplog_recording_time]  DEFAULT (getdate()) FOR [recording_time]
+End
 If Object_id('web_evaluation_config','U') Is Null
 Begin
 	CREATE TABLE web_evaluation_config(

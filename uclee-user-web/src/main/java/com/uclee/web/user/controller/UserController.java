@@ -699,6 +699,10 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		PaymentOrder paymentOrder = userService.selectPaymentOrderBySerialNum(paymentSerialNum);
+		//添加扫描规则
+		paymentOrder.setCheckCount(0);
+		paymentOrder.setCreateTime(new Date());
+		userService.updatePaymentOrder(paymentOrder);
 		List<Payment> payments = new ArrayList<Payment>();
 		if(paymentOrder!=null&&paymentOrder.getMoney().compareTo(new BigDecimal(0))>0){
 			payments = userService.selectAllPayment();

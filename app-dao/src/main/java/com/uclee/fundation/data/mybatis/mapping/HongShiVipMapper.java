@@ -14,6 +14,7 @@ import com.uclee.fundation.data.mybatis.model.Lnsurance;
 import com.uclee.fundation.data.mybatis.model.Orders;
 import com.uclee.fundation.data.mybatis.model.RetailDetails;
 import com.uclee.fundation.data.mybatis.model.UnderlineOrders;
+import com.uclee.fundation.data.mybatis.model.VipLog;
 import com.uclee.fundation.data.mybatis.model.VipVoucher;
 
 public interface HongShiVipMapper {
@@ -48,6 +49,8 @@ public interface HongShiVipMapper {
 	List<ChongzhiDetailed> selectChongzhiDetailed(String danhao);
 	
 	int insertSelective(VipVoucher record);
+	
+	int insertVipLog(VipLog record);
 	
 	List<IntegralRecharge> selectIntegralRecharge(String danhao);
 	
