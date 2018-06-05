@@ -9,6 +9,11 @@ Begin
   alter table web_products add Explain varchar(255);
 End
 
+If Not Exists(Select * From 会员where name='性别' And id=Object_id('会员','U'))
+Begin
+  alter table 会员 add 性别varchar(20);
+End
+
 If Not Exists(Select * From syscolumns where name='parameter' And id=Object_id('web_products','U'))
 Begin
   alter table web_products add parameter varchar(50);

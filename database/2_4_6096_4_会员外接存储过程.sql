@@ -436,7 +436,7 @@ Begin
           ,是否充值,卡金额,卡余额,建立时间,内码,身份证号,工作单位,审核人,记帐人,备注
           ,卡现金,卡赠送,换卡余额,换卡积分,换卡日期,换卡编号,是否积分,会员生日
           ,所属编号,会员类别,是否购物券,客户编号,会员卡类型,积分比例,限额
-          ,会员等级类型,oID,Ocode,首次充值
+          ,会员等级类型,oID,Ocode,首次充值,性别
     From 会员 
     Where id Not In(Select Distinct 会员ID 
                     From 会员身份)
@@ -445,7 +445,7 @@ Begin
           ,是否充值,卡金额,卡余额,建立时间,内码,身份证号,工作单位,审核人,记帐人,备注
           ,卡现金,卡赠送,换卡余额,换卡积分,换卡日期,换卡编号,是否积分,会员生日
           ,所属编号,会员类别,是否购物券,客户编号,会员卡类型,积分比例,限额
-          ,会员等级类型,oID,Ocode,首次充值
+          ,会员等级类型,oID,Ocode,首次充值,性别
     From 会员 
     Where id In(Select 会员ID 
                 From 会员身份 
@@ -467,6 +467,9 @@ Procedure AddVip
   @cBirthday:生日,yyyy-mm-dd格式
   @bIsLunar:是农历,0表示生日是公历
   @cVipCode:绑定到会员编号
+  @cIdNumber:身份证号
+  @cCompany:工作单位
+  @cSex:性别
   --@cVipCode不指定则新建会员
   --指定则绑定到已有会员
   --指定的会员编号不存在则失败返回-1
@@ -487,6 +490,9 @@ Create Procedure [AddVip]
       ,@cBirthday varchar(10)    = '1900-01-01'--生日,yyyy-mm-dd格式,范围1900-01-01到2079-06-06
       ,@bIsLunar bit             = 0--是农历,0表示生日是公历
       ,@cVipCode varchar(20)     = ''--要绑定的会员编号
+      ,@cIdNumber varchar(50)     = ''--身份证号
+      ,@cCompany varchar(50)     = ''--工作单位
+      ,@cSex varchar(20)     = ''--性别
                    --不指定则新建一个会员,指定则绑定到已有会员
                    --如果指定的会员不存在,则失败返回-1
 As
@@ -499,6 +505,9 @@ Begin
   Set @ParaInfo = dbo.NameValue('C','@cBirthday',@cBirthday)         Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@bIsLunar',@bIsLunar)           Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@cVipCode',@cVipCode)           Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@cIdNumber',@cIdNumber)         Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@cCompany',@cCompany)           Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@cSex',@cSex)                   Exec Loger @LogID,@Parameters=@ParaInfo
   Declare @iVipID int    --会员表ID
   Declare @VipState int  --10表示停用,表示有效
   Declare @IsLose bit    --1表示挂失,0表示未挂失
@@ -583,6 +592,18 @@ Begin
         ,会员生日 = Case When IsNull(@cBirthday,'')=''
                          Then 会员生日 
                          Else Right(Replace(@cBirthday,'-',''),4)
+                    End
+       ,身份证号 = Case When IsNull(@cIdNumber,'')=''
+                     Then 身份证号 
+                     Else @cIdNumber
+                    End
+        ,工作单位 = Case When IsNull(@cCompany,'')=''
+                     Then 工作单位 
+                     Else @cCompany
+                    End
+        ,性别 = Case When IsNull(@cSex,'')=''
+                     Then 性别 
+                     Else @cSex
                     End
   Where ID=@iVipID
   --进行会员绑定
@@ -2170,6 +2191,9 @@ Create Procedure [WSC_AddVip]
       ,@cBirthday varchar(10)    = '1900-01-01'--生日,yyyy-mm-dd格式,范围1900-01-01到2079-06-06
       ,@bIsLunar bit             = 0--是农历,0表示生日不是农历(是公历)
       ,@cVipCode varchar(20)     = ''--此参数停用
+      ,@cIdNumber varchar(50)    = ''--身份证号
+      ,@cCompany varchar(50)     = ''--工作单位
+      ,@cSex varchar(20)         = ''--性别
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2180,7 +2204,9 @@ Begin
   Set @ParaInfo = dbo.NameValue('C','@cBirthday',@cBirthday)         Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@bIsLunar',@bIsLunar)           Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@cVipCode',@cVipCode)           Exec Loger @LogID,@Parameters=@ParaInfo
-
+  Set @ParaInfo = dbo.NameValue('C','@cIdNumber',@cIdNumber)         Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@cCompany',@cCompany)           Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@cSex',@cSex)                   Exec Loger @LogID,@Parameters=@ParaInfo
   Set @cVipCode = null --该参数的值已经丢弃,本函数使用手机号来定位线下身份
   Declare @Return int, @msg varchar(100)
   --定位下线会员身份
@@ -2199,7 +2225,7 @@ Begin
   Else If @Tally < 2
   Begin
     If @Tally = 0 Set @cVipCode = ''
-    Exec @Return=AddVip @cWeiXinCode,@cMobileNumber,@cName,@cBirthday,@bIsLunar,@cVipCode
+    Exec @Return=AddVip @cWeiXinCode,@cMobileNumber,@cName,@cBirthday,@bIsLunar,@cVipCode,@cIdNumber,@cCompany,@cSex
     Set @msg = Case @Return 
                When  0 Then '成功'
                When -1 Then '外键''' + @cWeiXinCode + '''已经与其它线下会员卡绑定'
