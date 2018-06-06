@@ -22,6 +22,9 @@ constructor(props) {
       cName: '',
       cMobileNumber: '',
       code: '',
+      cIdNumber: '',
+      cCompany: '',
+      cSex: '1',
       cBirthday: '',
       bIsLunar: '0',
       cVipCode: '',
@@ -49,7 +52,10 @@ constructor(props) {
         cMobileNumber: d.cMobileNumber,
         cBirthday: moment(d.cBirthday).format('YYYY-MM-DD'),
         bIsLunar: d.bIsLunar,
-        cVipCode: d.cVipCode
+        cVipCode: d.cVipCode,
+        cIdNumber: d.cIdNumber,
+        cCompany: d.cCompany,
+        cSex: d.cSex
       })
     })
     
@@ -179,6 +185,55 @@ render() {
                       >
                         <option value="0">公历</option>
                       </select>
+                    </div>
+                  </div>
+                   <div className="form-group">
+              <label className="control-label col-xs-3 trim-right">
+              性别
+              </label>
+              <div className="col-xs-9">
+                <select
+                  name="cSex"
+                  className="form-control"
+                  value={this.state.cSex}
+                  placeholder="请输入性别"
+                  onChange={this._change}
+                >
+                 
+                  <option value='1'>男</option>
+                  <option value='2'>女</option>
+                </select>
+              </div>
+            </div>
+                  
+                  <div className="form-group">
+                    <label className="control-label col-xs-3 trim-right">
+                      身份证号
+                    </label>
+                    <div className="col-xs-9">
+                      <input
+                        type="tel"
+                        name="cIdNumber"
+                        className="form-control"
+                        placeholder="#可不填"
+                        value={this.state.cIdNumber}
+                        onChange={this._change}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="control-label col-xs-3 trim-right">
+                      工作单位
+                    </label>
+                    <div className="col-xs-9">
+                      <input
+                        type="tel"
+                        name="cCompany"
+                        className="form-control"
+                        placeholder="#可不填"
+                        value={this.state.cCompany}
+                        onChange={this._change}
+                      />
                     </div>
                   </div>
                 </div>

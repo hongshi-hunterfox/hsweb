@@ -41,7 +41,9 @@ const RechargeListItem = (props) => {
      }
    
      	<div className="bottom">
-        <span className='left'>变动金额:{props.value}</span>
+        <span className='left'>
+        	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
+        </span>
         <span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
       </div>
       <div className='bottom '>
