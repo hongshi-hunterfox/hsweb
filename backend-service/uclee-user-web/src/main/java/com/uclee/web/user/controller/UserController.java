@@ -535,7 +535,7 @@ public class UserController extends CommonUserHandler{
 		
 
 		if(userId!=null){
-			//根据会员表有没有此手机号来决定跳转--外键获取的手机号有可能不是你本次输入的手机号，也不会跳转
+			//根据会员表有没有此手机号来决定跳转
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
 					List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
 					if(lnsurance!=null&&lnsurance.size()>0){
@@ -552,7 +552,7 @@ public class UserController extends CommonUserHandler{
 		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 		if(bindingRewards!=null&&bindingRewards.size()>=1){
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
-			if(coupon.size()<bindingRewards.get(0).getAmount()||coupon.size()==0){
+			if(coupon.size()<bindingRewards.get(0).getAmount()){
 				map.put("result",false);
 				return map;
 			}

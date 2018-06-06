@@ -99,7 +99,7 @@ class ShowCoupon extends React.Component {
 	  	}
 	}
 	_cancelHandler=()=>{
-	  	window.location='/forces'
+	  	window.location='/member-card'
 	}
 
 
