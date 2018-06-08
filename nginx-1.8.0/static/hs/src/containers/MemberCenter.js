@@ -57,14 +57,11 @@ class MemberCenter extends React.Component {
           <div className="member-center-hero">
           {
             !this.state.isSigned?
-            <span className="member-center-check-in" onClick={() => { 
-              if(this.state.cVipCode===null){
-                alert("请先绑定会员。");
-                return ;
-              }
-
-
-            }}><a href="/CheckTable">签到获取积分</a></span>:
+            <span className="member-center-check-in">
+            	<a href="/SignIn">
+            		<font color="white">签到获取积分</font>
+            	</a>
+            </span>:
             <span className="member-center-check-in">今日已签到</span>
           }
             <img src={this.state.ucenterImg} alt=""/>

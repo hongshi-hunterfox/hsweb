@@ -454,16 +454,12 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<HongShiCoupon> coupons = userService.selectCouponById(userId);		
-		if(userId!=null){
-			logger.info("cccc0---="+userId);		
+		if(userId!=null){	
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);			
-			logger.info("cccc1---="+tt.getOauthId());
 			List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
 			if(lnsurance!=null&&lnsurance.size()>0){
 			List<Lnsurance> lnsurances = hongShiVipService.selectUsers(lnsurance.get(0).getPhone());
 			if(lnsurances!=null&&lnsurances.size()>1){
-				logger.info("cccc2---="+lnsurances.size());
-
 				System.out.println("此会员以赠送过，不再显示！");
 				return map;
 			}

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
 import com.backend.service.ProductManageServiceI;
 import com.uclee.date.util.DateUtils;
@@ -58,6 +59,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		//将sortValue的值设定到产品里面
 		product.setSortValue(maxSortValue);
 		descriptionHandler(product);
+		System.out.println("产品=="+product.getPrice());
 		if(productMapper.insertSelective(product)>0){
 			if(product.getSale()!=null){
 				ProductSale productSale = productSaleMapper.selectByProductId(product.getProductId());

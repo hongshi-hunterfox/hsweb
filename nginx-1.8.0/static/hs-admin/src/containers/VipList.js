@@ -229,7 +229,7 @@ _search = () => {
     })
   }
   _send = userId => {
-    var conf = confirm('确定要派送礼券吗？');
+    var conf = confirm('确定要联动派送礼券吗？');
     var url='';
     if(conf){
       url='/uclee-backend-web/sendVipMsg?userId=' + userId+'&sendVoucher=1';

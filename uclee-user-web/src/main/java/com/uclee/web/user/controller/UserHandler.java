@@ -344,25 +344,17 @@ public class UserHandler {
 			if(!VerifyCode.checkVerifyCode(session,hsVip.getvNumber(),hsVip.getCode())){
 				map.put("result", "fail");	
 				if(hsVip.getvCode()!= vip.get(0).getvCode()){
-					
-				
-				if(hsVip.getCode()==null){
-					map.put("reason", "请输入验证码");
-					
-				}else{
+					if(hsVip.getCode()==null){
+						map.put("reason", "请输入验证码");					
+					}else{
 					  
 						map.put("reason", "验证码错误");
 						logger.info("验证码错误");
 						
-						return map;
-						
-				}
-				}
-				
+						return map;	
+					}
+				}	
 			}
-//		}
-			
-
 			map.put("result", "success");
 			if(vip.size()==0){			
 				userService.updateVips(hsVip.getvCode(), up);			
@@ -382,10 +374,6 @@ public class UserHandler {
 				map.put("reason","手机号已与其他会员卡绑定，不能修改！");
 				map.put("result", "fail");	
 			}
-//		}
-		
-	
-			
 		return map; 
 	}
 	

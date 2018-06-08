@@ -1235,8 +1235,6 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public boolean sendViphMsg(Integer userId,boolean sendVoucher) {
 		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
-		System.out.println("sssssss=================="+userId);
-		System.out.println("sssssss=================="+sendVoucher);
 		if(login!=null){
 			String nickName="";
 			UserProfile profile = userProfileMapper.selectByUserId(userId);
@@ -1252,7 +1250,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/coupon?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(1);
 				msgRecord.setUserId(userId);

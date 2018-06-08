@@ -1,10 +1,10 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import './check-table.css'
+import './sign-in.css'
 import Navi from './Navi'
 import moment from 'moment'
 import req from 'superagent'
-class CheckTable extends React.Component {
+class SignIn extends React.Component {
 	constructor(props) {
 	    super(props)
 	    this.state = {
@@ -88,7 +88,8 @@ class CheckTable extends React.Component {
            		<div className="check-table-vipcode" onClick={() =>{
             		if(this.state.cVipCode===null){
                 		alert("请先绑定会员。");
-                			return ;
+                		window.location="/member-card"
+                		return ;
               		}
             		req.get('/uclee-user-web/SigningGift')
 					   .end((err, res) => {
@@ -142,4 +143,4 @@ class CheckTable extends React.Component {
         );
 	}
 }
-export default CheckTable
+export default SignIn

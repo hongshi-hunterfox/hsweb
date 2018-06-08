@@ -42,14 +42,10 @@ public class BackendHandler {
 	}
 	@RequestMapping("/sendBirthMsg")
 	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
-		System.out.println("sssssss=================="+userId);
-		System.out.println("sssssss=================="+sendVoucher);
 		return backendService.sendBirthMsg(userId,sendVoucher);
 	}
 	@RequestMapping("/sendVipMsg")
 	public @ResponseBody boolean sendViphMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
-		System.out.println("sssssss=================="+userId);
-		System.out.println("sssssss=================="+sendVoucher);
 		return backendService.sendViphMsg(userId,sendVoucher);
 	}
 	@RequestMapping("/isVoucherLimit")
@@ -96,7 +92,7 @@ public class BackendHandler {
 	public @ResponseBody boolean integralinConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateIntegralInGifts(freightPost);
 	}
-	//¸üĞÂÉúÈÕÍÆËÍÀñÈ¯ÉèÖÃ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		return backendService.updateBirthVoucher(birthVoucherPost);
@@ -106,7 +102,7 @@ public class BackendHandler {
 		return backendService.truncateBirthVoucherHandler();
 	}
 	
-	//¸üĞÂ»áÔ±ÅÉËÍÀñÈ¯ÉèÖÃ
+	//ï¿½ï¿½ï¿½Â»ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½
 	@RequestMapping("/vipVoucherHandler")
 	public @ResponseBody boolean vipVoucherHandler(HttpServletRequest request,@RequestBody VipVoucherPost vipVoucherPost) {
 		return backendService.updateVipVoucher(vipVoucherPost);
