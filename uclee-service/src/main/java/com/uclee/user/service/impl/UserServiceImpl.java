@@ -2393,7 +2393,7 @@ public class UserServiceImpl implements UserServiceI {
 			order.setPaymentOrderId(paymentOrder.getPaymentOrderId());
 			//插入订单
 			if(orderMapper.insertSelective(order)>0){
-				
+				System.out.println("在提交订单时插入订单--申凯鑫");
 				//插入订单项
 				for(OrderItem item : orderItem){
 					item.setOrderId(order.getOrderId());

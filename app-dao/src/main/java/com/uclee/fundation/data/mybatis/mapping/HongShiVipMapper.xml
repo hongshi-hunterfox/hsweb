@@ -42,6 +42,12 @@
 		<result column="ret" property="msg" jdbcType="VARCHAR" />
 		<result column="retcode" property="retcode" jdbcType="INTEGER" />
 	</resultMap>
+	<resultMap id="VipLog" type="com.uclee.fundation.data.mybatis.model.VipLog">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="vcode" property="vcode" jdbcType="VARCHAR" />
+		<result column="foreign_key" property="foreignKey" jdbcType="VARCHAR" />
+		<result column="recording_time" property="recordingTime" jdbcType="VARCHAR" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode
 	</sql>
@@ -70,4 +76,10 @@
 			statementType="CALLABLE">
 		CALL Get_WordVal (会员扫码定时变)
 	</select>
+	<insert id="insertVipLog" parameterType="com.uclee.fundation.data.mybatis.model.VipLog" >
+    insert into web_viplog (vcode, foreign_key
+      )
+    values (#{vcode,jdbcType=VARCHAR}, #{foreignKey,jdbcType=VARCHAR}
+      )
+   </insert>
 </mapper>

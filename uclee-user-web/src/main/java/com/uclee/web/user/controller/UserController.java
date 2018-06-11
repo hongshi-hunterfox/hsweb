@@ -520,6 +520,8 @@ public class UserController extends CommonUserHandler{
 		//添加扫描规则
 		paymentOrder.setCheckCount(0);
 		paymentOrder.setCreateTime(new Date());
+		System.out.println("checkout-------------+k+"+paymentOrder.getCheckCount());
+		System.out.println("CreateTime-------------+k+"+paymentOrder.getCreateTime());
 		userService.updatePaymentOrder(paymentOrder);
 		List<Payment> payments = new ArrayList<Payment>();
 		if(paymentOrder!=null&&paymentOrder.getMoney().compareTo(new BigDecimal(0))>0){

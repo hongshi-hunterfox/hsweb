@@ -6,6 +6,7 @@ import com.uclee.fundation.data.mybatis.model.AddVipResult;
 import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
 import com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord;
 import com.uclee.fundation.data.mybatis.model.HongShiVip;
+import com.uclee.fundation.data.mybatis.model.VipLog;
 
 public interface HongShiVipMapper {
 	AddVipResult addVipInfo(HongShiVip params);
@@ -20,4 +21,5 @@ public interface HongShiVipMapper {
 
 	Integer getCodeSwitching();
 	
+	int insertVipLog(VipLog record);
 }
