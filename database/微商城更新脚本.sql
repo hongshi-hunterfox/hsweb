@@ -70,6 +70,16 @@ Begin
 	)
 End
 
+--必需要插入用户密码
+If Object_id('web_account_information','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_account_information](
+	[account] [varchar](25) NULL,
+	[password] [varchar](30) NULL
+)
+End
+
+
 If Object_id('web_viplog','U') Is Null
 Begin
 CREATE TABLE [dbo].[web_viplog](
