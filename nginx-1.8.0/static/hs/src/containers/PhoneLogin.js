@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './member-setting.css'
 
@@ -141,7 +141,7 @@ class PhoneLogin extends React.Component {
           })
 
           req
-            .get('/uclee-user-web/verifyCode')
+            .get('/uclee-user-web/bossVerifyCode')
             .query({
               phone: this.state.cMobileNumber
             })

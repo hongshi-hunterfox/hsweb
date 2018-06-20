@@ -236,7 +236,24 @@ public class UserController extends CommonUserHandler{
 		return false;
 	}
 	
-		/**
+	/** 
+	* @Title: verifyCode 
+	* @Description: 老板助手验证码发送类 
+	* @param @param phone 目标手机
+	* @param @param request
+	* @param @return    设定文件 
+	* @return Boolean    返回类型 
+	* @throws 
+	*/
+	@RequestMapping("/bossVerifyCode")
+	public @ResponseBody Boolean bossVerifyCode(String phone,HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Map<String,String> config = userService.getSMSConfig();
+		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
+	}
+	
+	/**
 	 * @Title: verifyCodes 
 	 * @value: 判断是否校验验证码
 	 */

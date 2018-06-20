@@ -34,6 +34,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private CommentMapper commentMapper;
 	@Autowired
+	private AccountMapper accountMapper;
+	@Autowired
 	private HongShiVipMapper hongShiVipMapper;
 	@Autowired
 	private OrderMapper orderMapper;
@@ -1732,6 +1734,17 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public List<UserProfile> selectAllVipList() {
 		return userProfileMapper.selectAllVipList();
+	}
+	@Override
+	public Boolean getAccount(String account,String password) {
+		List<Account> Account = accountMapper.getAccount(account);
+		if(Account!=null&&Account.size()>0){
+			List<Account> Password = accountMapper.getPassword(password);
+				if(Password!=null&&Password.size()>0){
+					return true;
+				}
+		}
+		return false;
 	}
 
 }

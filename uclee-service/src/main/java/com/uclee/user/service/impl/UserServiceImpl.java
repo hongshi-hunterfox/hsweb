@@ -1638,48 +1638,75 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public boolean paymentSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
 		//更新订单状态
+		logger.info("001--userid=============="+paymentOrder.getUserId());
+		logger.info("002--PaymentSerialNum()=============="+paymentOrder.getPaymentSerialNum());
 		List<Order> orders = this.selectOrderByPaymentSerialNum(paymentOrder.getUserId(), paymentOrder.getPaymentSerialNum());
+		logger.info("003--orders=============="+JSON.toJSONString(orders));
 		for(Order order:orders){
 			order.setStatus((short)2);
+			logger.info("004--status=============="+order.getStatus());
 			//调用存储过程插入洪石订单
 			int hongShiResult=0;
 			try {
 				HongShiCreateOrder createOrderData = new HongShiCreateOrder();
 				NapaStore napaStore = napaStoreMapper.selectByPrimaryKey(order.getStoreId());
+				logger.info("005--napaStore=============="+JSON.toJSONString(napaStore));
 				if(napaStore!=null){
+					logger.info("006=============="+napaStore.getHsCode());
 					createOrderData.setDepartment(napaStore.getHsCode());
+					logger.info("007=============="+createOrderData.getDepartment());
 				}else{
 					logger.info("加盟店不存在");
 				}
+				logger.info("008--Phone=============="+order.getPhone());
 				createOrderData.setCallNumber(order.getPhone());
+				logger.info("009--CallNumber=============="+createOrderData.getCallNumber());
+				logger.info("0010--IsSelfPick=============="+order.getIsSelfPick());
 				if(!order.getIsSelfPick()){
 					createOrderData.setDestination(order.getProvince()+order.getCity()+order.getRegion()+order.getAddrDetail()+"(收货人:" + order.getName()+")");
+					logger.info("0011--Destination=============="+createOrderData.getDestination());
 				}
 				createOrderData.setOrderCode(null);
 				BigDecimal total = order.getTotalPrice();
-
+				logger.info("0012--total=============="+total);
 				createOrderData.setPickUpTime(order.getPickTime());
+				logger.info("0013--PickUpTime=============="+createOrderData.getPickUpTime());
 				createOrderData.setCallNumber(order.getPhone());
+				logger.info("0014--CallNumber=============="+createOrderData.getCallNumber());
 				createOrderData.setRemarks(order.getRemark());
+				logger.info("0015--Remarks=============="+createOrderData.getRemarks());
 				createOrderData.setWeiXinCode(oauthLogin.getOauthId());
+				logger.info("0016--WeiXinCode=============="+createOrderData.getWeiXinCode());
 				createOrderData.setWSC_TardNo(order.getOrderSerialNum());
+				logger.info("0017--WSC_TardNo=============="+createOrderData.getWSC_TardNo());
 				createOrderData.setPayment(new BigDecimal(0));
+				logger.info("0018--Payment=============="+createOrderData.getPayment());
 				if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
 					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
+					logger.info("0019--coupon=============="+JSON.toJSONString(coupon));
 					if(coupon!=null&&coupon.size()>0){
 						createOrderData.setVoucher(coupon.get(0).getPayQuota());
+						logger.info("0020--Voucher=============="+createOrderData.getVoucher());
 					}else{
 						createOrderData.setVoucher(new BigDecimal(0));
+						logger.info("0021--Voucher=============="+createOrderData.getVoucher());
 					}
 				}else{
 					createOrderData.setVoucher(new BigDecimal(0));
+					logger.info("0022--Voucher=============="+createOrderData.getVoucher());
 				}
 				total = total.add(order.getShippingCost());
+				logger.info("0023--total=============="+JSON.toJSONString(total));
 				createOrderData.setTotalAmount(total);
+				logger.info("0024--TotalAmount=============="+createOrderData.getTotalAmount());
 				createOrderData.setOauthId(oauthLogin.getOauthId());
+				logger.info("0025--OauthId=============="+createOrderData.getOauthId());
 				createOrderData.setShipping(order.getShippingCost());
+				logger.info("0026--Shipping=============="+createOrderData.getShipping());
 				createOrderData.setDeducted(order.getCut());
+				logger.info("0027--Deducted=============="+createOrderData.getDeducted());
 				System.out.println("订单： " + JSON.toJSONString(createOrderData));
+				logger.info("dingdan： createOrderData" + JSON.toJSONString(createOrderData));
 				CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 				//回收礼券
 				try {
@@ -4004,6 +4031,7 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String, String> wxInitiativeCheck(PaymentOrder paymentOrder) {
 		Map<String,String> weixinConfig = getWeixinConfig();
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		logger.info("paymentOrder=============="+JSON.toJSONString(paymentOrder));
 		parameterMap.put("appid", weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
 		parameterMap.put("mch_id", weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
 		long time = System.currentTimeMillis();
@@ -4019,6 +4047,7 @@ public class UserServiceImpl implements UserServiceI {
 		wxUnifiedRequest.setOut_trade_no(paymentOrder.getPaymentSerialNum());
 		wxUnifiedRequest.setSign(sign);
 		String xmlString = MessageUtil.wxUnifiedRequestToXml(wxUnifiedRequest).replaceAll("__", "_");
+		logger.info("xmlString===="+xmlString);
 		try {
 			String retXml = new String(HttpClientUtil.httpsPost("https://api.mch.weixin.qq.com/pay/orderquery", xmlString).getBytes(), "ISO-8859-1");
 			Map<String,String> ret = MessageUtil.parseXml(retXml);
@@ -4039,7 +4068,7 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public int updateVips(String vCode, HsVip hsVip) {
-		logger.info("124----="+JSON.toJSONString(hsVip));
+		logger.info("hsvip----="+JSON.toJSONString(hsVip));
 		return hsVipMapper.updateVips(hsVip);
 	}
 		public List<HsVip> selectVips(String vNumber) {	

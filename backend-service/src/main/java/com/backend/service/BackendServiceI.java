@@ -166,4 +166,6 @@ public interface BackendServiceI {
 	List<UserProfile> selectAllVipList();
 
 	boolean sendViphMsg(Integer userId, boolean sendVoucher);
+	
+	Boolean getAccount(String account,String password);
 }

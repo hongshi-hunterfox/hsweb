@@ -587,6 +587,19 @@ public class BackendController {
 		orderMap.put("refundDesc",auditRefundDto.getRefundDesc());
 		return orderMap;
 	}
+	/**
+	 * 用来校验登陆账户和密码---凯鑫
+	 * @param account
+	 * @param password
+	 * @param Request
+	 * @return
+	 */
+	@RequestMapping("/getAccount")
+	public @ResponseBody  Boolean getAccount(HttpServletRequest Request,String account,String password){
+		HttpSession session = Request.getSession();
+		System.out.println("--------------"+account);
+		System.out.println("--------------"+password);
+		return backendService.getAccount(account,password);
+	}
 
-	
 }
