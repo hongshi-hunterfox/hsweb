@@ -76,7 +76,7 @@ componentWillUnmount() {
                 onChange={this._change}
               />
             <ErrorMsg msg={this.state.error} />
-            <div className="login-cs">
+            <div className="cs">
               <button type="submit" className="btn btn-primary">
                 点击登陆
               </button>

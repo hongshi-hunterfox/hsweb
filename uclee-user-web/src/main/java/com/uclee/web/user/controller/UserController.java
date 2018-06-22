@@ -262,13 +262,10 @@ public class UserController extends CommonUserHandler{
 		Map<String, Object> map = new TreeMap<String, Object>();
 		HttpSession session = request.getSession();
 		Map<String, String> config = userService.getSMSConfig();
-		logger.info("12345"+phone);
 		
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
-		logger.info("12345"+numbers.get(0).getPhone());
 		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
-			logger.info("12345"+numbers.get(0).getPhone());
 			if(numbers.get(0).getPhone().equals(phone)){
 				System.out.println("没有修改手机号");	
 	
@@ -656,7 +653,7 @@ public class UserController extends CommonUserHandler{
 			logger.info("item.getCartId()============="+hsgooscode.getHsGoodsCode());
 		}
 
-		logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa="+JSON.toJSONString(a)); 
+		logger.info("hsgooscode="+JSON.toJSONString(a)); 
 		
 		map.put("hsgooscode",JSON.toJSONString(a));
 		map.put("cartItems", carts);

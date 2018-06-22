@@ -6,7 +6,7 @@
   font-size: 40px;
 }
 .login-css {
-  margin-top: 130px;
+  margin-top: 110px;
   display: -webkit-flex;
   display: flex;
   -webkit-align-items: center;
@@ -15,12 +15,13 @@
   justify-content: center;
   margin-bottom: 10px;
 }
-.login-cs {
-  margin-top: 20px;
+.login-css .cs {
+  margin-top: 15px;
   text-align: center;
 }
 .login-wb {
-  margin-top: 285px;
+  margin-top: 290px;
   font-size: 15px;
   text-align: center;
+  margin-bottom: 10px;
 }

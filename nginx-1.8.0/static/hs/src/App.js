@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import req from 'superagent'
 import StoreBar from './components/StoreBar'
-
+import './App.css'
 function authURL(u, appId) {
   return (
     'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' +
@@ -157,10 +157,9 @@ class App extends Component {
     return (
       <div className="app">
         {this.state.loading
-          ? <div className="text-center">
-          					微信授权中
-          <i className="fa fa-spinner fa-pulse"></i>
-          </div>
+          ?	<div className="center">
+          		<i className="fa fa-weixin fa-4x" aria-hidden="true"></i>
+          	</div>
           : <div className="main">
               {showStoreBar ? <StoreBar /> : null}
 

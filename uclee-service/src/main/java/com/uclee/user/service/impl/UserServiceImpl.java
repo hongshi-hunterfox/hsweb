@@ -2509,16 +2509,29 @@ public class UserServiceImpl implements UserServiceI {
 		paymentOrder.setIsCompleted(false);
 		//插入支付单
 		boolean insertResult = true;
-		if(paymentOrderMapper.insertSelective(paymentOrder)>0){
-			order.setPaymentOrderId(paymentOrder.getPaymentOrderId());
+		paymentOrderMapper.insertSelective(paymentOrder);
+		logger.info("111aymentSerialNum=========="+paymentOrder.getPaymentSerialNum());
+		//查询是否插入到支付单--kx
+		PaymentOrder pamentOrdes = paymentOrderMapper.selectByPaymentSerialNum(paymentOrder.getPaymentSerialNum());
+		logger.info("111pamentOrdes=========="+JSON.toJSONString(pamentOrdes));
+		//if(paymentOrderMapper.insertSelective(paymentOrder)>0){
+		if(pamentOrdes!=null){
 			//插入订单
-			if(orderMapper.insertSelective(order)>0){
-				
+			order.setPaymentOrderId(paymentOrder.getPaymentOrderId());
+			orderMapper.insertSelective(order);
+			//查询订单是否插入到web_ordes--kx
+			Order  orders = orderMapper.selectByPaymentOrderId(order.getPaymentOrderId());
+			logger.info("111orders=========="+JSON.toJSONString(orders));
+			if(orders!=null){	
 				//插入订单项
 				for(OrderItem item : orderItem){
 					item.setOrderId(order.getOrderId());
-					if(orderItemMapper.insertSelective(item)>0){
-						
+					orderItemMapper.insertSelective(item);
+					//查询是否插入到item表--kx
+					List<OrderItem> items = orderItemMapper.selectByOrderId(item.getOrderId());
+					logger.info("111items=========="+JSON.toJSONString(items));
+					if(items!=null){
+						System.out.println("插入到item表");
 					}else{
 						insertResult=false;
 					}
@@ -2526,10 +2539,12 @@ public class UserServiceImpl implements UserServiceI {
 			}else{
 				insertResult=false;
 			}
+		}else{
+			insertResult=false;
 		}
 		if(!insertResult){
 			map.put("result", false);
-			map.put("reason", "网络繁忙，请稍后重试");
+			map.put("reason", "提交失败，请返回购物车重新提交");
 			return map;
 		}
 		//删除购物车
@@ -2562,16 +2577,6 @@ public class UserServiceImpl implements UserServiceI {
 	public List<Order> getUnpayOrderListByUserId(Integer userId) {
 		List<Order> orders = orderMapper.getUnpayOrderListByUserId(userId);
 		for(Order order:orders){
-			/*if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
-				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
-				if(coupon!=null&&coupon.size()>0){
-					order.setDiscount(coupon.get(0).getPayQuota());
-				}else{
-					order.setDiscount(new BigDecimal(0));
-				}
-			}else{
-				order.setDiscount(new BigDecimal(0));
-			}*/
 			order.setDiscount(order.getVoucherPrice());
 			order.setCreateTimeStr(DateUtils.format(order.getCreateTime(), DateUtils.FORMAT_LONG));
 			NapaStore store = napaStoreMapper.selectByPrimaryKey(order.getStoreId());

@@ -227,7 +227,7 @@ class Order extends React.Component {
         alert('非法数据，请返回购物车')
         window.location = '/cart'
       } else {
-        alert('订单已提交，请勿重新提交，请到未支付订单继续完成支付')
+        alert('订单已提交，请勿重复提交，请到未支付订单继续完成支付')
         window.location = '/unpay-order-list'
       }
     }
@@ -243,15 +243,6 @@ class Order extends React.Component {
                 : 0)
    var Difference = this.state.config.full - this.state.total
    
-// var hsgooscode = this.state.hsgooscode.map((item, index) => {
-//          return(
-//          	<div>
-//         			<span>
-//         				{item.hsGoodsCode}
-//         			</span>
-//         		</div>
-//          )
-//    })
     return (
       <DocumentTitle title="提交订单">
         <div className="order">

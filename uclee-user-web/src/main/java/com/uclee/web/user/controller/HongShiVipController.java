@@ -85,10 +85,8 @@ public class HongShiVipController<phone> {
 		String day= DateUtils.getDay(new Date());
 		//获得现在是几点,hour=15
 		String hour=DateUtils.getTime(new Date()).substring(0,2);
-
 		char[]  dayChar=day.toCharArray();
 		char[]  hourChar=hour.toCharArray();
-
 		//以下就是邓彪要求的值
 		String preFixStr=String.valueOf(dayChar[0]).concat(String.valueOf(hourChar[0]));//11
 		String barcodeEndFixStr=String.valueOf(dayChar[1])+"+"+String.valueOf(hourChar[1]);//条形码是4+5
