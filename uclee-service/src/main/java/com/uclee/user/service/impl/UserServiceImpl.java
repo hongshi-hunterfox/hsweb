@@ -2316,6 +2316,7 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String, Object> orderHandler(OrderPost orderPost, Integer userId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		//记录最后一次购买时间
+		System.out.println("1orderPost======="+JSON.toJSONString(orderPost));
 		UserProfile userProfile = userProfileMapper.selectByUserId(userId);
 		if(userProfile!=null){
 			userProfile.setLastBuy(new Date());
@@ -2706,6 +2707,7 @@ public class UserServiceImpl implements UserServiceI {
 		List<CartDto> result = new ArrayList<CartDto>();
 		for(CartDto item:cart){			
 			CartDto tmp = cartMapper.selectByUserIdAndCartId(userId, item.getCartId());
+			System.out.println("tmp==========="+tmp);
 			if(tmp!=null){
 				String specifcationStr = "款式：";
 				SpecificationValue specificationValue = specificationValueMapper.selectByPrimaryKey(tmp.getSpecificationValueId());
@@ -2725,11 +2727,13 @@ public class UserServiceImpl implements UserServiceI {
 				List<ProductDto> products  = productMapper.selectOneImage(tmp.getProductId());
 				if(products.size()>0){
 					tmp.setTitle(products.get(0).getTitle());
+					tmp.setAppointedTime(products.get(0).getAppointedTime());
 					tmp.setImage(products.get(0).getImage());
 				}
 				result.add(tmp);
 			}
 		}
+		
 		return result;
 	}
 

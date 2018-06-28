@@ -230,7 +230,7 @@ const DetailPicker = (props) => {
 }
 
 const DetailActions = (props) => {
-  return (
+  return ( 
     <div className="detail-actions clearfix">
       <div className="detail-action-aside" onClick={() => {
         window.location = '/cart'
@@ -241,6 +241,12 @@ const DetailActions = (props) => {
         </div>
       </div>
       <div className="detail-action-group">
+      	<span className="detail-action-cart-text">
+          	<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2217904463&site=qq&menu=yes">
+          		<i className="fa fa-qq" aria-hidden="true"></i>
+          		在线客服
+          	</a>
+        </span> 
         <div className="detail-action-add-cart" onClick={props.onClickCart}>加入购物车</div>
         <div className="detail-action-buy-now" onClick={props.onClickBuy}>立即购买</div>
       </div>
@@ -262,6 +268,7 @@ class Detail extends React.Component {
       title: null,
       parameter: '',
       explain: null,
+      appointedTime: 0,
       shippingFree:false,
       loading: true,
       showPick: false,
@@ -448,6 +455,7 @@ class Detail extends React.Component {
             <DetailCarousel images={this.state.images}/>
             <DetailInfo
               title={this.state.title}
+              appointedTime={this.state.appointedTime}
               explain={this.state.explain}
               shippingFree={this.state.shippingFree}
               salesAmount={this.state.salesAmount}
@@ -473,6 +481,7 @@ class Detail extends React.Component {
               closePick={this._closePick}
               image={this.state.images[0].imageUrl}
               title={this.state.title}
+              appointedTime={this.state.appointedTime}
               parameter={this.state.parameter}
               totalPrice={totalPrice}
               spec={spec}

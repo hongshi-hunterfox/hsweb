@@ -48,9 +48,9 @@ public class StoreController {
         if(config1!=null) {
             ret.put("logoUrl",config1.getValue() );
         }
-        Config config2 = configMapper.getByTag(WebConfig.signName);
+        Config config2 = configMapper.getByTag(WebConfig.brand);
         if(config2!=null) {
-            ret.put("signName",config2.getValue());
+            ret.put("brand",config2.getValue());
         }
 
         return ret;

@@ -12,6 +12,7 @@
 		<result column="工作单位" property="vCompany" jdbcType="VARCHAR" />
 		<result column="状态" property="vState" jdbcType="INTEGER" />
 		<result column="性别" property="vSex" jdbcType="VARCHAR" />
+		<result column="是否充值" property="isLose" jdbcType="INTEGER" />
 	</resultMap>
 	
   <select id="selectupdateVips" resultMap="HsVip">
@@ -48,5 +49,7 @@
     </set>    
       where 编号=#{vCode,jdbcType=VARCHAR}
   </update> 
-
+  <update id="updateRecharge" parameterType="com.uclee.fundation.data.mybatis.model.HsVip">
+  	update 会员 set 是否充值=1 where ID=#{id,jdbcType=INTEGER}
+  </update>
 </mapper>

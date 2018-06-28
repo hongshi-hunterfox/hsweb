@@ -31,6 +31,7 @@ class Product extends React.Component {
       text: '',
       title: '',
       explain: '',
+      appointedTime: 0,
       parameter: '',
       categoryId: '',
       images: [],
@@ -109,6 +110,18 @@ class Product extends React.Component {
                   name="sale"
                   className="form-control"
                   value={this.state.sale}
+                  onChange={this._simpleInputChange}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">提前/小时下单：</label>
+              <div className="col-md-9">
+                <input
+                  type="text"
+                  name="appointedTime"
+                  className="form-control"
+                  value={this.state.appointedTime}
                   onChange={this._simpleInputChange}
                 />
               </div>
@@ -554,6 +567,7 @@ class Product extends React.Component {
           shippingFree:res.body.productForm.shippingFree,
           title: res.body.productForm.title,
           explain: res.body.productForm.explain,
+          appointedTime: res.body.productForm.appointedTime,
           parameter: res.body.productForm.parameter,
           categoryId: res.body.productForm.categoryId,
           //images: res.body.productForm.images,

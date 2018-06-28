@@ -43,7 +43,8 @@ class MemberCard extends React.Component {
       vipImage:'',
       allowRecharge:true,
       vipJbarcode:'',
-      cardStatus:''
+      cardStatus:'',
+      id:0
     }
   }
 
@@ -53,6 +54,14 @@ class MemberCard extends React.Component {
       .query({
         t: new Date().getTime()
       })
+      .end((err, res) => {
+ 		if (res.text) {
+          this.setState(res.body)
+        }
+      })
+      
+      req
+      .get('/uclee-user-web/discontinuationVip')
       .end((err, res) => {
  		if (res.text) {
           this.setState(res.body)
@@ -124,6 +133,24 @@ class MemberCard extends React.Component {
           <div className="member-card-list">
             <div className="member-card-item">
               <div className="member-card-item-code">电子会员卡:
+              <span onClick={() => { 
+              	var conf = confirm('确定挂失吗？挂失后会员功能将无法使用!');
+          	    if(!conf){
+          	     return;
+          	    }   
+          	    else{
+                 req
+                 .get('/uclee-user-web/discontinuationVip')
+                 .end((err, res) => {				          
+                 	alert("挂失成功,请返回页面刷新!")
+					window.location="/member-card";
+                 })
+                }   
+		  	  }} className="member-card-item-Unbundling">
+		  	  	<button type="submit" className="btn btn-warning btn-sm" >
+		  	  		<font color="white">挂失</font>
+		  	  	</button>
+		  	  </span>
               {this.state.config.unbundling==0 ?
               <span onClick={() => { 
               	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');

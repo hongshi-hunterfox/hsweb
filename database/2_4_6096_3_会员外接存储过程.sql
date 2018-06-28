@@ -1209,13 +1209,21 @@ Begin
 End
 Go
 /*******************************************************************************
-  将orders表中的字段客户编号改为长度为100
+  将orders表中的字段客户编号改为长度为100，将orders_detail备注长度改为100
+  在订单明细表中，添加字段productid，用于存储微商城的产品id字段
 */
 declare @length int 
 select @length = [length] from syscolumns where id =object_id('orders') and name ='客户编号'
 if @length<>100
   alter table orders alter column 客户编号 varchar(100)
 go
+declare @length int
+select @length = [length] from syscolumns where id =object_id('orders_detail') and name ='备注'
+if @length<>100
+  alter table orders_detail alter column 备注 varchar(100)
+go
+if not Exists(select * from syscolumns where id =object_id('orders_detail') and name = 'productid')
+  alter table orders_detail add  productid int
 
 /*******************************************************************************
 Procedure CreateOrder
@@ -1250,6 +1258,7 @@ Create Procedure [dbo].[CreateOrder]
        @订金       money      =0     ,--下单时用现金支付的
        @刷卡金额   money      =0     ,--下单时用会员卡支付的
        @礼券       money      =0     ,--下单时用礼券抵扣的
+	   @运费       money      =0     ,--下单时用礼券
        @结单       bit        =Null  ,--是否结单
        @废止       bit        =Null  ,--如果废止,@结单将变为0
        @销售类别   varchar(50)=''    ,--网上商城生成的订单为'公众号',不可修改
@@ -1277,16 +1286,14 @@ Begin
   Set @ParaInfo = dbo.NameValue('Y','@订金',@订金)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@刷卡金额',@刷卡金额)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@礼券',@礼券)             Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@运费',@运费)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@结单',@结单)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@废止',@废止)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@销售类别',@销售类别)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@销售类别',@销售类别)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@客户编号',@客户编号)    Exec Loger @LogID,@Parameters=@ParaInfo
-  Declare @运费 money --运费从微商城相应订单记录中提取
-  If IsNull(@商户订单号,'')<>''
-    Select @运费=shipping_cost from web_orders where order_serial_num = @商户订单号
+
   Set @运费 = IsNull(@运费, 0)
-  
   Declare @OrderID int--成功返回订单ID,失败返回0或负值
   Declare @单位名称 varchar(50),@当前余额 money,@当前积分 money,@应收金额 money,@欠款 money,@交货日期 varchar(10)
   Declare @第三方支付 money,@ErrorID int
@@ -1299,17 +1306,9 @@ Begin
     Set @单位名称=''
   Else
     Select @单位名称=名称 From 会员 Where 编号=@往来编号
-  -------------2018-01-15  邓彪--当金额合计不等于产品金额+运费时，重新赋值，处理欠款为运费的问题 --------------- 
-  declare @合计金额 money
-  If @金额合计 Is Null Set @金额合计=0.00
-  Select @合计金额 = shipping_cost + total_price from web_orders where order_serial_num = @商户订单号
-  if @合计金额 <> @金额合计
-  begin
-    Exec Loger @LogID,@Key=@单号,@ExtendInfo='金额合计和合计金额不等'
-    set @金额合计 =@合计金额
-  end
-  --------------------------------------------------------------------------------------------------------------
-  Set @应收金额=@金额合计-@优惠合计
+  Set @金额合计=@金额合计+@优惠合计
+  Set @应收金额=@金额合计
+  set @订金 = @应收金额-@让利-@刷卡金额-@礼券
   Set @欠款 = Case When @结单=1 Then 0 Else @应收金额-@让利-@订金-@刷卡金额-@礼券 End
   Set @欠款 = IsNull(@欠款, 0)
   Set @交货日期=Case When @结单=1 Or @废止=1 Then Convert(varchar(10),GetDate(),120) Else Null End
@@ -1359,25 +1358,7 @@ Begin
     --更新从微商城产生的第三方支付金额
     Exec Loger @LogID,@ExtendInfo='同步从微商城产生的第三方支付金额'
     Exec AddWebPay 1,@OrderID
-    --重算并更新欠款
-    Exec Loger @LogID,@ExtendInfo='重算并更新欠款'
-    Select @第三方支付 = Sum(结算金额) 
-    From 结算明细表 
-    Where 业务ID=@OrderID 
-      and 来源=1 
-      And 结算ID In (Select ID 
-                     From 结算方式表 
-                     Where 第三方支付=1)
-    Set @欠款= Case When @结单=1 
-                    Then 0 
-                    Else @应收金额-@让利-@订金-@刷卡金额-@礼券-@第三方支付 
-               End
-    if @销售类别 = '公众号'
-	begin
-	  Set @欠款 = 0
-	end
-    Set @欠款 = IsNull(@欠款, 0)
-    Update orders Set 欠款=@欠款 Where ID=@OrderID
+
   End
   Else
   Begin
@@ -1403,10 +1384,9 @@ Begin
     Set @ParaInfo='生成明细中的运费项:@运费='+Convert(varchar(20),@运费)
     Exec Loger @LogID,@ExtendInfo=@ParaInfo
     Delete From orders_detail Where 订单ID=@OrderID And 编号='SYS_001'
-    Exec AddOrderItem @OrderID,'SYS_001',@运费,1,@运费
+    Exec AddOrderItem @OrderID,'SYS_001',@运费,1,@运费,0,0
     --如果有必要,在此加入相应的入库动作
   End
-  
   Exec Loger @LogID,@Result=@OrderID
   Return @OrderID
 End
@@ -1418,13 +1398,14 @@ Procedure AddOrderItem
 If Object_id('[AddOrderItem]','P') Is Not Null
   Drop Procedure [AddOrderItem]
 Go
-Create Procedure [AddOrderItem]
+Create Procedure [dbo].[AddOrderItem]
        @PID         int        ,--订单ID
        @GoodsCode   varchar(10),--商品编号
-       @GoodsCount  int        ,--商品数量
+       @GoodsCount  money        ,--商品数量
        @Price       money      ,--单价,未折扣的单价
        @TotalAmount money      ,--金额,折扣后总金额
-       @ExtendPrice money=0     --线上单价
+       @ExtendPrice money=0    , --线上单价
+	   @Productid int          --线上产品id
 As       
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -1435,22 +1416,23 @@ Begin
   Set @ParaInfo = dbo.NameValue('Y','@Price',@Price)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@TotalAmount',@TotalAmount) Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@ExtendPrice',@ExtendPrice) Exec Loger @LogID,@Parameters=@ParaInfo
-  
+  Set @ParaInfo = dbo.NameValue('N','@Productid',@Productid)  Exec Loger @LogID,@Parameters=@ParaInfo
 
   Declare @Return int,@DetailID int
-  Declare @名称 varchar(30),@规格 varchar(20),@折扣 money,@优惠金额 money
+  Declare @名称 varchar(30),@规格 varchar(20),@折扣 numeric(12,2),@优惠金额 money,@销售主价 money
 
-  Select @名称=名称,@规格=规格 From goods Where 是否销售=1 And 编号=@GoodsCode
-  Set @折扣 = @TotalAmount * 100 / @Price / @GoodsCount
-  Set @优惠金额 = @Price * @GoodsCount - @TotalAmount
-
-  Insert Into orders_detail(订单ID,编号,名称,规格,单价,折扣,数量,金额,优惠金额,结单)
-         Values(@PID,@GoodsCode,@名称,@规格,@Price,@折扣,@GoodsCount,@TotalAmount,@优惠金额,0)
+  Select @名称=名称,@规格=规格,@销售主价=销售主价 From goods Where 是否销售=1 And 编号=@GoodsCode
+  Set @折扣 = @TotalAmount * 100 / @销售主价 / @GoodsCount
+  Set @优惠金额 = @销售主价 * @GoodsCount - @TotalAmount
+  declare @title  varchar(50) 
+  select @title=title from web_products where product_id = @Productid
+  set  @title=isnull(@title,'')
+  Insert Into orders_detail(订单ID,编号,名称,规格,单价,折扣,数量,金额,优惠金额,结单,备注,Productid)
+         Values(@PID,@GoodsCode,@名称,@规格,@销售主价,@折扣,@GoodsCount,@TotalAmount,@优惠金额,0,@title,@Productid)
   Set @DetailID = Scope_Identity()
   If IsNull(@ExtendPrice, 0)<>0
     Insert Into orders_detail_extend(link_id,web_price)Values(@DetailID,@ExtendPrice)
   If @@Error<>0 Set @Return = -1 Else Set @Return = 0
-  
   Exec Loger @LogID,@Key=@DetailID,@Result=@Return
   Return @Return
 End
@@ -1607,7 +1589,8 @@ Begin
   Declare @LogID int,@ParaInfo varchar(128)
   Exec @LogID=Loger null,'GetOrdersDetail'
   Set @ParaInfo = dbo.NameValue('N','@OrderID',@OrderID) Exec Loger @LogID,@Key=@OrderID,@Parameters=@ParaInfo
-  Select * From orders_detail Where 订单ID=@OrderID
+  Select ID, 订单ID, 编号, 名称, 规格, 单价, 折扣, 数量, 金额, 优惠金额, 备注, 原价, 结单, 累计出货, productid
+       From orders_detail Where 订单ID=@OrderID
   Return 0
 End
 Go
@@ -2538,9 +2521,10 @@ Go
 Create Procedure [WSC_AddOrderItem]
        @PID         int        ,--订单ID
        @GoodsCode   varchar(10),--商品编号
-       @GoodsCount  int        ,--商品数量
+       @GoodsCount  money        ,--商品数量
        @Price       money      ,--单价,未折扣的单价
-       @TotalAmount money       --金额,折扣后总金额
+       @TotalAmount money      ,--金额,折扣后总金额
+	   @Productid  int         --线上商城产品id
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2550,9 +2534,9 @@ Begin
   Set @ParaInfo = dbo.NameValue('N','@GoodsCount',@GoodsCount)   Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@Price',@Price)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@TotalAmount',@TotalAmount) Exec Loger @LogID,@Parameters=@ParaInfo
-
+  Set @ParaInfo = dbo.NameValue('Y','@Productid',@Productid)  Exec Loger @LogID,@Parameters=@ParaInfo
   Declare @Return int,@msg varchar(100)
-  Exec @Return=AddOrderItem @PID,@GoodsCode,@GoodsCount,@Price,@TotalAmount,@Price
+  Exec @Return=AddOrderItem @PID,@GoodsCode,@GoodsCount,@Price,@TotalAmount,@Price,@Productid
   Set @msg = Case @Return
              When 0 Then '成功'
              When -1 Then '失败'
@@ -2766,6 +2750,37 @@ Begin
   Select @Return As retcode, @msg As Msg
 End
 Go
+
+--Function Get_WordVal
+获取字典表数据
+--
+   If Object_id('[Get_WordVal]','P') Is Not Null
+ 
+  Drop Procedure Get_WordVal
+Go
+Create procedure 
+   Get_WordVal(@bookname varchar(50))
+as
+begin
+  
+   declare @Value Varchar(1), @WordVal Varchar(1)
+  
+   if Exists (select wordval from 字典 where bookname=@bookname )
+  
+   begin
+    
+   select @WordVal = wordval from 字典 where bookname=@bookname
+    
+   set @Value = @WordVal
+  end
+  else
+    set @Value = '0'
+  
+   select @Value
+
+   end
+
+   go
 --------------------------------------------------------------------------------
 --检查分销树以确认两个会员可以建立分销父子关系
 --返回集0则可以建立分销关系

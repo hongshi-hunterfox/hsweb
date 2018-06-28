@@ -252,22 +252,16 @@ If Object_ID('web_evaluation_config','U') Is Null
 
 CREATE TABLE web_evaluation_config(
 	
-
 id int IDENTITY(1,1) NOT NULL,
 	
-
 point int NOT NULL,
 	
-
 money decimal(20, 2) NULL,
 	
-
 voucher_code varchar(255) NOT NULL,
-
 	
 amount int NOT NULL,
 	
-
 time datetime NULL
 );
 
@@ -611,51 +605,27 @@ begin
 
 CREATE TABLE web_deliver_addrs(
 
-  
+  deliverAddr_id int identity (1,1) primary key,
 
- deliverAddr_id int identity (1,1) primary key,
+  user_id int  NOT NULL ,
 
-  
+  name varchar(255) NOT NULL DEFAULT '',
 
- user_id int  NOT NULL ,
+  phone varchar(32) NOT NULL DEFAULT '',
 
-  
+  province varchar(32) NOT NULL DEFAULT '',
 
- name varchar(255) NOT NULL DEFAULT '',
-
-  
-
- phone varchar(32) NOT NULL DEFAULT '',
-
-   
-
-province varchar(32) NOT NULL DEFAULT '',
-
-   
-
-city varchar(32) NOT NULL DEFAULT '',
-
- 
+  city varchar(32) NOT NULL DEFAULT '',
 
   region varchar(32) NOT NULL DEFAULT '',
 
- 
-
   addr_detail varchar(255) NOT NULL DEFAULT'',
-
- 
 
   zipCode varchar(32) NOT NULL DEFAULT '',
 
- 
-
   is_default bit NOT NULL DEFAULT 0,
 
- 
-
-  longitude varchar(255) not null default '',
-
-  
+  longitude varchar(255) not null default '',  
 
  latitude varchar(255) not null default ''
 

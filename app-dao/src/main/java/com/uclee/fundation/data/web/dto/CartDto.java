@@ -21,6 +21,16 @@ public class CartDto extends Cart{
 	
 	private Date endTime;
 	
+	private int appointedTime;
+	
+	public int getAppointedTime() {
+		return appointedTime;
+	}
+
+	public void setAppointedTime(int appointedTime) {
+		this.appointedTime = appointedTime;
+	}
+
 	public Date getStartTime() {
 		return startTime;
 	}

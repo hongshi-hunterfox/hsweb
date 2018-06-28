@@ -46,6 +46,14 @@ public class ConfigPost {
 	private String unbundling;
 	private String signText;
 	private String force;
+	private String brand;
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
 
 	private String zhengshu;
 	private String zhengshuPassword;

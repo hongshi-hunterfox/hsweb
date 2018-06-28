@@ -22,7 +22,8 @@ var errMap = {
   Distribution_error: '不在配送范围内',
   closeDate_error:'我们歇业了',
   businesstime_error:'我们打烊睡觉了',
-  fullamunt_error:'不满足优惠券使用条件'
+  fullamunt_error:'不满足优惠券使用条件',
+  times_error:'取货时间不能小于预定时间'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -57,7 +58,8 @@ class Order extends React.Component {
       closeEndDateStr:'',
       businessStartTime:'',
       businessEndTime:'',
-      hsgooscode: []
+      hsgooscode: [],
+      appointedTime:''
     }
     
     this.lat = 21.908
@@ -130,6 +132,7 @@ class Order extends React.Component {
       this.setState({
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
+        appointedTime: resJson.appointedTime,
         total: resJson.total,
         isShippingfree:resJson.isShippingFree,
         supportDeliver:resJson.supportDeliver,
@@ -587,6 +590,21 @@ salesInfoShowClick=()=>{
     }
     e.preventDefault()
     var data = fto(e.target)
+    var appointed = this.state.appointedTime;
+    var res = appointed.split(",");
+    var hours = data.pickTimeStr
+    var times = hours.substring(2,0)
+    console.log(times)
+    for(var i=0;i<res.length;i++){
+    	console.log(res[i])
+    	if(res[i]>times){
+    		this.setState({
+        error: errMap['times_error']
+      })
+      return false
+    	}
+    }
+
     if (!data.isSelfPick) {
       this.setState({
         error: errMap['isSelfPick_error']
@@ -648,22 +666,19 @@ salesInfoShowClick=()=>{
         error: errMap['fullamunt_error']
       })
       return false
-    }
-    
+    }    
     var a=this.state.hsgooscode
 		var convertibleGoods=this.state.convertibleGoods;
 		var result=convertibleGoods.split(",");
 		var bb = 0;
-		for(var i=0;i<result.length;i++){
-  		console.log("aaaaaaa===="+a)
-  		
+		for(var i=0;i<result.length;i++){  		
   		if(a.lastIndexOf((result[i]+","))===-1){			
-  			console.log("aaaaaaa===="+result[i])
+  			console.log(result[i])
   		}else{
   			bb = 1;
   		}
   	}
-			console.log("aaaaaaa===="+bb)
+			console.log(bb)
     	if(this.state.convertibleGoods!==null&&bb===0){
     		this.setState({
         	error: errMap['fullamunt_error']
@@ -815,6 +830,7 @@ class OrderItem extends React.Component {
             <span className="count pull-right">{((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?"单价：￥"+item.money:"促销单价：￥"+item.promotion}</span>  
           </div>
           <div className="other">
+            提前{item.appointedTime}小时预定
             <span className="price pull-right">数量：x {item.amount}</span>
           </div>
         </div>

@@ -27,6 +27,24 @@ public class Product {
     private Integer sortValue;
     
     private String parameter;
+    
+    private Integer appointedTime;
+
+	public Boolean getIsShippingFree() {
+		return isShippingFree;
+	}
+
+	public void setIsShippingFree(Boolean isShippingFree) {
+		this.isShippingFree = isShippingFree;
+	}
+
+	public Integer getAppointedTime() {
+		return appointedTime;
+	}
+
+	public void setAppointedTime(Integer appointedTime) {
+		this.appointedTime = appointedTime;
+	}
 
 	public String getParameter() {
 		return parameter;

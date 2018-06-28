@@ -380,6 +380,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getForce()!=null) {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
 		}
+		if (configPost.getBrand()!=null) {
+			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
+		}
 		return true;
 	}
 	@Override
@@ -517,6 +520,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getForce()!=null) {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
+		}
+		if (configPost.getBrand()!=null) {
+			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
 		}
 		return true;
 	}
@@ -793,6 +799,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			productForm.setIsShow(product.getIsShow());
 			productForm.setParameter(product.getParameter());
 			productForm.setExplain(product.getExplain());
+			productForm.setAppointedTime(product.getAppointedTime());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
 			productForm.setDescription(FileUtil.UrlRequest(product.getDescription()));
@@ -1047,6 +1054,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setVoucherSendInformation(config.getValue());
 			}else if(config.getTag().equals(WebConfig.force)){
 				configPost.setForce(config.getValue());
+			}else if(config.getTag().equals(WebConfig.brand)){
+				configPost.setBrand(config.getValue());
 			}
 		}
 		return configPost;

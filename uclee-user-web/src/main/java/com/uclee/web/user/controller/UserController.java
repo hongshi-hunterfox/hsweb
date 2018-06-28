@@ -598,6 +598,7 @@ public class UserController extends CommonUserHandler{
 	* @return Map<String,Object>    返回类型 
 	* @throws 
 	*/
+	@SuppressWarnings("deprecation")
 	@RequestMapping("/order")
 	public @ResponseBody Map<String,Object> order(HttpServletRequest request,@RequestBody List<CartDto> cart){
 		Map<String,Object> map = new TreeMap<String,Object>();
@@ -609,8 +610,18 @@ public class UserController extends CommonUserHandler{
 		logger.info("cart post====="+JSON.toJSONString(carts));
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
+		Date date = new Date();
+		//拼接预定时间put到前台--kx
+		String appointedTime= "";
+		for(CartDto item:carts){			
+			System.out.println("item.getAppointedTime() = "+item.getAppointedTime());
+			date.setHours(new Date().getHours()+item.getAppointedTime());
+			appointedTime=appointedTime+date.getHours()+",";
+		}
+		System.out.println("date2 = "+appointedTime);
+		map.put("appointedTime",appointedTime);
+		
 		for(CartDto item:carts){
-			Date date = new Date();
 			long value = date.getTime();
 			long value1 = 0;
             if(item.getStartTime()!=null){

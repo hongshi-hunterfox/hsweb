@@ -7,6 +7,7 @@ import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
 import com.uclee.fundation.data.mybatis.mapping.EvaluationGiftsMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
+import com.uclee.fundation.data.mybatis.mapping.HsVipMapper;
 import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.hongshi.service.HongShiVipServiceI;
@@ -48,6 +49,9 @@ public class HongShiVipController<phone> {
 	
 	@Autowired
 	private HongShiVipMapper hongShiVipMapper;
+	
+	@Autowired
+	private HsVipMapper hsVipMapper;
 
 	@Autowired
 	private OauthLoginMapper oauthLoginMapper;
@@ -179,10 +183,24 @@ public class HongShiVipController<phone> {
 	 * @return hongShiVipService.changeVip
 	 */
 	@RequestMapping("/changeVip")
-	public  Integer changeVip(Integer type,HttpSession session) {
-		HongShiVip oVIP = getVipInfo(type,session);
-		return hongShiVipService.changeVip(oVIP.getId());
-		}
+	public @ResponseBody Integer changeVip(Integer type,HttpSession session) {
+		HongShiVip vip = getVipInfo(type,session);
+		return hongShiVipService.changeVip(vip.getId());
+	}
+	
+	/**
+	 * @Title: discontinuationVip
+	 * @Description: 会员卡挂失-kx
+	 * @param type
+	 * @param session
+	 * @return vip.getId()
+	 */
+	@RequestMapping("/discontinuationVip")
+	public @ResponseBody Integer discontinuationVip(Integer type,HttpSession session) {
+		HongShiVip vip = getVipInfo(type, session);
+		hsVipMapper.updateRecharge(vip.getId());
+		return vip.getId();
+	}
 		
 	
 	/** 
@@ -359,10 +377,6 @@ public class HongShiVipController<phone> {
 		List<Orders> orders = hongShiVipService.selectOrders(billCode);
 			if(orders!=null){
 				for(int j =0; j<orders.size();j++){
-					System.out.println("xiaxia----"+orders.get(j).getNames());
-					System.out.println("xiaxia----"+orders.get(j).getGuige());
-					System.out.println("xiaxia----"+orders.get(j).getBeizhu());
-					System.out.println("xiaxia----"+JSON.toJSONString(orders));	
 					map.put("orders",orders);
 				}
 				System.out.println("billCode=============="+orders.get(0).getStoreName());
@@ -380,8 +394,6 @@ public class HongShiVipController<phone> {
 		if(order!=null){
 			for(int j =0; j<order.size();j++){
 				List<UnderlineOrders> orders = hongShiVipService.selectUnderlineOrders(order.get(j).getDanhao());
-				System.out.println("xiaxia----"+orders.get(j).getNames());
-				System.out.println("xiaxia----"+orders.get(j).getGuige());
 				map.put("orders",orders);
 			}
 			System.out.println("billCode=============="+order.get(0).getStoreName());
@@ -397,13 +409,9 @@ public class HongShiVipController<phone> {
 		List<RetailDetails> dingdan = hongShiVipService.selectRetailDetails(billCode);
 		if(dingdan!=null){
 			for(int j =0; j<dingdan.size();j++){
-//				System.out.println("sunsun----"+dingdan.get(j).getDanhao());
 				List<RetailDetails> orders = hongShiVipService.selectRetailDetails(dingdan.get(j).getDanhao());
-//				System.out.println("xiaxia----"+orders.get(j).getBeizhu());
-//				System.out.println("xiaxia----"+orders.get(j).getGuige());
 				map.put("orders",dingdan);
 			}
-			System.out.println("huujj=============="+dingdan.get(0).getStoreName());
 			map.put("danhao",dingdan.get(0).getDanhao());
 			map.put("storeName",dingdan.get(0).getStoreName());
 			map.put("beizhu",dingdan.get(0).getBeizhu());
@@ -417,8 +425,6 @@ public class HongShiVipController<phone> {
 		if(chongzhi!=null){
 			for(int j =0; j<chongzhi.size();j++){
 				List<ChongzhiDetailed> orders = hongShiVipService.selectChongzhiDetailed(chongzhi.get(j).getDanhao());
-				System.out.println("xiaxia----"+orders.get(j).getJine());
-				System.out.println("xiaxia----"+orders.get(j).getRiqi());
 				map.put("orders",orders);
 			}
 		}	
@@ -427,8 +433,6 @@ public class HongShiVipController<phone> {
 		if(jifenchongzhi!=null){
 			for(int j =0; j<jifenchongzhi.size();j++){
 				List<IntegralRecharge> orders = hongShiVipService.selectIntegralRecharge(jifenchongzhi.get(j).getDanhao());
-				System.out.println("xiaxia----"+orders.get(j).getBeizhu());
-//				System.out.println("xiaxia----"+orders.get(j).getDanhao());
 				map.put("orders",orders);
 			}
 		}	

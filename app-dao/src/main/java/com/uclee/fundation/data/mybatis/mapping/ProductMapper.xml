@@ -14,6 +14,7 @@
     <result column="is_show" property="isShow" jdbcType="BIT" />
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
     <result column="parameter" property="parameter" jdbcType="VARCHAR" />
+    <result column="appointed_time" property="appointedTime" jdbcType="INTEGER"/>
   </resultMap>
    <resultMap id="ProductGe" type="com.uclee.fundation.data.mybatis.model.ProductGe" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -33,6 +34,7 @@
     <result column="Explain" property="explain" jdbcType="VARCHAR" />
     <result column="is_show" property="isShow" jdbcType="BIT" />
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
+    <result column="appointed_time" property="appointedTime" jdbcType="INTEGER"/>
   </resultMap>
   <resultMap id="ProductParameters" type="com.uclee.fundation.data.mybatis.model.ProductParameters" >
     <id column="id" property="id" jdbcType="INTEGER" />
@@ -40,7 +42,8 @@
     <result column="sname" property="sname" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value,parameter
+    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value,parameter,
+    appointed_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -138,11 +141,11 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
-      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value
+      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,appointed_time
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT},
-      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR}
+      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR},#{appointedTime,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
@@ -185,6 +188,9 @@
       <if test="parameter !=null">
       	parameter,
       </if>
+      <if test="appointedTime !=null">
+      	appointed_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -222,6 +228,9 @@
       </if>
       <if test="parameter !=null">
       	 #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="appointedTime !=null">
+      	 #{appointedTime,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -261,6 +270,9 @@
       <if test="parameter !=null">
       	parameter = #{parameter,jdbcType=VARCHAR},
       </if>
+      <if test="appointedTime !=null">
+      	appointed_time = #{appointedTime,jdbcType=INTEGER},
+      </if>
     </set>
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
@@ -276,8 +288,9 @@
       Explain = #{explain,jdbcType=VARCHAR},
       is_show = #{isShow,jdbcType=BIT},
       sort_value = #{sortValue,jdbcType=INTEGER},
-      parameter = #{parameter,jdbcType=VARCHAR}
-    where product_id = #{productId,jdbcType=INTEGER}
+      parameter = #{parameter,jdbcType=VARCHAR},
+      appointed_time = #{appointedTime,jdbcType=INTEGER}
+    where product_id = #{appointedTime,jdbcType=INTEGER}
   </update>
 
   <select id="getMaxSortValue" resultType="java.lang.Integer">

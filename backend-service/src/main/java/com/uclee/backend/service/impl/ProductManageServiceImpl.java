@@ -317,7 +317,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			}
 
 			List<ProductParameters> parameters  = productMapper.selectParameters(product.getProductId());		
-			if(parameters!=null){
+			if(parameters!=null&&parameters.size()>0){
 				//更新同一产品下的不同参数属性名称
 				ProductParameters iems=new  ProductParameters();
 				iems.setProductId(product.getProductId());

@@ -21,7 +21,17 @@ public class HsVip {
 	private String code;
 	
 	private String vSex;
+	
+	private int isLose;
 
+
+	public int getIsLose() {
+		return isLose;
+	}
+
+	public void setIsLose(int isLose) {
+		this.isLose = isLose;
+	}
 
 	public Integer getId() {
 		return id;

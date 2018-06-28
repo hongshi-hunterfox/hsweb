@@ -110,7 +110,7 @@ class SignIn extends React.Component {
                       				isSigned:true
                     			})
                     			alert("签到成功，积分+" + data.point+"，连续签到次数:+"+1+"!")
-                    			window.location="/CheckTable"
+                    			window.location="/SignIn"
                     			return;
                            	}
                   			if(!data.result){
