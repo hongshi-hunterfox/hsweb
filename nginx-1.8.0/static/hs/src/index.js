@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -12,6 +13,7 @@ import UnpayOrderList from './containers/UnpayOrderList'
 import OrderList from './containers/OrderList'
 import MemberCard from './containers/MemberCard'
 import Information from './containers/Information'
+import Install from './containers/Install'
 import MemberSetting from './containers/MemberSetting'
 import MemberSetting1 from './containers/MemberSetting1'
 import MemberSetting2 from './containers/MemberSetting2'
@@ -57,6 +59,7 @@ ReactDOM.render(
       <Route path="boss-center" component={BossCenter} />
       <Route path="member-card" component={MemberCard} />
       <Route path="information" component={Information} />
+       <Route path="install" component={Install} />
       <Route path="member-setting" component={MemberSetting} />
       <Route path="member-setting1" component={MemberSetting1} />
       <Route path="member-setting2" component={MemberSetting2} />

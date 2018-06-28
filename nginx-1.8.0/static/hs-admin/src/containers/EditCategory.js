@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import DocumentTitle from 'react-document-title'
 import fto from 'form_to_object'
 // import validator from 'validator'
@@ -54,17 +54,17 @@ class EditCategory extends React.Component {
               <label className="control-label col-md-3">批量设置折扣：</label>
               <input type='text' name='batchDiscount' value={this.state.batchDiscount} onChange={this._change}/>
             </div>
-             <div className="input-group input-group-sm">
-                                        <span className="input-group-addon">
+             <div className="form-group">
+                                        <label className="control-label col-md-3">
                                           批量设置开始时间：
-                                        </span>
-                                        <input type='text' className="form-control" name="startTimeStrs" value={this.state.startTimeStrs} onChange={this._change}/>
+                                        </label>
+                                        <input type='text' name="startTimeStrs" value={this.state.startTimeStrs} onChange={this._change}/>
                                       </div>
-                                        <div className="input-group input-group-sm">
-                                        <span className="input-group-addon">
+                                        <div className="form-group">
+                                        <label className="control-label col-md-3">
                                           批量设置结束时间：
-                                        </span>
-                                        <input type='text' className="form-control" name="endTimeStrs"  value={this.state.endTimeStrs} onChange={this._change}/>
+                                        </label>
+                                        <input type='text' name="endTimeStrs"  value={this.state.endTimeStrs} onChange={this._change}/>
                                       </div>
 
 
@@ -99,6 +99,7 @@ class EditCategory extends React.Component {
       data.categoryId=this.props.location.query.categoryId
     }
     console.log(data)
+    if(data.batchDiscount<=1&&data.batchDiscount>0){
     req.post('/uclee-backend-web/editCategory').send(data).end((err, res) => {
       if (err) {
         return err
@@ -111,6 +112,10 @@ class EditCategory extends React.Component {
         alert(data.reason);
       }
     })
+    }else{
+    	alert("设置折扣必须为小数");
+    	return false;
+    }
   }
 }
 

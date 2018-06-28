@@ -1,3 +1,4 @@
+
 .member-card {
   padding-top: 15px;
 }
@@ -77,6 +78,26 @@
   text-align: center;
   float: right;
   padding: 15px;
+}
+
+.member-card-item-loss {
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  right: 10px;
+  
+}
+.member-card-item-ls {
+  padding: 15px;
+  font-size: 18px;
+  float: left;
+  
+}
+.check-table-du {
+  padding: 8px;
+  font-size: 15px;
+  
 }
 
 .member-card-item-Unbundling {
