@@ -141,7 +141,7 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
-      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,appointed_time
+      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,parameter,appointed_time
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT},
@@ -185,9 +185,7 @@
       <if test="sortValue !=null">
         sort_value,
       </if>
-      <if test="parameter !=null">
       	parameter,
-      </if>
       <if test="appointedTime !=null">
       	appointed_time,
       </if>
@@ -267,9 +265,7 @@
       <if test="sortValue !=null">
         sort_value = #{sortValue,jdbcType=INTEGER},
       </if>
-      <if test="parameter !=null">
       	parameter = #{parameter,jdbcType=VARCHAR},
-      </if>
       <if test="appointedTime !=null">
       	appointed_time = #{appointedTime,jdbcType=INTEGER},
       </if>
