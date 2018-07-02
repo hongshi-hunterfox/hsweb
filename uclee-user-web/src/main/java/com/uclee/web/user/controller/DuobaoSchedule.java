@@ -68,7 +68,7 @@ public class DuobaoSchedule {
 		}
 	}
 
-	@Scheduled(fixedRate = 1000 * 2)
+	@Scheduled(fixedRate = 1000 * 3)
 	private void InitiativeCheck(){
 		String[] datasourceStr = {"fcx","hs"};
 		for(String tmp:datasourceStr){
@@ -77,8 +77,9 @@ public class DuobaoSchedule {
 				List<PaymentOrder> paymentOrders = userService.selectForTimer();
 				for (PaymentOrder paymentOrder : paymentOrders) {
 					paymentOrder.setCheckCount(paymentOrder.getCheckCount() + 1);
+					
 					paymentOrderMapper.updateCheckCount(paymentOrder);
-
+					logger.info("paymentOrder1==========="+JSON.toJSONString(paymentOrder));
 					Map<String, String> ret = userService.wxInitiativeCheck(paymentOrder);
 
 					if (ret.get("trade_state") != null && ret.get("trade_state").equals("SUCCESS")) {
