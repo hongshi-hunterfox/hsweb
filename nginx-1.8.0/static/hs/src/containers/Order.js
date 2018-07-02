@@ -23,7 +23,7 @@ var errMap = {
   closeDate_error:'我们歇业了',
   businesstime_error:'我们打烊睡觉了',
   fullamunt_error:'不满足优惠券使用条件',
-  times_error:'取货时间不能小于预定时间'
+  times_error:'取货时间不能小于'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -596,20 +596,28 @@ salesInfoShowClick=()=>{
     e.preventDefault()
     var data = fto(e.target)
     var appointed = this.state.appointedTime;
-    var res = appointed.split(",");
     var hours = data.pickTimeStr
     var times = hours.substring(2,0)
-    console.log(times)
-    for(var i=0;i<res.length;i++){
-    	console.log(res[i])
-    	if(res[i]>times){
+    var timef = hours.substring(3,5)
+    console.log(timef)
+    var yudings = appointed.substring(2,0)
+    var yudingf = appointed.substring(3,5)
+    console.log(yudings)
+    console.log(yudingf)
+    if(yudings>times){
     		this.setState({
-        error: errMap['times_error']
+        error: errMap['times_error']+appointed
+      })
+      return false
+    }
+    if(yudings===times){
+    	if(yudingf>timef){
+    		this.setState({
+        error: errMap['times_error']+appointed
       })
       return false
     	}
-    }
-
+    }   
     if (!data.isSelfPick) {
       this.setState({
         error: errMap['isSelfPick_error']

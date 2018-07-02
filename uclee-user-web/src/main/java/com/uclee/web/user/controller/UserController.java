@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -611,7 +612,7 @@ public class UserController extends CommonUserHandler{
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
 		Date date = new Date();
-		//拼接预定时间put到前台--kx
+		//拼接预定小时时间--kx
 		String appointedTime= "";
 		for(CartDto item:carts){			
 			System.out.println("item.getAppointedTime() = "+item.getAppointedTime());
@@ -619,7 +620,23 @@ public class UserController extends CommonUserHandler{
 			appointedTime=appointedTime+date.getHours()+",";
 		}
 		System.out.println("date2 = "+appointedTime);
-		map.put("appointedTime",appointedTime);
+		//转换字符串数组
+		String str[] = appointedTime.split(","); 
+		//字符串数组转为int数组
+		Integer Hours[] = new Integer[str.length];  
+		for(int i=0;i<str.length;i++){  
+			Hours[i]=Integer.parseInt(str[i]);
+		}
+		//取最大值
+		int max = (int) Collections.max(Arrays.asList(Hours));
+		System.out.println("Hours"+max);
+		//取最大时间
+		date.setHours(max);
+		SimpleDateFormat time=new SimpleDateFormat("HH:mm");
+		
+		System.out.println(time.format(date.getTime())); 
+		map.put("appointedTime",time.format(date.getTime()));
+		System.out.println("Hours"+time.format(date.getTime()));
 		
 		for(CartDto item:carts){
 			long value = date.getTime();
