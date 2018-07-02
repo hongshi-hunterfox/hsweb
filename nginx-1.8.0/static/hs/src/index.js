@@ -45,6 +45,7 @@ import MyOrderDetail from './containers/MyOrderDetail.js'
 import OnlineOrder from './containers/OnlineOrder.js'
 import Refund from './containers/Refund.js'
 import ChouJiang from './containers/ChouJiang.js'
+import SwitchShop from './containers/SwitchShop.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -91,6 +92,7 @@ ReactDOM.render(
       <Route path="OnlineOrder" component={OnlineOrder} />
       <Route path="seller/refund" component={Refund}/>
       <Route path="luck_draw" component={ChouJiang}/>
+      <Route path="switch-shop" component={SwitchShop}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

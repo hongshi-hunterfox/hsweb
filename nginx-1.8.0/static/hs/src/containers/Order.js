@@ -333,11 +333,16 @@ class Order extends React.Component {
               defaultAddr={this.state.defaultAddr}
               storeAddr={this.state.storeAddr}
             />
-            <div className="order-store">
-              <span className="fa fa-home fa-lg" />{localStorage.getItem('storeName')}
+            <div className="order-store" >
               {this.state.isSelfPick == 'false' ?
-              <span className="number">(配送范围：{this.state.config.restrictedDistance}公里内)</span>
-              :null}
+              <span className="fa fa-home fa-lg">
+              	<font size="3">{localStorage.getItem('storeName') + "(配送范围：" + this.state.config.restrictedDistance + "公里内)"}</font>
+              </span>
+              :
+              <span className="fa fa-home fa-lg">
+              	<a href="/switch-shop"><font color="black" size="3">{localStorage.getItem('storeName')} [切换门店]</font></a>
+              </span>
+              }
             </div>
             <OrderItem cartItems={this.state.cartItems} />
             <input
