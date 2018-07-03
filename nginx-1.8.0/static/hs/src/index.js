@@ -11,6 +11,7 @@ import Recharge from './containers/Recharge'
 import UnpayOrderList from './containers/UnpayOrderList'
 import OrderList from './containers/OrderList'
 import MemberCard from './containers/MemberCard'
+import Install from './containers/Install'
 import MemberSetting from './containers/MemberSetting'
 import MemberSetting1 from './containers/MemberSetting1'
 import MemberSetting2 from './containers/MemberSetting2'
@@ -62,6 +63,7 @@ ReactDOM.render(
       <Route path="all-product" component={AllProduct} />
       <Route path="editaddr" component={EditAddr} />
       <Route path="seller/payment" component={Payment} />
+      <Route path="install" component={Install} />
       <Route path="seller/paymentAlipay" component={PaymentAlipay} />
       <Route path="lottery" component={Lottery} />
       <Route path="distribution-center" component={DistributionCenter} />

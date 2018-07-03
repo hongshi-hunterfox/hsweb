@@ -37,25 +37,28 @@ class MemberCard extends React.Component {
       balance: null,
       cVipCode: null,
       image: '',
-      nickName: '',
+      cMobileNumber: '',
+      phones: '',
       config:{},
       vipImage:'',
       allowRecharge:true,
       vipJbarcode:'',
-      cardStatus:''
+      cardStatus:'',
+      id:0
     }
   }
 
   componentDidMount() {
     req
       .get('/uclee-user-web/getUserInfo/')
-      .end((err, res) => {
-        this.setState({
-          image: res.body.image,
-          nickName: res.body.nickName
-        })
+      .query({
+        t: new Date().getTime()
       })
-    
+      .end((err, res) => {
+ 		if (res.text) {
+          this.setState(res.body)
+        }
+      })
     req.get('/uclee-backend-web/config').end((err, res) => {
       if (err) {
         return err
@@ -103,7 +106,8 @@ class MemberCard extends React.Component {
                 {
                   !this.state.cVipCode ?
                   <span className="member-card-setting-link">绑定会员卡 ></span>
-                  : null
+                  :
+                  <span className="member-card-setting-link"><a href="install">设置>></a></span>
                 }
               </div>
             </div>
@@ -121,25 +125,6 @@ class MemberCard extends React.Component {
           <div className="member-card-list">
             <div className="member-card-item">
               <div className="member-card-item-code">电子会员卡:
-              <span onClick={() => { 
-              	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
-          	    if(!conf){
-          	     return;
-          	    }   
-          	    else{
-                 req
-                 .get('/uclee-user-web/changeVip')
-                 .end((err, res) => {				          
-                 	alert("解绑成功,请返回页面刷新!")
-                 	window.location.reload();
-                    return;
-                    window.location.reload();
-                 })
-                }   
-		  	  }}
-              className="member-card-item-Unbundling">
-                <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout">解除绑定</a></button>
-		  	  </span>    
               </div>
               {
                 this.state.vipJbarcode&&this.state.vipJbarcode!==''?

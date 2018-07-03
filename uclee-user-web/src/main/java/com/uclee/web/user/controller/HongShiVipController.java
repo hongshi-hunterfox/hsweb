@@ -7,6 +7,7 @@ import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
 import com.uclee.fundation.data.mybatis.mapping.EvaluationGiftsMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
+import com.uclee.fundation.data.mybatis.mapping.HsVipMapper;
 import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.hongshi.service.HongShiVipServiceI;
@@ -50,6 +51,10 @@ public class HongShiVipController {
 	
 	@Autowired
 	private OauthLoginMapper oauthLoginMapper;
+	
+		
+	@Autowired
+	private HsVipMapper hsVipMapper;
 
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
@@ -176,6 +181,22 @@ public class HongShiVipController {
 		HongShiVip oVIP = getVipInfo(type,session);
 		return hongShiVipService.changeVip(oVIP.getId());
 		}
+		
+		/**
+	 * @Title: discontinuationVip
+	 * @Description: 会员卡挂失-kx
+	 * @param type
+	 * @param session
+	 * @return vip.getId()
+	 */
+	@RequestMapping("/discontinuationVip")
+	public @ResponseBody Integer discontinuationVip(Integer type,HttpSession session) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HongShiVip vip = getVipInfo(type, session);
+		return hsVipMapper.updateRecharge(vip.getId());
+	}
+		
+	
 		
 	
 	/** 
