@@ -125,27 +125,6 @@ class MemberCard extends React.Component {
           <div className="member-card-list">
             <div className="member-card-item">
               <div className="member-card-item-code">电子会员卡:
-              
-              {this.state.config.unbundling==0 ?
-              <span onClick={() => { 
-              	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
-          	    if(!conf){
-          	     
-          	    }   
-          	    else{
-                 req
-                 .get('/uclee-user-web/changeVip')
-                 .end((err, res) => {				          
-                 	alert("解绑成功,请返回页面刷新!")
-					window.location="/member-card";
-                    //window.location.reload();
-                 })
-                }   
-		  	  }}
-              className="member-card-item-Unbundling">
-                <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout"><font color="white">解除绑定</font></a></button>
-		  	  </span>  : null
-              }
               </div>
               {
                 this.state.vipJbarcode&&this.state.vipJbarcode!==''?

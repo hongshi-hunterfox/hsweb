@@ -1,4 +1,4 @@
-import "./order-list.css"
+﻿import "./order-list.css"
 import React from "react"
 import DocumentTitle from "react-document-title"
 import Navi from './Navi'
@@ -118,7 +118,7 @@ class OrderList extends React.Component {
 					
           			<div>
 						<span onClick={()=>{window.location="/myOrderDetail/" + item.outerOrderCode}} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单详情</span>
-						<span onClick={this._inValid.bind(this,item.outerOrderCode)} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单作废</span>
+						{/*<span onClick={this._inValid.bind(this,item.outerOrderCode)} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单作废</span>*/}
 					</div>
 
 						{!item.isEnd&&!item.void?

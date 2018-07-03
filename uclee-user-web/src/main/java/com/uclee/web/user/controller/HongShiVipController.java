@@ -198,8 +198,8 @@ public class HongShiVipController<phone> {
 	@RequestMapping("/discontinuationVip")
 	public @ResponseBody Integer discontinuationVip(Integer type,HttpSession session) {
 		HongShiVip vip = getVipInfo(type, session);
-		hsVipMapper.updateRecharge(vip.getId());
-		return vip.getId();
+		return hsVipMapper.updateRecharge(vip.getId());
+		 
 	}
 		
 	

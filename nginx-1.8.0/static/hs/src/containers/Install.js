@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './member-card.css'
 import req from 'superagent'
@@ -17,7 +17,7 @@ const NoItem = () => {
     )
 }
 
-class MemberCard extends React.Component {
+class Install extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,7 +28,7 @@ class MemberCard extends React.Component {
       allowRecharge:true,
       vipJbarcode:'',
       cardStatus:'',
-      id:0
+      id:0,
     }
   }
 
@@ -80,14 +80,11 @@ class MemberCard extends React.Component {
     return (
       <DocumentTitle title="我的会员卡">
         <div className="member-card">
-          <div onClick={this._setting} className="member-card-setting">
             <div className="media">
-             <div className="member-card-item-code">会员卡挂失:
-  
-                {
-                  !this.state.cVipCode ?
-                 <span className="member-card-item-loss"></span>
-                  : <span onClick={() => { 
+            <div className="member-card-item-code">会员卡挂失:
+             
+              {
+               <span onClick={() => { 
               		var conf = confirm('确定挂失吗？挂失后会员功能将无法使用!');
           	   		 if(!conf){
                      return;
@@ -102,13 +99,49 @@ class MemberCard extends React.Component {
                  })
                 }   
 		  	  }}      
-              className="member-card-item-Unbundling">  
-               <button type="submit" className="btn btn-warning btn-sm" ><font color="white">挂失</font></button>
-               </span>		  	  
-                }
+              className="member-card-item-Unbundling"> 
+              {
+              	this.state.disable ==1?
+               <button type="submit" className="btn btn-warning btn-sm" ><font color="white">已挂失</font></button>
+              :
+              <button type="submit" className="btn btn-warning btn-sm" ><font color="white">挂失</font></button>
+              }
+             </span>
+             
+            }
+             
+              
+  
+                
                </div> 
              </div>
-          </div>
+          
+          <div className="member-card">
+          <div className="media">
+          <div className="member-card-item-code">会员卡解绑:
+              <span onClick={() => { 
+              	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
+          	    if(!conf){
+          	      return;
+          	    }   
+          	    else{
+                 req
+                 .get('/uclee-user-web/changeVip')
+                 .end((err, res) => {				          
+                 	alert("解绑成功,请返回页面刷新!")
+					window.location="/install";
+                    //window.location.reload();
+                 })
+                }   
+		  	  }}
+              className="member-card-item-Unbundling">
+                <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout"><font color="white">解除绑定</font></a></button>
+		  	  </span>
+       </div>
+        </div>
+         </div>
+      
+       
           <div className= "member-card-item-recharge"><button type="submit" className="btn btn-success" ><a href="member-card"><font color="white">返回上一级</font></a></button>
             </div>  
         </div>
@@ -119,4 +152,4 @@ class MemberCard extends React.Component {
 
 }
 
-export default MemberCard
+export default Install
