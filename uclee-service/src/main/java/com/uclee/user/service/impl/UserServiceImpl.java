@@ -2460,7 +2460,10 @@ public class UserServiceImpl implements UserServiceI {
 			orderItem.add(item);
 		}
 		//拼接备注插入产品的规格口味--kx
-		order.setRemark(a+"备注；"+orderPost.getRemark());
+		if(orderPost.getRemark()==null){
+			orderPost.setRemark(" ");
+		}
+		order.setRemark(a+"-"+orderPost.getRemark());
 		order.setTotalPrice(totalMoney);	
 		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
 		BigDecimal cut = new BigDecimal(0);

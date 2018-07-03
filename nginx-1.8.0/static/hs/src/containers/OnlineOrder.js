@@ -124,11 +124,7 @@ class OnlineOrder extends React.Component {
 			  <div>
 				<div className="order-store">单号:{this.state.danhao}</div>
 				<div className="order-store">门店:{this.state.storeName}</div>
-				{this.state.beizhu!==null ?
 				<div className="order-store">备注:{this.state.beizhu}</div>
-				:
-				null
-				}
 				<div className="order-store">合计金额:{this.state.jine}</div>
 				{this.state.huijine!==undefined ?
                     <div className="order-store">优惠金额:{this.state.huijine}</div>
