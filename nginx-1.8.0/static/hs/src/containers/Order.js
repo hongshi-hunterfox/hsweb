@@ -22,7 +22,6 @@ var errMap = {
   Distribution_error: '不在配送范围内',
   closeDate_error:'我们歇业了',
   businesstime_error:'我们打烊睡觉了',
-  fullamunt_error:'不满足优惠券使用条件',
   times_error:'取货时间不能小于'
 }
 import ErrorMessage from './ErrorMessage'
@@ -41,6 +40,7 @@ class Order extends React.Component {
       voucherText: 0,
       fullamount: 0,
       convertibleGoods: '',
+      remarks: '',
       isDataError: false,
       shippingFee: 0,
       phone: '',
@@ -179,9 +179,14 @@ class Order extends React.Component {
           fullamount: JSON.parse(sessionStorage.getItem('fullamount'))
         })
       }
-       if (sessionStorage.getItem('convertibleGoods') != null) {
+      if (sessionStorage.getItem('convertibleGoods') != null) {
         this.setState({
           convertibleGoods: JSON.parse(sessionStorage.getItem('convertibleGoods'))
+        })
+      }
+      if (sessionStorage.getItem('remarks') != null) {
+        this.setState({
+          remarks: JSON.parse(sessionStorage.getItem('remarks'))
         })
       }
       if (!this.state.cartItems || this.state.cartItems.length <= 0) {
@@ -446,7 +451,7 @@ class Order extends React.Component {
             >
               优惠券：
               {this.state.voucherText && this.state.voucherText !== ''
-                ? this.state.voucherText + '元现金优惠券   x 1 单笔满' + this.state.fullamount + '元使用'
+                ? this.state.voucherText + '元现金优惠券   x 1'
                 : null}
               <span className="icon fa fa-chevron-right" />
             </div>
@@ -456,11 +461,11 @@ class Order extends React.Component {
               value={this.state.voucherCode}
             />
              <div className="order-total">
-              满减：<span className="money">¥{this.state.cut}</span>
+              满减：<span className="money">￥{this.state.cut}</span>
             </div>
             {this.state.isSelfPick === 'false' ?
             <div className="order-total">
-              满额起送：<span className="money">¥{this.state.config.full>0?this.state.config.full:0}</span>
+              满额起送：<span className="money">￥{this.state.config.full>0?this.state.config.full:0}</span>
             </div>:null}
                 {
                   this.state.salesInfo.length>=1?
@@ -487,7 +492,7 @@ class Order extends React.Component {
                   :null
                 }   
             <div className="order-submit">
-            合计：¥{Total}
+            合计：￥{Total}
             {this.state.isSelfPick === 'false'?
             (Difference>0?
 					  <span className="button">还需：{Difference}元起送!</span>
@@ -676,17 +681,17 @@ salesInfoShowClick=()=>{
     console.log("aaaaa"+this.state.hsgooscode)
     if (this.state.total<this.state.fullamount) {
       this.setState({
-        error: errMap['fullamunt_error']
+        error: this.state.remarks
       })
       return false
     }    
-    var a=this.state.hsgooscode
+    var hsgooscode=this.state.hsgooscode
 		var convertibleGoods=this.state.convertibleGoods;
-		var result=convertibleGoods.split(",");
+		var result=convertibleGoods.split(";");
 		var bb = 0;
 		for(var i=0;i<result.length;i++){  		
-  		if(a.lastIndexOf((result[i]+","))===-1){			
-  			console.log(result[i])
+  		if(hsgooscode.lastIndexOf((result[i]+","))===-1){			
+  			console.log("aaaaaa="+result[i])
   		}else{
   			bb = 1;
   		}
@@ -694,7 +699,7 @@ salesInfoShowClick=()=>{
 			console.log(bb)
     	if(this.state.convertibleGoods!==null&&bb===0){
     		this.setState({
-        	error: errMap['fullamunt_error']
+        	error: this.state.remarks
       	})
       	return false
     	}
@@ -730,6 +735,7 @@ salesInfoShowClick=()=>{
         sessionStorage.removeItem('voucher_text')
         sessionStorage.removeItem('fullamount')
         sessionStorage.removeItem('convertibleGoods')
+        sessionStorage.removeItem('remarks')
         sessionStorage.removeItem('remark')
         sessionStorage.removeItem('isSelfPick')
         sessionStorage.removeItem('isFromCart')
