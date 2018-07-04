@@ -65,46 +65,40 @@ class OnlineOrder extends React.Component {
        var orders = this.state.orders.map((item,index)=>{
         return (
             <div>
-              <div className="order-store"></div> 
-              
-              {item.guige ===undefined ? 
-              	
-            <div>
-              
-              <div>
-              	{item.jine!==undefined ?
-              	<div className="order-store">充值金额：{item.jine}</div>
-              	:
-              	<div className="order-store">合计金额：{item.hejijine}</div>
-              	}
-              	{item.xianjin!==undefined ?
-              	<div className="order-store">支付金额：{item.xianjin}</div>
-              	:
-              	<div className="order-store">规格：{item.beizhu}</div>
-              	}
-              	{item.jifen!==undefined ?
-              	<div className="order-store">赠送积分：{item.jifen}</div>
-              	:
-              	null
-              	}
-              </div>           	
-              	<div>
-              		<div className="order-store">日期:{item.riqi}</div>
-                </div>
-             
-            </div>
+            {item.guige ===undefined ?              	
+           		<div>
+              		{item.jine!==undefined ?
+              			<div className="order-store">充值金额：{item.jine}</div>
+              		:
+              			<div className="order-store">合计金额：{item.hejijine}</div>
+              		}
+              		{item.xianjin!==undefined ?
+              			<div className="order-store">支付金额：{item.xianjin}</div>
+              		:
+              			<div className="order-store">规格：{item.beizhu}</div>
+              		}
+              		{item.jifen!==undefined ?
+              			<div className="order-store">赠送积分：{item.jifen}</div>
+              		:
+              			null
+              		}          	
+              			<div className="order-store">日期:{item.riqi}</div>
+            	</div>
               :
-              <div>
-           	 	 <div className="order-list-top-item">
-                	<span className="store pull-left">{item.names}</span>
-                	 <span className="statuss pull-right">单价：￥<span style={{color:'#27AE60'}}>{item.danjia}</span></span>
+                <div className="order-list-top-item">
+                	<span className="statuss pull-left">
+                		产品名称：<span style={{color:'#27AE60'}}>{item.names}</span> 
+                    </span>
+                    <div>
+                		<span className="statuss pull-left">
+                			单价：￥<span style={{color:'#27AE60'}}>{item.danjia}</span>
+                		</span>	
+                		<span className="statuss pull-right">
+                    		数量：x <span style={{color:'#27AE60'}}>{item.shuliang}</span>
+                    	</span>
                     </div>
-                    <div className="order-list-top-item">
-                    
-                    <span className="statuss pull-right">数量：x <span style={{color:'#27AE60'}}>{item.shuliang}</span></span>
-                    </div>
-              
-              </div>
+                </div>
+
               }
             </div>
         );

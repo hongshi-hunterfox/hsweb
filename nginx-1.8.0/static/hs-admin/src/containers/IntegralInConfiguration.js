@@ -74,7 +74,7 @@ class IntegralInConfiguration extends React.Component {
                 {this.state.initValue
                   ? <ValueGroup
                       condition={'赠送'}
-                      keyText={'几天赠送一次'}
+                      keyText={'连续签到次数'}
                       value0Text={'会员卡余额'}
                       valueText={'优惠券对应商品号'}
                       value1Text={'数量'}

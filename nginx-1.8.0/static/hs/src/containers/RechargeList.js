@@ -18,41 +18,63 @@ const NoItem = () => {
 
 const RechargeListItem = (props) => {
   return (
-    <div className="recharge-list-item ">
-    {props.source!=="评论赠积分" ?
+   <div className="recharge-list-item ">
+   {props.source!=="评论赠积分" ?
     
-    (props.source!=="绑卡送积分"&&props.source!=="签到送积分"&&props.source!=="抽奖扣积分" ?
-			<div  className="top"
-      	onClick={()=>{window.location='/OnlineOrder?billCode=' + props.billCode + ',' + props.source}}> 
+    props.source!=="绑卡送积分"&&props.source!=="签到送积分"&&props.source!=="抽奖扣积分" ?
+    <div onClick={()=>{window.location='/OnlineOrder?billCode=' + props.billCode + ',' + props.source}}>
+			<div  className="top"> 
             <span className="left">{props.source}：</span>
             <span className="right">{props.billCode}</span>   
       </div>
-      :
-        <div className="top">
-            <span className="left">{props.source}：</span>
-            <span className="right">{props.billCode}</span>
-        </div>
-       )
-    :
-    <div className="top">
-            <span className="left">{props.source}：</span>
-            <span className="right">{props.billCode}</span>
-    </div>
-     }
-   
-     	<div className="bottom">
-        <span className='left'>
+      <div className="bottom">
+      	<span className='left'>
         	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
-        </span>
-        <span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
-      </div>
-      <div className='bottom '>
-          <span className='left'>变动积分:{props.bonusPoints}</span>
-          <span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
-      </div>
-      
+      	</span>
+      	<span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
+    	</div>
+    	<div className='bottom '>
+      	<span className='left'>变动积分:{props.bonusPoints}</span>
+      	<span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+    	</div>
     </div>
-    )
+    :
+    <div>
+      <div className="top">
+          <span className="left">{props.source}：</span>
+          <span className="right">{props.billCode}</span>
+      </div>
+    	<div className="bottom">
+      	<span className='left'>
+        	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
+      	</span>
+      	<span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
+    	</div>
+    	<div className='bottom '>
+      	<span className='left'>变动积分:{props.bonusPoints}</span>
+      	<span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+    	</div>
+    </div>  
+    :
+    <div>
+    	<div className="top">
+      	<span className="left">{props.source}：</span>
+      	<span className="right">{props.billCode}</span>
+    	</div>
+    	<div className="bottom">
+      	<span className='left'>
+        	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
+      	</span>
+      	<span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
+    	</div>
+    	<div className='bottom '>
+      	<span className='left'>变动积分:{props.bonusPoints}</span>
+      	<span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+    	</div>
+    </div>
+  }  
+  </div>
+  )
 }
 
 class RechargeList extends React.Component {
