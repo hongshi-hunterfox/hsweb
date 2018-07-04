@@ -2437,44 +2437,46 @@ If Object_id('[WSC_CreateOrder]','P') Is Not Null
   Drop Procedure [WSC_CreateOrder]
 Go
 Create Procedure [dbo].[WSC_CreateOrder]
-       @OrderCode   varchar(20) =NULL OUTPUT,--为空则新建单,不为空则修改已有单
-       @WSC_TardNo  varchar(32) =''   ,--外部转入的订单,对应的外部订单号
-       @PickUpTime  datetime    =Null ,--预约取货时间
-       @WeiXinCode  varchar(50) =''   ,--会员外键
-       @CallNumber  varchar(50) =Null ,--联系方式
-       @Remarks     varchar(100)=Null ,--顾客注明的内容
-       @Destination varchar(100)=Null ,--送货地址非送货订单不填
-       @TotalAmount money       =0    ,--未折扣时合计,金额合计
-       @Discount    money       =0    ,--商品折扣金额,折后金额,-整单免除-会员卡支付-礼券支付=欠款
-       @Deducted    money       =0    ,--整单免除金额
-       @Payment     money       =0    ,--下单时用会员卡支付的金额
-       @Voucher     money       =0    ,--下单时使用礼券支付的金额
-       @EndOrder    bit         =Null ,--是否结单,欠款不为0时不可结单
-       @VoidOrder   bit         =Null ,--如果废止,只可对结单=0的单废止
-       @Department  varchar(20) =''   ,--订单下到哪个店
-       @Vouchers    varchar(300)=''   ,--客户支付中使用的礼券的编号列表,使用逗号分隔
-	   @WXOpenID    varchar(100)=''    --记录客户微信Open_Id
+        @OrderCode   varchar(20) =NULL OUTPUT,--为空则新建单,不为空则修改已有单1
+       @WSC_TardNo  varchar(32) =''   ,--外部转入的订单,对应的外部订单号2
+       @PickUpTime  datetime    =Null ,--预约取货时间3
+       @WeiXinCode  varchar(50) =''   ,--会员外键4
+       @CallNumber  varchar(50) =Null ,--联系方式5
+       @Remarks     varchar(100)=Null ,--顾客注明的内容6
+       @Destination varchar(100)=Null ,--送货地址非送货订单不填7
+       @TotalAmount money       =0    ,--未折扣时合计,金额合计8
+       @Discount    money       =0    ,--商品折扣金额,折后金额,-整单免除-会员卡支付-礼券支付=欠款9
+       @Deducted    money       =0    ,--整单免除金额10
+       @Payment     money       =0    ,--下单时用会员卡支付的金额11
+       @Voucher     money       =0    ,--下单时使用礼券支付的金额12
+	   @ShippingCost money      =0    ,--下单时支付的运费13
+       @EndOrder    bit         =Null ,--是否结单,欠款不为0时不可结单14
+       @VoidOrder   bit         =Null ,--如果废止,只可对结单=0的单废止15
+       @Department  varchar(20) =''   ,--订单下到哪个店16
+       @Vouchers    varchar(300)=''   ,--客户支付中使用的礼券的编号列表,使用逗号分隔17
+	   @WXOpenID    varchar(100)=''    --记录客户微信Open_Id18
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
   Exec @LogID=Loger null,'WSC_CreateOrder'
-  Set @ParaInfo = dbo.NameValue('C','@OrderCode',@OrderCode)     Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@WSC_TardNo',@WSC_TardNo)   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('D','@PickUpTime',@PickUpTime)   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@WeiXinCode',@WeiXinCode)   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@CallNumber',@CallNumber)   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@Remarks',@Remarks)         Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@Destination',@Destination) Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@TotalAmount',@TotalAmount) Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@Discount',@Discount)       Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@Deducted',@Deducted)       Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@Payment',@Payment)         Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@Voucher',@Voucher)         Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('L','@EndOrder',@EndOrder)       Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('L','@VoidOrder',@VoidOrder)     Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@Department',@Department)   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@Vouchers',@Vouchers)       Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@@WXOpenID',@WXOpenID)      Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@OrderCode',@OrderCode)      Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@WSC_TardNo',@WSC_TardNo)    Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('D','@PickUpTime',@PickUpTime)    Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@WeiXinCode',@WeiXinCode)    Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@CallNumber',@CallNumber)    Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@Remarks',@Remarks)          Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@Destination',@Destination)  Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@TotalAmount',@TotalAmount)  Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@Discount',@Discount)        Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@Deducted',@Deducted)        Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@Payment',@Payment)          Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@Voucher',@Voucher)          Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@ShippingCost',@ShippingCost)Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('L','@EndOrder',@EndOrder)        Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('L','@VoidOrder',@VoidOrder)      Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@Department',@Department)    Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@Vouchers',@Vouchers)        Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@@WXOpenID',@WXOpenID)       Exec Loger @LogID,@Parameters=@ParaInfo
   Declare @Return int,@msg varchar(100)
   Declare @OrderID int,@Department_Web varchar(10),@UserCode varchar(10),@VipCode varchar(20),@cDate varchar(10)
   Select @Department_Web='公众号'
@@ -2504,6 +2506,7 @@ Begin
                            ,@让利=@Deducted
                            ,@刷卡金额=@Payment
                            ,@礼券=@Voucher
+						   ,@运费=@ShippingCost
                            ,@结单=@EndOrder
                            ,@废止=@VoidOrder
                            ,@销售类别=@Department_Web
@@ -2511,7 +2514,8 @@ Begin
 						   ,@客户编号=@WXOpenID
   Exec Loger @LogID,@Key=@OrderCode,@ExtendInfo='调用存储过程[CreateOrder]建立订单',@Result=0
   Select @OrderID As OrderID,@OrderCode As OrderCode
-EnD
+End
+
 Go
 --------------------------------------------------------------------------------
 --写入订单明细
@@ -2661,7 +2665,7 @@ Begin
   Create Table #tmp_WSC_GetOrdersDetail
         (ID int,OrderID int,Code varchar(10),Name varchar(30),Specification varchar(20)
         ,Price money,DiscountRate money,[Count] money,TotalAmount money,SumDiscount money
-        ,memo varchar(200),Reserved1 money,IsEnd bit,SumOfDay int)
+        ,memo varchar(200),Reserved1 money,IsEnd bit,SumOfDay int,Productid int)
   Exec Loger @LogID,@ExtendInfo='调用存储过程[GetOrdersDetail]获取计单明细'
   Insert Into #tmp_WSC_GetOrdersDetail Exec GetOrdersDetail @OrderID
   Exec Loger @LogID,@ExtendInfo='从[orders_detail_extend]表同步商城售价'
@@ -2674,6 +2678,7 @@ Begin
   
   Drop Table #tmp_WSC_GetOrdersDetail
 End
+
 Go
 --------------------------------------------------------------------------------
 --订单中回收礼券
