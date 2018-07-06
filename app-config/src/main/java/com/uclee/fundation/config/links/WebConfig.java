@@ -50,4 +50,5 @@ public interface WebConfig {
 	String VoucherSendInformation="VoucherSendInformation";
 	String force = "force";
 	String brand = "brand";
+	String qq = "qq";
 }                      

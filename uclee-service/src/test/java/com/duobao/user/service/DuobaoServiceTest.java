@@ -147,7 +147,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	}
 	@Test
 	public void point(){
-		hongShiMapper.saleVoucher("83001", "oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "10011");
+		hongShiMapper.saleVoucher("83001", "oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "10011","测试赠送礼券");
 		//hongShiMapper.recoverVoucher(6, "oH7hfuEN8qnZjC7fr2_zUFK7eVl8", "订单消费");
 	}
 
@@ -363,7 +363,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
 								if (coupon != null && coupon.size() > 0) {
 									try {
-										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode(),"测试赠送礼券1");
 										isSend = true;
 									} catch (Exception e) {
 
@@ -376,7 +376,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
 								if (coupon != null && coupon.size() > 0) {
 									try {
-										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond(),"测试赠送礼券2");
 										isSend = true;
 									} catch (Exception e) {
 
@@ -389,7 +389,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
 								if (coupon != null && coupon.size() > 0) {
 									try {
-										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird(),"测试赠送礼券3");
 										isSend = true;
 									} catch (Exception e) {
 

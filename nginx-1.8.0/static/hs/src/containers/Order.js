@@ -3,6 +3,7 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './order.css'
 import req from 'superagent'
+var Link = require('react-router').Link
 var geocoder = null
 var qq = window.qq
 import Icon from '../components/Icon'
@@ -250,7 +251,6 @@ class Order extends React.Component {
                     this.state.cut).toFixed(2)
                 : 0)
    var Difference = this.state.config.full - this.state.total
-   
     return (
       <DocumentTitle title="提交订单">
         <div className="order">
@@ -490,18 +490,25 @@ class Order extends React.Component {
                     </div>
                   </div>
                   :null
-                }   
-            <div className="order-submit">
-            合计：￥{Total}
-            {this.state.isSelfPick === 'false'?
-            (Difference>0?
-					  <span className="button">还需：{Difference}元起送!</span>
-					  :
-            <button type="submit" className="button">提交订单</button>)
-            :<button type="submit" className="button">提交订单</button>}
-            </div>
+                }
             <ErrorMessage error={this.state.error} />
+            <div className="order-submit">
+            	合计：￥{Total}
+            	{this.state.isSelfPick === 'false'?
+            	(Difference>0?
+					  	<span className="button">还需：{Difference}元起送!</span>
+					  	:
+            	<button type="submit" className="button">提交订单</button>)
+            	:<button type="submit" className="button">提交订单</button>}
+            </div>
           </form>
+          <div className="qq-btn">
+            	 <span className="border">
+            		<a href={"http://wpa.qq.com/msgrd?v=3&uin="+this.state.config.qq+"&site=qq&menu=yes"}>
+        					<font size="3" color="#f15f40"><i className="fa fa-qq" aria-hidden="true">qq客服</i></font>
+      					</a>
+      				 </span>
+      			</div>
         </div>
       </DocumentTitle>
     )
@@ -600,29 +607,6 @@ salesInfoShowClick=()=>{
     }
     e.preventDefault()
     var data = fto(e.target)
-    var appointed = this.state.appointedTime;
-    var hours = data.pickTimeStr
-    var times = hours.substring(2,0)
-    var timef = hours.substring(3,5)
-    console.log(timef)
-    var yudings = appointed.substring(2,0)
-    var yudingf = appointed.substring(3,5)
-    console.log(yudings)
-    console.log(yudingf)
-    if(yudings>times){
-    		this.setState({
-        error: errMap['times_error']+appointed
-      })
-      return false
-    }
-    if(yudings===times){
-    	if(yudingf>timef){
-    		this.setState({
-        error: errMap['times_error']+appointed
-      })
-      return false
-    	}
-    }   
     if (!data.isSelfPick) {
       this.setState({
         error: errMap['isSelfPick_error']
@@ -677,6 +661,29 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    var appointed = this.state.appointedTime;
+    var hours = data.pickTimeStr
+    var times = hours.substring(2,0)
+    var timef = hours.substring(3,5)
+    console.log(timef)
+    var yudings = appointed.substring(2,0)
+    var yudingf = appointed.substring(3,5)
+    console.log(yudings)
+    console.log(yudingf)
+    if(yudings>times){
+    		this.setState({
+        error: errMap['times_error']+appointed
+      })
+      return false
+    }
+    if(yudings===times){
+    	if(yudingf>timef){
+    		this.setState({
+        error: errMap['times_error']+appointed
+      })
+      return false
+    	}
+    }   
     console.log("aaaaa"+this.state.convertibleGoods)
     console.log("aaaaa"+this.state.hsgooscode)
     if (this.state.total<this.state.fullamount) {

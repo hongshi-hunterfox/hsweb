@@ -68,7 +68,7 @@ public class DuobaoSchedule {
 		}
 	}
 
-	@Scheduled(fixedRate = 1000 * 2)
+	@Scheduled(fixedRate = 1000 * 3)
 	private void InitiativeCheck(){
 		String[] datasourceStr = {"fcx","hs"};
 		for(String tmp:datasourceStr){

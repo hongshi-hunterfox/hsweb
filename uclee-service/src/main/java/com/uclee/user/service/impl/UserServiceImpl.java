@@ -1864,7 +1864,7 @@ public class UserServiceImpl implements UserServiceI {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
 							if (coupon != null && coupon.size() > 0) {
 								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode());
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode(),"充值赠送礼券");
 									isSend=true;
 								} catch (Exception e) {
 
@@ -1875,7 +1875,7 @@ public class UserServiceImpl implements UserServiceI {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
 							if (coupon != null && coupon.size() > 0) {
 								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond());
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond(),"充值赠送礼券");
 									isSend=true;
 								} catch (Exception e) {
 
@@ -1886,7 +1886,7 @@ public class UserServiceImpl implements UserServiceI {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
 							if (coupon != null && coupon.size() > 0) {
 								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird());
+									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird(),"充值赠送礼券");
 									isSend=true;
 								} catch (Exception e) {
 
@@ -3368,7 +3368,7 @@ public class UserServiceImpl implements UserServiceI {
 					if (coupon != null && coupon.size() > 0) {
 						try {
 							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),
-									config.getVoucherCode());
+									config.getVoucherCode(),"抽奖赠送礼券");
 							map.put("result", true);
 							map.put("text", "恭喜抽中" + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_HALF_UP)
 									+ "现金优惠券，奖品已放入账户中，请注意查看");

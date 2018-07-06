@@ -52,7 +52,10 @@ public class StoreController {
         if(config2!=null) {
             ret.put("brand",config2.getValue());
         }
-
+        Config config3 = configMapper.getByTag(WebConfig.qq);
+        if(config3!=null) {
+            ret.put("numbers",config3.getValue());
+        }
         return ret;
     }
 

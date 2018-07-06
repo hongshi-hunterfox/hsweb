@@ -1567,7 +1567,7 @@ public class UserController extends CommonUserHandler{
 		if(coupon!=null && !coupon.isEmpty()){
 			if(coupon != null && coupon.size()>0){
 				coupon.get(0);                       
-				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode());
+				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode(),"评价赠送礼券");
 				if(a>0){
 					System.out.println("发送成功");
 				}else{
@@ -1610,7 +1610,7 @@ public class UserController extends CommonUserHandler{
 							if(coupon!=null && !coupon.isEmpty()){
 								if(coupon != null && coupon.size()>0){
 					
-									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode());
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
 									if(s>0){
 										System.out.println("发送成功");
 									}else{
@@ -1647,7 +1647,7 @@ public class UserController extends CommonUserHandler{
 							if(coupon!=null && !coupon.isEmpty()){
 								if(coupon != null && coupon.size()>0){
 					
-									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode());
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
 									if(s>0){
 										System.out.println("发送成功");
 									}else{

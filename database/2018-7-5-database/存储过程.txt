@@ -1158,6 +1158,7 @@ Create Procedure [SaleingVoucher]
        @PayByCard      money      =0     ,--会员卡支付金额
        @VipCode        varchar(20)=''    ,--往来编号
        @VoucherCode    varchar(20)='0000',--券编号,编号为0000的券不做记录
+       @SaleType       varchar(20)=''    ,--是什么活动销售的礼券
        @Ret_BillCode   varchar(20) Output--相应销售单号,返回值
 As
 Begin
@@ -1172,6 +1173,7 @@ Begin
   Set @ParaInfo = dbo.NameValue('Y','@PayByCard',@PayByCard)           Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@VipCode',@VipCode)               Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@VoucherCode',@VoucherCode)       Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@SaleType',@SaleType)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@Ret_BillCode',@Ret_BillCode)     Exec Loger @LogID,@Parameters=@ParaInfo
 
   If @CDate='' Or @CDate Is Null 
@@ -1214,7 +1216,7 @@ Begin
     If @VoucherCode<>'0000'
       Begin
         Insert Into 礼券销售表(编号,面额,金额,日期,部门编号,往来编号,销售时间,单号)
-               Values(@VoucherCode, @面额, @Price, @CDate, @DepartmentCode, @VipCode, getdate(), @Ret_BillCode)
+               Values(@VoucherCode, @面额, @Price, @CDate, @DepartmentCode, @VipCode, getdate() ,@SaleType, @Ret_BillCode)
         --更改礼券表状态
         Update 礼券表 Set 状态=2,是否回收=0,往来编号=@VipCode Where 编号=@VoucherCode
       End
@@ -2403,6 +2405,7 @@ Create Procedure [WSC_SaleVoucher]
        @WeiXinCode varchar(50) ,--会员外键
        @PayByCard money=0      ,--会员卡支付金额,赠送则为0
        @Price money = 0         --实际售价,赠送时为0
+       @SaleType  varchar(20)   --是什么活动销售的礼券
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2412,6 +2415,7 @@ Begin
   Set @ParaInfo = dbo.NameValue('C','@WeiXinCode',@WeiXinCode)   Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@PayByCard',@PayByCard)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@Price',@Price)             Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@SaleType',@SaleType)       Exec Loger @LogID,@Parameters=@ParaInfo
 
   Declare @Return int,@msg varchar(100),@SalesCode varchar(20)
   Declare @Department varchar(10),@UserCode varchar(10),@VipCode varchar(20),@CDate varchar(10)
@@ -2442,7 +2446,7 @@ Begin
   Exec Loger @LogID,@ExtendInfo='调用存储过程[SaleingVoucher]进行电子券销售'
   Exec @Return=SaleingVoucher @Department, @UserCode, @CDate
                             , @GoodsCode, @Price, 0, @PayByCard
-                            , @VipCode, @VoucherCode, @SalesCode Output
+                            , @VipCode, @VoucherCode,@SaleType, @SalesCode Output
   
   Set @msg = Case @Return 
              When 0    Then '成功'

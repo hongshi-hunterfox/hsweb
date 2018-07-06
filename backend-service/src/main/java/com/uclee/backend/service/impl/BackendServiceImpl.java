@@ -240,6 +240,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
 		}else{
 			configMapper.updateByTag(WebConfig.force, "");
+		}if (configPost.getQq()!=null) {
+			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
+		}else{
+			configMapper.updateByTag(WebConfig.qq, "");
 		}
 		
 		return true;
@@ -382,6 +386,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getBrand()!=null) {
 			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
+		}
+		if (configPost.getQq()!=null) {
+			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
 		}
 		return true;
 	}
@@ -1056,6 +1063,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setForce(config.getValue());
 			}else if(config.getTag().equals(WebConfig.brand)){
 				configPost.setBrand(config.getValue());
+			}else if(config.getTag().equals(WebConfig.qq)){
+				configPost.setQq(config.getValue());
 			}
 		}
 		return configPost;
@@ -1201,7 +1210,7 @@ public class BackendServiceImpl implements BackendServiceI {
 						if (coupon != null && coupon.size() > 0) {
 							try {
 								for(int i=0;i<birthVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode());
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode(),"生日祝福赠送礼券");
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -1276,7 +1285,7 @@ public class BackendServiceImpl implements BackendServiceI {
 						if (coupon != null && coupon.size() > 0) {
 							try {
 								for(int i=0;i<vipVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), vipVoucher.getVoucher());
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), vipVoucher.getVoucher(),"定向发券");
 								}
 							} catch (Exception e) {
 								e.printStackTrace();

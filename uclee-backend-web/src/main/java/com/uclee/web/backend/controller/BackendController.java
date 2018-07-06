@@ -369,6 +369,7 @@ public class BackendController {
 	public @ResponseBody Map<String,Object> config(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		ConfigPost config = backendService.getConfig();
+		map.put("qq", config.getQq());
 		map.put("config", config);
 		return map;
 	}

@@ -80,15 +80,14 @@ class Install extends React.Component {
     return (
       <DocumentTitle title="我的会员卡">
         <div className="member-card">
-            <div className="media">
+          <div className="media">
             <div className="member-card-item-code">会员卡挂失:
-             
-              {
+              {this.state.disable !==1 ?
                <span onClick={() => { 
-              		var conf = confirm('确定挂失吗？挂失后会员功能将无法使用!');
-          	   		 if(!conf){
+              	  var conf = confirm('确定挂失吗？挂失后会员功能将无法使用!');
+          	   		if(!conf){
                      return;
-          	   		 }   
+          	   		}   
           	    	else{
                  	req
                 	.get('/uclee-user-web/discontinuationVip')
@@ -99,22 +98,16 @@ class Install extends React.Component {
                  })
                 }   
 		  	  }}      
-              className="member-card-item-Unbundling"> 
-              {
-              	this.state.disable ==1?
-               <button type="submit" className="btn btn-warning btn-sm" ><font color="white">已挂失</font></button>
-              :
+              className="member-card-item-Unbundling">
               <button type="submit" className="btn btn-warning btn-sm" ><font color="white">挂失</font></button>
-              }
              </span>
-             
+             :
+             <span className="member-card-item-Unbundling">
+             	<button type="submit" className="btn btn-warning btn-sm" ><font color="white">已挂失</font></button>
+            </span>
             }
-             
-              
-  
-                
-               </div> 
-             </div>
+          </div> 
+        </div>
           
           <div className="member-card">
           <div className="media">
@@ -130,12 +123,12 @@ class Install extends React.Component {
                  .end((err, res) => {				          
                  	alert("解绑成功,请返回页面刷新!")
 					window.location="/install";
-                    //window.location.reload();
+					window.location="/uclee-user-web/logout";
                  })
                 }   
 		  	  }}
               className="member-card-item-Unbundling">
-                <button type="submit" className="btn btn-warning btn-sm" ><a href="/uclee-user-web/logout"><font color="white">解除绑定</font></a></button>
+                <button type="submit" className="btn btn-warning btn-sm" ><font color="white">解除绑定</font></button>
 		  	  </span>
        </div>
         </div>

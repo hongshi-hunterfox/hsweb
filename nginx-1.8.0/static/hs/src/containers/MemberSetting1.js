@@ -215,7 +215,7 @@ render() {
                         type="tel"
                         name="cIdNumber"
                         className="form-control"
-                        placeholder="#可不填"
+                        placeholder="#选填"
                         value={this.state.cIdNumber}
                         onChange={this._change}
                       />
@@ -230,7 +230,7 @@ render() {
                         type="tel"
                         name="cCompany"
                         className="form-control"
-                        placeholder="#可不填"
+                        placeholder="#选填"
                         value={this.state.cCompany}
                         onChange={this._change}
                       />

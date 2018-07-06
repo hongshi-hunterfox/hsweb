@@ -24,7 +24,7 @@ public class MerChantCodeInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String merchantCode=httpServletRequest.getParameter("merchantCode");
-        logger.info("Request Url:"+httpServletRequest.getRequestURI());
+//        logger.info("Request Url:"+httpServletRequest.getRequestURI());
         logger.info("merchantCode:"+merchantCode);
         HttpSession session=httpServletRequest.getSession();
         String mCode=(String)session.getAttribute(GlobalSessionConstant.MERCHANT_CODE);

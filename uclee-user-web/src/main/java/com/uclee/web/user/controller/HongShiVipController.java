@@ -299,7 +299,7 @@ public class HongShiVipController<phone> {
 							if (coupon != null && coupon.size() > 0) {
 								try {
 									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),
-											bindingRewards.get(0).getVoucherCode());
+											bindingRewards.get(0).getVoucherCode(),"绑定会员赠送礼券");
 								} catch (Exception e) {
 									e.printStackTrace();
 								}

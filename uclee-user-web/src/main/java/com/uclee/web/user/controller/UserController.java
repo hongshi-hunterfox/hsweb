@@ -211,23 +211,17 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String, String> config = userService.getSMSConfig();
-		logger.info("12345"+phone);
-		
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
-		logger.info("12345"+numbers.get(0).getPhone());
+		logger.info("12345"+numbers.size());
 		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
 			logger.info("12345"+numbers.get(0).getPhone());
 			if(numbers.get(0).getPhone().equals(phone)){
 				System.out.println("没有修改手机号");	
-				
-	
 			}else{
-				
 				return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"),
 						config.get("signName"), config.get("templateCode"));
-			}
-			
+			}	
 		}else{
 			//第一次使用商城绑定会员卡，根据user_id取不到手机号执行下面代码
 			return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"),
@@ -628,6 +622,7 @@ public class UserController extends CommonUserHandler{
 			Hours[i]=Integer.parseInt(str[i]);
 		}
 		//取最大值
+		System.out.println("Hours"+Hours);
 		int max = (int) Collections.max(Arrays.asList(Hours));
 		System.out.println("Hours"+max);
 		//取最大时间
@@ -1605,7 +1600,7 @@ public class UserController extends CommonUserHandler{
 		if(coupon!=null && !coupon.isEmpty()){
 			if(coupon != null && coupon.size()>0){
 				coupon.get(0);                       
-				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode());
+				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode(),"评价赠送礼券");
 				if(a>0){
 					System.out.println("发送成功");
 				}else{
@@ -1648,7 +1643,7 @@ public class UserController extends CommonUserHandler{
 							if(coupon!=null && !coupon.isEmpty()){
 								if(coupon != null && coupon.size()>0){
 					
-									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode());
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
 									if(s>0){
 										System.out.println("发送成功");
 									}else{
@@ -1685,7 +1680,7 @@ public class UserController extends CommonUserHandler{
 							if(coupon!=null && !coupon.isEmpty()){
 								if(coupon != null && coupon.size()>0){
 					
-									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode());
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
 									if(s>0){
 										System.out.println("发送成功");
 									}else{

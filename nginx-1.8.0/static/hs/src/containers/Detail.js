@@ -231,22 +231,26 @@ const DetailPicker = (props) => {
 
 const DetailActions = (props) => {
   return ( 
-    <div className="detail-actions clearfix">
+    <div className="detail-actions">
+    	<div className="detail-action-aside">
+    	  <div className="detail-action-cart">
+    	  	<i className="fa fa-qq" aria-hidden="true" />
+    	  	<span className="detail-action-cart-text">
+      			<a href={"http://wpa.qq.com/msgrd?v=3&uin="+props.numbers+"&site=qq&menu=yes"}>       		
+        		 <font color="#8B795E">qq客服</font>
+      			</a>
+      		</span>
+				</div>
+    	</div>
       <div className="detail-action-aside" onClick={() => {
         window.location = '/cart'
       }}>
         <div className="detail-action-cart has-item">
           <Icon name="shopping-cart" className="detail-action-cart-icon"/>
-          <span className="detail-action-cart-text">购物车</span>
+          <span className="detail-action-cart-text"><font color="#8B795E">购物车</font></span>
         </div>
       </div>
       <div className="detail-action-group">
-      	<span className="detail-action-cart-text">
-          	<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2217904463&site=qq&menu=yes">
-          		<i className="fa fa-qq" aria-hidden="true"></i>
-          		在线客服
-          	</a>
-        </span> 
         <div className="detail-action-add-cart" onClick={props.onClickCart}>加入购物车</div>
         <div className="detail-action-buy-now" onClick={props.onClickBuy}>立即购买</div>
       </div>
@@ -266,6 +270,7 @@ class Detail extends React.Component {
       specifications: [],
       parameters:[],
       title: null,
+      numbers: '',
       parameter: '',
       explain: null,
       appointedTime: 0,
@@ -321,7 +326,8 @@ class Detail extends React.Component {
 			var c = JSON.parse(res.text)
 			console.log(c.storeList)
 			this.setState({
-				signName:c.signName
+				signName:c.signName,
+				numbers:c.numbers
 			})
 		})
 
@@ -501,7 +507,7 @@ class Detail extends React.Component {
               canshu = {canshu}
               />
             <DetailRich description={this.state.description}/>
-            <DetailActions onClickCart={this._clickCartAdd} onClickBuy={this._clickBuyNow}/>
+            <DetailActions numbers={this.state.numbers} onClickCart={this._clickCartAdd} onClickBuy={this._clickBuyNow}/>
           </div>
         }
       </DocumentTitle>

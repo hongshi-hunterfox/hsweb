@@ -108,6 +108,10 @@ class ActivityConfig extends React.Component {
                 <textarea rows="3" cols="20" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>设置客服qq：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.qq} name="qq" className="form-control" onChange={this._change}/>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>设置品牌名称：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.brand} name="brand" className="form-control" onChange={this._change}/>

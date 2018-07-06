@@ -103,3 +103,8 @@ If Not Exists(Select * From syscolumns where name='accumulation' And id=Object_i
 Begin
  alter table web_sign_record add accumulation int;
 End
+--礼券销售表
+If Not Exists(Select * From syscolumns where name='销售类型' And id=Object_id('礼券销售表','U'))
+Begin
+ alter table 礼券销售表 add 销售类型 varchar(20) null 
+End

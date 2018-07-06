@@ -113,7 +113,7 @@ class Information extends React.Component {
                       <input
                         type="text"
                         name="code"
-                        className="form-control"
+                        className="member-setting-code-btn"
                         placeholder="请输入验证码"
                         value={this.state.code}
                         onChange={this._change}
@@ -123,7 +123,7 @@ class Information extends React.Component {
                     <div className="col-xs-5">
                       <button
                         type="button"
-                        className="btn btn-default member-setting-code-btn"
+                        className="form-control"
                         onClick={this._getCode}
                         disabled={this.state.fetchingCode}
                       >
@@ -182,8 +182,7 @@ class Information extends React.Component {
                <ErrorMsg msg={this.state.error} />
               <div className="yi" style={{marginTop:'10px'}}>
       
-            	<button type="submit" className="yi">提交
-            	</button>
+            	<button type="submit" className="btn btn-primary">提交</button>
               </div>
         	</div> 
         	</form>

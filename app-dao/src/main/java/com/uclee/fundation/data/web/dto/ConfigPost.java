@@ -47,6 +47,15 @@ public class ConfigPost {
 	private String signText;
 	private String force;
 	private String brand;
+	private String qq;
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+
 	public String getBrand() {
 		return brand;
 	}
