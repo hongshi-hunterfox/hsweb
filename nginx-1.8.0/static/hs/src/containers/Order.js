@@ -508,7 +508,7 @@ class Order extends React.Component {
         					<font size="3" color="#f15f40"><i className="fa fa-qq" aria-hidden="true">qq客服</i></font>
       					</a>
       				 </span>
-      			</div>
+      		</div>
         </div>
       </DocumentTitle>
     )
@@ -856,7 +856,10 @@ class OrderItem extends React.Component {
             <span className="count pull-right">{((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?"单价：￥"+item.money:"促销单价：￥"+item.promotion}</span>  
           </div>
           <div className="other">
-            提前{item.appointedTime}小时预定
+           {item.appointedTime!==0&&item.appointedTime!==null ?
+          	"提前"+item.appointedTime+"小时预定"
+          	:null
+           }
             <span className="price pull-right">数量：x {item.amount}</span>
           </div>
         </div>
