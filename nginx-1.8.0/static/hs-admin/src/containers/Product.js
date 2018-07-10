@@ -901,48 +901,6 @@ class Product extends React.Component {
         err: '库存不能为空'
       })
     }
-    
-  var foundWrongCuxiaoJia = false
-    data.valuePost.every(item => {
-      if (!item.promotionPrice) {
-        foundWrongCuxiaoJia = true
-        return false
-      }
-      return true
-    })
-    if (foundWrongCuxiaoJia) {
-      return this.setState({
-        err: '促销价不能为空'
-      })
-    }
-    
-    var foundWrongStartTime = false
-    data.valuePost.every(item => {
-      if (!item.startTimeStr) {
-        foundWrongStartTime = true
-        return false
-      }
-      return true
-    })
-    if (foundWrongStartTime) {
-      return this.setState({
-        err: '开始时间不能为空'
-      })
-    }
-    
-    var foundWrongEndTime = false
-    data.valuePost.every(item => {
-      if (!item.endTimeStr) {
-        foundWrongEndTime = true
-        return false
-      }
-      return true
-    })
-    if (foundWrongEndTime) {
-      return this.setState({
-        err: '结束时间不能为空'
-      })
-    }
 
     var foundWrongPrice = false
     data.valuePost.every(item => {
