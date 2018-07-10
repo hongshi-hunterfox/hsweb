@@ -2730,7 +2730,9 @@ public class UserServiceImpl implements UserServiceI {
 				List<ProductDto> products  = productMapper.selectOneImage(tmp.getProductId());
 				if(products.size()>0){
 					tmp.setTitle(products.get(0).getTitle());
-					tmp.setAppointedTime(products.get(0).getAppointedTime());
+					if(products.get(0).getAppointedTime()!=null){
+						tmp.setAppointedTime(products.get(0).getAppointedTime());
+					}
 					tmp.setImage(products.get(0).getImage());
 				}
 				result.add(tmp);
@@ -2915,8 +2917,12 @@ public class UserServiceImpl implements UserServiceI {
 				}
 			}
 			//获取goods表名称---skx
-			HongShiCoupon couponName = hongShiMapper.getCouponName(coupon.getProductNumber());
-			coupon.setName(couponName.getName());
+			if(coupon!=null){
+				HongShiCoupon couponName = hongShiMapper.getCouponName(coupon.getProductNumber());
+				if(couponName!=null){
+					coupon.setName(couponName.getName());
+				}				
+			}
 		}
 		return couponsRet;
 	}

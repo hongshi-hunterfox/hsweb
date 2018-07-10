@@ -113,7 +113,7 @@ class Information extends React.Component {
                       <input
                         type="text"
                         name="code"
-                        className="member-setting-code-btn"
+                        className="form-control"
                         placeholder="请输入验证码"
                         value={this.state.code}
                         onChange={this._change}

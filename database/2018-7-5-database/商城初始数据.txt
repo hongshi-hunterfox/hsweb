@@ -2,7 +2,7 @@ use Êý¾Ý¿âÃû
 go
 
 --web_account_information
-insert into web_account_information(account,password) values('001','0010');
+insert into web_account_information(account,password) values('hongshi','nicaicai');
 --web_napa_store_user_link
 insert into web_napa_store_user_link (store_id,user_id) select store_id,user_id from web_napa_stores;
 

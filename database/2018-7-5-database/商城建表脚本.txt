@@ -517,8 +517,10 @@ If Object_id('web_orders_setting_picktime','U') Is Null
 BEGIN
 create table web_orders_setting_picktime(
 id int identity (1,1) primary key,
-pickStartTime datetime,
-pickEndTime datetime
+closeStartDate datetime,
+closeEndDate datetime,
+businessStartTime varchar(50),
+businessEndTime varchar(50)
 )
 END
 

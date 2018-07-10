@@ -6,15 +6,15 @@ class App extends Component {
 	  constructor(props) {
     super(props)
     this.state = {
-      phone:localStorage.getItem('account')
+      account:localStorage.getItem('account')
     }
   }
   componentDidMount() {
-    this._sendMerchantCode()
-     if(!localStorage.getItem('account')){
+  	if(!localStorage.getItem('account')){
      	alert("尚未登陆，请先登陆！");
       window.location='/login'
     }
+    this._sendMerchantCode()
   }
 
   _sendMerchantCode = (cb) => {

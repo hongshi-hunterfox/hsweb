@@ -1215,7 +1215,7 @@ Begin
     --生成礼券销售表记录
     If @VoucherCode<>'0000'
       Begin
-        Insert Into 礼券销售表(编号,面额,金额,日期,部门编号,往来编号,销售时间,单号)
+        Insert Into 礼券销售表(编号,面额,金额,日期,部门编号,往来编号,销售时间,单号,销售类型)
                Values(@VoucherCode, @面额, @Price, @CDate, @DepartmentCode, @VipCode, getdate() ,@SaleType, @Ret_BillCode)
         --更改礼券表状态
         Update 礼券表 Set 状态=2,是否回收=0,往来编号=@VipCode Where 编号=@VoucherCode
@@ -2135,7 +2135,7 @@ If Object_id('[WSC_GetVipInfo]','P') Is Not Null
   Drop Procedure [WSC_GetVipInfo]
 Go
 Create Procedure [WSC_GetVipInfo]
-       @cWeiXinCode varchar(50) = null,
+        @cWeiXinCode varchar(50) = null,
        @DayCount int=null,
        @NowDate datetime =null
 As
@@ -2160,7 +2160,7 @@ Begin
         ,CanBonusPoints bit,Birthday_C varchar(5),RelationID varchar(20)
         ,VipGroup varchar(10),IsVoucher bit,Department varchar(20),VipType int
         ,BonusPointsRatio money,PayQuota money,VipLevelType int
-        ,Outer_ID int,Outer_Code varchar(30),FirstTime datetime)
+        ,Outer_ID int,Outer_Code varchar(30),FirstTime datetime,cSex varchar(20))
   If @DayCount Is Null
     Insert Into #tmp_WSC_GetVipInfo Exec GetVipInfo @cWeiXinCode
   Else
@@ -2169,9 +2169,6 @@ Begin
   Select * From #tmp_WSC_GetVipInfo  --以此输出,可以在此排除不需要的字段
   Drop Table #tmp_WSC_GetVipInfo
 End
-Go
---exec WSC_GetVipInfo 'Y6GagnXEeygErTHh9-Rx3'
---exec WSC_GetVipInfo '',10,'2017-07-01'
 
 --------------------------------------------------------------------------------
 --添加会员
@@ -2404,8 +2401,8 @@ Create Procedure [WSC_SaleVoucher]
        @VoucherCode varchar(20),--礼券编号
        @WeiXinCode varchar(50) ,--会员外键
        @PayByCard money=0      ,--会员卡支付金额,赠送则为0
-       @Price money = 0         --实际售价,赠送时为0
-       @SaleType  varchar(20)   --是什么活动销售的礼券
+       @Price money = 0        ,--实际售价,赠送时为0
+	   @SaleType  varchar(20)   --是什么活动销售的礼券  
 As
 Begin
   Declare @LogID int,@ParaInfo varchar(128)
@@ -2446,7 +2443,7 @@ Begin
   Exec Loger @LogID,@ExtendInfo='调用存储过程[SaleingVoucher]进行电子券销售'
   Exec @Return=SaleingVoucher @Department, @UserCode, @CDate
                             , @GoodsCode, @Price, 0, @PayByCard
-                            , @VipCode, @VoucherCode,@SaleType, @SalesCode Output
+                            , @VipCode, @VoucherCode, @SaleType, @SalesCode Output
   
   Set @msg = Case @Return 
              When 0    Then '成功'
@@ -2462,6 +2459,7 @@ Begin
   Exec Loger @LogID,@Key=@SalesCode,@ExtendInfo=@msg,@Result=@Return
   Select 0 As retcode,@msg As Msg,@SalesCode As SalesOrderNo
 End
+
 Go
 --------------------------------------------------------------------------------
 --建立订单
@@ -2574,8 +2572,17 @@ Begin
   Set @ParaInfo = dbo.NameValue('Y','@Price',@Price)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@TotalAmount',@TotalAmount) Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@Productid',@Productid)  Exec Loger @LogID,@Parameters=@ParaInfo
+  Declare @Return int,@msg varchar(100)
+  Exec @Return=AddOrderItem @PID,@GoodsCode,@GoodsCount,@Price,@TotalAmount,@Price,@Productid
+  Set @msg = Case @Return
+             When 0 Then '成功'
+             When -1 Then '失败'
+             Else '未知错误'
+             End
+  Exec Loger @LogID,@ExtendInfo=@msg,@Result=@Return
+  Select @Return As retcode, @msg As Msg
+End
 
-  
   
   
 --------------------------------------------------------------------------------
@@ -2784,7 +2791,7 @@ End
 Go
 
 --Function Get_WordVal
-获取字典表数据
+--获取字典表数据
 --
    If Object_id('[Get_WordVal]','P') Is Not Null
  
