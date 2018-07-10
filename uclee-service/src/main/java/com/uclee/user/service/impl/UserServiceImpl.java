@@ -2417,15 +2417,19 @@ public class UserServiceImpl implements UserServiceI {
 			item.setItemSerialNum(NumberUtil.generateSerialNum());
 			Date date = new Date();
 			long value0 = date.getTime();
-			long value1 = value.getStartTime().getTime();
-			long value2 = value.getEndTime().getTime();
-			if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
-				item.setPrice(value.getPromotionPrice());
-			}else{
-				item.setPrice(value.getHsGoodsPrice());	
-			}
-			if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
-				item.setPrice(value.getPromotionPrice());
+			if(value.getPromotionPrice()!=null&&value.getStartTime()!=null&&value.getEndTime()!=null){
+				long value1 = value.getStartTime().getTime();
+				long value2 = value.getEndTime().getTime();
+				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
+					item.setPrice(value.getPromotionPrice());
+				}else{
+					item.setPrice(value.getHsGoodsPrice());	
+				}
+				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
+					item.setPrice(value.getPromotionPrice());
+				}else{
+					item.setPrice(value.getHsGoodsPrice());
+				}
 			}else{
 				item.setPrice(value.getHsGoodsPrice());
 			}
@@ -2436,11 +2440,17 @@ public class UserServiceImpl implements UserServiceI {
 				item.setImageUrl(productImageLink.getImageUrl());
 			}
 			//判断是否是带促销价的商品总价
-			if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
-				totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getPromotionPrice()));
-			}else{
-			totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
-			}
+			if(value.getPromotionPrice()!=null&&value.getStartTime()!=null&&value.getEndTime()!=null){
+				long value1 = value.getStartTime().getTime();
+				long value2 = value.getEndTime().getTime();
+				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
+					totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getPromotionPrice()));
+				}else{
+					totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+				}
+			 }else{
+				 totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice())); 
+			 }
 			//记录销量
 			try {
 				ProductSale tmp = productSaleMapper.selectByProductId(cart.getProductId());

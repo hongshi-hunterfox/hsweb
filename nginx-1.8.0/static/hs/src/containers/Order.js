@@ -661,7 +661,10 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    var mydate = new Date()
     var appointed = this.state.appointedTime;
+    console.log("mydate="+mydate);
+    console.log("appointed="+appointed);
     var hours = data.pickTimeStr
     var times = hours.substring(2,0)
     var timef = hours.substring(3,5)
@@ -670,20 +673,23 @@ salesInfoShowClick=()=>{
     var yudingf = appointed.substring(3,5)
     console.log(yudings)
     console.log(yudingf)
-    if(yudings>times){
-    		this.setState({
-        error: errMap['times_error']+appointed
-      })
-      return false
-    }
-    if(yudings===times){
-    	if(yudingf>timef){
-    		this.setState({
-        error: errMap['times_error']+appointed
-      })
-      return false
+    //有预定时间时执行
+    if(mydate.toLocaleTimeString()!=appointed){
+    	if(yudings>times){
+    			this.setState({
+        		error: errMap['times_error']+appointed
+      		})
+      	return false
     	}
-    }   
+    	if(yudings===times){
+    		if(yudingf>timef){
+    			this.setState({
+        		error: errMap['times_error']+appointed
+     	 		})
+      		return false
+    		}
+    	}
+    }
     console.log("aaaaa"+this.state.convertibleGoods)
     console.log("aaaaa"+this.state.hsgooscode)
     if (this.state.total<this.state.fullamount) {
