@@ -1,4 +1,4 @@
-/* global wx */
+﻿/* global wx */
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './order.css'
@@ -661,35 +661,39 @@ salesInfoShowClick=()=>{
       })
       return false
     }
-    var mydate = new Date()
-    var appointed = this.state.appointedTime;
-    console.log("mydate="+mydate);
-    console.log("appointed="+appointed);
-    var hours = data.pickTimeStr
-    var times = hours.substring(2,0)
-    var timef = hours.substring(3,5)
-    console.log(timef)
-    var yudings = appointed.substring(2,0)
-    var yudingf = appointed.substring(3,5)
-    console.log(yudings)
-    console.log(yudingf)
-    //有预定时间时执行
-    if(mydate.toLocaleTimeString()!=appointed){
-    	if(yudings>times){
-    			this.setState({
-        		error: errMap['times_error']+appointed
-      		})
-      	return false
-    	}
-    	if(yudings===times){
-    		if(yudingf>timef){
-    			this.setState({
-        		error: errMap['times_error']+appointed
-     	 		})
-      		return false
-    		}
-    	}
-    }
+var myDate = Date.parse(new Date());
+
+myDate = myDate / 1000;//获取系统当前时间戳
+ 		
+var yuding = this.state.riqi +' '+this.state.appointedTime
+   
+var yudingtime = Date.parse(new Date(yuding));
+    
+yudingtime = yudingtime / 1000;
+    
+var stringTime  = data.pickDateStr +' '+ data.pickTimeStr
+    
+var timestamp2 = Date.parse(new Date(stringTime));
+ 		
+timestamp2 = timestamp2 / 1000;	
+    
+//只有有预定时间时才执行
+  	
+if(myDate!=yudingtime){
+    	
+	if(yudingtime>timestamp2){
+    		
+		this.setState({
+        	
+			error: errMap['times_error']+yuding
+      	
+		})
+      	
+		return false
+    	
+	}
+   
+}
     console.log("aaaaa"+this.state.convertibleGoods)
     console.log("aaaaa"+this.state.hsgooscode)
     if (this.state.total<this.state.fullamount) {

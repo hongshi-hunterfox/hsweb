@@ -1,4 +1,4 @@
-package com.uclee.web.user.controller;
+﻿package com.uclee.web.user.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
@@ -629,8 +629,13 @@ public class UserController extends CommonUserHandler{
 		date.setHours(max);
 		SimpleDateFormat time=new SimpleDateFormat("HH:mm");
 		
+		SimpleDateFormat riqi=new SimpleDateFormat("yyyy-MM-dd");
+		
 		System.out.println(time.format(date.getTime())); 
+		
 		map.put("appointedTime",time.format(date.getTime()));
+		
+		map.put("riqi",riqi.format(date));
 		System.out.println("Hours"+time.format(date.getTime()));
 		
 		for(CartDto item:carts){

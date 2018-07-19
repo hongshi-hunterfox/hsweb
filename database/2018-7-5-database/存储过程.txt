@@ -507,7 +507,6 @@ Begin
   Set @ParaInfo = dbo.NameValue('C','@cVipCode',@cVipCode)           Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@cIdNumber',@cIdNumber)         Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@cCompany',@cCompany)           Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@cSex',@cSex)                   Exec Loger @LogID,@Parameters=@ParaInfo
   Declare @iVipID int    --会员表ID
   Declare @VipState int  --10表示停用,表示有效
   Declare @IsLose bit    --1表示挂失,0表示未挂失
@@ -2170,19 +2169,8 @@ Begin
   Drop Table #tmp_WSC_GetVipInfo
 End
 
---------------------------------------------------------------------------------
---添加会员
---  @cWeiXinCode外键
---  @cMobileNumber手机号
---  @cName姓名,可选
---  @cBirthday生日,可选
---  @bIsLuna,是农历,可选
---WSC_AddVip状态集:
--- 0   :成功
--- -1  :已绑定到其它会员
--- -2  :无此会员
--- -3  :会员已停用
--- -201:手机号重复(有多张卡)
+go
+
 If Object_id('[WSC_AddVip]','P') Is Not Null
   Drop Procedure [WSC_AddVip]
 Go
@@ -2583,7 +2571,7 @@ Begin
   Select @Return As retcode, @msg As Msg
 End
 
-  
+go 
   
 --------------------------------------------------------------------------------
 --获取订单列表
