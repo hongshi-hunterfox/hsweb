@@ -1,4 +1,4 @@
-﻿package com.uclee.web.user.controller;
+package com.uclee.web.user.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
@@ -628,13 +628,9 @@ public class UserController extends CommonUserHandler{
 		//取最大时间
 		date.setHours(max);
 		SimpleDateFormat time=new SimpleDateFormat("HH:mm");
-		
 		SimpleDateFormat riqi=new SimpleDateFormat("yyyy-MM-dd");
-		
 		System.out.println(time.format(date.getTime())); 
-		
 		map.put("appointedTime",time.format(date.getTime()));
-		
 		map.put("riqi",riqi.format(date));
 		System.out.println("Hours"+time.format(date.getTime()));
 		
@@ -1736,8 +1732,9 @@ public class UserController extends CommonUserHandler{
 		return orderMap;
 	}
 	
-		/**
-	 * @Description : 个人信息详情页面
+	/**
+	 * @Description : 个人信息详情页面--jx
+	 * @param vNumber
 	 */
 	@RequestMapping("/getVips")
 	public @ResponseBody HsVip getVips(HttpServletRequest request, String vNumber) {
@@ -1746,28 +1743,19 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
-		logger.info("sjx------="+oauthLogin.getOauthId());
 		List<HongShiVip> ret= hongShiVipService.getVipInfo(oauthLogin.getOauthId());
 		if(ret!=null&&ret.size()>0){
-			logger.info("sjx------="+ret.get(0).getcVipCode());
 
 			List<HsVip> Vips = userService.selecthsVip(ret.get(0).getcVipCode());
 			Map<String,Object> map = new TreeMap<String,Object>();
 			for(HsVip item:Vips){
 				String vName =item.getvName();
-				logger.info("name----="+vName);
 				String Number = item.getvNumber();
-				logger.info("phone----="+Number);
 				String vBirthday= item.getvBirthday();
-				logger.info("vBirthday----="+vBirthday);
 				String vIdNumber = item.getvIdNumber();
-				logger.info("vIdNumber----="+vIdNumber);
 				String vCompany = item.getvCompany();
-				logger.info("vCompany---="+vCompany);
 				String vCode=item.getvCode();
-				logger.info("vcode-----="+vCode);
 				String vSex=item.getvSex();
-				logger.info("111111vsex-----="+vSex);
 				res.setvName(vName);
 				res.setvNumber(Number);
 				res.setvBirthday(vBirthday);
@@ -1817,7 +1805,6 @@ public class UserController extends CommonUserHandler{
 		map.put("refund",fund);
 		return map;
 	}
-	
-	
+
 	
  }

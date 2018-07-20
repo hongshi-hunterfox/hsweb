@@ -60,7 +60,8 @@ class Order extends React.Component {
       businessStartTime:'',
       businessEndTime:'',
       hsgooscode: [],
-      appointedTime:''
+      appointedTime:'',
+      riqi: ''
     }
     
     this.lat = 21.908
@@ -134,6 +135,7 @@ class Order extends React.Component {
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
         appointedTime: resJson.appointedTime,
+        riqi: resJson.riqi,
         total: resJson.total,
         isShippingfree:resJson.isShippingFree,
         supportDeliver:resJson.supportDeliver,
