@@ -1239,11 +1239,11 @@ public class UserServiceImpl implements UserServiceI {
 
 			seller_id = new String(request.getParameter("seller_id").getBytes("ISO-8859-1"), "UTF-8");
 
-			notify_type=new String(request.getParameter("notify_type").getBytes("ISO-8859-1"),"UTF-8");
-
-			success_num=new String(request.getParameter("success_num").getBytes("ISO-8859-1"),"UTF-8");
-
-			result_details=new String(request.getParameter("result_details").getBytes("ISO-8859-1"),"UTF-8");
+//			notify_type=new String(request.getParameter("notify_type").getBytes("ISO-8859-1"),"UTF-8");
+//
+//			success_num=new String(request.getParameter("success_num").getBytes("ISO-8859-1"),"UTF-8");
+//
+//			result_details=new String(request.getParameter("result_details").getBytes("ISO-8859-1"),"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1255,68 +1255,100 @@ public class UserServiceImpl implements UserServiceI {
 			// 请在这里加上商户的业务逻辑程序代码
 
 			// ——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
-			if(notify_type!=null && !"".equals(notify_type)&& "batch_refund_notify".equalsIgnoreCase(notify_type)){
-				//退款的通知
-				if(success_num!=null && !"".equals(success_num) && Integer.parseInt(success_num)>0){
-					//必须要取出来result_details,根据tranction_id查询出来退款表里面的记录
-					// 执行更新web_refund_orders表，同时执行存储过程
-					if(result_details!=null && !"".equals(result_details)){
-						String[] resultDetailArray=result_details.split("^");
-						String tranctionId=resultDetailArray[0];
-						logger.info("支付宝退款回掉函数返回的原交易单号:"+tranctionId);
 
-						RefundOrder refundOrder=refundOrderMapper.selectByTransactionId(tranctionId);
-						//设定flag状态为3,isCompleted为已完成
-						refundOrder.setFlag(3);
-						refundOrder.setIsCompleted(true);
-						updateRefundOrder(refundOrder);
+			if (trade_status.equals("TRADE_FINISHED")) {
+				// 判断该笔订单是否在商户网站中已经做过处理
+				// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+				// 如果有做过处理，不执行商户的业务程序
 
-						String openId ="";
-						OauthLogin oauthLogin = getOauthLoginInfoByUserId(refundOrder.getUserId());
-						if(oauthLogin !=null){
-							openId=oauthLogin.getOauthId();//外键
-							Map pramMap=new HashMap();
-							pramMap.put("paymentSerialNum",refundOrder.getPaymentSerialNum());
-							pramMap.put("openId",openId);
-							pramMap.put("flag",3);
-							insertOrderTrace(pramMap);
-						}
-						//这里还需要执行一个存储过程orders_invalid，因为存储过程暂时还未完成。
-						return "success";
-					}
+				// 注意：
+				// 退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+			} else if (trade_status.equals("TRADE_SUCCESS")) {
+				// 判断该笔订单是否在商户网站中已经做过处理
+				// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+				// 如果有做过处理，不执行商户的业务程序
+				datasource.switchDataSource(body);
+				logger.info("支付宝回调datasource: " + body);
+				if (alipayNotifySuccessHandle(out_trade_no, total_fee, seller_id,trade_no,body)) {
+					return "success";
 				}
+				// 注意：
+				// 付款完成后，支付宝系统发送该交易状态通知
 			}
-			if("trade_status_sync".equalsIgnoreCase(notify_type)){
-				//支付的通知
-				if (trade_status.equals("TRADE_FINISHED")) {
-					// 判断该笔订单是否在商户网站中已经做过处理
-					// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-					// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
-					// 如果有做过处理，不执行商户的业务程序
 
-					// 注意：
-					// 退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
-				} else if (trade_status.equals("TRADE_SUCCESS")) {
-					// 判断该笔订单是否在商户网站中已经做过处理
-					// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-					// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
-					// 如果有做过处理，不执行商户的业务程序
-					datasource.switchDataSource(body);
-					logger.info("支付宝回调datasource: " + body);
-					if (alipayNotifySuccessHandle(out_trade_no, total_fee, seller_id,trade_no,body)) {
-						return "success";
-					}
-					// 注意：
-					// 付款完成后，支付宝系统发送该交易状态通知
-				}
-			}
 			// ——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+
 			//////////////////////////////////////////////////////////////////////////////////////////
 		} else {// 验证失败
 			return "fail";
 		}
 		return "fail";
 	}
+
+//			if(notify_type!=null && !"".equals(notify_type)&& "batch_refund_notify".equalsIgnoreCase(notify_type)){
+//				//退款的通知
+//				if(success_num!=null && !"".equals(success_num) && Integer.parseInt(success_num)>0){
+//					//必须要取出来result_details,根据tranction_id查询出来退款表里面的记录
+//					// 执行更新web_refund_orders表，同时执行存储过程
+//					if(result_details!=null && !"".equals(result_details)){
+//						String[] resultDetailArray=result_details.split("^");
+//						String tranctionId=resultDetailArray[0];
+//						logger.info("支付宝退款回掉函数返回的原交易单号:"+tranctionId);
+//
+//						RefundOrder refundOrder=refundOrderMapper.selectByTransactionId(tranctionId);
+//						//设定flag状态为3,isCompleted为已完成
+//						refundOrder.setFlag(3);
+//						refundOrder.setIsCompleted(true);
+//						updateRefundOrder(refundOrder);
+//
+//						String openId ="";
+//						OauthLogin oauthLogin = getOauthLoginInfoByUserId(refundOrder.getUserId());
+//						if(oauthLogin !=null){
+//							openId=oauthLogin.getOauthId();//外键
+//							Map pramMap=new HashMap();
+//							pramMap.put("paymentSerialNum",refundOrder.getPaymentSerialNum());
+//							pramMap.put("openId",openId);
+//							pramMap.put("flag",3);
+//							insertOrderTrace(pramMap);
+//						}
+//						//这里还需要执行一个存储过程orders_invalid，因为存储过程暂时还未完成。
+//						return "success";
+//					}
+//				}
+//			}
+//			if("trade_status_sync".equalsIgnoreCase(notify_type)){
+//				//支付的通知
+//				if (trade_status.equals("TRADE_FINISHED")) {
+//					// 判断该笔订单是否在商户网站中已经做过处理
+//					// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+//					// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+//					// 如果有做过处理，不执行商户的业务程序
+//
+//					// 注意：
+//					// 退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+//				} else if (trade_status.equals("TRADE_SUCCESS")) {
+//					// 判断该笔订单是否在商户网站中已经做过处理
+//					// 如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+//					// 请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+//					// 如果有做过处理，不执行商户的业务程序
+//					datasource.switchDataSource(body);
+//					logger.info("支付宝回调datasource: " + body);
+//					if (alipayNotifySuccessHandle(out_trade_no, total_fee, seller_id,trade_no,body)) {
+//						return "success";
+//					}
+//					// 注意：
+//					// 付款完成后，支付宝系统发送该交易状态通知
+//				}
+//			}
+//			// ——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+//			//////////////////////////////////////////////////////////////////////////////////////////
+//		} else {// 验证失败
+//			return "fail";
+//		}
+//		return "fail";
+//	}
 
 	/**
 	 * @param body  

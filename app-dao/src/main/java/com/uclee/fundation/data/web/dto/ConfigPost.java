@@ -44,10 +44,19 @@ public class ConfigPost {
 	private String startUp;
 	private String full;
 	private String unbundling;
+	private String loss;
 	private String signText;
 	private String force;
 	private String brand;
 	private String qq;
+	public String getLoss() {
+		return loss;
+	}
+
+	public void setLoss(String loss) {
+		this.loss = loss;
+	}
+
 	public String getQq() {
 		return qq;
 	}

@@ -375,6 +375,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getUnbundling()!=null) {
 			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
 		}
+		if(configPost.getLoss()!=null){
+			configMapper.updateByTag(WebConfig.loss, configPost.getLoss());
+		}
 		if (configPost.getSignText()!=null) {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
@@ -518,6 +521,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getUnbundling()!=null) {
 			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
+		}
+		if (configPost.getLoss()!=null) {
+			configMapper.updateByTag(WebConfig.loss, configPost.getLoss());
 		}
 		if (configPost.getSignText()!=null) {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
@@ -1055,6 +1061,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setFull(config.getValue());
 			}else if(config.getTag().equals(WebConfig.unbundling)){
 				configPost.setUnbundling(config.getValue());
+			}else if(config.getTag().equals(WebConfig.loss)){
+				configPost.setLoss(config.getValue());				
 			}else if(config.getTag().equals(WebConfig.signText)){
 				configPost.setSignText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.VoucherSendInformation)){

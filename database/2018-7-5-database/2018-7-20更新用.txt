@@ -81,6 +81,7 @@ insert into web_config(tag,value) values('brand','洪石软件');--设置品牌名
 
 insert into web_config(tag,value) values('qq','2217904463');--设置品牌名
 
+insert into web_config(tag,value) values('loss','0')
 
 
 

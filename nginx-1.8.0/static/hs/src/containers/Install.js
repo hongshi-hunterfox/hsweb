@@ -81,6 +81,7 @@ class Install extends React.Component {
       <DocumentTitle title="我的会员卡">
         <div className="member-card">
           <div className="media">
+          	{this.state.config.loss < 1 ?
             <div className="member-card-item-code">会员卡挂失:
               {this.state.disable !==1 ?
                <span onClick={() => { 
@@ -106,12 +107,13 @@ class Install extends React.Component {
              	<button type="submit" className="btn btn-warning btn-sm" ><font color="white">已挂失</font></button>
             </span>
             }
-          </div> 
+          </div> : null}
         </div>
           
-          <div className="member-card">
+        <div className="member-card">
           <div className="media">
-          <div className="member-card-item-code">会员卡解绑:
+          	{this.state.config.unbundling < 1 ?
+          	<div className="member-card-item-code">会员卡解绑:
               <span onClick={() => { 
               	var conf = confirm('确定解绑吗？解绑后会员功能将无法使用!');
           	    if(!conf){
@@ -130,9 +132,9 @@ class Install extends React.Component {
               className="member-card-item-Unbundling">
                 <button type="submit" className="btn btn-warning btn-sm" ><font color="white">解除绑定</font></button>
 		  	  </span>
-       </div>
+        	</div> : null}
+          </div>
         </div>
-         </div>
       
        
           <div className= "member-card-item-recharge"><button type="submit" className="btn btn-success" ><a href="member-card"><font color="white">返回上一级</font></a></button>

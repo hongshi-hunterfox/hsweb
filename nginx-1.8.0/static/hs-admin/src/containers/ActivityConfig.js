@@ -147,7 +147,13 @@ class ActivityConfig extends React.Component {
                   <option value="1">停用</option>
                 </select>
               </div>
-
+							<label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用会员挂失：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="loss" value={this.state.config.loss?this.state.config.loss:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">启用</option>
+                  <option value="1">停用</option>
+                </select>
+              </div>
               {/*<label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定强制弹个人信息：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <select name="force" value={this.state.config.force?this.state.config.force:'1'} style={{padding:'5px'}} onChange={this._change}>    

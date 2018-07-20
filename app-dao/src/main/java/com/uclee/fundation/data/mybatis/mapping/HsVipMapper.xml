@@ -50,6 +50,6 @@
       where 编号=#{vCode,jdbcType=VARCHAR}
   </update> 
   <update id="updateRecharge" parameterType="com.uclee.fundation.data.mybatis.model.HsVip">
-  	update 会员 set 是否充值=1 where ID=#{id,jdbcType=INTEGER}
+  	update 会员 set 是否充值=1, 备注='用户本人挂失' where ID=#{id,jdbcType=INTEGER}
   </update>
 </mapper>
