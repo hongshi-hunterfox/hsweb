@@ -77,7 +77,6 @@ public class DuobaoSchedule {
 				List<PaymentOrder> paymentOrders = userService.selectForTimer();
 				for (PaymentOrder paymentOrder : paymentOrders) {
 					paymentOrder.setCheckCount(paymentOrder.getCheckCount() + 1);
-					
 					paymentOrderMapper.updateCheckCount(paymentOrder);
 					logger.info("paymentOrder1==========="+JSON.toJSONString(paymentOrder));
 					Map<String, String> ret = userService.wxInitiativeCheck(paymentOrder);

@@ -14,8 +14,8 @@ public interface OrderMapper {
     int insertSelective(Order record);
 
     Order selectByPrimaryKey(Integer orderId);
-
-	Order selectByPaymentOrderId(Integer paymentOrderId);
+    
+    Order selectByPaymentOrderId(Integer paymentOrderId);
 
     int updateByPrimaryKeySelective(Order record);
 

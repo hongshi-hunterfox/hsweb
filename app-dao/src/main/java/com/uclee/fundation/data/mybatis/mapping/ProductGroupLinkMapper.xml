@@ -11,6 +11,7 @@
     *
     from web_product_group_links
     where group_id = #{groupId,jdbcType=INTEGER}
+    ORDER by position ASC
   </select>
   <select id="selectByGroupIdAndProductId" resultMap="BaseResultMap" >
     select 
@@ -26,11 +27,13 @@
     select 
     A.*
     from web_product_group_links as A left join web_products as C on A.product_id=C.product_id where C.product_id is not null
+    ORDER by A.group_id ASC ,A.position ASC
   </select>
   <select id="selectByTag" resultMap="BaseResultMap" >
     select 
     A.*
     from web_product_group_links as A left join web_product_groups as B on A.group_id=B.group_id left join web_products as C on A.product_id=C.product_id where B.tag=#{tag,jdbcType=VARCHAR} and C.product_id is not null
+    ORDER  by A.group_id ASC ,A.position ASC
   </select>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
     insert into web_product_group_links (group_id, product_id, position
@@ -63,4 +66,15 @@
       </if>
     </trim>
   </insert>
+
+  <select id="getMaxPosition" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select max(position) from web_product_group_links
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+
+<update id="updateProductGroupPosition" >
+    update web_product_group_links set POSITION =#{position,jdbcType=INTEGER}
+    where group_id = #{groupId,jdbcType=INTEGER} and product_id = #{productId,jdbcType=INTEGER}
+</update>
+
 </mapper>

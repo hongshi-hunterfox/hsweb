@@ -42,5 +42,14 @@ public interface WebConfig {
 	String salesText = "salesText";
 	String restrictedDistance = "restrictedDistance";
 	String startUp = "startUp";
-
+	String full = "full";
+	String unbundling = "unbundling";
+	String loss = "loss";
+	String signText = "signText";
+	String zhengshu="zhengshu";
+	String zhengshuPassword="zhengshuPassword";
+	String VoucherSendInformation="VoucherSendInformation";
+	String force = "force";
+	String brand = "brand";
+	String qq = "qq";
 }                      

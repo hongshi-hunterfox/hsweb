@@ -1,5 +1,6 @@
 package com.backend.service;
-
+import java.text.ParseException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,8 @@ public interface BackendServiceI {
 	List<HongShiOrder> getHongShiOrder(Boolean isEnd);
 
 	List<UserProfile> getUserList();
+	
+	List<UserProfile> getVipList(Date start,Date end) throws ParseException;
 
 	ConfigPost getConfig();
 
@@ -52,9 +55,9 @@ public interface BackendServiceI {
 
 	int updateStoreInfo(String description);
 
-	List<UserProfile> getUserListForBirth(String start,String end);
+	List<UserProfile> getUserListForBirth(String start, String end);
 
-	boolean sendBirthMsg(Integer userId,boolean sendVoucher);
+	boolean sendBirthMsg(Integer userId, boolean sendVoucher);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
@@ -100,8 +103,12 @@ public interface BackendServiceI {
 	boolean delRechargeConfig(Integer id);
 
 	List<BirthVoucher> selectAllBirthVoucher();
+	
+	List<VipVoucher> selectAllVipVoucher();
 
 	boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost);
+	
+	boolean updateVipVoucher(VipVoucherPost vipVoucherPost);
 
     List<ShippingFullCut> selectAllShippingFullCut();
 
@@ -114,20 +121,51 @@ public interface BackendServiceI {
 	List<BindingRewards> selectAllBindingRewards();
 	
 	List<EvaluationGifts> selectAllEvaluationGifts();
+	List<IntegralInGifts> selectAllIntegralInGifts();
 
 	boolean updateBindingRewards(FreightPost freightPost);
 
 	NapaStore getHongShiStore(String hsCode);
 
 	Map<String,Object> isVoucherLimit(Integer amount);
+	
+	Map<String,Object> isCouponAmount(Integer amount);
 
 	boolean delComment(Integer id);
 
 	boolean truncateBirthVoucherHandler();
 
+	boolean truncateVipVoucherHandler();
+	
     boolean updateActivityConfig(ConfigPost configPost);
 
 	boolean systemConfigHandler(ConfigPost configPost);
 
 	boolean updateEvaluationGifts(FreightPost freightPost);
+	boolean updateIntegralInGifts(FreightPost freightPost);
+
+	//add by chiangpan for pickTime
+	List<OrderSettingPick> selectAllOrderSettingPick();
+
+	boolean updateOrderSettingPick(OrderSettingPick orderSettingPick);
+
+    //add by chiangpan for sort
+	int updateProductGroupPosition(Integer groupId, Integer productId, Integer position);
+
+	List<Category> selectBybatchDiscount(String category);
+	
+	List<ProductParameters> getParameters(Integer productId);
+
+	//add by chiangpan for operator Audit refund list
+	List<AuditRefundDto> getRefundOrderList(String orderSerialNum);
+
+	Order getOrderBySeialNum(String orderSerialNum);
+	
+	List<UserProfile> selectCardPhoneVips(String cartphone);
+	
+	List<UserProfile> selectAllVipList();
+
+	boolean sendViphMsg(Integer userId, boolean sendVoucher);
+	
+	Boolean getAccount(String account,String password);
 }

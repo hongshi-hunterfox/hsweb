@@ -34,12 +34,13 @@ import java.util.*;
 /**
  * @author Administrator
  * 洪石会员相关接口
+ * @param <phone>
  *
  */
 @Controller
 @EnableAutoConfiguration
 @RequestMapping("/uclee-user-web/")
-public class HongShiVipController {
+public class HongShiVipController<phone> {
 	@Autowired
 	private UserServiceI userService;
 
@@ -50,11 +51,10 @@ public class HongShiVipController {
 	private HongShiVipMapper hongShiVipMapper;
 	
 	@Autowired
-	private OauthLoginMapper oauthLoginMapper;
-	
-		
-	@Autowired
 	private HsVipMapper hsVipMapper;
+
+	@Autowired
+	private OauthLoginMapper oauthLoginMapper;
 
 	@Autowired
 	private BindingRewardsMapper bindingRewardsMapper;
@@ -89,15 +89,12 @@ public class HongShiVipController {
 		String day= DateUtils.getDay(new Date());
 		//获得现在是几点,hour=15
 		String hour=DateUtils.getTime(new Date()).substring(0,2);
-
 		char[]  dayChar=day.toCharArray();
 		char[]  hourChar=hour.toCharArray();
-
 		//以下就是邓彪要求的值
 		String preFixStr=String.valueOf(dayChar[0]).concat(String.valueOf(hourChar[0]));//11
 		String barcodeEndFixStr=String.valueOf(dayChar[1])+"+"+String.valueOf(hourChar[1]);//条形码是4+5
 		String vipEndFixStr=String.valueOf(dayChar[1]).concat(String.valueOf(hourChar[1]));//二维码是45
-
 		if(userId!=null){
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
 			if(tt!=null){
@@ -105,22 +102,31 @@ public class HongShiVipController {
 				
 				if(ret!=null&&ret.size()>0){
 					if(userProfile!=null){
-							Integer a = hongShiVipService.getCodeSwitching();
-							if(a!=0){
-									ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
-									try{
-										ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
-									}catch (Exception e){
-										e.printStackTrace();
-									}
-							}else{
-									ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
-									try{
-										ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
-									}catch (Exception e){
-										e.printStackTrace();
-									}
+						Integer a = hongShiVipService.getCodeSwitching();
+						logger.info("status---="+a);
+						if(a!=0){
+							logger.info("status1---="+a);
+							ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
+
+						try{
+
+							ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
+
+						}catch (Exception e){
+							e.printStackTrace();
+						}
+						}else{
+							logger.info("status2---="+a);
+							ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
+
+							try{
+
+								ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+
+							}catch (Exception e){
+								e.printStackTrace();
 							}
+						}
 						ret.get(0).setAllowRecharge(true);
 						ret.get(0).setAllowPayment(true);
 						if(ret.get(0).getState()==0){
@@ -146,7 +152,7 @@ public class HongShiVipController {
 							ret.get(0).setAllowPayment(false);
 							ret.get(0).setCardStatus("会员卡已超过使用期限");
 						}
-						//插入记录到viplog表--shenkaixin
+				//插入记录到viplog表--shenkaixin
 						logger.info("aaaaaa========="+tt.getOauthId());
 						logger.info("aaaaaa========="+ret.get(0).getCardCode());
 //						//精确到毫秒--shenkaixin or HH 为24小时
@@ -177,12 +183,12 @@ public class HongShiVipController {
 	 * @return hongShiVipService.changeVip
 	 */
 	@RequestMapping("/changeVip")
-	public  Integer changeVip(Integer type,HttpSession session) {
-		HongShiVip oVIP = getVipInfo(type,session);
-		return hongShiVipService.changeVip(oVIP.getId());
-		}
-		
-		/**
+	public @ResponseBody Integer changeVip(Integer type,HttpSession session) {
+		HongShiVip vip = getVipInfo(type,session);
+		return hongShiVipService.changeVip(vip.getId());
+	}
+	
+	/**
 	 * @Title: discontinuationVip
 	 * @Description: 会员卡挂失-kx
 	 * @param type
@@ -191,12 +197,10 @@ public class HongShiVipController {
 	 */
 	@RequestMapping("/discontinuationVip")
 	public @ResponseBody Integer discontinuationVip(Integer type,HttpSession session) {
-		Map<String,Object> map = new TreeMap<String,Object>();
 		HongShiVip vip = getVipInfo(type, session);
 		return hsVipMapper.updateRecharge(vip.getId());
+		 
 	}
-		
-	
 		
 	
 	/** 
@@ -232,6 +236,36 @@ public class HongShiVipController {
 		}
 		if(userId!=null){
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
+
+			
+			
+			//判断是否注册过会员	
+			List<Lnsurance> lnsurance = hongShiVipService.selectUsers(vip.getcMobileNumber());
+			
+			//如果list不为null长度大于0就说明该会员已有绑定记录
+			if(lnsurance!=null&&lnsurance.size()>0){
+				System.out.println("该外键有绑定会员卡记录");
+				if(tt!=null){
+					vip.setcWeiXinCode(tt.getOauthId());
+					try{
+						AddVipResult res=hongShiVipService.addHongShiVipInfo(vip);
+						logger.info("addVipInfo res:"+JSON.toJSONString(res));
+						if(res!=null&&res.getRetcode()!=0){
+							ret.put("reason", res.getMsg());
+							ret.put("result", "fail");
+							return ret;
+						}
+					}catch (Exception e){
+						ret.put("reason", "网络繁忙，请稍后重试");
+						ret.put("result", "fail");
+						e.printStackTrace();
+						return ret;
+					}	
+					ret.put("result", "success");
+					return ret;
+				}
+			}
+			
 			if(tt!=null){
 				vip.setcWeiXinCode(tt.getOauthId());
 				try{
@@ -247,10 +281,10 @@ public class HongShiVipController {
 					ret.put("result", "fail");
 					e.printStackTrace();
 					return ret;
-				}
-				ret.put("result", "success");
+				}	
 				try{
 					//赠送积分处理
+					logger.info("user_id-----="+userId);
 					UserProfile userProfile = userService.getBasicUserProfile(userId);
 					if(userProfile!=null){
 						userProfile.setRegistTime(new Date());
@@ -265,7 +299,7 @@ public class HongShiVipController {
 							if (coupon != null && coupon.size() > 0) {
 								try {
 									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),
-											bindingRewards.get(0).getVoucherCode());
+											bindingRewards.get(0).getVoucherCode(),"绑定会员赠送礼券");
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -277,6 +311,8 @@ public class HongShiVipController {
 
 					e.printStackTrace();
 				}
+				ret.put("result", "success");
+				return ret;
 			}
 		}
 		logger.info("rec:"+JSON.toJSONString(vip));
@@ -323,4 +359,87 @@ public class HongShiVipController {
 		}
 		return ret;
 	}
+	@RequestMapping("/vipRecordDetail")
+	public @ResponseBody Map<String,Object>  vipRecordDetail(HttpSession session,String billCode,String Source){
+		Map<String,Object> map=new HashMap<String,Object>();
+		String[] strs=billCode.split(",");
+		 billCode = "";
+		 Source = "";
+		for(int i=0,len=strs.length;i<len;i++){
+			billCode=strs[0].toString();
+			Source=strs[1].toString();
+			System.out.println(strs[i].toString());
+		}
+		
+		System.out.println("billCode=============="+billCode);
+		System.out.println("Source=============="+Source);
+	if(Source.equals("线上订单")){
+		List<Orders> orders = hongShiVipService.selectOrders(billCode);
+			if(orders!=null){
+				for(int j =0; j<orders.size();j++){
+					map.put("orders",orders);
+				}
+				System.out.println("billCode=============="+orders.get(0).getStoreName());
+				map.put("danhao",orders.get(0).getDanhao());
+				map.put("storeName",orders.get(0).getStoreName());
+				map.put("beizhu",orders.get(0).getBeizhu());
+				map.put("huijine",orders.get(0).getHuijine());
+				map.put("songhuo",orders.get(0).getSonghuo());
+				map.put("riqi",orders.get(0).getRiqi());
+				map.put("jine",orders.get(0).getJine());
+			
+			}
+	}else if(Source.equals("线下订单")){
+		List<Orders> order = hongShiVipService.selectOrders(billCode);
+		if(order!=null){
+			for(int j =0; j<order.size();j++){
+				List<UnderlineOrders> orders = hongShiVipService.selectUnderlineOrders(order.get(j).getDanhao());
+				map.put("orders",orders);
+			}
+			System.out.println("billCode=============="+order.get(0).getStoreName());
+			map.put("danhao",order.get(0).getDanhao());
+			map.put("storeName",order.get(0).getStoreName());
+			map.put("beizhu",order.get(0).getBeizhu());
+			map.put("jine",order.get(0).getJine());
+			map.put("songhuo",order.get(0).getSonghuo());
+			map.put("huijine",order.get(0).getHuijine());
+			map.put("riqi",order.get(0).getRiqi());
+		}	
+	}else if(Source.equals("零售")){
+		List<RetailDetails> dingdan = hongShiVipService.selectRetailDetails(billCode);
+		if(dingdan!=null){
+			for(int j =0; j<dingdan.size();j++){
+				List<RetailDetails> orders = hongShiVipService.selectRetailDetails(dingdan.get(j).getDanhao());
+				map.put("orders",dingdan);
+			}
+			map.put("danhao",dingdan.get(0).getDanhao());
+			map.put("storeName",dingdan.get(0).getStoreName());
+			map.put("beizhu",dingdan.get(0).getBeizhu());
+			map.put("jine",dingdan.get(0).getJine());
+			map.put("riqi",dingdan.get(0).getRiqi());
+			map.put("huijine",dingdan.get(0).getHuijine());
+		}	
+	
+	}else if(Source.equals("充值")){
+		List<ChongzhiDetailed> chongzhi = hongShiVipService.selectChongzhiDetailed(billCode);
+		if(chongzhi!=null){
+			for(int j =0; j<chongzhi.size();j++){
+				List<ChongzhiDetailed> orders = hongShiVipService.selectChongzhiDetailed(chongzhi.get(j).getDanhao());
+				map.put("orders",orders);
+			}
+		}	
+	}else if(Source.equals("积分充值")){
+		List<IntegralRecharge> jifenchongzhi = hongShiVipService.selectIntegralRecharge(billCode);
+		if(jifenchongzhi!=null){
+			for(int j =0; j<jifenchongzhi.size();j++){
+				List<IntegralRecharge> orders = hongShiVipService.selectIntegralRecharge(jifenchongzhi.get(j).getDanhao());
+				map.put("orders",orders);
+			}
+		}	
+	
+	}
+		return map;
+	}
+	
+	
 }

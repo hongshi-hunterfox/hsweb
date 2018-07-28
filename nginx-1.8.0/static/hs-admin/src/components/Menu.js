@@ -11,6 +11,9 @@ class Menu extends React.Component {
           <Link to={'/user-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             用户列表
           </Link> 
+          <Link to={'/vip-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            会员列表
+          </Link> 
           <Link to={'/phoneUserList?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             加盟商管理
           </Link>
@@ -50,6 +53,9 @@ class Menu extends React.Component {
           <Link to={'/recharge-config-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             充值赠送设置
           </Link>
+          <Link to={'/integralinConfiguration?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            签到赠送礼品设置
+          </Link>
           <Link to={'/comment-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             评论管理
           </Link>
@@ -68,6 +74,14 @@ class Menu extends React.Component {
            <Link to={'/shake-monitor?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             现场抽奖活动
           </Link>
+
+          <Link to={'/orderSettingPick?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            设定歇业时间和营业时间
+          </Link>
+          {/*<Link to={'/auditRefund?merchantCode='+localStorage.getItem('merchantCode')}  className="list-group-item" activeClassName="active">
+            退款审核
+          </Link>
+          */}
           <Link to={'/activity-config?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
           参数配置
           </Link>

@@ -3,7 +3,17 @@ import Menu from './components/Menu'
 import req from 'superagent'
 
 class App extends Component {
+	  constructor(props) {
+    super(props)
+    this.state = {
+      account:localStorage.getItem('account')
+    }
+  }
   componentDidMount() {
+  	if(!localStorage.getItem('account')){
+     	alert("尚未登陆，请先登陆！");
+      window.location='/login'
+    }
     this._sendMerchantCode()
   }
 

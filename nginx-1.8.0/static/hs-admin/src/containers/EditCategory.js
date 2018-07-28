@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import DocumentTitle from 'react-document-title'
 import fto from 'form_to_object'
 // import validator from 'validator'
@@ -11,7 +11,11 @@ class EditCategory extends React.Component {
     super(props)
     this.state = {
       err: null,
-      category:''
+      category:'',
+      batchDiscount:'1',
+      startTimeStrs:'',
+      endTimeStrs:''
+      
     }
   }
 
@@ -24,7 +28,12 @@ class EditCategory extends React.Component {
       console.log(res.body)
       if (res.body) {
         this.setState({
-          category:res.body.category
+          category:res.body.category,
+          batchDiscount:res.body.batchDiscount,
+          startTimeStrs:res.body.startTimeStrs,
+          endTimeStrs:res.body.endTimeStrs,
+          startTimeStr:res.body.startTimeStr,
+          endTimeStr:res.body.endTimeStr
         })
       }
     })
@@ -39,8 +48,25 @@ class EditCategory extends React.Component {
             
             <div className="form-group">
               <label className="control-label col-md-3">分类：</label>
-              <input type='text' name='category' value={this.state.category} onChange={this._categoryChange}/>
+              <input type='text' name='category' value={this.state.category} onChange={this._change}/>
             </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">批量设置折扣：</label>
+              <input type='text' name='batchDiscount' value={this.state.batchDiscount} onChange={this._change}/>
+            </div>
+             <div className="form-group">
+                                        <label className="control-label col-md-3">
+                                          批量设置开始时间：
+                                        </label>
+                                        <input type='text' name="startTimeStrs" value={this.state.startTimeStrs} onChange={this._change}/>
+                                      </div>
+                                        <div className="form-group">
+                                        <label className="control-label col-md-3">
+                                          批量设置结束时间：
+                                        </label>
+                                        <input type='text' name="endTimeStrs"  value={this.state.endTimeStrs} onChange={this._change}/>
+                                      </div>
+
 
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
@@ -53,9 +79,10 @@ class EditCategory extends React.Component {
       </DocumentTitle>
     )
   }
-  _categoryChange=(e)=>{
+ 
+   _change = e => {
     this.setState({
-      category:e.target.value
+      [e.target.name]: e.target.value
     })
   }
   _click = () => {
@@ -72,6 +99,7 @@ class EditCategory extends React.Component {
       data.categoryId=this.props.location.query.categoryId
     }
     console.log(data)
+    if(data.batchDiscount<=1&&data.batchDiscount>0){
     req.post('/uclee-backend-web/editCategory').send(data).end((err, res) => {
       if (err) {
         return err
@@ -84,6 +112,10 @@ class EditCategory extends React.Component {
         alert(data.reason);
       }
     })
+    }else{
+    	alert("设置折扣必须为小数");
+    	return false;
+    }
   }
 }
 

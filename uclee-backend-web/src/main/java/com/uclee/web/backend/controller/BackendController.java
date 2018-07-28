@@ -1,6 +1,8 @@
 package com.uclee.web.backend.controller;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.AuditRefundDto;
 import org.apache.commons.collections.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -23,8 +26,10 @@ import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
 import com.uclee.fundation.data.mybatis.mapping.FreightMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
+import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
 import com.uclee.fundation.data.web.dto.BannerPost;
 import com.uclee.fundation.data.web.dto.ConfigPost;
+import com.uclee.fundation.data.web.dto.FreightPost;
 import com.uclee.fundation.data.web.dto.MySelect;
 
 import scala.collection.immutable.HashMap;
@@ -149,6 +154,31 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
+	@RequestMapping("/integralinConfiguration")
+	public @ResponseBody Map<String,Object> integralinConfiguration(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<IntegralInGifts> integralinGifts = backendService.selectAllIntegralInGifts();
+		int i = 0;
+		if(integralinGifts.size()==0){
+			IntegralInGifts integralinGift = new IntegralInGifts();
+			integralinGift.setDay(0);
+			integralinGift.setMoney(new BigDecimal(0));
+			integralinGift.setVoucherCode("");
+			integralinGift.setAmount(0);
+			integralinGifts.add(integralinGift);
+		}
+		for(IntegralInGifts item : integralinGifts){
+			map.put("myKey[" + i + "]", item.getDay());
+			map.put("myValue0[" + i +"]", item.getMoney());
+			map.put("myValue[" + i + "]", item.getVoucherCode());
+			map.put("myValue1[" + i + "]", item.getAmount());
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+	}
 	@RequestMapping("/fullCut")
 	public @ResponseBody Map<String,Object> fullCut(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();
@@ -208,6 +238,27 @@ public class BackendController {
 		int i = 0;
 		for(BirthVoucher item : birthVoucher){
 			map.put("myKey[" + i + "]", item.getVoucherCode());
+			map.put("myValue[" + i + "]", item.getAmount());
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+	}
+	@RequestMapping("/vipVoucher")
+	public @ResponseBody Map<String,Object> vipVoucher(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new LinkedMap();
+		List<VipVoucher> vipVoucher = backendService.selectAllVipVoucher();
+		/*if(birthVoucher!=null&&birthVoucher.size()==0){
+			BirthVoucher tmp = new BirthVoucher();
+			tmp.setVoucherCode("");
+			tmp.setAmount(0);
+			birthVoucher.add(tmp);
+		}*/
+		int i = 0;
+		for(VipVoucher item : vipVoucher){
+			map.put("myKey[" + i + "]", item.getVoucher());
 			map.put("myValue[" + i + "]", item.getAmount());
 			i++;
 		}
@@ -318,6 +369,7 @@ public class BackendController {
 	public @ResponseBody Map<String,Object> config(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		ConfigPost config = backendService.getConfig();
+		map.put("qq", config.getQq());
 		map.put("config", config);
 		return map;
 	}
@@ -332,6 +384,60 @@ public class BackendController {
 		List<UserProfile> users = backendService.getUserList();
 		map.put("users", users);
 		map.put("size", users.size());
+		return map;
+	}
+	/*
+	 * 取得所有会员信息和根据会员注册时间查询会员信息--skx
+	 */
+	@RequestMapping("/vipList")
+	public @ResponseBody Map<String,Object> vipList(HttpServletRequest request,String start,String end) throws ParseException {
+		Map<String,Object> map = new TreeMap<String,Object>();	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			System.out.println("start============="+start);
+			System.out.println("end============="+end);
+			if(!start.equals("undefined")&&!end.equals("undefined")){
+				Date start1=sdf.parse(start);
+				Date end1=sdf.parse(end);
+				List<UserProfile> vips = backendService.getVipList(start1,end1);
+				for(UserProfile item:vips){
+					//用于转换会员注册日期数据类型
+					item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+				}
+				map.put("start", DateUtils.format(new Date(),DateUtils.FORMAT_SHORT));
+				map.put("end", DateUtils.format(DateUtils.addDay(new Date(),30),DateUtils.FORMAT_SHORT));
+				map.put("vips", vips);
+				map.put("size", vips.size());
+			}
+			
+		return map;
+	}
+	/*
+	 * 根据手机号和卡号查询会员信息--skx
+	 */
+	@RequestMapping("/vipPhone")
+	public @ResponseBody Map<String,Object> vipPhone(HttpServletRequest request,String cartphone) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		System.out.println("phone================"+cartphone);
+		List<UserProfile> vips = backendService.selectCardPhoneVips(cartphone);
+		map.put("vips", vips);
+		map.put("size", vips.size());
+		return map;
+	}
+	/*
+	 * 取所有会员信息----skx
+	 */
+	@RequestMapping("/getAllvip")
+	public @ResponseBody Map<String,Object> getAllvip(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		System.out.println("helloworld");
+		List<UserProfile> vips = backendService.selectAllVipList();
+		for(UserProfile item:vips){
+			//用于转换会员注册日期数据类型
+			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+		}
+		System.out.println("helloworld============"+JSON.toJSONString(vips));
+		map.put("vips", vips);
+		map.put("size", vips.size());
 		return map;
 	}
 	@RequestMapping("/categoryList")
@@ -426,5 +532,74 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
-	
+
+	/*
+		copy by chiangpan
+	*/
+	@RequestMapping("/orderSettingPick")
+	public @ResponseBody Map<String,Object> orderSettingPick(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<OrderSettingPick> orderSettingPick = backendService.selectAllOrderSettingPick();
+
+		if(orderSettingPick!=null && orderSettingPick.size()>0){
+			map.put("closeStartDateStr",DateUtils.format(orderSettingPick.get(0).getCloseStartDate(),DateUtils.FORMAT_SHORT));
+			map.put("closeEndDateStr",DateUtils.format(orderSettingPick.get(0).getCloseEndDate(),DateUtils.FORMAT_SHORT));
+			map.put("businessStartTime", orderSettingPick.get(0).getBusinessStartTime());
+			map.put("businessEndTime",orderSettingPick.get(0).getBusinessEndTime());
+			result.put("size",1);
+		}else{
+			//以下是默认日期
+			String year=DateUtils.getYear(new Date());
+			map.put("closeStartDateStr",year+"-01-01");
+			map.put("closeEndDateStr",year+"-01-01");
+			map.put("businessStartTime", "00:00");
+			map.put("businessEndTime","23:59");
+			result.put("size",0);
+		}
+		result.put("data", map);
+		return result;
+	}
+
+	@RequestMapping("/refundList")
+	public @ResponseBody  Map<String,Object> refundList(HttpServletRequest Request){
+
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<AuditRefundDto> refundList = backendService.getRefundOrderList("");
+
+		map.put("refunds", refundList);
+		map.put("size", refundList.size());
+		return map;
+	}
+
+	//审核退款单时的订单详情
+	@RequestMapping(value="/getAduitRefundDetail")
+	public @ResponseBody Map<String,Object> getAduitRefundDetail(HttpServletRequest request,String orderSerialNum){
+		Map<String,Object> orderMap=new TreeMap<String,Object>();
+		//为了不影响页面效果而死命的查询，牺牲性能
+		AuditRefundDto auditRefundDto=new AuditRefundDto();
+		List<AuditRefundDto> refundList = backendService.getRefundOrderList(orderSerialNum);
+		if(refundList!=null && refundList.size()>0){
+			 auditRefundDto=refundList.get(0);
+		}
+		Order order=backendService.getOrderBySeialNum(orderSerialNum);
+		orderMap.put("order",order);
+		orderMap.put("refundDesc",auditRefundDto.getRefundDesc());
+		return orderMap;
+	}
+	/**
+	 * 用来校验登陆账户和密码---凯鑫
+	 * @param account
+	 * @param password
+	 * @param Request
+	 * @return
+	 */
+	@RequestMapping("/getAccount")
+	public @ResponseBody  Boolean getAccount(HttpServletRequest Request,String account,String password){
+		HttpSession session = Request.getSession();
+		System.out.println("--------------"+account);
+		System.out.println("--------------"+password);
+		return backendService.getAccount(account,password);
+	}
+
 }

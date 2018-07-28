@@ -22,6 +22,9 @@ constructor(props) {
       cName: '',
       cMobileNumber: '',
       code: '',
+      cIdNumber: '',
+      cCompany: '',
+      cSex: '1',
       cBirthday: '',
       bIsLunar: '0',
       cVipCode: '',
@@ -49,7 +52,10 @@ constructor(props) {
         cMobileNumber: d.cMobileNumber,
         cBirthday: moment(d.cBirthday).format('YYYY-MM-DD'),
         bIsLunar: d.bIsLunar,
-        cVipCode: d.cVipCode
+        cVipCode: d.cVipCode,
+        cIdNumber: d.cIdNumber,
+        cCompany: d.cCompany,
+        cSex: d.cSex
       })
     })
     
@@ -181,6 +187,55 @@ render() {
                       </select>
                     </div>
                   </div>
+                   <div className="form-group">
+              <label className="control-label col-xs-3 trim-right">
+              性别
+              </label>
+              <div className="col-xs-9">
+                <select
+                  name="cSex"
+                  className="form-control"
+                  value={this.state.cSex}
+                  placeholder="请输入性别"
+                  onChange={this._change}
+                >
+                 
+                  <option value='1'>男</option>
+                  <option value='2'>女</option>
+                </select>
+              </div>
+            </div>
+                  
+                  <div className="form-group">
+                    <label className="control-label col-xs-3 trim-right">
+                      身份证号
+                    </label>
+                    <div className="col-xs-9">
+                      <input
+                        type="tel"
+                        name="cIdNumber"
+                        className="form-control"
+                        placeholder="#选填"
+                        value={this.state.cIdNumber}
+                        onChange={this._change}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="control-label col-xs-3 trim-right">
+                      工作单位
+                    </label>
+                    <div className="col-xs-9">
+                      <input
+                        type="tel"
+                        name="cCompany"
+                        className="form-control"
+                        placeholder="#选填"
+                        value={this.state.cCompany}
+                        onChange={this._change}
+                      />
+                    </div>
+                  </div>
                 </div>
               : ''}
             <ErrorMsg msg={this.state.error} />
@@ -218,17 +273,8 @@ render() {
 
 
   _getCode = () => {
-    if (!validator.isMobilePhone(this.state.cMobileNumber, 'zh-CN')) {
-      return this.setState({
-        error: '请输入正确的手机号码'
-      })
-    }
-    this.setState({
-     fetchingCode: true
-    })
-
-    req
-      .get('/uclee-user-web/verifyCode')
+	req
+      .get('/uclee-user-web/isphone')
       .query({
         phone: this.state.cMobileNumber
       })
@@ -236,12 +282,29 @@ render() {
         if (err) {
           return err
         }
-        this._tick()
-      })
-  }
-
-
-
+       if(res.body.fail !== "adopt"){
+       	return this.setState({
+        	error: res.body.fail,
+        	disabled:false
+      	})
+       }else{
+     	this.setState({
+     		fetchingCode: true
+    	})
+    	req
+      		.get('/uclee-user-web/verifyCode')
+      		.query({
+        		phone: this.state.cMobileNumber
+      		})
+      		.end((err, res) => {
+        		if (err) {
+        			return err
+        		}
+        		this._tick()
+      		})
+       }
+      }) 
+  	}
   _tick = () => {
 
     this.tick = setInterval(() => {
@@ -262,6 +325,9 @@ render() {
       })
     }, 1000)
   }
+
+
+
 
   _submit = e => {
     this.setState({
@@ -293,9 +359,9 @@ render() {
       })
     }
 
-    if (!validator.isMobilePhone(data.cMobileNumber, 'zh-CN')) {
+    if (/^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[6])|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$/.test(data.cMobileNumber)){
       return this.setState({
-        error: '请输入正确的手机号码',
+        error: '请输入正确的手机号',
         disabled:false
       })
     }

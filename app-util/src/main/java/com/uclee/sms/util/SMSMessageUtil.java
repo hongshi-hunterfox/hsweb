@@ -15,14 +15,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.taobao.api.ApiException;
-//import com.taobao.api.DefaultTaobaoClient;
-//import com.taobao.api.TaobaoClient;
-//import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
-//import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
-//
-//import org.apache.log4j.Logger;
-//
-//import java.util.Date;
+
 
 
 public class SMSMessageUtil {
@@ -93,36 +86,6 @@ public class SMSMessageUtil {
 				System.out.println("sendSmsResponse.getCode is "+sendSmsResponse.getCode());
 				return false;
 			}
-
-    	//TaobaoClient client = new DefaultTaobaoClient(URL, APP_KEY, SECRET);
-      //  AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
-//        req.setSmsType(SMS_TYPE);
-//
-//
-//        req.setSmsFreeSignName(signName);
-//        req.setSmsParamString("{\"code\":\"" + code + "\"}");
-//        req.setRecNum(mobile);
-//        req.setSmsTemplateCode(TEMPLATE_CODE);
-//        req.setTimestamp(new Date().getTime());
-        //AlibabaAliqinFcSmsNumSendResponse rsp = ((DefaultTaobaoClient) acsClient).execute(req);
-
-
-     //   JSONObject body = JSONObject.parseObject(rsp.getBody());
-      //  LOG.info(JSON.toJSONString(body));
-//        if (body.containsKey("alibaba_aliqin_fc_sms_num_send_response")) {
-//            LOG.info(String.format("==>发送短信成功:手机号%s,发送返回信息:%s", mobile, rsp.getBody()));
-//
-//            return  true;
-//        } else if (body.containsKey("error_response")) {
-//            JSONObject errorRps = body.getJSONObject("error_response");
-//            LOG.info(String.format("==>发送短信失败:手机号%s,发送返回信息:%s", mobile, rsp.getBody()));
-//            return false;
-//        } else {
-//            LOG.info(String.format("==>发送短信失败|未知异常:手机号%s,发送返回信息:%s", mobile, rsp.getBody()));
-//            return false;
-//        }
-
-
     }
 
     public static void main(String[] args) throws ApiException {
@@ -132,7 +95,7 @@ public class SMSMessageUtil {
 //        send("15902023879", "345345","LTAIbl6n3zsUcEEJ","0Z0TLDfQ1HdsCpN2k4Cs9UZrWImUVC","邓彪");
 //        send("15902023879", "345345","23887342","0db633205f62d240086ee62fe892380f","洪石软件");
 //        System.out.println(responseCode);
-    	send("15902023879","12345678","SMS_82925013","LTAIR7DaQEcFJ6YZ","9HKp5mkN9wdAPBAhsOGkgZu0SUU5Z7","洪石");
+    	send("15515947627","12345678","SMS_82925013","LTAIR7DaQEcFJ6YZ","9HKp5mkN9wdAPBAhsOGkgZu0SUU5Z7","洪石");
     }
 
 

@@ -108,6 +108,14 @@ class ActivityConfig extends React.Component {
                 <textarea rows="3" cols="20" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>设置客服qq：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.qq} name="qq" className="form-control" onChange={this._change}/>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>设置品牌名称：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.brand} name="brand" className="form-control" onChange={this._change}/>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否支持配送：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <select name="supportDeliver" value={this.state.config.supportDeliver?this.state.config.supportDeliver:'yes'} style={{padding:'5px'}} onChange={this._change}>
@@ -115,19 +123,46 @@ class ActivityConfig extends React.Component {
                   <option value="yes">支持</option>
                 </select>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定会员：</label>
-              <div className="col-md-9" style={{marginTop:'10px'}}>
-                <select name="startUp" value={this.state.config.startUp?this.state.config.startUp:'0'} style={{padding:'5px'}} onChange={this._change}>
-                  <option value="0">默认</option>
-                  <option value="1">启用无线下会员</option>
-                  <option value="2">启用有线下会员</option>
-                  <option value="3">停用会员绑定</option>
-                </select>
-              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>配送距离限制km：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>满额起送设置：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.config.full} name="full" className="form-control" onChange={this._change}/>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定会员：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="startUp" value={this.state.config.startUp?this.state.config.startUp:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">默认</option>
+                  <option value="1">只启用无线下会员</option>
+                  <option value="2">只启用有线下会员</option>
+                  <option value="3">停用会员绑定</option>
+                </select>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用会员解绑：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="unbundling" value={this.state.config.unbundling?this.state.config.unbundling:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">启用</option>
+                  <option value="1">停用</option>
+                </select>
+              </div>
+							<label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用会员挂失：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="loss" value={this.state.config.loss?this.state.config.loss:'0'} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="0">启用</option>
+                  <option value="1">停用</option>
+                </select>
+              </div>
+              {/*<label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用绑定强制弹个人信息：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="force" value={this.state.config.force?this.state.config.force:'1'} style={{padding:'5px'}} onChange={this._change}>    
+                  <option value="1">启用</option>
+                  <option value="2">不启用</option>                
+                </select>
+              </div>
+             */}
+
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>会员绑定页面内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <textarea rows="3" cols="20" value={this.state.config.bindText} name="bindText" className="form-control" onChange={this._change}>
@@ -136,6 +171,11 @@ class ActivityConfig extends React.Component {
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>评论赠送提示内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <textarea rows="3" cols="20" value={this.state.config.commentText} name="commentText" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>签到奖品规则页面内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <textarea rows="3" cols="20" value={this.state.config.signText} name="signText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
             </div>

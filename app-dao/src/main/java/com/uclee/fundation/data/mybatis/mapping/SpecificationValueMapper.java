@@ -15,10 +15,14 @@ public interface SpecificationValueMapper {
     int insertSelective(SpecificationValue record);
 
     SpecificationValue selectByPrimaryKey(Integer valueId);
+    
+    List<SpecificationValue> selectByPrimaryKeys(Integer valueId);
 
     int updateByPrimaryKeySelective(SpecificationValue record);
 
     int updateByPrimaryKey(SpecificationValue record);
+    
+    int updateGuiGe(SpecificationValue record);
 
 	SpecificationValue selectByProductIdAndValueId(@Param("productId")Integer productId,@Param("valueId") Integer valueId);
 
@@ -29,4 +33,7 @@ public interface SpecificationValueMapper {
 	List<SpecificationValue> selectByProductId(Integer productId);
 
     List<String> selectHsCodeByProductId(Integer productId);
+    
+    List<SpecificationValue> selectByHsGoods(Integer valueId);
+    SpecificationValue selectGoods(Integer valueId);
 }

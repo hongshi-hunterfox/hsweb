@@ -21,4 +21,7 @@ public interface WechatMerchantInfo {
 	String APPID_CONFIG = "appid";
 	
 	String NOTIFY_URL_CONFIG = "notifyurl";
+
+	String ZHENGSHU="zhengshu";
+	String ZHENGSHU_PASSWORD="zhengshuPassword";
 }

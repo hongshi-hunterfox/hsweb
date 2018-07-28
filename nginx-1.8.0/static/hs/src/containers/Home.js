@@ -15,6 +15,8 @@ import ProductGroup from "./ProductGroup"
 var HomeUtil = require('../utils/HomeUtil.js');
 import req from 'superagent'
 var fto = require('form_to_object')
+var myDate = new Date()
+var Date1 = new Date(myDate).getTime()
 
 class HomeCarousel extends React.Component {
   render() {
@@ -142,7 +144,22 @@ const DetailPicker = (props) => {
             <div className="detail-picker-header-info">
               <div className="detail-picker-header-title">{props.title}</div>
               <div className="detail-picker-header-price">
-                ¥ {props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              {
+              	((Date1)<(props.startTime)||(Date1)>(props.endTime)) ?
+              <div>
+              在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              </div>	
+              	: 
+              <div>
+              	{((props.promotionPrice)==='-') ? 
+              	<div>
+              	在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              	</div> :
+              	<div>
+              	促销价：¥{props.promotionPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce} 在售价：¥{props.totalPrice}</span>:null}
+              	</div>
+              	}
+              </div>}
               </div>
             </div>
           </div>
@@ -164,6 +181,21 @@ const DetailPicker = (props) => {
                     )
                 })
               }
+            </div>
+            <div className="detail-picker-spec-name">{props.parameter!==null ? (props.parameter)+'：': null}</div>
+            <div className="detail-picker-spec-values clearfix">
+              {props.canshu.map((item)=>{
+       					return(	
+      			 				<div key={item.id}  
+      			 					onClick={() => {
+          	      			props.param(item.id)
+          	      			console.log("ssss="+item.id)
+                			}} 
+                			className={(item.sname !==null ? 'detail-picker-spec-value' + (item.id === props.ValudId ? ' active' : ''): null)}>
+         							{item.sname}
+        						</div>
+        				);  
+    					})}        
             </div>
           </div>
 
@@ -209,10 +241,13 @@ class Home extends React.Component {
       banner:[],
       quickNavis:[],
       specifications:[],
+      parameters:[],
+      parameter: '',
       images:[],
       pickType: 'add_to_cart',
       showPick: false,
       currentSpecValudId: null,
+      ValudId: null,
       currentAmount: 1,
       salesAmount:0,
       productId:0
@@ -221,10 +256,18 @@ class Home extends React.Component {
     this.specValueMap = {}
     this.specPrePriceMap = {}
     this.specPreValueMap = {}
+    this.specProPriceMap = {}
+    this.specProValueMap = {}
+    this.specStartTimeMap = {}
+    this.specStaValueMap = {}
+    this.specEndTimeMap = {}
+    this.specEndValueMap = {}
     this.minPrice = 0
     this.maxPrice = 0
     this.preMinPrice = 0
     this.preMaxPrice = 0
+    this.proMinPrice = 0
+    this.proMaxPrice = 0
   }
 
   componentDidMount() {
@@ -311,9 +354,12 @@ class Home extends React.Component {
         alert('here:' + res.body.currentSpecValudId)
         this.setState({
           showPick: true,
+          parameter: res.body.parameter,
+          parameters:res.body.parameters,
           specifications:res.body.specifications,
           images:res.body.images,
-          currentSpecValudId:res.body.currentSpecValudId
+          currentSpecValudId:res.body.currentSpecValudId,
+          ValudId:res.body.ValudId
         })
       })
   }
@@ -353,6 +399,15 @@ class Home extends React.Component {
       }
     })
   }
+  
+  _param  = (id) => {
+    this.setState((prevState) => {
+      return {
+        ValudId: id
+      }
+    })
+  }
+
 
   _clickCartAdd = () => {
     this.setState({
@@ -375,7 +430,9 @@ class Home extends React.Component {
       .send({
         amount: this.state.currentAmount,
         productId: parseInt(this.state.productId, 10),
-        specificationValueId: this.state.currentSpecValudId
+        specificationValueId: this.state.currentSpecValudId,
+        paramete: this.state.parameter,
+        canshuValueId: this.state.ValudId
       })
       .end((err, res) => {
         if (err) {
@@ -399,6 +456,18 @@ class Home extends React.Component {
     window.location = url
   }
   render() {
+  	var canshu = this.state.parameters
+  	var canshuid = this.state.parameters.map((item,index)=>{
+      return(
+      	<div key={index}>
+      	{item.sname !==null ?
+       	<div className='detail-picker-spec-value'>
+         		{item.id}
+        </div>
+        : null}
+        </div>
+      );  
+    })
     var { specifications } = this.state
     if (specifications.length) {
         // take the first one only
@@ -417,10 +486,29 @@ class Home extends React.Component {
 
           return item.prePrice
         })
+        var promotionPrice = spec.values.map((item) => {
+          // calc the map BTW
+          this.specProPriceMap[`_${item.valueId}`] = item.promotionPrice
+          this.specProValueMap[`_${item.valueId}`] = item.value
+
+          return item.promotionPrice
+        })
+        var startTime = spec.values.map((item) =>{
+        	this.specStartTimeMap[`_${item.valueId}`] = item.startTime
+        	this.specStaValueMap[`_${item.valueId}`] = item.value
+        	return item.startTime
+        })
+        var endTime = spec.values.map((item) =>{
+        	this.specEndTimeMap[`_${item.valueId}`] = item.endTime
+        	this.specEndValueMap[`_${item.valueId}`] = item.value
+        	return item.endTime
+        })
         this.minPrice = Math.min.apply(null, prices)
         this.maxPrice = Math.max.apply(null, prices)
         this.preMinPrice = Math.min.apply(null, prePrices)
         this.preMaxPrice = Math.max.apply(null, prePrices)
+        this.proMinPrice = Math.min.apply(null, promotionPrice)
+        this.proMaxPrice = Math.max.apply(null, promotionPrice)
     }
     var totalPrice = '-'
     if (this.specPriceMap[`_${this.state.currentSpecValudId}`]) {
@@ -429,6 +517,18 @@ class Home extends React.Component {
     var prePirce=0;
     if (this.specPrePriceMap[`_${this.state.currentSpecValudId}`]) {
       prePirce = new Big(this.specPrePriceMap[`_${this.state.currentSpecValudId}`]).toString()
+    }
+    var promotionPrice='-'
+    if (this.specProPriceMap[`_${this.state.currentSpecValudId}`]) {
+      promotionPrice = new Big(this.specProPriceMap[`_${this.state.currentSpecValudId}`]).toString()
+    }
+		var startTime='00:00'
+    if (this.specStartTimeMap[`_${this.state.currentSpecValudId}`]) {
+      startTime = new Big(this.specStartTimeMap[`_${this.state.currentSpecValudId}`]).toString()
+    }
+    var endTime='00:00'
+    if (this.specEndTimeMap[`_${this.state.currentSpecValudId}`]) {
+      endTime = new Big(this.specEndTimeMap[`_${this.state.currentSpecValudId}`]).toString()
     }
     var groups = this.state.groups.map((item, index) => {
       return(
@@ -474,9 +574,10 @@ class Home extends React.Component {
                                   specifications:item1.specifications,
                                   images:item1.images,
                                   currentSpecValudId:item1.currentSpecValudId,
+                                  ValudId:item1.ValudId,
                                   productId:item1.productId
                                 })
-                              /*req
+                              req
                                 .get('/uclee-user-web/productDetail?productId=' + item1.productId)
                                 .end((err, res) => {
                                   if (err) {
@@ -487,11 +588,14 @@ class Home extends React.Component {
                                     showPick: true,
                                     specifications:res.body.specifications,
                                     images:res.body.images,
+                                    parameter:res.body.parameter,
+                                    parameters:res.body.parameters,
                                     currentSpecValudId:res.body.currentSpecValudId,
+                                    ValudId:res.body.ValudId,
                                     productId:item1.productId
                                   })
-                                })*/
-                            }}>buy</div>
+                                })
+                            }}><i className="fa fa-shopping-cart" aria-hidden="true" /></div>
                           </div>
                         </div>
                       </div>
@@ -522,14 +626,22 @@ class Home extends React.Component {
               title={this.state.title}
               totalPrice={totalPrice}
               spec={spec}
+              canshu={canshu}
+              canshuid={canshuid}
+              parameter={this.state.parameter}
               pickSpec={this._pickSpec}
+              param={this._param}
               currentSpecValudId={this.state.currentSpecValudId}
+              ValudId={this.state.ValudId}
               currentAmount={this.state.currentAmount}
               subAmount={this._subAmount}
               addAmount={this._addAmount}
               onClickNext={this._clickNext}
               pickType={this.state.pickType}
               prePirce={prePirce}
+              promotionPrice={promotionPrice}
+              startTime={startTime}
+              endTime={endTime}
               />
             <Navi query={this.props.location.query}/>
 

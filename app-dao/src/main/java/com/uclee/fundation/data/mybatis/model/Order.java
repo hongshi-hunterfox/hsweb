@@ -84,6 +84,16 @@ public class Order {
     private String pickUpImage;
 
     private String pickUpBarcode;
+    
+    private String value;
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
 
 	public String getPickUpBarcode() {
 		return pickUpBarcode;

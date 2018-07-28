@@ -43,6 +43,7 @@ import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.model.Permission;
 import com.uclee.fundation.data.mybatis.model.Role;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
+import com.uclee.fundation.data.web.dto.ValuePost;
 import com.uclee.model.CookieVelocity;
 import com.uclee.page.util.PageUtils;
 import com.uclee.user.service.UserProfileServiceI;
@@ -60,8 +61,6 @@ public class ProductManagerHandler {
 	
 	@RequestMapping(value = "/doAddProductHandler", method = RequestMethod.POST)
 	public @ResponseBody Boolean addProductHandler(@RequestBody ProductForm productForm,HttpSession session) throws Exception {
-	
-		logger.info("----------------" + JSON.toJSONString(productForm));
 		return productManageService.addProduct(productForm);
 		
 	}
@@ -75,9 +74,7 @@ public class ProductManagerHandler {
 	
 	@RequestMapping(value = "/doUpdateProductHandler", method = RequestMethod.POST)
 	public @ResponseBody Boolean doUpdateProductHandler(@RequestBody ProductForm productForm,HttpSession session) throws Exception {
-	
-		logger.info("----------------" + JSON.toJSONString(productForm));
-		
+		System.out.println("productfrom============"+JSON.toJSONString(productForm));
 		return productManageService.updateProduct(productForm);
 		
 	}

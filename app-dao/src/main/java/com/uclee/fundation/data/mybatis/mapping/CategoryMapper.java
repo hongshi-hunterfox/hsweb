@@ -1,5 +1,6 @@
 package com.uclee.fundation.data.mybatis.mapping;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.uclee.fundation.data.mybatis.model.Category;
@@ -24,4 +25,5 @@ public interface CategoryMapper {
     Category selectByPId(Integer productId);
 
     Category selectByName(String category);
+    List<Category> selectBybatchDiscount(String category);
 }

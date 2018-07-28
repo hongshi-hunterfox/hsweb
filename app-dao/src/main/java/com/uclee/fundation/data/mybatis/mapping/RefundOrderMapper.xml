@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.RefundOrderMapper" >
+    <resultMap id="RefundOrder" type="com.uclee.fundation.data.mybatis.model.RefundOrder" >
+        <id column="refund_order_id" property="refundOrderId" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="payment_id" property="paymentId" jdbcType="INTEGER" />
+        <result column="payment_order_id" property="paymentOrderId" jdbcType="INTEGER"/>
+        <result column="payment_serial_num" property="paymentSerialNum" jdbcType="VARCHAR" />
+        <result column="refund_serial_num" property="refundSerialNum" jdbcType="VARCHAR"/>
+        <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
+        <result column="transaction_type" property="transactionType" jdbcType="CHAR" />
+        <result column="totalFree" property="totalFree" jdbcType="DECIMAL" />
+        <result column="refundFree" property="refundFree" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="complete_time" property="completeTime" jdbcType="TIMESTAMP" />
+        <result column="is_completed"  property="isCompleted" jdbcType="BIT"/>
+        <result column="refundDesc" property="refundDesc" jdbcType="VARCHAR"/>
+        <result column="flag" property="flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="aduitRefund" type="com.uclee.fundation.data.web.dto.AuditRefundDto">
+        <id column="order_id" property="orderId" jdbcType="INTEGER" />
+        <result column="payment_order_id" property="paymentOrderId" jdbcType="INTEGER" />
+        <result column="refund_order_id" property="refundOrderId" jdbcType="INTEGER" />
+        <result column="payment_id" property="paymentId" jdbcType="INTEGER" />
+        <result column="order_serial_num" property="orderSerialNum" jdbcType="VARCHAR" />
+        <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="refundFree" property="refundFree" jdbcType="DECIMAL" />
+        <result column="payment_name" property="paymentName" jdbcType="VARCHAR" />
+        <result column="refund_serial_num" property="refundSerialNum" jdbcType="VARCHAR" />
+        <result column="refundDesc" property="refundDesc" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+
+
+    <sql id="Base_Column_List">
+        refund_order_id, user_id, payment_id, payment_order_id, payment_serial_num, refund_serial_num,
+        transaction_id, transaction_type, totalFree, refundFree ,create_time,complete_time,is_completed,refundDesc,flag
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="RefundOrder" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from web_refund_orders
+        where refund_order_id = #{refundOrderId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByRefundSerialNum" resultMap="RefundOrder" >
+        select
+        <include refid="Base_Column_List" />
+        from web_refund_orders
+        where refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectExistByPaymentSerialNum" resultMap="RefundOrder" parameterType="java.lang.String">
+        select <include refid="Base_Column_List" />
+        from web_refund_orders
+        where payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByTransactionId" resultMap="RefundOrder" parameterType="java.lang.String">
+        select <include refid="Base_Column_List" />
+        from web_refund_orders
+        where transaction_id= #{transactionId,jdbcType=VARCHAR}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from web_refund_orders
+        where refund_order_id = #{refundOrderId,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.RefundOrder" useGeneratedKeys="true"
+            keyProperty="refundOrderId">
+        insert into web_refund_orders (user_id, payment_id, payment_order_id, payment_serial_num, refund_serial_num,
+        transaction_id, transaction_type, totalFree, refundFree ,create_time,complete_time,is_completed,refundDesc,flag)
+        values (#{userId,jdbcType=INTEGER}, #{paymentId,jdbcType=INTEGER}, #{paymentOrderId,jdbcType=INTEGER},
+        #{paymentSerialNum,jdbcType=VARCHAR},#{refundSerialNum,jdbcType=VARCHAR},
+        #{transactionId,jdbcType=VARCHAR},  #{transactionType,jdbcType=CHAR},
+        #{totalFree,jdbcType=DECIMAL},   #{refundFree,jdbcType=DECIMAL},
+        #{createTime,jdbcType=TIMESTAMP},#{completeTime,jdbcType=TIMESTAMP},#{isCompleted,jdbcType=BIT},#{refundDesc,jdbcType=VARCHAR},#{flag,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.RefundOrder" useGeneratedKeys="true"
+            keyProperty="refundOrderId">
+        insert into web_refund_orders
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="refundOrderId != null" >
+                refund_order_id,
+            </if>
+            <if test="userId != null" >
+                user_id,
+            </if>
+            <if test="paymentId != null" >
+                payment_id,
+            </if>
+
+            <if test=" paymentOrderId!= null" >
+                payment_order_id,
+            </if>
+            <if test="paymentSerialNum != null" >
+                payment_serial_num,
+            </if>
+
+            <if test="refundSerialNum != null" >
+                refund_serial_num,
+            </if>
+
+            <if test="transactionId != null" >
+                transaction_id,
+            </if>
+
+            <if test="transactionType != null" >
+                transaction_type,
+            </if>
+
+            <if test="totalFree != null" >
+                totalFree,
+            </if>
+
+            <if test="refundFree !=null">
+                refundFree,
+            </if>
+
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="completeTime != null" >
+                complete_time,
+            </if>
+
+            <if test="isCompleted != null" >
+                is_completed,
+            </if>
+
+            <if test="refundDesc != null" >
+                refundDesc,
+            </if>
+
+            <if test="flag !=null">
+                flag,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="refundOrderId != null" >
+                #{refundOrderId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null" >
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="paymentId != null" >
+                #{paymentId,jdbcType=INTEGER},
+            </if>
+
+            <if test="paymentOrderId!= null" >
+                #{paymentOrderId,jdbcType=INTEGER},
+            </if>
+
+            <if test="paymentSerialNum != null" >
+                #{paymentSerialNum,jdbcType=VARCHAR},
+            </if>
+
+            <if test="refundSerialNum != null" >
+                #{refundSerialNum,jdbcType=VARCHAR},
+            </if>
+
+            <if test="transactionId != null" >
+                #{transactionId,jdbcType=VARCHAR},
+            </if>
+
+            <if test="transactionType != null" >
+                #{transactionType,jdbcType=CHAR},
+            </if>
+
+            <if test="totalFree != null" >
+                #{totalFree,jdbcType=DECIMAL},
+            </if>
+
+            <if test="refundFree != null" >
+                #{refundFree,jdbcType=DECIMAL},
+            </if>
+
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="completeTime != null" >
+                #{completeTime,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="isCompleted != null" >
+                #{isCompleted,jdbcType=BIT},
+            </if>
+
+            <if test="refundDesc != null" >
+                #{refundDesc,jdbcType=VARCHAR},
+            </if>
+
+            <if test="flag !=null">
+                #{flag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.RefundOrder" >
+        update web_refund_orders
+        <set >
+            <if test="userId != null" >
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="paymentId != null" >
+                payment_id = #{paymentId,jdbcType=INTEGER},
+            </if>
+
+            <if test="paymentOrderId != null" >
+                payment_order_id = #{paymentOrderId,jdbcType=INTEGER},
+            </if>
+
+            <if test="paymentSerialNum != null" >
+                payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR},
+            </if>
+
+            <if test="refundSerialNum !=null">
+                refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR},
+            </if>
+
+            <if test="transactionId != null" >
+                transaction_id = #{transactionId,jdbcType=VARCHAR},
+            </if>
+
+            <if test="transactionType != null" >
+                transaction_type = #{transactionType,jdbcType=CHAR},
+            </if>
+
+            <if test="totalFree != null" >
+                totalFree = #{totalFree,jdbcType=DECIMAL},
+            </if>
+
+            <if test="refundFree != null" >
+                refundFree = #{refundFree,jdbcType=DECIMAL},
+            </if>
+
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="completeTime != null" >
+                complete_time = #{completeTime,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="isCompleted !=null">
+                is_completed= #{isCompleted,jdbcType=BIT},
+            </if>
+            <if test="refundDesc !=null">
+                refundDesc= #{refundDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="flag !=null">
+                flag = #{flag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.RefundOrder" >
+        update web_refund_orders
+        set user_id = #{userId,jdbcType=INTEGER},
+         payment_id = #{paymentId,jdbcType=INTEGER},
+         payment_order_id = #{paymentOrderId,jdbcType=INTEGER},
+         payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR},
+         refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR},
+         transaction_id = #{transactionId,jdbcType=VARCHAR},
+         transaction_type = #{transactionType,jdbcType=CHAR},
+         totalFree = #{totalFree,jdbcType=DECIMAL},
+         refundFree = #{refundFree,jdbcType=DECIMAL},
+         create_time = #{createTime,jdbcType=TIMESTAMP},
+         complete_time = #{completeTime,jdbcType=TIMESTAMP},
+         is_completed= #{isCompleted,jdbcType=BIT},
+         refundDesc = #{refundDesc,jdbcType=VARCHAR},
+         flag= #{flag,jdbcType=INTEGER}
+        where refund_order_id = #{refundOrderId,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="getRefundOrderList" resultMap="aduitRefund" parameterType="java.lang.String">
+      select A.order_serial_num,B.store_name,CONVERT(varchar(100), A.create_time, 20) as create_time,C.refundFree,E.payment_name,
+      A.order_id,C.refund_order_id,C.refund_serial_num,C.refundDesc
+      from
+      web_orders A inner join web_napa_stores B on A.store_id=B.store_id
+      inner join web_refund_orders C on A.payment_order_id=C.payment_order_id
+      inner join web_payment_orders D on A.payment_order_id=D.payment_order_id
+      inner join web_payments E on D.payment_id=E.payment_id
+      where C.flag=2
+      <if test=" orderSerialNum !=null and orderSerialNum !='' ">
+        and A.order_serial_num= #{orderSerialNum,jdbcType=VARCHAR}
+      </if>
+
+
+    </select>
+
+    <insert id="insertOrderTrace" statementType="CALLABLE"  parameterType="map" >
+      {call WSC_insertOrderTrace(#{paymentSerialNum},#{openId},#{flag})}
+    </insert>
+
+
+</mapper>

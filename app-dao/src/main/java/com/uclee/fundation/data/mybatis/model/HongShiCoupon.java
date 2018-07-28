@@ -17,6 +17,56 @@ public class HongShiCoupon {
 	private String barCode;
 	
 	private String goodsCode;
+	
+	private BigDecimal fullamount;
+	
+	private String convertibleGoods;
+	
+	private String remarks;
+	
+	private String productNumber;
+	
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getProductNumber() {
+		return productNumber;
+	}
+
+	public void setProductNumber(String productNumber) {
+		this.productNumber = productNumber;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public String getConvertibleGoods() {
+		return convertibleGoods;
+	}
+
+	public void setConvertibleGoods(String convertibleGoods) {
+		this.convertibleGoods = convertibleGoods;
+	}
+
+	public BigDecimal getFullamount() {
+		return fullamount;
+	}
+
+	public void setFullamount(BigDecimal fullamount) {
+		this.fullamount = fullamount;
+	}
 
 	public String getGoodsCode() {
 		return goodsCode;

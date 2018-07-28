@@ -67,21 +67,21 @@ class ShowCoupon extends React.Component {
             );
         });
         return(
-        	<DocumentTitle title="新人礼包">
-        	<div>
-        	<div className="show-coupon">
-        	<div className="show-coupon-upper">☆★<span>新人礼包</span>★☆</div>
-        	<div className="show-coupon-vipcode">已放入你的账户: {this.state.cVipCode}</div>
-        	<div className="show-coupon-roll">
-        		{coupons}
-        	</div>
-            </div>
-            <div className="show-btn">
-             <div className="show-btn-items">	
-				<span onClick={this._cancelHandler}>知道了</span>
-             </div>
-            </div>
-            </div>
+        	<DocumentTitle title="绑定成功">
+        	<div>        	
+        			<div className="show-coupon">
+        			<div className="show-coupon-up">新人礼包</div>
+        			<div className="show-coupon-vipcode"><i className="fa fa-volume-up">已放入你的账户  {this.state.cVipCode}</i></div>
+        	</div>	
+        	<div className="show-btn">
+        		<div className="show-coupon">
+        			<span className="show-coupon-foll">
+						{coupons}
+        			</span>
+        		</div>
+        	</div> 
+        	<span className="show-btn-items" onClick={this._cancelHandler}>知道了!</span>
+			</div>
         	</DocumentTitle>
         );
 	}

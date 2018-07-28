@@ -98,4 +98,13 @@
       value = #{value,jdbcType=VARCHAR}
     where tag = #{tag,jdbcType=VARCHAR}
   </update>
+
+
+  <select id="getWeixinCertificateConfig" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from web_config where tag='zhengshu' or tag='zhengshuPassword'
+  </select>
+
+
 </mapper>

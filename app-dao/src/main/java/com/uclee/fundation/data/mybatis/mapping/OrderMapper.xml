@@ -33,6 +33,7 @@
     <result column="payment_serial_num" property="paymentSerialNum" jdbcType="VARCHAR" />
     <result column="pick_up_image" property="pickUpImage" jdbcType="VARCHAR" />
     <result column="pick_up_barcode" property="pickUpBarcode" jdbcType="VARCHAR" />
+   	<result column="value" property="value" jdbcType="VARCHAR" /> 
   </resultMap>
   <resultMap type="com.uclee.fundation.data.mybatis.model.Order" id="OrderWithItem" extends="BaseResultMap">
    <collection property="items" javaType="list" ofType="com.uclee.fundation.data.mybatis.model.OrderItem">
@@ -59,7 +60,7 @@
     from web_orders
     where order_id = #{orderId,jdbcType=INTEGER}
   </select>
-  <select id="selectByPaymentOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   <select id="selectByPaymentOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from web_orders

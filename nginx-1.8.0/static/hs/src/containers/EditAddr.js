@@ -3,9 +3,12 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import Navi from './Navi'
 var EditAddrUtil = require('../utils/EditAddrUtil.js')
-var fto = require('form_to_object')
+//var fto = require('form_to_object')
+import fto from 'form_to_object'
 import ErrorMessage from './ErrorMessage'
 var browserHistory = require('react-router').browserHistory
+var geocoder,map = null;
+var qq=window.qq;
 var errMap = {
 	empty_name: '请输入联系人姓名',
 	empty_phone: '请输入联系电话',
@@ -30,9 +33,12 @@ class EditAddr extends React.Component {
 			regionId: 0,
 			name: ''
 		}
+		this.lat=23.12463
+    	this.lng=113.36199
 	}
 
 	componentDidMount() {
+		this._init()
 		var q = this.props.location.query
 		EditAddrUtil.getData(
 			q,
@@ -139,6 +145,7 @@ class EditAddr extends React.Component {
 								onFocus={this._f}
 								onBlur={this._b}
 								onChange={this._setCity}
+								id='test'
 							>
 								<option value="">请选择省份</option>
 								{province}
@@ -149,6 +156,7 @@ class EditAddr extends React.Component {
 								onFocus={this._f}
 								onBlur={this._b}
 								onChange={this._setRegion}
+								id='test1'
 							>
 								<option value="">请选择城市</option>
 								{city}
@@ -159,6 +167,7 @@ class EditAddr extends React.Component {
 								onFocus={this._f}
 								onBlur={this._b}
 								onChange={this._handleChange.bind(this, 'regionId')}
+								id='test2'
 							>
 								<option value="">请选择地区</option>
 								{region}
@@ -176,6 +185,9 @@ class EditAddr extends React.Component {
 								onBlur={this._b}
 							/>
 						</div>
+						<div className="col-md-9 col-md-offset-3 map-container" id="container">
+                
+              			</div>
 						<ErrorMessage error={this.state.error} />
 						<button
 							type="submit"
@@ -190,7 +202,26 @@ class EditAddr extends React.Component {
 			</DocumentTitle>
 		)
 	}
-
+ _init = () => {
+    var center = new qq.maps.LatLng(23.12463,113.36199);
+    map = new qq.maps.Map(document.getElementById('container'),{
+      center: center,
+      zoom: 15
+    });
+    //调用地址解析类
+    geocoder = new qq.maps.Geocoder({
+      complete : (result) => {
+        console.log(result)
+        this.lat=result.detail.location.lat
+        this.lng=result.detail.location.lng
+        map.setCenter(result.detail.location);
+        new qq.maps.Marker({
+            map:map,
+            position: result.detail.location
+        });
+      }
+    });
+  }
 	_f = () => {
 		document.getElementById('hs-navi').style.display = 'none'
 		document.getElementById('hs-submit-btn').style.position = 'static'
@@ -201,12 +232,23 @@ class EditAddr extends React.Component {
 		document.getElementById('hs-submit-btn').style.position = 'fixed'
 	}
 
+
 	_handleChange = (key, e) => {
 		var deliverAddr = Object.assign({}, this.state.deliverAddr)
 		deliverAddr[key] = e.target.value
 		this.setState({
 			deliverAddr: deliverAddr
 		})
+		var  myselect=document.getElementById("test");
+		var index=myselect.selectedIndex ;
+		var  myselect1=document.getElementById("test1");
+		var index1=myselect1.selectedIndex ;
+		var  myselect2=document.getElementById("test2");
+		var index2=myselect2.selectedIndex ;
+		console.log("aaa===="+myselect.options[index].text + myselect1.options[index1].text + myselect2.options[index2].text)
+		console.log("aaa===="+deliverAddr.addrDetail)
+		var addr=myselect.options[index].text + myselect1.options[index1].text + myselect2.options[index2].text + (deliverAddr.addrDetail || '')
+		geocoder.getLocation(addr)
 	}
 	_setCity = e => {
 		var q = {

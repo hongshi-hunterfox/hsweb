@@ -7,10 +7,14 @@ import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.payment.exception.PaymentHandlerException;
+import com.uclee.payment.exception.RefundHandlerException;
 import com.uclee.user.model.PaymentStrategyResult;
+import com.uclee.user.model.RefundStrategyResult;
 import com.uclee.user.model.UserForm;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -271,12 +275,53 @@ public interface UserServiceI {
 
 	Map<String, Object> getMobile(String phone, String hsCode);
 	
-	Map<String, Object> getMobJect(String QueryName);
+    //Map<String, Object> getMobJect(String QueryName);
 	//根据微商城订单号取得订单的所有信息by chiangpan
 	Order getOrderListSerailNum(String outerOrderCode);
 
-
+	Map<String, Object> getMobJect(String QueryName,String phone,String hsCode);
 	List<PaymentOrder> selectForTimer();
 
 	Map<String,String> wxInitiativeCheck(PaymentOrder paymentOrder);
+	
+	List<HsVip> selecthsVip(String vCode);
+
+	int updateVips(String vCode, HsVip hsVip);
+	
+	List<HsVip> selectVips(String vNumber);
+	
+	List<UserProfile> selectAllProfileLists(Integer userId);
+	
+	List<HongShiVip> selectVip(String cMobileNumber);
+	
+	List<Lnsurance> getUsers(String oauthId);
+	
+	ProductParameters obtainParameters(Integer id);
+	
+	SignRecord selectAccumulation(Integer userId);
+	
+	SignRecord getAccumulation(Integer userId);
+
+	//退款 by chiangpan
+	Map<String,Object> applyRefund(String outerOrderCode, Integer userId);
+
+	RefundOrder selectRefundOrderBySerialNum(String refundSerialNum);
+
+	RefundStrategyResult getWCRefund(String openId, RefundOrder refundOrder) throws RefundHandlerException;
+
+	//获得微信证书配置
+	Map<String,String> getWeixinZhengshuConfig();
+
+	//支付宝退款
+	RefundStrategyResult getAlipayForRefund(RefundOrder refundOrder);
+
+	int updateRefundOrder(RefundOrder refundOrder);
+	//调用存储过程插入到线下表order_trace表
+	int insertOrderTrace(Map pramMap);
+	
+	List<SpecificationValue> selectByHsGoods(Integer valueId);
+	
+	Cart selectValueId(Integer userId, Integer cartId);
+	
+	SpecificationValue selectGoods(Integer valueId);
 }

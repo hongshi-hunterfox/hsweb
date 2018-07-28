@@ -12,6 +12,9 @@
 	    <result column="hs_goods_id" property="hsGoodsId" jdbcType="INTEGER" />
 	    <result column="hs_goods_price" property="hsGoodsPrice" jdbcType="DECIMAL" />
 	    <result column="pre_price" property="prePrice" jdbcType="DECIMAL" />
+	    <result column="promotion_price" property="promotionPrice" jdbcType="DECIMAL" />
+	    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     </collection>
   </resultMap>
   <sql id="Base_Column_List" >

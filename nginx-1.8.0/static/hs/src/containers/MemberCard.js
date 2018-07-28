@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './member-card.css'
 import req from 'superagent'

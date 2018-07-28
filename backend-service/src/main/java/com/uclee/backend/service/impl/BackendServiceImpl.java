@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,6 +34,10 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private CommentMapper commentMapper;
 	@Autowired
+	private AccountMapper accountMapper;
+	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
+	@Autowired
 	private OrderMapper orderMapper;
 	@Autowired
 	private ShippingFullCutMapper shippingFullCutMapper;
@@ -42,6 +47,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private BindingRewardsMapper bindingRewardsMapper;
 	@Autowired
 	private EvaluationGiftsMapper evaluationGiftsMapper;
+	@Autowired
+	private IntegralInGiftsMapper integralinGiftsMapper;
 	@Autowired
 	private CategoryMapper categoryMapper;
 	@Autowired
@@ -90,6 +97,13 @@ public class BackendServiceImpl implements BackendServiceI {
 	private UserProfileMapper userProfileMapper;
 	@Autowired
 	private VarMapper varMapper;
+
+	@Autowired
+	private OrderSettingPickMapper orderSettingPickMapper;
+
+	@Autowired
+	private RefundOrderMapper refundOrderMapper;
+
 	@SuppressWarnings("unused")
 	@Override
 	public boolean updateConfig(ConfigPost configPost) { 
@@ -217,6 +231,21 @@ public class BackendServiceImpl implements BackendServiceI {
 		}else{
 			configMapper.updateByTag(WebConfig.startUp, "");
 		}
+		if (configPost.getSignText()!=null) {
+			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
+		}else{
+			configMapper.updateByTag(WebConfig.signText, "");
+		}
+		if (configPost.getForce()!=null) {
+			configMapper.updateByTag(WebConfig.force, configPost.getForce());
+		}else{
+			configMapper.updateByTag(WebConfig.force, "");
+		}if (configPost.getQq()!=null) {
+			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
+		}else{
+			configMapper.updateByTag(WebConfig.qq, "");
+		}
+		
 		return true;
 	}
 	@Override
@@ -339,6 +368,30 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getStartUp()!=null) {
 			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
+		}
+		if (configPost.getFull()!=null) {
+			configMapper.updateByTag(WebConfig.full, configPost.getFull());
+		}
+		if (configPost.getUnbundling()!=null) {
+			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
+		}
+		if(configPost.getLoss()!=null){
+			configMapper.updateByTag(WebConfig.loss, configPost.getLoss());
+		}
+		if (configPost.getSignText()!=null) {
+			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
+		}
+		if (configPost.getVoucherSendInformation()!=null) {
+			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+		}
+		if (configPost.getForce()!=null) {
+			configMapper.updateByTag(WebConfig.force, configPost.getForce());
+		}
+		if (configPost.getBrand()!=null) {
+			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
+		}
+		if (configPost.getQq()!=null) {
+			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
 		}
 		return true;
 	}
@@ -463,6 +516,27 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getStartUp()!=null) {
 			configMapper.updateByTag(WebConfig.startUp, configPost.getStartUp());
 		}
+		if (configPost.getFull()!=null) {
+			configMapper.updateByTag(WebConfig.full, configPost.getFull());
+		}
+		if (configPost.getUnbundling()!=null) {
+			configMapper.updateByTag(WebConfig.unbundling, configPost.getUnbundling());
+		}
+		if (configPost.getLoss()!=null) {
+			configMapper.updateByTag(WebConfig.loss, configPost.getLoss());
+		}
+		if (configPost.getSignText()!=null) {
+			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
+		}
+		if (configPost.getVoucherSendInformation()!=null) {
+			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+		}
+		if (configPost.getForce()!=null) {
+			configMapper.updateByTag(WebConfig.force, configPost.getForce());
+		}
+		if (configPost.getBrand()!=null) {
+			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
+		}
 		return true;
 	}
 	@Override
@@ -485,6 +559,12 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<EvaluationGifts> selectAllEvaluationGifts() {
 
 		return evaluationGiftsMapper.selectOne();
+	}
+
+	@Override
+	public List<IntegralInGifts> selectAllIntegralInGifts() {
+
+		return integralinGiftsMapper.selectOne();
 	}
 
 	@Override
@@ -570,6 +650,27 @@ public class BackendServiceImpl implements BackendServiceI {
 		return true;
 	}
 	@Override
+	public boolean updateIntegralInGifts(FreightPost freightPost) {
+		int delAll = integralinGiftsMapper.deleteAll();
+		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0||freightPost.getMyValue1()==null||freightPost.getMyValue1().size()==0||freightPost.getMyValue0()==null||freightPost.getMyValue0().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||freightPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, Double> entry : freightPost.getMyKey().entrySet()){
+			IntegralInGifts integralinGifts = new IntegralInGifts();
+			integralinGifts.setDay(entry.getValue().intValue());
+			integralinGifts.setMoney(new BigDecimal(freightPost.getMyValue0().get(entry.getKey())));
+			integralinGifts.setVoucherCode(freightPost.getMyValue().get(entry.getKey()));
+			integralinGifts.setAmount(Integer.parseInt(freightPost.getMyValue1().get(entry.getKey())));
+			integralinGiftsMapper.insertSelective(integralinGifts);
+		}
+		return true;
+	}
+	@Override
 	public boolean updateFullCut(FreightPost freightPost) {
 		int delAll = fullCutMapper.deleteAll();
 		if(freightPost.getMyKey()==null||freightPost.getMyValue()==null||freightPost.getMyKey().size()==0||freightPost.getMyValue().size()==0){
@@ -612,6 +713,33 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public boolean truncateBirthVoucherHandler() {
 		int delAll = birthVoucherMapper.deleteAll();
+
+		return true;
+	}
+
+	@Override
+	public boolean updateVipVoucher(VipVoucherPost vipVoucherPost) {
+		@SuppressWarnings("unused")
+		int delAll = hongShiVipMapper.deleteAll();
+		if(vipVoucherPost.getMyKey()==null||vipVoucherPost.getMyValue()==null||vipVoucherPost.getMyKey().size()==0||vipVoucherPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, String> entry : vipVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||vipVoucherPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, String> entry : vipVoucherPost.getMyKey().entrySet()){
+			VipVoucher tmp = new VipVoucher();
+			tmp.setAmount(Integer.parseInt(vipVoucherPost.getMyValue().get(entry.getKey())));
+			tmp.setVoucher(entry.getValue().toString());
+			hongShiVipMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+	@Override
+	public boolean truncateVipVoucherHandler() {
+		int delAll = hongShiVipMapper.deleteAll();
 
 		return true;
 	}
@@ -682,7 +810,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		Product product = productMapper.selectByPrimaryKey(productId);
 		if(product!=null){
 			productForm.setIsShow(product.getIsShow());
+			productForm.setParameter(product.getParameter());
 			productForm.setExplain(product.getExplain());
+			productForm.setAppointedTime(product.getAppointedTime());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
 			productForm.setDescription(FileUtil.UrlRequest(product.getDescription()));
@@ -708,6 +838,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			tmp.setHsPrice(value.getHsGoodsPrice());
 			tmp.setName(value.getValue());
 			tmp.setPrePrice(value.getPrePrice());
+			tmp.setPromotionPrice(value.getPromotionPrice());
+			tmp.setStartTime(value.getStartTime());
+			tmp.setEndTime(value.getEndTime());
+			tmp.setStartTimeStr(DateUtils.format(value.getStartTime(), DateUtils.FORMAT_LONG));
+			tmp.setEndTimeStr(DateUtils.format(value.getEndTime(), DateUtils.FORMAT_LONG));	
 			List<Integer> storeIds = new ArrayList<Integer>();
 			List<NapaStore> stores = napaStoreMapper.selectByValueId(value.getValueId());
 			for(NapaStore store:stores){
@@ -800,6 +935,23 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return userProfile;
 	}
+	
+	@Override
+	public List<UserProfile> getVipList(Date start, Date end) throws ParseException {
+		return userProfileMapper.selectByVips(start, end);
+	}
+	@Override
+	public List<UserProfile> selectCardPhoneVips(String cartphone) {
+		if(cartphone==null){
+			return new ArrayList<UserProfile>();
+		}
+		List<UserProfile> viplist = userProfileMapper.selectCardPhoneVips(cartphone);
+		for(UserProfile item:viplist){
+			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+		}
+		return viplist;
+	}
+	
 	@Override
 	public List<UserProfile> getUserListForBirth(String start,String end) {
 		if(start==null||end==null){
@@ -905,6 +1057,22 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setRestrictedDistance(config.getValue());
 			}else if(config.getTag().equals(WebConfig.startUp)){
 				configPost.setStartUp(config.getValue());
+			}else if(config.getTag().equals(WebConfig.full)){
+				configPost.setFull(config.getValue());
+			}else if(config.getTag().equals(WebConfig.unbundling)){
+				configPost.setUnbundling(config.getValue());
+			}else if(config.getTag().equals(WebConfig.loss)){
+				configPost.setLoss(config.getValue());				
+			}else if(config.getTag().equals(WebConfig.signText)){
+				configPost.setSignText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.VoucherSendInformation)){
+				configPost.setVoucherSendInformation(config.getValue());
+			}else if(config.getTag().equals(WebConfig.force)){
+				configPost.setForce(config.getValue());
+			}else if(config.getTag().equals(WebConfig.brand)){
+				configPost.setBrand(config.getValue());
+			}else if(config.getTag().equals(WebConfig.qq)){
+				configPost.setQq(config.getValue());
 			}
 		}
 		return configPost;
@@ -979,6 +1147,10 @@ public class BackendServiceImpl implements BackendServiceI {
 		ProductGroupLink linkTmp = new ProductGroupLink();
 		linkTmp.setGroupId(productGroupPost.getGroupId());
 		linkTmp.setProductId(productGroupPost.getProductId());
+		//新增时设定该产品的postion值 by chiangpan
+		int maxPosition=productGroupLinkMapper.getMaxPosition(productGroupPost.getGroupId());
+		maxPosition+=1;
+		linkTmp.setPosition(maxPosition);
 		productGroupLinkMapper.insertSelective(linkTmp);
 		return true;
 	}
@@ -1046,7 +1218,7 @@ public class BackendServiceImpl implements BackendServiceI {
 						if (coupon != null && coupon.size() > 0) {
 							try {
 								for(int i=0;i<birthVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode());
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode(),"生日祝福赠送礼券");
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -1088,6 +1260,55 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return false;
 	}
+	@Override
+	public boolean sendViphMsg(Integer userId,boolean sendVoucher) {
+		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+		if(login!=null){
+			String nickName="";
+			UserProfile profile = userProfileMapper.selectByUserId(userId);
+			if(profile!=null){
+				nickName = profile.getNickName();
+			}
+			String[] key = {"keyword1","keyword2","keyword3"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"优惠券派送提醒"};
+			//使用生日短信模板--skx
+			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/coupon?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
+			//联动送礼券
+			if(sendVoucher) {
+				try {
+					List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();
+					for(VipVoucher vipVoucher:vipVouchers) {
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(vipVoucher.getVoucher());
+						if (coupon != null && coupon.size() > 0) {
+							try {
+								for(int i=0;i<vipVoucher.getAmount();i++) {
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), vipVoucher.getVoucher(),"定向发券");
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	public String sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
 		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
 		sendData.put("touser", openId);
@@ -1275,6 +1496,35 @@ public class BackendServiceImpl implements BackendServiceI {
 		ret.put("result",true);
 		return ret;
 	}
+	
+	@Override
+	public Map<String,Object> isCouponAmount(Integer amount) {
+		Map<String,Object> ret = new TreeMap<String,Object>();
+		if(amount==null){
+			amount=1;
+		}
+		try {
+			List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();
+			for(VipVoucher vipVoucher:vipVouchers) {
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(vipVoucher.getVoucher());
+				if(coupon!=null&&coupon.size()<(vipVoucher.getAmount()*amount)){
+					ret.put("result",false);
+					if(coupon.size()>0) {
+						ret.put("text", "券（商品券号：" + coupon.get(0).getGoodsCode() + "），剩余张数为" + coupon.size() + "还差" + (vipVoucher.getAmount() * amount-coupon.size()) + "张");
+					}else{
+						ret.put("text", "券（商品券号：" + vipVoucher.getVoucher() + "），剩余张数为0张" + "还差" + (vipVoucher.getAmount() * amount) + "张");
+					}
+					return ret;
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			ret.put("result",false);
+			return ret;
+		}
+		ret.put("result",true);
+		return ret;
+	}
 
 	@Override
 	public List<ProductDto> selectAllProductByCatId(Integer categoryId) {
@@ -1321,6 +1571,27 @@ public class BackendServiceImpl implements BackendServiceI {
 		if(category.getCategoryId()!=null){
 			Category tmp = categoryMapper.selectByPrimaryKey(category.getCategoryId());
 			Category tmp2 = categoryMapper.selectByName(category.getCategory());
+			List<Category> tmp3 = categoryMapper.selectBybatchDiscount(category.getCategory());
+			List<ProductGe> productguige = productMapper.selectProductsCategories(category.getCategoryId());
+			
+			if(productguige!=null){
+				for(int i=0;i<productguige.size();i++){
+					System.out.println("6666======"+productguige.get(i).getValueId());
+					SpecificationValue Value = specificationValueMapper.selectByPrimaryKey(productguige.get(i).getValueId());
+				    System.out.println("在售价============"+ Value.getHsGoodsPrice());
+				    BigDecimal prePrice = Value.getHsGoodsPrice().multiply(category.getBatchDiscount());	
+				    System.out.println("折扣价============"+ prePrice);
+					Value.setPromotionPrice(prePrice);
+					System.out.println("开始时间============"+ category.getStartTimeStrs());
+					Value.setStartTimeStr(category.getStartTimeStrs());
+					System.out.println("结束时间============"+ category.getEndTimeStrs());
+					Value.setEndTimeStr(category.getEndTimeStrs());
+					
+					specificationValueMapper.updateGuiGe(Value);
+					
+				}
+			}
+			
 			if(tmp2!=null&&tmp2.getCategoryId()!=category.getCategoryId()){
 				ret.put("result",false);
 				ret.put("reason","该类别已经存在，不可重复添加");
@@ -1438,4 +1709,68 @@ public class BackendServiceImpl implements BackendServiceI {
 	public List<BirthVoucher> selectAllBirthVoucher() {
 		return birthVoucherMapper.selectAll();
 	}
+	
+	@Override
+	public List<VipVoucher> selectAllVipVoucher() {
+		return hongShiVipMapper.selectAll();
+	}
+	
+	@Override
+	public List<OrderSettingPick> selectAllOrderSettingPick() {
+		return orderSettingPickMapper.selectAll();
+	}
+
+	@Override
+	public boolean updateOrderSettingPick(OrderSettingPick  orderSettingPick) {
+		int delAll =orderSettingPickMapper.deleteAll();
+		orderSettingPick.setCloseStartDate(DateUtils.parse(orderSettingPick.getCloseStartDateStr(), DateUtils.FORMAT_SHORT));
+		orderSettingPick.setCloseEndDate(DateUtils.parse(orderSettingPick.getCloseEndDateStr(), DateUtils.FORMAT_SHORT));
+		orderSettingPickMapper.insertSelective(orderSettingPick);
+
+		return true;
+
+	}
+
+	@Override
+	public int updateProductGroupPosition(Integer groupId, Integer productId, Integer position) {
+		return productGroupLinkMapper.updateProductGroupPosition(groupId,productId,position);
+	}
+	@Override
+	public List<ProductParameters> getParameters(Integer productId) {
+		return productMapper.getParameters(productId);
+	}
+
+	@Override
+	public List<AuditRefundDto> getRefundOrderList(String orderSerialNum) {
+		return refundOrderMapper.getRefundOrderList(orderSerialNum);
+
+	}
+
+	@Override
+	public Order getOrderBySeialNum(String orderSerialNum) {
+		Order order=orderMapper.getOrderListByOrderSerailNum(orderSerialNum);
+		return order;
+	}
+	
+	@Override
+	public List<Category> selectBybatchDiscount(String category) {
+		return  categoryMapper.selectBybatchDiscount(category);
+	}
+	
+	@Override
+	public List<UserProfile> selectAllVipList() {
+		return userProfileMapper.selectAllVipList();
+	}
+	@Override
+	public Boolean getAccount(String account,String password) {
+		List<Account> Account = accountMapper.getAccount(account);
+		if(Account!=null&&Account.size()>0){
+			List<Account> Password = accountMapper.getPassword(password);
+				if(Password!=null&&Password.size()>0){
+					return true;
+				}
+		}
+		return false;
+	}
+
 }

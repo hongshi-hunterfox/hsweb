@@ -23,7 +23,7 @@ public interface ConfigMapper {
     
     List<Config> selectAll();
 
-	int updateByTag(@Param("tag")String tag,@Param("value")String value);
+	int updateByTag(@Param("tag") String tag, @Param("value") String value);
 
 	Config getByTag(String tag);
 
@@ -32,5 +32,8 @@ public interface ConfigMapper {
 	List<Config> getAlipayConfig();
 
 	List<Config> getSMSConfig();
+
+    List<Config> getWeixinCertificateConfig();
+
 
 }

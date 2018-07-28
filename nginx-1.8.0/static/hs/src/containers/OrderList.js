@@ -1,4 +1,4 @@
-import "./order-list.css"
+﻿import "./order-list.css"
 import React from "react"
 import DocumentTitle from "react-document-title"
 import Navi from './Navi'
@@ -48,65 +48,88 @@ class OrderList extends React.Component {
 			barcode:url2
 		})
 	}
+
+	_inValid=(outerOrderCode)=>{
+		var conf = confirm('确认要作废订单吗？');
+		if(conf){
+			req.get('/uclee-user-web/applyRefund?outerOrderCode='+outerOrderCode).end((err, res) => {
+				if (err) {
+					return err
+				}
+				if(res.body.result){
+					var resJson = JSON.parse(res.text)
+					window.location = 'seller/refund?refundSerialNum=' + resJson.refundSerialNum
+				}else{
+					alert("该订单已经退款");
+				}
+			})
+		}
+	}
+
+
+
+
 	render() {
 		var items = this.state.orders.map((item, index) => {
-			return (
-				<div className="order-list" key={index}>
-					<div className="order-list-top">
-						<div className="order-list-top-item">
-							<span className="store pull-left">
-								{item.outerOrderCode !== null && item.outerOrderCode !== ""
-									? "线上订单"
-									: "线下订单"}
-							</span>
-							<span className="status pull-right">
-								{!item.isEnd ? item.void? "已废弃" :  "制作配送中" : "已完成"}
-							</span>
-						</div>
-						<div className="number">
-							<span>订单编号：{item.orderCode}{item.outerOrderCode !== null && item.outerOrderCode !== ""
-							? <span>(微商城单号：{item.outerOrderCode})</span>
-							: null}</span>
-						</div>
-						<div className="number">
-							<span>下单时间：{item.createTime}</span>
-						</div>
-            			<div className="number">
-							<span>下单部门：{item.department}</span>
-						</div>
-						{   item.isEnd ==1?
-							<div className="number">
-							    <span>评论订单有礼：{this.state.commentText}</span>
-						    </div>
-						    :null
-						}
-
-						<div className="number">
-							<span>订单金额：{item.totalAmount>0?item.totalAmount:0}</span>
-
-						</div>
-					</div>
-			          
-                
-
-
-					<div>
-						{item.isEnd&&!item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/comment?orderSerialNum='+item.outerOrderCode}>去评论</Link>:null}
-						{item.isEnd&&item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/commentDetail?orderSerialNum='+item.outerOrderCode}>查看评论</Link>:null}
-					</div>
-					
-          			<div>
-						<span onClick={()=>{window.location="/myOrderDetail/" + item.outerOrderCode}} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单详情</span>
-					</div>
-
-						{!item.isEnd&&!item.void?
-							<div>
-							<span className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} onClick={this._showImage.bind(this,item.pickUpImageUrl,item.barcode)}>查看提货码</span>
+			if(item.outerOrderCode !== null && item.outerOrderCode !== ""){
+				return (
+					<div className="order-list" key={index}>
+						<div className="order-list-top">
+							<div className="order-list-top-item">
+								<span className="store pull-left">
+									{/*}{item.outerOrderCode !== null && item.outerOrderCode !== ""
+										? "线上订单"
+										: "线下订单"}
+									*/}
+									线上订单
+								</span>
+								<span className="status pull-right">
+									{!item.isEnd ? item.void? "已废弃" :  "制作配送中" : "已完成"}
+								</span>
 							</div>
-						:null}
+							<div className="number">
+								<span>订单编号：{item.orderCode}{item.outerOrderCode !== null && item.outerOrderCode !== ""
+								? <span>(微商城单号：{item.outerOrderCode})</span>
+								: null}</span>
+							</div>
+							<div className="number">
+								<span>下单时间：{item.createTime}</span>
+							</div>
+            				<div className="number">
+								<span>下单部门：{item.department}</span>
+							</div>
+							{   item.isEnd ==1?
+								<div className="number">
+							    	<span>评论订单有礼：{this.state.commentText}</span>
+						    	</div>
+						    	:null
+							}
+
+							<div className="number">
+								<span>订单金额：{item.totalAmount>0?item.totalAmount:0}</span>
+
+							</div>
+						</div>
+						<div>
+							{item.isEnd&&!item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/comment?orderSerialNum='+item.outerOrderCode}>去评论</Link>:null}
+							{item.isEnd&&item.isComment?<Link className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} to={'/commentDetail?orderSerialNum='+item.outerOrderCode}>查看评论</Link>:null}
+						</div>
 					
-				</div>
-			)
+          				<div>
+							<span onClick={()=>{window.location="/myOrderDetail/" + item.outerOrderCode}} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单详情</span>
+						{/*<span onClick={this._inValid.bind(this,item.outerOrderCode)} className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#09F7C7',color:'white'}} >订单作废</span>*/}
+						</div>
+
+							{!item.isEnd&&!item.void?
+								<div>
+									<span className='btn btn-default' style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} onClick={this._showImage.bind(this,item.pickUpImageUrl,item.barcode)}>查看提货码</span>
+								</div>
+							:null}
+					</div>
+				)
+			}else{
+				return null;
+			}
 		})
 		return (
 			<DocumentTitle title="我的订单">

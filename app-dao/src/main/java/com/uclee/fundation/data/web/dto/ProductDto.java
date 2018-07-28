@@ -1,10 +1,12 @@
 package com.uclee.fundation.data.web.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.uclee.fundation.data.mybatis.model.Product;
 import com.uclee.fundation.data.mybatis.model.ProductImageLink;
+import com.uclee.fundation.data.mybatis.model.ProductParameters;
 import com.uclee.fundation.data.mybatis.model.Specification;
 
 public class ProductDto extends Product{
@@ -14,26 +16,12 @@ public class ProductDto extends Product{
 	private String image;
 
 	private String category;
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
+	
+	private List<ProductParameters> parameters;
 
 	private List<ProductImageLink> images;
 
 	private List<String> salesInfo;
-
-	public List<String> getSalesInfo() {
-		return salesInfo;
-	}
-
-	public void setSalesInfo(List<String> salesInfo) {
-		this.salesInfo = salesInfo;
-	}
 
 	private List<Specification> specifications;
 	
@@ -41,6 +29,56 @@ public class ProductDto extends Product{
 	
 	private BigDecimal prePrice;
 	
+	private BigDecimal promotionPrice;
+	
+	private Date startTime;
+	
+	private Date endTime;
+	
+	private String startTimeStr;
+	
+	private String endTimeStr;
+	
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public BigDecimal getPromotionPrice() {
+		return promotionPrice;
+	}
+
+	public void setPromotionPrice(BigDecimal promotionPrice) {
+		this.promotionPrice = promotionPrice;
+	}
+
 	private Integer currentSpecValudId;
 
 	public BigDecimal getPrePrice() {
@@ -98,5 +136,28 @@ public class ProductDto extends Product{
 	public void setSpecifications(List<Specification> specifications) {
 		this.specifications = specifications;
 	}
+	
+	public List<ProductParameters> getParameters() {
+		return parameters;
+	}
 
+	public void setParameters(List<ProductParameters> parameters) {
+		this.parameters = parameters;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	public List<String> getSalesInfo() {
+		return salesInfo;
+	}
+
+	public void setSalesInfo(List<String> salesInfo) {
+		this.salesInfo = salesInfo;
+	}
 }

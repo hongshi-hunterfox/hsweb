@@ -2,7 +2,9 @@ package com.uclee.web.user.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.domain.Data;
 import com.backend.service.BackendServiceI;
+import com.taobao.api.internal.toplink.logging.LogUtil;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
@@ -12,8 +14,10 @@ import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.hongshi.service.HongShiServiceI;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.sms.util.VerifyCode;
 import com.uclee.user.service.DuobaoServiceI;
@@ -35,7 +39,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @EnableAutoConfiguration
@@ -54,6 +61,8 @@ public class UserController extends CommonUserHandler{
 	private BackendServiceI backendService;
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
+	@Autowired
+	private HongShiServiceI hongShiService;
 	@Autowired
 	private DataSourceFacade datasource;
 	@Autowired
@@ -80,6 +89,8 @@ public class UserController extends CommonUserHandler{
 	private BindingRewardsMapper bindingRewardsMapper;
 	@Autowired
 	private EvaluationGiftsMapper evaluationGiftsMapper;
+	@Autowired
+	private IntegralInGiftsMapper integralinGiftsMapper;
 	
 	
 	@RequestMapping("/getPageTitle")
@@ -156,6 +167,35 @@ public class UserController extends CommonUserHandler{
 		map.put("isPaid", paymentOrder.getIsCompleted());
 		return map;
 	}
+	
+	/**
+	 * 
+	 * 校验手机号码--skx
+	 */
+	@RequestMapping("/isphone")
+	public @ResponseBody Map<String,Object> isphone(String phone,HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		@SuppressWarnings("unused")
+		HttpSession session = request.getSession();
+		String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[6])|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
+		    if (phone.length() != 11) {
+		    	System.out.println("手机号应为11位数");
+		        map.put("fail","手机号应为11位数");
+		    } else {
+		        Pattern p = Pattern.compile(regex);
+		        Matcher m = p.matcher(phone);
+		        boolean isMatch = m.matches();
+		        System.out.println(isMatch);
+		        if (!isMatch) {
+		        	System.out.println("请填入正确的手机号");
+		        	map.put("fail","请填入正确的手机号");
+		        }else{
+		        	System.out.println("正确的手机号");
+		        	map.put("fail","adopt");
+		        }
+		    }   
+		return map;
+	}
 
 	/** 
 	* @Title: verifyCode 
@@ -170,9 +210,68 @@ public class UserController extends CommonUserHandler{
 	public @ResponseBody Boolean verifyCode(String phone,HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
-		Map<String,String> config = userService.getSMSConfig();
-		return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"), config.get("signName"), config.get("templateCode"));
+		Map<String, String> config = userService.getSMSConfig();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
+		logger.info("12345"+numbers.size());
+		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
+			logger.info("12345"+numbers.get(0).getPhone());
+			if(numbers.get(0).getPhone().equals(phone)){
+				System.out.println("没有修改手机号");	
+			}else{
+				return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"),
+						config.get("signName"), config.get("templateCode"));
+			}	
+		}else{
+			//第一次使用商城绑定会员卡，根据user_id取不到手机号执行下面代码
+			return VerifyCode.sendVerifyCode(session, phone, config.get("aliAppkey"), config.get("aliAppSecret"),
+					config.get("signName"), config.get("templateCode"));
+		}
+		
+		return false;
 	}
+	
+	/** 
+	* @Title: verifyCode 
+	* @Description: 老板助手验证码发送类 
+	* @param @param phone 目标手机
+	* @param @param request
+	* @param @return    设定文件 
+	* @return Boolean    返回类型 
+	* @throws 
+	*/
+	@RequestMapping("/bossVerifyCode")
+	public @ResponseBody Boolean bossVerifyCode(String phone,HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Map<String,String> config = userService.getSMSConfig();
+		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
+	}
+	
+	/**
+	 * @Title: verifyCodes 
+	 * @value: 判断是否校验验证码
+	 */
+	@RequestMapping("/verifyCodes")
+	public @ResponseBody Boolean verifyCodes(String phone, HttpServletRequest request) {
+		Map<String, Object> map = new TreeMap<String, Object>();
+		HttpSession session = request.getSession();
+		Map<String, String> config = userService.getSMSConfig();
+		
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
+		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
+			if(numbers.get(0).getPhone().equals(phone)){
+				System.out.println("没有修改手机号");	
+	
+			}else{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	/** 
 	* @Title: checkVerifyCode 
 	* @Description: 检验用户输入的验证码正确性 
@@ -363,7 +462,19 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
+		List<HongShiCoupon> coupons = userService.selectCouponById(userId);		
+		if(userId!=null){	
+			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);			
+			List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
+			if(lnsurance!=null&&lnsurance.size()>0){
+			List<Lnsurance> lnsurances = hongShiVipService.selectUsers(lnsurance.get(0).getPhone());
+			if(lnsurances!=null&&lnsurances.size()>1){
+				System.out.println("此会员以赠送过，不再显示！");
+				return map;
+			}
+			}
+			
+			}
 		map.put("coupons", coupons);
 		return map;
 	}
@@ -402,16 +513,51 @@ public class UserController extends CommonUserHandler{
 		}
 		return map;
 	}
+	
+	/**
+	 * 获取签到奖品规则的配置文安
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getSignText")
+	public @ResponseBody Map<String,Object> getSignText(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Config config = userService.getConfigByTag(WebConfig.signText);
+		if(config!=null){
+			map.put("signText", config.getValue());
+		}else {
+			map.put("signText", "");
+		}
+		return map;
+	}
 	//
 	@RequestMapping("/isVoucherLimit")
 	public @ResponseBody Map<String,Object> isVoucherLimit(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		
+
+		if(userId!=null){
+			//根据会员表有没有此手机号来决定跳转--外键获取的手机号有可能不是你本次输入的手机号，也不会跳转
+			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
+					List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
+					if(lnsurance!=null&&lnsurance.size()>0){
+						List<HongShiVip> Vip = userService.selectVip(lnsurance.get(0).getPhone());
+						if(Vip!=null&&Vip.size()>0){
+							map.put("result",false);
+							return map;
+						}
+					}
+				
+				}
+
+		
 		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 		if(bindingRewards!=null&&bindingRewards.size()>=1){
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
-			if(coupon.size()<bindingRewards.get(0).getAmount()){
+			if(coupon.size()<bindingRewards.get(0).getAmount()||coupon.size()==0){
 				map.put("result",false);
 				return map;
 			}
@@ -447,6 +593,7 @@ public class UserController extends CommonUserHandler{
 	* @return Map<String,Object>    返回类型 
 	* @throws 
 	*/
+	@SuppressWarnings("deprecation")
 	@RequestMapping("/order")
 	public @ResponseBody Map<String,Object> order(HttpServletRequest request,@RequestBody List<CartDto> cart){
 		Map<String,Object> map = new TreeMap<String,Object>();
@@ -455,15 +602,84 @@ public class UserController extends CommonUserHandler{
 		DeliverAddr defaultAddr = userService.getDefaultAddrByUserId(userId);
 		map.put("defaultAddr", defaultAddr);
 		List<CartDto> carts = userService.selectCartByIds(userId,cart);
+		logger.info("cart post====="+JSON.toJSONString(carts));
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
+		Date date = new Date();
+		//拼接预定小时时间--kx
+		String appointedTime= "";
+		for(CartDto item:carts){			
+			System.out.println("item.getAppointedTime() = "+item.getAppointedTime());
+			date.setHours(new Date().getHours()+item.getAppointedTime());
+			appointedTime=appointedTime+date.getHours()+",";
+		}
+		System.out.println("date2 = "+appointedTime);
+		//转换字符串数组
+		String str[] = appointedTime.split(","); 
+		//字符串数组转为int数组
+		Integer Hours[] = new Integer[str.length];  
+		for(int i=0;i<str.length;i++){  
+			Hours[i]=Integer.parseInt(str[i]);
+		}
+		//取最大值
+		System.out.println("Hours"+Hours);
+		int max = (int) Collections.max(Arrays.asList(Hours));
+		System.out.println("Hours"+max);
+		//取最大时间
+		date.setHours(max);
+		SimpleDateFormat time=new SimpleDateFormat("HH:mm");
+		SimpleDateFormat riqi=new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(time.format(date.getTime())); 
+		map.put("appointedTime",time.format(date.getTime()));
+		map.put("riqi",riqi.format(date));
+		System.out.println("Hours"+time.format(date.getTime()));
+		
 		for(CartDto item:carts){
-			total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+			long value = date.getTime();
+			long value1 = 0;
+            if(item.getStartTime()!=null){
+            value1=item.getStartTime().getTime();
+            }
+            long value2 = 0;
+			if(item.getEndTime()!=null){
+			value2 = item.getEndTime().getTime();
+			}
+			//判断提交订单商品是否有促销价--skx
+			if(value1!=0||value2!=0){
+				if(item.getPromotion()!=null && value>value1 && value<value2){
+					total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
+				}else{
+					total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));	
+				}
+			}else{
+				total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+			}
+
+					
 			Product product = userService.getProductById(item.getProductId());
 			if(product!=null&&!product.getShippingFree()){
 				isShippingFree=false;
 			}
+
+			ProductParameters csshuxings = userService.obtainParameters(item.getCanshuValueId());	
+			if(csshuxings!=null&&csshuxings.getSname()!=null){
+				item.setCsshuxing(csshuxings.getSname());
+			}
 		}
+		logger.info("carts.size============="+carts.size());
+		//把goodscode以字符串格式拼接在一起put到前台-skx
+		String a="";
+		for(int i=0;i<carts.size();i++){
+			logger.info("item.getCartId()============="+carts.get(i).getCartId());
+			Cart valueid=userService.selectValueId(userId, carts.get(i).getCartId());
+			SpecificationValue hsgooscode = userService.selectGoods(valueid.getSpecificationValueId());
+			a=a+hsgooscode.getHsGoodsCode()+",";
+			logger.info("item.getCartId()============="+hsgooscode.getHsGoodsCode());
+		}
+
+		logger.info("hsgooscode="+JSON.toJSONString(a)); 
+		
+		map.put("hsgooscode",JSON.toJSONString(a));
 		map.put("cartItems", carts);
 		map.put("isShippingFree", isShippingFree);
 		map.put("total", total);
@@ -501,7 +717,7 @@ public class UserController extends CommonUserHandler{
 		map.put("salesInfo",salesInfo);
 		return map;
 	}
-	
+
 	/** 
 	* @Title: payment 
 	* @Description: 支付页面的数据接口，返回支付方式，订单信息
@@ -520,8 +736,6 @@ public class UserController extends CommonUserHandler{
 		//添加扫描规则
 		paymentOrder.setCheckCount(0);
 		paymentOrder.setCreateTime(new Date());
-		System.out.println("checkout-------------+k+"+paymentOrder.getCheckCount());
-		System.out.println("CreateTime-------------+k+"+paymentOrder.getCreateTime());
 		userService.updatePaymentOrder(paymentOrder);
 		List<Payment> payments = new ArrayList<Payment>();
 		if(paymentOrder!=null&&paymentOrder.getMoney().compareTo(new BigDecimal(0))>0){
@@ -741,7 +955,7 @@ public class UserController extends CommonUserHandler{
 	* @throws 
 	*/
 	@RequestMapping("/productDetail")
-	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId){
+	public @ResponseBody ProductDto productDetail(HttpServletRequest request,Integer productId,Integer tid){
 		ProductDto productDto = userService.getProductDtoById(productId);
 		System.out.println(JSON.toJSONString(productDto));
 		return productDto;
@@ -979,6 +1193,7 @@ public class UserController extends CommonUserHandler{
 		boolean isFullCut=false;
 		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
 		for(ShippingFullCut shippingFullCut:shippingFullCuts){
+			logger.info("shippingFullCut.getuLimit()======"+shippingFullCut.getuLimit());
 			if(shippingFullCut.getsLimit()<=distance&&shippingFullCut.getuLimit()>distance){
 				if(total.compareTo(shippingFullCut.getCondition())>=0){
 					money=0.0;
@@ -987,10 +1202,13 @@ public class UserController extends CommonUserHandler{
 				}
 			}
 		}
+		logger.info("isFullCut======"+isFullCut);
 		if(!isFullCut) {
+			logger.info("isFullCut======"+isFullCut);
 			List<Freight> freights = userService.getAllFreightConfig();
 			for (Freight freight : freights) {
-				if (distance > freight.getCondition()) {
+				logger.info("freight.getCondition()======"+freight.getCondition());
+				if (distance >= freight.getCondition()) {
 					logger.info(freight.getMoney());
 					money = freight.getMoney().doubleValue();
 					logger.info(money);
@@ -1121,6 +1339,18 @@ public class UserController extends CommonUserHandler{
 				map.put("result","success");
 			}
 		}
+		
+		SignRecord accumulations = userService.selectAccumulation(userId);
+		if(accumulations!=null){
+			map.put("accumulations",accumulations.getAccumulation());
+		}
+		
+		SignRecord accumulation = userService.getAccumulation(userId);
+			if(accumulation!=null){
+				map.put("accumulation", accumulation.getAccumulation());
+				logger.info("accumulation.getAccumulation()==="+accumulation.getAccumulation());
+			}
+		
 		OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
 		if(tt!=null){
 			List<HongShiVip> ret= hongShiVipService.getVipInfo(tt.getOauthId());//openid 去拿信息
@@ -1345,11 +1575,11 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * @Description: 小助手数据接口
+	 * @Description: 小助手数据接口-skx
 	 */
 	@RequestMapping("/DataView")
-	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName){
-		return userService.getMobJect(QueryName);
+	public @ResponseBody Map<String, Object> assistant(HttpServletRequest request,String QueryName,String phone,String hsCode){
+		return userService.getMobJect(QueryName,phone,hsCode);
 	}
 	
 	/**
@@ -1371,7 +1601,7 @@ public class UserController extends CommonUserHandler{
 		if(coupon!=null && !coupon.isEmpty()){
 			if(coupon != null && coupon.size()>0){
 				coupon.get(0);                       
-				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode());
+				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode(),"评价赠送礼券");
 				if(a>0){
 					System.out.println("发送成功");
 				}else{
@@ -1387,10 +1617,91 @@ public class UserController extends CommonUserHandler{
 		//评论送金额
 		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(evaluationGifts.get(0).getMoney());
 		hongShiVipService.hongShiRecharge(dd);
-		
-	    return null;		
+	    return null;				
+	}
+	/**
+	 * @Description: 签到赠送接口sjx
+	 */
+	@RequestMapping("/SigningGift")
+	public @ResponseBody HongShiCommonResult SigningGift(HttpServletRequest request,String oauthId,Integer point,String tag){		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);		
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		List<IntegralInGifts> integralinGifts = integralinGiftsMapper.selectOne();
+		//判断是否在最大赠送活动天数内
+		List<IntegralInGifts> daylist = integralinGiftsMapper.selectDay();
+		SignRecord Accumulation = signRecordMapper.selectAccumulation(userId);
+		if(Accumulation==null){
+		int	accumulation = 1;
+			if(accumulation <= daylist.get(0).getDay()){
+				for(int i=0;i<integralinGifts.size();i++){					
+					if(accumulation==integralinGifts.get(i).getDay()){
+						logger.info("integralinGifts.get(i).getDay()======"+integralinGifts.get(i).getDay());
+						//获取优惠券赠送数量
+						int amount=integralinGifts.get(i).getAmount();
+						for(int j=0;j<amount;j++){
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(integralinGifts.get(i).getVoucherCode());
+							if(coupon!=null && !coupon.isEmpty()){
+								if(coupon != null && coupon.size()>0){
+					
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
+									if(s>0){
+										System.out.println("发送成功");
+									}else{
+										System.out.println("发送失败");
+									}					
+								}
+							}else{
+								System.out.println("券被抢光了");
+							}
 			
+						}
+							
+						//签到送金额	
+						HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(integralinGifts.get(i).getMoney());
+						hongShiVipService.hongShiRecharge(dd);
+					}
+				}
+			}
+			return null;
+		}
 
+		
+		if(Accumulation!=null){
+			if(Accumulation.getAccumulation()+1 <= daylist.get(0).getDay()){
+
+				for(int i=0;i<integralinGifts.size();i++){
+				
+					if(Accumulation.getAccumulation()+1==integralinGifts.get(i).getDay()){
+						logger.info("integralinGifts.get(i).getDay()======"+integralinGifts.get(i).getDay());
+						//获取优惠券赠送数量
+						int amount=integralinGifts.get(i).getAmount();
+						for(int j=0;j<amount;j++){
+							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(integralinGifts.get(i).getVoucherCode());
+							if(coupon!=null && !coupon.isEmpty()){
+								if(coupon != null && coupon.size()>0){
+					
+									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
+									if(s>0){
+										System.out.println("发送成功");
+									}else{
+										System.out.println("发送失败");
+									}					
+								}
+							}else{
+								System.out.println("券被抢光了");
+							}
+			
+						}
+							
+						//签到送金额	
+						HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId()).setcWeiXinOrderCode(null).setnAddMoney(integralinGifts.get(i).getMoney());
+						hongShiVipService.hongShiRecharge(dd);
+					}
+				}
+			}
+		}
+		return null;	
 
 	}
 
@@ -1404,6 +1715,7 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> orderMap=new TreeMap<String,Object>();
 		//根据微商城订单号取得订单
 		Order order=userService.getOrderListSerailNum(outerOrderCode);
+		System.out.println("order==============="+JSON.toJSONString(order));
 
 		if(order!=null){
 			NapaStore napaStore=userService.getNapaStore(order.getStoreId());//下单部门
@@ -1420,6 +1732,79 @@ public class UserController extends CommonUserHandler{
 		return orderMap;
 	}
 	
+	/**
+	 * @Description : 个人信息详情页面--jx
+	 * @param vNumber
+	 */
+	@RequestMapping("/getVips")
+	public @ResponseBody HsVip getVips(HttpServletRequest request, String vNumber) {
+		HsVip res=new HsVip();
+		
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		List<HongShiVip> ret= hongShiVipService.getVipInfo(oauthLogin.getOauthId());
+		if(ret!=null&&ret.size()>0){
+
+			List<HsVip> Vips = userService.selecthsVip(ret.get(0).getcVipCode());
+			Map<String,Object> map = new TreeMap<String,Object>();
+			for(HsVip item:Vips){
+				String vName =item.getvName();
+				String Number = item.getvNumber();
+				String vBirthday= item.getvBirthday();
+				String vIdNumber = item.getvIdNumber();
+				String vCompany = item.getvCompany();
+				String vCode=item.getvCode();
+				String vSex=item.getvSex();
+				res.setvName(vName);
+				res.setvNumber(Number);
+				res.setvBirthday(vBirthday);
+				res.setvIdNumber(vIdNumber);
+				res.setvCompany(vCompany);
+				res.setvCode(vCode);
+				res.setvSex(vSex);
+				map.put("item", item);
+			}
 	
+
+
+		}
+
+		return res;
+		
+	}
+
+
+	@RequestMapping("refund")
+	public @ResponseBody Map<String,Object> refund(HttpServletRequest request,String refundSerialNum){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		RefundOrder fund = userService.selectRefundOrderBySerialNum(refundSerialNum);
+
+		Payment payment=userService.getPaymentMethodById(fund.getPaymentId());
+
+		PaymentOrder paymentOrder=userService.getPaymentOrderBySerialNum(fund.getPaymentSerialNum());
+
+		List<Order> orders=userService.selectOrderByPaymentSerialNum(userId,paymentOrder.getPaymentSerialNum());
+		Order order=new Order();
+		if(orders!=null && orders.size()>0){
+			order=orders.get(0);
+			String createTimeStr=DateUtils.format(order.getCreateTime());
+			//下单时间
+			order.setCreateTimeStr(createTimeStr);
+			//下单部门
+			NapaStore napaStore=userService.getNapaStore(order.getStoreId());
+
+			order.setStoreName(napaStore.getStoreName());
+		}
+
+		map.put("order",order);
+		map.put("payment", payment);
+		map.put("paymentOrder", paymentOrder);
+		map.put("refund",fund);
+		return map;
+	}
+
 	
  }

@@ -1,57 +1,54 @@
 .show-btn {
-  background: url(/images/coupon/bg-ShowCoupon2.png) no-repeat;
-  padding: 2px;
+  background-color: #EE6363;
+  background-size: 100% 100%;
+  margin: 5px auto;
 }
 .show-btn-items {
-  background-color: #FFC125;
+  background-color: #FFD700;
   color: white;
   padding: 15px;
   font-size: 24px;
-  text-align: center;
-  width: 80%;
   margin: 20px auto;
-  border-radius: 40px;
-  border: 3px solid #C0392B;
+  border-radius: 25px;
+  border: 1px solid #F39C12;
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+  clear: both;
+  display: block;
+  text-align: center;
+  bottom: 15px;
+  width: 100%;
+  position: fixed;
 }
 .show-coupon {
-  background: url(/images/coupon/bg-ShowCoupon.png) no-repeat;
+  background-color: #EE6363;
   background-size: 100% 100%;
-  padding-bottom: 0px;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
 }
-.show-coupon-upper {
+.show-coupon-up {
   text-align: center;
-  color: #ffffff;
-  font-size: 30px;
+  font-size: 18px;
 }
 .show-coupon-vipcode {
   text-align: center;
-  color: #ffffff;
-  font-size: 15px;
+  font-size: 16px;
 }
-.show-coupon-items {
-  background-color: #FFC125;
-  color: white;
-  padding: 15px;
-  font-size: 24px;
-  text-align: center;
-  width: 80%;
-  margin: 20px auto;
-  border-radius: 40px;
-  border: 3px solid #C0392B;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
-}
-.show-coupon-roll {
+.show-coupon-foll {
   margin-bottom: 5px;
   overflow-y: scroll;
   overflow-x: scroll;
-  width: 350px;
-  height: 400px;
+  width: 90px;
+  height: 75px;
 }
 .show-coupon-item {
+  text-align: center;
   margin: 10px;
   background: url(/images/coupon/show-coupon.png) no-repeat;
   background-size: 100% 100%;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
 }
 .show-coupon-item:before,
 .show-coupon-item:after {
@@ -93,17 +90,4 @@
   padding: 5px;
   color: #0cd60c;
   font-size: 15px;
-}
-.show-coupon-bottom {
-  position: fixed;
-  background-color: white;
-  left: 0;
-  right: 0;
-  width: 100%;
-  bottom: 55px;
-  border-top: 1px solid #ddd;
-}
-.show-coupon-bottom-button {
-  float: center;
-  padding: 10px 20px;
 }

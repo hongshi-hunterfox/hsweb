@@ -46,6 +46,12 @@ public class HongShiVip {
 	private Boolean isAllowPayment;
 
 	private String cardStatus;
+	
+	private String cIdNumber;
+	
+	private String cCompany;
+	
+	private String cSex;
 
 	public String getCardStatus() {
 		return cardStatus;
@@ -224,4 +230,32 @@ public class HongShiVip {
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
+	public String getcIdNumber() {
+		return cIdNumber;
+	}
+
+	public HongShiVip setcIdNumber(String cIdNumber) {
+		this.cIdNumber = cIdNumber;
+		return this;
+	}
+
+	public String getcCompany() {
+		return cCompany;
+	}
+
+	public HongShiVip setcCompany(String cCompany) {
+		this.cCompany = cCompany;
+		return this;
+	}
+	
+	public String getcSex() {
+		return cSex;
+	}
+
+	public void setcSex(String cSex) {
+		this.cSex = cSex;
+	}
+
+
 }

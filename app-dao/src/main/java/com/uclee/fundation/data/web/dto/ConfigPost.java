@@ -42,6 +42,79 @@ public class ConfigPost {
 	private String salesText;
 	private String restrictedDistance;
 	private String startUp;
+	private String full;
+	private String unbundling;
+	private String loss;
+	private String signText;
+	private String force;
+	private String brand;
+	private String qq;
+	public String getLoss() {
+		return loss;
+	}
+
+	public void setLoss(String loss) {
+		this.loss = loss;
+	}
+
+	public String getQq() {
+		return qq;
+	}
+
+	public void setQq(String qq) {
+		this.qq = qq;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	private String zhengshu;
+	private String zhengshuPassword;
+	private String voucherSendInformation;
+	public String getVoucherSendInformation() {
+		return voucherSendInformation;
+	}
+
+	public void setVoucherSendInformation(String voucherSendInformation) {
+		this.voucherSendInformation = voucherSendInformation;
+	}
+
+	public String getSignText() {
+		return signText;
+	}
+
+	public void setSignText(String signText) {
+		this.signText = signText;
+	}
+
+	public String getUnbundling() {
+		return unbundling;
+	}
+
+	public void setUnbundling(String unbundling) {
+		this.unbundling = unbundling;
+	}
+
+	public String getForce() {
+		return force;
+	}
+
+	public void setForce(String force) {
+		this.force = force;
+	}
+
+	public String getFull() {
+		return full;
+	}
+
+	public void setFull(String full) {
+		this.full = full;
+	}
 
 	public String getBirthText() {
 		return birthText;
@@ -320,4 +393,19 @@ public class ConfigPost {
 		this.startUp = startUp;
 	}
 
+	public String getZhengshu() {
+		return zhengshu;
+	}
+
+	public void setZhengshu(String zhengshu) {
+		this.zhengshu = zhengshu;
+	}
+
+	public String getZhengshuPassword() {
+		return zhengshuPassword;
+	}
+
+	public void setZhengshuPassword(String zhengshuPassword) {
+		this.zhengshuPassword = zhengshuPassword;
+	}
 }

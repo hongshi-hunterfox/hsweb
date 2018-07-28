@@ -7,8 +7,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
 import com.backend.service.ProductManageServiceI;
+import com.uclee.date.util.DateUtils;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.data.mybatis.mapping.ProductCategoryLinkMapper;
 import com.uclee.fundation.data.mybatis.mapping.ProductImageLinkMapper;
@@ -20,6 +22,7 @@ import com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMappe
 import com.uclee.fundation.data.mybatis.model.ProductCategoryLink;
 import com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey;
 import com.uclee.fundation.data.mybatis.model.ProductImageLink;
+import com.uclee.fundation.data.mybatis.model.ProductParameters;
 import com.uclee.fundation.data.mybatis.model.ProductSale;
 import com.uclee.fundation.data.mybatis.model.ProductsSpecificationsValuesLink;
 import com.uclee.fundation.data.mybatis.model.SpecificationValue;
@@ -50,7 +53,13 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 	public boolean addProduct(ProductForm product) {	
 		//description 
 		product.setIsActive(true);
+		//取sortValue的最大值，然后加1
+		int maxSortValue=productMapper.getMaxSortValue();
+		maxSortValue+=1;
+		//将sortValue的值设定到产品里面
+		product.setSortValue(maxSortValue);
 		descriptionHandler(product);
+		System.out.println("产品=="+product.getPrice());
 		if(productMapper.insertSelective(product)>0){
 			if(product.getSale()!=null){
 				ProductSale productSale = productSaleMapper.selectByProductId(product.getProductId());
@@ -70,6 +79,11 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			sale.setCount(0);
 			sale.setProductId(product.getProductId());
 			productSaleMapper.insertSelective(sale);
+			}
+			List<ProductParameters> itema = productMapper.selectParameters(product.getProductId());
+			if(itema==null){
+			ProductParameters parameters = new ProductParameters();
+			productMapper.insertParameters(parameters);
 			}
 			logger.info("productId:" + product.getProductId());
 			// 插入
@@ -92,6 +106,11 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsGoodsPrice(item.getHsPrice());
 			value.setHsStock(item.getHsStock());
 			value.setPrePrice(item.getPrePrice());
+			value.setPromotionPrice(item.getPromotionPrice());
+			value.setStartTime(item.getStartTime());
+			value.setEndTime(item.getEndTime());
+			value.setStartTimeStr(DateUtils.format(item.getStartTime(), DateUtils.FORMAT_LONG));
+			value.setEndTimeStr(DateUtils.format(item.getEndTime(), DateUtils.FORMAT_LONG));
 			value.setSpecificationId(1);
 			value.setValue(item.getName());
 			if(specificationValueMapper.insertSelective(value)>0){
@@ -125,6 +144,10 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsGoodsPrice(item.getHsPrice());
 			value.setHsStock(item.getHsStock());
 			value.setPrePrice(item.getPrePrice());
+			value.setPromotionPrice(item.getPromotionPrice());
+			//提交时转换类型
+			value.setStartTime(DateUtils.parse(item.getStartTimeStr()));
+			value.setEndTime(DateUtils.parse(item.getEndTimeStr()));
 			value.setSpecificationId(1);
 			value.setValue(item.getName());
 			if(specificationValueMapper.insertSelective(value)>0){
@@ -273,21 +296,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		return url;
 	}
 
-	/*@Override
-	public boolean updateProduct(ProductForm productForm) {
-		descriptionHandler(productForm);
-		if(productMapper.updateByPrimaryKeySelective(productForm)>0){
-			logger.info("productId:" + productForm.getProductId());
-			// category link
-			updateCategoryHandler(productForm);
-			
-			//image 
-			updateImageHandler(productForm);
-			
-			return true;
-		}
-		return false;
-	}*/
+
 	@Override
 	public boolean updateProduct(ProductForm product) {	
 		//description 
@@ -306,6 +315,60 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 					productSaleMapper.insertSelective(tmp);
 				}
 			}
+
+			List<ProductParameters> parameters  = productMapper.selectParameters(product.getProductId());		
+			if(parameters!=null&&parameters.size()>0){
+				//更新同一产品下的不同参数属性名称
+				ProductParameters iems=new  ProductParameters();
+				iems.setProductId(product.getProductId());
+				
+				iems.setId(parameters.get(0).getId());
+				iems.setSname(product.getAttribute1());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(1).getId());
+				iems.setSname(product.getAttribute2());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(2).getId());
+				iems.setSname(product.getAttribute3());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(3).getId());
+				iems.setSname(product.getAttribute4());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(4).getId());
+				iems.setSname(product.getAttribute5());
+				productMapper.updateParameters(iems);
+				
+				iems.setId(parameters.get(5).getId());
+				iems.setSname(product.getAttribute6());
+				productMapper.updateParameters(iems);
+				
+			}else{
+				ProductParameters itema = new ProductParameters();
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute1());
+					productMapper.insertParameters(itema);	
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute2());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute3());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute4());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute5());
+					productMapper.insertParameters(itema);					
+					itema.setProductId(product.getProductId());
+					itema.setSname(product.getAttribute6());
+					productMapper.insertParameters(itema);
+			}
+
+			
 			logger.info("productId:" + product.getProductId());
 			// 插入
 			updateCategoryHandler(product);

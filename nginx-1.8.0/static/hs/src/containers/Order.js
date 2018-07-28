@@ -1,13 +1,17 @@
-/* global wx */
+﻿/* global wx */
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './order.css'
 import req from 'superagent'
+var Link = require('react-router').Link
 var geocoder = null
 var qq = window.qq
 import Icon from '../components/Icon'
 import validator from 'validator'
 import "./order-list.css"
+import Big from 'big.js'
+var myDate = new Date()
+var Date1 = new Date(myDate).getTime()
 var fto = require('form_to_object')
 var errMap = {
   data_error: '非法数据',
@@ -16,7 +20,10 @@ var errMap = {
   phone_error: '手机格式错误',
   phone_empty: '自提请输入联系手机',
   isSelfPick_error: '请选择是否自提',
-  Distribution_error: '不在配送范围内'
+  Distribution_error: '不在配送范围内',
+  closeDate_error:'我们歇业了',
+  businesstime_error:'我们打烊睡觉了',
+  times_error:'取货时间不能小于'
 }
 import ErrorMessage from './ErrorMessage'
 class Order extends React.Component {
@@ -32,6 +39,9 @@ class Order extends React.Component {
       cartIds: [],
       voucherCode: '',
       voucherText: 0,
+      fullamount: 0,
+      convertibleGoods: '',
+      remarks: '',
       isDataError: false,
       shippingFee: 0,
       phone: '',
@@ -44,10 +54,19 @@ class Order extends React.Component {
       salesInfo:[],
       cut:0,
       distance:0,
-      config:{}
+      config:{},
+      closeStartDateStr:'',
+      closeEndDateStr:'',
+      businessStartTime:'',
+      businessEndTime:'',
+      hsgooscode: [],
+      appointedTime:'',
+      riqi: ''
     }
-    this.lat = 23
-    this.lng = 113
+    
+    this.lat = 21.908
+    
+    this.lng = 110.85
   }
 
   componentDidMount() {
@@ -115,12 +134,15 @@ class Order extends React.Component {
       this.setState({
         defaultAddr: resJson.defaultAddr,
         cartItems: resJson.cartItems,
+        appointedTime: resJson.appointedTime,
+        riqi: resJson.riqi,
         total: resJson.total,
         isShippingfree:resJson.isShippingFree,
         supportDeliver:resJson.supportDeliver,
         isSelfPick:resJson.isSelfPick?resJson.isSelfPick:sessionStorage.getItem('isSelfPick') || '',
         salesInfo:resJson.salesInfo,
-        cut:resJson.cut
+        cut:resJson.cut,
+        hsgooscode:resJson.hsgooscode
       })
       sessionStorage.setItem('total', resJson.total);
       if (sessionStorage.getItem('addr') != null) {
@@ -155,6 +177,21 @@ class Order extends React.Component {
           voucherText: JSON.parse(sessionStorage.getItem('voucher_text'))
         })
       }
+      if (sessionStorage.getItem('fullamount') != null) {
+        this.setState({
+          fullamount: JSON.parse(sessionStorage.getItem('fullamount'))
+        })
+      }
+      if (sessionStorage.getItem('convertibleGoods') != null) {
+        this.setState({
+          convertibleGoods: JSON.parse(sessionStorage.getItem('convertibleGoods'))
+        })
+      }
+      if (sessionStorage.getItem('remarks') != null) {
+        this.setState({
+          remarks: JSON.parse(sessionStorage.getItem('remarks'))
+        })
+      }
       if (!this.state.cartItems || this.state.cartItems.length <= 0) {
         this.setState({
           isDataError: true
@@ -178,6 +215,21 @@ class Order extends React.Component {
       })
       console.log(this.state.config)
     })
+    req
+    	.get('uclee-backend-web/orderSettingPick')
+    	.end((err, res) => {
+      	if (err) {
+        	return err
+      	}
+      	var data = JSON.parse(res.text)
+      	console.log(data);
+      	this.setState({
+        	closeStartDateStr:data.data.closeStartDateStr,
+        	closeEndDateStr:data.data.closeEndDateStr,
+        	businessStartTime:data.data.businessStartTime,
+        	businessEndTime:data.data.businessEndTime
+      	})
+    	})
   }
 
   render() {
@@ -186,10 +238,21 @@ class Order extends React.Component {
         alert('非法数据，请返回购物车')
         window.location = '/cart'
       } else {
-        alert('订单已提交，请勿重新提交，请到未支付订单继续完成支付')
+        alert('订单已提交，请勿重复提交，请到未支付订单继续完成支付')
         window.location = '/unpay-order-list'
       }
     }
+    var Total = (this.state.total -
+                this.state.voucherText +
+                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
+                this.state.cut >
+                0
+                ? (this.state.total -
+                    this.state.voucherText +
+                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
+                    this.state.cut).toFixed(2)
+                : 0)
+   var Difference = this.state.config.full - this.state.total
     return (
       <DocumentTitle title="提交订单">
         <div className="order">
@@ -277,9 +340,16 @@ class Order extends React.Component {
               defaultAddr={this.state.defaultAddr}
               storeAddr={this.state.storeAddr}
             />
-            <div className="order-store">
-              <span className="fa fa-home fa-lg" />{localStorage.getItem('storeName')}
-              <span className="number">(配送范围：{this.state.config.restrictedDistance}公里内)</span>
+            <div className="order-store" >
+              {this.state.isSelfPick == 'false' ?
+              <span className="fa fa-home fa-lg">
+              	<font size="3">{localStorage.getItem('storeName') + "(配送范围：" + this.state.config.restrictedDistance + "公里内)"}</font>
+              </span>
+              :
+              <span className="fa fa-home fa-lg">
+              	<a href="/switch-shop"><font color="black" size="3">{localStorage.getItem('storeName')} [切换门店]</font></a>
+              </span>
+              }
             </div>
             <OrderItem cartItems={this.state.cartItems} />
             <input
@@ -383,7 +453,7 @@ class Order extends React.Component {
             >
               优惠券：
               {this.state.voucherText && this.state.voucherText !== ''
-                ? this.state.voucherText + ' 现金优惠券'
+                ? this.state.voucherText + '元现金优惠券   x 1'
                 : null}
               <span className="icon fa fa-chevron-right" />
             </div>
@@ -393,9 +463,12 @@ class Order extends React.Component {
               value={this.state.voucherCode}
             />
              <div className="order-total">
-              满减：<span className="money">¥{this.state.cut}</span>
+              满减：<span className="money">￥{this.state.cut}</span>
             </div>
-
+            {this.state.isSelfPick === 'false' ?
+            <div className="order-total">
+              满额起送：<span className="money">￥{this.state.config.full>0?this.state.config.full:0}</span>
+            </div>:null}
                 {
                   this.state.salesInfo.length>=1?
                   <div className="order-sales">
@@ -420,22 +493,24 @@ class Order extends React.Component {
                   </div>
                   :null
                 }
-            <div className="order-submit">
-              合计：¥
-              {this.state.total -
-                this.state.voucherText +
-                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
-                this.state.cut >
-                0
-                ? (this.state.total -
-                    this.state.voucherText +
-                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
-                    this.state.cut).toFixed(2)
-                : 0}
-              <button type="submit" className="button">提交订单</button>
-            </div>
             <ErrorMessage error={this.state.error} />
+            <div className="order-submit">
+            	合计：￥{Total}
+            	{this.state.isSelfPick === 'false'?
+            	(Difference>0?
+					  	<span className="button">还需：{Difference}元起送!</span>
+					  	:
+            	<button type="submit" className="button">提交订单</button>)
+            	:<button type="submit" className="button">提交订单</button>}
+            </div>
           </form>
+          <div className="qq-btn">
+            	 <span className="border">
+            		<a href={"http://wpa.qq.com/msgrd?v=3&uin="+this.state.config.qq+"&site=qq&menu=yes"}>
+        					<font size="3" color="#f15f40"><i className="fa fa-qq" aria-hidden="true">qq客服</i></font>
+      					</a>
+      				 </span>
+      		</div>
         </div>
       </DocumentTitle>
     )
@@ -493,16 +568,24 @@ salesInfoShowClick=()=>{
             '  ff  ' +
             Number(localStorage.getItem('longitude'))
         )
-
-        var distance = Math.round(
+				
+			
+        var distances = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
             new qq.maps.LatLng( 
               Number(localStorage.getItem('latitude')),
               Number(localStorage.getItem('longitude'))
+            
             )
           ) / 100
           )/10
+          if(distances < 1){
+          	var distance = 1
+          }else{
+          	var distance = distances
+          }
+         console.log("aaaa==="+distance)
         req
           .get('/uclee-user-web/getShippingFee?distance=' + distance + '&total=' + (sessionStorage.getItem('total')?sessionStorage.getItem('total'):0))
           .end((err, res) => {
@@ -541,7 +624,7 @@ salesInfoShowClick=()=>{
             )
           ) / 100
           )/10
-     if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
+    if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
       this.setState({
         error: errMap['Distribution_error']
       })
@@ -580,6 +663,83 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+var myDate = Date.parse(new Date());
+
+myDate = myDate / 1000;//获取系统当前时间戳
+ 		
+var yuding = this.state.riqi +' '+this.state.appointedTime
+   
+var yudingtime = Date.parse(new Date(yuding));
+    
+yudingtime = yudingtime / 1000;
+    
+var stringTime  = data.pickDateStr +' '+ data.pickTimeStr
+    
+var timestamp2 = Date.parse(new Date(stringTime));
+ 		
+timestamp2 = timestamp2 / 1000;	
+    
+//只有有预定时间时才执行
+  	
+if(myDate!=yudingtime){
+    	
+	if(yudingtime>timestamp2){
+    		
+		this.setState({
+        	
+			error: errMap['times_error']+yuding
+      	
+		})
+      	
+		return false
+    	
+	}
+   
+}
+    console.log("aaaaa"+this.state.convertibleGoods)
+    console.log("aaaaa"+this.state.hsgooscode)
+    if (this.state.total<this.state.fullamount) {
+      this.setState({
+        error: this.state.remarks
+      })
+      return false
+    }
+    if(this.state.convertibleGoods!==null){
+    	var hsgooscode=this.state.hsgooscode
+			var convertibleGoods=this.state.convertibleGoods;
+			var result=convertibleGoods.split(";");
+			var bb = 0;
+			for(var i=0;i<result.length;i++){  		
+  			if(hsgooscode.lastIndexOf((result[i]))===-1){			
+  				console.log("aaaaaa="+result[i])
+  			}else{
+  				bb = 1;
+  			}
+  			console.log(bb)
+    		if(this.state.convertibleGoods!==null&&bb===0){
+    			this.setState({
+        		error: this.state.remarks
+      		})
+      		return false
+    		}
+  		}
+		}
+
+    if(Date.parse(data.pickDateStr)>=Date.parse(this.state.closeStartDateStr)
+          &&
+          Date.parse(data.pickDateStr)<=Date.parse(this.state.closeEndDateStr)){
+
+      this.setState({
+        error:errMap['closeDate_error']
+      })
+      return false;
+    }
+    if(data.pickTimeStr<this.state.businessStartTime || data.pickTimeStr>this.state.businessEndTime){
+      this.setState({
+        error:errMap['businesstime_error']
+      })
+      return false;
+    }
     req.post('/uclee-user-web/orderHandler').send(data).end((err, res) => {
       if (err) {
         return err
@@ -594,6 +754,9 @@ salesInfoShowClick=()=>{
         sessionStorage.removeItem('addr')
         sessionStorage.removeItem('voucher')
         sessionStorage.removeItem('voucher_text')
+        sessionStorage.removeItem('fullamount')
+        sessionStorage.removeItem('convertibleGoods')
+        sessionStorage.removeItem('remarks')
         sessionStorage.removeItem('remark')
         sessionStorage.removeItem('isSelfPick')
         sessionStorage.removeItem('isFromCart')
@@ -703,10 +866,14 @@ class OrderItem extends React.Component {
           <img className="image" src={item.image} alt="" />
           <div className="title">{item.title}</div>
           <div className="sku-info">
-            <span className="sku">{item.specification}</span>
-            <span className="count pull-right">单价：￥{item.money}</span>
+            <span className="sku">{item.specification}({item.csshuxing})</span>
+            <span className="count pull-right">{((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?"单价：￥"+item.money:"促销单价：￥"+item.promotion}</span>  
           </div>
           <div className="other">
+           {item.appointedTime!==0&&item.appointedTime!==null ?
+          	"提前"+item.appointedTime+"小时预定"
+          	:null
+           }
             <span className="price pull-right">数量：x {item.amount}</span>
           </div>
         </div>

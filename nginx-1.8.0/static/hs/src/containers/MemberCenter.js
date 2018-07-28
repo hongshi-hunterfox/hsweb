@@ -8,8 +8,6 @@ import LinkGroupItem from '../components/LinkGroupItem'
 import req from 'superagent'
 import Navi from './Navi'
 
-
-
 class MemberCenter extends React.Component {
   constructor(props) {
     super(props)
@@ -59,41 +57,16 @@ class MemberCenter extends React.Component {
           <div className="member-center-hero">
           {
             !this.state.isSigned?
-            <span className="member-center-check-in" onClick={() => { 
-              if(this.state.cVipCode===null){
-                alert("请先绑定会员。");
-                return ;
-              }
-              req
-                .get('/uclee-user-web/signInHandler')
-                .end((err, res) => {
-                  var data = JSON.parse(res.text);
-                  if(data.existed){
-                    alert("今天已经签到过了哦~")
-                    return;
-                  }
-                  if(data.result){
-                    this.setState({
-                      point : Number(this.state.point) + Number(data.point),
-                      isSigned:true
-                    })
-                    alert("签到成功，积分+" + data.point)
-                    return;
-                  }
-                  if(!data.result){
-                    alert("网络繁忙请稍后重试")
-                    return;
-                  }
-                  
-                })
-
-            }}>签到获取积分</span>:
+            <span className="member-center-check-in">
+            	<a href="/SignIn">
+            		<font color="white">签到获取积分</font>
+            	</a>
+            </span>:
             <span className="member-center-check-in">今日已签到</span>
           }
             <img src={this.state.ucenterImg} alt=""/>
             <div className="member-center-info">
               <div>尊贵的 {this.state.nickName}</div>
-              {/*<div>您拥有本店积分：{0}</div>*/}
             </div>
           </div>
 
@@ -148,6 +121,7 @@ class MemberCenter extends React.Component {
             <LinkGroupItem icon="smile-o" text="积分抽奖" href="/lottery"/>
             <LinkGroupItem icon="smile-o" text="我的优惠券" onClick={() => { window.location='/coupon' }}/>
             <LinkGroupItem icon="smile-o" text="分销中心" onClick={() => { window.location='/distribution-center?serialNum='+this.state.serialNum+'&merchantCode='+localStorage.getItem('merchantCode')}}/>
+            <LinkGroupItem icon="smile-o" text="个人信息" onClick={() => { window.location='/information' }}/>
           </LinkGroup>
 
           <LinkGroup>

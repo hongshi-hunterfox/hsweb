@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.OrderSettingPickMapper" >
+    <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.OrderSettingPick" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="closeStartDate" property="closeStartDate" jdbcType="TIMESTAMP" />
+        <result column="closeEndDate" property="closeEndDate" jdbcType="TIMESTAMP" />
+        <result column="businessStartTime" property="businessStartTime" jdbcType="VARCHAR"/>
+        <result column="businessEndTime" property="businessEndTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,closeStartDate,closeEndDate,businessStartTime,businessEndTime
+    </sql>
+
+
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from web_orders_setting_picktime
+    </select>
+
+    <delete id="deleteAll" parameterType="java.lang.Integer" >
+        truncate table web_orders_setting_picktime
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.OrderSettingPick" >
+        insert into web_orders_setting_picktime
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="closeStartDate != null" >
+                closeStartDate,
+            </if>
+            <if test="closeEndDate != null" >
+                closeEndDate,
+            </if>
+
+            <if test="businessStartTime != null" >
+                businessStartTime,
+            </if>
+            <if test="businessEndTime != null" >
+                businessEndTime,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="closeStartDate != null" >
+                #{closeStartDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="closeEndDate != null" >
+                #{closeEndDate,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="businessStartTime != null" >
+                #{businessStartTime,jdbcType=VARCHAR},
+            </if>
+
+            <if test="businessEndTime != null" >
+                #{businessEndTime,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

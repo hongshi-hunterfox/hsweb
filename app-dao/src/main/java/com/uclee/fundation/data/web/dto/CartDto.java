@@ -1,6 +1,7 @@
 package com.uclee.fundation.data.web.dto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.uclee.fundation.data.mybatis.model.Cart;
 
@@ -14,6 +15,46 @@ public class CartDto extends Cart{
 	
 	private BigDecimal money;
 	
+	private BigDecimal promotion;
+	
+	private Date startTime;
+	
+	private Date endTime;
+	
+	private int appointedTime;
+	
+	public int getAppointedTime() {
+		return appointedTime;
+	}
+
+	public void setAppointedTime(int appointedTime) {
+		this.appointedTime = appointedTime;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public BigDecimal getPromotion() {
+		return promotion;
+	}
+
+	public void setPromotion(BigDecimal promotion) {
+		this.promotion = promotion;
+	}
+
 	private Integer stock;
 	
 	private Boolean isDisabled;

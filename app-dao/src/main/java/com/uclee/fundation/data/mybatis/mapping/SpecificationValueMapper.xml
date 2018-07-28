@@ -9,11 +9,28 @@
     <result column="hs_goods_price" property="hsGoodsPrice" jdbcType="DECIMAL" />
     <result column="hs_stock" property="hsStock" jdbcType="INTEGER" />
     <result column="pre_price" property="prePrice" jdbcType="DECIMAL" />
+    <result column="promotion_price" property="promotionPrice" jdbcType="DECIMAL" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTimeStr" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTimeStr" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    value_id, specification_id, value, hs_goods_code, hs_goods_price,hs_stock,pre_price
+    value_id, specification_id, value, hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByHsGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   	select 
+    hs_goods_code
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from web_specification_values
@@ -37,6 +54,10 @@
     from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
     where B.product_id = #{productId,jdbcType=INTEGER}
   </select>
+  <select id="selectGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	select hs_goods_code from web_specification_values where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+ 
   <select id="selectByProductIdAndValueId" resultMap="BaseResultMap" >
     select 
     A.* 
@@ -53,9 +74,9 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" useGeneratedKeys="true"
     keyProperty="valueId">
     insert into web_specification_values (value_id, specification_id, value, 
-      hs_goods_code, hs_goods_price,hs_stock,pre_price)
+      hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time)
     values (#{valueId,jdbcType=INTEGER}, #{specificationId,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, 
-      #{hsGoodsCode,jdbcType=VARCHAR}, #{hsGoodsPrice,jdbcType=DECIMAL},#{hsStock,jdbcType=INTEGER}, #{prePrice,jdbcType=DECIMAL})
+      #{hsGoodsCode,jdbcType=VARCHAR}, #{hsGoodsPrice,jdbcType=DECIMAL},#{hsStock,jdbcType=INTEGER}, #{prePrice,jdbcType=DECIMAL},#{promotionPrice,jdbcType=DECIMAL},#{startTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" useGeneratedKeys="true"
     keyProperty="valueId">
@@ -82,6 +103,15 @@
       <if test="prePrice != null" >
         pre_price,
       </if>
+       <if test="promotionPrice != null" >
+        promotion_price,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="valueId != null" >
@@ -104,6 +134,15 @@
       </if>
       <if test="prePrice != null" >
         #{prePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="promotionPrice != null" >
+        #{promotionPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -128,6 +167,15 @@
       <if test="prePrice != null" >
         pre_price = #{prePrice,jdbcType=DECIMAL},
       </if>
+      <if test="promotionPrice != null" >
+        promotion_price = #{promotionPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=INTEGER},
+      </if>
     </set>
     where value_id = #{valueId,jdbcType=INTEGER}
   </update>
@@ -138,7 +186,15 @@
       hs_goods_code = #{hsGoodsCode,jdbcType=VARCHAR},
       hs_goods_price = #{hsGoodsPrice,jdbcType=DECIMAL},
         pre_price = #{prePrice,jdbcType=DECIMAL},
+        promotion_price = #{promotionPrice,jdbcType=DECIMAL},
+        start_time = #{startTime,jdbcType=INTEGER},
+        end_time = #{endTime,jdbcType=INTEGER},
         hs_stock = #{hsStock,jdbcType=INTEGER}
     where value_id = #{valueId,jdbcType=INTEGER}
+  </update>
+  <update id="updateGuiGe" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+  	update web_specification_values
+  	 set  promotion_price = #{promotionPrice, jdbcType=DECIMAL}, start_time= #{startTimeStr,jdbcType=VARCHAR}, end_time= #{endTimeStr,jdbcType=VARCHAR}
+  	 where value_id=#{valueId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -24,6 +24,36 @@ public class Product {
 
     private Boolean isShow;
 
+    private Integer sortValue;
+    
+    private String parameter;
+    
+    private Integer appointedTime;
+
+	public Boolean getIsShippingFree() {
+		return isShippingFree;
+	}
+
+	public void setIsShippingFree(Boolean isShippingFree) {
+		this.isShippingFree = isShippingFree;
+	}
+
+	public Integer getAppointedTime() {
+		return appointedTime;
+	}
+
+	public void setAppointedTime(Integer appointedTime) {
+		this.appointedTime = appointedTime;
+	}
+
+	public String getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
+
     public Boolean getShippingFree() {
         return isShippingFree;
     }
@@ -110,5 +140,13 @@ public class Product {
 
     public void setIsShow(Boolean isShow) {
         this.isShow = isShow;
+    }
+
+    public Integer getSortValue() {
+        return sortValue;
+    }
+
+    public void setSortValue(Integer sortValue) {
+        this.sortValue = sortValue;
     }
 }

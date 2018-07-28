@@ -15,7 +15,7 @@ class StoreList extends React.Component {
 		this.state = {
 			stores: [],
 			logoUrl:'',
-			signName:'',
+			brand:'',
 			userLocation: {
 				latitude: null,
 				longitude: null
@@ -35,7 +35,7 @@ class StoreList extends React.Component {
 			this.setState({
 				stores: c.storeList,
 				logoUrl:c.logoUrl,
-				signName:c.signName
+				brand:c.brand
 			})
 		})
 
@@ -72,15 +72,15 @@ class StoreList extends React.Component {
 						}
 					})
 					wx.onMenuShareAppMessage({
-					title: '好店推荐: '+this.state.signName, // 分享标题
-					desc: '发现了一家好店: '+this.state.signName+',快来逛逛吧.', // 分享描述
+					title: '好店推荐: '+this.state.brand, // 分享标题
+					desc: '发现了一家好店: '+this.state.brand+',快来逛逛吧.', // 分享描述
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.logoUrl, // 分享图标
 					success: function() {},
 					cancel: function() {}
 				})
 				   wx.onMenuShareTimeline({
-					title: '发现了一家好店: '+this.state.signName+',快来逛逛吧.', // 分享标题
+					title: '发现了一家好店: '+this.state.brand+',快来逛逛吧.', // 分享标题
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.logoUrl, // 分享图标
 					success: function() {},
@@ -146,7 +146,7 @@ class StoreList extends React.Component {
 				<div className="store">
 					<div className="store-logo">
 						<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
-						<div className="store-logo-text">{this.state.signName}</div>
+						<div className="store-logo-text">{this.state.brand}</div>
 					</div>
 					<div className="store-select">请选择要进入的店：</div>
 					{items}

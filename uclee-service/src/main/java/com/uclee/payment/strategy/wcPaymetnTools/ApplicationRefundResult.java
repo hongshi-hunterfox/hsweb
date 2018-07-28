@@ -22,7 +22,7 @@ public class ApplicationRefundResult implements Serializable {
 	// 返回状态码
 	@Column(name = "RETURN_CODE")
 	private String return_code ;
-	
+
 	// 返回信息
 	@Column(name = "RETURN_MSG")
 	private String return_msg ;

@@ -41,9 +41,15 @@ import BirthVoucher from './containers/BirthVoucher'
 import FullCut from './containers/FullCut'
 import BindMemberSetting from './containers/BindMemberSetting'
 import EvaluationConfiguration from './containers/EvaluationConfiguration'
+import IntegralInConfiguration from './containers/IntegralInConfiguration'
 import SystemConfig from './containers/SystemConfig'
 import ActivityConfig from './containers/ActivityConfig'
 import RechargeConfigList from './containers/RechargeConfigList'
+import OrderSettingPick from './containers/OrderSettingPick'
+import AuditRefund from './containers/AuditRefund'
+import AuditRefundOrderDetail from './containers/AuditRefundOrderDetail'
+import VipList from './containers/VipList'
+import VoucherDelivery from './containers/VoucherDelivery'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -71,6 +77,7 @@ ReactDOM.render(
       <Route path="fullCutShipping" component={FullCutShipping} />
       <Route path="bindMemberSetting" component={BindMemberSetting} />
       <Route path="evaluationConfiguration" component={EvaluationConfiguration} />
+      <Route path="integralinConfiguration" component={IntegralInConfiguration} />
       <Route path="FullCut" component={FullCut} />
       <Route path="user-unbuy-list" component={UserUnBuyList} />
       <Route path="user-birth-list" component={UserBirthList} />
@@ -91,6 +98,12 @@ ReactDOM.render(
       <Route path="editPhoneUser" component={EditPhoneUser} />
       <Route path="phoneUserList" component={PhoneUserList} />
       <Route path="editProductGroup" component={EditProductGroup} />
+      <Route path="orderSettingPick" component={OrderSettingPick}/>
+      <Route path="auditRefund" component={AuditRefund} />
+      <Route path="auditRefundOrderDetail" component={AuditRefundOrderDetail} />
+      <Route path="auditRefundOrderDetail/:id" component={AuditRefundOrderDetail} />
+      <Route path="vip-list" component={VipList} />
+      <Route path= "voucher-delivery" component={VoucherDelivery} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

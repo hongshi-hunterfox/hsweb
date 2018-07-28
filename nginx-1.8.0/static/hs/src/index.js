@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -11,10 +12,12 @@ import Recharge from './containers/Recharge'
 import UnpayOrderList from './containers/UnpayOrderList'
 import OrderList from './containers/OrderList'
 import MemberCard from './containers/MemberCard'
+import Information from './containers/Information'
 import Install from './containers/Install'
 import MemberSetting from './containers/MemberSetting'
 import MemberSetting1 from './containers/MemberSetting1'
 import MemberSetting2 from './containers/MemberSetting2'
+import Forces from './containers/Forces'
 import RechargeList from './containers/RechargeList'
 import Detail from './containers/Detail'
 import Cart from './containers/Cart'
@@ -37,7 +40,12 @@ import Comment from './containers/Comment'
 import CommentDetail from './containers/CommentDetail'
 import DataView from './containers/DataView'
 import ShowCoupon from './containers/ShowCoupon'
+import SignIn from './containers/SignIn'
 import MyOrderDetail from './containers/MyOrderDetail.js'
+import OnlineOrder from './containers/OnlineOrder.js'
+import Refund from './containers/Refund.js'
+import ChouJiang from './containers/ChouJiang.js'
+import SwitchShop from './containers/SwitchShop.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -51,9 +59,12 @@ ReactDOM.render(
       <Route path="member-center" component={MemberCenter} />
       <Route path="boss-center" component={BossCenter} />
       <Route path="member-card" component={MemberCard} />
+      <Route path="information" component={Information} />
+       <Route path="install" component={Install} />
       <Route path="member-setting" component={MemberSetting} />
       <Route path="member-setting1" component={MemberSetting1} />
       <Route path="member-setting2" component={MemberSetting2} />
+      <Route path="forces" component={Forces} />
       <Route path="recharge-list" component={RechargeList} />
       <Route path="seller/recharge" component={Recharge} />
       <Route path="unpay-order-list" component={UnpayOrderList} />
@@ -63,7 +74,6 @@ ReactDOM.render(
       <Route path="all-product" component={AllProduct} />
       <Route path="editaddr" component={EditAddr} />
       <Route path="seller/payment" component={Payment} />
-      <Route path="install" component={Install} />
       <Route path="seller/paymentAlipay" component={PaymentAlipay} />
       <Route path="lottery" component={Lottery} />
       <Route path="distribution-center" component={DistributionCenter} />
@@ -77,7 +87,12 @@ ReactDOM.render(
       <Route path="storeList" component={StoreList} />
       <Route path="dataView" component={DataView} />
       <Route path="ShowCoupon" component={ShowCoupon} />
+      <Route path="SignIn" component={SignIn} />
       <Route path="myOrderDetail/:id" component={MyOrderDetail} />
+      <Route path="OnlineOrder" component={OnlineOrder} />
+      <Route path="seller/refund" component={Refund}/>
+      <Route path="luck_draw" component={ChouJiang}/>
+      <Route path="switch-shop" component={SwitchShop}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,
