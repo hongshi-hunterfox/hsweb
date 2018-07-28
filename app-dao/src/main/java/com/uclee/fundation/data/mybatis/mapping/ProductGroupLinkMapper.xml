@@ -5,6 +5,7 @@
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
     <result column="position" property="position" jdbcType="INTEGER" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
   </resultMap>
   <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -32,9 +33,15 @@
   <select id="selectByTag" resultMap="BaseResultMap" >
     select 
     A.*
-    from web_product_group_links as A left join web_product_groups as B on A.group_id=B.group_id left join web_products as C on A.product_id=C.product_id where B.tag=#{tag,jdbcType=VARCHAR} and C.product_id is not null
+    from web_product_group_links as A left join web_product_groups as B on A.group_id=B.group_id left join web_products as C on A.product_id=C.product_id where B.group_name=#{groupName,jdbcType=VARCHAR} and C.product_id is not null
     ORDER  by A.group_id ASC ,A.position ASC
   </select>
+  
+  <insert id="inserts" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
+    insert into web_product_groups(group_name) values (#{groupName,jdbcType=VARCHAR})
+  </insert>
+  
+  
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
     insert into web_product_group_links (group_id, product_id, position
       )

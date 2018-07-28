@@ -10,7 +10,9 @@ class EditProductGroup extends React.Component {
     this.state = {
       err: null,
       productId: null,
+      all:[],
       groupId:null,
+      groupName:'',
       text:'',
       products: [],
       preProductId:0,
@@ -25,6 +27,16 @@ class EditProductGroup extends React.Component {
       preProductId:this.props.location.query.productId,
       productId:this.props.location.query.productId,
       groupId:this.props.location.query.groupId
+    })
+     
+     req.get('/uclee-backend-web/getAll').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        all:data.all
+      })
     })
     if(this.props.location.query.productId){
       req.get('/uclee-product-web/productList?productId='+this.props.location.query.productId).end((err, res) => {
@@ -98,10 +110,17 @@ class EditProductGroup extends React.Component {
               </div>
             </div>
             <div className="form-group">
-              <label className="control-label col-md-3">选择区域：</label>
-              <select name='groupId'>
-                <option value='1' selected={this.props.location.query.groupId===1?'selected':null}>店铺推荐</option>
-                <option value='2' selected={this.props.location.query.groupId===2?'selected':null}>店铺精品</option>
+              <input type='hidden' name='groupId' value={this.state.groupId} onChange={this._change}/>
+             
+              <label className="control-label col-md-3">选择模块：</label>
+               <select name="groupName">
+                {
+                  this.state.all.map((item,index)=>{
+                    return(
+                      <option value={item.groupName} key={index}>{item.groupName}</option>
+                    )
+                  })
+                }
               </select>
             </div>
 
@@ -131,20 +150,16 @@ class EditProductGroup extends React.Component {
     if(this.state.productId!==0){
       data.productId = this.state.productId 
     }
-    console.log(data)
 
     if (!data.productId) {
       return this.setState({
         err: '请选择产品'
       })
     }
-    if (!data.groupId) {
-      return this.setState({
-        err: '请选择区域'
-      })
-    }
-
-    req.post('/uclee-backend-web/editProductGroup').send(data).end((err, res) => {
+    
+    req.post('/uclee-backend-web/editProductGroup')
+    .send(data)
+    .end((err, res) => {
       if (err) {
         return err
       }

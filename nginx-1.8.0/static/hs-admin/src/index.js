@@ -35,6 +35,8 @@ import Freight from './containers/Freight'
 import StoreIntro from './containers/StoreIntro'
 import Lottery from './containers/LotteryConfig'
 import EditProductGroup from './containers/EditProductGroup'
+import ModuleSetting from './containers/ModuleSetting'
+import EditModuleSetting from './containers/EditModuleSetting'
 import ShakeMonitor from './containers/ShakeMonitor'
 import EditCategory from './containers/EditCategory'
 import BirthVoucher from './containers/BirthVoucher'
@@ -98,6 +100,8 @@ ReactDOM.render(
       <Route path="editPhoneUser" component={EditPhoneUser} />
       <Route path="phoneUserList" component={PhoneUserList} />
       <Route path="editProductGroup" component={EditProductGroup} />
+      <Route path="moduleSetting" component={ModuleSetting} />
+      <Route path="editModuleSetting" component={EditModuleSetting} />
       <Route path="orderSettingPick" component={OrderSettingPick}/>
       <Route path="auditRefund" component={AuditRefund} />
       <Route path="auditRefundOrderDetail" component={AuditRefundOrderDetail} />

@@ -14,10 +14,21 @@ public class ProductGroup {
     private String displayType;
 
     private Boolean isActive;
-
-    private List<ProductDto> products;
     
-    public List<ProductDto> getProducts() {
+    private String image;
+    
+    private List<ProductDto> products;
+
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public List<ProductDto> getProducts() {
 		return products;
 	}
 

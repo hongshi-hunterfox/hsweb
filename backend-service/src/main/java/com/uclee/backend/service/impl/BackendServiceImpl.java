@@ -244,6 +244,14 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
 		}else{
 			configMapper.updateByTag(WebConfig.qq, "");
+		}if (configPost.getLoss()!=null) {
+			configMapper.updateByTag(WebConfig.loss, configPost.getLoss());
+		}else{
+			configMapper.updateByTag(WebConfig.loss, "");
+		}if (configPost.getNotice()!=null) {
+			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
+		}else{
+			configMapper.updateByTag(WebConfig.notice, "");
 		}
 		
 		return true;
@@ -393,6 +401,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getQq()!=null) {
 			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
 		}
+		if (configPost.getNotice()!=null) {
+			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
+		}
 		return true;
 	}
 	@Override
@@ -536,6 +547,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getBrand()!=null) {
 			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
+		}
+		if (configPost.getNotice()!=null) {
+			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
 		}
 		return true;
 	}
@@ -1073,6 +1087,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBrand(config.getValue());
 			}else if(config.getTag().equals(WebConfig.qq)){
 				configPost.setQq(config.getValue());
+			}else if(config.getTag().equals(WebConfig.notice)){
+				configPost.setNotice(config.getValue());
 			}
 		}
 		return configPost;
@@ -1084,10 +1100,10 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
-	public List<ProductGroupLink> getProductGroup(String tag) {
+	public List<ProductGroupLink> getProductGroup(String groupName) {
 		List<ProductGroupLink> group = null; 
-		if(tag!=null&&!tag.equals("")){
-			group = productGroupLinkMapper.selectByTag(tag);
+		if(groupName!=null&&!groupName.equals("")){
+			group = productGroupLinkMapper.selectByTag(groupName);
 		}else{
 			group = productGroupLinkMapper.selectAll();
 		}
@@ -1139,17 +1155,19 @@ public class BackendServiceImpl implements BackendServiceI {
 
 	@Override
 	public boolean editProductGroup(ProductGroupPost productGroupPost) {
-		ProductGroupLink isExisted = productGroupLinkMapper.selectByGroupIdAndProductId(productGroupPost.getGroupId(), productGroupPost.getProductId());
+		ProductGroup productGroup = productGroupMapper.selectByGroupName(productGroupPost.getGroupName());
+		System.out.println("groupId"+productGroup.getGroupId());
+		ProductGroupLink isExisted = productGroupLinkMapper.selectByGroupIdAndProductId(productGroup.getGroupId(), productGroupPost.getProductId());
 		if(isExisted!=null){
 			return false;
 		}
 		productGroupLinkMapper.del(productGroupPost.getPreGroupId(),productGroupPost.getPreProductId());
 		ProductGroupLink linkTmp = new ProductGroupLink();
-		linkTmp.setGroupId(productGroupPost.getGroupId());
+		linkTmp.setGroupId(productGroup.getGroupId());
 		linkTmp.setProductId(productGroupPost.getProductId());
 		//新增时设定该产品的postion值 by chiangpan
-		int maxPosition=productGroupLinkMapper.getMaxPosition(productGroupPost.getGroupId());
-		maxPosition+=1;
+//		int maxPosition=productGroupLinkMapper.getMaxPosition(productGroup.getGroupId());
+		int maxPosition = 1;
 		linkTmp.setPosition(maxPosition);
 		productGroupLinkMapper.insertSelective(linkTmp);
 		return true;
@@ -1772,5 +1790,41 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return false;
 	}
+	
+    //插入groupName
+	@Override
+	public int insertGroupName(ProductGroup productGroup) {	
+		productGroup.setTag("hotProduct");
+		productGroup.getDisplayType();
+		productGroup.setIsActive(true);
+		return productGroupMapper.insert(productGroup);
+	}
+	//更新groupName
+	@Override
+	public int updateGroupName(ProductGroup productGroup) {
+
+//		if(productGroup.getGroupName()!=null){
+		System.out.println("2222"+JSON.toJSONString(productGroup));
+		return productGroupMapper.updateByPrimaryKey(productGroup);
+
+	}
+	//查询groupName
+	@Override
+	public List<ProductGroup> selectAll() {
+		return productGroupMapper.selectAll();
+	}
+	
+	@Override
+	public Map<String,Object> deleteGroupName(Integer groupId) {
+    Map<String,Object> ret = new TreeMap<String,Object>();	
+    if(productGroupMapper.deleteByPrimaryKey(groupId)>0){
+		ret.put("result",true);
+	}else{
+		ret.put("result",false);
+		ret.put("reason","网络繁忙");
+	}
+	return ret;
+}
+	
 
 }

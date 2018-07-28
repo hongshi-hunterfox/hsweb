@@ -19,7 +19,9 @@ public interface ProductGroupLinkMapper {
 
 	ProductGroupLink selectByGroupIdAndProductId(@Param("groupId") Integer preGroupId, @Param("productId") Integer preProductId);
 
-	List<ProductGroupLink> selectByTag(String tag);
+	List<ProductGroupLink> selectByTag(String groupName);
+	
+	ProductGroupLink selectByGroupName(Integer groupId);
 
 	//新增时获得排序值的最大值
 	int getMaxPosition(Integer groupId);

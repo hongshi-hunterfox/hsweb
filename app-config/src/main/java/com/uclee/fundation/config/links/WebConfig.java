@@ -52,4 +52,5 @@ public interface WebConfig {
 	String force = "force";
 	String brand = "brand";
 	String qq = "qq";
+	String notice = "notice";
 }                      

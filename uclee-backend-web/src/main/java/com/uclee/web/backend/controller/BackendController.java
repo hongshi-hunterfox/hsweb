@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
+import com.uclee.fundation.data.mybatis.mapping.ProductGroupMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.AuditRefundDto;
 import org.apache.commons.collections.map.LinkedMap;
@@ -42,6 +43,9 @@ public class BackendController {
 	private BackendServiceI backendService;
 	@Autowired
 	private RechargeConfigMapper rechargeConfigMapper;
+	@Autowired
+	private ProductGroupMapper productGroupMapper;
+	
 	
 	@RequestMapping("/freight")
 	public @ResponseBody Map<String,Object> freight(HttpServletRequest request) {
@@ -289,11 +293,25 @@ public class BackendController {
 	}
 	
 	@RequestMapping("/productGroup")
-	public @ResponseBody Map<String,Object> productGroup(HttpServletRequest request,String tag) {
+	public @ResponseBody Map<String,Object> productGroup(HttpServletRequest request,String groupName) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		List<ProductGroupLink> productGroup = backendService.getProductGroup(tag);
+		List<ProductGroupLink> productGroup = backendService.getProductGroup(groupName);
 		map.put("productGroup", productGroup);
 		return map;
+	}
+	
+	@RequestMapping("/getGroupName")
+	public @ResponseBody Map<String,Object> getGroupName(HttpServletRequest request,Integer groupId) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		if(groupId!=null){
+		System.out.println("groupId=="+ groupId);
+		ProductGroup productGroup = productGroupMapper.selectByPrimaryKey(groupId);
+		map.put("groupName",productGroup.getGroupName());
+		map.put("displayType",productGroup.getDisplayType());
+		map.put("image",productGroup.getImage());
+		}
+		return map;
+		
 	}
 	
 	@RequestMapping("/banner")
@@ -369,6 +387,9 @@ public class BackendController {
 	public @ResponseBody Map<String,Object> config(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		ConfigPost config = backendService.getConfig();
+		String notice = config.getNotice();
+		System.out.println("notice==="+notice.length());
+		map.put("notice", notice.length());
 		map.put("qq", config.getQq());
 		map.put("config", config);
 		return map;
@@ -601,5 +622,13 @@ public class BackendController {
 		System.out.println("--------------"+password);
 		return backendService.getAccount(account,password);
 	}
+	@RequestMapping("/getAll")
+	public @ResponseBody  Map<String, Object> getAll(HttpServletRequest Request){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<ProductGroup> all= backendService.selectAll();
+		map.put("all",all);
+		 return map;
+	}
+	
 
 }

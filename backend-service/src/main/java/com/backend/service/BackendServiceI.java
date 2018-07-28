@@ -39,7 +39,7 @@ public interface BackendServiceI {
 
 	List<Banner> getBannerList();
 
-	List<ProductGroupLink> getProductGroup(String tag);
+	List<ProductGroupLink> getProductGroup(String groupName);
 
 	boolean editBanner(BannerPost bannerPost);
 
@@ -168,4 +168,13 @@ public interface BackendServiceI {
 	boolean sendViphMsg(Integer userId, boolean sendVoucher);
 	
 	Boolean getAccount(String account,String password);
+
+	int insertGroupName(ProductGroup productGroup);
+	
+	int updateGroupName(ProductGroup productGroup);
+	
+	List<ProductGroup> selectAll();
+	
+	Map<String, Object> deleteGroupName(Integer groupId);
+	
 }

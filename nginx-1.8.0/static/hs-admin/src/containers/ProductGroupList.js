@@ -18,17 +18,28 @@ class ProductGroupList extends React.Component {
     super(props)
     this.state = {
       productGroup:[],
+      all:[],
       productGroupLink:{},
       size:10,
       isOpen:false,
       groupId:0,
+      groupName:'',
       productId:0,
       position :0
     }
   }
 
   componentDidMount() {
-    req.get('/uclee-backend-web/productGroup?tag='+ (this.props.location.query.tag?this.props.location.query.tag:'')).end((err, res) => {
+  	 req.get('/uclee-backend-web/getAll').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        all:data.all
+      })
+    })
+    req.get('/uclee-backend-web/productGroup?groupName='+ (this.props.location.query.groupName?this.props.location.query.groupName:'')).end((err, res) => {
       if (err) {
         return err
       }
@@ -103,7 +114,7 @@ class ProductGroupList extends React.Component {
     window.location=url;
   }
   _click=(e)=>{
-    window.location='/product-group-list?tag=' + e.target.value;
+    window.location='/product-group-list?groupName=' + e.target.value;
   }
   
   render() {
@@ -125,15 +136,20 @@ class ProductGroupList extends React.Component {
         <div className="user-list">
           <div className="user-list-add">
               <Link to={'/editProductGroup/'} className="btn btn-primary">
-               添加栏目
+               添加模块产品
               </Link>
               
             </div>
             <div className='user-list-select'>
-              <select name="tag" className='tag' onChange={this._click} value={this.props.location.query.tag?this.props.location.query.tag:''}>
-                <option value=''>全部栏目</option>
-                <option value="recommend">店铺推荐</option>
-                <option value="hotProduct">店铺精品</option>
+               <select name="groupName" className='groupName' onChange={this._click} value={this.props.location.query.groupName?this.props.location.query.groupName:''}>
+                <option value=''>全部模块</option>
+                {
+                  this.state.all.map((item,index)=>{
+                    return(
+                      <option value={item.groupName} key={index}>{item.groupName}</option>
+                    )
+                  })
+                }
               </select>
             </div>
             <table className="table table-bordered table-striped">

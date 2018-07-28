@@ -29,8 +29,8 @@ class Menu extends React.Component {
           <Link to={'/quick-navi-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             首页快捷导航设置
           </Link>
-          <Link to={'/product-group-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
-            首页产品设置
+          <Link to={'/editModuleSetting?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            首页模块设置
           </Link>
           <Link to={'/store-intro?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             公司介绍

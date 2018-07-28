@@ -153,7 +153,21 @@ public class BackendHandler {
 	}
 	@RequestMapping("/editProductGroup")
 	public @ResponseBody boolean editProductGroup(HttpServletRequest request,@RequestBody ProductGroupPost productGroupPost) {
+		System.out.println("productGroupPost=="+JSON.toJSONString(productGroupPost));
 		return backendService.editProductGroup(productGroupPost);
+	}
+	@RequestMapping("/insertGroupName")
+	public @ResponseBody int insertGroupName(HttpServletRequest request,@RequestBody ProductGroup productGroup){
+		return backendService.insertGroupName(productGroup);
+	}
+	@RequestMapping("/updateGroupName")
+	public @ResponseBody int updateGroupName(HttpServletRequest request,@RequestBody ProductGroup productGroup){
+		System.out.println("3333"+productGroup.getGroupId());
+		return backendService.updateGroupName(productGroup);
+	}
+	@RequestMapping("/deleteGroupName")
+	public @ResponseBody Map<String, Object> deleteGroupName(HttpServletRequest request,Integer groupId){
+		return backendService.deleteGroupName(groupId);
 	}
 	@RequestMapping("/editQuickNaviProduct")
 	public @ResponseBody boolean editQuickNaviProduct(HttpServletRequest request,@RequestBody QuickNaviProductPost quickNaviProductPost) {

@@ -9,6 +9,16 @@ public class ProductGroupPost {
 	private Integer preGroupId;
 	
 	private Integer preProductId;
+	
+	private String groupName;
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
 	public Integer getGroupId() {
 		return groupId;

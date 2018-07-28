@@ -103,6 +103,57 @@ class SearchBar extends React.Component {
     window.location="/all-product?keyword="+data.keyword;
   }
 }
+
+
+class HomeNotice extends React.Component {
+	constructor(props) {
+    super(props)
+    this.state = {
+     config:{},
+     notice:1
+    }
+  }
+
+  componentDidMount() {
+  	req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config:data.config,
+        notice:data.notice
+      })
+      console.log(this.state.config)
+    })
+  }
+  render() {
+  	
+    return (
+      <div className="not">
+      
+     		{this.state.notice>21 ?
+     			
+     			<span>
+     			
+       	 <marquee  direction="left">
+       	 <i className="fa fa-volume-up" />{this.state.config.notice}</marquee>
+       	  </span>
+        :
+        <span>
+        <i className="fa fa-volume-up"/>
+       {this.state.config.notice}
+       </span>
+       }
+     		
+      </div>
+     )
+
+  	 
+  	}
+}
+
+
 class HomeNav extends React.Component {
   _location=(url)=>{
       window.location=url
@@ -271,6 +322,16 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+  	req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config:data.config
+      })
+      console.log(this.state.config)
+    })
   	  req.get('/uclee-user-web/storeList').end((err, res) => {
 			if (err) {
 				return err
@@ -532,9 +593,15 @@ class Home extends React.Component {
     }
     var groups = this.state.groups.map((item, index) => {
       return(
-          <div key={index} className={'product-group' + (item.displayType === 'horizontal' ? ' product-group-hor': '')}>
+          <div key={index} className={'product-group' + (item.displayType === '1' ? ' product-group-hor': '')}>
             <div className="product-group-header">
-              {item.groupName}
+            <div className="member-center-hero">
+          
+            <span className="body">{item.groupName}</span>
+             <img src={item.image} alt=""/>
+          </div> 
+           </div>
+           <div className="product-group-body">
               <Link to='/all-product' className="product-group-header-link">
                 更多
               </Link>
@@ -615,7 +682,8 @@ class Home extends React.Component {
             {
               this.state.banner.length ? 
               <HomeCarousel banner={this.state.banner}/> : null
-            }            
+            }
+            <HomeNotice config={this.state.config}/>
             <HomeNav quickNavis={this.state.quickNavis}/>
             {groups}
             <CartBtn />
