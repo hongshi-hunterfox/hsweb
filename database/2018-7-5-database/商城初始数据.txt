@@ -188,7 +188,7 @@ insert into web_config(tag,value) values('qq','2217904463');--设置品牌名
 
 insert into web_config(tag,value) values('loss','0')
 
-insert into web_config(tag,value) values('notice','特大消息')
+insert into web_config(tag,value) values('notice','特大消息，周日全场八折！')
 
 insert into web_config (tag,value) values ('zhengshu','D:\zhengshu\hs\apiclient_cert.p12'); --证书路径
 
