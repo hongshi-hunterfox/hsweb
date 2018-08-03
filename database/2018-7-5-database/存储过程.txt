@@ -1049,38 +1049,64 @@ Procedure Saleing
 If Object_id('[Saleing]','P') Is Not Null
   Drop Procedure [Saleing]
 Go
-Create Procedure [Saleing]
-    @DepartmentCode varchar(10)     ,--销售部门
-    @UserCode varchar(10)           ,--操作员
-    @CDate varchar(10)              ,--做帐日期
-    @GoodsCode varchar(10)          ,--商品编号
-    @GoodsCount int                 ,--商品数量
-    @Price money                    ,--单价
-    @PayByCash money=0              ,--现金支付金额
-    @PayByCard money=0              ,--会员卡支付金额    
-    @VipCode varchar(20)            ,--往来编号
-    @Ret_BillCode varchar(20) OutPut --创建的销售单单号
+ALTER Procedure [dbo].[Saleing]
+    
+@DepartmentCode varchar(10)     ,--销售部门
+    
+@UserCode varchar(10)           ,--操作员
+    
+@CDate varchar(10)              ,--做帐日期
+    
+@GoodsCode varchar(10)          ,--商品编号
+    
+@GoodsCount int                 ,--商品数量
+    
+@Price money                    ,--单价
+    
+@PayByCash money=0              ,--现金支付金额
+    
+@PayByCard money=0              ,--会员卡支付金额    
+    
+@VipCode varchar(20)            ,--往来编号
+    
+@Ret_BillCode varchar(20) OutPut --创建的销售单单号
 As
 Begin
-  Declare @LogID int,@ParaInfo varchar(128)
-  Exec @LogID=Loger null,'Saleing'
-  Set @ParaInfo = dbo.NameValue('C','@DepartmentCode',@DepartmentCode) Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@UserCode',@UserCode)             Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@CDate',@CDate)                   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@GoodsCode',@GoodsCode)           Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('N','@GoodsCount',@GoodsCount)         Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@Price',@Price)                   Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@PayByCash',@PayByCash)           Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@PayByCard',@PayByCard)           Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@VipCode',@VipCode)               Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@Ret_BillCode',@Ret_BillCode)     Exec Loger @LogID,@Parameters=@ParaInfo
+  Declare 
+@LogID int,@ParaInfo varchar(128)
+  Exec 
+@LogID=Loger null,'Saleing'
+  
+Set @ParaInfo = dbo.NameValue('C','@DepartmentCode',@DepartmentCode) Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@UserCode',@UserCode)             
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@CDate',@CDate)                   
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@GoodsCode',@GoodsCode)           
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('N','@GoodsCount',@GoodsCount)        
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@Price',@Price)                 
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@PayByCash',@PayByCash)         
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@PayByCard',@PayByCard)           
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@VipCode',@VipCode)               
+Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@Ret_BillCode',@Ret_BillCode)     
+Exec Loger @LogID,@Parameters=@ParaInfo
   --生成单号
-  Declare @BillMax int,@SalesID int
+  
+Declare @BillMax int,@SalesID int
   Exec getbillmax '销售', @CDate, @BillMax Output
   Set @Ret_BillCode = Convert(varchar(6),Convert(datetime, @CDate), 12) 
-                    + '-' + Right('0000' + Convert(varchar(10), @BillMax), 5)
-  Set @ParaInfo = '生成单号:' + @Ret_BillCode Exec Loger @LogID,@ExtendInfo=@ParaInfo
+                    
++ '-' + Right('0000' + Convert(varchar(10), @BillMax), 5)
   
+Set @ParaInfo = '生成单号:' + @Ret_BillCode Exec Loger @LogID,@ExtendInfo=@ParaInfo
+  
+ 
   --在事务中添加记录
   Declare @销售类别 varchar(20),@原价 money,@当前余额 money,@当前积分 money
   Set @销售类别=Case When @VipCode='' Or @VipCode Is Null Then '正常零销' Else '会员销售' End

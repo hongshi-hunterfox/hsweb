@@ -136,3 +136,10 @@ If Not Exists(Select * From syscolumns where name='endTimeStrs' And id=Object_id
 Begin
  alter table web_categories add endTimeStrs varchar(255);
 End
+
+
+
+If Not Exists(Select * From syscolumns where name='image_url' And id=Object_id('web_product_groups','U'))
+Begin
+ alter table web_product_groups add image_url varchar(255);
+End
