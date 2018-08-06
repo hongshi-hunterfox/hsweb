@@ -142,7 +142,8 @@ class Order extends React.Component {
         isSelfPick:resJson.isSelfPick?resJson.isSelfPick:sessionStorage.getItem('isSelfPick') || '',
         salesInfo:resJson.salesInfo,
         cut:resJson.cut,
-        hsgooscode:resJson.hsgooscode
+        hsgooscode:resJson.hsgooscode,
+        supportDeliver:resJson.supportDeliver,
       })
       sessionStorage.setItem('total', resJson.total);
       if (sessionStorage.getItem('addr') != null) {
@@ -260,16 +261,13 @@ class Order extends React.Component {
              <div className="order-message">
               <div className="input-group">
                 <span className="input-group-addon">自提/配送：</span>
-                {/*<select
-                  name="isSelfPick"
-                  value={this.state.isSelfPick}
-                >
-                  <option value="">请选择</option>
-                  <option value="false">配送</option>
-                  <option value="true">自提</option>
-                </select>*/}
-                {this.state.supportDeliver?
-                <span  className="radio-input"><input type='radio' id='no' name="isSelfPick" checked={this.state.isSelfPick==="false"?'checked':null} value="false" onClick={e => {
+                <span  className="radio-input" onClick={() => {
+                	if(this.state.storeAddr.supportDeliver==='no'){
+                		alert("门店不支持配送,换个门店试试吧")
+                		window.location="/switch-shop/0"
+                		return
+                	}}}
+                	><input type='radio' id='no' name="isSelfPick" checked={this.state.isSelfPick==="false"?'checked':null} value="false" onClick={e => {
                     this.setState({
                       isSelfPick: e.target.value,
                       shippingFee: 0
@@ -301,8 +299,6 @@ class Order extends React.Component {
                     console.log(this.state.isSelfPick);
                    
                   }}/> <label htmlFor="no">配送</label></span>
-                  :null
-                }
                 
                 <input type='radio' name="isSelfPick" id="yes" value="true" checked={this.state.isSelfPick==="true"?'checked':null} onClick={e => {
                     this.setState({
@@ -340,16 +336,27 @@ class Order extends React.Component {
               defaultAddr={this.state.defaultAddr}
               storeAddr={this.state.storeAddr}
             />
-            <div className="order-store" >
+            <div className="order-addr" >
+              <div className="detail">
               {this.state.isSelfPick == 'false' ?
-              <span className="fa fa-home fa-lg">
-              	<font size="3">{localStorage.getItem('storeName') + "(配送范围：" + this.state.config.restrictedDistance + "公里内)"}</font>
-              </span>
+               <span className="fa fa-home fa-lg">
+               <font size='2'>
+               	配送门店
+               	<font size='1' color='#B8B8B8'>配送{this.state.config.restrictedDistance}km内)</font>:
+               </font>
+              	<font size='2'>
+              		{localStorage.getItem('id')==0 ? <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店        ></a>}
+              	</font>
+               </span>
               :
-              <span className="fa fa-home fa-lg">
-              	<a href="/switch-shop"><font color="black" size="3">{localStorage.getItem('storeName')} [切换门店]</font></a>
+ 							<span className="fa fa-home fa-lg">
+            	  <font size="2">
+            	  自提门店:
+            	  </font>
+              		<font size="2">{localStorage.getItem('id')==1 ? <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店         ></a>}</font>
               </span>
               }
+              </div>
             </div>
             <OrderItem cartItems={this.state.cartItems} />
             <input
@@ -650,7 +657,12 @@ salesInfoShowClick=()=>{
         return false
       }
     }
-
+		if(this.state.isSelfPick === 'false'&&this.state.storeAddr.supportDeliver === 'no'){
+			this.setState({
+        error: errMap['peisong_error']
+      })
+      return false
+		}
     if (!data.cartIds) {
       this.setState({
         error: errMap['data_error']

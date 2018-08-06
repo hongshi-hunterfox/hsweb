@@ -20,8 +20,18 @@ public class NapaStore {
     private String addrDetail;
     
     private String hsName;
+    
+    private String supportDeliver;
 
-    public String getHsName() {
+    public String getSupportDeliver() {
+		return supportDeliver;
+	}
+
+	public void setSupportDeliver(String supportDeliver) {
+		this.supportDeliver = supportDeliver;
+	}
+
+	public String getHsName() {
 		return hsName;
 	}
 

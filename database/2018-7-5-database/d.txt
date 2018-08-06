@@ -1,0 +1,26 @@
+delete from ReportColumn
+insert into ReportColumn(EngName,CnName,Sort,ObjectName,Remarks)
+select '日期','日期',1,'SumBusinessClass','营业分类汇总' union
+select '零售','零售',2,'SumBusinessClass','营业分类汇总' union
+select '订单','订单',3,'SumBusinessClass','营业分类汇总' union
+select '充值','充值',4,'SumBusinessClass','营业分类汇总' union
+select '收入方式','收入方式',1,'SalesRevenue','销售收入' union
+select '昨天','昨天',2,'SalesRevenue','销售收入'  union
+select '近七天','近七天',3,'SalesRevenue','销售收入'  union
+select '近三十天','近三十天',4,'SalesRevenue','销售收入'union
+select '日期','日期',1,'BusinessError','营业差额'  union
+select '店铺名','店铺名',2,'BusinessError','营业差额'  union
+select '应缴','应缴',3,'BusinessError','营业差额'  union
+select '实缴','实缴',4,'BusinessError','营业差额'  union
+select '差额','差额',5,'BusinessError','营业差额'  union
+select '类别','类别',1,'SalesRanking','分类单品销售排行' union
+select '产品','产品',2,'SalesRanking','分类单品销售排行'union
+select '销售','销售',3,'SalesRanking','分类单品销售排行'union
+select '日期','日期',1,'VIPAnalysis','会员分析'union
+select '充值','充值',2,'VIPAnalysis','会员分析'union
+select '刷卡','刷卡',3,'VIPAnalysis','会员分析'union
+select '类别','类别',1,'ClassSaleType','大类销售排行'union
+select '昨天','昨天',2,'ClassSaleType','大类销售排行'union
+select '近七天','近七天',3,'ClassSaleType','大类销售排行'union
+select '近三十天','近三十天',4,'ClassSaleType','大类销售排行'
+go

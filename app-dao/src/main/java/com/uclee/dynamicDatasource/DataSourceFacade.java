@@ -157,8 +157,8 @@ public class DataSourceFacade implements DataSource {
             beanDefinitionBuilder.addPropertyValue("password", dataSourceInfo.getPassword());
             beanDefinitionBuilder.addPropertyValue("initialSize",0);
             beanDefinitionBuilder.addPropertyValue("maxActive",200);
-            beanDefinitionBuilder.addPropertyValue("minIdle",1);
-            beanDefinitionBuilder.addPropertyValue("maxWait",60000);
+            beanDefinitionBuilder.addPropertyValue("minIdle",30);
+            beanDefinitionBuilder.addPropertyValue("maxWait",120000);
             beanDefinitionBuilder.addPropertyValue("validationQuery","select 1");
             beanDefinitionBuilder.addPropertyValue("testOnBorrow",false);
             beanDefinitionBuilder.addPropertyValue("testOnReturn",false);

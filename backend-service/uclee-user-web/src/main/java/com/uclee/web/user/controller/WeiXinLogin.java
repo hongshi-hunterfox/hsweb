@@ -131,14 +131,7 @@ public class WeiXinLogin extends CommonUserHandler{
        return source;  
     }
 
-	
-	/**
-	 *return
-	 *	key:result
-	 *		firstLoginSuccess    第一次登陆成功，跳转到绑定手机页面,没有手机号
-	 *		success				   登陆成功 
-	 *		fail  			                登陆失败
-	 */
+
 	/** 
 	* @Title: facebooklogin 
 	* @Description: 发起微信登陆请求
@@ -331,7 +324,5 @@ public class WeiXinLogin extends CommonUserHandler{
 			logger.info("e-d: " + (e-d));
  			return result;
  		}
-		
-		
 	}
 }

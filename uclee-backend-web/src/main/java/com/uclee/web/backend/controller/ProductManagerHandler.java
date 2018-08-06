@@ -61,6 +61,7 @@ public class ProductManagerHandler {
 	
 	@RequestMapping(value = "/doAddProductHandler", method = RequestMethod.POST)
 	public @ResponseBody Boolean addProductHandler(@RequestBody ProductForm productForm,HttpSession session) throws Exception {
+		System.out.println("aaa="+JSON.toJSONString(productForm));
 		return productManageService.addProduct(productForm);
 		
 	}

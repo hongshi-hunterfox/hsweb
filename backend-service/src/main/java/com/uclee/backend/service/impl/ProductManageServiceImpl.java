@@ -54,8 +54,9 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		//description 
 		product.setIsActive(true);
 		//取sortValue的最大值，然后加1
-		int maxSortValue=productMapper.getMaxSortValue();
-		maxSortValue+=1;
+		//int maxSortValue=productMapper.getMaxSortValue();
+		//maxSortValue+=1;
+		int maxSortValue = 1;
 		//将sortValue的值设定到产品里面
 		product.setSortValue(maxSortValue);
 		descriptionHandler(product);

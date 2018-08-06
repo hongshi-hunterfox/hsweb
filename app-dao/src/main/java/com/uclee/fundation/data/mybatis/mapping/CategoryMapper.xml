@@ -92,12 +92,15 @@
       <if test="parentId != null" >
         #{parentId,jdbcType=INTEGER},
       </if>
-       <if test="startTimeStrs != null" >
+      <if test="batchDiscount != null" >
+       #{batchDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="startTimeStrs != null" >
         #{startTimeStrs,jdbcType=VARCHAR},
       </if>
        <if test="endTimeStrs != null" >
         #{endTimeStrs,jdbcType=VARCHAR},
-      </if>
+       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Category" >

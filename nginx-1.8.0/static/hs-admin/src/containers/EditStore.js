@@ -37,7 +37,8 @@ class EditStore extends React.Component {
       region: '',
       addrDetail: '',
       latitude:23,
-      longitude:119
+      longitude:119,
+      supportDeliver: ''
     }
   }
 
@@ -72,7 +73,8 @@ class EditStore extends React.Component {
           code: res.body.napaStore.hsCode,
           userId:res.body.napaStore.userId,
           cityArr:res.body.city||[],
-          regionArr:res.body.region||[]
+          regionArr:res.body.region||[],
+          supportDeliver: res.body.napaStore.supportDeliver,
         })
       })
   }
@@ -108,6 +110,15 @@ class EditStore extends React.Component {
                       </option>
                     )
                   })}
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">是否支持配送：</label>
+              <div className="col-md-9">
+                <select name="supportDeliver" className="form-control" value={this.state.supportDeliver} onChange={this._onStoreChange}>
+     							<option value="yes">是</option>
+                	<option value="no">否</option>
                 </select>
               </div>
             </div>
@@ -290,7 +301,11 @@ class EditStore extends React.Component {
         err: '请填写 商户名称'
       })
     }
-
+		if (!data.supportDeliver) {
+      return this.setState({
+        err: '请选择 是否支持配送'
+      })
+    }
     if (!data.addrDetail) {
       return this.setState({
         err: '请填写 详细地址'

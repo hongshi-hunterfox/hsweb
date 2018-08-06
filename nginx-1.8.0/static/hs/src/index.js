@@ -92,7 +92,7 @@ ReactDOM.render(
       <Route path="OnlineOrder" component={OnlineOrder} />
       <Route path="seller/refund" component={Refund}/>
       <Route path="luck_draw" component={ChouJiang}/>
-      <Route path="switch-shop" component={SwitchShop}/>
+      <Route path="switch-shop/:id" component={SwitchShop}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

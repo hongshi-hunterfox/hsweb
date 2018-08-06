@@ -1578,16 +1578,18 @@ public class BackendServiceImpl implements BackendServiceI {
 				for(int i=0;i<productguige.size();i++){
 					System.out.println("6666======"+productguige.get(i).getValueId());
 					SpecificationValue Value = specificationValueMapper.selectByPrimaryKey(productguige.get(i).getValueId());
-				    System.out.println("在售价============"+ Value.getHsGoodsPrice());
-				    BigDecimal prePrice = Value.getHsGoodsPrice().multiply(category.getBatchDiscount());	
-				    System.out.println("折扣价============"+ prePrice);
-					Value.setPromotionPrice(prePrice);
-					System.out.println("开始时间============"+ category.getStartTimeStrs());
-					Value.setStartTimeStr(category.getStartTimeStrs());
-					System.out.println("结束时间============"+ category.getEndTimeStrs());
-					Value.setEndTimeStr(category.getEndTimeStrs());
-					
-					specificationValueMapper.updateGuiGe(Value);
+					if(Value!=null){
+					    System.out.println("在售价============"+ Value.getHsGoodsPrice());
+					    BigDecimal prePrice = Value.getHsGoodsPrice().multiply(category.getBatchDiscount());	
+					    System.out.println("折扣价============"+ prePrice);
+						Value.setPromotionPrice(prePrice);
+						System.out.println("开始时间============"+ category.getStartTimeStrs());
+						Value.setStartTimeStr(category.getStartTimeStrs());
+						System.out.println("结束时间============"+ category.getEndTimeStrs());
+						Value.setEndTimeStr(category.getEndTimeStrs());
+						
+						specificationValueMapper.updateGuiGe(Value);
+					}
 					
 				}
 			}
@@ -1620,12 +1622,14 @@ public class BackendServiceImpl implements BackendServiceI {
 					ret.put("reason","该类别已经存在，不可重复添加");
 					return ret;
 				}
-				if(categoryMapper.insertSelective(category)>0){
-					ret.put("result",true);
-				}else{
-					ret.put("result",false);
-					ret.put("reason","网络繁忙");
-				}
+//				if(categoryMapper.insertSelective(category)>0){
+				
+				categoryMapper.insertSelective(category);
+				ret.put("result",true);
+//				}else{
+//					ret.put("result",false);
+//					ret.put("reason","网络繁忙");
+//				}
 				return ret;
 			}
 		}

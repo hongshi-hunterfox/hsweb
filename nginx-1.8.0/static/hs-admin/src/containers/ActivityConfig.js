@@ -116,13 +116,6 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.brand} name="brand" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>是否支持配送：</label>
-              <div className="col-md-9" style={{marginTop:'10px'}}>
-                <select name="supportDeliver" value={this.state.config.supportDeliver?this.state.config.supportDeliver:'yes'} style={{padding:'5px'}} onChange={this._change}>
-                  <option value="no">不支持</option>
-                  <option value="yes">支持</option>
-                </select>
-              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>配送距离限制km：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.restrictedDistance} name="restrictedDistance" className="form-control" onChange={this._change}/>

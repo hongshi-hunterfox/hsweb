@@ -111,6 +111,16 @@ class AddStore extends React.Component {
               </div>
             </div>
             <div className="form-group">
+              <label className="control-label col-md-3">是否支持配送：</label>
+              <div className="col-md-9">
+                <select name="supportDeliver" className="form-control" onChange={this._hsCodeChange}>
+                <option value=''>请选择</option>
+                <option value="yes">是</option>
+                <option value="no">否</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
               <label className="control-label col-md-3">商店地址：</label>
               <div className="col-md-3">
                 <select
