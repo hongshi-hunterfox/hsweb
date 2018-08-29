@@ -156,7 +156,7 @@ public class DataSourceFacade implements DataSource {
             beanDefinitionBuilder.addPropertyValue("username", dataSourceInfo.getUsername());
             beanDefinitionBuilder.addPropertyValue("password", dataSourceInfo.getPassword());
             beanDefinitionBuilder.addPropertyValue("initialSize",0);
-            beanDefinitionBuilder.addPropertyValue("maxActive",200);
+            beanDefinitionBuilder.addPropertyValue("maxActive",20);
             beanDefinitionBuilder.addPropertyValue("minIdle",1);
             beanDefinitionBuilder.addPropertyValue("maxWait",60000);
             beanDefinitionBuilder.addPropertyValue("validationQuery","select 1");
@@ -166,7 +166,7 @@ public class DataSourceFacade implements DataSource {
             beanDefinitionBuilder.addPropertyValue("timeBetweenEvictionRunsMillis",60000);
             beanDefinitionBuilder.addPropertyValue("minEvictableIdleTimeMillis",25200000);
             beanDefinitionBuilder.addPropertyValue("removeAbandoned",true);
-            beanDefinitionBuilder.addPropertyValue("removeAbandonedTimeout",180);
+            beanDefinitionBuilder.addPropertyValue("removeAbandonedTimeout",1800);
             beanDefinitionBuilder.addPropertyValue("logAbandoned",true);
             beanDefinitionBuilder.addPropertyValue("filters","mergeStat");
 
@@ -181,7 +181,6 @@ public class DataSourceFacade implements DataSource {
             }
         }
         logger.info("使用切换后的数据源:"+dataSourceInfo.getMerchantCode());
-        System.out.println("使用切换后的数据源:"+dataSourceInfo.getMerchantCode());
         return druidDataSource1;
     }
 
@@ -204,4 +203,3 @@ public class DataSourceFacade implements DataSource {
 
 
 }
-

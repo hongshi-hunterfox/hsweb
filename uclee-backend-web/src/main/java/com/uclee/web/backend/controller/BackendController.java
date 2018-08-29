@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.backend.service.BackendServiceI;
+import com.github.pagehelper.PageHelper;
 import com.uclee.date.util.DateUtils;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
@@ -32,7 +33,7 @@ import com.uclee.fundation.data.web.dto.BannerPost;
 import com.uclee.fundation.data.web.dto.ConfigPost;
 import com.uclee.fundation.data.web.dto.FreightPost;
 import com.uclee.fundation.data.web.dto.MySelect;
-
+import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import scala.collection.immutable.HashMap;
 
 @Controller
@@ -45,7 +46,8 @@ public class BackendController {
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private ProductGroupMapper productGroupMapper;
-	
+	@Autowired
+	private BargainSettingMapper bargainSettingMapper;
 	
 	@RequestMapping("/freight")
 	public @ResponseBody Map<String,Object> freight(HttpServletRequest request) {
@@ -233,12 +235,6 @@ public class BackendController {
 		Map<String,Object> result = new TreeMap<String,Object>();
 		Map<String,Object> map = new LinkedMap();
 		List<BirthVoucher> birthVoucher = backendService.selectAllBirthVoucher();
-		/*if(birthVoucher!=null&&birthVoucher.size()==0){
-			BirthVoucher tmp = new BirthVoucher();
-			tmp.setVoucherCode("");
-			tmp.setAmount(0);
-			birthVoucher.add(tmp);
-		}*/
 		int i = 0;
 		for(BirthVoucher item : birthVoucher){
 			map.put("myKey[" + i + "]", item.getVoucherCode());
@@ -254,12 +250,6 @@ public class BackendController {
 		Map<String,Object> result = new TreeMap<String,Object>();
 		Map<String,Object> map = new LinkedMap();
 		List<VipVoucher> vipVoucher = backendService.selectAllVipVoucher();
-		/*if(birthVoucher!=null&&birthVoucher.size()==0){
-			BirthVoucher tmp = new BirthVoucher();
-			tmp.setVoucherCode("");
-			tmp.setAmount(0);
-			birthVoucher.add(tmp);
-		}*/
 		int i = 0;
 		for(VipVoucher item : vipVoucher){
 			map.put("myKey[" + i + "]", item.getVoucher());
@@ -450,13 +440,12 @@ public class BackendController {
 	@RequestMapping("/getAllvip")
 	public @ResponseBody Map<String,Object> getAllvip(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		System.out.println("helloworld");
 		List<UserProfile> vips = backendService.selectAllVipList();
 		for(UserProfile item:vips){
 			//用于转换会员注册日期数据类型
 			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+			 System.out.println(item);
 		}
-		System.out.println("helloworld============"+JSON.toJSONString(vips));
 		map.put("vips", vips);
 		map.put("size", vips.size());
 		return map;
@@ -622,6 +611,46 @@ public class BackendController {
 		System.out.println("--------------"+password);
 		return backendService.getAccount(account,password);
 	}
+	/**
+	 * 获取砍价活动列表
+	 * @return
+	 */
+	@RequestMapping("/getBargainList")
+	public @ResponseBody Map<String,Object> getBargainList(HttpServletRequest Request){
+		HttpSession session = Request.getSession();
+		Map<String,Object> map=new TreeMap<String,Object>();
+		List<BargainSetting> bargainList = backendService.selectBargain();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		for(BargainSetting item:bargainList){
+			item.setStarts(sdf.format(item.getStart()));
+			item.setEnds(sdf.format(item.getClosure()));
+		}
+		System.out.println("bargainlist=="+JSON.toJSONString(bargainList));
+		map.put("bargainList", bargainList);
+		return map;
+	}
+	/**
+	 * 获取砍价活动设置
+	 * @param id
+	 */
+	@RequestMapping("/getBargain")
+	public @ResponseBody Map<String,Object> getBargain(HttpServletRequest Request,Integer id){
+		HttpSession session = Request.getSession();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		if(id!=null){
+			BargainSetting bargain = backendService.selectBargainId(id);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			bargain.setStarts(sdf.format(bargain.getStart()));
+			bargain.setEnds(sdf.format(bargain.getClosure()));
+			SimpleDateFormat times = new SimpleDateFormat("HH:mm");
+			bargain.setStartTime(times.format(bargain.getStart()));
+			bargain.setEndTime(times.format(bargain.getClosure()));
+			map.put("bargain", bargain);
+			
+		}
+		return map;
+	}
+
 	@RequestMapping("/getAll")
 	public @ResponseBody  Map<String, Object> getAll(HttpServletRequest Request){
 		Map<String,Object> map = new TreeMap<String,Object>();
@@ -629,6 +658,4 @@ public class BackendController {
 		map.put("all",all);
 		 return map;
 	}
-	
-
 }

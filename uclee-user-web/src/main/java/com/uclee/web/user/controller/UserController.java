@@ -14,6 +14,7 @@ import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
@@ -38,7 +39,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -213,9 +219,7 @@ public class UserController extends CommonUserHandler{
 		Map<String, String> config = userService.getSMSConfig();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
-		logger.info("12345"+numbers.size());
 		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
-			logger.info("12345"+numbers.get(0).getPhone());
 			if(numbers.get(0).getPhone().equals(phone)){
 				System.out.println("没有修改手机号");	
 			}else{
@@ -295,7 +299,6 @@ public class UserController extends CommonUserHandler{
 			}else {
 				return false;
 			}
-
 		}
 		return false;
 	}
@@ -542,18 +545,16 @@ public class UserController extends CommonUserHandler{
 		if(userId!=null){
 			//根据会员表有没有此手机号来决定跳转--外键获取的手机号有可能不是你本次输入的手机号，也不会跳转
 			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
-					List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
-					if(lnsurance!=null&&lnsurance.size()>0){
-						List<HongShiVip> Vip = userService.selectVip(lnsurance.get(0).getPhone());
-						if(Vip!=null&&Vip.size()>0){
-							map.put("result",false);
-							return map;
-						}
-					}
-				
+			List<Lnsurance> lnsurance = userService.getUsers(tt.getOauthId());
+			if(lnsurance!=null&&lnsurance.size()>0){
+				List<HongShiVip> Vip = userService.selectVip(lnsurance.get(0).getPhone());
+				if(Vip!=null&&Vip.size()>0){
+					map.put("result",false);
+					return map;
 				}
-
-		
+			}
+				
+		}
 		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 		if(bindingRewards!=null&&bindingRewards.size()>=1){
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
@@ -644,15 +645,28 @@ public class UserController extends CommonUserHandler{
 			if(item.getEndTime()!=null){
 			value2 = item.getEndTime().getTime();
 			}
+			
+			System.out.println("cartid============"+item.getCartId());
+			BargainSetting price = userService.getPrice(item.getCartId());//获取砍价购买金额
 			//判断提交订单商品是否有促销价--skx
 			if(value1!=0||value2!=0){
 				if(item.getPromotion()!=null && value>value1 && value<value2){
 					total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
 				}else{
-					total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));	
+					//判断是否是砍价商品
+					if(price==null){
+						total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+					}else{
+						total = total.add(price.getPrice().multiply(new BigDecimal(item.getAmount())));
+					}	
 				}
 			}else{
-				total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+				//判断是否是砍价商品
+				if(price==null){
+					total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+				}else{
+					total = total.add(price.getPrice().multiply(new BigDecimal(item.getAmount())));
+				}	
 			}
 
 					
@@ -664,6 +678,10 @@ public class UserController extends CommonUserHandler{
 			ProductParameters csshuxings = userService.obtainParameters(item.getCanshuValueId());	
 			if(csshuxings!=null&&csshuxings.getSname()!=null){
 				item.setCsshuxing(csshuxings.getSname());
+			}
+			//判断是否是砍价商品
+			if(price!=null){
+				item.setMoney(price.getPrice());
 			}
 		}
 		logger.info("carts.size============="+carts.size());
@@ -715,6 +733,28 @@ public class UserController extends CommonUserHandler{
 			salesInfo.add(tmp);
 		}
 		map.put("salesInfo",salesInfo);
+		return map;
+	}
+	
+	/**
+	 * @Description: 更新砍价发起记录状态
+	 */
+	@RequestMapping("/status")
+	public @ResponseBody Map<String,Object> status(HttpServletRequest request,String paymentSerialNum){
+		HttpSession session = request.getSession();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
+		vipIdentity vip = userService.selectVipIdentity(oauth.getOauthId());
+		if(vip!=null){
+			//判断是否加过购物车
+			LaunchBargain record = userService.getbargainRecord(userId);
+			if(record!=null){
+				map.put("record", "已经加过购物车了,不能重复加入");
+				userService.updateLaunchBargain(userId);
+				backendService.sendBargainhMsg(userId);
+			}
+		}
 		return map;
 	}
 
@@ -1100,7 +1140,7 @@ public class UserController extends CommonUserHandler{
 		List<Payment> payments = userService.selectPaymentForRecharge();
 		map.put("payment", payments);
 		//获取充值配置
-		List<RechargeConfig> configs = backendService.selectAllRechargeConfig();
+		List<RechargeConfig> configs = backendService.selectMonPeiZhi();
 		Map<String,List<String>> extraData = new HashMap<String,List<String>>();
 		for(RechargeConfig config:configs){
 			if(config.getStartTime()!=null&&config.getEndTime()!=null&&new Date().after(config.getStartTime())&&new Date().before(config.getEndTime())){
@@ -1365,6 +1405,9 @@ public class UserController extends CommonUserHandler{
 				map.put("couponAmount",0);
 			}
 			List<HongShiOrder> orders = hongShiMapper.getHongShiOrder(tt.getOauthId(),false);
+			for(int i=0; i<orders.size();i++){
+				map.put("isvoid", orders.get(i).getVoid());
+			}
 			int deliCount = orders.size();
 			map.put("deliCount", deliCount);
 		}
@@ -1765,13 +1808,9 @@ public class UserController extends CommonUserHandler{
 				res.setvSex(vSex);
 				map.put("item", item);
 			}
-	
-
 
 		}
-
 		return res;
-		
 	}
 
 
@@ -1805,6 +1844,221 @@ public class UserController extends CommonUserHandler{
 		map.put("refund",fund);
 		return map;
 	}
-
+	
+	/**
+	 * @Description :砍价列表--kx
+	 */
+	@RequestMapping(value="/getBargain")
+	public @ResponseBody Map<String,Object> getBargain(HttpServletRequest request){
+		Map<String,Object> map=new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		List<BargainPost> list = userService.getBargainList();		
+		for(int i=0; i<list.size(); i++){
+			//判断活动是否在时间范围内
+//			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			String start = sdf.format(list.get(i).getStart());
+			String end = sdf.format(list.get(i).getClosure());
+			list.get(i).setStarts(start);
+			list.get(i).setEnds(end);
+			map.put("list", list);		
+		}
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
+		//得到外键和会员id
+		vipIdentity vip = userService.selectVipIdentity(oauth.getOauthId());
+		if(vip!=null){
+			LaunchBargain record = userService.getbargainRecord(userId);
+			//判断该用户是否有砍价活动正在进行中
+			if(record!=null){
+				map.put("record", "检测到你有砍价活动正在进行中，即将进入砍价详情界面！");
+				//取要进入的砍价信息
+				BargainLog value = userService.getValueId(record.getPid(), userId);
+				if(value!=null){
+					map.put("valueId", value.getValueId());
+					map.put("invitationcode", value.getInvitationCode());
+				}
+			}
+		}else{
+			map.put("vipFail","只有会员才能发起砍价，请先注册绑定会员");
+		}
+		System.out.println("date====="+System.currentTimeMillis());
+		//以当前时间拼接用户id生成流水号
+		String code = System.currentTimeMillis()+"="+userId;
+		System.out.println("code====="+code);
+		map.put("code", code);
+		return map;
+	}
+	
+	/**
+	 * 插入记录到发起砍价表并把发起人砍价
+	 * 记录插入到砍价记录表
+	 */
+	@RequestMapping("/LaunchBargain")
+	public @ResponseBody Map<String,Object> LaunchBargain(HttpServletRequest request, String name, BigDecimal hsGoodsPrice, String codes) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		BargainSetting bargain = userService.selectName(name);
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
+		//得到外键和会员id
+		vipIdentity vip = userService.selectVipIdentity(oauth.getOauthId());
+		LaunchBargain launchBargain = new LaunchBargain();
+		if(vip!=null){
+			launchBargain.setUid(userId);
+			launchBargain.setOpenId(oauth.getOauthId());
+			launchBargain.setPid(bargain.getId());
+			launchBargain.setInitialAmount(hsGoodsPrice);
+			//以设置的随机金额最大值来给发起砍价的人砍掉相应的金额--kx
+			launchBargain.setCurrentAmount(bargain.getMaxprice());
+			launchBargain.setLaunchTime(new Date());
+			//状态1为发起状态，2为结束
+			launchBargain.setStatus(1);
+			System.out.println("code123=========="+codes);
+			launchBargain.setInvitationCode(codes);
+			System.out.println("插入到发起砍价表的信息"+JSON.toJSONString(launchBargain));
+			LaunchBargain record = userService.getbargainRecord(userId);
+			//判断是否有正在进行中的砍价活动
+			if(record==null){
+				userService.insertLaunchBargain(launchBargain);
+				//把发起人的砍价记录插入到砍价记录表--kx
+				BargainLog log = new BargainLog();
+				log.setPid(launchBargain.getId());
+				log.setUid(launchBargain.getUid());
+				log.setOpenId(launchBargain.getOpenId());
+				//发起人砍掉的金额
+				log.setRandomAmount(bargain.getMaxprice());
+				log.setLaunchTime(new Date());
+				//关联邀请码
+				log.setInvitationCode(launchBargain.getInvitationCode());
+				userService.insertBargainLog(log);
+			}
+		}
+		return map;
+	}
+	
+	/**
+	 * 帮砍人帮砍记录
+	 */
+	@SuppressWarnings("unused")
+	@RequestMapping("/insertBargainLog")
+	public @ResponseBody Map<String,Object> insertBargainLog(HttpServletRequest request, String codes, String productName, Integer valueId) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
+		vipIdentity vip = userService.selectVipIdentity(oauth.getOauthId());
+		BargainSetting bargain = userService.selectName(productName);
+		Random random = new Random();
+		//根据活动设置生成砍价金额随机数
+		Double min=bargain.getMinprice();
+		Double max=bargain.getMaxprice();
+		System.out.println("min======="+min);
+		System.out.println("max======="+max);
+		Double result = min + (Math.random() * ((max - min)));
+		DecimalFormat df = new DecimalFormat("0.0");
+		System.out.println("result======="+result);
+			BargainLog log = new BargainLog();
+			log.setPid(0);
+			log.setUid(userId);
+			log.setOpenId(oauth.getOauthId());
+			BigDecimal sumMoney = userService.selectSumMoney(codes);
+			//保证最后砍价金额等于最大能砍掉的金额
+			BargainPost value = userService.getValue(valueId);
+			double sum = sumMoney.intValue() + result;
+			double price = value.getHsGoodsPrice().intValue() - value.getPrice().intValue();
+			if(sum>price){				
+				result = price - sumMoney.intValue();
+			}
+			result = new Double(df.format(result));
+			map.put("result", result);
+			log.setRandomAmount(result);
+			log.setLaunchTime(new Date());
+			//关联邀请码			
+			log.setInvitationCode(codes);
+			//取得砍价记录
+			List<BargainLog> bargainLog = userService.selectbargainLog(userId, codes);
+			System.out.println("bargainLog================="+bargainLog.size());
+			
+			//判断是否已经砍过价
+			if(bargainLog==null||bargainLog.size()==0){
+				userService.insertBargainLog(log);
+			}else{
+				System.out.println("有砍价记录");
+			}
+//		}
+		return map;
+	}
+	/**
+	 * 获取砍价记录数据
+	 */
+	@RequestMapping("/getBargainUser")
+	public @ResponseBody Map<String,Object> getBargainUser(HttpServletRequest request, String codes) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		System.out.println("codesskx======"+codes);
+		//取得砍价记录
+		List<WxUser> users = userService.selectWxUser(codes);
+		BigDecimal sumMoney = userService.selectSumMoney(codes);
+		System.out.println("sumMoney========"+sumMoney.doubleValue());
+		map.put("users", users);
+        map.put("sunMoney", sumMoney.doubleValue());
+		return map;
+	}
+	
+	/**
+	 * @Description:获取到要发起砍价的产品--kx
+	 */
+	@RequestMapping("/goBargain")
+	public @ResponseBody Map<String,Object> goBargain(HttpServletRequest request, Integer valueId, String codes) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		//得到会员信息
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		LaunchBargain launch = userService.selectLaunchLog(userId, codes);
+		boolean status=false;
+		if(launch==null){
+			map.put("status", status);
+		}else{
+			status=true;
+			map.put("status", status);
+		}
+		//取得砍价记录
+		List<BargainLog> bargainLog = userService.selectbargainLog(userId, codes);
+		System.out.println("bargainLog================="+bargainLog.size());
+		map.put("size", bargainLog.size());
+		System.out.println("valueId=="+valueId);
+		BargainPost value = userService.getValue(valueId);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String end = sdf.format(value.getClosure());
+		value.setEnds(end);
+		System.out.println("valuesid=="+value.getId());
+		//判断活动是否过期
+		BargainPost status1 = userService.getBargainOver(value.getId());
+		if(status1 == null){
+			map.put("status1", "活动已过期");
+		}
+		map.put("values", value);
+		return map;
+	}
+	
+	/**
+	 * @Description:砍价活动发起成功通知
+	 */
+	@RequestMapping("/bargainMsg")
+	public @ResponseBody boolean bargainMsg(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		return backendService.sendLaunchBargainhMsg(userId);
+	}
+	
+	/**
+	 * @Description:砍价活动砍价成功通知
+	 */
+	@RequestMapping("/sucessMsg")
+	public @ResponseBody boolean sucessMsg(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		return backendService.sendSucessMsg(userId);
+	}
 	
  }

@@ -91,6 +91,7 @@ public class AdminController {
     }
     @RequestMapping("getNapaStoreById")
     public @ResponseBody Map<String,Object> getNapaStoreById(Integer storeId){
+    	System.out.println("store===="+storeId);
          return storeService.selectNapaStoreById(storeId);
     }
 

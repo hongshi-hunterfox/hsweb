@@ -44,4 +44,5 @@ public interface HongShiMapper {
 	List<MobileItem>selectMobile(@Param("hsCode")String hsCode,@Param("userId")Integer userId);
 	List<Map<String, Object>> getmobJect(@Param("QueryName")String QueryName,@Param("hsCode")String hsCode,@Param("userId")Integer userId);
 	HongShiCoupon getCouponName(String productNumber);
+	List<Map<String, Object>> getObjectName(@Param("objectName")String objectName);
 }

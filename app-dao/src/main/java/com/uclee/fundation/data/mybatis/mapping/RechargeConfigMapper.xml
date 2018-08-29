@@ -31,6 +31,11 @@
     from web_recharge_config
     where money = #{money,jdbcType=DECIMAL}
   </select>
+  <select id="selectMonPeiZhi" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from web_recharge_config where getdate() between start_time and end_time order by money asc
+  </select>
   <select id="selectAll" resultMap="BaseResultMap"  >
     select 
     <include refid="Base_Column_List" />

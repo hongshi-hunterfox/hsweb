@@ -60,7 +60,14 @@ public class ConfigPost {
 	public void setNotice(String notice) {
 		this.notice = notice;
 	}
+	private String bargainText;
+	public String getBargainText() {
+		return bargainText;
+	}
 
+	public void setBargainText(String bargainText) {
+		this.bargainText = bargainText;
+	}
 	public String getLoss() {
 		return loss;
 	}
@@ -84,7 +91,6 @@ public class ConfigPost {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-
 
 	public String getVoucherSendInformation() {
 		return voucherSendInformation;

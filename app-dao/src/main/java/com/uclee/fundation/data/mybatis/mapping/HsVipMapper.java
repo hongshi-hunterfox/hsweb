@@ -1,5 +1,9 @@
 package com.uclee.fundation.data.mybatis.mapping;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.uclee.fundation.data.mybatis.model.HsVip;
 import com.uclee.fundation.data.mybatis.model.Product;
 import com.uclee.fundation.data.mybatis.model.UserProfile;

@@ -12,10 +12,11 @@
     <result column="latitude" property="latitude" jdbcType="VARCHAR" />
     <result column="hs_code" property="hsCode" jdbcType="VARCHAR" />
     <result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+    <result column="supportDeliver" property="supportDeliver" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     store_id,  store_name, province, city, region, longitude, latitude, hs_code,
-    addr_detail
+    addr_detail, supportDeliver
   </sql>
   <select id="selectByPrimaryKey" resultMap="NapaStore" parameterType="java.lang.Integer" >
     select 
@@ -65,11 +66,11 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.NapaStore" useGeneratedKeys="true" keyProperty="storeId">
     insert into web_napa_stores (store_id, store_name, 
       province, city, region, 
-      longitude, latitude, hs_code, 
+      longitude, latitude, hs_code, supportDeliver,
       addr_detail)
    	  values (#{storeId,jdbcType=INTEGER}, #{storeName,jdbcType=VARCHAR}, 
       #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, 
-      #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{hsCode,jdbcType=VARCHAR}, 
+      #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{hsCode,jdbcType=VARCHAR}, #{supportDeliver,jdbcType=VARCHAR}
       #{addrDetail,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.NapaStore" useGeneratedKeys="true" keyProperty="storeId">
@@ -100,6 +101,9 @@
       <if test="hsCode != null" >
         hs_code,
       </if>
+      <if test="supportDeliver != null" >
+        supportDeliver,
+      </if>
       <if test="addrDetail != null" >
         addr_detail,
       </if>
@@ -128,6 +132,9 @@
       </if>
       <if test="hsCode != null" >
         #{hsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="supportDeliver != null" >
+        #{supportDeliver,jdbcType=VARCHAR},
       </if>
       <if test="addrDetail != null" >
         #{addrDetail,jdbcType=VARCHAR},
@@ -158,6 +165,9 @@
       <if test="hsCode != null" >
         hs_code = #{hsCode,jdbcType=VARCHAR},
       </if>
+      <if test="supportDeliver != null" >
+        supportDeliver = #{supportDeliver,jdbcType=VARCHAR},
+      </if>
       <if test="addrDetail != null" >
         addr_detail = #{addrDetail,jdbcType=VARCHAR},
       </if>
@@ -174,6 +184,7 @@
       longitude = #{longitude,jdbcType=VARCHAR},
       latitude = #{latitude,jdbcType=VARCHAR},
       hs_code = #{hsCode,jdbcType=VARCHAR},
+      supportDeliver = #{supportDeliver,jdbcType=VARCHAR},
       addr_detail = #{addrDetail,jdbcType=VARCHAR}
     where store_id = #{storeId,jdbcType=INTEGER}
   </update>

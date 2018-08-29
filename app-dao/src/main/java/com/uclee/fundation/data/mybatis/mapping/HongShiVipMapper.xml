@@ -228,4 +228,5 @@
     values (#{vcode,jdbcType=VARCHAR}, #{foreignKey,jdbcType=VARCHAR}
       )
    </insert>
+
 </mapper>

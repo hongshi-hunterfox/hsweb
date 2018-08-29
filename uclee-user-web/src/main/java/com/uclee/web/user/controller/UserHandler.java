@@ -217,11 +217,11 @@ public class UserHandler {
 	* @throws 
 	*/
 	@RequestMapping("/cardAddHandler")
-	public @ResponseBody Map<String,Object> cardAddHandler(HttpServletRequest request,Integer cartId,Integer amount) {
+	public @ResponseBody Map<String,Object> cardAddHandler(HttpServletRequest request,Integer cartId,Integer amount, Integer activityMarkers) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		map = userService.cardAddHandler(userId,cartId,amount);
+		map = userService.cardAddHandler(userId,cartId,amount,activityMarkers);
 		return map;
 	}
 	/** 
@@ -370,7 +370,6 @@ public class UserHandler {
 				userService.updateVips(hsVip.getvCode(), up);	
 				map.put("result", "success");
 			}else{
-					
 				map.put("reason","手机号已与其他会员卡绑定，不能修改！");
 				map.put("result", "fail");	
 			}

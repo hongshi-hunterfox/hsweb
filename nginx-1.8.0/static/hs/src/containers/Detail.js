@@ -265,6 +265,7 @@ class Detail extends React.Component {
       images: [],
       stores: [],
       signName:'',
+      brand:'',
       text: '',
       description: null,
       specifications: [],
@@ -327,7 +328,8 @@ class Detail extends React.Component {
 			console.log(c.storeList)
 			this.setState({
 				signName:c.signName,
-				numbers:c.numbers
+				numbers:c.numbers,
+				brand:c.brand
 			})
 		})
 
@@ -366,8 +368,8 @@ class Detail extends React.Component {
 				wx.ready(() => {
 					var explain = this.state.explain
 					wx.onMenuShareAppMessage({
-					title: this.state.title+'-'+this.state.signName, // 分享标题
-					desc: explain != null ? explain : '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!',  // 分享描述
+					title: this.state.title+'-'+this.state.brand, // 分享标题
+					desc: explain != null ? explain : '我在'+this.state.brand+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!',  // 分享描述
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.images[0].imageUrl, // 分享图标
 					success: function() {},
@@ -375,7 +377,7 @@ class Detail extends React.Component {
 				})
 
 				  wx.onMenuShareTimeline({
-					title: '我在'+this.state.signName+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!', // 分享标题
+					title: '我在'+this.state.brand+'发现了一件好东西:'+this.state.title+"最低价格仅"+this.minPrice+'元,快来看看吧!', // 分享标题
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.images[0].imageUrl, // 分享图标
 					success: function() {},

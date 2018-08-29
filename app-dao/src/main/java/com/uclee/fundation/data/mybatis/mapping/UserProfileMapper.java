@@ -33,8 +33,6 @@ public interface UserProfileMapper {
 	List<UserProfile> selectAllProfileList();
 	
 	List<UserProfile> selectAllVipList();
-	
-	 
 
 	List<UserProfile> getUserListForBirth(@Param("start") String start, @Param("end")String end,@Param("year")String year);
 

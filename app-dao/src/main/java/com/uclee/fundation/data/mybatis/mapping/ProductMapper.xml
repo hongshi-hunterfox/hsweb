@@ -224,9 +224,7 @@
       <if test="sortValue !=null">
         #{sortValue,jdbcType=INTEGER},
       </if>
-     
       	 #{parameter,jdbcType=VARCHAR},
- 
       <if test="appointedTime !=null">
       	 #{appointedTime,jdbcType=INTEGER},
       </if>

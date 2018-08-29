@@ -1,0 +1,143 @@
+use 数据库名
+
+go
+
+--web_orders
+If Not Exists(Select * From syscolumns where name='cut' And id=Object_id('web_orders add','U'))
+Begin
+ alter table web_orders add cut decimal(15,2) not null default 0;
+End
+
+If Not Exists(Select * From syscolumns where name='pick_up_image' And id=Object_id('web_orders add','U'))
+Begin
+ alter table web_orders add pick_up_image varchar(255) not null default '';
+End
+
+If Not Exists(Select * From syscolumns where name='pick_up_barcode' And id=Object_id('web_orders add','U'))
+Begin
+ alter table web_orders add pick_up_barcode varchar(255) not null default '';
+End
+
+--web_payment_orders
+If Not Exists(Select * From syscolumns where name='check_count' And id=Object_id('web_payment_orders','U'))
+Begin
+ alter table web_payment_orders add check_count int not null default 0;
+End
+
+If Not Exists(Select * From syscolumns where name='version' And id=Object_id('web_payment_orders','U'))
+Begin
+ alter table web_payment_orders add version int not null default 0;
+End
+
+
+--web_products
+If Not Exists(Select * From syscolumns where name='is_shipping_free' And id=Object_id('web_products','U'))
+Begin
+ alter table web_products add is_shipping_free bit not null DEFAULT 0;
+End
+
+If Not Exists(Select * From syscolumns where name='appointed_time' And id=Object_id('web_products','U'))
+Begin
+  ALTER TABLE [web_products] ADD appointed_time int
+End
+
+If Not Exists(Select * From syscolumns where name='is_show' And id=Object_id('web_products','U'))
+Begin
+ alter table web_products add is_show bit not null default 1;
+End
+
+If Not Exists(Select * From syscolumns where name='Explain' And id=Object_id('web_products','U'))
+Begin
+ alter table web_products add Explain varchar(255);
+End
+
+If Not Exists(Select * From syscolumns where name='sort_value' And id=Object_id('web_products','U'))
+	Begin
+		alter table web_products add  sort_value int;
+		update web_products set sort_value=1
+	End
+
+If Not Exists(Select * From syscolumns where name='parameter' And id=Object_id('web_products','U'))
+Begin
+  alter table web_products add parameter varchar(50);
+End
+
+--会员
+If Not Exists(Select * From syscolumns where name='性别' And id=Object_id('会员','U'))
+Begin
+  alter table 会员 add 性别 varchar(20);
+End
+
+--web_specification_values
+If Not Exists(Select * From syscolumns where name='promotion_price' And id=Object_id('web_specification_values','U'))
+Begin
+  alter table web_specification_values add promotion_price decimal(20, 2);
+  update web_specification_values set promotion_price=0;
+End
+
+If Not Exists(Select * From syscolumns where name='start_time' And id=Object_id('web_specification_values','U'))
+Begin
+ alter table web_specification_values add start_time datetime;
+ update web_specification_values set start_time='1997-01-16 00:00:00';
+End
+
+If Not Exists(Select * From syscolumns where name='end_time' And id=Object_id('web_specification_values','U'))
+Begin
+ alter table web_specification_values add end_time datetime;
+ update web_specification_values set end_time='1997-01-16 00:00:00';
+End
+
+--web_payment_orders
+If Not Exists(Select * From syscolumns where name='check_count' And id=Object_id('web_payment_orders','U'))
+Begin
+ alter table web_payment_orders add check_count int not null default 0;
+End
+
+
+If Not Exists(Select * From syscolumns where name='version' And id=Object_id('web_payment_orders','U'))
+Begin
+ alter table web_payment_orders add version int not null default 0;
+End
+
+--web_sign_record
+If Not Exists(Select * From syscolumns where name='accumulation' And id=Object_id('web_sign_record','U'))
+Begin
+ alter table web_sign_record add accumulation int;
+End
+--礼券销售表
+If Not Exists(Select * From syscolumns where name='销售类型' And id=Object_id('礼券销售表','U'))
+Begin
+ alter table 礼券销售表 add 销售类型 varchar(20) null 
+End
+
+--web_cart
+If Not Exists(Select * From syscolumns where name='paramete' And id=Object_id('web_cart','U'))
+Begin
+ alter table web_cart add paramete VARCHAR(50);
+End
+If Not Exists(Select * From syscolumns where name='canshu_value_id' And id=Object_id('web_cart','U'))
+Begin
+ alter table web_cart add canshu_value_id int;
+End
+
+--web_categories
+If Not Exists(Select * From syscolumns where name='batchDiscount' And id=Object_id('web_categories','U'))
+Begin
+ alter table web_categories add batchDiscount decimal(20, 2);
+End
+
+If Not Exists(Select * From syscolumns where name='startTimeStrs' And id=Object_id('web_categories','U'))
+Begin
+ alter table web_categories add startTimeStrs varchar(255);
+End
+
+
+If Not Exists(Select * From syscolumns where name='endTimeStrs' And id=Object_id('web_categories','U'))
+Begin
+ alter table web_categories add endTimeStrs varchar(255);
+End
+
+If Not Exists(Select * From syscolumns where name='image_url' And id=Object_id('web_product_groups','U'))
+Begin
+ alter table web_product_groups add image_url varchar(255);
+End

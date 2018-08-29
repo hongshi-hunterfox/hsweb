@@ -22,14 +22,6 @@ class ValueGroupTmps extends React.Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (JSON.stringify(nextProps.initValue) !== JSON.stringify(this.state.v)) {
-  //     this.setState({
-  //       v: nextProps.initValue || {}
-  //     })
-  //   }
-  // }
-
   render() {
     var { v } = this.state
     var {

@@ -65,6 +65,7 @@ import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.config.links.WechatMerchantInfo;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.MobileItem;
 import com.uclee.fundation.data.web.dto.CartDto;
@@ -94,6 +95,8 @@ public class UserServiceImpl implements UserServiceI {
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
+	@Autowired
+	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private FreightMapper freightMapper;
 	@Autowired
@@ -1221,9 +1224,9 @@ public class UserServiceImpl implements UserServiceI {
 		String seller_id = null;
 		String body = null;
 		//add by chiangpan for adjust refund and payment
-		String notify_type=null;
-		String success_num=null;
-		String result_details=null;
+//		String notify_type=null;
+//		String success_num=null;
+//		String result_details=null;
 		try {
 			out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
 			// 支付宝交易号
@@ -1286,7 +1289,6 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return "fail";
 	}
-
 //			if(notify_type!=null && !"".equals(notify_type)&& "batch_refund_notify".equalsIgnoreCase(notify_type)){
 //				//退款的通知
 //				if(success_num!=null && !"".equals(success_num) && Integer.parseInt(success_num)>0){
@@ -2145,6 +2147,10 @@ public class UserServiceImpl implements UserServiceI {
 		List<CartDto> ret = new ArrayList<CartDto>();
 		List<CartDto> carts = cartMapper.selectUserCart(userId);
 		for(CartDto cart : carts){
+			CartDto c = cartMapper.selectByUserIdAndCartId(userId, cart.getCartId());
+			if(c!=null){
+				cart.setActivityMarkers(c.getActivityMarkers());
+			}
 			SpecificationValueStoreLink link = specificationValueStoreLinkMapper.selectByValueAndStoreId(cart.getSpecificationValueId(), selectedStoreId);
 			if(link==null){
 				cart.setIsDisabled(true);
@@ -2287,9 +2293,12 @@ public class UserServiceImpl implements UserServiceI {
 	*/
 	@Override
 	public boolean getInvitationHandler(Integer userId, String serialNum) {
+		//查用户是否进行过关系绑定
 		UserInvitedLink tmp = userInvitedLinkMapper.selectByInvitedId(userId);
 		logger.info(JSON.toJSONString(tmp));
+		
 		if(tmp==null){
+			//如果没有进行过关系绑定
 			User user = userMapper.selectByPrimaryKey(userId);
 			User invitor = userMapper.selectBySerialNum(serialNum);
 			logger.info(JSON.toJSONString(user));
@@ -2411,6 +2420,7 @@ public class UserServiceImpl implements UserServiceI {
 			}
 			Product product = productMapper.selectByPrimaryKey(cart.getProductId());
 			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
+			BargainSetting price = bargainSettingMapper.getPrice(cart.getCartId());
 //			List<ProductParameters> csshuxing = productMapper.obtainParameter(cart.getCanshuValueId());
 			ProductParameters csshuxing1 = productMapper.obtainParameters(cart.getCanshuValueId());
 			if(value==null){
@@ -2449,21 +2459,37 @@ public class UserServiceImpl implements UserServiceI {
 			item.setItemSerialNum(NumberUtil.generateSerialNum());
 			Date date = new Date();
 			long value0 = date.getTime();
-			if(value.getPromotionPrice()!=null&&value.getStartTime()!=null&&value.getEndTime()!=null){
-				long value1 = value.getStartTime().getTime();
-				long value2 = value.getEndTime().getTime();
+			//判断是否有促销价
+			if(value.getPromotionPrice()!=null&&value.getEndTime()!=null&&value.getStartTime()!=null){
+				long value1=value.getStartTime().getTime();
+				long value2=value.getEndTime().getTime();
 				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
 					item.setPrice(value.getPromotionPrice());
 				}else{
-					item.setPrice(value.getHsGoodsPrice());	
+					//判断产品是否参与了砍价
+					if(price==null){
+						item.setPrice(value.getHsGoodsPrice());
+					}else{
+						item.setPrice(price.getPrice());	
+					}
 				}
 				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
 					item.setPrice(value.getPromotionPrice());
 				}else{
-					item.setPrice(value.getHsGoodsPrice());
+					//判断产品是否参与了砍价
+					if(price==null){
+						item.setPrice(value.getHsGoodsPrice());
+					}else{
+						item.setPrice(price.getPrice());	
+					}
 				}
 			}else{
-				item.setPrice(value.getHsGoodsPrice());
+				//判断产品是否参与了砍价
+				if(price==null){
+					item.setPrice(value.getHsGoodsPrice());
+				}else{
+					item.setPrice(price.getPrice());	
+				}
 			}
 			item.setProductId(cart.getProductId());
 			item.setStoreId(orderPost.getStoreId());
@@ -2471,18 +2497,23 @@ public class UserServiceImpl implements UserServiceI {
 			if(productImageLink!=null){
 				item.setImageUrl(productImageLink.getImageUrl());
 			}
-			//判断是否是带促销价的商品总价
-			if(value.getPromotionPrice()!=null&&value.getStartTime()!=null&&value.getEndTime()!=null){
-				long value1 = value.getStartTime().getTime();
-				long value2 = value.getEndTime().getTime();
+			if(value.getPromotionPrice()!=null&&value.getEndTime()!=null&&value.getStartTime()!=null){
+				long value1=value.getStartTime().getTime();
+				long value2=value.getEndTime().getTime();
+				//判断是否是带促销价的商品总价
 				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
 					totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getPromotionPrice()));
 				}else{
-					totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+					//判断产品是否参与了砍价
+					if(price==null){
+						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+					}else{
+						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(price.getPrice()));
+					}
 				}
-			 }else{
-				 totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice())); 
-			 }
+			}else{
+				totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+			}
 			//记录销量
 			try {
 				ProductSale tmp = productSaleMapper.selectByProductId(cart.getProductId());
@@ -3001,12 +3032,15 @@ public class UserServiceImpl implements UserServiceI {
 				record.setAccumulation(1);
 			}
 			if(Accumulation!=null){
-				int accumulation = Accumulation.getAccumulation()+1;
-				if(accumulation>daylist.get(0).getDay()){
-					record.setAccumulation(1);
-				}
-				else{
-					record.setAccumulation(Accumulation.getAccumulation()+1);
+				if(daylist!=null){
+				//防止getday为null
+					int accumulation = Accumulation.getAccumulation()+1;
+					if(accumulation>daylist.get(0).getDay()){
+						record.setAccumulation(1);
+					}
+					else{
+						record.setAccumulation(Accumulation.getAccumulation()+1);
+					}
 				}
 			}
 		} catch (NumberFormatException e) {
@@ -3467,11 +3501,14 @@ public class UserServiceImpl implements UserServiceI {
 	* @throws
 	*/
 	@Override
-	public Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount) {
+	public Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount, Integer activityMarkers) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		Cart cart = cartMapper.selectByUserIdAndCartId(userId, cartId);
 		if(cart!=null){
 			cart.setAmount(amount);
+			if(activityMarkers!=null){
+				cart.setActivityMarkers(activityMarkers);
+			}
 			cartMapper.updateByPrimaryKey(cart);
 			map.put("result", true);
 		}else{
@@ -3645,12 +3682,6 @@ public class UserServiceImpl implements UserServiceI {
 	*/
 	@Override
 	public boolean shakeHandler(Integer userId) {
-		/*Calendar todayStart = Calendar.getInstance();
-        todayStart.set(Calendar.HOUR, 0);
-        todayStart.set(Calendar.MINUTE, 0);
-        todayStart.set(Calendar.SECOND, 0);
-        todayStart.set(Calendar.MILLISECOND, 0);
-        Date today = todayStart.getTime();*/
 		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
         List<ShakeRecord> shakeRecord = shakeRecordMapper.selectTodayByUserId(userId, today);
         logger.info(JSON.toJSONString(shakeRecord));
@@ -3739,10 +3770,14 @@ public class UserServiceImpl implements UserServiceI {
 			return ret;
 		}
 		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName,hsCode,userId);
+		List<Map<String,Object>> colsName = hongShiMapper.getObjectName(QueryName);
+		ret.put("colsName",colsName);
 		ret.put("info",QueryName);
 		ret.put("itema", itema);
 		return ret;
 	}
+	
+
 
 	@Override
 	public Map<String, Object> getShakePageData() {
@@ -4371,6 +4406,99 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public SpecificationValue selectGoods(Integer valueId) {
 		return specificationValueMapper.selectGoods(valueId);
+	}
+
+	@Override
+	public List<BargainSetting> selectBargain() {
+
+		return bargainSettingMapper.selectBargain();
+	}
+
+	@Override
+	public List<BargainPost> getBargain() {
+		return bargainSettingMapper.getBargain();
+	}
+	//插入砍价发起表--kx
+	@Override
+	public int insertLaunchBargain(LaunchBargain launchBargain) {
+		return bargainSettingMapper.insertLaunchBargain(launchBargain);
+	}
+
+	@Override
+	public vipIdentity selectVipIdentity(String oauthId) {
+		return bargainSettingMapper.selectVipIdentity(oauthId);
+	}
+
+	@Override
+	public BargainSetting selectName(String name) {
+		return bargainSettingMapper.selectName(name);
+	}
+
+	@Override
+	public BargainPost getValue(Integer valueId) {
+		return bargainSettingMapper.getValue(valueId);
+	}
+	//砍价记录表
+	@Override
+	public int insertBargainLog(BargainLog log) {
+		return bargainSettingMapper.insertBargainLog(log);
+	}
+
+	@Override
+	public List<WxUser> selectWxUser(String invitationCode) {
+		return bargainSettingMapper.selectWxUser(invitationCode);
+	}
+
+	@Override
+	public BigDecimal selectSumMoney(String invitationCode) {
+		return bargainSettingMapper.selectSumMoney(invitationCode);
+	}
+
+	@Override
+	public LaunchBargain selectLaunch(Integer uid) {
+		return bargainSettingMapper.selectLaunch(uid);
+	}
+
+	@Override
+	public LaunchBargain selectLaunchLog(Integer uid, String invitationCode) {
+		return bargainSettingMapper.selectLaunchLog(uid, invitationCode);
+	}
+
+	@Override
+	public List<BargainLog> selectbargainLog(Integer uid, String invitationCode) {
+		System.out.println("invitationCode========uid"+uid);
+		System.out.println("invitationCode========skx"+invitationCode);
+		return bargainSettingMapper.selectbargainLog(uid, invitationCode);
+	}
+
+	@Override
+	public BargainSetting getPrice(Integer cartId) {
+		return bargainSettingMapper.getPrice(cartId);
+	}
+
+	@Override
+	public LaunchBargain getbargainRecord(Integer uid) {
+		return bargainSettingMapper.getbargainRecord(uid);
+	}
+
+	@Override
+	public BargainLog getValueId(Integer id, Integer uid) {
+		return bargainSettingMapper.getValueId(id, uid);
+	}
+
+	@Override
+	public List<BargainPost> getBargainList() {
+		return bargainSettingMapper.getBargainList();
+	}
+
+	@Override
+	public int updateLaunchBargain(Integer uid) {
+		return bargainSettingMapper.updateLaunchBargain(uid);
+	}
+
+	@Override
+	public BargainPost getBargainOver(Integer id) {
+		return bargainSettingMapper.getBargainOver(id);
 	}
 
 }

@@ -18,7 +18,7 @@ class DistributionCenter extends React.Component {
 	}
 
 	componentDidMount() {
-		request
+	request
       .get('/uclee-user-web/getVipInfo')
       .end((err, res) => {
         if (err) {

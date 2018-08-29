@@ -20,6 +20,8 @@ public interface BackendServiceI {
 	ProductForm getProductForm(Integer productId);
 
 	List<RechargeConfig> selectAllRechargeConfig();
+	
+	List<RechargeConfig> selectMonPeiZhi();
 
 	boolean updateRechargeConfig(FreightPost freightPost);
 
@@ -166,8 +168,6 @@ public interface BackendServiceI {
 	List<UserProfile> selectAllVipList();
 
 	boolean sendViphMsg(Integer userId, boolean sendVoucher);
-	
-	Boolean getAccount(String account,String password);
 
 	int insertGroupName(ProductGroup productGroup);
 	
@@ -177,4 +177,15 @@ public interface BackendServiceI {
 	
 	Map<String, Object> deleteGroupName(Integer groupId);
 	
+	boolean sendBargainhMsg(Integer userId);
+	
+	boolean sendLaunchBargainhMsg(Integer userId);
+	
+	boolean sendSucessMsg(Integer userId);
+	
+	Boolean getAccount(String account,String password);
+	
+	List<BargainSetting> selectBargain();
+	
+	BargainSetting selectBargainId(Integer id);
 }

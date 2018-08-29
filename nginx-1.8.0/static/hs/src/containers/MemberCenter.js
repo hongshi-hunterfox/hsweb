@@ -1,6 +1,5 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import hero from './member-center.jpg'
 import './member-center.css'
 import Icon from '../components/Icon'
 import LinkGroup from '../components/LinkGroup'
@@ -95,7 +94,7 @@ class MemberCenter extends React.Component {
               </a>
             </div>
             <div className="member-center-order" onClick={() => { window.location='/order-list?isEnd=0' }}>
-             {this.state.deliCount&&this.state.deliCount>0?<div className='member-center-order-count'>{this.state.deliCount}</div>:null}
+             {this.state.isvoid===false&&this.state.deliCount&&this.state.deliCount>0?<div className='member-center-order-count'>{this.state.deliCount}</div>:null}
               <a href="#">
                 <Icon name="smile-o" className="member-center-order-icon" />
                 <span>制作配送中</span>

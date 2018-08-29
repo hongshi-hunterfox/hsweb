@@ -151,4 +151,23 @@
     <select id="getCouponName" resultMap="HongShiCoupon">
 		select 名称  as name from goods where  编号=#{productNumber,jdbcType=VARCHAR}
 	</select> 
+	
+	<resultMap id="colsNames" type="java.util.Map">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="engName" property="engName" jdbcType="VARCHAR" />
+		<result column="cnName" property="cnName" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="objectName" property="objectName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getObjectName" resultMap="colsNames">
+		select
+		Id as "id",
+		EngName as "engName",
+		CnName as "cnName",
+		Sort as "sort",
+		ObjectName as "objectName"
+		from ReportColumn
+		where ObjectName = #{objectName}
+	</select>
 </mapper>

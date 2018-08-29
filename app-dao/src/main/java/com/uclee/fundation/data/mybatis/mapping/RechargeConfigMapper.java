@@ -19,6 +19,8 @@ public interface RechargeConfigMapper {
     int updateByPrimaryKey(RechargeConfig record);
 
 	List<RechargeConfig> selectAll();
+	
+	List<RechargeConfig> selectMonPeiZhi();
 
 	int deleteAll();
 

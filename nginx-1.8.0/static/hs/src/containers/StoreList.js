@@ -122,10 +122,11 @@ class StoreList extends React.Component {
 							item.storeId,
 							item.latitude,
 							item.longitude,
+							item.supportDeliver,
 						)}
 					>
 						<div className="store-list-item-top">
-							<div className="name">{item.storeName}</div>
+							<div className="name">{item.storeName}({item.supportDeliver === 'yes' ? '支持配送' : '不支持配送'})</div>
 							<div className="distance">
 								{distance > 10 ? '>10' : distance}
 								km

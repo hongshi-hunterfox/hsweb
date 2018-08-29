@@ -2,6 +2,9 @@ package com.uclee.fundation.data.mybatis.mapping;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.uclee.fundation.data.mybatis.model.BirthVoucher;
 import com.uclee.fundation.data.mybatis.model.BirthVoucher;
 import com.uclee.fundation.data.mybatis.model.AddVipResult;
@@ -53,5 +56,6 @@ public interface HongShiVipMapper {
 	int insertVipLog(VipLog record);
 	
 	List<IntegralRecharge> selectIntegralRecharge(String danhao);
+	
 	
 }

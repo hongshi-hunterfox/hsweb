@@ -12,7 +12,8 @@ class Coupon extends React.Component{
 	      voucherCode:'',
 	      voucherText:'',
 	      fullamount:'',
-	      convertibleGoods:''
+	      convertibleGoods:'',
+	      remarks:''
 	    }
 	}
 
@@ -48,6 +49,11 @@ class Coupon extends React.Component{
                 convertibleGoods: JSON.parse(sessionStorage.getItem('convertibleGoods'))
                 })
               }
+              if(sessionStorage.getItem('remarks')!=null){
+                this.setState({
+                remarks: JSON.parse(sessionStorage.getItem('remarks'))
+                })
+              }
 	}
 
 	  render(){
@@ -55,7 +61,7 @@ class Coupon extends React.Component{
             return(
             	<div className={
 						"coupon-item"
-					} key={index} onClick={this._pickvoucher.bind(this,item.vouchersCode,item.payQuota,item.fullamount,item.convertibleGoods)}>
+					} key={index} onClick={this._pickvoucher.bind(this,item.vouchersCode,item.payQuota,item.fullamount,item.convertibleGoods,item.remarks)}>
 	            	<div className='top-line'>
 	            		<div className="title">{item.name}</div>
 	            		<div className="condition">优惠券号:{item.barCode}</div>
@@ -112,20 +118,22 @@ class Coupon extends React.Component{
         	</DocumentTitle>
         );
 	  }
-	  _pickvoucher = (code,money,amount,Goods) =>{
+	  _pickvoucher = (code,money,amount,Goods,remarks) =>{
 	  	if(this.state.voucherCode!==code){
 	  		this.setState({
 		  		voucherCode: code,
 		  		voucherText:money,
 		  		fullamount:amount,
-		  		convertibleGoods:Goods
+		  		convertibleGoods:Goods,
+		  		remarks:remarks,
 		  	})	
 	  	}else{
 	  		this.setState({
 		  		voucherCode: '',
 		  		voucherText:'',
 		  		fullamount:'',
-		  		convertibleGoods:''
+		  		convertibleGoods:'',
+		  		remarks:''
 		  	})	
 	  	}
 	  	
@@ -137,6 +145,7 @@ class Coupon extends React.Component{
 			sessionStorage.setItem('voucher_text', JSON.stringify(this.state.voucherText));
 			sessionStorage.setItem('fullamount', JSON.stringify(this.state.fullamount));
 			sessionStorage.setItem('convertibleGoods', JSON.stringify(this.state.convertibleGoods));
+			sessionStorage.setItem('remarks', JSON.stringify(this.state.remarks));
 			
 		}
 		window.location='/order'

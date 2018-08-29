@@ -29,6 +29,7 @@ class EditStore extends React.Component {
       hsStoreList: [],
       storeId: 0,
       storeName: '',
+      supportDeliver: '',
       stateArr: [],
       cityArr: [],
       regionArr: [],
@@ -64,6 +65,7 @@ class EditStore extends React.Component {
 
         this.setState({
           storeName: res.body.napaStore.storeName,
+          supportDeliver: res.body.napaStore.supportDeliver,
           addrDetail: res.body.napaStore.addrDetail,
           storeId: res.body.napaStore.storeId,
           province: res.body.napaStore.province,
@@ -108,6 +110,15 @@ class EditStore extends React.Component {
                       </option>
                     )
                   })}
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">是否支持配送：</label>
+              <div className="col-md-9">
+                <select name="supportDeliver" className="form-control" value={this.state.supportDeliver} onChange={this._onStoreChange}>
+     							<option value="yes">是</option>
+                	<option value="no">否</option>
                 </select>
               </div>
             </div>
@@ -288,6 +299,12 @@ class EditStore extends React.Component {
     if (!data.storeName) {
       return this.setState({
         err: '请填写 商户名称'
+      })
+    }
+    
+    if (!data.supportDeliver) {
+      return this.setState({
+        err: '请选择 是否支持配送'
       })
     }
 

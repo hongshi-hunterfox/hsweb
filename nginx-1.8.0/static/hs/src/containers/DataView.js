@@ -32,11 +32,17 @@ componentDidMount() {
         this.setState({
           	info:res.body.info,
             itema:res.body.itema,
-            napaStores:res.body.napaStores
+            napaStores:res.body.napaStores,
+            colsName:res.body.colsName
         })
         var dat = JSON.stringify(this.state.itema);
         var data = JSON.parse(dat);
-        DataViewUtil.FillTable(data,'myview');
+        var colsN = JSON.stringify(this.state.colsName);
+        var colsNames = JSON.parse(colsN);
+		colsNames.sort(function(a, b){
+            return a.sort - b.sort;
+        });
+        DataViewUtil.FillTable(data,colsNames,'myview');
       })
  //      document.getElementById('opt').innerHTML = 'sadf';
 }

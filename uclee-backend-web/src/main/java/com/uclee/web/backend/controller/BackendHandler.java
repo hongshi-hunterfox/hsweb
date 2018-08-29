@@ -1,8 +1,12 @@
 package com.uclee.web.backend.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
@@ -14,7 +18,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-
+import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
@@ -26,6 +30,9 @@ public class BackendHandler {
 	
 	@Autowired
 	private BackendServiceI backendService;
+	@Autowired
+	private BargainSettingMapper bargainSettingMapper;
+	private BargainSetting bargaintinting;
 	
 	@RequestMapping("/configHandler")
 	public @ResponseBody boolean configHandler(HttpServletRequest request,@RequestBody ConfigPost configPost) {
@@ -92,7 +99,6 @@ public class BackendHandler {
 	public @ResponseBody boolean integralinConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateIntegralInGifts(freightPost);
 	}
-	//��������������ȯ����
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		return backendService.updateBirthVoucher(birthVoucherPost);
@@ -101,8 +107,6 @@ public class BackendHandler {
 	public @ResponseBody boolean truncateBirthVoucherHandler(HttpServletRequest request) {
 		return backendService.truncateBirthVoucherHandler();
 	}
-	
-	//���»�Ա������ȯ����
 	@RequestMapping("/vipVoucherHandler")
 	public @ResponseBody boolean vipVoucherHandler(HttpServletRequest request,@RequestBody VipVoucherPost vipVoucherPost) {
 		return backendService.updateVipVoucher(vipVoucherPost);
@@ -153,7 +157,6 @@ public class BackendHandler {
 	}
 	@RequestMapping("/editProductGroup")
 	public @ResponseBody boolean editProductGroup(HttpServletRequest request,@RequestBody ProductGroupPost productGroupPost) {
-		System.out.println("productGroupPost=="+JSON.toJSONString(productGroupPost));
 		return backendService.editProductGroup(productGroupPost);
 	}
 	@RequestMapping("/insertGroupName")
@@ -193,8 +196,37 @@ public class BackendHandler {
 	public @ResponseBody int updateStoreInfo(HttpServletRequest request,@RequestBody ProductForm productForm) {
 		return backendService.updateStoreInfo(productForm.getDescription());
 	}
-
-
+	@RequestMapping("/insertBargainSetting")
+	public @ResponseBody int insertBargainSetting(HttpServletRequest request,@RequestBody BargainPost bargainPost) throws ParseException {
+		//转换时间格式插入数据库
+		String StartTimes = bargainPost.getStarts()+" "+bargainPost.getStartTime();
+		String EndTimes = bargainPost.getEnds()+" "+bargainPost.getEndTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date StartDate = sdf.parse(StartTimes);
+		Date EndDate = sdf.parse(EndTimes);
+		bargainPost.setStart(StartDate);
+		bargainPost.setClosure(EndDate);
+		System.out.println("bargainPost="+JSON.toJSONString(bargainPost));
+		return bargainSettingMapper.insert(bargainPost);
+	}
+	@RequestMapping("/delBargainId")
+	public @ResponseBody int delBargainId(HttpServletRequest request,Integer id) {
+		System.out.println("id="+id);
+		return bargainSettingMapper.deleteBargainId(id);
+	}
+	@RequestMapping("/updateBargainSetting")
+	public @ResponseBody int updateBargainSetting(HttpServletRequest request,@RequestBody BargainPost bargainPost) throws ParseException {
+		System.out.println("bargainPost="+JSON.toJSONString(bargainPost));
+		//转换时间格式更新数据库
+		String StartTimes = bargainPost.getStarts()+" "+bargainPost.getStartTime();
+		String EndTimes = bargainPost.getEnds()+" "+bargainPost.getEndTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date StartDate = sdf.parse(StartTimes);
+		Date EndDate = sdf.parse(EndTimes);
+		bargainPost.setStart(StartDate);
+		bargainPost.setClosure(EndDate);
+		return bargainSettingMapper.updateBargainId(bargainPost);
+	}
 	@RequestMapping("/orderSettingPickHandler")
 	public  @ResponseBody boolean orderSettingPickHandler(HttpServletRequest request, @RequestBody OrderSettingPick  orderSettingPick){
 		return backendService.updateOrderSettingPick(orderSettingPick);

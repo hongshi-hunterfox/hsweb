@@ -16,12 +16,14 @@ import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
 import org.apache.poi.hssf.record.formula.functions.Na;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
+import com.github.pagehelper.PageHelper;
 import com.uclee.date.util.DateUtils;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.WebConfig;
@@ -97,7 +99,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private UserProfileMapper userProfileMapper;
 	@Autowired
 	private VarMapper varMapper;
-
+	@Autowired
+	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private OrderSettingPickMapper orderSettingPickMapper;
 
@@ -244,6 +247,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
 		}else{
 			configMapper.updateByTag(WebConfig.qq, "");
+		}if(configPost.getBargainText()!=null){
+			configMapper.updateByTag(WebConfig.bargainText, configPost.getBargainText());
+		}else{
+			configMapper.updateByTag(WebConfig.bargainText, "");
 		}if (configPost.getLoss()!=null) {
 			configMapper.updateByTag(WebConfig.loss, configPost.getLoss());
 		}else{
@@ -401,6 +408,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getQq()!=null) {
 			configMapper.updateByTag(WebConfig.qq, configPost.getQq());
 		}
+		if(configPost.getBargainText()!=null){
+			configMapper.updateByTag(WebConfig.bargainText, configPost.getBargainText());
+		}
 		if (configPost.getNotice()!=null) {
 			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
 		}
@@ -547,6 +557,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getBrand()!=null) {
 			configMapper.updateByTag(WebConfig.brand, configPost.getBrand());
+		}
+		if(configPost.getBargainText()!=null){
+			configMapper.updateByTag(WebConfig.bargainText, configPost.getBargainText());
 		}
 		if (configPost.getNotice()!=null) {
 			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
@@ -872,31 +885,6 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public List<RechargeConfig> selectAllRechargeConfig() {
 		List<RechargeConfig> configs = rechargeConfigMapper.selectAll();
-		/*for(RechargeConfig config:configs){
-			List<String> extra = new ArrayList<String>();
-			int i = 1;
-			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
-			if (coupon!=null&&coupon.size()>0) {
-				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
-				i++;
-				extra.add(tmp);
-			}
-			extra.add(config.getMoney() + "元优惠券1张");
-			extra.add(config.getMoney().add(new BigDecimal(10)) +"元优惠券1张");
-			List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
-			if (coupon!=null&&coupon.size()>0) {
-				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountSecond()+"张";
-				i++;
-				extra.add(tmp);
-			}
-			List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
-			if (coupon!=null&&coupon.size()>0) {
-				String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmountThird()+"张";
-				i++;
-				extra.add(tmp);
-			}
-			config.setExtra(extra);
-		}*/
 		return configs;
 	}
 
@@ -1087,6 +1075,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBrand(config.getValue());
 			}else if(config.getTag().equals(WebConfig.qq)){
 				configPost.setQq(config.getValue());
+			}else if(config.getTag().equals(WebConfig.bargainText)){
+				configPost.setBargainText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.notice)){
 				configPost.setNotice(config.getValue());
 			}
@@ -1326,6 +1316,91 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean sendBargainhMsg(Integer userId) {
+		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+		if(login!=null){
+			String nickName="";
+			UserProfile profile = userProfileMapper.selectByUserId(userId);
+			if(profile!=null){
+				nickName = profile.getNickName();
+			}
+			String[] key = {"keyword1","keyword2","keyword3"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"砍价活动完成通知"};
+			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+//			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), "恭喜你，砍价完成通知", key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean sendLaunchBargainhMsg(Integer userId) {
+		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+		if(login!=null){
+			String nickName="";
+			UserProfile profile = userProfileMapper.selectByUserId(userId);
+			if(profile!=null){
+				nickName = profile.getNickName();
+			}
+			String[] key = {"keyword1","keyword2","keyword3"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"砍价活动--发起成功通知"};
+			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+//			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/bargain?merchantCode="+config1.getValue(), "恭喜你，砍价活动发起成功", key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean sendSucessMsg(Integer userId) {
+		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+		if(login!=null){
+			String nickName="";
+			UserProfile profile = userProfileMapper.selectByUserId(userId);
+			if(profile!=null){
+				nickName = profile.getNickName();
+			}
+			String[] key = {"keyword1","keyword2","keyword3"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"砍价活动--砍价成功通知"};
+			Config config = configMapper.getByTag("birthTmpId");
+			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+			Config config2 = configMapper.getByTag(WebConfig.domain);
+//			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			if(config!=null){
+				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/bargain?merchantCode="+config1.getValue(), "恭喜你，砍价完成，马上点击下单吧", key,value, "");
+				MsgRecord msgRecord = new MsgRecord();
+				msgRecord.setType(1);
+				msgRecord.setUserId(userId);
+				msgRecordMapper.insertSelective(msgRecord);
+			}
+			return true;
+		}
+		return false;
+	}
+
 
 	public String sendWXMessage(String openId,String templateId,String url, String firstData,String[] key,String[] value,String remarkData) {
 		Map<String,Object> sendData = new LinkedHashMap<String,Object>();
@@ -1594,7 +1669,6 @@ public class BackendServiceImpl implements BackendServiceI {
 			
 			if(productguige!=null){
 				for(int i=0;i<productguige.size();i++){
-					System.out.println("6666======"+productguige.get(i).getValueId());
 					SpecificationValue Value = specificationValueMapper.selectByPrimaryKey(productguige.get(i).getValueId());
 				    System.out.println("在售价============"+ Value.getHsGoodsPrice());
 				    BigDecimal prePrice = Value.getHsGoodsPrice().multiply(category.getBatchDiscount());	
@@ -1790,8 +1864,8 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return false;
 	}
-	
-    //插入groupName
+
+//插入groupName
 	@Override
 	public int insertGroupName(ProductGroup productGroup) {	
 		productGroup.setTag("hotProduct");
@@ -1825,6 +1899,19 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 	return ret;
 }
-	
+	@Override
+	public List<BargainSetting> selectBargain() {
+		List<BargainSetting> bargainList = bargainSettingMapper.selectBargain();
+		return bargainList;
+	}
+	@Override
+	public BargainSetting selectBargainId(Integer id) {
+		return bargainSettingMapper.selectBargainId(id);
+	}
+	@Override
+	public List<RechargeConfig> selectMonPeiZhi() {
+		List<RechargeConfig> configs = rechargeConfigMapper.selectMonPeiZhi();
+		return configs;
+	}
 
 }

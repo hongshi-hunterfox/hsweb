@@ -75,7 +75,6 @@ class BossCenter extends React.Component {
             </div>
         );
     })
-    //图表列表<div className='top'>{item.types}</div>
 	var itemo = this.state.itemo.map((item,index)=>{
 		
         return (

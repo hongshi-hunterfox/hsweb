@@ -25,6 +25,16 @@ public class Cart {
     private Integer canshuValueId;
     
     private String csshuxing;
+    
+    private Integer activityMarkers;
+
+	public Integer getActivityMarkers() {
+		return activityMarkers;
+	}
+
+	public void setActivityMarkers(Integer activityMarkers) {
+		this.activityMarkers = activityMarkers;
+	}
 
 	public String getCsshuxing() {
 		return csshuxing;

@@ -24,6 +24,7 @@ import com.uclee.fundation.data.mybatis.model.HongShiProduct;
 import com.uclee.fundation.data.mybatis.model.HongShiStore;
 import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
+import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.web.dto.ValuePost;
 
 public class BackendServiceTest  extends AbstractServiceTests{

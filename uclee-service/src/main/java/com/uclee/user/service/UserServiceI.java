@@ -2,6 +2,7 @@ package com.uclee.user.service;
 import com.github.pagehelper.PageInfo;
 //import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
@@ -203,7 +204,7 @@ public interface UserServiceI {
 
 	Config getLotteryWebConfig();
 
-	Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount);
+	Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount, Integer activityMarkers);
 
 	Map<String, Object> cardDelHandler(Integer userId, Integer cartId);
 
@@ -324,4 +325,40 @@ public interface UserServiceI {
 	Cart selectValueId(Integer userId, Integer cartId);
 	
 	SpecificationValue selectGoods(Integer valueId);
+	
+	List<BargainSetting> selectBargain();
+	
+	List<BargainPost> getBargain();
+	
+	int insertLaunchBargain(LaunchBargain launchBargain);
+	
+	int insertBargainLog(BargainLog bargainLog);
+	
+	vipIdentity selectVipIdentity(String oauthId);
+	
+	BargainSetting selectName(String name);
+	
+	BargainPost getValue(Integer valueId);
+	
+	List<WxUser> selectWxUser(String  invitationCode);
+	
+	BigDecimal selectSumMoney(String  invitationCode);
+	
+	LaunchBargain selectLaunch(Integer  uid);
+	
+	LaunchBargain selectLaunchLog(Integer uid, String invitationCode);
+	
+	List<BargainLog> selectbargainLog(Integer uid, String invitationCode);
+	
+	BargainSetting getPrice(Integer cartId);
+	
+	LaunchBargain getbargainRecord(Integer uid);
+	
+	BargainLog getValueId(Integer id, Integer uid);
+	
+	List<BargainPost> getBargainList();
+	
+	int updateLaunchBargain(Integer uid);
+	
+	BargainPost getBargainOver(Integer id);
 }

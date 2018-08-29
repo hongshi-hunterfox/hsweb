@@ -114,6 +114,7 @@ class SwitchShop extends React.Component {
 			var distance = item.distance
 			return (
 				<div className="store-list" key={index}>
+				{this.props.params.id==0 && item.supportDeliver=='no' ? null :
 					<div
 						className="store-list-item"
 						onClick={this._pick.bind(
@@ -122,10 +123,11 @@ class SwitchShop extends React.Component {
 							item.storeId,
 							item.latitude,
 							item.longitude,
+							this.props.params.id,
 						)}
 					>
 						<div className="store-list-item-top">
-							<div className="name">{item.storeName}</div>
+							<div className="name">{item.storeName}({item.supportDeliver === 'yes' ? '支持配送' : '不支持配送'})</div>
 							<div className="distance">
 								{distance > 10 ? '>10' : distance}
 								km
@@ -138,6 +140,7 @@ class SwitchShop extends React.Component {
 							<div className="fa fa-chevron-right right"/>
 						</div>
 					</div>
+				}
 				</div>
 			)
 		})
@@ -153,11 +156,12 @@ class SwitchShop extends React.Component {
 			</DocumentTitle>
 		)
 	}
-	_pick = (storeName, storeId, latitude, longitude) => {
+	_pick = (storeName, storeId, latitude, longitude ,id) => {
 		localStorage.setItem('storeName', storeName)
 		localStorage.setItem('storeId', storeId)
 		localStorage.setItem('latitude', latitude)
 		localStorage.setItem('longitude', longitude)
+		localStorage.setItem('id', id)
 		window.location = "/order"
 	}
 }

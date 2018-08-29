@@ -67,11 +67,18 @@ class Cart extends React.Component {
     var totalPrice = Big(0)
     list.forEach(item => {
       if (item.checked) {
-        totalPrice = 
-        (Date1<item.startTime||Date1>item.endTime||item.promotion===null) ?
-        totalPrice.add(Big(item.money).times(Big(item.amount)))
-        :
-        totalPrice.add(Big(item.promotion).times(Big(item.amount)))	
+        totalPrice =  
+        	(Date1<item.startTime||Date1>item.endTime||item.promotion===null ?
+        		(
+        			localStorage.getItem('bargainPrice') ===null
+        			? 
+        			totalPrice.add(Big(item.money).times(Big(item.amount)))
+        			:
+        			totalPrice.add(Big(localStorage.getItem('bargainPrice')).times(Big(item.amount)))
+        		)
+        	:
+        	totalPrice.add(Big(item.promotion).times(Big(item.amount)))
+        	)
       }
     })
     
@@ -101,7 +108,6 @@ class Cart extends React.Component {
                         {this.state.editMode ? '完成' : '编辑'}
                       </span>
                     </div>
-
                     <div className="cart-items">
                       {list.map((item, index) => {
                         return (
@@ -115,18 +121,16 @@ class Cart extends React.Component {
                                 }}
                               />
                             </div>
-                            <div className="cart-item-img">
-                              <a href={'/detail/' + item.productId}>
+                            <div className="cart-item-img"> 
                                 <img
                                   src={item.image}
                                   alt={item.title}
                                   width="80"
                                   height="80"
                                 />
-                              </a>
                             </div>
                             <div className="cart-item-info">
-                              {this.state.editMode
+                              {item.activityMarkers===null&&this.state.editMode
                                 ? <Counter
                                     amount={item.amount}
                                     addAmount={this._addItemAmount.bind(
@@ -165,17 +169,17 @@ class Cart extends React.Component {
                                     checked: !item.checked
                                   }
                                 })
-                              }}>                               
-                    {
-            	        ((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?
-                      <div>
-                      {'在售价¥ ' + item.money}
-                     </div>	
-              	     : 
-                     <div>
-                      {'促销价¥ ' + item.promotion}
-                      </div>
-                    } 
+                              }}> 
+                    						{
+            	        						Date1 < item.startTime || Date1 > item.endTime || item.promotion === null ?
+                      						<div>
+                      							{localStorage.getItem('bargainPrice') ===null ?	'在售价¥ ' + item.money : '购买价¥ ' + localStorage.getItem('bargainPrice')}
+                     							</div>	
+              	     							: 
+                     							<div>
+                      							{'促销价¥ ' + item.promotion}
+                     							 </div>
+                    						} 
                               </div>
                               {this.state.editMode
                                 ? null
@@ -198,9 +202,55 @@ class Cart extends React.Component {
                         )
                       })}
                     </div>
+                     {!this.state.loading && dList.length
+            					? <div>
+                					<div
+                  					style={{
+                    					padding: '5px 10px'
+                  					}}
+                					>
+                  					当前门店不支持以下产品：
+                					</div>
+                					{dList.map((item, index) => {
+                  					return (
+                    					<div className="cart-item clearfix disabled" key={index}>
+                      					<div className="cart-item-img">
+                         	 					<img
+                            					src={item.image}
+                            					alt={item.title}
+                           		 				width="80"
+                            					height="80"
+                          					/>
+                      					</div>
+                      					<div className="cart-item-info">
+                        					<div className="cart-item-title">
+                          					{item.title}
+                        					</div>
+                        					<div className="cart-item-spec">
+                          					{item.specification}<br />
+                          					{item.paramete}：{item.csshuxing}
+                        					</div>
+                        					<div className="cart-item-price">
+                            			{
+            	        							((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?
+                      							<div>
+                      								{'在售价¥ ' + item.money}
+                     								</div>	
+              	     								: 
+                     								<div>
+                      								{'促销价¥ ' + item.promotion}
+                      							</div>
+                    							} 
+                        					</div>
+                      					</div>
+                    					</div>
+                  					)
+                					})}
+              					</div>
+            				: null}
 
                     <div className="cart-settle">
-                      <div className="cart-settle-price">           
+                      <div className="cart-settle-price">  
                       {'合计：¥' + (totalPrice.toString())}
                       </div>
                       <div className="cart-settle-info">不含运费</div>
@@ -213,56 +263,6 @@ class Cart extends React.Component {
                     </div>
                   </div>
                 : <CartEmpty />}
-
-          {!this.state.loading && dList.length
-            ? <div>
-                <div
-                  style={{
-                    padding: '5px 10px'
-                  }}
-                >
-                  当前门店不支持以下产品：
-                </div>
-                {dList.map((item, index) => {
-                  return (
-                    <div className="cart-item clearfix disabled" key={index}>
-                      <div className="cart-item-img">
-                        <a href={'/detail/' + item.productId}>
-                          <img
-                            src={item.image}
-                            alt={item.title}
-                            width="80"
-                            height="80"
-                          />
-                        </a>
-                      </div>
-                      <div className="cart-item-info">
-                        <div className="cart-item-title">
-                          <a href={'/detail/' + item.productId}>{item.title}</a>
-                        </div>
-                        <div className="cart-item-spec">
-                          {item.specification}<br />
-                          {item.paramete}：{item.csshuxing}
-                        </div>
-                        <div className="cart-item-price">
-                            {
-            	        ((Date1)<(item.startTime)||(Date1)>(item.endTime)||(item.promotion)===null) ?
-                      <div>
-                      {'在售价¥ ' + item.money}
-                     </div>	
-              	     : 
-                     <div>
-                      {'促销价¥ ' + item.promotion}
-                      </div>
-                    } 
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            : null}
-
         </div>
       </DocumentTitle>
     )
@@ -405,7 +405,6 @@ class Cart extends React.Component {
 
       var data = {};
       data.cartIds = checkedCartIds;
-			console.log("aaaaaaaa===="+data)
       req.post('/uclee-user-web/stockCheck').send(data).end((err, res) => {
         if (err) {
           return err

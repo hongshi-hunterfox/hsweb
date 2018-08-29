@@ -52,6 +52,8 @@ import AuditRefund from './containers/AuditRefund'
 import AuditRefundOrderDetail from './containers/AuditRefundOrderDetail'
 import VipList from './containers/VipList'
 import VoucherDelivery from './containers/VoucherDelivery'
+import BargainSetting from './containers/BargainSetting'
+import BargainList from './containers/BargainList'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -108,6 +110,9 @@ ReactDOM.render(
       <Route path="auditRefundOrderDetail/:id" component={AuditRefundOrderDetail} />
       <Route path="vip-list" component={VipList} />
       <Route path= "voucher-delivery" component={VoucherDelivery} />
+      <Route path= "bargain-setting" component={BargainSetting} />
+      <Route path= "bargain-setting/:id" component={BargainSetting} />
+      <Route path= "bargain-list" component={BargainList} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

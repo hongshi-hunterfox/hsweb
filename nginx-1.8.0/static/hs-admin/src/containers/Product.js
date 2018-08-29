@@ -901,7 +901,6 @@ class Product extends React.Component {
         err: '库存不能为空'
       })
     }
-
     var foundWrongPrice = false
     data.valuePost.every(item => {
       if (!/^\d+(\.\d{1,2})?$/.test(item.hsPrice)) {

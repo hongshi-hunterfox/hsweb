@@ -23,6 +23,16 @@ public class CartDto extends Cart{
 	
 	private int appointedTime;
 	
+	private Integer activityMarkers;
+	
+	public Integer getActivityMarkers() {
+		return activityMarkers;
+	}
+
+	public void setActivityMarkers(Integer activityMarkers) {
+		this.activityMarkers = activityMarkers;
+	}
+
 	public int getAppointedTime() {
 		return appointedTime;
 	}

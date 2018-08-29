@@ -184,6 +184,11 @@ class ActivityConfig extends React.Component {
                 <textarea rows="3" cols="20" value={this.state.config.signText} name="signText" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动规则内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <textarea rows="3" cols="20" value={this.state.config.bargainText} name="bargainText" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
             </div>
             <div className="form-group">
               <label className="control-label col-md-3">logo图片：</label>

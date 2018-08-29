@@ -74,7 +74,9 @@ class Menu extends React.Component {
            <Link to={'/shake-monitor?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             现场抽奖活动
           </Link>
-
+					<Link to={'/bargain-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+            砍价活动
+          </Link>
           <Link to={'/orderSettingPick?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             设定歇业时间和营业时间
           </Link>

@@ -158,7 +158,7 @@ class App extends Component {
       <div className="app">
         {this.state.loading
           ?	<div className="center">
-          		<i className="fa fa-weixin fa-4x" aria-hidden="true"></i>
+
           	</div>
           : <div className="main">
               {showStoreBar ? <StoreBar /> : null}
