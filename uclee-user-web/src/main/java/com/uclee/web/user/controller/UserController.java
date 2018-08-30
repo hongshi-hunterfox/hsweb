@@ -1113,7 +1113,9 @@ public class UserController extends CommonUserHandler{
 					if(!StringUtils.isEmpty(config.getVoucherCode())){
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
 						if (coupon!=null&&coupon.size()>0&&config.getAmount()!=null&&config.getAmount()>0) {
-							String tmp = i + ". " + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"+config.getAmount()+"张";
+							HongShiCoupon name = hongShiMapper.getCouponName(coupon.get(0).getGoodsCode());
+							//coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"
+							String tmp = i + ". " + name.getName() +config.getAmount()+"张";
 							i++;
 							extra.add(tmp);
 						}
@@ -1121,7 +1123,9 @@ public class UserController extends CommonUserHandler{
 					if(!StringUtils.isEmpty(config.getVoucherCodeSecond())) {
 						List<HongShiCoupon> coupon2 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeSecond());
 						if (coupon2 != null && coupon2.size() > 0&&config.getAmountSecond()!=null&&config.getAmountSecond()>0) {
-							String tmp = i + ". " + coupon2.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" + config.getAmountSecond() + "张";
+							HongShiCoupon name = hongShiMapper.getCouponName(coupon2.get(0).getGoodsCode());
+							// coupon2.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" 
+							String tmp = i + ". " + name.getName() + config.getAmountSecond() + "张";
 							i++;
 							extra.add(tmp);
 						}
@@ -1129,7 +1133,9 @@ public class UserController extends CommonUserHandler{
 					if(!StringUtils.isEmpty(config.getVoucherCodeSecond())) {
 						List<HongShiCoupon> coupon3 = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCodeThird());
 						if (coupon3 != null && coupon3.size() > 0&&config.getAmountThird()!=null&&config.getAmountThird()>0) {
-							String tmp = i + ". " + coupon3.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" + config.getAmountThird() + "张";
+							HongShiCoupon name = hongShiMapper.getCouponName(coupon3.get(0).getGoodsCode());
+							//coupon3.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券"
+							String tmp = i + ". " + name.getName() + config.getAmountThird() + "张";
 							i++;
 							extra.add(tmp);
 						}
