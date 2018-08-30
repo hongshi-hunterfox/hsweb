@@ -150,7 +150,7 @@
     </select> 
     <select id="getCouponName" resultMap="HongShiCoupon">
 		select 名称  as name from goods where  编号=#{productNumber,jdbcType=VARCHAR}
-	</select> 
+	</select>
 	
 	<resultMap id="colsNames" type="java.util.Map">
 		<result column="id" property="id" jdbcType="INTEGER" />

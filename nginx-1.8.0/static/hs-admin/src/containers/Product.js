@@ -65,7 +65,6 @@ class Product extends React.Component {
     var end = this.state.currentSpec.endTimeStr
     var date1 = new Date(begin).getTime()
     var date2 = new Date(end).getTime()
-    var moren = '1997-01-16 00:00:00'
     return (
       <DocumentTitle title={id ? '编辑产品' : '新增产品'}>
         <div className="product">
@@ -368,13 +367,13 @@ class Product extends React.Component {
                                         <span className="input-group-addon">
                                           促销开始：
                                         </span>
-                                        <input type='text' className="form-control" placeholder="格式1997-01-16 00:00:00" value={item.startTimeStr==null ? moren : item.startTimeStr} onChange={this._changeStartTime.bind(this,item)}/>
+                                        <input type='text' className="form-control" placeholder="格式1997-01-16 00:00:00" value={item.startTimeStr==null ? '1997-01-16 00:00:00' : item.startTimeStr} onChange={this._changeStartTime.bind(this,item)}/>
                                       </div>
                                         <div className="input-group input-group-sm">
                                         <span className="input-group-addon">
                                           促销结束：
                                         </span>
-                                        <input type='text' className="form-control"  placeholder="格式1997-01-16 00:00:00"value={item.endTimeStr==null ? moren : item.endTimeStr} onChange={this._changeEndTime.bind(this,item)}/>
+                                        <input type='text' className="form-control"  placeholder="格式1997-01-16 00:00:00"value={item.endTimeStr==null ? '1997-01-16 00:00:00' : item.endTimeStr} onChange={this._changeEndTime.bind(this,item)}/>
                                       </div>
                                     </div>
                                   : null}

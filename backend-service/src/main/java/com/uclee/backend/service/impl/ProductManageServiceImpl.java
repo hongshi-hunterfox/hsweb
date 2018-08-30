@@ -146,8 +146,10 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setPrePrice(item.getPrePrice());
 			value.setPromotionPrice(item.getPromotionPrice());
 			//提交时转换类型
-			value.setStartTime(DateUtils.parse(item.getStartTimeStr()));
-			value.setEndTime(DateUtils.parse(item.getEndTimeStr()));
+			if(item.getStartTimeStr()!=null&&item.getEndTimeStr()!=null){
+				value.setStartTime(DateUtils.parse(item.getStartTimeStr()));
+				value.setEndTime(DateUtils.parse(item.getEndTimeStr()));
+			}
 			value.setSpecificationId(1);
 			value.setValue(item.getName());
 			if(specificationValueMapper.insertSelective(value)>0){
