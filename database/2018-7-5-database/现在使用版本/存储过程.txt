@@ -2336,7 +2336,7 @@ Begin
         (GoodsCode varchar(10)
         ,VouchersCode varchar(20),PayQuota money,State varchar(10)
         ,VipCode varchar(20),EndTime datetime
-        ,BarCode varchar(30),ConvertibleGoods varchar(255),FullAmount Money,Remarks varchar(255),ProductNumber varchar(255))
+        ,BarCode varchar(30),ConvertibleGoods varchar(2000),FullAmount Money,Remarks varchar(255),ProductNumber varchar(255))
   --查找相应的会员编号
   Declare @cDepart varchar(20)
   If IsNull(@WeiXinCode, '') <> ''
