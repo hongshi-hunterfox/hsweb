@@ -446,6 +446,10 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
+		for(HongShiCoupon item:coupons){
+			System.out.println("name==================="+item.getName());
+			System.out.println("remark================="+item.getRemarks());
+		}
 		map.put("coupons", coupons);
 		return map;
 	}
