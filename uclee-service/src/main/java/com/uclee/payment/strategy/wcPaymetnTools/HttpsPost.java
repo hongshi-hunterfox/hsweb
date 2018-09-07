@@ -128,7 +128,7 @@ public class HttpsPost {
                     String.valueOf(xmlStr.getBytes().length));  
             urlCon.setUseCaches(false);  
             //设置为gbk可以解决服务器接收时读取的数据中文乱码问题  
-            urlCon.getOutputStream().write(xmlStr.getBytes("UTF-8"));  
+            urlCon.getOutputStream().write(xmlStr.getBytes("gbk"));  
             urlCon.getOutputStream().flush();  
             urlCon.getOutputStream().close();  
             BufferedReader in = new BufferedReader(new InputStreamReader(  

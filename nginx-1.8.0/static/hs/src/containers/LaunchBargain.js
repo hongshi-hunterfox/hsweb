@@ -236,6 +236,9 @@ class LaunchBargain extends React.Component {
                 							<div  className="launch-bargain-item-spec">                             
                   								规格:{this.state.values.value}	                          
                 							</div>
+                							<div className="launch-bargain-item-spec">
+                								库存:{this.state.values.hsStock}
+                							</div>
 	                						<div className="launch-bargain-item-spec">
 	                  							价格:{this.state.values.hsGoodsPrice}元
 	                						</div>

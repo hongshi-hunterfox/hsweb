@@ -76,8 +76,7 @@ public class ProductManagerController {
 	public @ResponseBody Map<String,Object> isTitleExisted(HttpSession session,String title,Integer productId){
 		Map<String,Object> map = new HashMap<String,Object>();
 		Product product = productMapper.selectByTitle(title);
-		int A = product.getProductId();
-		if(A==productId){
+		if(product!=null){
 			if(product.getProductId()==productId){
 				map.put("result", true);
 			}else{

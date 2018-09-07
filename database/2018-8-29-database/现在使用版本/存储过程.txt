@@ -968,7 +968,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='获取出库到指定部门,并且尚未销售的,指定产品编号的礼券'
       Select A.产品编号,A.编号,A.面额,'已出库' As 状态
             ,Case When IsNull(A.往来编号,'0')='0' Then '' Else A.往来编号 End As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As A
       Left Join 礼券出库表 As B On A.编号=B.编号
       Where A.状态=1 And B.往来编号=@DepartmentCode
@@ -981,7 +981,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='获取出库到指定部门并且尚未销售的礼券'
       Select A.产品编号,A.编号,A.面额,'已出库' As 状态
             ,Case When IsNull(A.往来编号,'0')='0' Then '' Else A.往来编号 End As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As A
       Left Join 礼券出库表 As B On A.编号=B.编号
       Where A.状态=1 And B.往来编号=@DepartmentCode
@@ -993,7 +993,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='获取指定会员持有的未过期礼券'
       Select A.产品编号,A.编号,A.面额,'已销售' As 状态
             ,@VipCode As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As a
       Inner Join 礼券销售表 As b On a.编号=b.编号
       Where b.往来编号=@VipCode
@@ -1016,7 +1016,7 @@ Begin
                   Then IsNull(C.往来编号,'') 
                   Else A.往来编号 
              End As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As A
       Left Join 礼券出库表 As B On A.编号=B.编号
       Left Join 礼券销售表 As C On A.编号=C.编号
@@ -1025,7 +1025,7 @@ Begin
   Else
     Begin
       Exec Loger @LogID,@ExtendInfo='获取一个空结果集',@Result=-1
-      Select Top 0 产品编号,编号,面额,'' As 状态,往来编号 As 会员编号,截止日期,条码 From 礼券表
+      Select Top 0 产品编号,编号,面额,'' As 状态,往来编号 As 会员编号,截止日期,条码,可兑产品,使用满额,备注,产品编号 From 礼券表
       Return -1 --无参数
     End
   Return 0
@@ -2336,7 +2336,7 @@ Begin
         (GoodsCode varchar(10)
         ,VouchersCode varchar(20),PayQuota money,State varchar(10)
         ,VipCode varchar(20),EndTime datetime
-        ,BarCode varchar(30))
+        ,BarCode varchar(30),ConvertibleGoods varchar(2000),FullAmount Money,Remarks varchar(255),ProductNumber varchar(255))
   --查找相应的会员编号
   Declare @cDepart varchar(20)
   If IsNull(@WeiXinCode, '') <> ''

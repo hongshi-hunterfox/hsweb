@@ -33,7 +33,9 @@ public interface BackendServiceI {
 
 	List<HongShiOrder> getHongShiOrder(Boolean isEnd);
 
-	List<UserProfile> getUserList();
+	List<UserProfile> getUserList(Integer pn);
+	
+	Double selectPageNums();
 	
 	List<UserProfile> getVipList(Date start,Date end) throws ParseException;
 

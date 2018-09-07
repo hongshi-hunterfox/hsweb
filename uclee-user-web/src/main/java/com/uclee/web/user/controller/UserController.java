@@ -185,7 +185,6 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[6])|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
 		    if (phone.length() != 11) {
-		    	System.out.println("手机号应为11位数");
 		        map.put("fail","手机号应为11位数");
 		    } else {
 		        Pattern p = Pattern.compile(regex);
@@ -193,10 +192,8 @@ public class UserController extends CommonUserHandler{
 		        boolean isMatch = m.matches();
 		        System.out.println(isMatch);
 		        if (!isMatch) {
-		        	System.out.println("请填入正确的手机号");
 		        	map.put("fail","请填入正确的手机号");
 		        }else{
-		        	System.out.println("正确的手机号");
 		        	map.put("fail","adopt");
 		        }
 		    }   
@@ -449,6 +446,10 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
+		for(HongShiCoupon item:coupons){
+			System.out.println("name==================="+item.getName());
+			System.out.println("remark================="+item.getRemarks());
+		}
 		map.put("coupons", coupons);
 		return map;
 	}
@@ -1372,6 +1373,7 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		map.put("result","fail");
+		map.put("userid", userId);
 		if(userId!=null){
 			UserProfile profile = userService.getBasicUserProfile(userId);
 			User user = userService.getUserById(userId);

@@ -82,6 +82,9 @@ class bargain extends React.Component {
                             		<div  className="bargain-item-spec">                             
                               		产品名称:{item.productName}                           
                             		</div>
+                            		<div  className="bargain-item-spec">                             
+                              		剩余库存:{item.hsStock}                           
+                            		</div>
                             		<div className="bargain-item-spec">
                             			开始时间:{item.starts}
                             		</div>

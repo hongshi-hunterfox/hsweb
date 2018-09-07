@@ -135,9 +135,13 @@ class SwitchShop extends React.Component {
 						</div>
 						<div className="store-list-item-bottom">
 							<div className="addr">
-								{item.province}{item.city}{item.region}{item.addrDetail}
+								<font color="#808080">{item.province}{item.city}{item.region}{item.addrDetail}</font>
 							</div>
-							<div className="fa fa-chevron-right right"/>
+							<div>
+								<font color="#808080">
+									<span className="fa fa-chevron-right right"/>
+								</font>
+							</div>
 						</div>
 					</div>
 				}
@@ -146,13 +150,22 @@ class SwitchShop extends React.Component {
 		})
 		return (
 			<DocumentTitle title="切换门店">
+			<div>
 				<div className="store">
+					<div className="store-logo">
+						<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
+						<div className="store-logo-text">{this.state.brand}</div>
+					</div>
 					<div className="store-select">请选择门店：</div>
 					{items}
 					<div className="bottom-text">
-						O(∩_∩)O 啊哦，没有更多店铺啦~~~
+						没有更多店铺啦~~~
 					</div>
 				</div>
+				<div className="tail">
+						广州洪石软件提供技术支持
+				</div>
+			</div>
 			</DocumentTitle>
 		)
 	}

@@ -36,6 +36,7 @@
     <result column="hs_goods_price" property="hsGoodsPrice" jdbcType="DECIMAL" />
     <result column="value" property="value" jdbcType="DECIMAL" />
     <result column="closure" property="end" jdbcType="TIMESTAMP" />
+    <result column="hs_stock" property="hsStock" jdbcType="INTEGER" />
   </resultMap>
   
    <resultMap id="launchbargain" type="com.uclee.fundation.data.mybatis.model.LaunchBargain" >

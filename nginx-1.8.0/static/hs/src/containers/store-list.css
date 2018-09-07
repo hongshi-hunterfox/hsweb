@@ -1,3 +1,6 @@
+.store {
+  background-color: white;
+}
 .store-logo {
   text-align: center;
 }
@@ -141,4 +144,12 @@
   text-align: center;
   font-size: 12px;
   color: #afafaf;
+  margin-bottom: 18px;
+}
+.tail {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+  color: #afafaf;
+  margin-bottom: 15px;
 }

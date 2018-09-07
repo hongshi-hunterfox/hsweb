@@ -180,7 +180,8 @@ public class DataSourceFacade implements DataSource {
                 return druidDataSource;
             }
         }
-        logger.info("使用切换后的数据源:"+dataSourceInfo.getMerchantCode());
+        //logger.info("使用切换后的数据源:"+dataSourceInfo.getMerchantCode());
+        System.out.println("使用切换后的数据源:"+dataSourceInfo.getMerchantCode());
         return druidDataSource1;
     }
 

@@ -930,12 +930,17 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 
 	@Override
-	public List<UserProfile> getUserList() {
-		List<UserProfile> userProfile = userProfileMapper.selectAllProfileList();
+	public List<UserProfile> getUserList(Integer pn) {
+		List<UserProfile> userProfile = userProfileMapper.selectAllProfileList(pn);
 		for(UserProfile item:userProfile){
 			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
 		}
 		return userProfile;
+	}
+	
+	@Override
+	public Double selectPageNums() {
+		return userProfileMapper.selectPageNums();
 	}
 	
 	@Override

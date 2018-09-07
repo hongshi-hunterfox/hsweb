@@ -199,7 +199,7 @@ class UserBirthList extends React.Component {
               className="btn btn-primary"
               onClick={this._send.bind(this, item.userId)}
             >
-              发送信息
+              <span className="glyphicon glyphicon-bookmark" />发送信息
             </button>
           </td>
         </tr>
@@ -234,10 +234,15 @@ class UserBirthList extends React.Component {
             />
             </div>
             <div className="btn btn-primary searchBtn" style={{marginTop:'25px',float:'left'}} onClick={this._search}>
-              搜索
+              <span className="glyphicon glyphicon-search" />搜索
             </div>
+            <button className="btn btn-primary pull-right" >
+              	<span className="glyphicon glyphicon-cog" />自动发送信息设置
+            </button>
           </div>
-            <button className="btn btn-primary pull-left" onClick={this._sendAll}>批量发送</button>
+            <button className="btn btn-primary pull-left" onClick={this._sendAll}>
+            	<span className="glyphicon glyphicon-pencil" />批量发送
+            </button>
           <table className="table table-bordered table-striped">
             <thead>
               <tr>

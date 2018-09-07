@@ -9,23 +9,42 @@ class UserList extends React.Component {
     super(props)
     this.state = {
       users:[],
-      size:10
+      pageinfo:{},
+      pn: this.props.location.query.pn,
+      pagenums:0,
+      pagenum:0,
+      pagesize:[]
     }
   }
 
   componentDidMount() {
-    req.get('/uclee-backend-web/userList').end((err, res) => {
+    req
+    .get('/uclee-backend-web/userList')
+    .query({
+        pn: this.state.pn
+      })
+    .end((err, res) => {
       if (err) {
         return err
       }
       var data = JSON.parse(res.text)
+			var pagesize=[];
+     	for(var i=0;i<data.size;i++){
+		    	pagesize.push(i+1)	
+		  }
       this.setState({
         users: data.users,
-        size:data.users.length
+        pagenums: data.pagenums,
+        size: data.size,
+        pagenum: data.pagenum,
+        pagesize: pagesize
       })
     })
+    
   }
   
+ 
+    
   render() {
     var list = this.state.users.map((item, index) => {
       return (
@@ -40,12 +59,39 @@ class UserList extends React.Component {
         </tr>
       )
     })
+    //分页页码按钮显示
+//  var pagesizes = this.state.pagesize.map((item, index) => {
+//  		return (
+//      	<span style={{float:'left'}} key={index}>
+//      
+//	        <nav aria-label="Page navigation">
+//				<ul className="pagination">	
+//		        {this.state.pagenum === index+1 ? 
+//					<li className="active">
+//						<a href="#">
+//							{index+1}
+//						</a>
+//					</li>
+//				:
+//					<li>
+//						<span onClick={()=>{window.location='/user-list?pn='+(index+1)}}>
+//							{index+1}
+//						</span>
+//					</li>
+//				}
+//		        </ul>
+//		      </nav>
+//	        </span>
+//	     )
+//
+//  })
+
     return (
       <DocumentTitle title="用户列表">
         <div className="user-list">
-          <div className="user-list-add">
+          	<div className="user-list-add">
               <div className="btn btn-primary">
-               用户总数:{this.state.size}
+               用户总数:{this.state.pagenums}
               </div>
             </div>
             <table className="table table-bordered table-striped">
@@ -61,13 +107,45 @@ class UserList extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {list}
+				{list}
               </tbody>
             </table>
+            	当前{this.state.pagenum}页,总{this.state.size}页,总{this.state.pagenums}条记录
+            	<span style={{float:'right'}}>
+	            	<span onClick={()=>{window.location='/user-list?pn='+1}}>
+						<button class="btn btn-default" type="submit">首页</button>
+					</span>
+	            	<span>
+	            		{this.state.pagenum === 1
+	            			?
+	            			<button class="btn btn-default" type="submit" onClick={()=>{alert("已经是第一页了~~")}}>
+								上一页
+							</button>
+	            			:
+							<button class="btn btn-default" type="submit" onClick={()=>{window.location='/user-list?pn='+(this.state.pagenum-1)}}>
+								上一页
+							</button>
+						}
+					</span>
+					<span>
+					{this.state.pagenum === this.state.size 
+						?
+						<button class="btn btn-default" type="submit" onClick={()=>{alert("已经到最后一页了~~")}}>下一页</button>
+						:
+						<button class="btn btn-default" type="submit" onClick={()=>{window.location='/user-list?pn='+(this.state.pagenum+1)}}>
+							下一页
+						</button>
+					}
+					</span>
+					<span onClick={()=>{window.location='/user-list?pn='+this.state.size}}>
+						<button class="btn btn-default" type="submit" >末页</button>
+					</span>
+				</span>
         </div>
       </DocumentTitle>
     )
   }
+
 }
 
 export default UserList

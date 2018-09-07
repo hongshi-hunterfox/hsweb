@@ -256,267 +256,274 @@ class Order extends React.Component {
    var Difference = this.state.config.full - this.state.total
     return (
       <DocumentTitle title="提交订单">
-        <div className="order">
-          <form className="" onSubmit={this._handleSubmit}>
-             <div className="order-message">
-              <div className="input-group">
-                <span className="input-group-addon">自提/配送：</span>
-                <span  className="radio-input" onClick={() => {
-                	if(this.state.storeAddr.supportDeliver==='no'){
-                		alert("门店不支持配送,换个门店试试吧")
-                		window.location="/switch-shop/0"
-                	}}}
-                	>
-                	<input type='radio' id='no' name="isSelfPick" checked={this.state.isSelfPick==="false"?'checked':null} value="false" onClick={e => {
-                    	this.setState({
-                      	isSelfPick: e.target.value,
-                      	shippingFee: 0
-                    	}, () => {
-                      console.log(this.state)
-                       if (
-                          this.state.isSelfPick &&
-                          this.state.isSelfPick === 'false' &&
-                          localStorage.getItem('latitude') != null &&
-                          localStorage.getItem('longitude') != null
-                        ) {
-                          if (this.state.defaultAddr) {
-                            var addr =
-                              this.state.defaultAddr.province +
-                              this.state.defaultAddr.city +
-                              this.state.defaultAddr.region +
-                              this.state.defaultAddr.addrDetail
-                            console.log('addr:' + addr)
-                            console.log('this.state.isShippingfree:' + this.state.isShippingfree)
-                            if(!this.state.isShippingfree){
-                              geocoder.getLocation(addr,this.state.total)
-                            }else{
-                            	geocoder.getLocation(addr,this.state.total)
-                            }
-                          }
-                        }
-                    })
-                    sessionStorage.setItem('isSelfPick', e.target.value)
-                    console.log(this.state.isSelfPick);
-                   
-                  }}/><label htmlFor="no">配送</label></span>
-                
-                <input type='radio' name="isSelfPick" id="yes" value="true" checked={this.state.isSelfPick==="true"?'checked':null} onClick={e => {
-                    this.setState({
-                      isSelfPick: e.target.value,
-                      shippingFee: 0
-                    }, () => {
-                       if (
-                          this.state.isSelfPick &&
-                          this.state.isSelfPick === 'false' &&
-                          localStorage.getItem('latitude') != null &&
-                          localStorage.getItem('longitude') != null
-                        ) {
-                          if (this.state.defaultAddr) {
-                            var addr =
-                              this.state.defaultAddr.province +
-                              this.state.defaultAddr.city +
-                              this.state.defaultAddr.region +
-                              this.state.defaultAddr.addrDetail
-                            console.log('addr:' + addr)
-                            if(!this.state.isShippingfree){
-                             geocoder.getLocation(addr,this.state.total)
-                            }
-                          }
-                        }
-                    })
-                    sessionStorage.setItem('isSelfPick', e.target.value)
-                  }} /><label htmlFor="yes">自提</label>
-              </div>
-            </div>
-            <Addr
-              isSelfPick={this.state.isSelfPick}
-              _addrTabChange={this._addrTabChange}
-              defaultAddr={this.state.defaultAddr}
-              storeAddr={this.state.storeAddr}
-            />
-            <div className="order-addr" >
-              <div className="detail">
-              {this.state.isSelfPick == 'false' ?
-               <span className="fa fa-home fa-lg">
-               <font size='2'>
-               	配送门店
-               	<font size='1' color='#B8B8B8'>配送({this.state.config.restrictedDistance}km内)</font>:
-               </font>
-              	<font size='2'>
-              		{localStorage.getItem('id')==0 ? <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店        ></a>}
-              	</font>
-               </span>
-              :
-              <span className="fa fa-home fa-lg">
-            	  <font size="2">
-            	  自提门店:
-            	  </font>
-              		<font size="2">{localStorage.getItem('id')==1 ? <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店         ></a>}</font>
-              </span>
-              }
-              </div>
-            </div>
-            <OrderItem cartItems={this.state.cartItems} />
-            <input
-              type="hidden"
-              name="addrId"
-              value={
-                this.state.defaultAddr
-                  ? this.state.defaultAddr.deliveraddrId
-                  : null
-              }
-            />
-            <input type="hidden" name="cartIds" value={this.state.cartIds} />
-            <input
-              type="hidden"
-              name="storeId"
-              value={localStorage.getItem('storeId')}
-            />
-            <input
-              type="hidden"
-              name="addrId"
-              value={
-                this.state.defaultAddr
-                  ? this.state.defaultAddr.deliveraddrId
-                  : null
-              }
-            />
-            <div className="order-message">
-              <div className="input-group">
-                <span className="input-group-addon">买家留言：</span>
-                <textarea
-                  rows="2"
-                  name="remark"
-                  className="form-control"
-                  value={this.state.remark}
-                  onChange={this._remarkHandler}
-                />
-              </div>
-            </div>
-
-           
-            {this.state.isSelfPick && this.state.isSelfPick === 'true'
-              ? <div className="order-message">
-                  <div className="input-group">
-                    <span className="input-group-addon">联系手机：</span>
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={this.state.phone}
-                      name="phone"
-                      onChange={this._phoneHandler}
-                    />
-                  </div>
-                </div>
-              : null}
-            <div className="order-message">
-              <div className="input-group">
-                <span className="input-group-addon">取货日期：</span>
-                <input
-                  className="form-control"
-                  type="date"
-                  name="pickDateStr"
-                  value={this.state.pDate}
-                  onChange={e => {
-                    this.setState({ pDate: e.target.value })
-                    sessionStorage.setItem('p_date', e.target.value)
-                  }}
-                />
-              </div>
-            </div>
-            <div className="order-message">
-              <div className="input-group">
-                <span className="input-group-addon">取货时间：</span>
-                <input
-                  className="form-control"
-                  type="time"
-                  name="pickTimeStr"
-                  value={this.state.pTime}
-                  onChange={e => {
-                    this.setState({ pTime: e.target.value })
-                    sessionStorage.setItem('p_time', e.target.value)
-                  }}
-                />
-              </div>
-            </div>
-            <div className="order-total">
-              商品小计：<span className="money">￥{this.state.total}</span>
-            </div>
-            <div className="order-total">
-              <input
-                type="hidden"
-                name="shippingFee"
-                value={this.state.isShippingfree ? 0 : this.state.shippingFee}
-              />
-              运费：<span className="money">￥{this.state.isShippingfree ? 0 : this.state.shippingFee}</span>
-            </div>
-            <div
-              className="order-coupon"
-              onClick={() => {
-                window.location = 'coupon?isFromOrder=1'
-              }}
-            >
-              优惠券：
-              {this.state.voucherText && this.state.voucherText !== ''
-                ? this.state.voucherText + '元现金优惠券   x 1'
-                : null}
-              <span className="icon fa fa-chevron-right" />
-            </div>
-            <input
-              type="hidden"
-              name="voucherCode"
-              value={this.state.voucherCode}
-            />
-             <div className="order-total">
-              满减：<span className="money">￥{this.state.cut}</span>
-            </div>
-            {this.state.isSelfPick === 'false' ?
-            <div className="order-total">
-              满额起送：<span className="money">￥{this.state.config.full>0?this.state.config.full:0}</span>
-            </div>:null}
-                {
-                  this.state.salesInfo.length>=1?
-                  <div className="order-sales">
-                     <div onClick={this.salesInfoShowClick} className='order-sales-top'>
-                      <span className='order-sales-tag'>
-                        营销
-                      </span>
-                      <span className='order-sales-text'>
-                            {this.state.salesInfo[0]}...
-                        </span>
-                        <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
-                    </div>
-                    <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
-                      {this.state.salesInfo.map((item,index)=>{
-                        return(
-                          <div className='order-sales-item' key={index}>
-                            {item}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                  :null
-                }
-            <ErrorMessage error={this.state.error} />
-            <div className="order-submit">
-            	合计：￥{Total}
-            	{this.state.isSelfPick === 'false'?
-            	(Difference>0?
-					  	<span className="button">还需：{Difference}元起送!</span>
-					  	:
-            	<button type="submit" className="button">提交订单</button>)
-            	:<button type="submit" className="button">提交订单</button>}
-            </div>
-          </form>
-          <div className="qq-btn">
-            	 <span className="border">
-            		<a href={"http://wpa.qq.com/msgrd?v=3&uin="+this.state.config.qq+"&site=qq&menu=yes"}>
-        					<font size="3" color="#f15f40"><i className="fa fa-qq" aria-hidden="true">qq客服</i></font>
-      					</a>
-      				 </span>
-      		</div>
-        </div>
+      	<div>
+	        <div className="order">
+	          <form className="" onSubmit={this._handleSubmit}>
+	             <div className="order-message">
+	              <div className="input-group">
+	                <span className="input-group-addon">自提/配送：</span>
+	                <span  className="radio-input" onClick={() => {
+	                	if(this.state.storeAddr.supportDeliver==='no'){
+	                		alert("门店不支持配送,换个门店试试吧")
+	                		window.location="/switch-shop/0"
+	                	}}}
+	                	>
+	                	<input type='radio' id='no' name="isSelfPick" checked={this.state.isSelfPick==="false"?'checked':null} value="false" onClick={e => {
+	                    	this.setState({
+	                      	isSelfPick: e.target.value,
+	                      	shippingFee: 0
+	                    	}, () => {
+	                      console.log(this.state)
+	                       if (
+	                          this.state.isSelfPick &&
+	                          this.state.isSelfPick === 'false' &&
+	                          localStorage.getItem('latitude') != null &&
+	                          localStorage.getItem('longitude') != null
+	                        ) {
+	                          if (this.state.defaultAddr) {
+	                            var addr =
+	                              this.state.defaultAddr.province +
+	                              this.state.defaultAddr.city +
+	                              this.state.defaultAddr.region +
+	                              this.state.defaultAddr.addrDetail
+	                            console.log('addr:' + addr)
+	                            console.log('this.state.isShippingfree:' + this.state.isShippingfree)
+	                            if(!this.state.isShippingfree){
+	                              geocoder.getLocation(addr,this.state.total)
+	                            }else{
+	                            	geocoder.getLocation(addr,this.state.total)
+	                            }
+	                          }
+	                        }
+	                    })
+	                    sessionStorage.setItem('isSelfPick', e.target.value)
+	                    console.log(this.state.isSelfPick);
+	                   
+	                  }}/><label htmlFor="no">配送</label></span>
+	                
+	                <input type='radio' name="isSelfPick" id="yes" value="true" checked={this.state.isSelfPick==="true"?'checked':null} onClick={e => {
+	                    this.setState({
+	                      isSelfPick: e.target.value,
+	                      shippingFee: 0
+	                    }, () => {
+	                       if (
+	                          this.state.isSelfPick &&
+	                          this.state.isSelfPick === 'false' &&
+	                          localStorage.getItem('latitude') != null &&
+	                          localStorage.getItem('longitude') != null
+	                        ) {
+	                          if (this.state.defaultAddr) {
+	                            var addr =
+	                              this.state.defaultAddr.province +
+	                              this.state.defaultAddr.city +
+	                              this.state.defaultAddr.region +
+	                              this.state.defaultAddr.addrDetail
+	                            console.log('addr:' + addr)
+	                            if(!this.state.isShippingfree){
+	                             geocoder.getLocation(addr,this.state.total)
+	                            }
+	                          }
+	                        }
+	                    })
+	                    sessionStorage.setItem('isSelfPick', e.target.value)
+	                  }} /><label htmlFor="yes">自提</label>
+	              </div>
+	            </div>
+	            <Addr
+	              isSelfPick={this.state.isSelfPick}
+	              _addrTabChange={this._addrTabChange}
+	              defaultAddr={this.state.defaultAddr}
+	              storeAddr={this.state.storeAddr}
+	            />
+	            <div className="order-addr" >
+	              <div className="detail">
+	              {this.state.isSelfPick == 'false' ?
+	               <span className="fa fa-home fa-lg">
+	               <font size='2'>
+	               	配送门店
+	               	<font size='1' color='#B8B8B8'>配送({this.state.config.restrictedDistance}km内)</font>
+	               </font>
+	              	<font size='2'>
+	              		{localStorage.getItem('id')==0 ? <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店        ></a>}
+	              	</font>
+	               </span>
+	              :
+	              <span className="fa fa-home fa-lg">
+	            	  <font size="2">
+	            	  	自提门店:
+	            	  </font>
+	              		<font size="2">{localStorage.getItem('id')==1 ? <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店         ></a>}</font>
+	              </span>
+	              }
+	              </div>
+	            </div>
+	            <OrderItem cartItems={this.state.cartItems} />
+	            <input
+	              type="hidden"
+	              name="addrId"
+	              value={
+	                this.state.defaultAddr
+	                  ? this.state.defaultAddr.deliveraddrId
+	                  : null
+	              }
+	            />
+	            <input type="hidden" name="cartIds" value={this.state.cartIds} />
+	            <input
+	              type="hidden"
+	              name="storeId"
+	              value={localStorage.getItem('storeId')}
+	            />
+	            <input
+	              type="hidden"
+	              name="addrId"
+	              value={
+	                this.state.defaultAddr
+	                  ? this.state.defaultAddr.deliveraddrId
+	                  : null
+	              }
+	            />
+	            <div className="order-message">
+	              <div className="input-group">
+	                <span className="input-group-addon">买家留言：</span>
+	                <textarea
+	                  rows="2"
+	                  name="remark"
+	                  className="form-control"
+	                  value={this.state.remark}
+	                  onChange={this._remarkHandler}
+	                />
+	              </div>
+	            </div>
+	
+	           
+	            {this.state.isSelfPick && this.state.isSelfPick === 'true'
+	              ? <div className="order-message">
+	                  <div className="input-group">
+	                    <span className="input-group-addon">联系手机：</span>
+	                    <input
+	                      className="form-control"
+	                      type="text"
+	                      value={this.state.phone}
+	                      name="phone"
+	                      onChange={this._phoneHandler}
+	                    />
+	                  </div>
+	                </div>
+	              : null}
+	            <div className="order-message">
+	              <div className="input-group">
+	                <span className="input-group-addon">取货日期：</span>
+	                <input
+	                  className="form-control"
+	                  type="date"
+	                  name="pickDateStr"
+	                  value={this.state.pDate}
+	                  onChange={e => {
+	                    this.setState({ pDate: e.target.value })
+	                    sessionStorage.setItem('p_date', e.target.value)
+	                  }}
+	                />
+	              </div>
+	            </div>
+	            <div className="order-message">
+	              <div className="input-group">
+	                <span className="input-group-addon">取货时间：</span>
+	                <input
+	                  className="form-control"
+	                  type="time"
+	                  name="pickTimeStr"
+	                  value={this.state.pTime}
+	                  onChange={e => {
+	                    this.setState({ pTime: e.target.value })
+	                    sessionStorage.setItem('p_time', e.target.value)
+	                  }}
+	                />
+	              </div>
+	            </div>
+	            <div className="order-total">
+	              商品小计：<span className="money">￥{this.state.total}</span>
+	            </div>
+	            <div className="order-total">
+	              <input
+	                type="hidden"
+	                name="shippingFee"
+	                value={this.state.isShippingfree ? 0 : this.state.shippingFee}
+	              />
+	              运费：<span className="money">￥{this.state.isShippingfree ? 0 : this.state.shippingFee}</span>
+	            </div>
+	            <div
+	              className="order-coupon"
+	              onClick={() => {
+	                window.location = 'coupon?isFromOrder=1'
+	              }}
+	            >
+	              优惠券：
+	              {this.state.voucherText && this.state.voucherText !== ''
+	                ? this.state.voucherText + '元现金优惠券   x 1'
+	                : null}
+	              <span className="icon fa fa-chevron-right" />
+	            </div>
+	            <input
+	              type="hidden"
+	              name="voucherCode"
+	              value={this.state.voucherCode}
+	            />
+	             <div className="order-total">
+	              满减：<span className="money">￥{this.state.cut}</span>
+	            </div>
+	            {this.state.isSelfPick === 'false' ?
+	            <div className="order-total">
+	              满额起送：<span className="money">￥{this.state.config.full>0?this.state.config.full:0}</span>
+	            </div>:null}
+	                {
+	                  this.state.salesInfo.length>=1?
+	                  <div className="order-sales">
+	                     <div onClick={this.salesInfoShowClick} className='order-sales-top'>
+	                      <span className='order-sales-tag'>
+	                        营销
+	                      </span>
+	                      <span className='order-sales-text'>
+	                            {this.state.salesInfo[0]}...
+	                        </span>
+	                        <Icon className="order-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
+	                    </div>
+	                    <div className={'order-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
+	                      {this.state.salesInfo.map((item,index)=>{
+	                        return(
+	                          <div className='order-sales-item' key={index}>
+	                            {item}
+	                          </div>
+	                        )
+	                      })}
+	                    </div>
+	                  </div>
+	                  :null
+	                }
+	            <ErrorMessage error={this.state.error} />
+	            <div className="order-submit">
+	            	合计：￥{Total}
+	            	{this.state.isSelfPick === 'false'?
+	            	(Difference>0?
+						  	<span className="button">还需：{Difference}元起送!</span>
+						  	:
+	            	<button type="submit" className="button">提交订单</button>)
+	            	:<button type="submit" className="button">提交订单</button>}
+	            </div>
+	          </form>
+	          <div className="qq-btn">
+	            	 <span className="border">
+	            	 	<span className="badge">
+		            		<a href={"http://wpa.qq.com/msgrd?v=3&uin="+this.state.config.qq+"&site=qq&menu=yes"}>
+		        					<font color="#ffffff"><i className="fa fa-qq" aria-hidden="true">qq客服</i></font>
+		      					</a>
+		      				</span>
+	      				 </span>
+	      		</div>
+	        </div>
+	        <div className="tail">
+							广州洪石软件提供技术支持
+					</div>
+				</div>
       </DocumentTitle>
     )
   }

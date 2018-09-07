@@ -130,27 +130,18 @@ class HomeNotice extends React.Component {
   render() {
   	
     return (
-      <div className="not">
-      
-     		{this.state.notice>21 ?
-     			
-     			<span>
-     			
-       	 <marquee  direction="left">
-       	 <i className="fa fa-volume-up" />{this.state.config.notice}</marquee>
-       	  </span>
-        :
-        <span>
-        <i className="fa fa-volume-up"/>
-       {this.state.config.notice}
-       </span>
-       }
-     		
+    	<div className="gundongBox">
+    	{this.state.notice > 19 
+    		?
+	    	<span className="gundongList">
+		      <p className="gundongList-span">{this.state.config.notice}</p>
+		    </span>
+		    :
+		    <p className="gundongList-span">{this.state.config.notice}</p>
+		  }
       </div>
-     )
-
-  	 
-  	}
+    )
+  }
 }
 
 
@@ -198,19 +189,20 @@ const DetailPicker = (props) => {
               {
               	((Date1)<(props.startTime)||(Date1)>(props.endTime)) ?
               <div>
-              在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              	在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
               </div>	
               	: 
               <div>
               	{((props.promotionPrice)==='-') ? 
               	<div>
-              	在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+              		在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
               	</div> :
               	<div>
-              	促销价：¥{props.promotionPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce} 在售价：¥{props.totalPrice}</span>:null}
+              		促销价：¥{props.promotionPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce} 在售价：¥{props.totalPrice}</span>:null}
               	</div>
               	}
-              </div>}
+              </div>
+              }
               </div>
             </div>
           </div>
@@ -240,7 +232,6 @@ const DetailPicker = (props) => {
       			 				<div key={item.id}  
       			 					onClick={() => {
           	      			props.param(item.id)
-          	      			console.log("ssss="+item.id)
                 			}} 
                 			className={(item.sname !==null ? 'detail-picker-spec-value' + (item.id === props.ValudId ? ' active' : ''): null)}>
          							{item.sname}
@@ -594,20 +585,17 @@ class Home extends React.Component {
     var groups = this.state.groups.map((item, index) => {
       return(
           <div key={index} className={'product-group' + (item.displayType === '1' ? ' product-group-hor': '')}>
-            <div className="product-group-header">
-            <div className="member-center-hero">
-          
-            <span className="body">{item.groupName}</span>
-             <img src={item.image} alt=""/>
-          </div> 
-           </div>
-           <div className="product-group-body">
-              <Link to='/all-product' className="product-group-header-link">
-                更多
-              </Link>
-
-              
-            </div>
+          {item.image === null ?
+          	<div className="yemei">
+	          	<span className='yemei-text'>
+	          		<h3><p className="label label-danger">{item.groupName}</p></h3>
+	          	</span>
+          	</div>
+          	:
+            <div className="yemei">
+	            <img src={item.image} width='100%' height='100%' alt=""/>	 
+           	</div>
+          }
             <div className="product-group-body">
               {
                 item.products.map((item1, index1)=> {
@@ -671,6 +659,11 @@ class Home extends React.Component {
                 })
               }
             </div>
+            <div className='text'>
+	            <Link to='/all-product'>
+	              <span className="badge">查看更多<i className="glyphicon glyphicon-chevron-right" /></span>
+	            </Link>
+            </div>
           </div>
       );
     });
@@ -678,7 +671,7 @@ class Home extends React.Component {
     return (
       <DocumentTitle title="首页">
           <div className="home">
-         {/*<SearchBar/>*/}
+         	{/*<SearchBar/>*/}
             {
               this.state.banner.length ? 
               <HomeCarousel banner={this.state.banner}/> : null
@@ -712,7 +705,9 @@ class Home extends React.Component {
               endTime={endTime}
               />
             <Navi query={this.props.location.query}/>
-
+						<div className="tail">
+							广州洪石软件提供技术支持
+						</div>
           </div>
       </DocumentTitle>
     )

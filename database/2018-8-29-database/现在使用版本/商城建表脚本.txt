@@ -464,7 +464,9 @@ If Object_ID('web_napa_stores','U') Is Null
 
    latitude varchar(255) not null,
 
-   hs_code varchar(255) not null
+   hs_code varchar(255) not null,
+   
+   supportDeliver varchar(10) not null
 
 );
 

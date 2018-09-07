@@ -30,7 +30,9 @@ public interface UserProfileMapper {
 	
 	List<UserProfile> selectListByUserProfile(UserProfile userProfile);
 
-	List<UserProfile> selectAllProfileList();
+	List<UserProfile> selectAllProfileList(@Param("pn") Integer pn);
+	
+	Double selectPageNums();
 	
 	List<UserProfile> selectAllVipList();
 

@@ -98,22 +98,20 @@ class ModuleSetting extends React.Component {
               </div>
               <div className="form-group">
               </div>
-              <label className="control-label col-md-3">滚动方式：</label>
+              <label className="control-label col-md-3">显示方式：</label>
               <div div className="col-md-9">
                <select name='displayType'>
-                <option value='1' selected={this.props.location.query.displayType===1?'selected':null}>横向滚动</option>
-                <option value='2' selected={this.props.location.query.displayType===2?'selected':null}>竖向滚动</option>
+                <option value='1' selected={this.props.location.query.displayType===1?'selected':null}>横向显示</option>
+                <option value='2' selected={this.props.location.query.displayType===2?'selected':null}>竖向显示</option>
               </select>
             </div>
-            
-              
-            <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
                 <button type="submit" className="btn btn-primary">提交</button>
               </div>
             </div>
           </form>
+          <ErrorMsg msg={this.state.err} />
         </div>
       </DocumentTitle>
     )
@@ -154,14 +152,10 @@ class ModuleSetting extends React.Component {
     e.preventDefault()
     var data = fto(e.target)
     console.log("data===="+data.groupId);
-    if (!data.image) {
+
+    if (!data.groupName&&!data.image) {
       return this.setState({
-        err: '至少上传一张图片'
-      })
-    }
-    if (!data.groupName) {
-      return this.setState({
-        err: '请填写栏目名称'
+        err: '名称或图片请至少设置一种才能提交'
       })
     }
 

@@ -68,7 +68,7 @@ class ModuleSetting extends React.Component {
       )
     })
     return (
-      <DocumentTitle title="分类列管理">
+      <DocumentTitle title="首页模块管理">
         <div className="product-list">
             <div className="product-list-add">
               <Link to={'/moduleSetting'} className="btn btn-primary">

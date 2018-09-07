@@ -22,6 +22,35 @@
     <result column="is_lunar" property="isLunar" jdbcType="BIT" />
     <result column="last_buy" property="lastBuy" jdbcType="TIMESTAMP" />
   </resultMap>
+   <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
   <sql id="Base_Column_List" >
     profile_id, user_id, image,email, phone, name, nick_name, login_count, regist_time, is_active,ip_addr,vip_image,vip_jbarcode,last_buy
   </sql>
@@ -47,10 +76,25 @@
     from web_user_profiles A left join web_user_role_link B on A.user_id=B.user_id
     where A.name = #{name,jdbcType=INTEGER} and B.role_id=3
   </select>
+  <select id="selectPageNums" resultType="java.lang.Double">
+  	select
+    count(*)
+    FROM web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID
+  </select>
   <select id="selectAllProfileList" resultMap="UserProfile">
-    select A.regist_time,A.image,A.name,convert(nvarchar(12),D.生日,102) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
-C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID
-    order by profile_id asc
+    <!--  select
+    *
+    FROM web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID
+	-->
+	Select top 15 * from web_user_profiles where user_id not in(select top ${pn} A.user_id from 
+	web_user_profiles AS A 
+	LEFT JOIN web_oauth_login AS B 
+	ON A.user_id = B.user_id 
+	LEFT JOIN 会员身份 AS C ON C.外键 = B.oauth_id 
+	LEFT JOIN 会员 AS D ON C.会员ID = D.ID
+ 	order by A.user_id ) order by user_id
   </select>
    <select id="selectAllProfileLists" resultMap="UserProfile">
     select A.regist_time,A.image,A.name,convert(nvarchar(12),D.生日,102) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on

@@ -2,6 +2,7 @@
 import './store-list.css'
 import React from 'react'
 import DocumentTitle from 'react-document-title'
+import Icon from '../components/Icon'
 var request = require('superagent')
 
 // req 用于发送 AJAX 请求
@@ -126,7 +127,9 @@ class StoreList extends React.Component {
 						)}
 					>
 						<div className="store-list-item-top">
-							<div className="name">{item.storeName}({item.supportDeliver === 'yes' ? '支持配送' : '不支持配送'})</div>
+							<div className="name">
+								{item.storeName}({item.supportDeliver === 'yes' ? '支持配送' : '不支持配送'})
+							</div>
 							<div className="distance">
 								{distance > 10 ? '>10' : distance}
 								km
@@ -134,9 +137,13 @@ class StoreList extends React.Component {
 						</div>
 						<div className="store-list-item-bottom">
 							<div className="addr">
-								{item.province}{item.city}{item.region}{item.addrDetail}
+								<font color="#808080">{item.province}{item.city}{item.region}{item.addrDetail}</font>
 							</div>
-							<div className="fa fa-chevron-right right"/>
+							<div>
+								<font color="#808080">
+									<span className="fa fa-chevron-right right"/>
+								</font>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -144,15 +151,21 @@ class StoreList extends React.Component {
 		})
 		return (
 			<DocumentTitle title="选择店铺">
-				<div className="store">
-					<div className="store-logo">
-						<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
-						<div className="store-logo-text">{this.state.brand}</div>
+				<div>
+					<div className="store">
+						<div className="store-logo">
+							<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
+							<div className="store-logo-text">{this.state.brand}</div>
+						</div>
+						<div className="store-select">请选择要进入的店：</div>
+						{items}
+						<div className="bottom-text">
+							没有更多店铺啦~~~
+						</div>
+						
 					</div>
-					<div className="store-select">请选择要进入的店：</div>
-					{items}
-					<div className="bottom-text">
-						O(∩_∩)O 啊哦，没有更多店铺啦~~~
+					<div className="tail">
+						广州洪石软件提供技术支持
 					</div>
 				</div>
 			</DocumentTitle>

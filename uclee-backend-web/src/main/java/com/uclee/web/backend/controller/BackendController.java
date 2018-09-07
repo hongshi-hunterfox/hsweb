@@ -1,6 +1,7 @@
 package com.uclee.web.backend.controller;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,12 +18,15 @@ import org.apache.commons.collections.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.backend.service.BackendServiceI;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.uclee.date.util.DateUtils;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
@@ -389,19 +393,33 @@ public class BackendController {
 		Category category = backendService.getCategoryById(categoryId);
 		return category;
 	}
+	@SuppressWarnings("unused")
 	@RequestMapping("/userList")
-	public @ResponseBody Map<String,Object> userList(HttpServletRequest request) {
-		Map<String,Object> map = new TreeMap<String,Object>();
-		List<UserProfile> users = backendService.getUserList();
+	public @ResponseBody Map<String,Object> userList(HttpServletRequest request, Integer pn) {
+		Map<String,Object> map = new TreeMap<String,Object>();		
+		List<UserProfile> users;
+		if(pn==null){
+			 users = backendService.getUserList(0);
+			 map.put("pagenum",1);
+		}else{
+			 map.put("pagenum",pn);
+			 pn = pn-1;
+			 users = backendService.getUserList(pn*5);
+		}
+		Double pagenums = backendService.selectPageNums();
+		Double pagesize = (pagenums/15);
+		//小数点后值不为0进1
+		int size = (int)Math.ceil(pagesize);
+		map.put("size", size);
 		map.put("users", users);
-		map.put("size", users.size());
+		map.put("pagenums", pagenums);
 		return map;
 	}
 	/*
-	 * 取得所有会员信息和根据会员注册时间查询会员信息--skx
+	 * 取得所有会员信息和根据会员注册时间查询会员信息
 	 */
 	@RequestMapping("/vipList")
-	public @ResponseBody Map<String,Object> vipList(HttpServletRequest request,String start,String end) throws ParseException {
+	public @ResponseBody Map<String,Object> vipList(HttpServletRequest request, String start, String end) throws ParseException {
 		Map<String,Object> map = new TreeMap<String,Object>();	
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			System.out.println("start============="+start);
@@ -423,7 +441,7 @@ public class BackendController {
 		return map;
 	}
 	/*
-	 * 根据手机号和卡号查询会员信息--skx
+	 * 根据手机号和卡号查询会员信息
 	 */
 	@RequestMapping("/vipPhone")
 	public @ResponseBody Map<String,Object> vipPhone(HttpServletRequest request,String cartphone) {

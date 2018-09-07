@@ -44,6 +44,16 @@ public class BargainPost {
 	private String value;
 	
 	private Date end;
+	
+	private Integer hsStock;
+
+	public Integer getHsStock() {
+		return hsStock;
+	}
+
+	public void setHsStock(Integer hsStock) {
+		this.hsStock = hsStock;
+	}
 
 	public Date getEnd() {
 		return end;

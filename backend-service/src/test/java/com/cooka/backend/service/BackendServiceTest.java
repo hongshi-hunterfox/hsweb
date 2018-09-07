@@ -52,7 +52,7 @@ public class BackendServiceTest  extends AbstractServiceTests{
 	}
 	@Test
 	public void testUserList(){
-		logger.info(JSON.toJSONString(backendService.getUserList()));
+		logger.info(JSON.toJSONString(backendService.getUserList(1)));
 	}
 	
 	@Test

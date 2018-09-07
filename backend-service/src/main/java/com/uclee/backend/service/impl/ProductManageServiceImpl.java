@@ -133,7 +133,6 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			productMapper.updateByPrimaryKeySelective(product);
 		}
 	}
-	
 	private void updateSpecificationHandler(ProductForm product) {
 		delPreSpecificationValue(product.getProductId());
 		delPreProSpeValueLink(product.getProductId());
@@ -146,8 +145,10 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setPrePrice(item.getPrePrice());
 			value.setPromotionPrice(item.getPromotionPrice());
 			//提交时转换类型
-			if(item.getStartTimeStr()!=null&&item.getEndTimeStr()!=null){
+			if(item.getStartTimeStr()!=null && item.getStartTimeStr().length()>0){
 				value.setStartTime(DateUtils.parse(item.getStartTimeStr()));
+			}
+			if(item.getEndTimeStr()!=null && item.getEndTimeStr().length()>0){
 				value.setEndTime(DateUtils.parse(item.getEndTimeStr()));
 			}
 			value.setSpecificationId(1);

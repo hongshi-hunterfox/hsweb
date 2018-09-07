@@ -73,9 +73,9 @@
 		<property name="plugins">
 			<array>
 				<bean class="com.github.pagehelper.PageHelper">
-					<property name="properties">
+					 <property name="properties">
 						<value>
-							dialect=mysql
+							dialect=sqlserver
 						</value>
 					</property>
 				</bean>

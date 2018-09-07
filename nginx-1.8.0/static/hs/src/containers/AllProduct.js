@@ -224,7 +224,7 @@ class AllProduct extends React.Component{
 					</div>*/}
 					{products}
                     <div className="text-center">
-                        ~~已显示全部
+                        已加载全部
                     </div>
 					
 					<Navi query={this.props.location.query}/>

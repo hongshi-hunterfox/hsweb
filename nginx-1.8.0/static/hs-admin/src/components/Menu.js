@@ -8,7 +8,7 @@ class Menu extends React.Component {
         paddingTop: 30
       }}>
         <div className="list-group">
-          <Link to={'/user-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+          <Link to={'user-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             用户列表
           </Link> 
           <Link to={'/vip-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
