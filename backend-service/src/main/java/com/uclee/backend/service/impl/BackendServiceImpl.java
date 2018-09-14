@@ -382,7 +382,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
 		if (configPost.getVoucherSendInformation()!=null) {
-			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+			configMapper.updateByTag(WebConfig.voucherSendInformation, configPost.getVoucherSendInformation());
 		}
 		if (configPost.getForce()!=null) {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
@@ -529,7 +529,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
 		if (configPost.getVoucherSendInformation()!=null) {
-			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+			configMapper.updateByTag(WebConfig.voucherSendInformation, configPost.getVoucherSendInformation());
 		}
 		if (configPost.getForce()!=null) {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
@@ -1065,7 +1065,7 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setLoss(config.getValue());				
 			}else if(config.getTag().equals(WebConfig.signText)){
 				configPost.setSignText(config.getValue());
-			}else if(config.getTag().equals(WebConfig.VoucherSendInformation)){
+			}else if(config.getTag().equals(WebConfig.voucherSendInformation)){
 				configPost.setVoucherSendInformation(config.getValue());
 			}else if(config.getTag().equals(WebConfig.force)){
 				configPost.setForce(config.getValue());
@@ -1148,8 +1148,8 @@ public class BackendServiceImpl implements BackendServiceI {
 		linkTmp.setGroupId(productGroupPost.getGroupId());
 		linkTmp.setProductId(productGroupPost.getProductId());
 		//新增时设定该产品的postion值 by chiangpan
-		int maxPosition=productGroupLinkMapper.getMaxPosition(productGroupPost.getGroupId());
-		maxPosition+=1;
+//		int maxPosition=productGroupLinkMapper.getMaxPosition(productGroup.getGroupId());
+		int maxPosition = 1;
 		linkTmp.setPosition(maxPosition);
 		productGroupLinkMapper.insertSelective(linkTmp);
 		return true;
@@ -1275,7 +1275,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config = configMapper.getByTag("birthTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
-			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			Config config3 = configMapper.getByTag(WebConfig.voucherSendInformation);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
 				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/coupon?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");

@@ -2098,7 +2098,7 @@ public class UserServiceImpl implements UserServiceI {
 		List<ShippingFullCut> shippingFullCuts = shippingFullCutMapper.selectAllShippingFullCutActive(new Date());
 		for(ShippingFullCut shippingFullCut:shippingFullCuts){
 			String tmp = "";
-			tmp = count + ". "+shippingFullCut.getsLimit()+"-"+shippingFullCut.getuLimit()+"公里,"+"满"+shippingFullCut.getCondition()+"元免运费";
+			tmp = count + ". 距离"+shippingFullCut.getsLimit()+"-"+shippingFullCut.getuLimit()+"公里,"+"满"+shippingFullCut.getCondition()+"元免运费";
 			count++;
 			salesInfo.add(tmp);
 		}

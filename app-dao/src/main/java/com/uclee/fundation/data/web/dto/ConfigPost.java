@@ -49,6 +49,10 @@ public class ConfigPost {
 	private String force;
 	private String brand;
 	private String qq;
+	private String zhengshu;
+	private String zhengshuPassword;
+	private String voucherSendInformation;
+	
 	public String getLoss() {
 		return loss;
 	}
@@ -73,9 +77,7 @@ public class ConfigPost {
 		this.brand = brand;
 	}
 
-	private String zhengshu;
-	private String zhengshuPassword;
-	private String voucherSendInformation;
+	
 	public String getVoucherSendInformation() {
 		return voucherSendInformation;
 	}
