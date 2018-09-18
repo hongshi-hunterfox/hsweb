@@ -29,6 +29,10 @@ componentDidMount() {
         if (err) {
           return err;
        	}
+        if(this.state.QueryName === 'BusinessError'){
+        	window.location="/Difference?QueryName=BusinessError"
+        	return;
+        }
         this.setState({
           	info:res.body.info,
             itema:res.body.itema,
@@ -44,7 +48,6 @@ componentDidMount() {
         });
         DataViewUtil.FillTable(data,colsNames,'myview');
       })
- //      document.getElementById('opt').innerHTML = 'sadf';
 }
 
 
@@ -57,7 +60,8 @@ componentDidMount() {
    return (
     <DocumentTitle title="小助手">
       <div className='data-view'>
-        <img src='/images/data.png' alt=""/>
+        <img src='/images/data.png' style={{width: '100%'}} alt=""/>
+        <label className="control-label col-md-3" ><h4>表格数据：</h4></label>
         <div className='data-view-color'>
         <table id='myview' className="table table-striped table-bordered"></table>
         </div>

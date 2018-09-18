@@ -115,11 +115,9 @@ public class UserHandler {
 	public @ResponseBody Map<String,Object> orderHandler(HttpServletRequest request,@RequestBody OrderPost orderPost) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
-//		orderPost.
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		logger.info("orderPost: " + JSON.toJSONString(orderPost));
 		map = userService.orderHandler(orderPost,userId);
-		logger.info("orderPost=======: " + JSON.toJSONString(map));
 		return map;
 	}
 	

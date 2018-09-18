@@ -79,91 +79,86 @@ public class HongShiVipController<phone> {
 	* @throws 
 	*/
 	@RequestMapping("getVipInfo")
-	public @ResponseBody HongShiVip  getVipInfo(Integer type,HttpSession session ){
+	public @ResponseBody HongShiVip  getVipInfo(Integer type,HttpSession session){
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		//Integer userId=type;
-		UserProfile userProfile = userService.getBasicUserProfile(userId);
+//		UserProfile userProfile = userService.getBasicUserProfile(userId);
 		logger.info("user_id:"+userId);
-
-		//獲得今天的日期如今天是3月14号，day=14
-		String day= DateUtils.getDay(new Date());
-		//获得现在是几点,hour=15
-		String hour=DateUtils.getTime(new Date()).substring(0,2);
-		char[]  dayChar=day.toCharArray();
-		char[]  hourChar=hour.toCharArray();
-		//以下就是邓彪要求的值
-		String preFixStr=String.valueOf(dayChar[0]).concat(String.valueOf(hourChar[0]));//11
-		String barcodeEndFixStr=String.valueOf(dayChar[1])+"+"+String.valueOf(hourChar[1]);//条形码是4+5
-		String vipEndFixStr=String.valueOf(dayChar[1]).concat(String.valueOf(hourChar[1]));//二维码是45
 		if(userId!=null){
-			OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
-			if(tt!=null){
-				List<HongShiVip> ret= hongShiVipService.getVipInfo(tt.getOauthId());//openid 去拿信息
-				
-				if(ret!=null&&ret.size()>0){
-					if(userProfile!=null){
-						Integer a = hongShiVipService.getCodeSwitching();
-						logger.info("status---="+a);
-						if(a!=0){
-							logger.info("status1---="+a);
-							ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
+			Integer userId2 = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+			logger.info("user_id2:"+userId2);
+			//验证两次获取用户是否一致
+			if(userId==userId2){
+				OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
+				if(tt!=null){
+					List<HongShiVip> ret= hongShiVipService.getVipInfo(tt.getOauthId());//openid 去拿信息
+					if(ret!=null||ret.size()>0){
+							//取得今天的日期如今天是3月14号，day=14
+							String day= DateUtils.getDay(new Date());
+							//获得现在是几点,hour=15
+							String hour=DateUtils.getTime(new Date()).substring(0,2);
+							char[]  dayChar=day.toCharArray();
+							char[]  hourChar=hour.toCharArray();
+							//以下就是邓彪要求的值
+							String preFixStr=String.valueOf(dayChar[0]).concat(String.valueOf(hourChar[0]));//11
+							String barcodeEndFixStr=String.valueOf(dayChar[1])+"+"+String.valueOf(hourChar[1]);//条形码是4+5
+							String vipEndFixStr=String.valueOf(dayChar[1]).concat(String.valueOf(hourChar[1]));//二维码是45
+							
+							Integer a = hongShiVipService.getCodeSwitching();
+							if(a!=0){
+								ret.get(0).setVipImage(userService.getVipImage(preFixStr.concat(tt.getOauthId()).concat(vipEndFixStr),userId));
 
-						try{
-
-							ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
-
-						}catch (Exception e){
-							e.printStackTrace();
-						}
-						}else{
-							logger.info("status2---="+a);
-							ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
-
-							try{
-
-								ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
-
-							}catch (Exception e){
-								e.printStackTrace();
+								try{
+	
+									ret.get(0).setVipJbarcode(userService.getVipJbarcode(preFixStr.concat(ret.get(0).getCardCode()).concat(barcodeEndFixStr),userId));
+	
+								}catch (Exception e){
+									e.printStackTrace();
+								}
+							}else{
+								ret.get(0).setVipImage(userService.getVipImage(tt.getOauthId(),userId));
+								try{
+									ret.get(0).setVipJbarcode(userService.getVipJbarcode(ret.get(0).getCardCode(),userId));
+								}catch (Exception e){
+									e.printStackTrace();
+								}
 							}
-						}
-						ret.get(0).setAllowRecharge(true);
-						ret.get(0).setAllowPayment(true);
-						if(ret.get(0).getState()==0){
-							ret.get(0).setAllowRecharge(false);
-							ret.get(0).setAllowPayment(false);
-							ret.get(0).setCardStatus("会员卡未启用");
-						}
-						if(ret.get(0).getDisable()==1){
-							ret.get(0).setAllowRecharge(false);
-							ret.get(0).setAllowPayment(false);
-							ret.get(0).setCardStatus("会员卡已挂失");
-						}
-						if((ret.get(0).getVipType()&2)==0){
-							ret.get(0).setAllowRecharge(false);
-							ret.get(0).setCardStatus("会员卡不可充值");
-						}
-						if(ret.get(0).getIsVoucher()==1){
-							ret.get(0).setAllowRecharge(false);
-							ret.get(0).setCardStatus("会员卡是购物券");
-						}
-						if(ret.get(0).getEndTime().before(new Date())){
-							ret.get(0).setAllowRecharge(false);
-							ret.get(0).setAllowPayment(false);
-							ret.get(0).setCardStatus("会员卡已超过使用期限");
-						}
-				//插入记录到viplog表--shenkaixin
-//						//精确到毫秒--shenkaixin or HH 为24小时
-//						String Vday = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss:SSS").format(new Date());
-						VipLog vipLog = new VipLog();
-						vipLog.setVcode(ret.get(0).getCardCode());
-						vipLog.setForeignKey(tt.getOauthId());
-//						vipLog.setRecordingTime(Vday);
-						hongShiVipMapper.insertVipLog(vipLog);
+							ret.get(0).setAllowRecharge(true);
+							ret.get(0).setAllowPayment(true);
+							if(ret.get(0).getState()==0){
+								ret.get(0).setAllowRecharge(false);
+								ret.get(0).setAllowPayment(false);
+								ret.get(0).setCardStatus("会员卡未启用");
+							}
+							if(ret.get(0).getDisable()==1){
+								ret.get(0).setAllowRecharge(false);
+								ret.get(0).setAllowPayment(false);
+								ret.get(0).setCardStatus("会员卡已挂失");
+							}
+							if((ret.get(0).getVipType()&2)==0){
+								ret.get(0).setAllowRecharge(false);
+								ret.get(0).setCardStatus("会员卡不可充值");
+							}
+							if(ret.get(0).getIsVoucher()==1){
+								ret.get(0).setAllowRecharge(false);
+								ret.get(0).setCardStatus("会员卡是购物券");
+							}
+							if(ret.get(0).getEndTime().before(new Date())){
+								ret.get(0).setAllowRecharge(false);
+								ret.get(0).setAllowPayment(false);
+								ret.get(0).setCardStatus("会员卡已超过使用期限");
+							}
+							VipLog vipLog = new VipLog();
+							vipLog.setVcode(ret.get(0).getCardCode());
+							vipLog.setForeignKey(tt.getOauthId());
+							hongShiVipMapper.insertVipLog(vipLog);
+							return ret.get(0);
 					}
-					logger.info(JSON.toJSONString(ret.get(0)));
-					return ret.get(0);
 				}
+			}else{
+				//如果两次获取userid不一致则返回false给页面
+				HongShiVip hongShiVip = new HongShiVip();
+				hongShiVip.setFail(false);
+				return hongShiVip;
 			}
 		}
 		

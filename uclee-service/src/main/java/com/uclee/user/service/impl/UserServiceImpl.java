@@ -2421,7 +2421,6 @@ public class UserServiceImpl implements UserServiceI {
 			Product product = productMapper.selectByPrimaryKey(cart.getProductId());
 			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
 			BargainSetting price = bargainSettingMapper.getPrice(cart.getCartId());
-//			List<ProductParameters> csshuxing = productMapper.obtainParameter(cart.getCanshuValueId());
 			ProductParameters csshuxing1 = productMapper.obtainParameters(cart.getCanshuValueId());
 			if(value==null){
 				map.put("result", false);
@@ -2445,7 +2444,7 @@ public class UserServiceImpl implements UserServiceI {
 				map.put("reason", "非法数据，请返回购物车重新提交");
 				return map;
 			}
-			//拼接备注插入产品的规格口味--kx
+			//拼接备注插入产品的规格口味
 			if(csshuxing1!=null&&csshuxing1.getSname()!=null){
 				a=a+"款式："+value.getValue()+"("+csshuxing1.getSname()+")"+",";
 			}
@@ -2588,17 +2587,15 @@ public class UserServiceImpl implements UserServiceI {
 		boolean insertResult = true;
 		paymentOrderMapper.insertSelective(paymentOrder);
 		logger.info("111aymentSerialNum=========="+paymentOrder.getPaymentSerialNum());
-		//查询是否插入到支付单--kx
+		//查询是否插入到支付单
 		PaymentOrder pamentOrdes = paymentOrderMapper.selectByPaymentSerialNum(paymentOrder.getPaymentSerialNum());
 		logger.info("111pamentOrdes=========="+JSON.toJSONString(pamentOrdes));
-		//if(paymentOrderMapper.insertSelective(paymentOrder)>0){
 		if(pamentOrdes!=null){
 			//插入订单
 			order.setPaymentOrderId(paymentOrder.getPaymentOrderId());
 			orderMapper.insertSelective(order);
-			//查询订单是否插入到web_ordes--kx
+			//查询订单是否插入到web_ordes
 			Order  orders = orderMapper.selectByPaymentOrderId(order.getPaymentOrderId());
-			logger.info("111orders=========="+JSON.toJSONString(orders));
 			if(orders!=null){	
 				//插入订单项
 				for(OrderItem item : orderItem){
@@ -2606,7 +2603,6 @@ public class UserServiceImpl implements UserServiceI {
 					orderItemMapper.insertSelective(item);
 					//查询是否插入到item表--kx
 					List<OrderItem> items = orderItemMapper.selectByOrderId(item.getOrderId());
-					logger.info("111items=========="+JSON.toJSONString(items));
 					if(items!=null){
 						System.out.println("插入到item表");
 					}else{
@@ -3755,13 +3751,9 @@ public class UserServiceImpl implements UserServiceI {
 	 */
 	@Override
 	public  Map<String, Object> getMobJect(String QueryName,String phone,String hsCode){
-//		LinkedHashMap<String,Object> ret = new LinkedHashMap<String, Object>();
 		HashMap<String,Object> ret = new HashMap<String, Object>();
 		Integer userId = null;
-
 		ret.put("result", false);
-
-		
 		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
 		if(napaStores!=null&&napaStores.size()>0){
 			ret.put("napaStores", napaStores);
@@ -3770,9 +3762,36 @@ public class UserServiceImpl implements UserServiceI {
 			return ret;
 		}
 		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName,hsCode,userId);
+		if(hsCode.length()>0){
+			ret.put("storename",itema.get(0).get("店铺名"));
+		}else{
+			ret.put("storename","全部店铺");
+		}
 		List<Map<String,Object>> colsName = hongShiMapper.getObjectName(QueryName);
+		String riqi = "";
+		String chae = "";
+		for (Map<String, Object> m : itema)  
+	    {	
+			if(riqi!=""){
+				riqi=riqi+","+m.get("日期");
+			}
+			if(riqi == ""){
+				riqi=m.get("日期")+"";
+			}
+			if(chae!=""){
+				chae=chae+","+m.get("差额");
+			}
+			if(chae == ""){
+				chae=m.get("差额")+"";
+			}
+//	      for (String k : m.keySet())  
+//	      {  
+//	        System.out.println(k + " : " + m.get(k));
+//	      }  
+	    }
+		ret.put("chae",chae);
+		ret.put("riqi",riqi);
 		ret.put("colsName",colsName);
-		ret.put("info",QueryName);
 		ret.put("itema", itema);
 		return ret;
 	}

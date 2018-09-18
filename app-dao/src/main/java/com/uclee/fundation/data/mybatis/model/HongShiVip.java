@@ -52,6 +52,16 @@ public class HongShiVip {
 	private String cCompany;
 	
 	private String cSex;
+	
+	private Boolean fail;
+	
+	public Boolean getFail() {
+		return fail;
+	}
+	
+	public void setFail(Boolean fail) {
+		this.fail = fail;
+	}
 
 	public String getCardStatus() {
 		return cardStatus;

@@ -65,9 +65,9 @@ class Menu extends React.Component {
            <Link to={'/user-birth-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             生日信息推送
           </Link>
-          <Link to={'/birth-voucher?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
+          {/*<Link to={'/birth-voucher?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             生日礼券赠送配置
-          </Link>
+         </Link>*/}
           <Link to={'/user-unbuy-list?merchantCode='+localStorage.getItem('merchantCode')} className="list-group-item" activeClassName="active">
             消费信息推送
           </Link>

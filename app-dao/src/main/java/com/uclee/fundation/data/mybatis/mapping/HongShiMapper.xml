@@ -92,7 +92,22 @@
 		<result column="Values" property="value" jdbcType="DECIMAL" />
 		<result column="VType" property="valueType" jdbcType="VARCHAR" />
 	</resultMap>
-
+	<resultMap id="CouponSales" type="com.uclee.fundation.data.mybatis.model.CouponSales">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="编号" property="numbers" jdbcType="INTEGER" />
+		<result column="面额" property="denomination" jdbcType="DECIMAL" />
+		<result column="日期" property="day" jdbcType="TIMESTAMP" />
+		<result column="部门编号" property="departmentNumber" jdbcType="INTEGER" />
+		<result column="往来编号" property="serialNumber" jdbcType="VARCHAR" />
+		<result column="销售时间" property="salesTime" jdbcType="VARCHAR" />
+		<result column="单号" property="oddNumbers" jdbcType="VARCHAR" />
+		<result column="销售类型" property="salesType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="CouponSales" resultMap="CouponSales">
+		<bind name="salesTime" value="'%' + salesTime + '%'" />
+		select * from 礼券销售表 where 销售时间 like #{salesTime, jdbcType=VARCHAR} and 销售类型 = '生日祝福赠送礼券' and 往来编号 = #{serialNumber, jdbcType=VARCHAR}
+	</select>
 	<select id="getHongShiOrder" resultMap="HongShiOrder">
 		exec WSC_GetOrdersList '','','',#{cWeiXinCode,jdbcType=VARCHAR},null,#{isEnd,jdbcType=BIT}
 	</select>

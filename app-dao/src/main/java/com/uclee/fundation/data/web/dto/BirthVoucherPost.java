@@ -15,6 +15,16 @@ public class BirthVoucherPost {
 	private String startTimeStr;
 
 	private String endTimeStr;
+	
+	private int day;
+	
+	public void setDay(int day) {
+		this.day = day;
+	}
+	
+	public int getDay() {
+		return day;
+	}
 
 	public String getStartTimeStr() {
 		return startTimeStr;

@@ -109,7 +109,7 @@ class LaunchBargain extends React.Component {
 				
 				wx.ready(() => {
 					wx.onMenuShareAppMessage({
-					title: '砍价召集令', // 分享标题
+					title: this.state.values.name, // 分享标题
 					desc: '我在'+this.state.brand+'发现了一件好东西:砍到'+this.state.values.price+'元可以购买，快来帮我砍价吧',  // 分享描述
 					link: window.location.href, // 分享链接
 					imgUrl: this.state.values.imageUrl, // 分享图标

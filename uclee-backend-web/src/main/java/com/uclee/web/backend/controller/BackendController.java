@@ -238,6 +238,8 @@ public class BackendController {
 	public @ResponseBody Map<String,Object> birthVoucher(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();
 		Map<String,Object> map = new LinkedMap();
+		BirthPush birthPush = backendService.selectDay();
+		result.put("day", birthPush.getDay());
 		List<BirthVoucher> birthVoucher = backendService.selectAllBirthVoucher();
 		int i = 0;
 		for(BirthVoucher item : birthVoucher){
@@ -404,7 +406,7 @@ public class BackendController {
 		}else{
 			 map.put("pagenum",pn);
 			 pn = pn-1;
-			 users = backendService.getUserList(pn*5);
+			 users = backendService.getUserList(pn*15);
 		}
 		Double pagenums = backendService.selectPageNums();
 		Double pagesize = (pagenums/15);

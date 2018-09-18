@@ -18,7 +18,11 @@ import com.uclee.fundation.data.web.dto.*;
 import org.apache.poi.hssf.record.formula.functions.Na;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
@@ -29,6 +33,7 @@ import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.number.util.NumberUtil;
+
 
 public class BackendServiceImpl implements BackendServiceI {
 
@@ -259,6 +264,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
 		}else{
 			configMapper.updateByTag(WebConfig.notice, "");
+		}if(configPost.getPerfectBirthText()!=null){
+			configMapper.updateByTag(WebConfig.perfectBirthText, configPost.getPerfectBirthText());
+		}else{
+			configMapper.updateByTag(WebConfig.perfectBirthText, "");
 		}
 		
 		return true;
@@ -414,6 +423,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getNotice()!=null) {
 			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
 		}
+		if (configPost.getPerfectBirthText()!=null) {
+			configMapper.updateByTag(WebConfig.perfectBirthText, configPost.getPerfectBirthText());
+		}
 		return true;
 	}
 	@Override
@@ -563,6 +575,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getNotice()!=null) {
 			configMapper.updateByTag(WebConfig.notice, configPost.getNotice());
+		}
+		if (configPost.getPerfectBirthText()!=null) {
+			configMapper.updateByTag(WebConfig.perfectBirthText, configPost.getPerfectBirthText());
 		}
 		return true;
 	}
@@ -735,6 +750,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			tmp.setVoucherCode(entry.getValue().toString());
 			birthVoucherMapper.insertSelective(tmp);
 		}
+		birthVoucherMapper.updateBrithPush(birthVoucherPost.getDay());
 		return true;
 	}
 	@Override
@@ -1084,6 +1100,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setBargainText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.notice)){
 				configPost.setNotice(config.getValue());
+			}else if(config.getTag().equals(WebConfig.perfectBirthText)){
+				configPost.setPerfectBirthText(config.getValue());
 			}
 		}
 		return configPost;
@@ -1209,7 +1227,7 @@ public class BackendServiceImpl implements BackendServiceI {
 				nickName = profile.getNickName();
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
-			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日祝福"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日提醒"};
 			Config config = configMapper.getByTag("birthTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
@@ -1918,5 +1936,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		List<RechargeConfig> configs = rechargeConfigMapper.selectMonPeiZhi();
 		return configs;
 	}
-
+	@Override
+	public BirthPush selectDay() {
+		BirthPush birthPush = birthVoucherMapper.selectDay();
+		return birthPush;
+	}
 }

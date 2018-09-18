@@ -7,6 +7,11 @@
     <result column="amount" property="amount" jdbcType="INTEGER" />
     <result column="time" property="time" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="BirthPushMap" type="com.uclee.fundation.data.mybatis.model.BirthPush" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="day" property="day" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, voucher_code, amount, time
   </sql>
@@ -20,6 +25,9 @@
     select
     <include refid="Base_Column_List" />
     from web_birth_voucher
+  </select>
+  <select id="selectDay" resultMap="BirthPushMap">
+    select day from web_birthdayInformation_push
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_birth_voucher
@@ -86,5 +94,10 @@
       amount = #{amount,jdbcType=INTEGER},
       time = #{time,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateBrithPush" parameterType="com.uclee.fundation.data.mybatis.model.BirthPush" >
+  	update web_birthdayInformation_push
+    set day = #{day, jdbcType=INTEGER}
+    where id = 1
   </update>
 </mapper>

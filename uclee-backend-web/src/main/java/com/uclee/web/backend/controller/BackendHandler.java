@@ -101,6 +101,7 @@ public class BackendHandler {
 	}
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
+		System.out.println("day=============="+birthVoucherPost.getDay());
 		return backendService.updateBirthVoucher(birthVoucherPost);
 	}
 	@RequestMapping("/truncateBirthVoucherHandler")

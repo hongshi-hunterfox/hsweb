@@ -1,6 +1,8 @@
 use 数据库名
 go
 
+insert into web_birthdayInformation_push(id,day,time) values(1,1,'8:00')
+insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！')
 --web_account_information
 insert into web_account_information(account,password) values('hongshi','nicaicai');
 --web_napa_store_user_link
@@ -191,6 +193,8 @@ insert into web_config(tag,value) values('brand','洪石软件');--设置品牌名
 insert into web_config(tag,value) values('qq','2217904463');--设置品牌名
 
 insert into web_config(tag,value) values('loss','0')
+
+insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！')
 
 insert into web_config(tag,value) values('notice','特大消息，周日全场八折！')
 

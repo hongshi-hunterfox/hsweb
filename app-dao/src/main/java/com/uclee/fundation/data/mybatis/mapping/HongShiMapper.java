@@ -19,7 +19,8 @@ import com.uclee.fundation.data.mybatis.model.HongShiOrder;
 import com.uclee.fundation.data.mybatis.model.HongShiOrderItem;
 import com.uclee.fundation.data.mybatis.model.HongShiProduct;
 import com.uclee.fundation.data.mybatis.model.HongShiStore;
-import com.uclee.fundation.data.mybatis.model.ProductPromotion;
+//import com.uclee.fundation.data.mybatis.model.ProductPromotion;
+import com.uclee.fundation.data.mybatis.model.CouponSales;
 import com.uclee.fundation.data.web.dto.MobileItem;
 import com.uclee.fundation.data.web.dto.BossCenterItem;
 
@@ -45,4 +46,5 @@ public interface HongShiMapper {
 	List<Map<String, Object>> getmobJect(@Param("QueryName")String QueryName,@Param("hsCode")String hsCode,@Param("userId")Integer userId);
 	HongShiCoupon getCouponName(String productNumber);
 	List<Map<String, Object>> getObjectName(@Param("objectName")String objectName);
+	List<CouponSales> CouponSales(String salesTime,String serialNumber);
 }

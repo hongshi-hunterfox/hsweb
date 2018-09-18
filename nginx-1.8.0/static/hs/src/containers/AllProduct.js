@@ -1,7 +1,6 @@
 require('./all-product.css');
 import DocumentTitle from 'react-document-title'
 import React from 'react'
-// var Link = require('react-router').Link;
 import Navi from './Navi'
 var _ = require('lodash')
 var fto = require('form_to_object')
@@ -219,14 +218,13 @@ class AllProduct extends React.Component{
 				<div className="all-prod">
 					<SearchBar/>
 					<AllProductsTab query={this.props.location.query} cats={this.state.cat}/>
-					{/*<div className="all-prod-items">
-						{products}
-					</div>*/}
 					{products}
                     <div className="text-center">
                         已加载全部
                     </div>
-					
+                    <div className="tail">
+						广州洪石软件提供技术支持
+					</div>
 					<Navi query={this.props.location.query}/>
 				</div>
 			</DocumentTitle>

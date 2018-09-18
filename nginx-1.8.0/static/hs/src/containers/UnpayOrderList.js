@@ -8,9 +8,16 @@ class UnpayOrderList extends React.Component {
 	constructor(props) {
 	    super(props)
 	    this.state = {
-		    orders:[]	    
+		    orders:[],
+		    seconds: 0
         }
 	}
+	
+	tick = () => {
+        this.setState({
+            seconds: this.props.seconds + 1
+        })
+    }
 
 	componentDidMount() {
 		UnpayOrderListUtil.getData(this.props.location.query, function(res) {
@@ -18,7 +25,13 @@ class UnpayOrderList extends React.Component {
 				orders:res.orders
 			});
 		}.bind(this));
+		
+		this.interval = setInterval(() => this.tick(), 1000);
 	}
+	
+	componentWillUnmount() {
+        clearInterval(this.interval);
+    }
 
 	render(){
 		var items = this.state.orders.map((item, index) => {
@@ -59,6 +72,7 @@ class UnpayOrderList extends React.Component {
 						<span className="pull-right text" onClick={() => {
                         window.location='/seller/payment?paymentSerialNum=' + item.paymentSerialNum
                       }}>立即支付</span>
+                                  <div>Seconds:{this.state.seconds}</div>
 					</div>
 				</div>
 			);

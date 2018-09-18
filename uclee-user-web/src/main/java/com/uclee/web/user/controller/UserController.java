@@ -2,9 +2,7 @@ package com.uclee.web.user.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
-import com.alipay.api.domain.Data;
 import com.backend.service.BackendServiceI;
-import com.taobao.api.internal.toplink.logging.LogUtil;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
@@ -15,10 +13,8 @@ import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.BargainPost;
-import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
-import com.uclee.hongshi.service.HongShiServiceI;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.sms.util.VerifyCode;
 import com.uclee.user.service.DuobaoServiceI;
@@ -33,15 +29,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -68,10 +60,6 @@ public class UserController extends CommonUserHandler{
 	@Autowired
 	private HongShiVipServiceI hongShiVipService;
 	@Autowired
-	private HongShiServiceI hongShiService;
-	@Autowired
-	private DataSourceFacade datasource;
-	@Autowired
 	private DataSourceInfoServiceI dataSourceInfoService;
 	@Autowired
 	private SignRecordMapper signRecordMapper;
@@ -79,8 +67,6 @@ public class UserController extends CommonUserHandler{
 	private CommentMapper commentMapper;
 	@Autowired
 	private HongShiMapper hongShiMapper;
-	@Autowired
-	private HongShiVipMapper hongShiVipMapper;
 	@Autowired
 	private ProductMapper productMapper;
 	@Autowired
@@ -185,7 +171,7 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(16[6])|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
 		    if (phone.length() != 11) {
-		        map.put("fail","手机号应为11位数");
+		        map.put("fail","手机号应为11位数字");
 		    } else {
 		        Pattern p = Pattern.compile(regex);
 		        Matcher m = p.matcher(phone);
@@ -211,7 +197,6 @@ public class UserController extends CommonUserHandler{
 	*/
 	@RequestMapping("/verifyCode")
 	public @ResponseBody Boolean verifyCode(String phone,HttpServletRequest request) {
-		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String, String> config = userService.getSMSConfig();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
@@ -243,7 +228,6 @@ public class UserController extends CommonUserHandler{
 	*/
 	@RequestMapping("/bossVerifyCode")
 	public @ResponseBody Boolean bossVerifyCode(String phone,HttpServletRequest request) {
-		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Map<String,String> config = userService.getSMSConfig();
 		return VerifyCode.sendVerifyCode(session,phone,config.get("aliAppkey"),config.get("aliAppSecret"),config.get("signName"),config.get("templateCode"));
@@ -255,10 +239,7 @@ public class UserController extends CommonUserHandler{
 	 */
 	@RequestMapping("/verifyCodes")
 	public @ResponseBody Boolean verifyCodes(String phone, HttpServletRequest request) {
-		Map<String, Object> map = new TreeMap<String, Object>();
-		HttpSession session = request.getSession();
-		Map<String, String> config = userService.getSMSConfig();
-		
+		HttpSession session = request.getSession();		
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
 		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
@@ -269,7 +250,6 @@ public class UserController extends CommonUserHandler{
 				return true;
 			}
 		}
-		
 		return false;
 	}
 
@@ -284,7 +264,6 @@ public class UserController extends CommonUserHandler{
 	*/
 	@RequestMapping("/checkVerifyCode")
 	public @ResponseBody Boolean checkVerifyCode(@RequestBody HongShiVip vip,HttpServletRequest request) {
-		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		if(!Strings.isNullOrEmpty(vip.getcMobileNumber())){
 			if(!Strings.isNullOrEmpty(vip.getCode())){
@@ -311,8 +290,6 @@ public class UserController extends CommonUserHandler{
 	*/
 	@RequestMapping("/checkNapaStorePhone")
 	public @ResponseBody Boolean checkNapaStorePhone(String phone,HttpServletRequest request) {
-		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		return userService.getNapaStoreByPhone(phone);
 	}
 	
@@ -446,10 +423,6 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<HongShiCoupon> coupons = userService.selectCouponById(userId);
-		for(HongShiCoupon item:coupons){
-			System.out.println("name==================="+item.getName());
-			System.out.println("remark================="+item.getRemarks());
-		}
 		map.put("coupons", coupons);
 		return map;
 	}
@@ -490,7 +463,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getCommentText")
 	public @ResponseBody Map<String,Object> getCommentText(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		Config config = userService.getConfigByTag(WebConfig.commentText);
 		if(config!=null){
 			map.put("commentText", config.getValue());
@@ -508,7 +480,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getBindText")
 	public @ResponseBody Map<String,Object> getBindText(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		Config config = userService.getConfigByTag(WebConfig.bindText);
 		if(config!=null){
 			map.put("bindText", config.getValue());
@@ -526,7 +497,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getSignText")
 	public @ResponseBody Map<String,Object> getSignText(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		Config config = userService.getConfigByTag(WebConfig.signText);
 		if(config!=null){
 			map.put("signText", config.getValue());
@@ -572,8 +542,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/Commentary")
 	public @ResponseBody Map<String,Object> Commentary(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
-		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<EvaluationGifts> evaluationGift = evaluationGiftsMapper.selectOne();
 		if(evaluationGift!=null&&evaluationGift.size()>=1){
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGift.get(0).getVoucherCode());
@@ -686,7 +654,7 @@ public class UserController extends CommonUserHandler{
 			}
 		}
 		logger.info("carts.size============="+carts.size());
-		//把goodscode以字符串格式拼接在一起put到前台-skx
+		//把goodscode以字符串拼接在一起
 		String a="";
 		for(int i=0;i<carts.size();i++){
 			logger.info("item.getCartId()============="+carts.get(i).getCartId());
@@ -753,7 +721,6 @@ public class UserController extends CommonUserHandler{
 			if(record!=null){
 				map.put("record", "已经加过购物车了,不能重复加入");
 				userService.updateLaunchBargain(userId);
-				backendService.sendBargainhMsg(userId);
 			}
 		}
 		return map;
@@ -1043,7 +1010,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping(value="/comment")
 	public @ResponseBody Map<String,Object> comment(HttpServletRequest request,String orderSerialNum) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		Comment tmp = commentMapper.selectByOrderId(orderSerialNum);
 		map.put("comment",tmp);
 		return map;
@@ -1051,7 +1017,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping(value="/getRechargeAble")
 	public @ResponseBody Map<String,Object> getRechargeAble(HttpServletRequest request,BigDecimal money) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(money);
 		if(rechargeConfig==null||rechargeConfig.getEndTime().before(new Date())){
 			map.put("result",false);
@@ -1216,7 +1181,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getProvinces")
 	public @ResponseBody Map<String,Object> getProvince(HttpServletRequest request) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		List<Province> state = userService.getAllProvince();
 		map.put("state", state);
 		return map;
@@ -1234,7 +1198,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getShippingFee")
 	public @ResponseBody Map<String,Object> getShippingFee(HttpServletRequest request,double distance,BigDecimal total) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
 		logger.info("distance: " + JSON.toJSONString(distance));
 		Double money=null;
 		boolean isFullCut=false;
@@ -1282,8 +1245,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getCities")
 	public @ResponseBody Map<String,Object> getCities(HttpServletRequest request,Integer provinceId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
-		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		if(provinceId!=null){
 			List<City> city = userService.getCities(provinceId);
 			logger.info(JSON.toJSONString(city));
@@ -1304,8 +1265,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getCitiesByStr")
 	public @ResponseBody Map<String,Object> getCities(HttpServletRequest request,String stateId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
-		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		if(stateId!=null){
 			List<City> city = userService.getCitiesByStr(stateId);
 			logger.info(JSON.toJSONString(city));
@@ -1326,8 +1285,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getRegions")
 	public @ResponseBody Map<String,Object> getRegions(HttpServletRequest request,Integer cityId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
-		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		if(cityId!=null){
 			List<Region> region = userService.getRegions(cityId);
 			map.put("region", region);
@@ -1346,8 +1303,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping("/getRegionsByStr")
 	public @ResponseBody Map<String,Object> getRegionsByStr(HttpServletRequest request,String cityId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		HttpSession session = request.getSession();
-		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		if(cityId!=null){
 			List<Region> region = userService.getRegionsByStr(cityId);
 			map.put("region", region);

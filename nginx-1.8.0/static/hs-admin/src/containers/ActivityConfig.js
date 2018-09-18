@@ -96,12 +96,13 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdCount} name="thirdCount" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
+              
+              {/* <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
-                {/*<input type="text" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}/>*/}
                 <textarea rows="3" cols="20" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}>
                 </textarea>
-              </div>
+              </div> */}
+             
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 {/*<input type="text" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}/>*/}

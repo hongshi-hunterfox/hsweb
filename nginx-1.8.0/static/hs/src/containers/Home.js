@@ -17,6 +17,7 @@ import req from 'superagent'
 var fto = require('form_to_object')
 var myDate = new Date()
 var Date1 = new Date(myDate).getTime()
+import LazyLoad from 'react-lazyload'
 
 class HomeCarousel extends React.Component {
   render() {
@@ -33,6 +34,7 @@ class HomeCarousel extends React.Component {
     var banner = this.props.banner.map((item, index) => {
       return(
           <div className="home-carousel-item" key={index}>
+          	<LazyLoad height={200}>
               {
                 item.link?
                 <a href={item.link}>
@@ -48,15 +50,14 @@ class HomeCarousel extends React.Component {
                   alt=""
                 />
               }
+            </LazyLoad>
           </div>
       );
     });
     return (
       <div className="home-carousel">
-        <Slick {...slickSettings}>
-          
+        <Slick {...slickSettings}>          
           {banner}
-
         </Slick>
       </div>
     )
@@ -124,21 +125,21 @@ class HomeNotice extends React.Component {
         config:data.config,
         notice:data.notice
       })
-      console.log(this.state.config)
+      console.log(this.state.notice)
     })
   }
   render() {
   	
     return (
     	<div className="gundongBox">
-    	{this.state.notice > 19 
+    	{this.state.notice > 21
     		?
 	    	<span className="gundongList">
-		      <p className="gundongList-span">{this.state.config.notice}</p>
+		      <p className="gundongList-span"><i className="fa fa-volume-down fa-lg" aria-hidden="true" /> {this.state.config.notice}</p>
 		    </span>
 		    :
-		    <p className="gundongList-span">{this.state.config.notice}</p>
-		  }
+    		<p className="gundongList-span"><i className="fa fa-volume-down fa-lg" aria-hidden="true" /> {this.state.config.notice}</p>
+  		}
       </div>
     )
   }
@@ -157,7 +158,9 @@ class HomeNav extends React.Component {
               className="home-nav-item"
               key={index}
             >
-            <img src={item.imageUrl} className='home-nav-item-image' />
+            <LazyLoad height={200}>
+            	<img src={item.imageUrl} className='home-nav-item-image' />
+            </LazyLoad>
               <span className="home-nav-item-text">
                 {item.title}
               </span>
@@ -181,7 +184,9 @@ const DetailPicker = (props) => {
 
           <div className="detail-picker-header clearfix">
             <div className="detail-picker-header-img">
-              <img src={props.image} width="50" height="50" alt=""/>
+            	<LazyLoad height={200}>
+              	<img src={props.image} width="50" height="50" alt=""/>
+              </LazyLoad>
             </div>
             <div className="detail-picker-header-info">
               <div className="detail-picker-header-title">{props.title}</div>
@@ -593,7 +598,9 @@ class Home extends React.Component {
           	</div>
           	:
             <div className="yemei">
-	            <img src={item.image} width='100%' height='100%' alt=""/>	 
+            	<LazyLoad height={200}>
+	            	<img src={item.image} width='100%' height='100%' alt=""/>	 
+	            </LazyLoad>
            	</div>
           }
             <div className="product-group-body">
@@ -604,11 +611,13 @@ class Home extends React.Component {
                         <div className='product-item-img'
                           onClick={()=>{window.location="/detail/" + item1.productId}}
                         >
-                          <img
-                            src={item1.image}
-                            className="image"
-                            alt=""
-                          />
+                        	<LazyLoad height={200}>
+	                          <img
+	                            src={item1.image}
+	                            className="image"
+	                            alt=""
+	                          />
+                          </LazyLoad>
                         </div>
 
                         {item1.tag

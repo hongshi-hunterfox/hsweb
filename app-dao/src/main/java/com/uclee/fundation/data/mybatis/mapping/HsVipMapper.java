@@ -15,4 +15,5 @@ public interface HsVipMapper {
 	HsVip selectupdateVips(String vCode);
 	List<HsVip> selectVips(String vNumber);
 	Integer updateRecharge(Integer id);
+	HsVip getVips(Integer id);
 }

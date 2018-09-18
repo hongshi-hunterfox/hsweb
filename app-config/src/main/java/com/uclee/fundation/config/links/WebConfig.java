@@ -54,4 +54,5 @@ public interface WebConfig {
 	String qq = "qq";
 	String notice = "notice";
 	String  bargainText = "bargainText";
+	String perfectBirthText = "perfectBirthText";
 }                      

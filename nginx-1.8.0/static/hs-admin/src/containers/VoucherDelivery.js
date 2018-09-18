@@ -181,14 +181,11 @@ class VoucherDelivery extends React.Component {
         if (err) {
           return err
         }
-
         if (res.text) {
           window.location = '/voucher-delivery'
         }
       })
-    }
-    
-    
+    }    
   }
 }
 

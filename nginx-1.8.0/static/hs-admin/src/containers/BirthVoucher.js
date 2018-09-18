@@ -30,7 +30,9 @@ class BirthVoucher extends React.Component {
       count: 1,
       initValue: null, //刚开始要设置成 null，只会从外部拿一次数据
       initRow: 2,
-      html: ''
+      html: '',
+      day: 0,
+      config:{},
     }
   }
 
@@ -42,9 +44,22 @@ class BirthVoucher extends React.Component {
       var data = JSON.parse(res.text)
       this.setState({
         initRow: data.size,
-        initValue: data.data
+        initValue: data.data,
+        day: data.day
       })
       console.log(this.state.initValue);
+    })
+    
+    req.get('/uclee-backend-web/config').end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        config: data.config,
+        logoUrl:data.config?data.config.logoUrl:'',
+      })
+      console.log(this.state.config)
     })
   }
   
@@ -83,6 +98,30 @@ class BirthVoucher extends React.Component {
                     />
                   : null}
               </div>
+              <label className="control-label col-md-3">推送信息内容设置:</label>
+	            <div className="col-md-9" style={{marginTop:'10px'}}>
+	              	<textarea rows="3" cols="20" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._handleChange}>
+	                </textarea>
+	            </div>
+	            <label className="control-label col-md-3">推送完善生日信息设置:</label>
+	            <div className="col-md-9" style={{marginTop:'10px'}}>
+	              	<textarea rows="3" cols="20" value={this.state.config.perfectBirthText} name="perfectBirthText" className="form-control" onChange={this._handleChange}>
+	                </textarea>
+	            </div>
+	            <label className="control-label col-md-3">自动推送提前天数:</label>
+	            <div className="col-md-9" >
+	            	<div className="row">
+	              	<div className="col-xs-2" style={{marginTop:'10px'}}>
+			    					<input type="number" className="form-control" 
+			    						name="day"
+				              value={this.state.day}
+				              onChange={e => {
+				                this.setState({day: e.target.value})
+				              }}
+			    					/>
+	    						</div>
+    						</div>
+    					</div>
             </div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
@@ -95,13 +134,25 @@ class BirthVoucher extends React.Component {
       </DocumentTitle>
     )
   }
-
+	_handleChange = (e) => {
+	    var c = Object.assign({}, this.state.config)
+	    c[e.target.name] = e.target.value
+	    this.setState({
+	      config: c
+	    })
+	}
   _submit = e => {
     e.preventDefault()
     var data = fto(e.target)
     if(values(data.myKey).length!==values(data.myValue).length){
       this.setState({
         err: "信息填写不完整"
+      })
+      return;
+    }
+    if(!data.day){
+      this.setState({
+        err: "请填写距离会员生日天数"
       })
       return;
     }
@@ -113,6 +164,20 @@ class BirthVoucher extends React.Component {
       })
 
       // return
+      
+    if(!data.birthText) {
+      return this.setState({
+        err: '请填写推送生日信息内容!'
+      })
+    }
+    req
+      .post('/uclee-backend-web/activityConfigHandler')
+      .send(data)
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+      })
 
       req.post('/uclee-backend-web/birthVoucherHandler').send(data).end((err, res) => {
         if (err) {

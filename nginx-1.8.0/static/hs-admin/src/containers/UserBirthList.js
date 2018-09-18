@@ -2,6 +2,7 @@ import React from 'react'
 import DocumentTitle from 'react-document-title'
 import './user-list.css'
 import req from 'superagent'
+import fto from 'form_to_object'
 // import { Link } from 'react-router'
 
 class UserBirthList extends React.Component {
@@ -13,7 +14,7 @@ class UserBirthList extends React.Component {
       day: this.props.location.query.day,
       checked: [],
       start:'',
-      end:''
+      end:'',
     }
   }
 
@@ -35,6 +36,9 @@ class UserBirthList extends React.Component {
         })
       })
   }
+
+
+  
   _send = userId => {
     var conf = confirm('是否要联动送礼券？');
     var url='';
@@ -199,7 +203,7 @@ class UserBirthList extends React.Component {
               className="btn btn-primary"
               onClick={this._send.bind(this, item.userId)}
             >
-              <span className="glyphicon glyphicon-bookmark" />发送信息
+              <span className="glyphicon glyphicon-send" /> 发送信息
             </button>
           </td>
         </tr>
@@ -233,15 +237,15 @@ class UserBirthList extends React.Component {
               }}
             />
             </div>
-            <div className="btn btn-primary searchBtn" style={{marginTop:'25px',float:'left'}} onClick={this._search}>
-              <span className="glyphicon glyphicon-search" />搜索
-            </div>
-            <button className="btn btn-primary pull-right" >
-              	<span className="glyphicon glyphicon-cog" />自动发送信息设置
+            <button className="btn btn-primary searchBtn" style={{marginTop:'25px',float:'left'}} onClick={this._search}>
+              <span className="glyphicon glyphicon-search" /> 搜索
             </button>
           </div>
             <button className="btn btn-primary pull-left" onClick={this._sendAll}>
-            	<span className="glyphicon glyphicon-pencil" />批量发送
+            	<span className="glyphicon glyphicon-bookmark"></span> 批量发送
+            </button>
+            <button className="btn btn-danger pull-right" onClick={()=>{window.location='/birth-voucher?merchantCode='+localStorage.getItem('merchantCode')}}>
+              	<span className="glyphicon glyphicon-cog" /> 礼券赠送设置
             </button>
           <table className="table table-bordered table-striped">
             <thead>

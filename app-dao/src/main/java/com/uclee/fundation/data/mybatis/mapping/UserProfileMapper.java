@@ -47,4 +47,6 @@ public interface UserProfileMapper {
     List<UserProfile> selectCardPhoneVips(String cartphone);
 	
 	List<UserProfile> selectAllProfileLists(Integer userId);
+	
+	List<UserProfile> getBirthIsNull();
 }

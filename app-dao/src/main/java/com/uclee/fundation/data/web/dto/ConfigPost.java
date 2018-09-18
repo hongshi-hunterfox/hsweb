@@ -53,6 +53,16 @@ public class ConfigPost {
 	private String zhengshuPassword;
 	private String voucherSendInformation;
 	private String notice;
+	private String perfectBirthText;
+	
+	public String getPerfectBirthText() {
+		return perfectBirthText;
+	}
+	
+	public void setPerfectBirthText(String perfectBirthText) {
+		this.perfectBirthText = perfectBirthText;
+	}
+	
 	public String getNotice() {
 		return notice;
 	}

@@ -64,6 +64,11 @@
      select A.* from web_user_profiles as A 
       where (DATEDIFF(day, A.last_buy, getdate()) &gt;= #{day,jdbcType=INTEGER} or A.last_buy is null) order by A.last_buy asc
   </select>
+  <select id="getBirthIsNull" resultMap="UserProfile">
+  	select D.生日 as birth,0 as is_lunar,A.* from web_user_profiles as A left join web_oauth_login as B on B.user_id=A.user_id
+ 		left join 会员身份 as C on B.oauth_id=C.外键 left join 会员 as D on C.会员ID=D.ID
+ 		where D.生日 is null and D.ID is not null
+  </select>
   <select id="selectByPrimaryKey" resultMap="UserProfile" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />

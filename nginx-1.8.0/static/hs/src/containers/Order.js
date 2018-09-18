@@ -337,23 +337,17 @@ class Order extends React.Component {
 	            />
 	            <div className="order-addr" >
 	              <div className="detail">
-	              {this.state.isSelfPick == 'false' ?
-	               <span className="fa fa-home fa-lg">
+	              {this.state.isSelfPick == 'false' ? 
 	               <font size='2'>
-	               	配送门店
+	               	<span className="fa fa-home fa-lg" /> 配送门店
 	               	<font size='1' color='#B8B8B8'>配送({this.state.config.restrictedDistance}km内)</font>
+	               	{localStorage.getItem('id')==0 ? <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店        ></a>}
 	               </font>
-	              	<font size='2'>
-	              		{localStorage.getItem('id')==0 ? <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店        ></a>}
-	              	</font>
-	               </span>
 	              :
-	              <span className="fa fa-home fa-lg">
 	            	  <font size="2">
-	            	  	自提门店:
+	            	  	<span className="fa fa-home fa-lg" /> 自提门店:
+	            	  	{localStorage.getItem('id')==1 ? <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店         ></a>}
 	            	  </font>
-	              		<font size="2">{localStorage.getItem('id')==1 ? <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店         ></a>}</font>
-	              </span>
 	              }
 	              </div>
 	            </div>
@@ -597,7 +591,6 @@ salesInfoShowClick=()=>{
           }else{
           	var distance = distances
           }
-         console.log("aaaa==="+distance)
         req
           .get('/uclee-user-web/getShippingFee?distance=' + distance + '&total=' + (sessionStorage.getItem('total')?sessionStorage.getItem('total'):0))
           .end((err, res) => {
@@ -697,8 +690,7 @@ salesInfoShowClick=()=>{
       	return false
     	}
     }
-    console.log("aaaaa"+this.state.convertibleGoods)
-    console.log("aaaaa"+this.state.hsgooscode)
+
     if (this.state.total<this.state.fullamount) {
       this.setState({
         error: this.state.remarks
@@ -707,13 +699,11 @@ salesInfoShowClick=()=>{
     }
     if(this.state.convertibleGoods!==null){
     	var hsgooscode=this.state.hsgooscode
-    	console.log('hsgooscode='+hsgooscode)
 			var convertibleGoods=this.state.convertibleGoods;
 			var result=convertibleGoods.split(";");
 		
 			var bb = 0;
 			for(var i=0;i<result.length;i++){  	
-				console.log('result='+result[i])
   			if(hsgooscode.lastIndexOf((result[i]))===-1){			
   				console.log("aaaaaa="+result[i])
   			}else{

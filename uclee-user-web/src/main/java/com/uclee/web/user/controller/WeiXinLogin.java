@@ -304,14 +304,15 @@ public class WeiXinLogin extends CommonUserHandler{
 					result.setResult(false);
 					return result;
 				}
-					newOauthLogin.setOauthUserName(weiXinNickName);
+				newOauthLogin.setOauthUserName(weiXinNickName);
 				newOauthLogin.setIsSubcribe(true);
 				newOauthLogin.setIsSubscribeShow(false);
 				headimgurl = weiXinUserInfoJsonData.getString("headimgurl");
 				logger.info(headimgurl);
 			}else{
 				newOauthLogin.setIsSubcribe(false);
-				newOauthLogin.setOauthUserName("用户" + new Date().getTime());
+//				newOauthLogin.setOauthUserName("用户" + new Date().getTime());
+				newOauthLogin.setOauthUserName("游客");
 				headimgurl = "http://120.25.193.220/group1/M00/00/91/eBnB3FggfCeAYi8BAAAXscnEGhw05.file";
 			}
 			long d = System.currentTimeMillis();

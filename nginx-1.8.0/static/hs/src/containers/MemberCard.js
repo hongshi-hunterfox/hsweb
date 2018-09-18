@@ -79,6 +79,10 @@ class MemberCard extends React.Component {
         if (res.text) {
           this.setState(res.body)
         }
+        if(this.state.fail === false){
+        	alert("状态异常,请退出页面重新进入")
+        	return;
+        }
       })
       
   	  

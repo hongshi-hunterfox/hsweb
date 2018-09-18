@@ -21,6 +21,12 @@
     from 会员
     where 编号=#{vCode,jdbcType=VARCHAR}
   </select>
+  <select id="getVips" resultMap="HsVip">
+    select
+    id, 编号, 名称, 生日, 电话, 身份证号, 工作单位, 状态, 性别
+    from 会员
+    where id=#{id,jdbcType=INTEGER}
+  </select>
   <select id="selecthsVip" resultMap="HsVip">
 	 select id, 编号, 名称, 生日, 电话, 身份证号, 工作单位 , 状态, 性别  from 会员  where 编号=#{vCode,jdbcType=VARCHAR}
   </select>

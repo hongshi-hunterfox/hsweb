@@ -190,4 +190,6 @@ public interface BackendServiceI {
 	List<BargainSetting> selectBargain();
 	
 	BargainSetting selectBargainId(Integer id);
+	
+	BirthPush selectDay();
 }
