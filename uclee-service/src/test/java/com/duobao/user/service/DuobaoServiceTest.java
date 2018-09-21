@@ -159,8 +159,6 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 		paymentOrder.setIsCompleted(true);
 		paymentOrder.setCompleteTime(new Date());
 		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(635);
-		System.out.println("aaaaaaaaaaaaaa======="+JSON.toJSONString(paymentOrder));
-		System.out.println("aaaaaaaaaaaaaa======="+JSON.toJSONString(oauthLogin));
 		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
 	}
 
@@ -240,7 +238,7 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 		orderPost.setIsSelfPick("false");
 		orderPost.setRemark("请及时送达");
 		orderPost.setVoucherCode("");
-		System.out.println(JSON.toJSONString(userService.orderHandler(orderPost,7)));
+		System.out.println(JSON.toJSONString(userService.orderHandler(orderPost,7, "88888888")));
 	}
 	@Test
 	public void testGetInvitationId(){

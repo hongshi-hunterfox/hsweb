@@ -81,7 +81,7 @@ public class HongShiVipController<phone> {
 	@RequestMapping("getVipInfo")
 	public @ResponseBody HongShiVip  getVipInfo(Integer type,HttpSession session){
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-//		UserProfile userProfile = userService.getBasicUserProfile(userId);
+		UserProfile userProfile = userService.getBasicUserProfile(userId);
 		logger.info("user_id:"+userId);
 		if(userId!=null){
 			Integer userId2 = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
@@ -91,7 +91,8 @@ public class HongShiVipController<phone> {
 				OauthLogin tt = userService.getOauthLoginInfoByUserId(userId);
 				if(tt!=null){
 					List<HongShiVip> ret= hongShiVipService.getVipInfo(tt.getOauthId());//openid 去拿信息
-					if(ret!=null||ret.size()>0){
+					if(ret!=null&&ret.size()>0){
+						if(userProfile!=null){
 							//取得今天的日期如今天是3月14号，day=14
 							String day= DateUtils.getDay(new Date());
 							//获得现在是几点,hour=15
@@ -151,7 +152,8 @@ public class HongShiVipController<phone> {
 							vipLog.setVcode(ret.get(0).getCardCode());
 							vipLog.setForeignKey(tt.getOauthId());
 							hongShiVipMapper.insertVipLog(vipLog);
-							return ret.get(0);
+						}
+						return ret.get(0);
 					}
 				}
 			}else{

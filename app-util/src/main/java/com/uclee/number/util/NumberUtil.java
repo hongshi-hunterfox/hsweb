@@ -8,6 +8,8 @@ public class NumberUtil {
 		String serialnum = String.valueOf(time);
 		Random random = new Random();// randomize
 		int randtail = (int) (random.nextInt(8999) + 1000);// keep length 4
+		System.out.println("serialnum1===="+serialnum);
+		System.out.println("String.valueOf(randtail)1===="+String.valueOf(randtail));
 		serialnum = serialnum + String.valueOf(randtail);// unix
 		// timestamp
 		// + 4 digit
@@ -18,6 +20,8 @@ public class NumberUtil {
 		String serialnum = String.valueOf(time);
 		Random random = new Random();// randomize
 		int randtail = (int) (random.nextInt(8999) + 1000);// keep length 4
+		System.out.println("serialnum2===="+serialnum);
+		System.out.println("String.valueOf(randtail)2===="+String.valueOf(randtail));
 		serialnum = serialnum +i + String.valueOf(randtail);// unix
 		// timestamp
 		// + 4 digit

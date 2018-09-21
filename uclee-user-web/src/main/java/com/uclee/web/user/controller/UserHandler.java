@@ -14,32 +14,24 @@ import com.uclee.payment.strategy.RefundHandlerStrategy;
 import com.uclee.user.model.RefundStrategyResult;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
-import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.StockPost;
-import com.uclee.fundation.dfs.fastdfs.data.Result;
 import com.uclee.number.util.NumberUtil;
-import com.uclee.payment.exception.PaymentHandlerException;
 import com.uclee.payment.strategy.PaymentHandlerStrategy;
 import com.uclee.sms.util.VerifyCode;
 import com.uclee.user.model.PaymentStrategyResult;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
-import com.uclee.userAgent.util.UserAgentUtils;
 
 @Controller
 @EnableAutoConfiguration
@@ -52,7 +44,7 @@ public class UserHandler {
 	private DuobaoServiceI duobaoService;
 	@Autowired
 	private CommentMapper commentMapper;
-	
+
 	/** 
 	* @Title: invitation 
 	* @Description: 分销邀请处理，根据当前用户和邀请者的序列号，绑定分销关系 
@@ -112,12 +104,11 @@ public class UserHandler {
 	* @throws 
 	*/
 	@RequestMapping("/orderHandler")
-	public @ResponseBody Map<String,Object> orderHandler(HttpServletRequest request,@RequestBody OrderPost orderPost) {
+	public @ResponseBody Map<String,Object> orderHandler(HttpServletRequest request, @RequestBody OrderPost orderPost) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		logger.info("orderPost: " + JSON.toJSONString(orderPost));
-		map = userService.orderHandler(orderPost,userId);
+		map = userService.orderHandler(orderPost, userId, NumberUtil.generateSerialNum());
 		return map;
 	}
 	
@@ -725,4 +716,9 @@ public class UserHandler {
 		}
 		return map;
 	}
+//	
+//	@RequestMapping("/orderStatus")
+//	public @ResponseBody int orderStatus(HttpServletRequest request) {
+//		return userService.orderStatus(null);
+//	}
 }

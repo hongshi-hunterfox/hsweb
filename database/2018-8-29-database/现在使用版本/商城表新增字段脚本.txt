@@ -8,6 +8,10 @@ Begin
  alter table web_orders add cut decimal(15,2) not null default 0;
 End
 
+If Not Exists(Select * From syscolumns where name='invalid' And id=Object_id('web_orders add','U'))
+Begin
+ALTER TABLE web_orders ADD invalid int NOT NULL DEFAULT 1
+End
 If Not Exists(Select * From syscolumns where name='pick_up_image' And id=Object_id('web_orders add','U'))
 Begin
  alter table web_orders add pick_up_image varchar(255) not null default '';

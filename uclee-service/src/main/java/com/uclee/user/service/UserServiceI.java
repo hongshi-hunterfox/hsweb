@@ -150,7 +150,7 @@ public interface UserServiceI {
 
 	DeliverAddr getDefaultAddrByUserId(Integer userId);
 
-	Map<String, Object> orderHandler(OrderPost orderPost, Integer userId);
+	Map<String, Object> orderHandler(OrderPost orderPost, Integer userId, String OrderSerialNum);
 
 	List<Order> getUnpayOrderListByUserId(Integer userId);
 
@@ -361,4 +361,10 @@ public interface UserServiceI {
 	int updateLaunchBargain(Integer uid);
 	
 	BargainPost getBargainOver(Integer id);
+	
+	List<Order> getOrderListByStatus();
+	
+	Order selectBySerialNum(String orderSerialNum);
+	
+	int updateByInvalid(String orderSerialNum);
 }

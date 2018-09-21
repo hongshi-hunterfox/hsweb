@@ -197,6 +197,7 @@ public class WeiXinLogin extends CommonUserHandler{
 		logger.info("获取的  opendId 是"+openid);
 		if(StringUtils.isEmpty(openid)){
 			logger.info("获取 openId  失败 ,授权 失败,get 到的信息为：\n"+JSON.toJSONString(accessTokenObject));
+			System.out.println("获取 openId  失败 ,授权 失败,get 到的信息为：\n"+JSON.toJSONString(accessTokenObject));
 			result.setResult(false);
 			return result;
 		}

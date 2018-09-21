@@ -184,9 +184,7 @@ const DetailPicker = (props) => {
 
           <div className="detail-picker-header clearfix">
             <div className="detail-picker-header-img">
-            	<LazyLoad height={200}>
-              	<img src={props.image} width="50" height="50" alt=""/>
-              </LazyLoad>
+              <img src={props.image} width="50" height="50" alt=""/>
             </div>
             <div className="detail-picker-header-info">
               <div className="detail-picker-header-title">{props.title}</div>

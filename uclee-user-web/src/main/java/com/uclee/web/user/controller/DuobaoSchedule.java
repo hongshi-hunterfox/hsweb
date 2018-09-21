@@ -11,6 +11,7 @@ import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import com.uclee.fundation.data.mybatis.mapping.BirthVoucherMapper;
 import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
 import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
+import com.uclee.fundation.data.mybatis.mapping.OrderItemMapper;
 import com.uclee.fundation.data.mybatis.mapping.VarMapper;
 import com.uclee.fundation.data.mybatis.model.BirthPush;
 import com.uclee.fundation.data.mybatis.model.BirthVoucher;
@@ -21,7 +22,10 @@ import com.uclee.fundation.data.mybatis.model.HsVip;
 import com.uclee.fundation.data.mybatis.model.Message;
 import com.uclee.fundation.data.mybatis.model.MsgRecord;
 import com.uclee.fundation.data.mybatis.model.OauthLogin;
+import com.uclee.fundation.data.mybatis.model.Order;
+import com.uclee.fundation.data.mybatis.model.OrderItem;
 import com.uclee.fundation.data.mybatis.model.PaymentOrder;
+import com.uclee.fundation.data.mybatis.model.SpecificationValue;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.mybatis.model.Var;
 import com.uclee.fundation.data.mybatis.model.vipIdentity;
@@ -34,6 +38,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.uclee.fundation.data.mybatis.mapping.PaymentOrderMapper;
+import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
 import com.uclee.fundation.data.mybatis.mapping.MsgRecordMapper;
 import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
 import com.uclee.fundation.data.mybatis.mapping.HsVipMapper;
@@ -85,11 +90,15 @@ public class DuobaoSchedule {
 	@Autowired
 	private MsgRecordMapper msgRecordMapper;
 	@Autowired
+	private OrderItemMapper orderItemMapper;
+	@Autowired
 	private HongShiMapper hongShiMapper;
 	@Autowired
 	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private HsVipMapper hsVipMapper;
+	@Autowired
+	private SpecificationValueMapper specificationValueMapper;
 
 	/*@Scheduled(cron="0 0 0 * * *")
 	private void updateWXInfo(){
@@ -236,6 +245,52 @@ public class DuobaoSchedule {
 	}
 	
 	/**
+	 * 定时检查未支付订单是否超过失效 时间
+	 */
+	@Scheduled(fixedRate = 1000 * 60)
+	private void orderStatus() {
+		dataSource.switchDataSource("master");
+		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
+		for(DataSourceInfo info:t) {
+			if(!info.getMerchantCode().equals("master")) {
+				try{
+					dataSource.switchDataSource(info.getMerchantCode());
+					List<Order> list = userService.getOrderListByStatus();
+					if(list!=null&&list.size()>0){
+						
+						for(Order item:list){
+							Date date = new Date(new Date().getTime() - 1800000);
+							if (item.getCreateTime().before(date)){ 
+								System.out.println("订单在失效范围内===="+item.getOrderSerialNum());
+				      	 	   	Order order = userService.selectBySerialNum(item.getOrderSerialNum());
+				      			//这里要把订单的状态改为-1即失效状态
+				      			userService.updateByInvalid(item.getOrderSerialNum());
+				      				if(order!=null){
+				      					//释放库存
+				      					List<OrderItem> orderItems = orderItemMapper.selectByOrderId(order.getOrderId());
+				      					logger.info(JSON.toJSONString(orderItems));
+				      					for(OrderItem orderItem : orderItems){
+				      						SpecificationValue value = specificationValueMapper.selectByPrimaryKey(orderItem.getValueId());
+				      						if(value!=null){
+				      							value.setHsStock(value.getHsStock()+orderItem.getAmount());
+				      							logger.info(JSON.toJSONString(value));
+				      							specificationValueMapper.updateByPrimaryKeySelective(value);
+				      						}
+				      					}
+				      				}	
+								
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}          
+
+	}
+	
+	/**
 	 * 此方法用来进行每日定时推送会员生日
 	 * 信息到微信公众号
 	 */
@@ -247,7 +302,6 @@ public class DuobaoSchedule {
 			if(!info.getMerchantCode().equals("master")) {
 				try{
 					dataSource.switchDataSource(info.getMerchantCode());
-					System.out.println("开始（**）任务：时间：" + new Date());
 					//取提前的天数
 					BirthPush birthPush = birthVoucherMapper.selectDay();
 					//格式化时间
@@ -336,7 +390,6 @@ public class DuobaoSchedule {
 							
 						}
 					}
-					System.out.println("结束（**）任务：时间：" + new Date());
 				}catch (Exception e){
 
 				}

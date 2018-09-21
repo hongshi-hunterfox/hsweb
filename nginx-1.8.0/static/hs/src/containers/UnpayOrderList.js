@@ -3,21 +3,18 @@ import React from 'react'
 import Navi from './Navi'
 import DocumentTitle from 'react-document-title'
 import UnpayOrderListUtil from '../utils/UnpayOrderListUtil'
+import req from 'superagent'
 class UnpayOrderList extends React.Component {
 
 	constructor(props) {
 	    super(props)
 	    this.state = {
 		    orders:[],
-		    seconds: 0
+		    order:[]
         }
 	}
 	
-	tick = () => {
-        this.setState({
-            seconds: this.props.seconds + 1
-        })
-    }
+	
 
 	componentDidMount() {
 		UnpayOrderListUtil.getData(this.props.location.query, function(res) {
@@ -25,13 +22,7 @@ class UnpayOrderList extends React.Component {
 				orders:res.orders
 			});
 		}.bind(this));
-		
-		this.interval = setInterval(() => this.tick(), 1000);
 	}
-	
-	componentWillUnmount() {
-        clearInterval(this.interval);
-    }
 
 	render(){
 		var items = this.state.orders.map((item, index) => {
@@ -40,13 +31,16 @@ class UnpayOrderList extends React.Component {
 					<div className="order-list-top">
 						<div className="order-list-top-item">
 							<span className="store pull-left">店铺：{item.storeName}</span>
-							<span className="status pull-right">待支付</span>
+							<span className="status pull-right">{item.invalid !== -1 ? "待支付" : "已关闭"}</span>
 						</div>
 						<div className="number">
 							<span >订单编号：{item.orderSerialNum}</span>
 						</div>
 						<div className="number">
 							<span >下单时间：{item.createTimeStr}</span>
+						</div>
+						<div className="number">
+							<span>请在30分钟内完成付款,超时订单将自动关闭</span>
 						</div>
 					</div>
 					<OrderItem orderItems={item.items} isSelfPick={item.isSelfPick}/>
@@ -69,10 +63,31 @@ class UnpayOrderList extends React.Component {
 					</div>
 					<div className="order-list-button">
 						<span className="pull-right text" onClick={this._delHandler.bind(this,item.orderSerialNum)}>删除订单</span>
-						<span className="pull-right text" onClick={() => {
-                        window.location='/seller/payment?paymentSerialNum=' + item.paymentSerialNum
-                      }}>立即支付</span>
-                                  <div>Seconds:{this.state.seconds}</div>
+						{item.invalid !== -1 
+							?
+							<span className="pull-right text" onClick={() => {
+								req
+								.get('/uclee-user-web/unpayOrderList')
+								.end((err, res) => {
+								      if (err) {
+								        return err
+								      }
+									this.setState({
+										order:res.body.orders
+									});
+									console.log("order============="+this.state.order)
+									this.state.order.map((item, index) => {
+										if(item.invalid === -1){
+											alert("订单已失效")
+											window.location.reload();
+										}else{
+											window.location='/seller/payment?paymentSerialNum=' + item.paymentSerialNum
+										}
+									})
+								});
+                      		}}>立即支付</span>
+                      		:null
+                        }
 					</div>
 				</div>
 			);

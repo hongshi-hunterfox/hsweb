@@ -86,6 +86,16 @@ public class Order {
     private String pickUpBarcode;
     
     private String value;
+    
+    private Integer invalid;
+    
+    public Integer getInvalid() {
+		return invalid;
+	}
+    
+    public void setInvalid(Integer invalid) {
+		this.invalid = invalid;
+	}
 
 	public String getValue() {
 		return value;

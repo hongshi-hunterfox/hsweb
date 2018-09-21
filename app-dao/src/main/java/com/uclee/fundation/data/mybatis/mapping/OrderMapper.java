@@ -36,6 +36,10 @@ public interface OrderMapper {
     int getUnpayOrderCountByUserId(Integer userId);
 
     Order getOrderListByOrderSerailNum(String orderSerialNum);
+    
+    List<Order> getOrderListByStatus();
 
     int getUnCommentCount(Integer userId);
+    
+    int updateByInvalid(String orderSerialNum);
 }

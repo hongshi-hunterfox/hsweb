@@ -87,7 +87,7 @@ public class WeixinApi extends DefaultApi20 {
 	      Response response = request.send();
 	      String responceBody = response.getBody();
 	      logger.info("获取的来自微信的responceBody"+responceBody);
-	      
+	      System.out.println("获取的来自微信的responceBody"+responceBody);
 	      Object result = JSON.parse(responceBody);
 	      String access_token = JSONPath.eval(result, "$.access_token").toString();
 	      if(Strings.isNullOrEmpty(access_token)){
@@ -96,6 +96,7 @@ public class WeixinApi extends DefaultApi20 {
                                 + response + "'", null);
 	      }
 	      logger.info("--响应对象是"+JSON.toJSONString(result)+" access_token 是"+ access_token);
+	      System.out.println("--响应对象是"+JSON.toJSONString(result)+" access_token 是"+ access_token);
 	      //System.out.printf("-------------"+JSON.toJSONString(result));
 	      // return api.getAccessTokenExtractor().extract(responceBody);
 	     return new Token(access_token, "", responceBody);

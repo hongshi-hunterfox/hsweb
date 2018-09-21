@@ -705,7 +705,7 @@ salesInfoShowClick=()=>{
 			var bb = 0;
 			for(var i=0;i<result.length;i++){  	
   			if(hsgooscode.lastIndexOf((result[i]))===-1){			
-  				console.log("aaaaaa="+result[i])
+  				console.log(result[i])
   			}else{
   				bb = 1;
   			}
@@ -738,6 +738,7 @@ salesInfoShowClick=()=>{
         return err
       }
     })
+
     req.post('/uclee-user-web/orderHandler').send(data)
     .end((err, res) => {
       if (err) {

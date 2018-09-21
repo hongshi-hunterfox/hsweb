@@ -24,6 +24,16 @@ public class OrderItem {
     private BigDecimal price;
     
     private String title;
+    
+    private Integer invalid;
+    
+    public Integer getInvalid() {
+		return invalid;
+	}
+    
+    public void setInvalid(Integer invalid) {
+		this.invalid = invalid;
+	}
 
     public String getTitle() {
 		return title;

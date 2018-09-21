@@ -202,7 +202,8 @@ class Cart extends React.Component {
                         )
                       })}
                     </div>
-                     {!this.state.loading && dList.length
+                    
+                    {!this.state.loading && dList.length
             					? <div>
                 					<div
                   					style={{
@@ -248,7 +249,7 @@ class Cart extends React.Component {
                 					})}
               					</div>
             				: null}
-
+                    
                     <div className="cart-settle">
                       <div className="cart-settle-price">  
                       {'合计：¥' + (totalPrice.toString())}
@@ -263,6 +264,8 @@ class Cart extends React.Component {
                     </div>
                   </div>
                 : <CartEmpty />}
+          			
+          			    
         </div>
       </DocumentTitle>
     )
