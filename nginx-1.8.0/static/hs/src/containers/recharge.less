@@ -1,0 +1,181 @@
+@import '../public.less';
+.payment{
+	&-extra{
+		margin-top: 5px;
+		padding: 10px;
+		background-color: white;
+		.note{
+			padding: 5px 0px;
+			margin-bottom: 10px;
+		}
+		&-item{
+			padding: 5px 0px;
+			border-bottom: 1px solid #f2f2f2;
+		}
+	}
+	&-balance{
+		margin-bottom: 10px;
+		padding: 15px;
+		width: 100%;
+		background-color: white;
+		.clearfix();
+		.gold{
+			color: #ffb598;
+		}
+		.red{
+			color: #f95a5a;
+		}
+		&-number{
+			width: 50%;
+			float: left;
+		}
+		&-money{
+			width: 50%;
+			float: left;
+		}
+	}
+	.count-down{
+		text-align: center;
+		color: grey;
+		padding: 15px;
+		font-size: 15px;
+	}
+
+	&-money{
+		background-color: white;
+		width: 100%;
+		.clearfix();
+		padding: 12px;
+		&-item{
+			padding: 5px;
+			border: 1px solid #ecebeb;
+			margin: 10px 1%;
+			float: left;
+			width:92%/4;
+			text-align: center;
+		}
+		.active{
+			color: white;
+			background-color:  #fc9005;
+		}
+
+	}
+	&-note{
+		background-color: white;
+		padding: 10px;	
+		font-weight: bold;	
+		.gold{
+			color: #ffb598;
+		}
+	}
+
+	&-info{
+		background-color: white;
+		padding: 10px;	
+		.gold{
+			color: #ffb598;
+		}	
+	}
+
+
+	&-info{
+		&:before,
+		&:after {
+			content: "";
+			display: table;
+		}
+		&:after {
+			clear: both;
+		}
+		width: 100%;
+		background-color: white;
+		margin-top:5px;
+		&-method{
+			padding: 15px;
+			border-bottom: 1px solid #ddd;
+			.red{
+				color: red;
+			}
+			&-text{
+				font-size: 15px;
+				margin-left: 10px;
+			}
+			&-image{
+				border-radius: 50%;
+				width: 30px;
+				height: 30px;
+			}
+			.icon-check {
+				font-size: 23px;
+				position: absolute;
+				z-index: 1000;
+				right: 0;
+				bottom: 0;
+				color: #fff;
+				display: none;
+			}
+			&.active {	
+				border: 1px solid #ffa530;
+				border-color: #ffa530;
+				position: relative;
+				&::after {
+					content: '';
+					color: #fff;
+					width: 0;
+					height: 0;
+					border-style: solid;
+					border-width: 0 0 36px 36px;
+					border-color: transparent transparent #fc9005 transparent;
+					position: absolute;
+					z-index: 888;
+					bottom: 0;
+					right: 0;
+				}
+				.icon-check {
+					display: block;
+				}
+			}
+		}
+		&-money{
+			padding: 15px;
+		}
+	}
+
+	&-bottom{
+		position: fixed;
+		background-color: white;
+		left: 0;
+		right: 0;
+		width: 100%;
+		bottom: 3px;
+		border-top: 1px solid #ddd;
+		&-button{
+			width: 98%;
+			color: white;
+			padding: 15px;
+			background-color: #fc9005;
+			border-radius : 15px;
+			margin :1% 5px;
+		}
+	}
+
+}
+
+.payment .form-control {
+    border-radius: 50px;
+    height: 50px;
+    padding: 50px 10px;
+    text-align: center;
+    font-size: 25px;
+}
+
+.payment .form-horizontal .form-group {
+    margin-right: 5px;
+    margin-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.payment .form-group {
+    margin-bottom: 15px;
+}

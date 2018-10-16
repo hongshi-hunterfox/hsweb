@@ -1,0 +1,135 @@
+@import "../public.less";
+
+
+.shake-monitor {
+  height: 100%;
+  &-body {
+    background-image: url(/images/background.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 100%;
+
+    #root,
+    .app,
+    .main {
+      height: 100%;
+    }
+  }
+
+  &-title {
+    text-align: center;
+    color: white;
+    margin-top: 0;
+    padding-top: 15px;
+  }
+
+  &-total {
+    .clearfix();
+    .reset-button{
+      float: right;
+      margin-right: 50px;
+    }
+    text-align: center;
+    color: white
+  }
+
+  &-items {
+    border: 3px solid white;
+    border-radius: 10px;
+    width: 90%;
+    height: 40%;
+    margin: auto;
+    overflow: auto;
+  }
+
+  &-item {
+    width: 5%;
+    float: left;
+    animation-name: shake;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    > img {
+      width: 50px;
+      height: 50px;
+      display: block;
+      margin: auto;
+    }
+
+    > span {
+      display: block;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &-prize {
+    width: 90%;
+    margin: auto;
+    &-title {
+      text-align: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    &-items {
+      border: 3px solid white;
+      border-radius: 10px;
+      margin: auto;
+      white-space: nowrap;
+      overflow: auto;
+      float: left;
+      width: 80%;
+      height: 85px;
+    }
+
+
+    &-control {
+      .clearfix();
+      float: left;
+      width: 20%;
+      padding: 0 15px;
+      .button{
+        text-align: center;
+        margin-top: 10px;
+      }
+    }
+
+    &-item {
+      width: 70px;
+      display: inline-block;
+      animation-name: shake;
+      animation-duration: 1s;
+      animation-timing-function: ease-out;
+      > img {
+        width: 50px;
+        height: 50px;
+        display: block;
+        margin: auto;
+      }
+
+      > span {
+        display: block;
+        color: white;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+@keyframes shake {
+  from {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

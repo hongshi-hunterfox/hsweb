@@ -1,0 +1,144 @@
+.cart {
+  padding-bottom: 60px;
+}
+.cart-empty {
+  text-align: center;
+}
+.cart-empty > a {
+  display: inline-block;
+  color: #ff6600;
+  border: 1px solid #ff6600;
+  padding: 4px 12px;
+  border-radius: 5px;
+}
+.cart-store {
+  background-color: white;
+  padding: 10px;
+}
+.cart-edit-toggle {
+  color: #447dff;
+  display: block;
+  float: right;
+  margin-top: 2px;
+  margin-right: 5px;
+}
+.cart-items {
+  background-color: white;
+}
+.cart.in-edit-mode .cart-item {
+  padding-right: 60px;
+}
+.cart-item {
+  background-color: #f5f5f5;
+  position: relative;
+  padding-left: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.cart-item + .cart-item {
+  margin-top: 10px;
+}
+.cart-item-check {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+}
+.cart-item.disabled {
+  opacity: 0.5;
+}
+.cart-item .hs-counter {
+  width: 80%;
+}
+.cart-item .hs-checkbox {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  margin: auto;
+}
+.cart-item-img {
+  float: left;
+}
+.cart-item-info {
+  overflow: hidden;
+  padding-left: 10px;
+}
+.cart-item-title {
+  font-size: 16px;
+}
+.cart-item-spec {
+  color: #999;
+}
+.cart-item-price {
+  color: #ff6600;
+  font-size: 16px;
+  font-weight: bold;
+}
+.cart-item-amount {
+  position: absolute;
+  right: 10px;
+  bottom: 15px;
+}
+.cart-item-delete {
+  position: absolute;
+  background-color: #ec534d;
+  color: white;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  text-align: center;
+  width: 50px;
+  z-index: 99;
+}
+.cart-item-delete > span {
+  display: block;
+  position: absolute;
+  height: 1em;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.cart-settle {
+  background-color: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5px;
+  border-top: 1px solid #ddd;
+}
+.cart-settle-price {
+  color: #ff6600;
+}
+.cart-settle-info {
+  color: #aaa;
+}
+.cart-settle .left {
+  right: 6.1em;
+}
+.cart-settle-go {
+  background-color: #ec534d;
+  color: white;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 6em;
+}
+.cart-settle-go > span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  height: 1em;
+  line-height: 1em;
+  margin: auto;
+}

@@ -1,0 +1,35 @@
+.recharge-config-list:before,
+.recharge-config-list:after {
+  content: "";
+  display: table;
+}
+.recharge-config-list:after {
+  clear: both;
+}
+.recharge-config-list-add {
+  float: right;
+  margin: 30px 0;
+}
+.recharge-config-list-model {
+  position: fixed;
+  top: 30%;
+  left: 30%;
+  width: 50%;
+  background-color: #337ab7;
+  padding: 5px;
+}
+.recharge-config-list-model:before,
+.recharge-config-list-model:after {
+  content: "";
+  display: table;
+}
+.recharge-config-list-model:after {
+  clear: both;
+}
+.recharge-config-list-model .icon {
+  color: white;
+  display: inline-block;
+  float: right;
+  font-size: 30px;
+  padding: 5px;
+}

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.CartMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Cart" >
+    <id column="cart_id" property="cartId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="specification_value_id" property="specificationValueId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="paramete" property="paramete" jdbcType="VARCHAR" />
+    <result column="canshu_value_id" property="canshuValueId" jdbcType="INTEGER" />
+    <result column="activity_markers" property="activityMarkers" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="CartDto" type="com.uclee.fundation.data.web.dto.CartDto" >
+    <id column="cart_id" property="cartId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="specification_value_id" property="specificationValueId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="paramete" property="paramete" jdbcType="VARCHAR" />
+    <result column="canshu_value_id" property="canshuValueId" jdbcType="INTEGER" />  
+    <result column="activity_markers" property="activityMarkers" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cart_id, user_id, product_id, specification_value_id, amount ,create_time, paramete, canshu_value_id, activity_markers
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_cart
+    where cart_id = #{cartId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserIdAndCartId" resultMap="CartDto" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_cart
+    where cart_id = #{cartId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectUserCart" resultMap="CartDto" parameterType="java.lang.Integer" >
+    select 
+    A.*
+    from web_cart as A left join web_products as B on A.product_id=B.product_id
+    where A.user_id = #{userId,jdbcType=INTEGER} and B.product_id is not null
+  </select>
+  <select id="selectExisted" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_cart
+    where user_id = #{userId,jdbcType=INTEGER} and product_id = #{productId,jdbcType=INTEGER} and specification_value_id = #{specificationValueId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_cart
+    where cart_id = #{cartId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Cart" useGeneratedKeys="true"
+    keyProperty="cartId">
+    insert into web_cart (cart_id, user_id, product_id, 
+      specification_value_id, amount, create_time, canshu_value_id, parameter, activity_markers)
+    values (#{cartId, jdbcType=INTEGER}, #{userId, jdbcType=INTEGER}, #{productId, jdbcType=INTEGER}, 
+      #{specificationValueId, jdbcType=INTEGER},#{amount, jdbcType=INTEGER}, #{createTime, jdbcType=TIMESTAMP}, #{paramete, jdbcType=VARCHAR}, 
+      #{canshuValueId, jdbcType=INTEGER}, #{activityMarkers,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Cart" useGeneratedKeys="true"
+    keyProperty="cartId">
+    insert into web_cart
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cartId != null" >
+        cart_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="specificationValueId != null" >
+        specification_value_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+        paramete,
+        canshu_value_id,
+        activity_markers
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cartId != null" >
+        #{cartId, jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId, jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId, jdbcType=INTEGER},
+      </if>
+      <if test="specificationValueId != null" >
+        #{specificationValueId, jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null" >
+        #{amount, jdbcType=INTEGER},
+      </if>
+     	#{paramete, jdbcType=VARCHAR},
+        #{canshuValueId, jdbcType=INTEGER},
+        #{activityMarkers, jdbcType=INTEGER}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Cart" >
+    update web_cart
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="specificationValueId != null" >
+        specification_value_id = #{specificationValueId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+        paramete = #{paramete,jdbcType=VARCHAR},
+        canshu_value_id = #{canshuValueId,jdbcType=INTEGER},       
+    </set>
+    where cart_id = #{cartId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Cart" >
+    update web_cart
+    set user_id = #{userId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      specification_value_id = #{specificationValueId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      amount = #{amount,jdbcType=INTEGER},
+      paramete = #{paramete,jdbcType=VARCHAR},
+      canshu_value_id = #{canshuValueId,jdbcType=INTEGER}      
+    where cart_id = #{cartId,jdbcType=INTEGER}
+  </update>
+  <select id="selectValueId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+ 	 select specification_value_id from web_cart where cart_id = #{cartId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+  </select>
+</mapper>

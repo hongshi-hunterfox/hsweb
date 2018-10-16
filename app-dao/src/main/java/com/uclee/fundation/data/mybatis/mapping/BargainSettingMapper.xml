@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper" >
+<resultMap id="BargainSetting" type="com.uclee.fundation.data.mybatis.model.BargainSetting" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="start" property="start" jdbcType="TIMESTAMP" />
+    <result column="closure" property="closure" jdbcType="TIMESTAMP" />
+    <result column="start" property="starts" jdbcType="VARCHAR" />
+    <result column="closure" property="ends" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="minprice" property="minprice" jdbcType="DECIMAL" />
+    <result column="maxprice" property="maxprice" jdbcType="DECIMAL" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="tries_limit" property="triesLimit" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.web.dto.BargainPost" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="start" property="start" jdbcType="TIMESTAMP" />
+    <result column="closure" property="closure" jdbcType="TIMESTAMP" />
+    <result column="start" property="starts" jdbcType="VARCHAR" />
+    <result column="closure" property="ends" jdbcType="VARCHAR" />
+    <result column="start" property="startTime" jdbcType="VARCHAR" />
+    <result column="closure" property="endTime" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="minprice" property="minprice" jdbcType="DECIMAL" />
+    <result column="maxprice" property="maxprice" jdbcType="DECIMAL" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="tries_limit" property="triesLimit" jdbcType="INTEGER" />   
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />
+    <result column="hs_goods_code" property="hsGoodsCode" jdbcType="INTEGER" />
+    <result column="hs_goods_price" property="hsGoodsPrice" jdbcType="DECIMAL" />
+    <result column="value" property="value" jdbcType="DECIMAL" />
+    <result column="closure" property="end" jdbcType="TIMESTAMP" />
+    <result column="hs_stock" property="hsStock" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap id="launchbargain" type="com.uclee.fundation.data.mybatis.model.LaunchBargain" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="initial_amount" property="initialAmount" jdbcType="DECIMAL" />
+    <result column="current_amount" property="currentAmount" jdbcType="DECIMAL" />
+    <result column="launch_Time" property="launchTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
+  </resultMap>
+   <resultMap id="vipidentaty" type="com.uclee.fundation.data.mybatis.model.vipIdentity" >
+    <id column="会员ID" property="vid" jdbcType="INTEGER" />
+    <result column="外键" property="oauthId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BargainLog" type="com.uclee.fundation.data.mybatis.model.BargainLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="random_amount" property="randomAmount" jdbcType="DECIMAL" />
+    <result column="launch_time" property="launchTime" jdbcType="TIMESTAMP" />
+    <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="getWxUser" type="com.uclee.fundation.data.mybatis.model.WxUser" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="random_amount" property="randomAmount" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <select id="selectBargain" resultMap="BargainSetting" >
+    select 
+    top 50 *
+    from web_bargain_setting
+  </select>
+  <select id="selectName" resultMap="BargainSetting" >
+    select 
+     *
+    from web_bargain_setting where name = #{name jdbcType=VARCHAR} or product_name = #{productName jdbcType=VARCHAR}
+  </select>
+   <select id="selectVipIdentity" resultMap="vipidentaty" >
+    select 
+    *
+    from 会员身份  where 外键=#{oauthId jdbcType=VARCHAR}
+  </select>
+  <select id="selectSumMoney" resultType="bigDecimal">
+    select coalesce(sum(random_amount), 0) from web_bargain_log where invitation_code = #{invitationCode jdbcType=VARCHAR}
+  </select>
+  <select id="selectbargainLog" resultMap="BargainLog">
+    select * from web_bargain_log where uid = #{uid, jdbcType=INTEGER} and invitation_code = #{invitationCode, jdbcType=VARCHAR}
+  </select>
+  <select id="getbargainRecord" resultMap="launchbargain">
+    select * from web_launch_bargain where status=1 and uid = #{uid, jdbcType=INTEGER}
+  </select>
+   <select id="selectBargainId" resultMap="BargainSetting" >
+    select 
+     *
+    from web_bargain_setting where id = #{id jdbcType=INTEGER}
+  </select>
+  <select id="getBargain" resultMap="BaseResultMap" >
+     select * from web_bargain_setting as a left join web_products as b on  a.product_name=b.title
+  	 left join web_products_specifications_values_link as c  on b.product_id=c.product_id
+  	 left join web_specification_values as d on c.value_id=d.value_id
+  	 left join web_product_images_link as e on b.product_id=e.product_id
+  </select>
+  <select id="getBargainList" resultMap="BaseResultMap">
+  	 select * from web_bargain_setting as a left join web_products as b on  a.product_name=b.title
+  	 left join web_products_specifications_values_link as c  on b.product_id=c.product_id
+  	 left join web_specification_values as d on c.value_id=d.value_id
+  	 left join web_product_images_link as e on b.product_id=e.product_id where getdate() between start and closure
+  </select>
+  <select id="getBargainOver" resultMap="BaseResultMap">
+  	 select * from web_bargain_setting as a left join web_products as b on  a.product_name=b.title
+  	 left join web_products_specifications_values_link as c  on b.product_id=c.product_id
+  	 left join web_specification_values as d on c.value_id=d.value_id
+  	 left join web_product_images_link as e on b.product_id=e.product_id where getdate() between start and closure and a.id = #{id, jdbcType=INTEGER}
+  </select>
+  <select id="getValue" resultMap="BaseResultMap" >
+  	select * from web_bargain_setting as a left join web_products as b on  a.product_name=b.title
+  	 left join web_products_specifications_values_link as c  on b.product_id=c.product_id
+  	 left join web_specification_values as d on c.value_id=d.value_id
+  	 left join web_product_images_link as e on b.product_id=e.product_id
+  	 left join web_specification_values as f on d.value_id=f.value_id where c.value_id=#{valueId jdbcType=INTEGER}
+  </select>
+  <select id="getPrice" resultMap="BargainSetting">
+    select c.price from web_cart as a left join web_products as b on a.product_id = b.product_id left join web_bargain_setting
+  	as c on b.title = c.product_name where a.cart_id=#{cartId, jdbcType=INTEGER} and a.activity_markers=1
+  </select>
+  <select id="getValueId" resultMap="BargainLog">
+  	  select c.value_id,d.invitation_code from web_bargain_setting as a 
+  		left join web_products as b 
+  		on a.product_name = b.title 
+  		left join web_products_specifications_values_link 
+  		as c on b.product_id=c.product_id 
+  		left join web_launch_bargain as d
+  		on a.id = d.pid
+  		where a.id=#{id, jdbcType=INTEGER} and d.uid=#{uid, jdbcType=INTEGER} and d.status=1
+  </select>
+  
+  <select id="selectWxUser" resultMap="getWxUser">
+  	select b.user_id, b.image, b.nick_name, d.random_amount from web_oauth_login as a 
+  	left join web_user_profiles as b on a.user_id = b.user_id 
+  	left join 会员身份 as c on a.oauth_id = c.外键 
+  	left join web_bargain_log as d on a.user_id=d.uid
+  	where d.invitation_code = #{invitationCode, jdbcType=VARCHAR}
+  </select>
+  <select id="selectLaunchLog" resultMap="launchbargain">
+  	select * from web_launch_bargain where uid = #{uid, jdbcType=INTEGER} and invitation_code = #{invitationCode, jdbcType=VARCHAR}
+  </select>
+   <delete id="deleteBargainId" parameterType="java.lang.Integer" >
+   delete  web_bargain_setting where id = #{id jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.uclee.fundation.data.web.dto.BargainPost" >
+    insert into web_bargain_setting (name,start,closure,price, minprice,
+      maxprice,product_name,tries_limit)
+    values (#{name, jdbcType=VARCHAR}, #{start, jdbcType=TIMESTAMP}, #{closure, jdbcType=TIMESTAMP}, 
+      #{price, jdbcType=DECIMAL}, #{minprice, jdbcType=DECIMAL}, #{maxprice, jdbcType=DECIMAL}, #{productName, jdbcType=VARCHAR}, 1)
+  </insert>
+  
+  <insert id="insertLaunchBargain" parameterType="com.uclee.fundation.data.mybatis.model.LaunchBargain" >
+    insert into web_launch_bargain (pid, uid, open_id, initial_amount, current_amount, launch_Time, status, invitation_code)
+    	values (#{pid, jdbcType=INTEGER}, #{uid, jdbcType=INTEGER}, #{openId, jdbcType=VARCHAR}, 
+      	#{initialAmount, jdbcType=DECIMAL}, #{currentAmount, jdbcType=DECIMAL}, #{launchTime, jdbcType=TIMESTAMP}, #{status, jdbcType=INTEGER}, #{invitationCode, jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateLaunchBargain" parameterType="com.uclee.fundation.data.mybatis.model.LaunchBargain">
+  	update web_launch_bargain set status=2 where uid = #{uid, jdbcType=INTEGER} and status = 1
+  </update>
+  
+  <insert id="insertBargainLog" parameterType="com.uclee.fundation.data.mybatis.model.BargainLog" >
+    insert into web_bargain_log (pid, uid, open_id, random_amount, launch_time, invitation_code)
+    	values (#{pid, jdbcType=INTEGER}, #{uid, jdbcType=INTEGER}, #{openId, jdbcType=VARCHAR}, 
+      	#{randomAmount, jdbcType=DECIMAL}, #{launchTime, jdbcType=TIMESTAMP}, #{invitationCode, jdbcType=VARCHAR})
+  </insert>
+   
+  <update id="updateBargainId" parameterType="com.uclee.fundation.data.web.dto.BargainPost" >
+    update web_bargain_setting
+    set name = #{name, jdbcType=VARCHAR},
+      start = #{start, jdbcType=TIMESTAMP},
+      closure = #{closure, jdbcType=TIMESTAMP},
+      price = #{price, jdbcType=DECIMAL},
+      minprice = #{minprice, jdbcType=DECIMAL},
+      maxprice = #{maxprice, jdbcType=DECIMAL},
+      product_name = #{productName, jdbcType=VARCHAR},
+      tries_limit = 1
+    where id = #{id, jdbcType=INTEGER}
+  </update>
+
+</mapper>

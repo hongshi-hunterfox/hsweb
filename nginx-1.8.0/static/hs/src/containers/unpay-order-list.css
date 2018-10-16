@@ -1,0 +1,118 @@
+.order-list {
+  margin-top: 10px;
+}
+.order-list:before,
+.order-list:after {
+  content: "";
+  display: table;
+}
+.order-list:after {
+  clear: both;
+}
+.order-list-top-item:before,
+.order-list-top-item:after {
+  content: "";
+  display: table;
+}
+.order-list-top-item:after {
+  clear: both;
+}
+.order-list-top-item .store {
+  font-size: 14px;
+  margin: 10px 10px;
+}
+.order-list-top-item .status {
+  color: #f95b0d;
+  font-size: 13px;
+  margin: 10px 10px;
+}
+.order-list-top .number {
+  font-size: 13px;
+  color: #afafaf;
+  margin: 0px 10px 10px 10px;
+}
+.order-list-item-info {
+  background-color: #f9f9f9;
+  margin-top: 8px;
+}
+.order-list-item-info:before,
+.order-list-item-info:after {
+  content: "";
+  display: table;
+}
+.order-list-item-info:after {
+  clear: both;
+}
+.order-list-item-info .image {
+  width: 80px;
+  height: 80px;
+  margin: 0px 10px  0px 10px;
+  float: left;
+}
+.order-list-item-info .title {
+  margin-top: 5px;
+  font-size: 15px;
+}
+.order-list-item-info .price {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #afafaf;
+}
+.order-list-item-info .sku-info {
+  margin-bottom: 8px;
+}
+.order-list-item-info .sku-info .sku {
+  color: #afafaf;
+  margin-top: 5px;
+  font-size: 12px;
+}
+.order-list-item-info .sku-info .count {
+  margin-right: 10px;
+}
+.order-list-item-info .tag {
+  color: white;
+  padding: 2px 5px;
+  font-size: 12px;
+  background-color: #f15f40;
+  border-radius: 10%;
+}
+.order-list-bottom {
+  margin: 5px 0;
+  background-color: white;
+}
+.order-list-bottom:before,
+.order-list-bottom:after {
+  content: "";
+  display: table;
+}
+.order-list-bottom:after {
+  clear: both;
+}
+.order-list-bottom .total {
+  margin-right: 8px;
+}
+.order-list-button {
+  background-color: white;
+  margin: 5px 0;
+}
+.order-list-button:before,
+.order-list-button:after {
+  content: "";
+  display: table;
+}
+.order-list-button:after {
+  clear: both;
+}
+.order-list-button .text {
+  color: #f15f40;
+  padding: 4px 10px;
+  border-radius: 10%;
+  border: 1px solid #f15f40;
+  margin-right: 8px;
+}
+.order .bottom-text {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+  color: #afafaf;
+}

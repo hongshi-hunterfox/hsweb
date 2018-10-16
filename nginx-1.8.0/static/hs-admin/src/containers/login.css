@@ -1,0 +1,23 @@
+.body {
+  background: #4D4D4D;
+  text-align: center;
+}
+.body-main {
+  padding-top: 125px;
+}
+.body-main .denglu {
+  width: 100%;
+  padding-left: 560px;
+  padding-right: 535px;
+}
+.body-main .subtitle {
+  text-align: center;
+}
+.body-bottom {
+  padding-bottom: 10px;
+  color: #DEDEDE;
+}
+.body-bottom .font {
+  font-size: 15px;
+  color: #808080;
+}

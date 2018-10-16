@@ -1,0 +1,174 @@
+.cart {
+  padding-bottom: 60px;
+
+  &-empty {
+    text-align: center;
+
+    > a {
+      display: inline-block;
+      color: #ff6600;
+      border: 1px solid #ff6600;
+      padding: 4px 12px;
+      border-radius: 5px;
+    }
+  }
+	
+  &-store {
+    background-color: white;
+    padding: 10px;
+  }
+
+  &-edit {
+    &-toggle {
+      color: #447dff;
+      display: block;
+      float: right;
+      margin-top: 2px;
+      margin-right: 5px;
+    }
+  }
+
+  &-items {
+    background-color: white;
+  }
+
+  &.in-edit-mode {
+    .cart-item {
+      padding-right: 60px;
+    }
+  }
+
+  &-item {
+    background-color: #f5f5f5;
+    position: relative;
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    & + & {
+      margin-top: 10px;
+    }
+
+    &-check {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 30px;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+    }
+
+    .hs-counter {
+      width: 80%;
+    }
+
+    
+
+    .hs-checkbox {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 18px;
+      height: 18px;
+      margin: auto;
+    }
+
+    &-img {
+      float: left;
+    }
+
+    &-info {
+      overflow: hidden;
+      padding-left: 10px;
+    }
+
+    &-title {
+      font-size: 16px;
+    }
+
+    &-spec {
+      color: #999;
+    }
+
+    &-price {
+      color: #ff6600;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    &-amount {
+      position: absolute;
+      right: 10px;
+      bottom: 15px;
+    }
+
+    &-delete {
+      position: absolute;
+      background-color: #ec534d;
+      color: white;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      text-align: center;
+      width: 50px;
+      z-index: 99;
+
+      > span {
+        display: block;
+        position: absolute;
+        height: 1em;
+        width: 100%;
+        text-align: center;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+      }
+    }
+  }
+
+  &-settle {
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+
+    &-price {
+      color: #ff6600;
+    }
+
+    &-info {
+      color: #aaa;
+    }
+    .left{
+      right: 6.1em;
+    }
+    &-go {
+      
+      background-color: #ec534d;
+      color: white;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 6em;
+
+      > span {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        right: 0;
+        text-align: center;
+        height: 1em;
+        line-height: 1em;
+        margin: auto;
+      }
+    }
+  }
+}

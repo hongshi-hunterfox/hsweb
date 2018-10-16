@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper">
+	<resultMap id="HongShiVip"
+		type="com.uclee.fundation.data.mybatis.model.HongShiVip">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="cWeiXinCode" property="cWeiXinCode" jdbcType="VARCHAR" />
+		<result column="CallNumber" property="cMobileNumber" jdbcType="VARCHAR" />
+		<result column="Name" property="cName" jdbcType="VARCHAR" />
+		<result column="Birthday" property="cBirthday" jdbcType="VARCHAR" />
+		<result column="IsLunar" property="bIsLunar" jdbcType="BIT" />
+		<result column="VipCode" property="cVipCode" jdbcType="VARCHAR" />
+		<result column="CardCode" property="cardCode" jdbcType="VARCHAR" />
+		<result column="Balance" property="balance" jdbcType="DECIMAL" />
+		<result column="BonusPoints" property="bonusPoints" jdbcType="DECIMAL" />
+		<result column="State" property="state" jdbcType="INTEGER" />
+		<result column="Disable" property="disable" jdbcType="INTEGER" />
+		<result column="IsVoucher" property="isVoucher" jdbcType="INTEGER" />
+		<result column="VipType" property="vipType" jdbcType="INTEGER" />
+		<result column="EndTime" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="IdNumber" property="cIdNumber" jdbcType="VARCHAR" />
+		<result column="Company" property="cCompany" jdbcType="VARCHAR" />
+		<result column="Sex" property="cSex" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<resultMap id="HongShiRechargeRecord"
+		type="com.uclee.fundation.data.mybatis.model.HongShiRechargeRecord">
+		<result column="DealTim" property="dealTim" jdbcType="VARCHAR" />
+		<result column="Source" property="source" jdbcType="VARCHAR" />
+		<result column="BillCode" property="billCode" jdbcType="VARCHAR" />
+		<result column="Amount" property="amount" jdbcType="DECIMAL" />
+		<result column="Balance" property="balance" jdbcType="DECIMAL" />
+		<result column="BonusPoints" property="bonusPoints" jdbcType="INTEGER" />
+		<result column="Integral" property="integral" jdbcType="INTEGER" />
+	</resultMap>
+		<resultMap id="Orders"  type="com.uclee.fundation.data.mybatis.model.Orders">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="单号" property="danhao" jdbcType="VARCHAR" />
+   	    <result column="order_serial_num" property="orderSerialNum" jdbcType="VARCHAR" />
+   	    <result column="订单ID" property="ordersId" jdbcType="INTEGER" />
+   	    <result column="名称" property="names" jdbcType="VARCHAR" />
+   	    <result column="规格" property="guige" jdbcType="VARCHAR" />
+   	    <result column="备注" property="beizhu" jdbcType="VARCHAR" />
+   	    <result column="编号" property="bianhao" jdbcType="VARCHAR" />
+   	    <result column="金额合计" property="jine" jdbcType="DECIMAL" />
+   	     <result column="让利" property="huijine" jdbcType="DECIMAL" />
+   	     <result column="金额" property="danjia" jdbcType="DECIMAL" />
+   	    <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
+   	    <result column="数量" property="shuliang" jdbcType="INTEGER" />
+   	     <result column="部门编号" property="bumen" jdbcType="VARCHAR" />
+   	      <result column="送货地址" property="songhuo" jdbcType="VARCHAR" />
+   	     <result column="hs_code" property="hsCode" jdbcType="VARCHAR" />
+   	     <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="UnderlineOrders"  type="com.uclee.fundation.data.mybatis.model.UnderlineOrders">
+   	    <result column="订单ID" property="ordersId" jdbcType="INTEGER" />
+   	    <result column="名称" property="names" jdbcType="VARCHAR" />
+   	    <result column="规格" property="guige" jdbcType="VARCHAR" />
+   	     <result column="编号" property="bianhao" jdbcType="VARCHAR" />
+   	      <result column="单价" property="danjia" jdbcType="DECIMAL" />
+   	     <result column="金额" property="jine" jdbcType="DECIMAL" />
+   	     <result column="备注" property="beizhu" jdbcType="VARCHAR" />
+   	     <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
+   	     <result column="数量" property="shuliang" jdbcType="INTEGER" /> 
+   	     <result column="单号" property="danhao" jdbcType="VARCHAR" />
+   	     <result column="送货地址" property="songhuo" jdbcType="VARCHAR" />
+   	     <result column="部门编号" property="bumen" jdbcType="VARCHAR" />
+   	     <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+   	      <result column="让利" property="huijine" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="RetailDetails"  type="com.uclee.fundation.data.mybatis.model.RetailDetails">
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="单号" property="danhao" jdbcType="VARCHAR" />
+   	    <result column="销售ID" property="xiaoshouId" jdbcType="INTEGER" />
+   	    <result column="编号" property="bianhao" jdbcType="VARCHAR" />
+   	    <result column="名称" property="names" jdbcType="VARCHAR" />
+   	    <result column="规格" property="guige" jdbcType="VARCHAR" />
+   	     <result column="单价" property="danjia" jdbcType="DECIMAL" />
+   	    <result column="备注" property="beizhu" jdbcType="VARCHAR" />
+   	    <result column="金额合计" property="jine" jdbcType="DECIMAL" />
+   	    <result column="让利" property="huijine" jdbcType="DECIMAL" />
+   	    <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
+   	    <result column="数量" property="shuliang" jdbcType="INTEGER" />
+   	    <result column="部门编号" property="bumen" jdbcType="VARCHAR" />
+   	    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+   	    
+	</resultMap>
+	<resultMap id="ChongzhiDetailed"  type="com.uclee.fundation.data.mybatis.model.ChongzhiDetailed">
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="单号" property="danhao" jdbcType="VARCHAR" />
+   	    <result column="金额" property="jine" jdbcType="DECIMAL" />
+   	    <result column="现金" property="xianjin" jdbcType="DECIMAL" />
+   	    <result column="积分" property="jifen" jdbcType="INTEGER" />
+   	    <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
+   	    
+	</resultMap>
+	<resultMap id="IntegralRecharge"  type="com.uclee.fundation.data.mybatis.model.IntegralRecharge">
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="单号" property="danhao" jdbcType="VARCHAR" />
+   	    <result column="金额合计" property="hejijine" jdbcType="DECIMAL" />
+   	    <result column="备注" property="beizhu" jdbcType="VARCHAR" />
+   	    <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
+   	    
+	</resultMap>
+	<resultMap id="HongShiVipInfo"
+		type="com.uclee.fundation.data.mybatis.model.HongShiVip">
+		<result column="电话" property="cMobileNumber" jdbcType="VARCHAR" />
+		<result column="名称" property="cName" jdbcType="VARCHAR" />
+		<result column="生日" property="cBirthday" jdbcType="VARCHAR" />
+		<result column="是否农历" property="bIsLunar" jdbcType="BIT" />
+		<result column="编号" property="cVipCode" jdbcType="VARCHAR" />
+		<result column="卡余额" property="balance" jdbcType="DECIMAL" />
+		<result column="身份证号" property="cIdNumber" jdbcType="VARCHAR" />
+		<result column="工作单位" property="cCompany" jdbcType="VARCHAR" />
+		<result column="性别" property="cSex" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<resultMap id="AddVipResult" type="com.uclee.fundation.data.mybatis.model.AddVipResult">
+		<result column="ret" property="msg" jdbcType="VARCHAR" />
+		<result column="retcode" property="retcode" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="Lnsurance" type="com.uclee.fundation.data.mybatis.model.Lnsurance">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="vip_id" property="vipId" jdbcType="INTEGER" />
+		<result column="oauth_id" property="oauthId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="VipVoucher" type="com.uclee.fundation.data.mybatis.model.VipVoucher">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="voucher" property="voucher" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="VipLog" type="com.uclee.fundation.data.mybatis.model.VipLog">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="vcode" property="vcode" jdbcType="VARCHAR" />
+		<result column="foreign_key" property="foreignKey" jdbcType="VARCHAR" />
+		<result column="recording_time" property="recordingTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, cWeiXinCode, cMobileNumber,cName,cBirthday,bIsLunar,cVipCode,cIdNumber,cCompany,cSex
+	</sql>
+	<select id="addVipInfo" parameterType="com.uclee.fundation.data.mybatis.model.HongShiVip"
+		statementType="CALLABLE" resultMap="AddVipResult">
+		CALL WSC_AddVip(#{cWeiXinCode},#{cMobileNumber},#{cName},#{cBirthday},#{bIsLunar},#{cVipCode},#{cIdNumber},#{cCompany},#{cSex})
+	</select>
+	<select id="getVipInfo" parameterType="java.lang.String"
+		statementType="CALLABLE" resultMap="HongShiVip">
+		CALL WSC_GetVipInfo(#{cWeiXinCode})
+	</select>
+	<select id="selectAll" resultMap="VipVoucher" parameterType="java.lang.Integer" >
+    select
+    id,voucher,amount
+    from web_vip_voucher
+  	</select>
+	<select id="getCodeSwitching" resultType="Integer" 
+		statementType="CALLABLE">
+		CALL Get_WordVal (会员扫码定时变)
+	</select>
+
+	<select id="getVipRechargeLog" parameterType="java.lang.Integer"
+		statementType="CALLABLE" resultMap="HongShiRechargeRecord">
+		CALL GetVipLog_ID(#{iVipID})
+	</select>
+	<select id="selectOrders" resultMap="Orders">
+    select orders_detail.名称,orders.备注,orders.送货地址,orders_detail.金额,orders_detail.数量,orders.让利,web_napa_stores. store_name,orders.金额合计,orders.建立日期,orders.单号 from orders 
+     left join orders_detail on orders.ID=orders_detail.订单ID 
+     left join web_napa_stores on orders.部门编号= web_napa_stores.hs_code where 单号=#{danhao,jdbcType=VARCHAR}
+    </select>
+    <select id="selectUnderlineOrders" resultMap="UnderlineOrders">
+     select goods.名称,goods.规格,orders_detail.单价,orders.送货地址,orders.备注,orders_detail.金额,orders.让利,orders_detail.数量,orders.建立日期,orders.单号 ,web_napa_stores. store_name from orders left join orders_detail on orders.ID=orders_detail.订单ID
+      left join web_napa_stores on orders.部门编号= web_napa_stores.hs_code  
+     left join goods on orders_detail.编号=goods.编号  where 单号=#{danhao,jdbcType=VARCHAR}
+    </select>
+     <select id="selectRetailDetails" resultMap="RetailDetails">
+     select sales.备注,sales.让利,goods.名称,goods.规格,sales_detail.单价,sales_detail.数量,sales.金额合计,sales.建立日期 ,sales.单号  ,web_napa_stores. store_name from sales left join sales_detail on sales.ID=sales_detail.销售ID
+      left join web_napa_stores on sales.部门编号= web_napa_stores.hs_code
+     left join goods on sales_detail.编号=goods.编号 where 单号=#{danhao,jdbcType=VARCHAR}
+    </select>
+    <select id="selectChongzhiDetailed" resultMap="ChongzhiDetailed">
+  		select * from 充值表 left join 充值明细表 on 充值表.ID=充值明细表.PID 
+  		where 单号=#{danhao,jdbcType=VARCHAR}
+    </select>
+     <select id="selectIntegralRecharge" resultMap="IntegralRecharge">
+  		select 充值明细表.备注,充值表.金额合计,充值表.建立日期,充值表.单号 from  充值表 left join 充值明细表 on 充值表.ID=充值明细表.PID where 单号=#{danhao,jdbcType=VARCHAR}
+    </select>
+	<select id="hongShiRecharge" parameterType="com.uclee.fundation.data.mybatis.model.HongShiRecharge"
+		statementType="CALLABLE" resultType="java.lang.Integer">
+		CALL WSC_VipReCharge(#{cWeiXinCode},#{nAddMoney},#{cWeiXinOrderCode})
+	</select>
+    <select id="changeVip" parameterType="java.lang.Integer" statementType="CALLABLE" >
+    	CALL ChangeVipLinks(#{cVipLk})
+    </select>
+     <select id="selectVip" resultMap="HongShiVip">
+    	select 电话,名称,生日,是否农历,编号,卡余额,性别  from 会员  where 电话=#{cMobileNumber,jdbcType=VARCHAR}
+    </select>
+    <select id="selectUsers" resultMap="Lnsurance">
+    	select id,vip_id,oauth_id,create_time,phone from web_user_list where phone=#{phone,jdbcType=VARCHAR}
+    </select>
+    <select id="getUsers" resultMap="Lnsurance">
+    	select id,vip_id,oauth_id,create_time,phone from web_user_list where oauth_id=#{oauthId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteAll">
+    truncate table  web_vip_voucher
+  </delete>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.VipVoucher" >
+    insert into web_vip_voucher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="voucher != null" >
+        voucher,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="voucher != null" >
+        #{voucher,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertVipLog" parameterType="com.uclee.fundation.data.mybatis.model.VipLog" >
+    insert into web_viplog (vcode, foreign_key
+      )
+    values (#{vcode,jdbcType=VARCHAR}, #{foreignKey,jdbcType=VARCHAR}
+      )
+   </insert>
+</mapper>

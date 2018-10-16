@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.SpecificationMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Specification" >
+    <id column="specification_id" property="specificationId" jdbcType="INTEGER" />
+    <result column="specification" property="specification" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="SpecificationWithValue" type="com.uclee.fundation.data.mybatis.model.Specification" extends="BaseResultMap">
+    <collection property="specificationValues" javaType="list" ofType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+      <id column="value_id" property="valueId" jdbcType="INTEGER" />
+	    <result column="value" property="value" jdbcType="VARCHAR" />
+	    <result column="hs_goods_id" property="hsGoodsId" jdbcType="INTEGER" />
+	    <result column="hs_goods_price" property="hsGoodsPrice" jdbcType="DECIMAL" />
+	    <result column="pre_price" property="prePrice" jdbcType="DECIMAL" />
+	    <result column="promotion_price" property="promotionPrice" jdbcType="DECIMAL" />
+	    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    specification_id, specification
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_specifications
+    where specification_id = #{specificationId,jdbcType=INTEGER}
+  </select>
+  <select id="getByProductId" resultMap="SpecificationWithValue" parameterType="java.lang.Integer" >
+    select 
+    a.*,b.* 
+    from web_specifications a left join web_specification_values as b on a.specification_id=b.specification_id 
+    left join web_products_specifications_values_link as c on c.value_id=b.value_id
+    where c.product_id = #{productId,jdbcType=INTEGER} order by b.hs_goods_price asc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_specifications
+    where specification_id = #{specificationId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Specification" >
+    insert into web_specifications (specification_id, specification)
+    values (#{specificationId,jdbcType=INTEGER}, #{specification,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Specification" >
+    insert into web_specifications
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="specificationId != null" >
+        specification_id,
+      </if>
+      <if test="specification != null" >
+        specification,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="specificationId != null" >
+        #{specificationId,jdbcType=INTEGER},
+      </if>
+      <if test="specification != null" >
+        #{specification,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Specification" >
+    update web_specifications
+    <set >
+      <if test="specification != null" >
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where specification_id = #{specificationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Specification" >
+    update web_specifications
+    set specification = #{specification,jdbcType=VARCHAR}
+    where specification_id = #{specificationId,jdbcType=INTEGER}
+  </update>
+</mapper>

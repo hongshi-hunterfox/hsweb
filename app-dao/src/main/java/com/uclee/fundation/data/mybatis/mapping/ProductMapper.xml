@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Product" >
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify" property="lastModify" jdbcType="TIMESTAMP" />
+    <result column="is_active" property="isActive" jdbcType="BIT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="is_shipping_free" property="isShippingFree" jdbcType="BIT" />
+    <result column="Explain" property="explain" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="BIT" />
+    <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
+    <result column="parameter" property="parameter" jdbcType="VARCHAR" />
+    <result column="appointed_time" property="appointedTime" jdbcType="INTEGER"/>
+  </resultMap>
+   <resultMap id="ProductGe" type="com.uclee.fundation.data.mybatis.model.ProductGe" >
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="specification_id" property="specificationId" jdbcType="INTEGER" />
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />    
+  </resultMap>  
+  <resultMap id="ProductDto" type="com.uclee.fundation.data.web.dto.ProductDto" >
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify" property="lastModify" jdbcType="TIMESTAMP" />
+    <result column="is_active" property="isActive" jdbcType="BIT" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="is_shipping_free" property="isShippingFree" jdbcType="BIT" />
+    <result column="Explain" property="explain" jdbcType="VARCHAR" />
+    <result column="is_show" property="isShow" jdbcType="BIT" />
+    <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
+    <result column="appointed_time" property="appointedTime" jdbcType="INTEGER"/>
+  </resultMap>
+  <resultMap id="ProductParameters" type="com.uclee.fundation.data.mybatis.model.ProductParameters" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="sname" property="sname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value,parameter,
+    appointed_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_products
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByTitle" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_products
+    where title = #{title,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByExplain" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from web_products
+    where Explain = #{explain,jdbcType=VARCHAR}
+  </select>
+  <select id="selectOneImage" resultMap="ProductDto" parameterType="java.lang.Integer" >
+    select 
+    A.*,b.image_url as image
+    from web_products as A left join web_product_images_link as B on A.product_id=b.product_id
+    where A.product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="getProductById" resultMap="ProductDto" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_products
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectProductsCategories" resultMap="ProductGe" parameterType="java.lang.Integer" >
+   select * from  web_products_categories_link as b left join web_products_specifications_values_link as c on b.product_id=c.product_id where b.category_id=#{categoryId,jdbcType=INTEGER}
+   </select>
+  <select id="selectQuickNaviProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
+    select
+    A.*
+    from web_products A left join web_quick_navi_product_link B on A.product_id=B.product_id where B.navi_id=#{naviId,jdbcType=INTEGER}
+    order by A.sort_value ASC
+  </select>
+  <select id="getAllProductByCatId" resultMap="ProductDto" parameterType="java.lang.Integer" >
+    select
+    A.*
+    from web_products A left join web_products_categories_link as B on A.product_id = B.product_id where B.category_id=#{categoryId,jdbcType=INTEGER}
+    ORDER  by A.sort_value ASC
+
+  </select>
+  <select id="getAllProduct" resultMap="ProductDto" parameterType="java.lang.Integer" >
+    select
+    distinct A.*
+    <if test="isSaleDesc != null " >
+      ,C.count
+    </if>
+    from web_products as A 
+    <if test="isSaleDesc != null " >
+    	left join  web_product_sale as C on A.product_id=C.product_id
+    </if>
+     
+    <if test="categoryId != null" >
+       left join web_products_categories_link as B on A.product_id = B.product_id where B.category_id=#{categoryId,jdbcType=INTEGER} 
+     </if>
+    <if test="naviId != null" >
+       left join web_quick_navi_product_link as E on A.product_id = E.product_id where E.navi_id=#{naviId,jdbcType=INTEGER}
+     </if>
+    <if test="keyword != null" >
+      left join web_products_specifications_values_link as C on A.product_id = C.product_id
+      left join web_specification_values as D on C.value_id = D.value_id where D.value like  #{keyword,jdbcType=VARCHAR} or A.title like #{keyword,jdbcType=VARCHAR}
+    </if>
+
+    order by
+    <if test="isPriceDesc != null and isPriceDesc == 1 " >
+      A.price asc,
+    </if>
+    <if test="isPriceDesc != null and isPriceDesc == 0 " >
+      A.price desc,
+    </if>
+    <if test="isPriceDesc != null and isSaleDesc != null and isSaleDesc == 1 " >
+      C.count asc,
+    </if>
+    <if test="isPriceDesc != null and isSaleDesc != null and isSaleDesc == 0 " >
+      C.count desc,
+    </if>
+    <if test="isPriceDesc == null and isSaleDesc != null and isSaleDesc == 1 " >
+      C.count asc,
+    </if>
+    <if test="isPriceDesc == null and isSaleDesc != null and isSaleDesc == 0 " >
+      C.count desc,
+    </if>
+    A.sort_value ASC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_products
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
+    keyProperty="productId">
+    insert into web_products (product_id, title, description, 
+      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,parameter,appointed_time
+      )
+    values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT},
+      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR},#{appointedTime,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
+    keyProperty="productId">
+    insert into web_products
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModify != null" >
+        last_modify,
+      </if>
+      <if test="isActive != null" >
+        is_active,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="isShippingFree != null" >
+        is_shipping_free,
+      </if>
+      <if test="explain != null" >
+        Explain,
+      </if>
+      <if test="isShow !=null ">
+        is_show,
+      </if>
+      <if test="sortValue !=null">
+        sort_value,
+      </if>
+      	parameter,
+      <if test="appointedTime !=null">
+      	appointed_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModify != null" >
+        #{lastModify,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null" >
+        #{isActive,jdbcType=BIT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isShippingFree != null" >
+        #{isShippingFree,jdbcType=BIT},
+      </if>
+      <if test="explain != null" >
+        #{explain,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow !=null ">
+        #{isShow,jdbcType=BIT},
+      </if>
+      <if test="sortValue !=null">
+        #{sortValue,jdbcType=INTEGER},
+      </if>
+      	 #{parameter,jdbcType=VARCHAR},
+      <if test="appointedTime !=null">
+      	 #{appointedTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" >
+    update web_products
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModify != null" >
+        last_modify = #{lastModify,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=BIT},
+      </if>
+      <if test="isShippingFree != null" >
+        is_shipping_free = #{isShippingFree,jdbcType=BIT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+       <if test="explain != null" >
+        Explain = #{explain,jdbcType=VARCHAR},
+      </if>
+      <if test="isShow !=null">
+        is_show = #{isShow,jdbcType=BIT},
+      </if>
+      <if test="sortValue !=null">
+        sort_value = #{sortValue,jdbcType=INTEGER},
+      </if>
+      	parameter = #{parameter,jdbcType=VARCHAR},
+      <if test="appointedTime !=null">
+      	appointed_time = #{appointedTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Product" >
+    update web_products
+    set title = #{title,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify = #{lastModify,jdbcType=TIMESTAMP},
+      price = #{price,jdbcType=DECIMAL},
+      is_shipping_free = #{isShippingFree,jdbcType=BIT},
+      is_active = #{isActive,jdbcType=BIT},
+      Explain = #{explain,jdbcType=VARCHAR},
+      is_show = #{isShow,jdbcType=BIT},
+      sort_value = #{sortValue,jdbcType=INTEGER},
+      parameter = #{parameter,jdbcType=VARCHAR},
+      appointed_time = #{appointedTime,jdbcType=INTEGER}
+    where product_id = #{appointedTime,jdbcType=INTEGER}
+  </update>
+
+  <select id="getMaxSortValue" resultType="java.lang.Integer">
+      select max(sort_value)
+      FROM
+      web_products
+  </select>
+  
+  <select id="getParameters" resultMap="ProductParameters" parameterType="java.lang.Integer">
+    select 
+    id,product_id,sname
+    from web_product_parameters
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectParameters" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+    select 
+    id,product_id,sname
+    from web_product_parameters
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="obtainParameters" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+    select 
+    sname
+    from web_product_parameters
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="obtainParameter" resultMap="ProductParameters" parameterType="java.lang.Integer" >
+    select 
+    *
+    from web_product_parameters
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   <insert id="insertParameters" parameterType="com.uclee.fundation.data.mybatis.model.ProductParameters" useGeneratedKeys="true"
+    keyProperty="productId">
+    insert into web_product_parameters
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        product_id,
+        sname,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        #{productId,jdbcType=INTEGER},
+        #{sname,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+    <update id="updateParameters" parameterType="com.uclee.fundation.data.mybatis.model.ProductParameters">
+    update web_product_parameters  set sname = #{sname,jdbcType=VARCHAR}
+    where product_id = #{productId,jdbcType=INTEGER} and id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

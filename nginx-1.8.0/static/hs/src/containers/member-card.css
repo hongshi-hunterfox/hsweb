@@ -1,0 +1,106 @@
+
+.member-card {
+  padding-top: 15px;
+}
+
+.member-card-setting {
+  color: #333;
+  display: block;
+  background-color: white;
+  padding: 5px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.member-card-setting:active {
+  background-color: #eee;
+}
+
+.member-card-setting .media-body {
+  position: relative;
+  padding-top: 10px;
+}
+
+.member-card-avatar {
+  border-radius: 50%;
+}
+
+.member-card-setting-link {
+  position: absolute;
+  height: 1em;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  right: 10px;
+}
+
+.member-card-image{
+  text-align: center;
+   padding: 5px;
+}
+
+.member-card-image-item{
+  width: 250px;
+  height: 250px;
+}
+.member-card-image-barcode{
+
+  width: 100%;
+  height: 100px;
+}
+.member-card-list {
+  padding: 10px;
+}
+
+.member-card-item {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5)
+}
+
+.member-card-item-code {
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 9px;
+  font-size: 15px;
+}
+
+.member-card-item-balance {
+  padding: 15px;
+  text-align: center;
+  font-size: 24px;
+  float: left;
+}
+
+.member-card-item-recharge {
+  text-align: center;
+  float: right;
+  padding: 15px;
+}
+
+.member-card-item-loss {
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  right: 10px;
+  
+}
+.member-card-item-ls {
+  text-align: center;
+  font-size: 15px;
+  float: left;
+  
+}
+.check-table-du {
+  padding: 8px;
+  font-size: 15px;
+  
+}
+
+.member-card-item-Unbundling {
+	text-align: center;
+  float: right;
+}

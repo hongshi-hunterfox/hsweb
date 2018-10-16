@@ -1,0 +1,1176 @@
+use 数据库名
+
+go
+
+--必需要插入用户密码
+If Object_id('web_account_information','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_account_information](
+	[account] [varchar](25) NULL,
+	[password] [varchar](30) NULL
+)
+End
+
+If Object_ID('web_balance','U') Is Null
+
+create table web_balance(
+
+  id int identity (1,1) primary key,
+
+  user_id int not null,
+
+  balance decimal(20,2) NOT NULL,
+
+);
+
+If Object_ID('web_balance_log','U') Is Null
+
+create table web_balance_log(
+
+  id int identity (1,1) primary key,
+
+  user_id int not null,
+
+  money decimal(20,2) NOT NULL,
+
+  balance decimal(20,2) NOT NULL,
+
+  create_time DATETIME DEFAULT(GETDATE())
+
+);
+
+If Object_ID('web_banner','U') Is Null
+
+create table web_banner(
+
+  id int identity(1,1) primary key,
+
+  image_url varchar(255) not null default '',
+
+  link varchar(255) not null default ''
+
+);
+
+If Object_ID('web_binding_rewards  ','U') Is Null
+
+CREATE TABLE web_binding_rewards (
+
+  id int identity (1,1) primary key,
+
+  point int not null default 0,
+
+  voucher_code varchar(255) NOT NULL DEFAULT '',
+
+  amount int NOT NULL DEFAULT 1,
+
+  time DATETIME DEFAULT(GETDATE())
+
+);
+
+If Object_ID('web_birth_voucher  ','U') Is Null
+
+CREATE TABLE web_birth_voucher (
+
+  id int identity (1,1) primary key,
+
+  voucher_code varchar(255) NOT NULL DEFAULT '',
+
+  amount int NOT NULL DEFAULT 0,
+
+  time DATETIME DEFAULT(GETDATE())
+
+);
+
+If Object_ID('web_cart','U') Is Null
+
+begin
+
+create table web_cart(
+
+   cart_id int identity (1,1) primary key,
+
+   user_id int not null,
+
+   product_id int not null,
+
+   specification_value_id int not null,
+
+   amount int not null,
+
+   create_time DATETIME DEFAULT(GETDATE())
+
+);
+
+end
+
+CREATE NONCLUSTERED INDEX userIdx ON web_cart(user_id);
+
+If Object_ID('web_categories','U') Is Null
+
+CREATE TABLE web_categories(
+
+   category_id int identity (1,1) primary key,
+
+   category  varchar(255) NOT NULL,
+
+   parent_id int NOT NULL
+
+);
+
+If Object_ID('web_cities','U') Is Null
+
+CREATE TABLE web_cities(
+
+   city_id int primary key,
+
+   province_id int NOT NULL,
+
+   city varchar(255) NOT NULL 
+
+);
+
+If Object_ID('web_comment  ','U') Is Null
+
+CREATE TABLE web_comment (
+
+  id int identity (1,1) primary key,
+
+  user_id int not null,
+
+  order_serial_num varchar(255) NOT NULL,
+
+  title varchar(1024) not null DEFAULT '',
+
+  deliver int NOT NULL DEFAULT 5,
+
+  service int NOT NULL DEFAULT 5,
+
+  quality int NOT NULL DEFAULT 5,
+
+  back_title varchar(1024) not null DEFAULT '',
+
+  time DATETIME DEFAULT(GETDATE()),
+
+  back_time DATETIME DEFAULT null
+
+);
+
+If Object_ID('web_config','U') Is Null
+
+create table web_config(
+
+  id int identity (1,1) primary key,
+
+  tag varchar(255) not null,
+
+  value varchar(255) not null
+
+);
+
+If Object_ID('web_deliver_addrs','U') Is Null
+
+begin
+
+CREATE TABLE web_deliver_addrs(
+
+  deliverAddr_id int identity (1,1) primary key,
+
+  user_id int  NOT NULL ,
+
+  name varchar(255) NOT NULL DEFAULT '',
+
+  phone varchar(32) NOT NULL DEFAULT '',
+
+  province varchar(32) NOT NULL DEFAULT '',
+
+  city varchar(32) NOT NULL DEFAULT '',
+
+  region varchar(32) NOT NULL DEFAULT '',
+
+  addr_detail varchar(255) NOT NULL DEFAULT'',
+
+  zipCode varchar(32) NOT NULL DEFAULT '',
+
+  is_default bit NOT NULL DEFAULT 0,
+
+  longitude varchar(255) not null default '',  
+
+ latitude varchar(255) not null default ''
+
+);
+
+end
+
+CREATE NONCLUSTERED INDEX userIdx ON web_deliver_addrs(user_id);
+
+If Object_ID('web_evaluation_config','U') Is Null
+
+CREATE TABLE web_evaluation_config(
+	
+id int IDENTITY(1,1) NOT NULL,
+	
+point int NOT NULL,
+	
+money decimal(20, 2) NULL,
+	
+voucher_code varchar(255) NOT NULL,
+	
+amount int NOT NULL,
+	
+time datetime NULL
+);
+
+If Object_ID('web_freight','U') Is Null
+
+create table web_freight(
+
+  id int identity (1,1) primary key,
+
+  condition float not null default 0.00,
+
+  money decimal(20,2) NOT NULL
+
+);
+
+If Object_ID('web_full_cut ','U') Is Null
+
+CREATE TABLE web_full_cut (
+
+  id int identity (1,1) primary key,
+
+  condition decimal(15,2) not null,
+
+  cut decimal(15,2) not null ,
+
+  time DATETIME DEFAULT(GETDATE()),
+
+  start_time DATETIME DEFAULT null,
+
+  end_time DATETIME DEFAULT null
+
+);
+
+If Object_ID('web_home_quick_navi ','U') Is Null
+
+CREATE TABLE web_home_quick_navi (
+
+  navi_id int identity (1,1) primary key,
+
+  title varchar(255) NOT NULL DEFAULT '',
+
+  image_url varchar(255) NOT NULL DEFAULT ''
+
+);
+
+If Object_id('web_integralin_config','U') Is Null
+BEGIN
+CREATE TABLE [dbo].[web_integralin_config](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[day] [int] NOT NULL,
+	[money] [decimal](20, 2) NULL,
+	[voucher_code] [varchar](255) NULL,
+	[amount] [int] NULL
+)
+END
+
+If Object_ID('web_lottery_draw_config','U') Is Null
+
+create table web_lottery_draw_config(
+
+  id int identity(1,1) primary key,
+
+  voucher_code varchar(255) default null,
+
+  money decimal(20,2) default null,
+
+  product_id int not null default 0,
+
+  code varchar(255) not null default '',
+
+  rate float not null default 0.00,
+
+  count int not null default 0,
+
+  is_end bit not null default 0,
+
+  limits int not null default 10000,
+
+  start_time DATETIME DEFAULT(GETDATE()),
+
+  end_time DATETIME DEFAULT(GETDATE())
+
+);
+
+If Object_ID('web_lottery_record','U') Is Null
+
+create table web_lottery_record(
+
+  id int identity(1,1) primary key,
+
+  user_id int not null,
+
+  time DATETIME DEFAULT(GETDATE())
+
+);
+
+If Object_ID('web_message  ','U') Is Null
+
+CREATE TABLE web_message (
+
+  id int identity (1,1) primary key,
+
+  oauth_id varchar(255) NOT NULL DEFAULT '',
+
+  order_num varchar(255) not null DEFAULT '',
+
+  time DATETIME DEFAULT(GETDATE()),
+
+  money decimal(20,2) NOT NULL DEFAULT '0.00',
+
+  pay_type varchar(255) not null DEFAULT '',
+
+  is_send bit NOT NULL DEFAULT 0
+
+);
+
+If Object_ID('web_msg_record','U') Is Null
+
+create table web_msg_record(
+
+  id int identity(1,1) primary key,
+
+  user_id int not null ,
+
+  type int not null default 0,
+
+  time DATETIME DEFAULT(GETDATE()),
+
+);
+
+If Object_ID('web_napa_store_user_link','U') Is Null
+
+create table web_napa_store_user_link(
+
+  id int identity(1,1) primary key,
+
+  user_id int not null ,
+
+  store_id int not null 
+
+);
+
+If Object_ID('web_napa_stores','U') Is Null
+
+ create table web_napa_stores(
+
+   store_id int identity (1,1) primary key,
+
+   user_id int not null,
+
+   store_name varchar(255) not null,
+
+   province varchar(255) not null,
+
+   city varchar(255) not null,
+
+   region varchar(255) not null,
+
+   addr_detail varchar(255) not null,
+
+   longitude varchar(255) not null,
+
+   latitude varchar(255) not null,
+
+   hs_code varchar(255) not null
+
+);
+
+If Object_ID('web_oauth_login','U') Is Null
+
+begin
+
+CREATE TABLE web_oauth_login (
+
+   login_id int identity (1,1) primary key, --主键id
+
+   oauth_id varchar(255) NOT NULL,    --如微信openid
+
+   user_id int NOT NULL,  --用户id
+
+   oauth_name varchar(255) not null,  --登陆名信息
+
+   oauth_access_token varchar(255) not null,--登陆名信息
+
+   oauth_expires varchar(255) not null,--登陆名信息
+
+   is_subcribe bit not null ,    --是否关注
+
+   is_subscribe_show bit not null default 1, --微商城未使用
+
+   is_point_send bit not null default 0, --微商城未使用
+
+ );
+
+end
+
+CREATE NONCLUSTERED INDEX oauthIdx ON web_oauth_login(oauth_id);
+
+If Object_ID('web_order_items','U') Is Null
+
+begin
+
+CREATE TABLE web_order_items(
+
+   item_id int identity (1,1) primary key,
+
+   item_serial_num varchar(255) NOT NULL DEFAULT '',
+
+   order_id int NOT NULL ,
+
+   store_id int NOT NULL,
+
+   product_id int NOT NULL,
+
+   image_url varchar(255) NOT NULL DEFAULT '',
+
+   value_id int NOT NULL,
+
+   value varchar(255) not null default '',
+
+   amount smallint NOT NULL DEFAULT 0,
+
+   price decimal(20,2) NOT NULL
+
+);
+
+end
+
+CREATE NONCLUSTERED INDEX orderIdx ON web_order_items(order_id)
+
+If Object_ID('web_orders','U') Is Null
+
+begin
+
+CREATE TABLE web_orders(
+
+   order_id int identity (1,1) primary key, --订单id
+
+   order_serial_num varchar(255) NOT NULL DEFAULT '', --订单号
+
+   user_id int  NOT NULL , --用户id
+
+   store_id int NOT NULL,  --加盟店id
+
+   payment_order_id int NOT NULL DEFAULT 0, --支付单id
+
+   province VARCHAR(255) not null default '', --省份
+
+   city VARCHAR(255) not null default '', --城市
+
+   region VARCHAR(255) not null default '', --区域
+
+   addr_detail VARCHAR(255) not null default '', --详细地址
+
+   name VARCHAR(255) not null default '', --收货人
+
+   phone VARCHAR(255) not null default '', --收货号码
+
+   zip_code VARCHAR(255) not null default '', --邮编
+
+   create_time DATETIME DEFAULT(GETDATE()), -- 创建时间
+
+   pay_time DATETIME DEFAULT null, -- 支付时间
+
+   shipping_cost decimal(20,2) NOT NULL DEFAULT '0.00', --运费
+
+   total_price decimal(20,2) NOT NULL, --总价
+
+   voucher_price decimal(20,2) NOT NULL default 0.00, --电子券使用金额
+
+   voucher_code VARCHAR(255) not null default '',  --电子券编号
+
+   status smallint NOT NULL DEFAULT '1', --状态，1未支付，2已支付
+
+   remark VARCHAR(255) not null default '', --备注
+
+   pick_time DATETIME DEFAULT null,--取货时间
+
+   is_self_pick bit not null default 0,--是否自提
+
+   first_dist_id int not null default 0, --第一分销者id
+
+   first_dist_money decimal(20,2) NOT NULL default 0, --一级分销金额
+
+   second_dist_id int not null default 0, --二级分销id
+
+   second_dist_money decimal(20,2) NOT NULL default 0, --二级分销金额
+
+   sync_status smallint NOT NULL DEFAULT '100',
+
+);
+
+end
+
+CREATE NONCLUSTERED INDEX orderSerialNumIdx ON web_orders(order_serial_num)
+
+If Object_id('web_orders_setting_picktime','U') Is Null
+BEGIN
+create table web_orders_setting_picktime(
+id int identity (1,1) primary key,
+closeStartDate datetime,
+closeEndDate datetime,
+businessStartTime varchar(50),
+businessEndTime varchar(50)
+)
+END
+
+If Object_id('web_payment_callback_data','U') Is Null
+Begin
+CREATE TABLE web_payment_callback_data (
+  id int identity (1,1) primary key,
+  data varchar(4096) NOT NULL DEFAULT '',
+  payment_serial_num varchar(255) NOT NULL,
+  create_time DATETIME DEFAULT(GETDATE())
+) ;
+End
+
+If Object_ID('web_payment_orders','U') Is Null
+
+begin
+
+CREATE TABLE web_payment_orders(
+
+   payment_order_id int identity (1,1) primary key, --支付单号id
+
+   user_id int  NOT NULL, --用户id
+
+   payment_id int  NOT NULL, --支付方式id
+
+   payment_serial_num varchar(255) NOT NULL, --支付单号
+
+   transaction_id varchar(255) NOT NULL DEFAULT '', --外部支付交易号
+
+   money decimal(20,2) NOT NULL DEFAULT '0.00', --支付金额
+
+   transaction_type smallint not null default 1, --交易类型 1为商品订单，2为充值订单
+
+   is_completed bit NOT NULL DEFAULT '0', --是否完成支付
+
+   create_time DATETIME DEFAULT(GETDATE()), --创建时间
+
+   complete_time DATETIME DEFAULT null, --完成时间
+
+   is_sync bit not null default 0  --是否已同步订单到洪石系统
+
+);
+
+end
+
+CREATE NONCLUSTERED INDEX uidIdx ON web_payment_orders(user_id)
+
+If Object_ID('web_payments','U') Is Null
+
+CREATE TABLE web_payments(
+
+   payment_id int identity (1,1) primary key,
+
+   payment_name varchar(255) NOT NULL ,
+
+   unit varchar(255) not null default '',
+
+   platform varchar(255) not null default '',
+
+   is_active bit NOT NULL DEFAULT '1',
+
+   strategy_class_name varchar(255) not  NULL
+
+);
+
+If Object_ID('web_permissions','U') Is Null
+
+CREATE TABLE web_permissions(
+
+   permission_id int identity (1,1) primary key,
+
+   permission varchar(255) NOT NULL,
+
+   tag VARCHAR(255) NOT NULL DEFAULT '',
+
+   name varchar(255) NOT NULL,
+
+   is_active bit NOT NULL DEFAULT '1'
+
+);
+
+If Object_ID('web_product_group_links','U') Is Null
+
+CREATE TABLE web_product_group_links (
+
+  group_id int not null,
+
+  product_id int  NOT NULL,
+
+  position int  NOT NULL default 0
+
+);
+
+If Object_ID('web_product_groups','U') Is Null
+
+ CREATE TABLE web_product_groups (
+
+  group_id int identity (1,1) primary key,
+
+  group_name varchar(255) NOT NULL,
+
+  tag varchar(255) not null default '',
+
+  display_type varchar(255) not null default '',
+
+  is_active bit NOT NULL DEFAULT '0'
+
+);
+
+If Object_ID('web_product_images_link','U') Is Null
+
+ CREATE TABLE web_product_images_link(
+
+   link_id int identity (1,1) primary key,
+
+   product_id int NOT NULL ,
+
+   image_url varchar(255) NOT NULL DEFAULT ''
+
+);
+
+If Object_ID('web_product_sale','U') Is Null
+
+create table web_product_sale(
+
+  id int identity(1,1) primary key,
+
+  product_id int not null ,
+
+  count int not null default 0,
+
+);
+
+If Object_ID('web_products','U') Is Null
+
+CREATE TABLE web_products (
+
+   product_id int identity (1,1) primary key,
+
+   title varchar(255) NOT NULL DEFAULT '', 
+
+   description varchar(255) NOT NULL DEFAULT '', 
+
+   create_time DATETIME DEFAULT(GETDATE()), 
+
+   last_modify DATETIME DEFAULT(GETDATE()),
+
+   is_active bit NOT NULL DEFAULT '0',
+
+   price decimal(20,2) NOT NULL DEFAULT '0.00',
+
+ );
+
+If Object_ID('web_products_categories_link','U') Is Null
+
+CREATE TABLE web_products_categories_link(
+
+   product_id int NOT NULL,
+
+   category_id int NOT NULL
+
+);
+
+If Object_ID('web_products_specifications_values_link','U') Is Null
+
+ CREATE TABLE web_products_specifications_values_link(
+
+   specification_id int  NOT NULL,
+
+   value_id int  NOT NULL,
+
+   product_id int not null
+
+);
+
+If Object_id('web_product_parameters','U') Is Null
+Begin
+	CREATE TABLE web_product_parameters(
+	id int IDENTITY(1,1) primary key NOT NULL,
+	product_id int NULL,
+	sname varchar(50) NULL,
+	)
+End
+
+If Object_ID('web_province','U') Is Null
+
+ CREATE TABLE web_province(
+
+   province_id int primary key,
+
+   province varchar(255) NOT NULL ,
+
+);
+
+If Object_ID('web_quick_navi_product_link  ','U') Is Null
+
+CREATE TABLE web_quick_navi_product_link (
+
+  id int identity (1,1) primary key,   
+
+  navi_id int  NOT NULL, 
+
+  product_id int  NOT NULL, 
+
+);
+
+If Object_id('web_vip_voucher','U') Is Null
+BEGIN
+CREATE TABLE [dbo].[web_vip_voucher](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[voucher] [varchar](255) NOT NULL,
+	[amount] [int] NOT NULL,
+)
+
+END
+
+If Object_ID('web_recharge_config','U') Is Null
+
+create table web_recharge_config(
+
+  id int identity (1,1) primary key,
+
+  money decimal(20,2) NOT NULL,
+
+  rewards decimal(20,2) NOT NULL default 0,
+
+  voucher_code varchar(255) not null default '',
+
+  type int not null default 1,
+
+  start_time DATETIME DEFAULT(GETDATE()),
+
+  end_time DATETIME DEFAULT(GETDATE()),
+
+  amount int,
+
+  amount_second int,
+
+  amount_third int,
+
+  voucher_code_second varchar(255),
+
+  voucher_code_third varchar(255),
+
+  limit int
+
+);
+
+If Object_ID('web_recharge_rewards_record  ','U') Is Null
+
+CREATE TABLE web_recharge_rewards_record (
+
+  id int identity (1,1) primary key,
+
+  user_id int not null,
+
+  config_id int not null,
+
+  count int not null default 0
+
+);
+
+If Object_ID('web_regions','U') Is Null
+
+CREATE TABLE web_regions(
+
+   region_id int primary key,
+
+   city_id int  NOT NULL,
+
+   region varchar(255) NOT NULL 
+
+);
+
+If Object_ID('web_role_permission_link','U') Is Null
+
+CREATE TABLE web_role_permission_link(
+
+   role_id int  NOT NULL,
+
+   permission_id int NOT NULL
+
+);
+
+If Object_ID('web_roles','U') Is Null
+
+CREATE TABLE web_roles(
+
+   role_id int identity (1,1) primary key,
+
+   role varchar(255) NOT NULL ,
+
+   parent_id int NOT NULL default 0,
+
+   is_active bit NOT NULL DEFAULT '1',
+
+   is_in_list bit not null default '1'
+
+);
+
+If Object_ID('web_shake_record','U') Is Null
+
+create table web_shake_record(
+
+  id int identity(1,1) primary key,
+
+  user_id int not null,
+
+  time DATETIME DEFAULT(GETDATE()),
+
+  is_show bit not null default 0
+
+);
+
+If Object_ID('web_shipping_full_cut  ','U') Is Null
+
+CREATE TABLE web_shipping_full_cut (
+
+  id int identity (1,1) primary key,
+
+  s_limit float not null ,
+
+  u_limit float not null ,
+
+  condition decimal(15,2) not null ,
+
+  time DATETIME DEFAULT(GETDATE()),
+
+  start_time DATETIME DEFAULT null,
+
+  end_time DATETIME DEFAULT null
+
+);
+
+If Object_ID('web_sign_record','U') Is Null
+
+create table web_sign_record(
+
+  id int identity (1,1) primary key,
+
+  user_id int not null,
+
+  sign_time DATETIME DEFAULT(GETDATE()),
+
+  point int not null default 0
+
+);
+
+If Object_ID('web_specification_value_store_link','U') Is Null
+
+CREATE TABLE web_specification_value_store_link (
+
+   value_id int not null,
+
+   store_id int not null
+
+ );
+
+If Object_ID('web_specification_values','U') Is Null
+
+CREATE TABLE web_specification_values(
+
+   value_id int identity (1,1) primary key,
+
+   specification_id int not null,
+
+   value varchar(255) NOT NULL DEFAULT '',
+
+   hs_goods_code varchar(255) not null,
+
+   hs_goods_price decimal(20,2) NOT NULL DEFAULT '0.00',
+
+   hs_stock int not null,
+
+   pre_price decimal(20,2) NOT NULL DEFAULT '0.00'
+
+);
+
+If Object_ID('web_specifications','U') Is Null
+
+ CREATE TABLE web_specifications(
+
+   specification_id int identity (1,1) primary key,
+
+   specification varchar(255) NOT NULL DEFAULT ''
+
+);
+
+If Object_ID('web_store_info','U') Is Null
+
+create table web_store_info(
+
+  id int identity(1,1) primary key,
+
+  description varchar(255) not null default '',
+
+);
+
+If Object_ID('web_user_invited_link','U') Is Null
+
+CREATE TABLE web_user_invited_link (
+
+  user_id int  NOT NULL,    --用户id
+
+  invited_id int  NOT NULL, --受邀用户id
+
+  invite_time DATETIME DEFAULT(GETDATE()) --邀请时间
+
+);
+
+If Object_ID('web_user_profiles','U') Is Null
+
+begin
+
+CREATE TABLE web_user_profiles(
+
+   profile_id int identity (1,1) primary key, --主键id
+
+   user_id int  NOT NULL, --用户id
+
+   image varchar(255) NOT NULL default '', --用户头像
+
+   email varchar(255) NOT NULL default '', --微商城未使用
+
+   phone varchar(32) NOT NULL DEFAULT '',  --如果是老板，对应存手机登陆手机号
+
+   name varchar(255) NOT NULL DEFAULT'',  --用户名
+
+   nick_name varchar(255) NOT NULL DEFAULT'', --昵称
+
+   login_count smallint NOT NULL DEFAULT 0, --微商城未使用
+
+   regist_time  DATETIME DEFAULT(GETDATE()), --注册时间
+
+   is_active bit NOT NULL DEFAULT '1', --微商城未使用
+
+   ip_addr varchar(255) not null default '', --微商城未使用
+
+   vip_image varchar(255) NOT NULL default '', --二维码地址
+
+   vip_jbarcode varchar(255) NOT NULL default '', --条形码地址
+
+   last_buy DATETIME DEFAULT null, --最后一次购买时间
+
+);
+
+end
+
+CREATE NONCLUSTERED INDEX uidIdx ON web_oauth_login(user_id)
+
+If Object_ID('web_user_role_link','U') Is Null
+
+CREATE TABLE web_user_role_link(
+
+   user_id int NOT NULL,
+
+   role_id int NOT NULL
+
+);
+
+If Object_ID('web_users','U') Is Null
+
+CREATE TABLE web_users (
+
+   user_id int identity (1,1) primary key, --用户id
+
+   parent_id int  NOT NULL DEFAULT '0', --父id，微商城暂时不用
+
+   password varchar(255) not null, --密码，微商城暂时没用
+
+   serial_num varchar(255) not null --用户序列号
+
+ );
+
+If Object_id('web_user_list','U') Is Null
+Begin
+	CREATE TABLE web_user_list(
+	id int identity(1,1) primary key,
+	vip_id int,
+	oauth_id varchar(255),
+	create_time datetime,
+	phone varchar(25)
+	)
+End
+
+If Object_id('web_evaluation_config','U') Is Null
+Begin
+create table ReportColumn(
+Id int IDENTITY(1,1) NOT NULL ,
+EngName Varchar(20),
+CnName Varchar(20),
+Sort int,
+ObjectName varchar(50),
+Remarks varchar(20)
+)
+end 
+go
+delete from ReportColumn
+insert into ReportColumn(EngName,CnName,Sort,ObjectName,Remarks)
+select '日期','日期',1,'SumBusinessClass','营业分类汇总' union
+select '零售','零售',2,'SumBusinessClass','营业分类汇总' union
+select '订单','订单',3,'SumBusinessClass','营业分类汇总' union
+select '充值','充值',4,'SumBusinessClass','营业分类汇总' union
+select '收入方式','收入方式',1,'SalesRevenue','销售收入' union
+select '昨天','昨天',2,'SalesRevenue','销售收入'  union
+select '近七天','近七天',3,'SalesRevenue','销售收入'  union
+select '近三十天','近三十天',4,'SalesRevenue','销售收入'union
+select '日期','日期',1,'BusinessError','营业差额'  union
+select '店铺名','店铺名',2,'BusinessError','营业差额'  union
+select '应缴','应缴',3,'BusinessError','营业差额'  union
+select '实缴','实缴',4,'BusinessError','营业差额'  union
+select '差额','差额',5,'BusinessError','营业差额'  union
+select '类别','类别',1,'SalesRanking','分类单品销售排行' union
+select '产品','产品',2,'SalesRanking','分类单品销售排行'union
+select '销售','销售',3,'SalesRanking','分类单品销售排行'union
+select '日期','日期',1,'VIPAnalysis','会员分析'union
+select '充值','充值',2,'VIPAnalysis','会员分析'union
+select '刷卡','刷卡',3,'VIPAnalysis','会员分析'union
+select '类别','类别',1,'ClassSaleType','大类销售排行'union
+select '昨天','昨天',2,'ClassSaleType','大类销售排行'union
+select '近七天','近七天',3,'ClassSaleType','大类销售排行'union
+select '近三十天','近三十天',4,'ClassSaleType','大类销售排行'
+go
+
+If Object_ID('web_vars','U') Is Null
+
+CREATE TABLE web_vars (
+
+  var_id int identity (1,1) primary key,
+
+  platform varchar(255) NOT NULL DEFAULT '',
+
+  name varchar(255) NOT NULL DEFAULT '',
+
+  storage_time DATETIME DEFAULT(GETDATE()),
+
+  value varchar(1024) NOT NULL DEFAULT '',
+
+);
+
+If Object_id('web_viplog','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_viplog](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[vcode] [varchar](255) NULL,
+	[foreign_key] [varchar](255) NULL,
+	[recording_time] [datetime] NULL,
+	[timestamp] [timestamp] NULL
+)
+
+ALTER TABLE [dbo].[web_viplog] ADD  CONSTRAINT [DF_web_viplog_recording_time]  DEFAULT (getdate()) FOR [recording_time]
+End
+
+If Object_ID('web_winning_record','U') Is Null
+
+create table web_winning_record(
+
+  id int identity(1,1) primary key,
+
+  user_id int not null,
+
+  winning_level int not null,
+
+  time DATETIME DEFAULT(GETDATE()) 
+
+);
+
+--退款
+declare @def varchar(100),@SQL Nvarchar(100)
+if exists(select [name]
+	from sysobjects t
+	where id = (select cdefault from syscolumns where id = object_id(N'web_binding_rewards')
+	and name='amount')  ) 
+begin
+	select @def=[name] 	from sysobjects t
+	where id = (select cdefault from syscolumns where id = object_id(N'web_binding_rewards') and name='amount') 
+	set @SQL ='alter table web_binding_rewards drop constraint '+@def
+	exec  sp_executesql  @SQL
+	alter table web_binding_rewards add default(1) for amount
+end
+else
+begin
+  alter table web_binding_rewards add default(1) for amount
+end
+
+
+
+go
+If Object_id('web_refund_orders','U') Is Null
+	BEGIN
+		CREATE TABLE web_refund_orders(
+			refund_order_id int IDENTITY(1,1) NOT NULL,
+			user_id int NOT NULL,
+			payment_id int NOT NULL,
+			payment_order_id int NOT NULL,
+			payment_serial_num varchar(255) NOT NULL,
+			refund_serial_num varchar(255) NOT NULL,
+			transaction_id varchar(255) NOT NULL DEFAULT ('') ,
+			transaction_type smallint NOT NULL,
+			totalFree decimal(20, 2) NOT NULL DEFAULT ('0.00') ,
+			refundFree decimal(20, 2) NOT NULL DEFAULT ('0.00') ,
+			create_time datetime NULL DEFAULT (getdate()),
+			complete_time datetime NULL  DEFAULT (null),
+			is_completed BIT not NULL DEFAULT (0),
+			refundDesc varchar(500),
+			flag int not null DEFAULT 0
+		)
+	END
+
+
+If Not Exists(Select * From web_config where tag='zhengshu')
+	Begin
+		insert into web_config (tag,value) values ('zhengshu','D:\zhengshu\hs\apiclient_cert.p12'); --证书路径
+	End
+
+
+
+If Not Exists(Select * From web_config where tag='zhengshuPassword')
+	Begin
+		insert into web_config (tag,value) values ('zhengshuPassword','to119,0002'); --证书的密码(一般是web_config表中的merchantcode值,如果不是的话也需要写入到数据库中)
+	End
+
+if not EXISTS (select * from sysObjects where  id=object_id (N'[dbo].[WSC_insertOrderTrace]'))
+	BEGIN
+						CREATE PROCEDURE  [dbo].[WSC_insertOrderTrace]
+							@paymentSerialNum varchar(50),
+							@openId varchar(100),
+							@flag int
+
+						AS
+						BEGIN
+							SET NOCOUNT ON;
+							Declare @orderSeialNum varchar(30),@orderId int,@num varchar(10)
+
+							select @orderSeialNum=A.order_serial_num from web_orders A left join web_payment_orders B
+							on A.payment_order_id=B.payment_order_id where B.payment_serial_num=@paymentSerialNum
+
+
+							select @orderId=ID FROM orders where 商户订单号=@orderSeialNum
+							select @num=单号 from orders where 商户订单号=@orderSeialNum
+
+							if @flag=1
+							begin
+								insert into orders_trace(订单id,订单单号,状态,建立日期,操作人)
+								values(@orderId,@num,'申请退款中',getDate(),@openId)
+							end
+							else if @flag=3
+							begin
+								insert into orders_trace(订单id,订单单号,状态,建立日期,操作人)
+								values(@orderId,@num,'退款成功',getDate(),@openId)
+							end
+						END
+	END

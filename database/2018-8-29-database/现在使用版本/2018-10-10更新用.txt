@@ -1,0 +1,60 @@
+--------------------------------------------------------------------
+自动生日信息推送
+create table web_birthdayInformation_push(
+	id int primary key not null,
+	day int not null,
+	time varchar(50) not null
+)
+新增砍价记录表
+create table web_bargain_log(
+  id int IDENTITY(1,1) NOT NULL,
+  pid int,
+  vid int,
+  open_id varchar(255),
+  random_amount decimal(20, 2),
+  launch_time datetime,
+  invitation_code varchar(50)
+  )
+
+CREATE TABLE [dbo].[web_bargain_setting](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](255) NULL,
+	[start] [datetime] NULL,
+	[closure] [datetime] NULL,
+	[price] [decimal](20, 2) NULL,
+	[minprice] [decimal](20, 2) NULL,
+	[maxprice] [decimal](20, 2) NULL,
+	[product_name] [varchar](50) NULL,
+	[tries_limit] [int] NULL,
+)
+
+CREATE TABLE [dbo].[web_launch_bargain](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[pid] [int] NULL,
+	[uid] [int] NULL,
+	[open_id] [varchar](255) NULL,
+	[initial_amount] [decimal](20, 2) NULL,
+	[current_amount] [decimal](20, 2) NULL,
+	[launch_time] [datetime] NULL,
+	[status] [int] NULL,
+	[invitation_code] [varchar](50) NULL,
+)
+
+
+-----新增字段
+
+alter table web_products add appointed_time int
+  alter table web_product_groups add image_url varchar; 
+alter table web_orders add invalid int;
+ alter table web_cart add activity_markers int;
+
+
+insert into web_config(tag,value) values('loss','0')
+
+insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！')
+
+insert into web_config(tag,value) values('notice','欢迎光临！')
+
+insert into web_config(tag,value) values('bargainText','...')
+
+insert into web_config(tag,value) values('signText','...')

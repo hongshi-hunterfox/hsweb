@@ -1,0 +1,184 @@
+.check-btn {
+  background: url(/images/coupon/bg-ShowCoupon2.png) no-repeat;
+  padding: 2px;
+}
+.check-btn-items {
+  background-color: #FFC125;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+  text-align: center;
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 40px;
+  border: 3px solid #C0392B;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+}
+.button {
+  background-color: #ff0000;
+}
+.member-center-heros {
+  position: relative;
+  text-align: right;
+}
+.check-table-in {
+  text-align: right;
+  background-color: #FF7256;
+}
+.check-wrap {
+  margin-top: 30px;
+  padding-left: 15px;
+  text-align: center;
+}
+.check-btn-wrap {
+  margin: auto;
+  display: block;
+  width: 6em;
+  height: 6em;
+  background-color: #EEAD0E;
+  border: 1px solid #FFB90F;
+  color: #BCEE68;
+  font-size: 18px;
+  border-radius: 50%;
+  padding: 15px;
+  position: relative;
+  outline: 0;
+}
+.check-limits {
+  background-color: red;
+  margin-top: 30px;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+}
+.check-table {
+  background: url(/images/checktable.png) no-repeat;
+  background-size: 100% 100%;
+  display: block;
+  height: 100px;
+  max-width: 100%;
+  padding: 15px;
+}
+.check-table-upper {
+  color: #ffffff;
+  font-size: 18px;
+  text-align: center;
+}
+.check-table-upp {
+  text-align: right;
+}
+.check-table-dui {
+  padding: 8px;
+  color: #FF7F00;
+  font-size: 15px;
+  text-align: center;
+}
+.check-table-vipcode {
+  color: #FFDAB9;
+  font-size: 12px;
+  text-align: center;
+}
+.check-table-code {
+  width: 250px;
+  height: 300px;
+  color: #FFD700;
+  font-size: 20px;
+  padding: 8px;
+}
+.check-table-de {
+  padding: 8px;
+  text-align: center;
+  width: 200px;
+  height: 200px;
+}
+.check-table-de img {
+  width: 100%;
+  height: 100%;
+}
+.check-table-co {
+  color: #FF7F00;
+  font-size: 20px;
+  padding: 8px;
+  text-align: center;
+}
+.check-table-items {
+  background-color: #FFC125;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+  text-align: center;
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 40px;
+  border: 3px solid #C0392B;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+}
+.check-table-roll {
+  width: 350px;
+  height: 486px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  text-align: center;
+}
+.check-table-on {
+  margin-top: 30px;
+  padding: 5px 5px;
+  width: 350px;
+  height: 165px;
+  text-align: center;
+}
+.check-table-in {
+  text-align: center;
+  background-color: #FF7256;
+}
+.check-table-item {
+  margin: 10px;
+  background: url(/images/checktable.png) no-repeat;
+  background-size: 100% 100%;
+}
+.check-table-item:before,
+.check-table-item:after {
+  content: "";
+  display: table;
+}
+.check-table-item:after {
+  clear: both;
+}
+.check-table-item .top-line:before,
+.check-table-item .top-line:after {
+  content: "";
+  display: table;
+}
+.check-table-item .top-line:after {
+  clear: both;
+}
+.check-table-item .top-line .title {
+  float: left;
+  padding: 15px 10px;
+}
+.check-table-item .top-line .condition {
+  float: right;
+  padding: 15px 10px;
+}
+.check-table-item .center-line .money {
+  color: #ee0a3b;
+  text-align: center;
+}
+.check-table-item .center-line .money .number {
+  font-size: 50px;
+}
+.check-table-item .bottom-line {
+  text-align: center;
+}
+.check-table-item .tag {
+  display: block;
+  float: right;
+  padding: 5px;
+  color: #0cd60c;
+  font-size: 15px;
+}
+.check-table-message {
+  border-bottom: 1px;
+  margin: 10px;
+  padding: 10px 0;
+}

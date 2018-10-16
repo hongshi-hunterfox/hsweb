@@ -1,0 +1,42 @@
+{
+  "name": "hs-admin",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bulid": "^1.0.0",
+    "font-awesome": "^4.7.0",
+    "form_to_object": "^1.0.8",
+    "input-moment": "^0.3.5",
+    "jquery": "^3.3.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "npm": "^5.2.0",
+    "react": "^15.5.4",
+    "react-document-title": "^2.0.3",
+    "react-dom": "^15.5.4",
+    "react-modal-bootstrap": "^1.1.1",
+    "react-moment": "^0.6.5",
+    "react-quill": "^1.0.0-rc.2",
+    "react-router": "^3.0.5",
+    "react-smooth-scrollbar": "^7.2.2",
+    "run": "^1.4.0",
+    "superagent": "^3.5.2",
+    "validator": "^7.0.0"
+  },
+  "devDependencies": {
+    "autoless": "^0.1.7",
+    "less": "^2.7.2",
+    "npm-run-all": "^4.0.2",
+    "react-scripts": "0.9.5"
+  },
+  "scripts": {
+    "start": "npm-run-all -p watch-less rs-start",
+    "build": "npm-run-all -s build-less rs-build",
+    "rs-build": "react-scripts build",
+    "rs-start": "react-scripts start",
+    "watch-less": "autoless ./src",
+    "build-less": "autoless ./src --no-watch"
+  },
+  "proxy": "http://localhost:8092"
+}

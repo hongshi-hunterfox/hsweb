@@ -1,0 +1,110 @@
+.launch-bargain {
+  background: url(/images/timg.png) no-repeat;
+  width: 100%;
+  height: 600px;
+  background-size: cover;
+}
+.launch-bargain-empty {
+  text-align: center;
+}
+.launch-bargain-empty > a {
+  display: inline-block;
+  color: #ff6600;
+  border: 1px solid #ff6600;
+  padding: 2px 12px;
+  border-radius: 5px;
+}
+.launch-bargain-items {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+.launch-bargain-items-fontTitle {
+  position: absolute;
+  left: 41%;
+  font-size: 19px;
+  color: white;
+  top: 86px;
+}
+.launch-bargain-items-fontMoney {
+  position: absolute;
+  left: 40%;
+  font-size: 18px;
+  top: 135px;
+}
+.launch-bargain-items-fontText {
+  position: absolute;
+  left: 15%;
+  font-size: 18px;
+  top: 175px;
+}
+.launch-bargain-item {
+  position: relative;
+  padding: 5px;
+}
+.launch-bargain-item + .launch-bargain-item {
+  margin-top: 2px;
+}
+.launch-bargain-item-img {
+  float: left;
+}
+.launch-bargain-item-info {
+  overflow: hidden;
+  padding-left: 10px;
+}
+.launch-bargain-item-title {
+  font-size: 16px;
+}
+.launch-bargain-item-spec {
+  color: #999;
+}
+.launch-bargain-item-font {
+  background-color: white;
+  font-size: 16px;
+  position: relative;
+  height: 80px;
+  border: 1px solid #f5f5f5;
+  text-align: center;
+}
+.launch-bargain-item-bg {
+  background-color: black;
+  text-align: center;
+}
+.launch-bargain-item-button {
+  text-align: center;
+}
+.launch-bargain-item-cardstyle {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
+}
+.launch-bargain-item-roll {
+  overflow-y: scroll;
+  overflow-x: scroll;
+  width: 100%;
+  height: 150px;
+}
+.launch-bargain-item-on {
+  margin-top: 30px;
+  padding: 5px 5px;
+  width: 350px;
+  height: 165px;
+  text-align: center;
+}
+.launch-bargain-item-checkin {
+  display: block;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #FFC125;
+  padding: 4px 10px;
+  color: white;
+  border-radius: 15px;
+  border: 1px solid #F39C12;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
+}
+.usersList {
+  padding: 2px 12px;
+}

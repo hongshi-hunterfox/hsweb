@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.CategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Category" >
+    <id column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="batchDiscount" property="batchDiscount" jdbcType="DECIMAL" />
+    <result column="startTimeStrs" property="startTimeStrs" jdbcType="VARCHAR" />
+    <result column="endTimeStrs" property="endTimeStrs" jdbcType="VARCHAR" />
+    <result column="startTimeStrs" property="startTimeStr" jdbcType="TIMESTAMP" />
+    <result column="endTimeStrs" property="endTimeStr" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    category_id, category, parent_id, batchDiscount, startTimeStrs, endTimeStrs
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_categories
+    where category_id = #{categoryId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_categories
+    where parent_id = #{parentId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    A.*
+    from web_categories A left join web_products_categories_link B  on A.category_id=B.category_id
+    where B.product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from web_categories
+    where category = #{category,jdbcType=VARCHAR}
+  </select>
+   <select id="selectBybatchDiscount" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from web_categories
+    where category = #{category,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_categories
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_categories
+    where category_id = #{categoryId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Category" >
+    insert into web_categories (category_id, category, parent_id, batchDiscount, startTimeStrs,endTimeStrs 
+      )
+    values (#{categoryId,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{batchDiscount,jdbcType=DECIMAL}, #{startTimeStrs,jdbcType=VARCHAR}, #{endTimeStrs,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Category" >
+    insert into web_categories
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="batchDiscount != null" >
+       batchDiscount,
+      </if>
+       <if test="startTimeStrs != null" >
+       startTimeStrs,
+      </if>
+       <if test="endTimeStrs != null" >
+       endTimeStrs,
+      </if>
+     
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+       <if test="startTimeStrs != null" >
+        #{startTimeStrs,jdbcType=VARCHAR},
+      </if>
+       <if test="endTimeStrs != null" >
+        #{endTimeStrs,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Category" >
+    update web_categories
+    <set >
+      <if test="category != null" >
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="batchDiscount != null" >
+        batchDiscount = #{batchDiscount,jdbcType=DECIMAL},
+      </if>
+       <if test="startTimeStrs != null" >
+        startTimeStrs = #{startTimeStrs,jdbcType=VARCHAR},
+      </if>
+       <if test="endTimeStrs != null" >
+        endTimeStrs = #{endTimeStrs,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where category_id = #{categoryId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Category" >
+    update web_categories
+    set category = #{category,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+       batchDiscount = #{batchDiscount,jdbcType=DECIMAL},
+       startTimeStrs = #{startTimeStrs,jdbcType=VARCHAR},
+       endTimeStrs = #{endTimeStrs,jdbcType=VARCHAR}
+    where category_id = #{categoryId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,277 @@
+.order {
+  background-color: white;
+}
+.order:before,
+.order:after {
+  content: "";
+  display: table;
+}
+.order:after {
+  clear: both;
+}
+.order-sales {
+  background-color: white;
+  margin: 10px;
+  position: relative;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ececec;
+}
+.order-sales:before,
+.order-sales:after {
+  content: "";
+  display: table;
+}
+.order-sales:after {
+  clear: both;
+}
+.order-sales:hover,
+.order-sales:active {
+  background-color: white;
+}
+.order-sales .none {
+  display: none;
+}
+.order-sales-top {
+  margin-bottom: 10px;
+}
+.order-sales-tag {
+  color: #FF2C29;
+  border: 1px solid #FFC1BF;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.order-sales-text {
+  margin-left: 5px;
+}
+.order-sales-icon {
+  float: right;
+  margin-right: 10px;
+}
+.order-sales-item {
+  padding: 5px 0px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.order-addr {
+  margin: 10px;
+}
+.order-addr .tab {
+  width: 100%;
+  color: #afafaf;
+}
+.order-addr .tab:before,
+.order-addr .tab:after {
+  content: "";
+  display: table;
+}
+.order-addr .tab:after {
+  clear: both;
+}
+.order-addr .tab .deli {
+  padding: 3px;
+  border-radius: 5%;
+  border: 1px solid #afafaf;
+  float: left;
+  text-align: center;
+  width: 48%;
+}
+.order-addr .tab .self {
+  padding: 3px;
+  border-radius: 5%;
+  border: 1px solid #afafaf;
+  float: right;
+  text-align: center;
+  width: 48%;
+}
+.order-addr .tab .select {
+  color: #f15f40;
+  font-weight: bold;
+  border: 1px solid #f15f40;
+}
+.order-addr .detail {
+  padding: 10px;
+  border-bottom: 1px dotted #f15f40;
+}
+.order-addr .detail .deli {
+  width: 100%;
+}
+.order-addr .detail .deli:before,
+.order-addr .detail .deli:after {
+  content: "";
+  display: table;
+}
+.order-addr .detail .deli:after {
+  clear: both;
+}
+.order-addr .detail .deli .left {
+  width: 90%;
+  float: left;
+}
+.order-addr .detail .deli .left:before,
+.order-addr .detail .deli .left:after {
+  content: "";
+  display: table;
+}
+.order-addr .detail .deli .left:after {
+  clear: both;
+}
+.order-addr .detail .deli .left .icon {
+  font-size: 20px;
+  margin-right: 5px;
+}
+.order-addr .detail .deli .left .phone {
+  float: right;
+  margin-right: 10px;
+}
+.order-addr .detail .deli .left .addrDetail {
+  margin-left: 17px;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #afafaf;
+}
+.order-addr .detail .deli .right {
+  width: 5%;
+  margin-top: 10px;
+  padding: 5px;
+  float: right;
+}
+.order-addr .detail .self .left {
+  width: 100%;
+}
+.order-addr .detail .self .left:before,
+.order-addr .detail .self .left:after {
+  content: "";
+  display: table;
+}
+.order-addr .detail .self .left:after {
+  clear: both;
+}
+.order-addr .detail .self .left .icon {
+  font-size: 20px;
+  margin-right: 5px;
+}
+.order-addr .detail .self .left .addrDetail {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #afafaf;
+}
+.order-store {
+  margin: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #ececec;
+}
+.order-item {
+  margin: 10px;
+  padding: 10px 0px;
+  border-bottom: 1px solid #ececec;
+}
+.order-item-info {
+  background-color: #f9f9f9;
+  margin-top: 8px;
+}
+.order-item-info:before,
+.order-item-info:after {
+  content: "";
+  display: table;
+}
+.order-item-info:after {
+  clear: both;
+}
+.order-item-info .image {
+  width: 80px;
+  height: 80px;
+  margin: 0px 10px  0px 10px;
+  float: left;
+}
+.order-item-info .title {
+  margin-top: 5px;
+  font-size: 15px;
+}
+.order-item-info .price {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #afafaf;
+}
+.order-item-info .sku-info {
+  margin-bottom: 8px;
+}
+.order-item-info .sku-info .sku {
+  color: #afafaf;
+  margin-top: 5px;
+  font-size: 12px;
+}
+.order-item-info .sku-info .count {
+  margin-right: 10px;
+}
+.order-message {
+  border-bottom: 1px solid #ececec;
+  margin: 10px;
+  padding: 10px 0;
+}
+.order-message .input-group .form-control {
+  border-radius: 0;
+}
+.order-message .input-group-addon {
+  background-color: white;
+  border-radius: 0;
+  border: none;
+  padding-left: 0;
+}
+.order-message .radio-input {
+  margin-right: 20px;
+}
+.order-total {
+  border-bottom: 1px solid #ececec;
+  margin: 10px;
+  padding: 10px 0;
+}
+.order-total .money {
+  float: right;
+  margin-right: 10px;
+}
+.order-submit {
+  margin: 10px;
+  padding-bottom: 10px;
+  color: #f15f40;
+  float: right;
+}
+.order-submit .button {
+  background-color: #f15f40;
+  padding: 10px 20px;
+  color: white;
+  margin-left: 10px;
+  border-radius: 15%;
+}
+.order-coupon {
+  border-bottom: 1px solid #ececec;
+  margin: 10px;
+  padding: 10px 0;
+}
+.order-coupon:before,
+.order-coupon:after {
+  content: "";
+  display: table;
+}
+.order-coupon:after {
+  clear: both;
+}
+.order-coupon .icon {
+  float: right;
+  margin-right: 10px;
+}
+.qq-btn {
+  margin-top: 10px;
+  padding-left: 5px;
+  padding-bottom: 35px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 98;
+}
+.tail {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+  color: #afafaf;
+  margin-bottom: 15px;
+}

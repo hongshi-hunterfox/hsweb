@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ProductGroupLinkMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="position" property="position" jdbcType="INTEGER" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    *
+    from web_product_group_links
+    where group_id = #{groupId,jdbcType=INTEGER}
+    ORDER by position ASC
+  </select>
+  <select id="selectByGroupIdAndProductId" resultMap="BaseResultMap" >
+    select 
+    *
+    from web_product_group_links
+    where group_id = #{groupId,jdbcType=INTEGER} and product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="del" >
+    delete from web_product_group_links
+    where group_id = #{groupId,jdbcType=INTEGER} and product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    A.*
+    from web_product_group_links as A left join web_products as C on A.product_id=C.product_id where C.product_id is not null
+    ORDER by A.group_id ASC ,A.position ASC
+  </select>
+  <select id="selectByTag" resultMap="BaseResultMap" >
+    select 
+    A.*
+    from web_product_group_links as A left join web_product_groups as B on A.group_id=B.group_id left join web_products as C on A.product_id=C.product_id where B.group_name=#{groupName,jdbcType=VARCHAR} and C.product_id is not null
+    ORDER  by A.group_id ASC ,A.position ASC
+  </select>
+  
+  <insert id="inserts" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
+    insert into web_product_groups(group_name) values (#{groupName,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
+    insert into web_product_group_links (group_id, product_id, position
+      )
+    values (#{groupId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{position,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroupLink" >
+    insert into web_product_group_links
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getMaxPosition" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select max(position) from web_product_group_links
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+
+<update id="updateProductGroupPosition" >
+    update web_product_group_links set POSITION =#{position,jdbcType=INTEGER}
+    where group_id = #{groupId,jdbcType=INTEGER} and product_id = #{productId,jdbcType=INTEGER}
+</update>
+
+</mapper>

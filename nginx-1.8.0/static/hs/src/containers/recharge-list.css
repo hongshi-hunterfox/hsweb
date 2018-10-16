@@ -1,0 +1,44 @@
+.recharge-list {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.recharge-list-item {
+  background-color: white;
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.recharge-list-item .top:before,
+.recharge-list-item .top:after {
+  content: "";
+  display: table;
+}
+.recharge-list-item .top:after {
+  clear: both;
+}
+.recharge-list-item .top .left {
+  float: left;
+  color: #27AE60;
+  font-size: 15px;
+}
+.recharge-list-item .top .right {
+  font-size: 15px;
+  color: #27AE60;
+  float: right;
+}
+.recharge-list-item .bottom:before,
+.recharge-list-item .bottom:after {
+  content: "";
+  display: table;
+}
+.recharge-list-item .bottom:after {
+  clear: both;
+}
+.recharge-list-item .bottom .left {
+  float: left;
+  font-size: 15px;
+  color: #8C8C8C;
+}
+.recharge-list-item .bottom .right {
+  font-size: 15px;
+  float: right;
+}

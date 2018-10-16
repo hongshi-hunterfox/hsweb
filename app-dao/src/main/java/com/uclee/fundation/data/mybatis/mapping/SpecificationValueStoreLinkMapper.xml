@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.SpecificationValueStoreLinkMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.SpecificationValueStoreLink" >
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="selectByValueAndStoreId" resultMap="BaseResultMap" >
+    select 
+    *
+    from web_specification_value_store_link
+    where value_id = #{valueId,jdbcType=INTEGER} and store_id = #{storeId,jdbcType=INTEGER}
+  </select>
+  <delete id="delByProductId" parameterType="java.lang.Integer" >
+    delete from web_specification_value_store_link where value_id in (select value_id from web_products_specifications_values_link where product_id=#{productId,jdbcType=INTEGER})
+  </delete>
+  <delete id="delByStoreId" parameterType="java.lang.Integer" >
+    delete from web_specification_value_store_link where store_id=#{storeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValueStoreLink" >
+    insert into web_specification_value_store_link (value_id, store_id)
+    values (#{valueId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValueStoreLink" >
+    insert into web_specification_value_store_link
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="valueId != null" >
+        value_id,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="valueId != null" >
+        #{valueId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

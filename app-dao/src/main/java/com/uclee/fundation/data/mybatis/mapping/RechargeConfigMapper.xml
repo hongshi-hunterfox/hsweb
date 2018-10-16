@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.RechargeConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="rewards" property="rewards" jdbcType="DECIMAL" />
+    <result column="voucher_code" property="voucherCode" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="voucher_code_second" property="voucherCodeSecond" jdbcType="VARCHAR" />
+    <result column="amount_second" property="amountSecond" jdbcType="INTEGER" />
+    <result column="voucher_code_third" property="voucherCodeThird" jdbcType="VARCHAR" />
+    <result column="amount_third" property="amountThird" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="limit" property="limit" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rewards, money,voucher_code,amount,voucher_code_second,amount_second,voucher_code_third,amount_third,start_time,end_time,type,limit
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_recharge_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByMoney" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_recharge_config
+    where money = #{money,jdbcType=DECIMAL} and rewards = #{rewards,jdbcType=DECIMAL}
+  </select>
+   <select id="getByMoney" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_recharge_config t1 
+    where money = #{money,jdbcType=DECIMAL} and getdate() between t1.start_time and t1.end_time and not exists
+    	(select 1 from web_recharge_config t2 where t2.money=t1.money and t2.rewards>t1.rewards and getdate() between t2.start_time and t2.end_time)
+  </select>
+  <select id="selectMonPeiZhi" resultMap="BaseResultMap"  >
+   select 
+   	<include refid="Base_Column_List" /> 
+   	from web_recharge_config t1 where getdate() between t1.start_time and t1.end_time and not exists 
+   		(select 1 from web_recharge_config t2 where t2.money=t1.money and t2.rewards>t1.rewards and getdate() between t2.start_time and t2.end_time)
+   	order by money asc
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from web_recharge_config order by money asc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_recharge_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteAll">
+    truncate table  web_recharge_config
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.RechargeConfig" >
+    insert into web_recharge_config (id, rewards, money,voucher_code,amount,voucher_code_second,amount_second,voucher_code_third,amount_third,start_time,end_time,type,limit
+      )
+    values (#{id,jdbcType=INTEGER}, #{rewards,jdbcType=DECIMAL}, #{money,jdbcType=DECIMAL},#{voucherCode,jdbcType=VARCHAR},#{amount,jdbcType=INTEGER}
+    ,#{voucherCodeSecond,jdbcType=VARCHAR},#{amountSecond,jdbcType=INTEGER},#{voucherCodeThird,jdbcType=VARCHAR},#{amountThird,jdbcType=INTEGER}
+    ,#{startTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP},
+    #{type,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.RechargeConfig" >
+    insert into web_recharge_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rewards != null" >
+        rewards,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="voucherCode != null" >
+        voucher_code,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="voucherCodeSecond != null" >
+        voucher_code_second,
+      </if>
+      <if test="amountSecond != null" >
+        amount_second,
+      </if>
+      <if test="voucherCodeThird != null" >
+        voucher_code_third,
+      </if>
+      <if test="amountThird != null" >
+        amount_third,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="limit != null" >
+        limit,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="rewards != null" >
+        #{rewards,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherCode != null" >
+        #{voucherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="voucherCodeSecond != null" >
+        #{voucherCodeSecond,jdbcType=VARCHAR},
+      </if>
+      <if test="amountSecond != null" >
+        #{amountSecond,jdbcType=INTEGER},
+      </if>
+      <if test="voucherCodeThird != null" >
+        #{voucherCodeThird,jdbcType=VARCHAR},
+      </if>
+      <if test="amountThird != null" >
+        #{amountThird,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="limit != null" >
+        #{limit,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.RechargeConfig" >
+    update web_recharge_config
+    <set >
+      <if test="rewards != null" >
+        rewards = #{rewards,jdbcType=DECIMAL},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherCode != null" >
+       voucher_code = #{voucherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="voucherCodeSecond != null" >
+        voucher_code_second = #{voucherCodeSecond,jdbcType=VARCHAR},
+      </if>
+      <if test="amountSecond != null" >
+        amount_second = #{amountSecond,jdbcType=INTEGER},
+      </if>
+      <if test="voucherCodeThird != null" >
+        voucher_code_third = #{voucherCodeThird,jdbcType=VARCHAR},
+      </if>
+      <if test="amountThird != null" >
+        amount_third = #{amountThird,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+       type =  #{type,jdbcType=INTEGER},
+      </if>
+      <if test="limit != null" >
+        limit =  #{limit,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.RechargeConfig" >
+    update web_recharge_config
+    set rewards = #{rewards,jdbcType=DECIMAL},
+    voucher_code = #{voucherCode,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=INTEGER},
+      voucher_code_second = #{voucherCodeSecond,jdbcType=VARCHAR},
+      amount_second = #{amountSecond,jdbcType=INTEGER},
+      voucher_code_third = #{voucherCodeThird,jdbcType=VARCHAR},
+      amount_third = #{amountThird,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+    type =  #{type,jdbcType=INTEGER},
+    limit =  #{limit,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

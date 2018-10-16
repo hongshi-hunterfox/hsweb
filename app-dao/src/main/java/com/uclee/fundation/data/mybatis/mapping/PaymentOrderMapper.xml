@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.PaymentOrderMapper" >
+  <resultMap id="PaymentOrder" type="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    <id column="payment_order_id" property="paymentOrderId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="payment_id" property="paymentId" jdbcType="INTEGER" />
+    <result column="check_count" property="checkCount" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="payment_serial_num" property="paymentSerialNum" jdbcType="VARCHAR" />
+    <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="transaction_type" property="transactionType" jdbcType="CHAR" />
+    <result column="is_completed" property="isCompleted" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="complete_time" property="completeTime" jdbcType="TIMESTAMP" />
+    <result column="is_sync" property="isSync" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    payment_order_id, user_id, payment_id, payment_serial_num, transaction_id, money, 
+    transaction_type, is_completed, create_time, complete_time ,is_sync,check_count,version
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="PaymentOrder" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_payment_orders
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPaymentSerialNum" resultMap="PaymentOrder" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_payment_orders
+    where payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectForTimer" resultMap="PaymentOrder" >
+    select top 50
+    <include refid="Base_Column_List" />
+    from web_payment_orders
+    where is_completed = 0 and create_time &lt; #{target,jdbcType=TIMESTAMP} and check_count &lt;= 50 and create_time >'2018-03-13'
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_payment_orders
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" useGeneratedKeys="true"
+    keyProperty="paymentOrderId">
+    insert into web_payment_orders (payment_order_id, user_id, payment_id, check_count,version,
+      payment_serial_num, transaction_id, money, 
+      transaction_type, is_completed, 
+      create_time,complete_time,is_sync)
+    values (#{paymentOrderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{paymentId,jdbcType=INTEGER}, #{checkCount,jdbcType=INTEGER},
+    #{version,jdbcType=INTEGER},
+      #{paymentSerialNum,jdbcType=VARCHAR}, #{transactionId,jdbcType=VARCHAR}, #{money,jdbcType=DECIMAL}, 
+      #{transactionType,jdbcType=CHAR}, #{isCompleted,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP},#{completeTime,jdbcType=TIMESTAMP}, #{isSync,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" useGeneratedKeys="true"
+    keyProperty="paymentOrderId">
+    insert into web_payment_orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paymentOrderId != null" >
+        payment_order_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="checkCount != null" >
+        check_count,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="paymentSerialNum != null" >
+        payment_serial_num,
+      </if>
+      <if test="transactionId != null" >
+        transaction_id,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="transactionType != null" >
+        transaction_type,
+      </if>
+      <if test="isCompleted != null" >
+        is_completed,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="completeTime != null" >
+        complete_time,
+      </if>
+      <if test="isSync != null" >
+        is_sync,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paymentOrderId != null" >
+        #{paymentOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="checkCount != null" >
+        #{checkCount,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="paymentSerialNum != null" >
+        #{paymentSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null" >
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="transactionType != null" >
+        #{transactionType,jdbcType=CHAR},
+      </if>
+      <if test="isCompleted != null" >
+        #{isCompleted,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completeTime != null" >
+        #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSync != null" >
+        #{isSync,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    update web_payment_orders
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="checkCount != null" >
+        check_count = #{checkCount,jdbcType=INTEGER},
+      </if>
+      <if test="paymentSerialNum != null" >
+        payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null" >
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="transactionType != null" >
+        transaction_type = #{transactionType,jdbcType=CHAR},
+      </if>
+      <if test="isCompleted != null" >
+        is_completed = #{isCompleted,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completeTime != null" >
+        complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSync != null" >
+        is_sync = #{isSync,jdbcType=BIT},
+      </if>
+    </set>
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    update web_payment_orders
+    set user_id = #{userId,jdbcType=INTEGER},
+      payment_id = #{paymentId,jdbcType=INTEGER},
+      check_count = #{checkCount,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      payment_serial_num = #{paymentSerialNum,jdbcType=VARCHAR},
+      transaction_id = #{transactionId,jdbcType=VARCHAR},
+      money = #{money,jdbcType=DECIMAL},
+      transaction_type = #{transactionType,jdbcType=CHAR},
+      is_completed = #{isCompleted,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      complete_time = #{completeTime,jdbcType=TIMESTAMP},
+      isSync = #{isSync,jdbcType=BIT}
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updatePaymentResult" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    update web_payment_orders
+    set
+    version=#{version,jdbcType=INTEGER} + 1,
+    transaction_id = #{transactionId,jdbcType=VARCHAR},
+    is_completed = #{isCompleted,jdbcType=BIT},
+    complete_time = #{completeTime,jdbcType=TIMESTAMP}
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER} and version = #{version,jdbcType=INTEGER}
+  </update>
+  <update id="updateCheckCount" parameterType="com.uclee.fundation.data.mybatis.model.PaymentOrder" >
+    update web_payment_orders
+    set
+    check_count=check_count + 1
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </update>
+</mapper>

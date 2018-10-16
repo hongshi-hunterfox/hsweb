@@ -1,0 +1,93 @@
+.show-btn {
+  background-color: #EE6363;
+  background-size: 100% 100%;
+  margin: 5px auto;
+}
+.show-btn-items {
+  background-color: #FFD700;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+  margin: 20px auto;
+  border-radius: 25px;
+  border: 1px solid #F39C12;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+  clear: both;
+  display: block;
+  text-align: center;
+  bottom: 15px;
+  width: 100%;
+  position: fixed;
+}
+.show-coupon {
+  background-color: #EE6363;
+  background-size: 100% 100%;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
+}
+.show-coupon-up {
+  text-align: center;
+  font-size: 18px;
+}
+.show-coupon-vipcode {
+  text-align: center;
+  font-size: 16px;
+}
+.show-coupon-foll {
+  margin-bottom: 5px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  width: 90px;
+  height: 75px;
+}
+.show-coupon-item {
+  text-align: center;
+  margin: 10px;
+  background: url(/images/coupon/show-coupon.png) no-repeat;
+  background-size: 100% 100%;
+  border-radius: 5px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
+}
+.show-coupon-item:before,
+.show-coupon-item:after {
+  content: "";
+  display: table;
+}
+.show-coupon-item:after {
+  clear: both;
+}
+.show-coupon-item .top-line:before,
+.show-coupon-item .top-line:after {
+  content: "";
+  display: table;
+}
+.show-coupon-item .top-line:after {
+  clear: both;
+}
+.show-coupon-item .top-line .title {
+  float: left;
+  padding: 15px 10px;
+}
+.show-coupon-item .top-line .condition {
+  float: right;
+  padding: 15px 10px;
+}
+.show-coupon-item .center-line .money {
+  color: #ee0a3b;
+  text-align: center;
+}
+.show-coupon-item .center-line .money .number {
+  font-size: 50px;
+}
+.show-coupon-item .bottom-line {
+  text-align: center;
+}
+.show-coupon-item .tag {
+  display: block;
+  float: right;
+  padding: 5px;
+  color: #0cd60c;
+  font-size: 15px;
+}

@@ -1,0 +1,99 @@
+.distribution {
+  padding-bottom: 100px;
+}
+.distribution-hidden {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  z-index: 1002;
+  margin-top: 5px;
+  background-color: rgba(153, 153, 153, 0.6);
+  width: 100%;
+  height: 100%;
+}
+.distribution-hidden-image {
+  position: fixed;
+  top: 10%;
+  left: 22%;
+  width: 70%;
+}
+.distribution-top {
+  background-color: white;
+  padding: 10px;
+}
+.distribution-top:before,
+.distribution-top:after {
+  content: "";
+  display: table;
+}
+.distribution-top:after {
+  clear: both;
+}
+.distribution-top .left {
+  padding: 10px 0 0 10px;
+}
+.distribution-top .left .number {
+  font-size: 35px;
+  color: #f15f40;
+  text-align: center;
+}
+.distribution-top .transfer {
+  font-size: 18px;
+  float: right;
+  background-color: white;
+  color: #f15f40;
+  padding: 4px 10px;
+  border-radius: 15px;
+  border: 1px solid #f15f40;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+.distribution-text {
+  background-color: white;
+  text-align: center;
+}
+.distribution-text .top {
+  color: #f15f40;
+  padding: 10px 0 0 0;
+  font-size: 30px;
+  font-weight: bold;
+}
+.distribution-text .bottom {
+  color: #f15f40;
+  font-size: 20px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+.distribution-content .item {
+  margin-top: 5px;
+  background-color: white;
+  border-bottom: 2px solid #d0d0d0;
+  padding: 15px;
+}
+.distribution-content .right {
+  display: block;
+  float: right;
+}
+.distribution-intro {
+  margin-top: 20px;
+  padding: 15px;
+}
+.distribution-intro .title {
+  font-weight: bold;
+}
+.distribution-intro .content {
+  padding: 10px;
+}
+.distribution .button {
+  border-radius: 15px;
+  padding: 15px;
+  background-color: #d62f0b;
+  text-align: center;
+  color: white;
+  margin: 10px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  bottom: 50px;
+}

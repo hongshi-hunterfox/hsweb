@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.OrderItemMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.OrderItem" >
+    <id column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_serial_num" property="itemSerialNum" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="SMALLINT" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    item_id, item_serial_num, order_id, store_id, product_id, image_url, value_id, value, 
+    amount, price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_order_items
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_order_items
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_order_items
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.OrderItem" >
+    insert into web_order_items (item_id, item_serial_num, order_id, 
+      store_id, product_id, image_url, 
+      value_id, value, amount, 
+      price)
+    values (#{itemId,jdbcType=INTEGER}, #{itemSerialNum,jdbcType=VARCHAR}, #{orderId,jdbcType=INTEGER}, 
+      #{storeId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{imageUrl,jdbcType=VARCHAR}, 
+      #{valueId,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{amount,jdbcType=SMALLINT}, 
+      #{price,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.OrderItem" >
+    insert into web_order_items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="itemSerialNum != null" >
+        item_serial_num,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="imageUrl != null" >
+        image_url,
+      </if>
+      <if test="valueId != null" >
+        value_id,
+      </if>
+      <if test="value != null" >
+        value,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="itemId != null" >
+        #{itemId,jdbcType=INTEGER},
+      </if>
+      <if test="itemSerialNum != null" >
+        #{itemSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="imageUrl != null" >
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="valueId != null" >
+        #{valueId,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=SMALLINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.OrderItem" >
+    update web_order_items
+    <set >
+      <if test="itemSerialNum != null" >
+        item_serial_num = #{itemSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="imageUrl != null" >
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="valueId != null" >
+        value_id = #{valueId,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=SMALLINT},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.OrderItem" >
+    update web_order_items
+    set item_serial_num = #{itemSerialNum,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=INTEGER},
+      store_id = #{storeId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      image_url = #{imageUrl,jdbcType=VARCHAR},
+      value_id = #{valueId,jdbcType=INTEGER},
+      value = #{value,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=SMALLINT},
+      price = #{price,jdbcType=DECIMAL}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+</mapper>

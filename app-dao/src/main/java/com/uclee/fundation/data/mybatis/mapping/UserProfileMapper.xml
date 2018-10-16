@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.UserProfileMapper" >
+  <resultMap id="UserProfile" type="com.uclee.fundation.data.mybatis.model.UserProfile" >
+    <id column="profile_id" property="profileId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="login_count" property="loginCount" jdbcType="SMALLINT" />
+    <result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
+    <result column="is_active" property="isActive" jdbcType="BIT" />
+    <result column="ip_addr" property="ipAddr" jdbcType="VARCHAR" />
+    <result column="vip_image" property="vipImage" jdbcType="VARCHAR" />
+    <result column="vip_jbarcode" property="vipJbarcode" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="card_num" property="cardNum" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="TIMESTAMP" />
+    <result column="is_lunar" property="isLunar" jdbcType="BIT" />
+    <result column="last_buy" property="lastBuy" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    profile_id, user_id, image,email, phone, name, nick_name, login_count, regist_time, is_active,ip_addr,vip_image,vip_jbarcode,last_buy
+  </sql>
+  <select id="getUserListForBirth" resultMap="UserProfile">
+    select D.生日 as birth,0 as is_lunar,A.* from web_user_profiles as A left join web_oauth_login as B on B.user_id=A.user_id
+ 		left join 会员身份 as C on B.oauth_id=C.外键 left join 会员 as D on C.会员ID=D.ID
+ 		where
+    #{year,jdbcType=VARCHAR} +'-'+substring(convert(char(10),D.生日,120),6,5) &gt;= #{start,jdbcType=VARCHAR} and #{year,jdbcType=VARCHAR}+'-'+substring(convert(char(10),D.生日,120),6,5) &lt;= #{end,jdbcType=VARCHAR} order by D.生日 desc
+  </select>
+  <select id="getUserListForUnBuy" resultMap="UserProfile" parameterType="java.lang.Integer" >
+     select A.* from web_user_profiles as A 
+      where (DATEDIFF(day, A.last_buy, getdate()) &gt;= #{day,jdbcType=INTEGER} or A.last_buy is null) order by A.last_buy asc
+  </select>
+  <select id="getBirthIsNull" resultMap="UserProfile">
+  	select D.生日 as birth,0 as is_lunar,A.* from web_user_profiles as A left join web_oauth_login as B on B.user_id=A.user_id
+ 		left join 会员身份 as C on B.oauth_id=C.外键 left join 会员 as D on C.会员ID=D.ID
+ 		where D.生日 is null and D.ID is not null
+  </select>
+  <select id="selectByPrimaryKey" resultMap="UserProfile" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from web_user_profiles
+    where profile_id = #{profileId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByName" resultMap="UserProfile">
+    select
+    A.*
+    from web_user_profiles A left join web_user_role_link B on A.user_id=B.user_id
+    where A.name = #{name,jdbcType=INTEGER} and B.role_id=3
+  </select>
+  <select id="selectPageNums" resultType="java.lang.Double">
+  	select
+    count(*)
+    FROM web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID
+  </select>
+  <select id="selectAllProfileList" resultMap="UserProfile">
+    <!--  select
+    *
+    FROM web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID
+	-->
+	Select top 15 * from web_user_profiles where user_id not in(select top ${pn} A.user_id from 
+	web_user_profiles AS A 
+	LEFT JOIN web_oauth_login AS B 
+	ON A.user_id = B.user_id 
+	LEFT JOIN 会员身份 AS C ON C.外键 = B.oauth_id 
+	LEFT JOIN 会员 AS D ON C.会员ID = D.ID
+ 	order by A.user_id ) order by user_id
+  </select>
+   <select id="selectAllProfileLists" resultMap="UserProfile">
+    select A.regist_time,A.image,A.name,convert(nvarchar(12),D.生日,102) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID where b.user_id=#{userId,jdbcType=INTEGER}
+    </select>
+  <select id="selectAllVipList" resultMap="UserProfile">
+    select top 100 percent A.user_id,A.regist_time,A.image,A.name,
+    convert(nvarchar(10),D.生日,120) as birthday,2017-DATEPART (year, D.生日) as age, 
+    D.编号 as card_num, D.电话 as phone 
+    from web_user_profiles as A 
+    left join web_oauth_login as B 
+    on A.user_id=B.user_id left join 会员身份 as C 
+    on C.外键=B.oauth_id left join 会员 as D 
+    on C.会员ID = D.ID  
+    where D.电话 != ''
+  </select>
+  <select id="selectByVips" resultMap="UserProfile">
+    select A.user_id,A.regist_time,A.image,A.name,convert(nvarchar(10),D.生日,120) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID where D.电话 !='' and A.regist_time between #{start,jdbcType=TIMESTAMP} and #{end,jdbcType=TIMESTAMP}
+    order by profile_id asc
+  </select>
+  <select id="selectCardPhoneVips" resultMap="UserProfile">
+    select A.user_id,A.regist_time,A.image,A.name,convert(nvarchar(10),D.生日,120) as birthday,2017-DATEPART (year, D.生日) as age,D.编号 as card_num,D.电话 as phone from web_user_profiles as A left join web_oauth_login as B on A.user_id=B.user_id left join 会员身份 as C on
+	C.外键=B.oauth_id left join 会员 as D on C.会员ID = D.ID where D.电话 !='' and (D.电话 = #{cartphone,jdbcType=VARCHAR} or D.编号 = #{cartphone,jdbcType=VARCHAR})
+  </select>
+  <select id="selectByUserId" resultMap="UserProfile" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from web_user_profiles
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_user_profiles
+    where profile_id = #{profileId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.UserProfile" >
+    insert into web_user_profiles (profile_id, user_id, image,email,
+      phone, name,ncik_name, login_count,
+      regist_time, is_active,ip_addr,vip_image,vip_jbarcode,last_buy)
+    values (#{profileId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{image,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{ncikName,jdbcType=VARCHAR}, #{loginCount,jdbcType=SMALLINT},
+      #{registTime,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{ipAddr,jdbcType=VARCHAR}, #{vipImage,jdbcType=VARCHAR},#{vipJbarcode,jdbcType=VARCHAR},#{lastBuy,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.UserProfile" >
+    insert into web_user_profiles
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="profileId != null" >
+        profile_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="loginCount != null" >
+        login_count,
+      </if>
+      <if test="registTime != null" >
+        regist_time,
+      </if>
+      <if test="isActive != null" >
+        is_active,
+      </if>
+      <if test="ipAddr != null" >
+        ip_addr,
+      </if>
+      <if test="vipImage != null" >
+        vip_image,
+      </if>
+      <if test="vipJbarcode != null" >
+        vip_jbarcode,
+      </if>
+      <if test="lastBuy != null" >
+        last_buy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="profileId != null" >
+        #{profileId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginCount != null" >
+        #{loginCount,jdbcType=SMALLINT},
+      </if>
+      <if test="registTime != null" >
+        #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null" >
+        #{isActive,jdbcType=BIT},
+      </if>
+      <if test="ipAddr != null" >
+        #{ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="vipImage != null" >
+        #{vipImage,jdbcType=VARCHAR},
+      </if>
+      <if test="vipJbarcode != null" >
+        #{vipJbarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastBuy != null" >
+        #{lastBuy,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.UserProfile" >
+    update web_user_profiles
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginCount != null" >
+        login_count = #{loginCount,jdbcType=SMALLINT},
+      </if>
+      <if test="registTime != null" >
+        regist_time = #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=BIT},
+      </if>
+      <if test="ipAddr != null" >
+        ip_addr = #{ipAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="vipImage != null" >
+        vip_image = #{vipImage,jdbcType=VARCHAR},
+      </if>
+      <if test="vipJbarcode != null" >
+        vip_jbarcode = #{vipJbarcode,jdbcType=VARCHAR},
+      </if>
+      <if test="lastBuy != null" >
+        last_buy=#{lastBuy,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where profile_id = #{profileId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.UserProfile" >
+    update web_user_profiles
+    set user_id = #{userId,jdbcType=INTEGER},
+      image = #{image,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      login_count = #{loginCount,jdbcType=SMALLINT},
+        last_buy=#{lastBuy,jdbcType=TIMESTAMP},
+      regist_time = #{registTime,jdbcType=TIMESTAMP},
+      is_active = #{isActive,jdbcType=BIT},
+      ip_addr = #{ipAddr,jdbcType=VARCHAR},
+      vip_image = #{vipImage,jdbcType=VARCHAR},
+      vip_jbarcode = #{vipJbarcode,jdbcType=VARCHAR}
+    where profile_id = #{profileId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByUserProfile" resultMap="UserProfile" >
+      select
+      A.*
+      from web_user_profiles as A left join web_users as B on A.user_id = B.user_id
+      <where>
+        <if test="email != null">
+          A.email = #{email,jdbcType=VARCHAR}
+        </if>
+        <if test="phone != null" >
+          A.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null" >
+            A.user_id = #{userId,jdbcType=INTEGER}
+          </if>
+          <if test="profileId != null" >
+            A.profile_id = #{profileId,jdbcType=INTEGER}
+          </if>
+          <if test="name != null" >
+           A.name = #{name,jdbcType=VARCHAR}
+          </if>
+          <if test="serialNum != null" >
+           B.serial_num = #{serialNum,jdbcType=VARCHAR}
+          </if>
+      </where>
+    </select>
+
+    <select id="selectListByUserProfile" resultMap="UserProfile" >
+      select
+      <include refid="Base_Column_List" />
+      from web_user_profiles
+      <where>
+          <if test="phone != null" >
+          <bind name="test1" value="'%' + phone + '%'" />
+          and phone like #{test1,jdbcType=VARCHAR}
+        </if>
+      </where>
+    </select>
+
+    <select id="selectUserByRoleType" resultMap="UserProfile"  parameterType="java.lang.Integer" >
+      select
+      <include refid="Base_Column_List" />
+        from  web_user_profiles
+        where user_id in ( select  user_id from web_user_role_link where  role_id = #{roleId,jdbcType=INTEGER} )
+    </select>
+
+    <select id="selectUserListByParentId" resultMap="UserProfile"  parameterType="java.lang.Integer" >
+        select
+      <include refid="Base_Column_List" />
+        from  web_user_profiles
+        where user_id in ( select  user_id from web_users  where  parent_id = #{parentId,jdbcType=INTEGER} )
+    </select>
+</mapper>

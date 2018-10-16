@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.HsVipMapper">
+	<resultMap id="HsVip"
+		type="com.uclee.fundation.data.mybatis.model.HsVip">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="编号" property="vCode" jdbcType="VARCHAR" />
+		<result column="名称" property="vName" jdbcType="VARCHAR" />
+		<result column="生日" property="vBirthday" jdbcType="VARCHAR" />
+		<result column="电话" property="vNumber" jdbcType="VARCHAR" />
+		<result column="身份证号" property="vIdNumber" jdbcType="VARCHAR" />
+		<result column="工作单位" property="vCompany" jdbcType="VARCHAR" />
+		<result column="状态" property="vState" jdbcType="INTEGER" />
+		<result column="性别" property="vSex" jdbcType="VARCHAR" />
+		<result column="是否充值" property="isLose" jdbcType="INTEGER" />
+	</resultMap>
+	
+  <select id="selectupdateVips" resultMap="HsVip">
+    select
+    id, 编号, 名称, 生日, 电话, 身份证号, 工作单位, 状态, 性别
+    from 会员
+    where 编号=#{vCode,jdbcType=VARCHAR}
+  </select>
+  <select id="getVips" resultMap="HsVip">
+    select
+    id, 编号, 名称, 生日, 电话, 身份证号, 工作单位, 状态, 性别
+    from 会员
+    where id=#{id,jdbcType=INTEGER}
+  </select>
+  <select id="selecthsVip" resultMap="HsVip">
+	 select id, 编号, 名称, 生日, 电话, 身份证号, 工作单位 , 状态, 性别  from 会员  where 编号=#{vCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectVips" resultMap="HsVip">
+    select * from 会员 where 状态=1 and 电话=#{vNumber,jdbcType=VARCHAR}
+    </select>
+  <update id="updateVips" parameterType="com.uclee.fundation.data.mybatis.model.HsVip" >
+  	update 会员  
+  	
+  	<set >
+      <if test="vName != null" >
+        	     名称 = #{vName,jdbcType=VARCHAR},
+      </if>
+      <if test="vBirthday != null" >
+          	生日 = #{vBirthday,jdbcType=VARCHAR},
+      </if>
+      <if test="vNumber != null" >
+      	   电话 = #{vNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="vSex != null" >
+      	   性别 = #{vSex,jdbcType=VARCHAR},
+      </if>
+                             身份证号 = #{vIdNumber,jdbcType=VARCHAR},
+    
+      	 工作单位 = #{vCompany,jdbcType=VARCHAR},
+    </set>    
+      where 编号=#{vCode,jdbcType=VARCHAR}
+  </update> 
+  <update id="updateRecharge" parameterType="com.uclee.fundation.data.mybatis.model.HsVip">
+  	update 会员 set 是否充值=1, 备注='用户本人挂失' where ID=#{id,jdbcType=INTEGER}
+  </update>
+</mapper>

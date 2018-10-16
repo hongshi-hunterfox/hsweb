@@ -1,0 +1,137 @@
+.rotate-transition {
+  transition: transform 2s ease;
+}
+.choujiang {
+  margin-top: 30%;
+}
+.choujiang-conversation {
+  margin-top: 10px;
+}
+.choujiang-conversation-image {
+  width: 100%;
+}
+.choujiang-qrcode {
+  width: 100%;
+  text-align: center;
+}
+.choujiang-qrcode-image {
+  width: 50%;
+}
+.choujiang-subc {
+  width: 100%;
+  text-align: center;
+}
+.choujiang-subc-button {
+  padding: 5px 20px;
+  border-radius: 15px;
+  border: 1px solid #f77b10;
+  color: #f77b10;
+  font-size: 20px;
+  text-align: center;
+}
+.choujiang-intro {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+}
+.choujiang-intro-tag {
+  font-size: 20px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 35%;
+  background-color: #f77b10;
+  color: white;
+  text-align: center;
+}
+.choujiang-intro-text {
+  margin: 10px;
+  font-size: 18px;
+  text-indent: 2em;
+  letter-spacing: 5px;
+  line-height: 25px;
+}
+.choujiang-intro-end {
+  font-size: 20px;
+  color: red;
+  margin: 10px;
+  letter-spacing: 5px;
+  line-height: 25px;
+}
+.choujiang-pan {
+  background-size: contain;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+}
+.choujiang-pan-body {
+  width: 100%;
+}
+.choujiang-pan-head {
+  background-size: contain;
+  position: absolute;
+  left: 31%;
+  top: 23.3%;
+  width: 37%;
+}
+.choujiang-pan-head.quick {
+  transition-duration: 0s !important;
+}
+.choujiang-pan .rotate0 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(0deg);
+}
+.choujiang-pan .rotate3888 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(3888deg);
+}
+.choujiang-pan .rotate3083 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(3083deg);
+}
+.choujiang-pan .rotate3485 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(3485deg);
+}
+.choujiang-pan .rotate2679 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(2679deg);
+}
+.choujiang-pan .rotate2276 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(2276deg);
+}
+.choujiang-pan .rotate1870 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(1870deg);
+}
+.choujiang-pan .rotate4291 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(4291deg);
+}
+.choujiang-pan .rotate4694 {
+  transition: transform 2s ease;
+  transform-origin: 50% 64.4%;
+  transform: rotate(4694deg);
+}
+.choujiang-result {
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  z-index: 1002;
+  margin-top: 5px;
+  background-color: rgba(153, 153, 153, 0.6);
+  width: 100%;
+  height: 100%;
+}
+.choujiang-result-image {
+  position: fixed;
+  width: 100%;
+}

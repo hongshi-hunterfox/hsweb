@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ProductCategoryLinkMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey" >
+    <id column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <id column="product_id" property="productId" jdbcType="INTEGER" />
+  </resultMap>
+   <select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    *
+    from web_products_categories_link
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+   <select id="selectByCId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    *
+    from web_products_categories_link
+    where category_id = #{categoryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey" >
+    delete from web_products_categories_link
+    where category_id = #{categoryId,jdbcType=INTEGER}
+      and product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey" >
+    insert into web_products_categories_link (category_id, product_id)
+    values (#{categoryId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.ProductCategoryLinkKey" >
+    insert into web_products_categories_link
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

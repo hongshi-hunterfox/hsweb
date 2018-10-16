@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ProductGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ProductGroup" >
+    <id column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="display_type" property="displayType" jdbcType="VARCHAR" />
+    <result column="image_url" property="image" jdbcType="VARCHAR" />
+    <result column="is_active" property="isActive" jdbcType="BIT" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    group_id, group_name, tag, display_type, image_url, is_active
+    from web_product_groups
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>   
+   <select id="selectByGroupName" resultMap="BaseResultMap">
+    select 
+    group_id, group_name, tag, display_type, image_url, is_active
+    from web_product_groups
+    where group_name = #{groupName,jdbcType=VARCHAR}
+  </select>   
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
+    select group_id,group_name,tag,image_url,is_active,case display_type when '1' then '横向滚动' else '竖向滚动'  end as display_type
+    from web_product_groups 
+  </select>
+  <select id="selectByTags" resultMap="BaseResultMap" >
+    select 
+   group_id, group_name, tag, display_type, image_url, is_active
+    from web_product_groups
+    where tag in
+    <foreach collection="array" item="item" index="index" 
+		open="(" separator="," close=")">#{item}
+	</foreach>
+	and is_active=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_product_groups
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroup" >
+    insert into web_product_groups (group_name, tag, 
+      display_type, image_url, is_active)
+    values (#{groupName,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+      #{displayType,jdbcType=VARCHAR},  #{image,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroup" >
+    insert into web_product_groups
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="displayType != null" >
+        display_type,
+      </if>
+      <if test="isActive != null" >
+        is_active,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="displayType != null" >
+        #{displayType,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null" >
+        #{isActive,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroup" >
+    update web_product_groups
+    <set >
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="displayType != null" >
+        display_type = #{displayType,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=BIT},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.ProductGroup" >
+    update web_product_groups
+    set group_name = #{groupName,jdbcType=VARCHAR},
+        display_type = #{displayType,jdbcType=VARCHAR},
+        image_url = #{image,jdbcType=VARCHAR}
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.LotteryDrawConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.LotteryDrawConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="voucher_code" property="voucherCode" jdbcType="VARCHAR" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="rate" property="rate" jdbcType="DOUBLE" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="is_end" property="isEnd" jdbcType="BIT" />
+    <result column="limits" property="limits" jdbcType="INTEGER" />
+    <result column="start_time" property="timeStart" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="timeEnd" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, voucher_code, money, product_id, code, is_end,rate,count,limits,start_time,end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_lottery_draw_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByConfigCode" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_lottery_draw_config
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_lottery_draw_config
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_lottery_draw_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteAll">
+    truncate table  web_lottery_draw_config
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.LotteryDrawConfig" >
+    insert into web_lottery_draw_config (id, voucher_code, money, 
+      product_id, code, is_end,count,rate,limits,start_time,end_time)
+    values (#{id,jdbcType=INTEGER}, #{voucherCode,jdbcType=VARCHAR}, #{money,jdbcType=DECIMAL}, 
+      #{productId,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{isEnd,jdbcType=BIT}, #{count,jdbcType=INTEGER}, #{rate,jdbcType=DOUBLE},#{limits,jdbcType=INTEGER}
+      ,#{timeStart,jdbcType=TIMESTAMP},#{timeEnd,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.LotteryDrawConfig" >
+    insert into web_lottery_draw_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="voucherCode != null" >
+        voucher_code,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="isEnd != null" >
+        is_end,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="limits != null" >
+        limits,
+      </if>
+      <if test="timeStart != null" >
+        start_time,
+      </if>
+      <if test="timeEnd != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="voucherCode != null" >
+        #{voucherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnd != null" >
+        #{isEnd,jdbcType=BIT},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="isEnd != null" >
+        #{isEnd,jdbcType=DOUBLE},
+      </if>
+      <if test="limits != null" >
+        #{limits,jdbcType=INTEGER},
+      </if>
+      <if test="timeStart != null" >
+       #{timeStart,jdbcType=INTEGER},
+      </if>
+      <if test="timeEnd != null" >
+       #{timeEnd,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.LotteryDrawConfig" >
+    update web_lottery_draw_config
+    <set >
+      <if test="voucherCode != null" >
+        voucher_code = #{voucherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnd != null" >
+        is_end = #{isEnd,jdbcType=BIT},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=DOUBLE},
+      </if>
+       <if test="limits != null" >
+        limits = #{limits,jdbcType=INTEGER},
+      </if>
+      <if test="timeStart != null" >
+        start_time=#{timeStart,jdbcType=INTEGER},
+      </if>
+      <if test="timeEnd != null" >
+        end_time=#{timeEnd,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.LotteryDrawConfig" >
+    update web_lottery_draw_config
+    set voucher_code = #{voucherCode,jdbcType=VARCHAR},
+      money = #{money,jdbcType=DECIMAL},
+      product_id = #{productId,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      is_end = #{isEnd,jdbcType=BIT},
+      count = #{count,jdbcType=INTEGER},
+      rate = #{rate,jdbcType=DOUBLE},
+        limits = #{limits,jdbcType=INTEGER},
+        start_time=#{timeStart,jdbcType=INTEGER},
+        end_time=#{timeEnd,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

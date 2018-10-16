@@ -1,0 +1,487 @@
+{
+  "cat": [
+    {
+      "categoryId": 1,
+      "category": "面包",
+      "parentId": 0
+    },
+    {
+      "categoryId": 2,
+      "category": "蛋糕",
+      "parentId": 0
+    },
+    {
+      "categoryId": 3,
+      "category": "巧克力蛋糕",
+      "parentId": 2
+    },
+    {
+      "categoryId": 4,
+      "category": "芝士蛋糕",
+      "parentId": 2
+    },
+    {
+      "categoryId": 5,
+      "category": "水果蛋糕",
+      "parentId": 2
+    },
+    {
+      "categoryId": 6,
+      "category": "发酵面包",
+      "parentId": 1
+    },
+    {
+      "categoryId": 7,
+      "category": "快速面包",
+      "parentId": 1
+    }
+  ],
+  "hongShiProduct": [
+    {
+      "id": 5322,
+      "code": "11001",
+      "name": "蔓越莓乳酪球",
+      "hsSpec": "90g",
+      "unit": null,
+      "hsPrice": 13
+    },
+    {
+      "id": 5323,
+      "code": "11002",
+      "name": "冥想法国",
+      "hsSpec": "220g",
+      "unit": null,
+      "hsPrice": 29
+    },
+    {
+      "id": 5324,
+      "code": "11003",
+      "name": "盐之花黄油卷",
+      "hsSpec": "65g",
+      "unit": null,
+      "hsPrice": 9
+    },
+    {
+      "id": 5325,
+      "code": "11004",
+      "name": "萨尔斯堡",
+      "hsSpec": "150g",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5326,
+      "code": "11005",
+      "name": "多谷物法国面包",
+      "hsSpec": "230g",
+      "unit": null,
+      "hsPrice": 29
+    },
+    {
+      "id": 5327,
+      "code": "11006",
+      "name": "贝果",
+      "hsSpec": "90g",
+      "unit": null,
+      "hsPrice": 0.01
+    },
+    {
+      "id": 5328,
+      "code": "11007",
+      "name": "法国红豆",
+      "hsSpec": "85g",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5329,
+      "code": "11008",
+      "name": "干酪法国",
+      "hsSpec": "120g",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5330,
+      "code": "11009",
+      "name": "大法棍",
+      "hsSpec": "250g",
+      "unit": null,
+      "hsPrice": 22
+    },
+    {
+      "id": 5331,
+      "code": "11010",
+      "name": "咸蒜小法国",
+      "hsSpec": "120g",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5332,
+      "code": "11011",
+      "name": "奶油埃及",
+      "hsSpec": "70g",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5333,
+      "code": "11012",
+      "name": "午后英伦",
+      "hsSpec": "270g",
+      "unit": null,
+      "hsPrice": 29
+    },
+    {
+      "id": 5334,
+      "code": "11013",
+      "name": "牛角可颂（大）",
+      "hsSpec": "70g",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5335,
+      "code": "11014",
+      "name": "牛角可颂（迷你）",
+      "hsSpec": "60",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5336,
+      "code": "11015",
+      "name": "午后英伦小浴缸",
+      "hsSpec": "",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5337,
+      "code": "11016",
+      "name": "脆皮小法棍",
+      "hsSpec": "110g",
+      "unit": null,
+      "hsPrice": 9
+    },
+    {
+      "id": 5338,
+      "code": "11017",
+      "name": "纽扣（橄榄佛卡夏）两个装",
+      "hsSpec": "160g",
+      "unit": null,
+      "hsPrice": 18
+    },
+    {
+      "id": 5339,
+      "code": "11018",
+      "name": "面具（橄榄佛卡夏）",
+      "hsSpec": "300g",
+      "unit": null,
+      "hsPrice": 32
+    },
+    {
+      "id": 5340,
+      "code": "11019",
+      "name": "黑糖红酒桂圆小餐包（4个装）",
+      "hsSpec": "200g",
+      "unit": null,
+      "hsPrice": 18
+    },
+    {
+      "id": 5341,
+      "code": "11020",
+      "name": "黑糖红酒桂圆（大）",
+      "hsSpec": "400g",
+      "unit": null,
+      "hsPrice": 32
+    },
+    {
+      "id": 5342,
+      "code": "11021",
+      "name": "抹茶密豆卡仕达爪爪",
+      "hsSpec": "100g",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5503,
+      "code": "11022",
+      "name": "水果可颂",
+      "hsSpec": "90g",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5343,
+      "code": "111025",
+      "name": "小法棍",
+      "hsSpec": "90g",
+      "unit": null,
+      "hsPrice": 9
+    },
+    {
+      "id": 5344,
+      "code": "11111",
+      "name": "黑糖桂圆吐司",
+      "hsSpec": "480g",
+      "unit": null,
+      "hsPrice": 32
+    },
+    {
+      "id": 5345,
+      "code": "12001",
+      "name": "牧场鲜奶吐司",
+      "hsSpec": "400g",
+      "unit": null,
+      "hsPrice": 29
+    },
+    {
+      "id": 5346,
+      "code": "12002",
+      "name": "咖啡核桃吐司",
+      "hsSpec": "470g",
+      "unit": null,
+      "hsPrice": 29
+    },
+    {
+      "id": 5347,
+      "code": "12003",
+      "name": "脆皮吐司",
+      "hsSpec": "440g",
+      "unit": null,
+      "hsPrice": 20
+    },
+    {
+      "id": 5511,
+      "code": "12004",
+      "name": "椰蓉吐司",
+      "hsSpec": "400g",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5348,
+      "code": "20111",
+      "name": "玛德琳礼盒12片装",
+      "hsSpec": "12片",
+      "unit": null,
+      "hsPrice": 99
+    },
+    {
+      "id": 5349,
+      "code": "21001",
+      "name": "摇滚乐乐吐司",
+      "hsSpec": "150g",
+      "unit": null,
+      "hsPrice": 29
+    },
+    {
+      "id": 5350,
+      "code": "21002",
+      "name": "杏仁巧酥",
+      "hsSpec": "100g",
+      "unit": null,
+      "hsPrice": 12
+    },
+    {
+      "id": 5351,
+      "code": "21003",
+      "name": "可可贝贝",
+      "hsSpec": "30g",
+      "unit": null,
+      "hsPrice": 3
+    },
+    {
+      "id": 5352,
+      "code": "21004",
+      "name": "杏仁糖",
+      "hsSpec": "200g",
+      "unit": null,
+      "hsPrice": 88
+    },
+    {
+      "id": 5353,
+      "code": "21005",
+      "name": "马卡龙",
+      "hsSpec": "6粒",
+      "unit": null,
+      "hsPrice": 132
+    },
+    {
+      "id": 5354,
+      "code": "21006",
+      "name": "费南雪",
+      "hsSpec": "25g",
+      "unit": null,
+      "hsPrice": 8
+    },
+    {
+      "id": 5355,
+      "code": "21007",
+      "name": "玛德琳（柠檬）",
+      "hsSpec": "30g",
+      "unit": null,
+      "hsPrice": 8
+    },
+    {
+      "id": 5356,
+      "code": "21008",
+      "name": "玛德琳（抹茶）",
+      "hsSpec": "30g",
+      "unit": null,
+      "hsPrice": 8
+    },
+    {
+      "id": 5357,
+      "code": "21009",
+      "name": "玛德琳（朗姆葡萄）",
+      "hsSpec": "30g",
+      "unit": null,
+      "hsPrice": 8
+    },
+    {
+      "id": 5358,
+      "code": "21010",
+      "name": "玛德琳（伯爵茶）",
+      "hsSpec": "30g",
+      "unit": null,
+      "hsPrice": 8
+    },
+    {
+      "id": 5359,
+      "code": "21011",
+      "name": "原味戚风蛋糕",
+      "hsSpec": "200g",
+      "unit": null,
+      "hsPrice": 32
+    },
+    {
+      "id": 5504,
+      "code": "22001",
+      "name": "散装蛋糕A",
+      "hsSpec": null,
+      "unit": null,
+      "hsPrice": 16
+    },
+    {
+      "id": 5360,
+      "code": "31000",
+      "name": "卡布奇诺",
+      "hsSpec": "杯",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5361,
+      "code": "31001",
+      "name": "拿铁",
+      "hsSpec": "杯",
+      "unit": null,
+      "hsPrice": 18
+    },
+    {
+      "id": 5509,
+      "code": "31002",
+      "name": "鸳鸯",
+      "hsSpec": "杯",
+      "unit": null,
+      "hsPrice": 15
+    },
+    {
+      "id": 5387,
+      "code": "81001",
+      "name": "负1元冲账券",
+      "hsSpec": "",
+      "unit": null,
+      "hsPrice": -1
+    },
+    {
+      "id": 5388,
+      "code": "81002",
+      "name": "1元冲账券",
+      "hsSpec": "",
+      "unit": null,
+      "hsPrice": 1
+    },
+    {
+      "id": 5502,
+      "code": "83001",
+      "name": "10元现金券",
+      "hsSpec": null,
+      "unit": null,
+      "hsPrice": 10
+    },
+    {
+      "id": 5506,
+      "code": "83002",
+      "name": "9元代金券",
+      "hsSpec": null,
+      "unit": null,
+      "hsPrice": 9
+    }
+  ],
+  "store": [
+    {
+      "storeId": 1,
+      "userId": 6,
+      "storeName": "测试加盟店",
+      "province": "广东省",
+      "city": "广州市",
+      "region": "萝岗区",
+      "longitude": "101.11",
+      "latitude": "212.22",
+      "hsCode": "111",
+      "addrDetail": ""
+    },
+    {
+      "storeId": 2,
+      "userId": 6,
+      "storeName": "测试加盟店2",
+      "province": "广东省",
+      "city": "广州市",
+      "region": "萝岗区",
+      "longitude": "101.11",
+      "latitude": "212.22",
+      "hsCode": "111",
+      "addrDetail": ""
+    },
+    {
+      "storeId": 3,
+      "userId": 6,
+      "storeName": "测试加盟店3",
+      "province": "广东省",
+      "city": "广州市",
+      "region": "萝岗区",
+      "longitude": "101.11",
+      "latitude": "212.22",
+      "hsCode": "111",
+      "addrDetail": ""
+    },
+    {
+      "storeId": 5,
+      "userId": 0,
+      "storeName": "测试商店",
+      "province": "广东省",
+      "city": "广州",
+      "region": "天河区",
+      "longitude": "113.31165",
+      "latitude": "23.13809",
+      "hsCode": "code",
+      "addrDetail": "水荫路54号"
+    },
+    {
+      "storeId": 6,
+      "userId": 0,
+      "storeName": "测试商店",
+      "province": "广东省",
+      "city": "广州",
+      "region": "天河区",
+      "longitude": "113.31165",
+      "latitude": "23.13809",
+      "hsCode": "code",
+      "addrDetail": "水荫路54号"
+    }
+  ]
+}

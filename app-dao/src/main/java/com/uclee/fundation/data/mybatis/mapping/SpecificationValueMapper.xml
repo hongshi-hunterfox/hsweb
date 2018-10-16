@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+    <id column="value_id" property="valueId" jdbcType="INTEGER" />
+    <result column="specification_id" property="specificationId" jdbcType="INTEGER" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="hs_goods_code" property="hsGoodsCode" jdbcType="VARCHAR" />
+    <result column="hs_goods_price" property="hsGoodsPrice" jdbcType="DECIMAL" />
+    <result column="hs_stock" property="hsStock" jdbcType="INTEGER" />
+    <result column="pre_price" property="prePrice" jdbcType="DECIMAL" />
+    <result column="promotion_price" property="promotionPrice" jdbcType="DECIMAL" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTimeStr" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTimeStr" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    value_id, specification_id, value, hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByHsGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   	select 
+    hs_goods_code
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByProductIdLimit" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select  TOP 1
+    A.*
+    from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
+    where B.product_id = #{productId,jdbcType=INTEGER} order by A.hs_goods_price asc
+  </select>
+  <select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select  
+    A.*
+    from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
+    where B.product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectHsCodeByProductId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+    select
+    A.hs_goods_code
+    from web_specification_values as A left join web_products_specifications_values_link as b on A.value_id=B.value_id
+    where B.product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectGoods" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	select hs_goods_code from web_specification_values where value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+ 
+  <select id="selectByProductIdAndValueId" resultMap="BaseResultMap" >
+    select 
+    A.* 
+    from web_specification_values as A left join web_products_specifications_values_link as B on A.specification_id=b.specification_id and A.value_id=B.value_id
+    where B.product_id = #{productId,jdbcType=INTEGER} and B.value_id = #{valueId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_specification_values
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </delete>
+  <delete id="delByProductId" parameterType="java.lang.Integer" >
+    delete from web_specification_values  where value_id in (select value_id from web_products_specifications_values_link where product_id=#{productId,jdbcType=INTEGER})
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" useGeneratedKeys="true"
+    keyProperty="valueId">
+    insert into web_specification_values (value_id, specification_id, value, 
+      hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time)
+    values (#{valueId,jdbcType=INTEGER}, #{specificationId,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, 
+      #{hsGoodsCode,jdbcType=VARCHAR}, #{hsGoodsPrice,jdbcType=DECIMAL},#{hsStock,jdbcType=INTEGER}, #{prePrice,jdbcType=DECIMAL},#{promotionPrice,jdbcType=DECIMAL},#{startTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" useGeneratedKeys="true"
+    keyProperty="valueId">
+    insert into web_specification_values
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="valueId != null" >
+        value_id,
+      </if>
+      <if test="specificationId != null" >
+        specification_id,
+      </if>
+      <if test="value != null" >
+        value,
+      </if>
+      <if test="hsGoodsCode != null" >
+        hs_goods_code,
+      </if>
+      <if test="hsGoodsPrice != null" >
+        hs_goods_price,
+      </if>
+      <if test="hsStock != null" >
+        hs_stock,
+      </if>
+      <if test="prePrice != null" >
+        pre_price,
+      </if>
+       <if test="promotionPrice != null" >
+        promotion_price,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="valueId != null" >
+        #{valueId,jdbcType=INTEGER},
+      </if>
+      <if test="specificationId != null" >
+        #{specificationId,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="hsGoodsCode != null" >
+        #{hsGoodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hsGoodsPrice != null" >
+        #{hsGoodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hsStock != null" >
+        #{hsStock,jdbcType=INTEGER},
+      </if>
+      <if test="prePrice != null" >
+        #{prePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="promotionPrice != null" >
+        #{promotionPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+    update web_specification_values
+    <set >
+      <if test="specificationId != null" >
+        specification_id = #{specificationId,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="hsGoodsCode != null" >
+        hs_goods_code = #{hsGoodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hsGoodsPrice != null" >
+        hs_goods_price = #{hsGoodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hsStock != null" >
+        hs_stock = #{hsStock,jdbcType=INTEGER},
+      </if>
+      <if test="prePrice != null" >
+        pre_price = #{prePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="promotionPrice != null" >
+        promotion_price = #{promotionPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+    update web_specification_values
+    set specification_id = #{specificationId,jdbcType=INTEGER},
+      value = #{value,jdbcType=VARCHAR},
+      hs_goods_code = #{hsGoodsCode,jdbcType=VARCHAR},
+      hs_goods_price = #{hsGoodsPrice,jdbcType=DECIMAL},
+        pre_price = #{prePrice,jdbcType=DECIMAL},
+        promotion_price = #{promotionPrice,jdbcType=DECIMAL},
+        start_time = #{startTime,jdbcType=INTEGER},
+        end_time = #{endTime,jdbcType=INTEGER},
+        hs_stock = #{hsStock,jdbcType=INTEGER}
+    where value_id = #{valueId,jdbcType=INTEGER}
+  </update>
+  <update id="updateGuiGe" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >
+  	update web_specification_values
+  	 set  promotion_price = #{promotionPrice, jdbcType=DECIMAL}, start_time= #{startTimeStr,jdbcType=VARCHAR}, end_time= #{endTimeStr,jdbcType=VARCHAR}
+  	 where value_id=#{valueId,jdbcType=INTEGER}
+  </update>
+</mapper>

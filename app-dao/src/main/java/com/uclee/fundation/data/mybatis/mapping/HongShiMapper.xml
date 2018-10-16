@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.HongShiMapper">
+	<resultMap id="HongShiProduct" type="com.uclee.fundation.data.mybatis.model.HongShiProduct">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="hsSpec" property="hsSpec" jdbcType="VARCHAR" />
+		<result column="unit" property="unit" jdbcType="VARCHAR" />
+		<result column="hsPrice" property="hsPrice" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="MobileItem" type="com.uclee.fundation.data.web.dto.MobileItem">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="parent" property="parent" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="caption" property="caption" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="orders" property="orders" jdbcType="INTEGER" />
+		<result column="types" property="types" jdbcType="VARCHAR" />
+		<result column="enabled" property="enabled" jdbcType="BOOLEAN" />
+		<result column="command" property="command" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="HongShiStore" type="com.uclee.fundation.data.mybatis.model.HongShiStore">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="abbreviation" property="abbreviation" jdbcType="VARCHAR" />
+		<result column="fullName" property="fullName" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="catAbbreviation" property="catAbbreviation" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="HongShiCoupon" type="com.uclee.fundation.data.mybatis.model.HongShiCoupon">
+		<result column="ouchersCode" property="vouchersCode" jdbcType="VARCHAR" />
+		<result column="PayQuota" property="payQuota" jdbcType="DECIMAL" />
+		<result column="State" property="state" jdbcType="VARCHAR" />
+		<result column="VipCode" property="vipCode" jdbcType="VARCHAR" />
+		<result column="EndTime" property="endTime" jdbcType="VARCHAR" />
+		<result column="BarCode" property="barCode" jdbcType="VARCHAR" />
+		<result column="GoodsCode" property="goodsCode" jdbcType="VARCHAR" />
+		<result column="FullAmount" property="fullamount" jdbcType="DECIMAL" />
+		<result column="ConvertibleGoods" property="convertibleGoods" jdbcType="VARCHAR" />
+		<result column="Remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="ProductNumber" property="productNumber" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="HongShiOrder" type="com.uclee.fundation.data.mybatis.model.HongShiOrder">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="OrderCode" property="orderCode" jdbcType="VARCHAR" />
+		<result column="Outer_OrderCode" property="outerOrderCode" jdbcType="VARCHAR" />
+		<result column="Date_C" property="date" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createTime" jdbcType="VARCHAR" />
+		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
+		<result column="Accounts" property="accounts" jdbcType="DOUBLE" />
+		<result column="IsEnd" property="isEnd" jdbcType="BIT" />
+		<result column="IsVoid" property="isVoid" jdbcType="BIT" />
+		<result column="PickUpCode" property="pickUpCode" jdbcType="BIT" />
+		<result column="Department" property="department" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="HongShiOrderItem" type="com.uclee.fundation.data.mybatis.model.HongShiOrderItem">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="OrderID" property="orderId" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="Price" property="price" jdbcType="DOUBLE" />
+		<result column="DiscountRate" property="discountRate" jdbcType="DOUBLE" />
+		<result column="Count" property="count" jdbcType="INTEGER" />
+		<result column="TotalAmount" property="totalAmount" jdbcType="DOUBLE" />
+		<result column="SumDiscount" property="sumDiscount" jdbcType="DOUBLE" />
+		<result column="Product_id" property="productId" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="HongShiGoods" type="com.uclee.fundation.data.mybatis.model.HongShiGoods">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="spec" property="spec" jdbcType="VARCHAR" />
+		<result column="Title" property="title" jdbcType="VARCHAR" />
+		<result column="Unit" property="unit" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CreateOrderItemResult" type="com.uclee.fundation.data.mybatis.model.CreateOrderItemResult">
+		<result column="retcode" property="retCode" jdbcType="INTEGER" />
+		<result column="Msg" property="msg" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="HongShiCommonResult" type="com.uclee.fundation.data.mybatis.model.HongShiCommonResult">
+		<result column="retcode" property="retCode" jdbcType="INTEGER" />
+		<result column="Msg" property="msg" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CreateOrderResult" type="com.uclee.fundation.data.mybatis.model.CreateOrderResult">
+		<result column="OrderID" property="orderID" jdbcType="INTEGER" />
+		<result column="OrderCode" property="orderCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BossCenterItem" type="com.uclee.fundation.data.web.dto.BossCenterItem">
+		<result column="Coption" property="coption" jdbcType="VARCHAR" />
+		<result column="Values" property="value" jdbcType="DECIMAL" />
+		<result column="VType" property="valueType" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CouponSales" type="com.uclee.fundation.data.mybatis.model.CouponSales">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="编号" property="numbers" jdbcType="INTEGER" />
+		<result column="面额" property="denomination" jdbcType="DECIMAL" />
+		<result column="日期" property="day" jdbcType="TIMESTAMP" />
+		<result column="部门编号" property="departmentNumber" jdbcType="INTEGER" />
+		<result column="往来编号" property="serialNumber" jdbcType="VARCHAR" />
+		<result column="销售时间" property="salesTime" jdbcType="VARCHAR" />
+		<result column="单号" property="oddNumbers" jdbcType="VARCHAR" />
+		<result column="销售类型" property="salesType" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="CouponSales" resultMap="CouponSales">
+		<bind name="salesTime" value="'%' + salesTime + '%'" />
+		select * from 礼券销售表 where 销售时间 like #{salesTime, jdbcType=VARCHAR} and 销售类型 = '生日祝福赠送礼券' and 往来编号 = #{serialNumber, jdbcType=VARCHAR}
+	</select>
+	<select id="getHongShiOrder" resultMap="HongShiOrder">
+		exec WSC_GetOrdersList '','','',#{cWeiXinCode,jdbcType=VARCHAR},null,#{isEnd,jdbcType=BIT}
+	</select>
+	<select id="selectBossCenter" resultMap="BossCenterItem">
+		exec WSC_Get_BossTotal #{hsCode,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER}
+	</select>
+	<select id="getHongShiOrderItems" resultMap="HongShiOrderItem">
+		exec WSC_GetOrdersDetail #{id,jdbcType=INTEGER}
+	</select>
+	<select id="getHongShiGoods" resultMap="HongShiGoods">
+		select ID as ID,编号 as Code,名称 as Title,规格 as spec,单位 as Unit from goods where 编号=#{code,jdbcType=VARCHAR}
+	</select>
+	<select id="getHongShiStore" resultMap="HongShiStore">
+		select id as id,编号 as code,rtrim(简称) as abbreviation,rtrim(全称) as fullName,rtrim(地址) as address,rtrim(联系电话)  as phone,rtrim(类别简称) as catAbbreviation,往来属性 as type from department where 是否停用=0 and 往来属性 in ('直营店','加盟店')
+	</select>
+	<select id="getOrderByOutCode" resultMap="HongShiOrder">
+		select rtrim(是否废止) as IsVoid  from orders where 商户订单号=#{code,jdbcType=VARCHAR}
+	</select>
+	<select id="getHongShiCoupon" resultMap="HongShiCoupon">
+		exec WSC_GetVouchers #{cWeiXinCode,jdbcType=VARCHAR}
+	</select>
+	<select id="getHongShiCouponByCode" resultMap="HongShiCoupon">
+		exec WSC_GetVouchers '', #{voucherCode,jdbcType=VARCHAR}
+	</select>
+	<select id="getHongShiCouponByGoodsCode" resultMap="HongShiCoupon">
+		exec WSC_GetVouchers '', '',#{goodsCode,jdbcType=VARCHAR}
+	</select>
+	<select id="saleVoucher" resultType="java.lang.Integer">
+		exec WSC_SaleVoucher #{goodsCode,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR},0,0,#{SaleType,jdbcType=VARCHAR}
+	</select>
+	<select id="recoverVoucher" resultType="java.lang.Integer">
+		exec WSC_RecoverVoucher #{orderId,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR}
+	</select>
+	<select id="createOrder" resultMap="CreateOrderResult">
+		exec WSC_CreateOrder '',#{WSC_TardNo,jdbcType=VARCHAR},#{PickUpTime,jdbcType=TIMESTAMP},#{WeiXinCode,jdbcType=VARCHAR},#{CallNumber,jdbcType=VARCHAR},#{Remarks,jdbcType=VARCHAR}
+		,#{Destination,jdbcType=VARCHAR},#{TotalAmount,jdbcType=DECIMAL},0,#{deducted,jdbcType=DECIMAL},#{Payment,jdbcType=DECIMAL},#{Voucher,jdbcType=DECIMAL},#{shipping,jdbcType=DECIMAL},'','',#{Department,jdbcType=VARCHAR},#{Vouchers,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR}
+	</select>
+	<select id="createOrderItem" resultMap="CreateOrderItemResult">
+		 exec WSC_AddOrderItem #{pId,jdbcType=INTEGER},#{goodsCode,jdbcType=VARCHAR},#{goodsCount,jdbcType=INTEGER},#{price,jdbcType=DECIMAL},#{totalAmount,jdbcType=DECIMAL},#{productId,jdbcType=INTEGER}
+	</select>
+	<select id="signInAddPoint" resultMap="HongShiCommonResult">
+		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},#{tag,jdbcType=INTEGER}
+	</select>
+	<select id="lotteryPoint" resultMap="HongShiCommonResult">
+		 exec WSC_VipBonusPoints #{oauthId,jdbcType=VARCHAR},#{point,jdbcType=INTEGER},'抽奖扣积分'
+	</select>
+	<select id="getHongShiProduct" resultMap="HongShiProduct">
+		select ID as id,编号 as code,名称 as name,规格 as hsSpec,单位 as hsUnit,销售主价 as hsPrice from goods where 是否销售=1 and 停用日期>convert(varchar(10),getdate(),120)
+	</select>
+	<select id="selectMobile" resultMap="MobileItem">
+	    select id,parent,name,caption,comment,orders,types,enabled,command from mobile_object where [types] like 'web:%'
+	</select>
+	<select id="getmobJect" parameterType="java.util.Map" resultType="java.util.Map">
+ 		exec QueryFormMObject #{QueryName,jdbcType=VARCHAR},#{hsCode,jdbcType=VARCHAR},#{userId,jdbcType=INTEGER}
+    </select> 
+    <select id="getCouponName" resultMap="HongShiCoupon">
+		select 名称  as name from goods where  编号=#{productNumber,jdbcType=VARCHAR}
+	</select>
+	
+	<resultMap id="colsNames" type="java.util.Map">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="engName" property="engName" jdbcType="VARCHAR" />
+		<result column="cnName" property="cnName" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="objectName" property="objectName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getObjectName" resultMap="colsNames">
+		select
+		Id as "id",
+		EngName as "engName",
+		CnName as "cnName",
+		Sort as "sort",
+		ObjectName as "objectName"
+		from ReportColumn
+		where ObjectName = #{objectName}
+	</select>
+</mapper>

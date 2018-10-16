@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.Order" >
+    <id column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="order_serial_num" property="orderSerialNum" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+    <result column="payment_order_id" property="paymentOrderId" jdbcType="INTEGER" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="region" property="region" jdbcType="VARCHAR" />
+    <result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="zip_code" property="zipCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="shipping_cost" property="shippingCost" jdbcType="DECIMAL" />
+    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+    <result column="cut" property="cut" jdbcType="DECIMAL" />
+    <result column="voucher_price" property="voucherPrice" jdbcType="DECIMAL" />
+    <result column="voucher_code" property="voucherCode" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="pick_time" property="pickTime" jdbcType="TIMESTAMP" />
+    <result column="is_self_pick" property="isSelfPick" jdbcType="BIT" />    
+    <result column="first_dist_id" property="firstDistId" jdbcType="INTEGER" />    
+    <result column="first_dist_money" property="firstDistMoney" jdbcType="DECIMAL" />    
+    <result column="second_dist_id" property="secondDistId" jdbcType="INTEGER" />    
+    <result column="second_dist_money" property="secondDistMoney" jdbcType="DECIMAL" />    
+    <result column="sync_status" property="syncStatus" jdbcType="SMALLINT" />
+    <result column="payment_serial_num" property="paymentSerialNum" jdbcType="VARCHAR" />
+    <result column="pick_up_image" property="pickUpImage" jdbcType="VARCHAR" />
+    <result column="pick_up_barcode" property="pickUpBarcode" jdbcType="VARCHAR" />
+   	<result column="value" property="value" jdbcType="VARCHAR" /> 
+   	<result column="invalid" property="invalid" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap type="com.uclee.fundation.data.mybatis.model.Order" id="OrderWithItem" extends="BaseResultMap">
+   <collection property="items" javaType="list" ofType="com.uclee.fundation.data.mybatis.model.OrderItem">
+      <id column="item_id" property="itemId" jdbcType="INTEGER" />
+	    <result column="item_serial_num" property="itemSerialNum" jdbcType="VARCHAR" />
+	    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+	    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+	    <result column="product_id" property="productId" jdbcType="INTEGER" />
+	    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+	    <result column="value_id" property="valueId" jdbcType="INTEGER" />
+	    <result column="value" property="value" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="SMALLINT" />
+	    <result column="price" property="price" jdbcType="DECIMAL" />
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="invalid" property="invalid" jdbcType="INTEGER" />
+    </collection>
+   </resultMap>
+  <sql id="Base_Column_List" >
+    order_id, order_serial_num, user_id, store_id, payment_order_id, province, city, 
+    region, addr_detail,name ,phone ,zip_code, create_time, pay_time, shipping_cost, total_price,cut,voucher_price,voucher_code, status, remark,pick_time,is_self_pick,first_dist_id,first_dist_money,second_dist_id,second_dist_money,sync_status,pick_up_image,pick_up_barcode
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_orders
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+   <select id="selectByPaymentOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_orders
+    where payment_order_id = #{paymentOrderId,jdbcType=INTEGER}
+  </select>
+  <select id="selectBySerialNum" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from web_orders
+    where order_serial_num = #{orderSerialNum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByVoucherCode" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from web_orders
+    where voucher_code = #{voucherCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPaymentSerialNum" resultMap="OrderWithItem"  >
+    select 
+    A.*,B.*,C.title
+    from web_orders as A left join web_order_items as B on A.order_id=B.order_id left join web_products as C on B.product_id=C.product_id
+    left join web_payment_orders as D on A.payment_order_id = D.payment_order_id 
+    where D.payment_serial_num= #{paymentSerialNum,jdbcType=VARCHAR} and D.user_id=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="getUnpayOrderListByUserId" resultMap="OrderWithItem" parameterType="java.lang.Integer" >
+    select 
+    A.*,B.*,C.title,D.payment_serial_num
+    from web_orders as A left join web_order_items as B on A.order_id=B.order_id left join web_products as C on B.product_id=C.product_id
+    left join web_payment_orders as D on A.payment_order_id=D.payment_order_id
+    where A.user_id = #{userId,jdbcType=INTEGER} and A.status=1 order by A.create_time desc 
+  </select>
+   <select id="getOrderListByStatus" resultMap="BaseResultMap">
+   select 
+    A.*,B.*,C.title,D.payment_serial_num
+    from web_orders as A left join web_order_items as B on A.order_id=B.order_id left join web_products as C on B.product_id=C.product_id
+    left join web_payment_orders as D on A.payment_order_id=D.payment_order_id
+    where status = 1 and invalid=1
+  </select>
+  <select id="getOrderListByOrderSerailNum" resultMap="OrderWithItem">
+    select
+    A.*,B.*,C.title
+    from web_orders as A left join web_order_items as B on A.order_id=B.order_id left join web_products as C on B.product_id=C.product_id
+    where A.order_serial_num = #{orderSerialNum,jdbcType=VARCHAR}
+  </select>
+  <select id="getUnpayOrderCountByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select
+    count(1)
+    from web_orders
+    where user_id = #{userId,jdbcType=INTEGER} and status=1
+  </select>
+  <select id="getUnCommentCount" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(1) from web_orders as A left join orders as B on A.order_serial_num=B.商户订单号
+    left join web_comment as C on A.order_serial_num=C.order_serial_num
+    where B.结单=1 and A.status=2 and C.id is null and A.user_id=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="getInvitationOrder" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    *
+    from web_orders 
+    where first_dist_id=#{userId,jdbcType=INTEGER} or second_dist_id = #{userId,jdbcType=INTEGER} and status=2 order by create_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_orders
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByOrderSerialNum">
+    delete from web_orders
+    where order_serial_num = #{orderSerialNum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Order" useGeneratedKeys="true"
+    keyProperty="orderId">
+    insert into web_orders (order_id, order_serial_num, user_id, 
+      store_id, payment_order_id, province, 
+      city, region, addr_detail,name ,phone ,zip_code, 
+      create_time, pay_time, shipping_cost, 
+      total_price,cut,voucher_price,voucher_code, status, remark,pick_time,is_self_pick,first_dist_id,first_dist_money,second_dist_id,second_dist_money,sync_status,pick_up_image,pick_up_barcode
+      )
+    values (#{orderId,jdbcType=INTEGER}, #{orderSerialNum,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{storeId,jdbcType=INTEGER}, #{paymentOrderId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{addrDetail,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{zipCode,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}, #{shippingCost,jdbcType=DECIMAL}, 
+      #{totalPrice,jdbcType=DECIMAL},#{cut,jdbcType=DECIMAL},#{voucherPrice,jdbcType=DECIMAL},#{voucherCode,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR},#{pickTime,jdbcType=TIMESTAMP}, #{isSelfPick,jdbcType=BIT}
+      , #{firstDistId,jdbcType=INTEGER}, #{firstDistMoney,jdbcType=DECIMAL}, #{secondDistId,jdbcType=INTEGER}, #{secondDistMoney,jdbcType=DECIMAL}, #{syncStatus,jdbcType=SMALLINT}, #{pickUpImage,jdbcType=VARCHAR}, #{pickUpBarcode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Order" useGeneratedKeys="true"
+    keyProperty="orderId">
+    insert into web_orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderSerialNum != null" >
+        order_serial_num,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="paymentOrderId != null" >
+        payment_order_id,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="region != null" >
+        region,
+      </if>
+      <if test="addrDetail != null" >
+        addr_detail,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="zipCode != null" >
+        zip_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="shippingCost != null" >
+        shipping_cost,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+      <if test="cut != null" >
+        cut,
+      </if>
+      <if test="voucherPrice != null" >
+        voucher_price,
+      </if>
+      <if test="voucherCode != null" >
+        voucher_code,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="pickTime != null" >
+        pick_time,
+      </if>
+      <if test="isSelfPick != null" >
+        is_self_pick,
+      </if>
+      <if test="firstDistId != null" >
+        first_dist_id,
+      </if>
+      <if test="firstDistMoney != null" >
+        first_dist_money,
+      </if>
+      <if test="secondDistId != null" >
+        second_dist_id,
+      </if>
+      <if test="secondDistMoney != null" >
+        second_dist_money,
+      </if>
+      <if test="syncStatus != null" >
+        sync_status,
+      </if>
+      <if test="pickUpImage != null" >
+        pick_up_image,
+      </if>
+      <if test="pickUpBarcode != null" >
+        pick_up_barcode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="orderSerialNum != null" >
+        #{orderSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentOrderId != null" >
+        #{paymentOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="addrDetail != null" >
+        #{addrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shippingCost != null" >
+        #{shippingCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cut != null" >
+        #{cut,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherPrice != null" >
+        #{voucherPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherCode != null" >
+        #{voucherCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="pickTime != null" >
+        #{pickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSelfPick != null" >
+        #{isSelfPick,jdbcType=BIT},
+      </if>
+      <if test="firstDistId != null" >
+        #{firstDistId,jdbcType=INTEGER},
+      </if>
+      <if test="firstDistMoney != null" >
+       #{firstDistMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="secondDistId != null" >
+       #{secondDistId,jdbcType=INTEGER},
+      </if>
+      <if test="secondDistMoney != null" >
+         #{secondDistMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="syncStatus != null" >
+         #{syncStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="pickUpImage != null" >
+        #{pickUpImage,jdbcType=VARCHAR},
+      </if>
+      <if test="pickUpBarcode != null" >
+        #{pickUpBarcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Order" >
+    update web_orders
+    <set >
+      <if test="orderSerialNum != null" >
+        order_serial_num = #{orderSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentOrderId != null" >
+        payment_order_id = #{paymentOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null" >
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="addrDetail != null" >
+        addr_detail = #{addrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        zip_code = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shippingCost != null" >
+        shipping_cost = #{shippingCost,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cut != null" >
+        cut = #{cut,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherPrice != null" >
+        voucher_price = #{voucherPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="voucherCode != null" >
+        voucher_code = #{voucherCode,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+       <if test="pickTime != null" >
+        pick_time = #{pickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSelfPick != null" >
+        is_self_pick = #{isSelfPick,jdbcType=BIT},
+      </if>
+      <if test="firstDistId != null" >
+        first_dist_id = #{firstDistId,jdbcType=INTEGER},
+      </if>
+      <if test="firstDistMoney != null" >
+       first_dist_money = #{firstDistMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="secondDistId != null" >
+       second_dist_id = #{secondDistId,jdbcType=INTEGER},
+      </if>
+      <if test="secondDistMoney != null" >
+        second_dist_money = #{secondDistMoney,jdbcType=DECIMAL},
+      </if>
+       <if test="syncStatus != null" >
+         sync_status = #{syncStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="pickUpImage != null" >
+        pick_up_image = #{pickUpImage,jdbcType=VARCHAR},
+      </if>
+      <if test="pickUpBarcode != null" >
+        pick_up_barcode = #{pickUpBarcode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.Order" >
+    update web_orders
+    set order_serial_num = #{orderSerialNum,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      store_id = #{storeId,jdbcType=INTEGER},
+      payment_order_id = #{paymentOrderId,jdbcType=INTEGER},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      addr_detail = #{addrDetail,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      zip_code = #{zipCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      pick_time = #{pickTime,jdbcType=TIMESTAMP},
+      shipping_cost = #{shippingCost,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
+      cut = #{cut,jdbcType=DECIMAL},
+      voucher_price = #{voucherPrice,jdbcType=DECIMAL},
+      voucher_code = #{voucherCode,jdbcType=DECIMAL},
+      status = #{status,jdbcType=SMALLINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_self_pick = #{isSelfPick,jdbcType=BIT},
+      first_dist_id = #{firstDistId,jdbcType=INTEGER},
+      first_dist_money = #{firstDistMoney,jdbcType=DECIMAL},
+      second_dist_id = #{secondDistId,jdbcType=INTEGER},
+      second_dist_money = #{secondDistMoney,jdbcType=DECIMAL},
+      pick_up_image = #{pickUpImage,jdbcType=VARCHAR},
+      pick_up_barcode = #{pickUpBarcode,jdbcType=VARCHAR},
+       sync_status = #{syncStatus,jdbcType=SMALLINT}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByInvalid" parameterType="com.uclee.fundation.data.mybatis.model.Order" >
+    update web_orders
+     set invalid = -1
+   	 where order_serial_num = #{orderSerialNum,jdbcType=VARCHAR}
+  </update>
+</mapper>
