@@ -1015,11 +1015,17 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 	@RequestMapping(value="/getRechargeAble")
+<<<<<<< HEAD
 	public @ResponseBody Map<String,Object> getRechargeAble(HttpServletRequest request, BigDecimal money, BigDecimal rewards) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		System.out.println("rewards============"+rewards);
 		System.out.println("money============"+money);
 		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(money, rewards);
+=======
+	public @ResponseBody Map<String,Object> getRechargeAble(HttpServletRequest request,BigDecimal money) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(money);
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		if(rechargeConfig==null||rechargeConfig.getEndTime().before(new Date())){
 			map.put("result",false);
 		}else{
@@ -1123,7 +1129,11 @@ public class UserController extends CommonUserHandler{
 						if (coupon!=null&&coupon.size()>0&&config.getAmount()!=null&&config.getAmount()>0) {
 							HongShiCoupon name = hongShiMapper.getCouponName(coupon.get(0).getGoodsCode());
 							//coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN)+"元现金优惠券"
+<<<<<<< HEAD
 							String tmp = i + "： " + name.getName() +config.getAmount()+"张";
+=======
+							String tmp = i + ". " + name.getName() +config.getAmount()+"张";
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 							i++;
 							extra.add(tmp);
 						}
@@ -1133,7 +1143,11 @@ public class UserController extends CommonUserHandler{
 						if (coupon2 != null && coupon2.size() > 0&&config.getAmountSecond()!=null&&config.getAmountSecond()>0) {
 							HongShiCoupon name = hongShiMapper.getCouponName(coupon2.get(0).getGoodsCode());
 							// coupon2.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_DOWN) + "元现金优惠券" 
+<<<<<<< HEAD
 							String tmp = i + "： " + name.getName() + config.getAmountSecond() + "张";
+=======
+							String tmp = i + ". " + name.getName() + config.getAmountSecond() + "张";
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 							i++;
 							extra.add(tmp);
 						}

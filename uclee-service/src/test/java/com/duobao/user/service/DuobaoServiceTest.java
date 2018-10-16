@@ -347,7 +347,11 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 	@Test
 	public void testWxMessage(){
 		dataSource.switchDataSource("kf");
+<<<<<<< HEAD
 		RechargeConfig rechargeConfig = rechargeConfigMapper.getByMoney(new BigDecimal("0.01"));
+=======
+		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(new BigDecimal("0.01"));
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(6);
 		if(rechargeConfig!=null){
 			//优惠券处理

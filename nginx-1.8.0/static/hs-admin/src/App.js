@@ -1,19 +1,33 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import Menu from './components/Menu';
 import req from 'superagent';
+=======
+import Menu from './components/Menu'
+import req from 'superagent'
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
 class App extends Component {
 	  constructor(props) {
     super(props)
     this.state = {
+<<<<<<< HEAD
       account:localStorage.getItem('account'),
       config:{}
+=======
+      account:localStorage.getItem('account')
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
     }
   }
   componentDidMount() {
   	if(!localStorage.getItem('account')){
+<<<<<<< HEAD
      	alert("你还没有登陆，请先登陆！");
       window.location='/login?merchantCode='+localStorage.getItem('merchantCode')
+=======
+     	alert("尚未登陆，请先登陆！");
+      window.location='/login'
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
     }
     this._sendMerchantCode()
   }
@@ -36,6 +50,7 @@ class App extends Component {
         }
         cb && cb(err, res)
       })
+<<<<<<< HEAD
       
       req.get('/uclee-backend-web/config')
       .end((err, res) => {
@@ -51,10 +66,13 @@ class App extends Component {
 	      console.log(this.state.config)
 	    })
       
+=======
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
   }
 
   render() {
     return (
+<<<<<<< HEAD
     	<div>
     		<div style={{background:'#4D4D4D', height:'55px', width:'100%'}}>
     			<span className="pull-left" style={{padding:'10px 60PX 0px 30px', color:'white'}}>
@@ -79,6 +97,25 @@ class App extends Component {
 	      </div>
 	      </div>
 
+=======
+      <div className="app container">
+        <div className="col-md-12">
+          <a href="/"><img src="/images/top.jpg" alt=""/></a>
+        </div>
+       {<div className="col-md-2">
+          <Menu />
+        </div>}
+        <div className="col-md-10">
+          <div style={{
+            padding: 15
+          }}>
+          {
+            this.props.children
+          }
+          </div>
+        </div>
+      </div>
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
     );
   }
 }

@@ -172,7 +172,11 @@ insert into web_config (tag,value) values ('birthText','');
 
 insert into web_config (tag,value) values ('salesText','');
 
+<<<<<<< HEAD
 insert into web_config (tag,value) values ('restrictedDistance','500');
+=======
+insert into web_config (tag,value) values ('restrictedDistance','50');
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
 insert into web_config (tag,value) values ('startUp','1');
 
@@ -190,7 +194,11 @@ insert into web_config (tag,value) values('unbundling',0);
 
 insert into web_config(tag,value) values('brand','ºéÊ¯Èí¼ş');--ÉèÖÃÆ·ÅÆÃû
 
+<<<<<<< HEAD
 insert into web_config(tag,value) values('qq','2217904463');--ÉèÖÃkefu
+=======
+insert into web_config(tag,value) values('qq','2217904463');--ÉèÖÃÆ·ÅÆÃû
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
 insert into web_config(tag,value) values('loss','0')
 
@@ -198,8 +206,11 @@ insert into web_config(tag,value) values('perfectBirthText','¼ì²âµ½Äã»¹Ã»ÓĞÌîĞ´É
 
 insert into web_config(tag,value) values('notice','ÌØ´óÏûÏ¢£¬ÖÜÈÕÈ«³¡°ËÕÛ£¡')
 
+<<<<<<< HEAD
 insert into web_config(tag,value) values('signText','...')
 
+=======
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 insert into web_config (tag,value) values ('zhengshu','D:\zhengshu\hs\apiclient_cert.p12'); --Ö¤ÊéÂ·¾¶
 
 insert into web_config (tag,value) values ('zhengshuPassword','to119,0002'); --Ö¤ÊéµÄÃÜÂë(Ò»°ãÊÇweb_config±íÖĞµÄmerchantcodeÖµ,Èç¹û²»ÊÇµÄ»°Ò²ĞèÒªĞ´Èëµ½Êı¾İ¿âÖĞ)

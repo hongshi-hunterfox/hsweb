@@ -68,7 +68,11 @@ class BargainList extends React.Component {
             </Link>
           </td>
           <td width="8%">
+<<<<<<< HEAD
           	<button className="btn btn-danger button-right" onClick={this._del.bind(this,item.id)}>
+=======
+          	<button className="btn btn-primary button-right" onClick={this._del.bind(this,item.id)}>
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
             删除
             </button>
           </td>  

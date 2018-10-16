@@ -14,8 +14,12 @@ class Login extends React.Component {
     this.state = {
       error: '',
       account: '',
+<<<<<<< HEAD
       password: '',
       config: {}
+=======
+      password: ''
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
     }
 
     this.tick = null
@@ -42,6 +46,7 @@ _sendMerchantCode = (cb) => {
         }
         cb && cb(err, res)
       })
+<<<<<<< HEAD
       
       req.get('/uclee-backend-web/config')
       .end((err, res) => {
@@ -56,12 +61,15 @@ _sendMerchantCode = (cb) => {
 	      })
 	      console.log(this.state.config)
 	    })
+=======
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
   }
 componentWillUnmount() {
     clearInterval(this.tick)
   }
   render() {
     return (
+<<<<<<< HEAD
       <DocumentTitle title="洪石商城">
 	      <div className="body">
 					<div className="body-main">
@@ -100,6 +108,48 @@ componentWillUnmount() {
 					</div>
 					<div style={{paddingTop:'25px'}} />
 	      </div>
+=======
+      <DocumentTitle title="admin登陆">
+      <div className="login">
+      	<div className="login-title">
+      		欢迎使用微商城后台管理系统
+      	</div>
+      	<div className="login-css">
+          <form
+            className="form-horizontal member-setting-form"
+            onSubmit={this._submit}
+          >
+                账号:
+                <input
+                  type="tel"
+                  name="account"
+                  className="input-group input-group-lg"
+                  placeholder="请输入你的账号"
+                  value={this.state.account}
+                  onChange={this._change}
+                />
+              密码:
+              <input
+                type="password"
+                name="password"
+                className="input-group input-group-lg"
+                placeholder="请输入你的密码"
+                value={this.state.password}
+                onChange={this._change}
+              />
+            <ErrorMsg msg={this.state.error} />
+            <div className="cs">
+              <button type="submit" className="btn btn-primary">
+                点击登陆
+              </button>
+            </div>
+            <div className="login-wb">
+              洪石软件提供技术服务支持
+            </div>
+          </form>
+        </div>
+      </div>
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
       </DocumentTitle>
     )
   }
@@ -141,6 +191,10 @@ componentWillUnmount() {
           })
           return
         }else{
+<<<<<<< HEAD
+=======
+        	alert("登陆成功")
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
           localStorage.setItem('account', data.account);
     			window.location='/'
         }

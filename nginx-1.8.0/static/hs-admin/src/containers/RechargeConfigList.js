@@ -101,7 +101,11 @@ class RechargeConfigList extends React.Component {
           }}>
               编辑
             </button>
+<<<<<<< HEAD
             <button className="btn btn-danger" onClick={this._del.bind(this,item.id)} style={{
+=======
+            <button className="btn btn-primary" onClick={this._del.bind(this,item.id)} style={{
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
             marginRight:'5px',marginBottom:'5px'
           }}>
               删除

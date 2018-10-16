@@ -123,10 +123,13 @@ If Not Exists(Select * From syscolumns where name='canshu_value_id' And id=Objec
 Begin
  alter table web_cart add canshu_value_id int;
 End
+<<<<<<< HEAD
 If Not Exists(Select * From syscolumns where name='activity_markers' And id=Object_id('web_cart','U'))
 Begin
  alter table web_cart add activity_markers int;
 End
+=======
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
 --web_categories
 If Not Exists(Select * From syscolumns where name='batchDiscount' And id=Object_id('web_categories','U'))
@@ -143,6 +146,7 @@ End
 If Not Exists(Select * From syscolumns where name='endTimeStrs' And id=Object_id('web_categories','U'))
 Begin
  alter table web_categories add endTimeStrs varchar(255);
+<<<<<<< HEAD
 End
 
 --web_napa_stores
@@ -169,3 +173,6 @@ insert into web_config(tag,value) values('notice','»¶Ó­¹âÁÙ£¡')
 insert into web_config(tag,value) values('bargainText','...')
 
 insert into web_config(tag,value) values('signText','...')
+=======
+End
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515

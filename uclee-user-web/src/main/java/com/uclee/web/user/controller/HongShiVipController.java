@@ -335,6 +335,20 @@ public class HongShiVipController<phone> {
 				List<HongShiVip> vip= hongShiVipService.getVipInfo(tt.getOauthId());//openid 去拿信息
 				if(vip!=null&&vip.size()>0){
 					ret= hongShiVipService.getRechargeRecord(vip.get(0).getId());
+<<<<<<< HEAD
+=======
+					/*for(HongShiRechargeRecord record:ret){
+						if(record.getSource().equals("订单")){
+							record.setLogType(1);
+						}else if(record.getSource().equals("充值")){
+							record.setLogType(2);
+						}else if(record.getSource().equals("签到送积分")){
+							record.setLogType(3);
+						}else{
+							record.setLogType(4);
+						}
+					}*/
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 					logger.info("会员卡明细： " + JSON.toJSONString(ret));
 				}
 			}

@@ -81,7 +81,11 @@ class Recharge extends React.Component {
 	render() {
 		var money = this.state.config.map((item, index) => {
 				return (
+<<<<<<< HEAD
 					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money && this.state.rewards === item.rewards ?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
+=======
+					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				);
 		});
 		console.log(this.state.extraData);
@@ -190,7 +194,11 @@ class Recharge extends React.Component {
 			return;
 		}
 		req
+<<<<<<< HEAD
         .get('/uclee-user-web/getRechargeAble?money=' + this.state.rechargeMoney+'&rewards='+this.state.rewards)
+=======
+        .get('/uclee-user-web/getRechargeAble?money=' + this.state.rechargeMoney)
+>>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
         .end((err, res) => {
           if (err) {
             return err
