@@ -47,13 +47,8 @@ class BannerList extends React.Component {
           <td><img src={item.imageUrl} alt="" width="100"/></td>
           <td>{item.link}</td>
           <td>
-<<<<<<< HEAD
             <button className="btn btn-primary" onClick={this._edit.bind(this,'/editBanner?id='+ item.id)}>编辑</button>
             <button className="btn btn-danger" onClick={this._delHandler.bind(this,item.id)}>   删除</button>
-=======
-            <button onClick={this._edit.bind(this,'/editBanner?id='+ item.id)}>编辑</button>
-            <button onClick={this._delHandler.bind(this,item.id)}>   删除</button>
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
           </td>
         </tr>
       )

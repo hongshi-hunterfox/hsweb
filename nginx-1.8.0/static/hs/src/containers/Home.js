@@ -101,11 +101,7 @@ class SearchBar extends React.Component {
      e.preventDefault()
     var data = fto(e.target);
     console.log(data.keyword);
-<<<<<<< HEAD
     window.location="/all-product?keyword="+data.keyword+"?merchantCode="+localStorage.getItem('merchantCode');
-=======
-    window.location="/all-product?keyword="+data.keyword;
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
   }
 }
 
@@ -158,11 +154,7 @@ class HomeNav extends React.Component {
     var list = this.props.quickNavis.map((item,index)=>{
         return (
             <div
-<<<<<<< HEAD
               onClick={this._location.bind(this,"/all-product?naviId="+item.naviId+"?merchantCode="+localStorage.getItem('merchantCode'))}
-=======
-              onClick={this._location.bind(this,"/all-product?naviId="+item.naviId)}
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
               className="home-nav-item"
               key={index}
             >
@@ -503,11 +495,7 @@ class Home extends React.Component {
         }
         var result = JSON.parse(res.text);
         if(result.result){
-<<<<<<< HEAD
           window.location = '/cart?merchantCode='+localStorage.getItem('merchantCode')
-=======
-          window.location = '/cart'
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
         }else{
           alert(result.reason);
         }
@@ -619,11 +607,7 @@ class Home extends React.Component {
                   return(
                       <div className="product-item" key={index1}>
                         <div className='product-item-img'
-<<<<<<< HEAD
                           onClick={()=>{window.location="/detail/" + item1.productId+"?merchantCode="+localStorage.getItem('merchantCode')}}
-=======
-                          onClick={()=>{window.location="/detail/" + item1.productId}}
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
                         >
                         	<LazyLoad height={200}>
 	                          <img
@@ -683,11 +667,7 @@ class Home extends React.Component {
               }
             </div>
             <div className='text'>
-<<<<<<< HEAD
 	            <Link to={'/all-product?merchantCode='+localStorage.getItem('merchantCode')}>
-=======
-	            <Link to='/all-product'>
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 	              <span className="badge">查看更多<i className="glyphicon glyphicon-chevron-right" /></span>
 	            </Link>
             </div>

@@ -1,11 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-<<<<<<< HEAD
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-=======
-import 'bootstrap/dist/css/bootstrap.min.css'
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 import 'font-awesome/css/font-awesome.min.css'
 import './index.css';
 import App from './App'

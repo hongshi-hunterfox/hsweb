@@ -59,35 +59,6 @@ class UserList extends React.Component {
         </tr>
       )
     })
-<<<<<<< HEAD
-=======
-    //分页页码按钮显示
-//  var pagesizes = this.state.pagesize.map((item, index) => {
-//  		return (
-//      	<span style={{float:'left'}} key={index}>
-//      
-//	        <nav aria-label="Page navigation">
-//				<ul className="pagination">	
-//		        {this.state.pagenum === index+1 ? 
-//					<li className="active">
-//						<a href="#">
-//							{index+1}
-//						</a>
-//					</li>
-//				:
-//					<li>
-//						<span onClick={()=>{window.location='/user-list?pn='+(index+1)}}>
-//							{index+1}
-//						</span>
-//					</li>
-//				}
-//		        </ul>
-//		      </nav>
-//	        </span>
-//	     )
-//
-//  })
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
     return (
       <DocumentTitle title="用户列表">

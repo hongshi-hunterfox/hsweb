@@ -244,22 +244,13 @@ public class UserServiceImpl implements UserServiceI {
 		logger.info("user: " + JSON.toJSONString(user));
 		logger.info("inputPassword: " + JSON.toJSONString(inputPassword));
 		boolean validatePwd = false;
-<<<<<<< HEAD
 		if (null == user || Strings.isNullOrEmpty(inputPassword) || user.getRegistTime() == null || Strings.isNullOrEmpty(user.getPassword())) {
-=======
-		if (null == user || Strings.isNullOrEmpty(inputPassword) || user.getRegistTime() == null
-				|| Strings.isNullOrEmpty(user.getPassword())) {
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			logger.info("验证用户密码需要信息不完整\n" + JSON.toJSONString(user));
 			return false;
 		}
 		String salt = UserUtil.getSalt(user.getRegistTime());
 		validatePwd = user.getPassword().equals(SHA256.encrypt(inputPassword, salt));
-<<<<<<< HEAD
 		if (!validatePwd)  {
-=======
-		if(!validatePwd){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			logger.info("密码错误real");
 			logger.info("user pass in database:"+user.getPassword());
 			logger.info("user pass input:"+SHA256.encrypt(inputPassword, salt));
@@ -1868,11 +1859,7 @@ public class UserServiceImpl implements UserServiceI {
 	* @throws 
 	*/
 	private boolean rechargeSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
-<<<<<<< HEAD
 		RechargeConfig rechargeConfig = rechargeConfigMapper.getByMoney(paymentOrder.getMoney());
-=======
-		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(paymentOrder.getMoney());
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		
 		BigDecimal realMoney = paymentOrder.getMoney();
 		if(rechargeConfig!=null){
@@ -3035,22 +3022,12 @@ public class UserServiceImpl implements UserServiceI {
 		if(signRecordMapper.insertSelective(record)>0){
 			//同步积分到洪石系统
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
-<<<<<<< HEAD
 			if (oauthLogin!=null){
 				hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),record.getPoint(),"签到送积分");
 			}
 			map.put("result", true);
 			map.put("point", config.getValue());
 		} else {
-=======
-			if(oauthLogin!=null){
-				hongShiMapper.signInAddPoint(oauthLogin.getOauthId(),record.getPoint(),"签到送积分");
-			}
-			
-			map.put("result", true);
-			map.put("point", config.getValue());
-		}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			map.put("result", false);
 		}
 		return map;
@@ -3077,11 +3054,7 @@ public class UserServiceImpl implements UserServiceI {
 		UserProfile profile = userProfileMapper.selectByUserId(userId);
 		File file = MyQRCode.generateQRCode(600,600,"http://weixin.qq.com/r/"+getcVipCode);
 		String vipImage = fDFSFileUpload.getFileId(file);
-<<<<<<< HEAD
 		if (profile!=null) {
-=======
-		if(profile!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			profile.setVipImage(vipImage);
 			userProfileMapper.updateByPrimaryKeySelective(profile);
 		}
@@ -3094,11 +3067,7 @@ public class UserServiceImpl implements UserServiceI {
 		File file = BarcodeUtil.generateFile(getcVipCode, System.getProperty("java.io.tmpdir")+".png");
 		String vipImage = fDFSFileUpload.getFileId(file);
 		logger.info(vipImage);
-<<<<<<< HEAD
 		if (profile!=null) {
-=======
-		if(profile!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			profile.setVipJbarcode(vipImage);
 			userProfileMapper.updateByPrimaryKeySelective(profile);
 		}
@@ -3117,28 +3086,16 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String, Object> distCenter(Integer userId) {
 		Map<String,Object> ret = new TreeMap<String,Object>();
 		User user = userMapper.selectByPrimaryKey(userId);
-<<<<<<< HEAD
 		if (user!=null) {
 			ret.put("serialNum", user.getSerialNum());
 		}
 		UserInvitedLink link = userInvitedLinkMapper.selectByInvitedId(userId);
 		if (link!=null) {
-=======
-		if(user!=null){
-			ret.put("serialNum", user.getSerialNum());
-		}
-		UserInvitedLink link = userInvitedLinkMapper.selectByInvitedId(userId);
-		if(link!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			UserProfile invitator = userProfileMapper.selectByUserId(link.getUserId());
 			ret.put("invitator",invitator);
 		}
 		Balance balance = this.getBalance(userId);
-<<<<<<< HEAD
 		if (balance!=null) {
-=======
-		if(balance!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			ret.put("money", balance.getBalance());
 		}
 		return ret;
@@ -3187,11 +3144,7 @@ public class UserServiceImpl implements UserServiceI {
 				} else {
 					config.setText(config.getMoney().toString() + "元会员卡余额");
 				}
-<<<<<<< HEAD
 			} else {
-=======
-			}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				config.setText("再接再励");
 			}
 		}
@@ -3219,15 +3172,9 @@ public class UserServiceImpl implements UserServiceI {
 				try {
 					HongShiCreateOrder createOrderData = new HongShiCreateOrder();
 					NapaStore napaStore = napaStoreMapper.selectByPrimaryKey(order.getStoreId());
-<<<<<<< HEAD
 					if (napaStore!=null) {
 						createOrderData.setDepartment(napaStore.getHsCode());
 					} else {
-=======
-					if(napaStore!=null){
-						createOrderData.setDepartment(napaStore.getHsCode());
-					}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 						logger.info("加盟店不存在");
 					}
 					createOrderData.setPickUpTime(order.getPickTime());
@@ -3240,7 +3187,6 @@ public class UserServiceImpl implements UserServiceI {
 					BigDecimal total = order.getTotalPrice();
 					createOrderData.setVouchers(order.getVoucherCode());
 					createOrderData.setPayment(paymentOrder.getMoney());
-<<<<<<< HEAD
 					if (order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")) {
 						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 						if (coupon!=null&&coupon.size()>0) {
@@ -3249,16 +3195,6 @@ public class UserServiceImpl implements UserServiceI {
 							createOrderData.setVoucher(new BigDecimal(0));
 						}
 					} else {
-=======
-					if(order.getVoucherCode()!=null&&!order.getVoucherCode().equals("")){
-						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
-						if(coupon!=null&&coupon.size()>0){
-							createOrderData.setVoucher(coupon.get(0).getPayQuota());
-						}else{
-							createOrderData.setVoucher(new BigDecimal(0));
-						}
-					}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 						createOrderData.setVoucher(new BigDecimal(0));
 					}
 
@@ -3270,15 +3206,9 @@ public class UserServiceImpl implements UserServiceI {
 					CreateOrderResult createOrderResult = hongShiMapper.createOrder(createOrderData);
 					//回收礼券
 					try {
-<<<<<<< HEAD
 						if (createOrderResult!=null) {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
 							if (coupon!=null&&coupon.size()>0) {
-=======
-						if(createOrderResult!=null){
-							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByCode(order.getVoucherCode());
-							if(coupon!=null&&coupon.size()>0){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 								hongShiMapper.recoverVoucher(coupon.get(0).getGoodsCode(),createOrderResult.getOrderID(),order.getVoucherCode(),"微商城使用单号："+order.getOrderSerialNum(),order.getVoucherPrice());
 							}
 						}
@@ -3292,11 +3222,7 @@ public class UserServiceImpl implements UserServiceI {
 					for(OrderItem item:items){
 						HongShiCreateOrderItem createOrderItem = new HongShiCreateOrderItem();
 						SpecificationValue value = specificationValueMapper.selectByPrimaryKey(item.getValueId());
-<<<<<<< HEAD
 						if (value!=null) {
-=======
-						if(value!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 							createOrderItem.setGoodsCode(value.getHsGoodsCode());
 						}
 						createOrderItem.setProductId(item.getProductId());
@@ -3316,17 +3242,10 @@ public class UserServiceImpl implements UserServiceI {
 					Config firstDistConfig = configMapper.getByTag(WebConfig.firstDis);
 					Config secondDistConfig = configMapper.getByTag(WebConfig.secondDis);
 					User firstDist = userMapper.selectByInvitedId(order.getUserId());
-<<<<<<< HEAD
 					if (firstDist!=null) {
 						//一级分销
 						Balance firstBalance = this.getBalance(firstDist.getUserId());
 						if (firstBalance!=null&&firstDistConfig!=null) {
-=======
-					if(firstDist!=null){
-						//一级分销
-						Balance firstBalance = this.getBalance(firstDist.getUserId());
-						if(firstBalance!=null&&firstDistConfig!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 							BigDecimal firstMoney;
 							try {
 								firstMoney = order.getTotalPrice().multiply(new BigDecimal((firstDistConfig.getValue())).divide(new BigDecimal(100)));
@@ -3336,11 +3255,7 @@ public class UserServiceImpl implements UserServiceI {
 								firstMoney=new BigDecimal(0.01);
 							}
 							firstBalance.setBalance(firstBalance.getBalance().add(firstMoney));
-<<<<<<< HEAD
 							if (balanceMapper.updateByPrimaryKeySelective(firstBalance)>0) {
-=======
-							if(balanceMapper.updateByPrimaryKeySelective(firstBalance)>0){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 								//记录日志
 								BalanceLog log = new BalanceLog();
 								log.setUserId(firstDist.getUserId());
@@ -3354,19 +3269,11 @@ public class UserServiceImpl implements UserServiceI {
 						}
 
 						//二级分销
-<<<<<<< HEAD
 						if (firstDist!=null) {
 							User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
 							if (secondDist!=null) {
 								Balance secondBalance = this.getBalance(secondDist.getUserId());
 								if (secondDist!=null&&secondBalance!=null&&secondDistConfig!=null) {
-=======
-						if(firstDist!=null){
-							User secondDist = userMapper.selectByInvitedId(firstDist.getUserId());
-							if(secondDist!=null) {
-								Balance secondBalance = this.getBalance(secondDist.getUserId());
-								if(secondDist!=null&&secondBalance!=null&&secondDistConfig!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 									BigDecimal secondMoney;
 									try {
 										secondMoney = order.getTotalPrice().multiply(new BigDecimal((secondDistConfig.getValue())).divide(new BigDecimal(100)));
@@ -3376,11 +3283,7 @@ public class UserServiceImpl implements UserServiceI {
 										secondMoney=new BigDecimal(0.01);
 									}
 									secondBalance.setBalance(secondBalance.getBalance().add(secondMoney));
-<<<<<<< HEAD
 									if (balanceMapper.updateByPrimaryKeySelective(secondBalance)>0) {
-=======
-									if(balanceMapper.updateByPrimaryKeySelective(secondBalance)>0){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 										//记录日志
 										BalanceLog log = new BalanceLog();
 										log.setUserId(secondDist.getUserId());
@@ -3406,17 +3309,10 @@ public class UserServiceImpl implements UserServiceI {
 				String[] key = {"keyword1","keyword2","keyword3","keyword4"};
 				Payment payment = paymentMapper.selectByPrimaryKey(paymentOrder.getPaymentId());
 				String paymentMethod="微信支付";
-<<<<<<< HEAD
 				if (payment!=null) {
 					if (payment.getStrategyClassName().equals("MemberCardPaymentStrategy")) {
 						paymentMethod="会员卡余额支付";
 					}else if (payment.getStrategyClassName().equals("AlipayPaymentStrategy")) {
-=======
-				if(payment!=null){
-					if(payment.getStrategyClassName().equals("MemberCardPaymentStrategy")){
-						paymentMethod="会员卡余额支付";
-					}else if(payment.getStrategyClassName().equals("AlipayPaymentStrategy")){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 						paymentMethod="支付宝支付";
 					}
 				}
@@ -3460,17 +3356,10 @@ public class UserServiceImpl implements UserServiceI {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		Balance balance = this.getBalance(userId);
 		map.put("result", false);
-<<<<<<< HEAD
 		if (balance!=null) {
 			BigDecimal money = balance.getBalance();
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
 			if (oauthLogin!=null) {
-=======
-		if(balance!=null){
-			BigDecimal money = balance.getBalance();
-			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
-			if(oauthLogin!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				//更新余额
 				balance.setBalance(new BigDecimal(0));
 				balanceMapper.updateByPrimaryKeySelective(balance);
@@ -3502,11 +3391,7 @@ public class UserServiceImpl implements UserServiceI {
 		if (config!=null&&oauthLogin!=null) {
 			//减去积分
 			Config webConfig = getLotteryWebConfig();
-<<<<<<< HEAD
 			if (webConfig!=null) {
-=======
-			if(webConfig!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				logger.info(JSON.toJSONString("进入抽奖扣除积分"));
 				int point = 1;
 				try {
@@ -3560,11 +3445,7 @@ public class UserServiceImpl implements UserServiceI {
 					lotteryDrawConfigMapper.updateByPrimaryKeySelective(config);
 					return map;
 				}
-<<<<<<< HEAD
 			} else {
-=======
-			}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				map.put("result", true);
 				map.put("text", "再接再励");
 				return map;
@@ -3591,24 +3472,14 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String, Object> cardAddHandler(Integer userId,Integer cartId, Integer amount, Integer activityMarkers) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		Cart cart = cartMapper.selectByUserIdAndCartId(userId, cartId);
-<<<<<<< HEAD
 		if (cart!=null) {
 			cart.setAmount(amount);
 			if (activityMarkers!=null) {
-=======
-		if(cart!=null){
-			cart.setAmount(amount);
-			if(activityMarkers!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				cart.setActivityMarkers(activityMarkers);
 			}
 			cartMapper.updateByPrimaryKey(cart);
 			map.put("result", true);
-<<<<<<< HEAD
 		} else {
-=======
-		}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			map.put("result", false);
 		}
 		return map;
@@ -3625,17 +3496,10 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String, Object> cardDelHandler(Integer userId,Integer cartId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		Cart cart = cartMapper.selectByUserIdAndCartId(userId, cartId);
-<<<<<<< HEAD
 		if (cart!=null) {
 			cartMapper.deleteByPrimaryKey(cart.getCartId());
 			map.put("result", true);
 		} else {
-=======
-		if(cart!=null){
-			cartMapper.deleteByPrimaryKey(cart.getCartId());
-			map.put("result", true);
-		}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			map.put("result", false);
 		}
 		return map;
@@ -3655,11 +3519,7 @@ public class UserServiceImpl implements UserServiceI {
 		Province province = provinceMapper.selectByProvince(addr.getProvince());
 		City city = cityMapper.selectByCity(addr.getCity());
 		Region region = regionMapper.selectByRegionAndCityId(addr.getRegion(),city.getCityId());
-<<<<<<< HEAD
 		if (province!=null&&city!=null&&region!=null) {
-=======
-		if(province!=null&&city!=null&&region!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			addr.setProvinceId(province.getProvinceId());
 			addr.setCityId(city.getCityId());
 			addr.setRegionId(region.getRegionId());
@@ -3670,11 +3530,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public List<City> getCitiesByStr(String province) {
 		Province ret = provinceMapper.selectByProvince(province);
-<<<<<<< HEAD
 		if (ret!=null) {
-=======
-		if(ret!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			return cityMapper.selectByProvinceId(ret.getProvinceId());
 		}
 		return null;
@@ -3683,11 +3539,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public List<Region> getRegionsByStr(String city) {
 		City ret = cityMapper.selectByCity(city);
-<<<<<<< HEAD
 		if (ret!=null) {
-=======
-		if(ret!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			return regionMapper.selectByCityId(ret.getCityId());
 		}
 		return null;
@@ -3696,11 +3548,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public String getStoreAddr(Integer storeId) {
 		NapaStore store = napaStoreMapper.selectByPrimaryKey(storeId);
-<<<<<<< HEAD
 		if (store!=null) {
-=======
-		if(store!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			return store.getProvince()+store.getCity()+store.getRegion()+store.getAddrDetail();
 		}
 		return null;
@@ -3729,21 +3577,12 @@ public class UserServiceImpl implements UserServiceI {
 	public int delOrder(String orderSerialNum) {
 		Order order = orderMapper.selectBySerialNum(orderSerialNum);
 		orderMapper.deleteByOrderSerialNum(orderSerialNum);
-<<<<<<< HEAD
 		if (order!=null) {
 			List<OrderItem> orderItems = orderItemMapper.selectByOrderId(order.getOrderId());
 			logger.info(JSON.toJSONString(orderItems));
 			for (OrderItem orderItem : orderItems) {
 				SpecificationValue value = specificationValueMapper.selectByPrimaryKey(orderItem.getValueId());
 				if (value!=null) {
-=======
-		if(order!=null){
-			List<OrderItem> orderItems = orderItemMapper.selectByOrderId(order.getOrderId());
-			logger.info(JSON.toJSONString(orderItems));
-			for(OrderItem orderItem : orderItems){
-				SpecificationValue value = specificationValueMapper.selectByPrimaryKey(orderItem.getValueId());
-				if(value!=null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 					value.setHsStock(value.getHsStock()+orderItem.getAmount());
 					logger.info(JSON.toJSONString(value));
 					specificationValueMapper.updateByPrimaryKeySelective(value);
@@ -3756,11 +3595,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public Boolean getNapaStoreByPhone(String phone) {
 		List<NapaStore> napaStore = napaStoreMapper.selectByPhone(phone);
-<<<<<<< HEAD
 		if (napaStore!=null&&napaStore.size()>0) {
-=======
-		if(napaStore!=null&&napaStore.size()>0){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			return true;
 		}
 		return false;
@@ -3769,11 +3604,7 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String,String> getWeixinConfig() {
 		Map<String,String> map = new HashMap<String,String>();
 		List<Config> configs = configMapper.getWeixinConfig();
-<<<<<<< HEAD
 		for (Config config:configs) {
-=======
-		for(Config config:configs){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			map.put(config.getTag(), config.getValue());
 		}
 		return map;
@@ -3782,11 +3613,7 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String,String> getSMSConfig() {
 		Map<String,String> map = new HashMap<String,String>();
 		List<Config> configs = configMapper.getSMSConfig();
-<<<<<<< HEAD
 		for (Config config:configs) {
-=======
-		for(Config config:configs){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			map.put(config.getTag(), config.getValue());
 		}
 		return map;
@@ -3795,11 +3622,7 @@ public class UserServiceImpl implements UserServiceI {
 	public Map<String,String> getAlipayConfig() {
 		Map<String,String> map = new HashMap<String,String>();
 		List<Config> configs = configMapper.getAlipayConfig();
-<<<<<<< HEAD
 		for (Config config:configs) {
-=======
-		for(Config config:configs){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			map.put(config.getTag(), config.getValue());
 		}
 		return map;
@@ -3833,11 +3656,7 @@ public class UserServiceImpl implements UserServiceI {
 		Date today = DateUtils.parse(DateUtils.format(new Date(), DateUtils.FORMAT_SHORT), DateUtils.FORMAT_SHORT);
         List<ShakeRecord> shakeRecord = shakeRecordMapper.selectTodayByUserId(userId, today);
         logger.info(JSON.toJSONString(shakeRecord));
-<<<<<<< HEAD
         if (shakeRecord==null||shakeRecord.size()==0) {
-=======
-        if(shakeRecord==null||shakeRecord.size()==0){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
         	ShakeRecord tmp = new ShakeRecord();
         	tmp.setIsShow(false);
         	tmp.setTime(new Date());
@@ -3865,25 +3684,15 @@ public class UserServiceImpl implements UserServiceI {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		Integer userId = null;
 		ret.put("result", false);
-<<<<<<< HEAD
 		if (phone==null&&hsCode==null) {
-=======
-		if(phone==null&&hsCode==null){
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			ret.put("reason", "param_error");
 			return ret;
 		}
 		
 		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
-<<<<<<< HEAD
 		if (napaStores!=null&&napaStores.size()>0) {
 			ret.put("napaStores", napaStores);
 		} else {
-=======
-		if(napaStores!=null&&napaStores.size()>0){
-			ret.put("napaStores", napaStores);
-		}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			ret.put("reason", "no_department");
 			return ret;
 		}
@@ -3895,19 +3704,11 @@ public class UserServiceImpl implements UserServiceI {
 				if (item.getValueType().equals("monery")) {
 					DecimalFormat df1 = new DecimalFormat("0.00");
 					item.setValue(new BigDecimal(df1.format(item.getValue())));
-<<<<<<< HEAD
 				} else {
 					DecimalFormat df1 = new DecimalFormat("0");
 					item.setValue(new BigDecimal(df1.format(item.getValue())));
 				}
 			} else {
-=======
-				} else{
-					DecimalFormat df1 = new DecimalFormat("0");
-					item.setValue(new BigDecimal(df1.format(item.getValue())));
-				}
-			}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				item.setValue(new BigDecimal(0));
 			}
 		}
@@ -3929,34 +3730,21 @@ public class UserServiceImpl implements UserServiceI {
 		Integer userId = null;
 		ret.put("result", false);
 		List<NapaStore> napaStores = napaStoreMapper.selectByPhone(phone);
-<<<<<<< HEAD
 		if (napaStores!=null&&napaStores.size()>0) {
 			ret.put("napaStores", napaStores);
 		} else {
-=======
-		if(napaStores!=null&&napaStores.size()>0){
-			ret.put("napaStores", napaStores);
-		}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			ret.put("reason", "no_department");
 			return ret;
 		}
 		List<Map<String,Object>> itema = hongShiMapper.getmobJect(QueryName,hsCode,userId);
-<<<<<<< HEAD
 		if (hsCode.length()>0) {
 			ret.put("storename",itema.get(0).get("店铺名"));
 		} else {
-=======
-		if(hsCode.length()>0){
-			ret.put("storename",itema.get(0).get("店铺名"));
-		}else{
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			ret.put("storename","全部店铺");
 		}
 		List<Map<String,Object>> colsName = hongShiMapper.getObjectName(QueryName);
 		String riqi = "";
 		String chae = "";
-<<<<<<< HEAD
 		for (Map<String, Object> m : itema) {	
 			if (riqi!="") {
 				riqi=riqi+","+m.get("日期");
@@ -3970,26 +3758,6 @@ public class UserServiceImpl implements UserServiceI {
 			if (chae == "") {
 				chae=m.get("差额")+"";
 			}
-=======
-		for (Map<String, Object> m : itema)  
-	    {	
-			if(riqi!=""){
-				riqi=riqi+","+m.get("日期");
-			}
-			if(riqi == ""){
-				riqi=m.get("日期")+"";
-			}
-			if(chae!=""){
-				chae=chae+","+m.get("差额");
-			}
-			if(chae == ""){
-				chae=m.get("差额")+"";
-			}
-//	      for (String k : m.keySet())  
-//	      {  
-//	        System.out.println(k + " : " + m.get(k));
-//	      }  
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 	    }
 		ret.put("chae",chae);
 		ret.put("riqi",riqi);
@@ -4343,18 +4111,11 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		//return DigestUtils.md5Hex().toUpperCase();
 	}
-<<<<<<< HEAD
 	
-=======
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 	@Override
 	public Map<String, String> wxInitiativeCheck(PaymentOrder paymentOrder) {
 		Map<String,String> weixinConfig = getWeixinConfig();
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
-<<<<<<< HEAD
-=======
-		logger.info("paymentOrder=============="+JSON.toJSONString(paymentOrder));
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		parameterMap.put("appid", weixinConfig.get(WechatMerchantInfo.APPID_CONFIG));
 		parameterMap.put("mch_id", weixinConfig.get(WechatMerchantInfo.MERCHANT_CODE_CONFIG));
 		long time = System.currentTimeMillis();
@@ -4370,10 +4131,6 @@ public class UserServiceImpl implements UserServiceI {
 		wxUnifiedRequest.setOut_trade_no(paymentOrder.getPaymentSerialNum());
 		wxUnifiedRequest.setSign(sign);
 		String xmlString = MessageUtil.wxUnifiedRequestToXml(wxUnifiedRequest).replaceAll("__", "_");
-<<<<<<< HEAD
-=======
-		logger.info("xmlString===="+xmlString);
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		try {
 			String retXml = new String(HttpClientUtil.httpsPost("https://api.mch.weixin.qq.com/pay/orderquery", xmlString).getBytes(), "ISO-8859-1");
 			Map<String,String> ret = MessageUtil.parseXml(retXml);
@@ -4386,10 +4143,6 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return new HashMap<>();
 	}
-<<<<<<< HEAD
-=======
-	
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		public List<HsVip> selecthsVip(String vCode) {
 		return hsVipMapper.selecthsVip(vCode);
 		
@@ -4397,20 +4150,11 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public int updateVips(String vCode, HsVip hsVip) {
-<<<<<<< HEAD
 		return hsVipMapper.updateVips(hsVip);
 	}
 	public List<HsVip> selectVips(String vNumber) {	
 		return hsVipMapper.selectVips(vNumber);
 	}
-=======
-		logger.info("hsvip----="+JSON.toJSONString(hsVip));
-		return hsVipMapper.updateVips(hsVip);
-	}
-		public List<HsVip> selectVips(String vNumber) {	
-		return hsVipMapper.selectVips(vNumber);
-		}
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
 	@Override
 	public List<HongShiVip> selectVip(String cMobileNumber) {
@@ -4418,13 +4162,8 @@ public class UserServiceImpl implements UserServiceI {
 	}
 	@Override
 	public List<UserProfile> selectAllProfileLists(Integer userId) {
-<<<<<<< HEAD
 		return userProfileMapper.selectAllProfileLists(userId);
 	}
-=======
-				return userProfileMapper.selectAllProfileLists(userId);
-							}
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 
 	@Override
 	public List<Lnsurance> getUsers(String oauthId) {

@@ -48,11 +48,7 @@ class CategoryList extends React.Component {
             <Link to={'/editCategory?categoryId=' + item.categoryId} className="btn btn-primary">
             编辑
             </Link>
-<<<<<<< HEAD
             <button className="btn btn-danger button-right" onClick={this._del.bind(this,item.categoryId)}>
-=======
-            <button className="btn btn-primary button-right" onClick={this._del.bind(this,item.categoryId)}>
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
             删除
             </button>
           </td>

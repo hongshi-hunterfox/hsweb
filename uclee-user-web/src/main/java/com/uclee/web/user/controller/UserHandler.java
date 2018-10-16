@@ -245,10 +245,6 @@ public class UserHandler {
 	public @ResponseBody Map<String,Object> cartHandler(HttpServletRequest request,@RequestBody Cart cart) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
-<<<<<<< HEAD
-=======
-		logger.info("cart=========="+JSON.toJSONString(cart));
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 		map.put("result", false);
 		if(cart.getAmount()==null||cart.getProductId()==null||cart.getSpecificationValueId()==null){
 			map.put("reason", "请选择规格");
@@ -332,24 +328,13 @@ public class UserHandler {
 		up.setvCode(hsVip.getvCode());
 		up.setvSex(hsVip.getvSex());
 		List<HsVip> vip = userService.selectVips(hsVip.getvNumber());	
-<<<<<<< HEAD
-=======
-		
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 			if(!VerifyCode.checkVerifyCode(session,hsVip.getvNumber(),hsVip.getCode())){
 				map.put("result", "fail");	
 				if(hsVip.getvCode()!= vip.get(0).getvCode()){
 					if(hsVip.getCode()==null){
 						map.put("reason", "请输入验证码");					
 					}else{
-<<<<<<< HEAD
 						map.put("reason", "验证码错误");
-=======
-					  
-						map.put("reason", "验证码错误");
-						logger.info("验证码错误");
-						
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 						return map;	
 					}
 				}	
@@ -358,22 +343,11 @@ public class UserHandler {
 			if(vip.size()==0){			
 				userService.updateVips(hsVip.getvCode(), up);			
 				return map;
-<<<<<<< HEAD
 			}					
 			String hVip = hsVip.getvCode();
 			String sVip = vip.get(0).getvCode();
 			map.put("result", "success");
 			if(vip.size()!=0&&hVip.equals(sVip)){						
-=======
-			}		
-			
-			String hVip = hsVip.getvCode();
-			String sVip = vip.get(0).getvCode();
-			map.put("result", "success");
-			if(vip.size()!=0&&hVip.equals(sVip)){
-				logger.info("hsVip.getvCode()----="+hsVip.getvCode());
-				logger.info("vip.get(0).getvCode()----="+vip.get(0).getvCode());						
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 				userService.updateVips(hsVip.getvCode(), up);	
 				map.put("result", "success");
 			}else{
@@ -419,18 +393,6 @@ public class UserHandler {
 	
 	/** 
 	* @Title: rechargeHandler 
-<<<<<<< HEAD
-=======
-	* @Description: 处理充值请求 
-	* @param @param request
-	* @param @param paymentId 支付方式id
-	* @param @param money 支付金额 
-	* @return PaymentStrategyResult    返回类型 
-	* @throws 
-	*/
-	/** 
-	* @Title: rechargeHandler 
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 	* @Description: 充值请求处理
 	* @param @param request
 	* @param @param paymentOrder post的充值订单数据
@@ -737,12 +699,4 @@ public class UserHandler {
 		}
 		return map;
 	}
-<<<<<<< HEAD
-=======
-//	
-//	@RequestMapping("/orderStatus")
-//	public @ResponseBody int orderStatus(HttpServletRequest request) {
-//		return userService.orderStatus(null);
-//	}
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
 }

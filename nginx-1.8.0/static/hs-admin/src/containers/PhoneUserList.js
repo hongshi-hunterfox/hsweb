@@ -37,10 +37,6 @@ class PhoneUserList extends React.Component {
         <div className="user-list">
           {/* 类名加上页面前缀防止冲突 */}
         <Link to="addUser" style={{marginRight:'5px',marginBottom:'5px'}} className="btn btn-success">添加用户</Link>
-<<<<<<< HEAD
-=======
-        <Link to="napaStoreList" style={{marginRight:'5px',marginBottom:'5px'}} className="btn btn-success">门店列表</Link>
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
           <table className="table table-bordered user-list">
             <thead>
               <tr>
@@ -57,13 +53,8 @@ class PhoneUserList extends React.Component {
                         <td width="20%"> {item.name}</td>
                         <td width="20%"> {item.phone}</td>
                         <td width="60%">
-<<<<<<< HEAD
                           <Link style={{marginRight:'5px'}} to={`/editPhoneUser?userId=${item.userId}`} className="btn btn-primary">编辑用户</Link>
                           <button style={{marginRight:'5px'}} onClick={this._delete_user.bind(this,item.userId)} className="btn btn-danger delete-user">删除用户</button>
-=======
-                          <Link style={{marginRight:'5px'}} to={`/editPhoneUser?userId=${item.userId}`} className="btn btn-danger">编辑用户</Link>
-                          <button style={{marginRight:'5px'}} onClick={this._delete_user.bind(this,item.userId)} className="btn btn-warning delete-user">删除用户</button>
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
                         </td>
                     </tr>
                     )

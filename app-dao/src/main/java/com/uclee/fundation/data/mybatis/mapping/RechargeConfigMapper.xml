@@ -29,7 +29,6 @@
     select 
     <include refid="Base_Column_List" />
     from web_recharge_config
-<<<<<<< HEAD
     where money = #{money,jdbcType=DECIMAL} and rewards = #{rewards,jdbcType=DECIMAL}
   </select>
    <select id="getByMoney" resultMap="BaseResultMap" >
@@ -45,14 +44,6 @@
    	from web_recharge_config t1 where getdate() between t1.start_time and t1.end_time and not exists 
    		(select 1 from web_recharge_config t2 where t2.money=t1.money and t2.rewards>t1.rewards and getdate() between t2.start_time and t2.end_time)
    	order by money asc
-=======
-    where money = #{money,jdbcType=DECIMAL}
-  </select>
-  <select id="selectMonPeiZhi" resultMap="BaseResultMap"  >
-    select 
-    <include refid="Base_Column_List" />
-    from web_recharge_config where getdate() between start_time and end_time order by money asc
->>>>>>> f062f2ca2b06e4e4a3db08dda385a31ebe085515
   </select>
   <select id="selectAll" resultMap="BaseResultMap"  >
     select 
