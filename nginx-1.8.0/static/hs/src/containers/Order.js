@@ -606,6 +606,7 @@ salesInfoShowClick=()=>{
   }
 
   _handleSubmit = e => {
+  	console.log("cartItems"+this.state.cartItems)
     if (!this.state.cartItems || this.state.cartItems.length <= 0) {
       this.setState({
         isDataError: true
@@ -614,6 +615,7 @@ salesInfoShowClick=()=>{
     }
     e.preventDefault()
     var data = fto(e.target)
+    console.log("isSelfPick"+data.isSelfPick)
     if (!data.isSelfPick) {
       this.setState({
         error: errMap['isSelfPick_error']
@@ -635,6 +637,7 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    console.log("addrId"+data.addrId)
     if (data.isSelfPick === 'false' && !data.addrId) {
       this.setState({
         error: errMap['addr_error']
@@ -667,6 +670,8 @@ salesInfoShowClick=()=>{
       })
       return false
     }
+    console.log("pickDateStr"+data.pickDateStr)
+    console.log("pickTimeStr"+data.pickTimeStr)
     if (!data.pickDateStr || !data.pickTimeStr) {
       this.setState({
         error: errMap['picktime_error']
@@ -690,13 +695,15 @@ salesInfoShowClick=()=>{
       	return false
     	}
     }
-
+  	console.log("fullamount"+this.state.fullamount)
+  	console.log("total"+this.state.total)
     if (this.state.total<this.state.fullamount) {
       this.setState({
         error: this.state.remarks
       })
       return false
     }
+    
     if(this.state.convertibleGoods!==null){
     	var hsgooscode=this.state.hsgooscode
 			var convertibleGoods=this.state.convertibleGoods;
@@ -717,6 +724,8 @@ salesInfoShowClick=()=>{
     		}
 			}
 		}
+    console.log("pickDateStr"+data.pickDateStr)
+    console.log("closeStartDateStr"+this.state.closeStartDateStr)
     if(Date.parse(data.pickDateStr)>=Date.parse(this.state.closeStartDateStr)
           &&
           Date.parse(data.pickDateStr)<=Date.parse(this.state.closeEndDateStr)){
@@ -726,6 +735,7 @@ salesInfoShowClick=()=>{
       })
       return false;
     }
+    console.log("businessStartTime"+this.state.businessStartTime) 
     if(data.pickTimeStr<this.state.businessStartTime || data.pickTimeStr>this.state.businessEndTime){
       this.setState({
         error:errMap['businesstime_error']

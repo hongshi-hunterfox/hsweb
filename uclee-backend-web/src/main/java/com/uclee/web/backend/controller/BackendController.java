@@ -37,6 +37,7 @@ import com.uclee.fundation.data.web.dto.BannerPost;
 import com.uclee.fundation.data.web.dto.ConfigPost;
 import com.uclee.fundation.data.web.dto.FreightPost;
 import com.uclee.fundation.data.web.dto.MySelect;
+import com.uclee.fundation.data.web.dto.ProductVoucherPost;
 import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import scala.collection.immutable.HashMap;
 
@@ -384,9 +385,9 @@ public class BackendController {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		ConfigPost config = backendService.getConfig();
 		String notice = config.getNotice();
-		System.out.println("notice==="+notice.length());
 		map.put("notice", notice.length());
 		map.put("qq", config.getQq());
+		System.out.println("getVoucherSendInformation===="+config.getVoucherSendInformation());
 		map.put("config", config);
 		return map;
 	}
@@ -424,8 +425,6 @@ public class BackendController {
 	public @ResponseBody Map<String,Object> vipList(HttpServletRequest request, String start, String end) throws ParseException {
 		Map<String,Object> map = new TreeMap<String,Object>();	
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			System.out.println("start============="+start);
-			System.out.println("end============="+end);
 			if(!start.equals("undefined")&&!end.equals("undefined")){
 				Date start1=sdf.parse(start);
 				Date end1=sdf.parse(end);
@@ -455,7 +454,7 @@ public class BackendController {
 		return map;
 	}
 	/*
-	 * 取所有会员信息----skx
+	 * 取所有会员信息
 	 */
 	@RequestMapping("/getAllvip")
 	public @ResponseBody Map<String,Object> getAllvip(HttpServletRequest request) {
@@ -618,7 +617,7 @@ public class BackendController {
 		return orderMap;
 	}
 	/**
-	 * 用来校验登陆账户和密码---凯鑫
+	 * 用来校验登陆账户和密码
 	 * @param account
 	 * @param password
 	 * @param Request
@@ -678,4 +677,51 @@ public class BackendController {
 		map.put("all",all);
 		 return map;
 	}
+	
+	/**
+	 * @author 申凯鑫
+	 * 取购买指定商品赠送礼券设置列表
+	 * @param Request
+	 * @return
+	 */
+	@RequestMapping("/getAllProductVoucher")
+	public @ResponseBody Map<String, Object>  getAllProductVoucher(HttpServletRequest Request) {
+		Map<String, Object> map = new TreeMap<String, Object>();
+		List<ProductVoucher> all= backendService.selectAllProductVoucher();
+		map.put("all",all);
+		return map;
+	}
+	
+	/**
+	 * @author 申凯鑫
+	 * 根据id取购买指定商品赠送礼券设置
+	 * @param Request
+	 * @return
+	 */
+	@RequestMapping("/getByProductVoucherId")
+	public @ResponseBody Map<String, Object> getByProductVoucherId(HttpServletRequest Request, Integer id) {
+		Map<String, Object> map = new TreeMap<String, Object>();
+		ProductVoucher productVoucherId = backendService.selectByPrimaryKey(id);
+		map.put("voucher",productVoucherId.getVoucher());
+		map.put("amount",productVoucherId.getAmount());
+		map.put("name",productVoucherId.getName());
+		return map;	
+	}
+	
+	/**
+	 * @author 申凯鑫
+	 * 取得已关联产品
+	 * @param Request
+	 * @return
+	 */
+	@RequestMapping("/selectSelectedProducts")
+	public @ResponseBody Map<String, Object> selectSelectedProducts(HttpServletRequest Request, Integer vid) {
+		Map<String, Object> map = new TreeMap<String, Object>();
+		List<ProductVoucherPost> pvp = backendService.selectSelectedProducts(vid);
+		map.put("productAll",pvp);
+		ProductVoucher productVoucherId = backendService.selectByPrimaryKey(vid);
+		map.put("name",productVoucherId.getName());		
+		return map;	
+	}
+	
 }

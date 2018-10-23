@@ -174,7 +174,7 @@ insert into web_config (tag,value) values ('restrictedDistance','50');
 insert into web_config (tag,value) values ('startUp','1');
 
 insert into web_config(id,tag,value) values(43,'commentText','评论有惊喜哦~~');
-insert into web_config(tag,value) values('VoucherSendInformation','.');
+insert into web_config(tag,value) values('voucherSendInformation','.');
 
 insert into web_config (tag,value) values('ACardMoreMembers',1);--是否开启多个微信可绑定一张卡(默认开启)
 

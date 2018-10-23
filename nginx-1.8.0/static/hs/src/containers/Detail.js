@@ -128,6 +128,40 @@ const DetailSales = (props) => {
     </div>
     )
 }
+
+const DetailCoupon = (props) => {
+  return (
+    <div className="detail-sales">
+
+        {
+          props.giftCouponsInfo.length>=1?
+          <div onClick={props.giftCouponsInfoShowClick} className='detail-sales-top'>
+            <span className='detail-sales-tag'>
+              赠送    
+            </span>
+            <span className='detail-sales-text'>
+                  {!props.giftCouponsInfoShow?props.giftCouponsInfo[0]+'...':null}
+              </span>
+              <Icon className="detail-sales-icon" name={props.giftCouponsInfoShow?'chevron-down':'chevron-right'} />
+          </div>
+          :null
+        }
+        
+        
+      <div className={'detail-sales-info ' +(!props.giftCouponsInfoShow?'none':'')}>
+        {props.giftCouponsInfo.map((item,index)=>{
+          return(
+            <div className='detail-sales-item' key={index}>
+              {item}
+            </div>
+          )
+        })}
+      </div>
+      
+    </div>
+    )
+}
+
 const DetailPicker = (props) => {
   if (props.showPick) {
     return (
@@ -255,7 +289,7 @@ const DetailActions = (props) => {
         <div className="detail-action-buy-now" onClick={props.onClickBuy}>立即购买</div>
       </div>
     </div>
-    )
+  )
 }
 
 class Detail extends React.Component {
@@ -284,7 +318,9 @@ class Detail extends React.Component {
       salesAmount:0,
       pickType: 'add_to_cart', // 'add_to_cart' || 'buy_now'
       salesInfo:[],
-      salesInfoShow:false
+      giftCouponsInfo:[],
+      salesInfoShow:false,
+      giftCouponsInfoShow:false
     }
 
     this.specPriceMap = {}
@@ -479,6 +515,11 @@ class Detail extends React.Component {
                 <DetailSales salesInfo={this.state.salesInfo} salesInfoShow = {this.state.salesInfoShow} salesInfoShowClick={this.salesInfoShowClick}/>
                 :null
               }
+              {
+                this.state.giftCouponsInfo.length>=1?
+                <DetailCoupon giftCouponsInfo={this.state.giftCouponsInfo} giftCouponsInfoShow = {this.state.giftCouponsInfoShow} giftCouponsInfoShowClick={this.giftCouponsInfoShowClick}/>
+                :null
+              }
             <DetailPick
               onClick={this._showPick}
               currentAmount={this.state.currentAmount}
@@ -520,6 +561,13 @@ class Detail extends React.Component {
       salesInfoShow: !this.state.salesInfoShow
     })
   }
+  
+  giftCouponsInfoShowClick=()=>{
+    this.setState({
+      giftCouponsInfoShow: !this.state.giftCouponsInfoShow 
+    })
+  }
+  
   _showPick = () => {
     this.setState({
       showPick: true

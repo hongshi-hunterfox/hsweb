@@ -353,15 +353,12 @@ public class HongShiVipController<phone> {
 			System.out.println(strs[i].toString());
 		}
 		
-		System.out.println("billCode=============="+billCode);
-		System.out.println("Source=============="+Source);
 	if(Source.equals("线上订单")){
 		List<Orders> orders = hongShiVipService.selectOrders(billCode);
 			if(orders!=null){
 				for(int j =0; j<orders.size();j++){
 					map.put("orders",orders);
 				}
-				System.out.println("billCode=============="+orders.get(0).getStoreName());
 				map.put("danhao",orders.get(0).getDanhao());
 				map.put("storeName",orders.get(0).getStoreName());
 				map.put("beizhu",orders.get(0).getBeizhu());
@@ -378,7 +375,6 @@ public class HongShiVipController<phone> {
 				List<UnderlineOrders> orders = hongShiVipService.selectUnderlineOrders(order.get(j).getDanhao());
 				map.put("orders",orders);
 			}
-			System.out.println("billCode=============="+order.get(0).getStoreName());
 			map.put("danhao",order.get(0).getDanhao());
 			map.put("storeName",order.get(0).getStoreName());
 			map.put("beizhu",order.get(0).getBeizhu());

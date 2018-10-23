@@ -22,6 +22,8 @@ public class ProductDto extends Product{
 	private List<ProductImageLink> images;
 
 	private List<String> salesInfo;
+	
+	private List<String> giftCouponsInfo;
 
 	private List<Specification> specifications;
 	
@@ -39,6 +41,14 @@ public class ProductDto extends Product{
 	
 	private String endTimeStr;
 	
+	public List<String> getGiftCouponsInfo() {
+		return giftCouponsInfo;
+	}
+
+	public void setGiftCouponsInfo(List<String> giftCouponsInfo) {
+		this.giftCouponsInfo = giftCouponsInfo;
+	}
+
 	public String getStartTimeStr() {
 		return startTimeStr;
 	}

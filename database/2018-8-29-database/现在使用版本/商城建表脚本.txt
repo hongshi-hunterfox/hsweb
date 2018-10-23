@@ -41,6 +41,20 @@ select '近七天','近七天',3,'ClassSaleType','大类销售排行'union
 select '近三十天','近三十天',4,'ClassSaleType','大类销售排行'
 go
 
+--买产品增礼券
+create table web_product_voucher_setting(
+	id int  identity (1,   1) NOT NULL,
+	voucher varchar(50) not null,
+	amount int not null,
+	name varchar(50) not null
+)
+--关联产品表
+create table web_coupons_products_links(
+	id int identity(1,1) primary key not null,
+	vid int not null,
+	pid int not null
+)
+
 --生日信息推送新增表
 create table web_birthdayInformation_push(
 	id int primary key not null,

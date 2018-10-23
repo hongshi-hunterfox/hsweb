@@ -1017,8 +1017,6 @@ public class UserController extends CommonUserHandler{
 	@RequestMapping(value="/getRechargeAble")
 	public @ResponseBody Map<String,Object> getRechargeAble(HttpServletRequest request, BigDecimal money, BigDecimal rewards) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		System.out.println("rewards============"+rewards);
-		System.out.println("money============"+money);
 		RechargeConfig rechargeConfig = rechargeConfigMapper.selectByMoney(money, rewards);
 		if(rechargeConfig==null||rechargeConfig.getEndTime().before(new Date())){
 			map.put("result",false);
@@ -1811,7 +1809,7 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * @Description :砍价列表--kx
+	 * @Description :砍价列表
 	 */
 	@RequestMapping(value="/getBargain")
 	public @ResponseBody Map<String,Object> getBargain(HttpServletRequest request){
@@ -1886,7 +1884,7 @@ public class UserController extends CommonUserHandler{
 			//判断是否有正在进行中的砍价活动
 			if(record==null){
 				userService.insertLaunchBargain(launchBargain);
-				//把发起人的砍价记录插入到砍价记录表--kx
+				//把发起人的砍价记录插入到砍价记录表
 				BargainLog log = new BargainLog();
 				log.setPid(launchBargain.getId());
 				log.setUid(launchBargain.getUid());
@@ -1951,7 +1949,6 @@ public class UserController extends CommonUserHandler{
 			}else{
 				System.out.println("有砍价记录");
 			}
-//		}
 		return map;
 	}
 	/**
@@ -1971,7 +1968,7 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/**
-	 * @Description:获取到要发起砍价的产品--kx
+	 * @Description:获取到要发起砍价的产品
 	 */
 	@RequestMapping("/goBargain")
 	public @ResponseBody Map<String,Object> goBargain(HttpServletRequest request, Integer valueId, String codes) {

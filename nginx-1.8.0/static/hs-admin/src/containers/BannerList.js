@@ -57,7 +57,7 @@ class BannerList extends React.Component {
       <DocumentTitle title="首页banner列表">
         <div className="user-list">
             <button className="btn btn-primary pull-right" onClick={this._newHandler}>新增</button>
-            <table className="table table-bordered table-striped">
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th>图片</th>

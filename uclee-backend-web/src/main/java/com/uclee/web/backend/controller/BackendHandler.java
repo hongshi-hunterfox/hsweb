@@ -4,19 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import com.alibaba.fastjson.JSON;
@@ -166,7 +159,6 @@ public class BackendHandler {
 	}
 	@RequestMapping("/updateGroupName")
 	public @ResponseBody int updateGroupName(HttpServletRequest request,@RequestBody ProductGroup productGroup){
-		System.out.println("3333"+productGroup.getGroupId());
 		return backendService.updateGroupName(productGroup);
 	}
 	@RequestMapping("/deleteGroupName")
@@ -210,11 +202,13 @@ public class BackendHandler {
 		System.out.println("bargainPost="+JSON.toJSONString(bargainPost));
 		return bargainSettingMapper.insert(bargainPost);
 	}
+	
 	@RequestMapping("/delBargainId")
 	public @ResponseBody int delBargainId(HttpServletRequest request,Integer id) {
 		System.out.println("id="+id);
 		return bargainSettingMapper.deleteBargainId(id);
 	}
+	
 	@RequestMapping("/updateBargainSetting")
 	public @ResponseBody int updateBargainSetting(HttpServletRequest request,@RequestBody BargainPost bargainPost) throws ParseException {
 		System.out.println("bargainPost="+JSON.toJSONString(bargainPost));
@@ -228,6 +222,7 @@ public class BackendHandler {
 		bargainPost.setClosure(EndDate);
 		return bargainSettingMapper.updateBargainId(bargainPost);
 	}
+	
 	@RequestMapping("/orderSettingPickHandler")
 	public  @ResponseBody boolean orderSettingPickHandler(HttpServletRequest request, @RequestBody OrderSettingPick  orderSettingPick){
 		return backendService.updateOrderSettingPick(orderSettingPick);
@@ -237,6 +232,60 @@ public class BackendHandler {
 	public @ResponseBody int productGroupSortPosition(HttpServletRequest request,Integer groupId,Integer productId,Integer position){
 		return backendService.updateProductGroupPosition(groupId,productId,position);
 	}
-
+	
+	@RequestMapping("/insertProductVoucher")
+	public @ResponseBody int insertProductVoucher(HttpServletRequest request,@RequestBody ProductVoucher productVoucher){
+		System.out.println(JSON.toJSON(productVoucher));
+		return backendService.insert(productVoucher);
+	}
+	
+	@RequestMapping("/updateProductVoucher")
+	public @ResponseBody int updateProductVoucher(HttpServletRequest request,@RequestBody ProductVoucher productVoucher){
+		System.out.println(JSON.toJSON(productVoucher));
+		return backendService.updateByPrimaryKey(productVoucher);
+	}
+	
+	@RequestMapping("/delProductVoucher")
+	public @ResponseBody int delProductVoucher(HttpServletRequest request, Integer id){
+		System.out.println("id:"+id);
+		return backendService.deleteByPrimaryKey(id);
+	}
+	
+	/**
+	 * @author 申凯鑫
+	 * 关联券和指定产品
+	 * @param request
+	 * @param vid
+	 * @param pid
+	 * @return
+	 */
+	@RequestMapping("/insertCouponsProductsLinks")
+	public @ResponseBody ProductVoucherPost insertCouponsProductsLinks(HttpServletRequest request,Integer vid, Integer[] pid) {
+		ProductVoucherPost productVoucherPost = new ProductVoucherPost();
+		System.out.println(pid.length);
+		for(int i=0; i<pid.length; i++) {
+			productVoucherPost.setVid(vid);
+			productVoucherPost.setPid(pid[i]);
+			ProductVoucherPost pvp = backendService.selectInspectionAlreadyExists(productVoucherPost.getVid(), pid[i]);
+			//没有相同数据才运行
+			if(pvp == null) {
+				backendService.insertCouponsProductsLinks(productVoucherPost);
+			}
+		}
+		return productVoucherPost;
+	}
+	
+	/**
+	 * @author 申凯鑫
+	 * 删除单个产品与购物赠券设置的关联
+	 * @param request
+	 * @param vid
+	 * @param pid
+	 * @return
+	 */
+	@RequestMapping("/delCouponsProductsLinks")
+	public @ResponseBody int delCouponsProductsLinks(HttpServletRequest request,Integer vid, Integer pid) {
+		return backendService.delCouponsProductsLinks(vid, pid);
+	}
 
 }

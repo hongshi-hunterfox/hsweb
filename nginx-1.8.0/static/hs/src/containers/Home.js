@@ -101,7 +101,7 @@ class SearchBar extends React.Component {
      e.preventDefault()
     var data = fto(e.target);
     console.log(data.keyword);
-    window.location="/all-product?keyword="+data.keyword+"?merchantCode="+localStorage.getItem('merchantCode');
+    window.location="/all-product?keyword="+data.keyword+"&merchantCode="+localStorage.getItem('merchantCode');
   }
 }
 
@@ -154,7 +154,7 @@ class HomeNav extends React.Component {
     var list = this.props.quickNavis.map((item,index)=>{
         return (
             <div
-              onClick={this._location.bind(this,"/all-product?naviId="+item.naviId+"?merchantCode="+localStorage.getItem('merchantCode'))}
+              onClick={this._location.bind(this,"/all-product?naviId="+item.naviId+"&merchantCode="+localStorage.getItem('merchantCode'))}
               className="home-nav-item"
               key={index}
             >

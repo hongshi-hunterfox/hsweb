@@ -36,8 +36,6 @@ import com.uclee.number.util.NumberUtil;
 
 
 public class BackendServiceImpl implements BackendServiceI {
-
-
 	@Autowired
 	private CommentMapper commentMapper;
 	@Autowired
@@ -108,9 +106,10 @@ public class BackendServiceImpl implements BackendServiceI {
 	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private OrderSettingPickMapper orderSettingPickMapper;
-
 	@Autowired
 	private RefundOrderMapper refundOrderMapper;
+	@Autowired
+	private ProductVoucherMapper productVoucherMapper;
 
 	@SuppressWarnings("unused")
 	@Override
@@ -268,7 +267,12 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.perfectBirthText, configPost.getPerfectBirthText());
 		}else{
 			configMapper.updateByTag(WebConfig.perfectBirthText, "");
+		}if(configPost.getVoucherSendInformation()!=null){
+			configMapper.updateByTag(WebConfig.voucherSendInformation, configPost.getVoucherSendInformation());
+		}else{
+			configMapper.updateByTag(WebConfig.voucherSendInformation, "");
 		}
+		
 		
 		return true;
 	}
@@ -406,7 +410,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
 		if (configPost.getVoucherSendInformation()!=null) {
-			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+			configMapper.updateByTag(WebConfig.voucherSendInformation, configPost.getVoucherSendInformation());
 		}
 		if (configPost.getForce()!=null) {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
@@ -562,7 +566,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.signText, configPost.getSignText());
 		}
 		if (configPost.getVoucherSendInformation()!=null) {
-			configMapper.updateByTag(WebConfig.VoucherSendInformation, configPost.getVoucherSendInformation());
+			configMapper.updateByTag(WebConfig.voucherSendInformation, configPost.getVoucherSendInformation());
 		}
 		if (configPost.getForce()!=null) {
 			configMapper.updateByTag(WebConfig.force, configPost.getForce());
@@ -1088,7 +1092,7 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setLoss(config.getValue());				
 			}else if(config.getTag().equals(WebConfig.signText)){
 				configPost.setSignText(config.getValue());
-			}else if(config.getTag().equals(WebConfig.VoucherSendInformation)){
+			}else if(config.getTag().equals(WebConfig.voucherSendInformation)){
 				configPost.setVoucherSendInformation(config.getValue());
 			}else if(config.getTag().equals(WebConfig.force)){
 				configPost.setForce(config.getValue());
@@ -1302,11 +1306,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"优惠券派送提醒"};
-			//使用生日短信模板--skx
+			//使用生日短信模板
 			Config config = configMapper.getByTag("birthTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
-			Config config3 = configMapper.getByTag(WebConfig.VoucherSendInformation);
+			Config config3 = configMapper.getByTag(WebConfig.voucherSendInformation);
 			if(config!=null){
 				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
 				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/coupon?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
@@ -1888,7 +1892,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		return false;
 	}
 
-//插入groupName
+	//插入groupName
 	@Override
 	public int insertGroupName(ProductGroup productGroup) {	
 		productGroup.setTag("hotProduct");
@@ -1924,18 +1928,68 @@ public class BackendServiceImpl implements BackendServiceI {
 		List<BargainSetting> bargainList = bargainSettingMapper.selectBargain();
 		return bargainList;
 	}
+	
 	@Override
 	public BargainSetting selectBargainId(Integer id) {
 		return bargainSettingMapper.selectBargainId(id);
 	}
+	
 	@Override
 	public List<RechargeConfig> selectMonPeiZhi() {
 		List<RechargeConfig> configs = rechargeConfigMapper.selectMonPeiZhi();
 		return configs;
 	}
+	
 	@Override
 	public BirthPush selectDay() {
 		BirthPush birthPush = birthVoucherMapper.selectDay();
 		return birthPush;
+	}
+	
+	@Override
+	public int insert(ProductVoucher productVoucher) {
+		return productVoucherMapper.insert(productVoucher);
+	}
+	
+	@Override
+	public List<ProductVoucher> selectAllProductVoucher() {
+		//获取所有购买商品赠送礼券设置
+		return productVoucherMapper.selectAllProductVoucher();
+	}
+	
+	@Override
+	public ProductVoucher selectByPrimaryKey(Integer id) {
+		return productVoucherMapper.selectByPrimaryKey(id);
+	}
+	
+	@Override
+	public int updateByPrimaryKey(ProductVoucher productVoucher) {
+		return productVoucherMapper.updateByPrimaryKey(productVoucher);
+	}
+	
+	@Override
+	public int deleteByPrimaryKey(Integer id) {
+		productVoucherMapper.deleteByLinks(id);//删除产品与赠送券关联
+		return productVoucherMapper.deleteByPrimaryKey(id);
+	}
+	
+	@Override
+	public int insertCouponsProductsLinks(ProductVoucherPost productVoucherPost) {
+		return productVoucherMapper.insertCouponsProductsLinks(productVoucherPost);
+	}
+	
+	@Override
+	public ProductVoucherPost selectInspectionAlreadyExists(Integer vid, Integer pid) {
+		return productVoucherMapper.selectInspectionAlreadyExists(vid, pid);
+	}
+	
+	@Override
+	public List<ProductVoucherPost> selectSelectedProducts(Integer vid) {
+		return productVoucherMapper.selectSelectedProducts(vid);
+	}
+	
+	@Override
+	public int delCouponsProductsLinks(Integer vid, Integer pid) {
+		return productVoucherMapper.delCouponsProductsLinks(vid, pid);
 	}
 }

@@ -92,24 +92,17 @@ class VoucherDelivery extends React.Component {
                   : null}
               </div>
             </div>
+            <div className="form-group ">
+          		<label className="control-label col-md-3" style={{marginTop:'10px'}}>派送礼券推送内容：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <textarea rows="3" cols="20" value={this.state.config.voucherSendInformation} name="voucherSendInformation" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+          	</div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
                 <button type="submit" className="btn btn-primary">提交</button>
-              </div>
-            </div>
-          </form>
-          <form onSubmit={this._tsubmit} className="form-horizontal">
-          	<div className="form-group ">
-          		<label className="control-label col-md-3" style={{marginTop:'10px'}}>派送礼券推送内容：</label>
-              <div className="col-md-9" style={{marginTop:'10px'}}>
-                <textarea rows="3" cols="20" value={this.state.config.VoucherSendInformation} name="VoucherSendInformation" className="form-control" onChange={this._change}>
-                </textarea>
-              </div>
-          	</div>
-          	<div className="form-group">
-              <div className="col-md-9 col-md-offset-3">
-                <button type="tsubmit" className="btn btn-primary">提交</button>
               </div>
             </div>
           </form>
@@ -124,30 +117,6 @@ class VoucherDelivery extends React.Component {
       config: c
     })
   }
-  _tsubmit = e => {
-    e.preventDefault()
-    var data = fto(e.target)
-    console.log(data)
-    if(!data.VoucherSendInformation) {
-      return this.setState({
-        err: '请填写推送信息内容!'
-      })
-    }
-   	req
-      .post('/uclee-backend-web/activityConfigHandler')
-      .send(data)
-      .end((err, res) => {
-        if (err) {
-          return err
-        }
-        if(res.body){
-          window.location='voucher-delivery';
-        }else{
-          alert('网络繁忙，请稍后重试');
-        }
-        console.log(res.body)
-      })
-  }
   _submit = e => {
     e.preventDefault()
     var data = fto(e.target)
@@ -158,6 +127,13 @@ class VoucherDelivery extends React.Component {
       })
       return;
     }
+    
+    if(!data.voucherSendInformation) {
+      return this.setState({
+        err: '请填写推送信息内容!'
+      })
+    }
+    
     if(data.myKey&&data.myValue){
       data.myKey = values1(data.myKey)
       data.myValue = values1(data.myValue)
@@ -166,6 +142,16 @@ class VoucherDelivery extends React.Component {
       })
 
       // return
+      //推送内容信息
+   	  req
+      .post('/uclee-backend-web/activityConfigHandler')
+      
+      .send(data)
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+      })
 	
       req.post('/uclee-backend-web/vipVoucherHandler').send(data).end((err, res) => {
         if (err) {
@@ -185,7 +171,8 @@ class VoucherDelivery extends React.Component {
           window.location = '/voucher-delivery'
         }
       })
-    }    
+    }
+    
   }
 }
 

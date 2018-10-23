@@ -55,6 +55,9 @@ import VipList from './containers/VipList'
 import VoucherDelivery from './containers/VoucherDelivery'
 import BargainSetting from './containers/BargainSetting'
 import BargainList from './containers/BargainList'
+import ProductVoucherSetting from './containers/ProductVoucherSetting'
+import ProductVoucherList from './containers/ProductVoucherList'
+import EditProductVoucherLinks from './containers/EditProductVoucherLinks'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -114,6 +117,9 @@ ReactDOM.render(
       <Route path= "bargain-setting" component={BargainSetting} />
       <Route path= "bargain-setting/:id" component={BargainSetting} />
       <Route path= "bargain-list" component={BargainList} />
+      <Route path= "product-voucher-setting" component={ProductVoucherSetting} />
+      <Route path= "product-voucher-list" component={ProductVoucherList} />
+      <Route path= "edit-product-voucher-links" component={EditProductVoucherLinks} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

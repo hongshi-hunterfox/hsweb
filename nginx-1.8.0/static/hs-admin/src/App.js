@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Menu from './components/Menu';
 import req from 'superagent';
+import { Link } from 'react-router';
 
 class App extends Component {
 	  constructor(props) {
@@ -57,19 +58,23 @@ class App extends Component {
     return (
     	<div>
     		<div style={{background:'#4D4D4D', height:'55px', width:'100%'}}>
-    			<span className="pull-left" style={{padding:'10px 60PX 0px 30px', color:'white'}}>
-    				<font size="5">{this.state.config.brand}</font>
-    				<font size="3">洪石微商店</font>
+    			<span className="pull-left" style={{padding:'10px 0PX 0px 30px', color:'white'}}>
+    				<Link to={'/?merchantCode='+localStorage.getItem('merchantCode')}>
+	    				<font size="5" style={{color:'white'}}>{this.state.config.brand}</font>
+	    				<font size="3" style={{color:'white'}}>洪石微商店</font>
+	    			</Link>
     		  </span>
-    			<span className="pull-right" style={{padding:'20px 60PX 0px 30px' ,color:'white'}}>欢迎您,管理员~~</span>
-    			<div style={{padding:'0px 300PX'}}>
+    		  <div style={{padding:'0px 0PX 0px 330px'}}>
     				<Menu />
     			</div>
+    			<span className="pull-right" style={{padding:'20px 60PX 0px 30px' ,color:'white'}}>欢迎您,管理员~~</span>
+    		</div>
+    		<div className="pull-right" style={{padding:'0px 10PX 0px 0px'}}>
+    			<input type="button" name="Submit" onClick={() => {javascript:history.back(-1)}} value="回到上一页" />
     		</div>
     		<div style={{paddingTop:'30px'}} />
 	      <div className="row">
-	      	<div className="col-md-2">
-	        </div>
+	      	<div className="col-md-2" />
 	        <div className="col-md-8">
 	          <div style={{paddingTop:'30px'}} />
 	          {this.props.children}

@@ -64,15 +64,15 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.drawPoint} name="drawPoint" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>一级分销获利比例(百分比)：</label>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>一级分销获利百分比：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.firstDis} name="firstDis" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>二级分销获利比例(百分比)：</label>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>二级分销获利百分比：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.secondDis} name="secondDis" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖一等奖奖池数：</label>
+            {/*<label className="control-label col-md-3" style={{marginTop:'10px'}}>活动抽奖一等奖奖池数：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.firstPrize} name="firstPrize" className="form-control" onChange={this._change}/>
               </div>
@@ -96,7 +96,7 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.thirdCount} name="thirdCount" className="form-control" onChange={this._change}/>
               </div>
-              
+             /*}
               {/* <label className="control-label col-md-3" style={{marginTop:'10px'}}>生日短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <textarea rows="3" cols="20" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}>

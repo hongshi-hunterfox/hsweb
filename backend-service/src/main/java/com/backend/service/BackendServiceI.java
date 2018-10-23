@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.backend.model.ProductForm;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
@@ -68,8 +70,7 @@ public interface BackendServiceI {
 	boolean sendUnbuyMsg(Integer userId);
 
 	boolean delStore(Integer storeId);
-
-
+	
     boolean editQiuckNavi(HomeQuickNavi homeQuickNavi);
 
 	HomeQuickNavi getQuickNavi(Integer naviId);
@@ -192,4 +193,22 @@ public interface BackendServiceI {
 	BargainSetting selectBargainId(Integer id);
 	
 	BirthPush selectDay();
+	
+	int insert(ProductVoucher productVoucher);
+	
+	int updateByPrimaryKey(ProductVoucher productVoucher);
+	
+	int deleteByPrimaryKey(Integer id);
+	
+	List<ProductVoucher> selectAllProductVoucher();
+	
+	ProductVoucher selectByPrimaryKey(Integer id);
+	
+	int insertCouponsProductsLinks (ProductVoucherPost productVoucherPost);
+	
+	ProductVoucherPost selectInspectionAlreadyExists(Integer vid, Integer pid);
+	
+	List<ProductVoucherPost> selectSelectedProducts(Integer vid);
+	
+	int delCouponsProductsLinks(Integer vid, Integer pid);
 }

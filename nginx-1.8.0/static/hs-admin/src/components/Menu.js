@@ -8,20 +8,7 @@ class Menu extends React.Component {
 	render() {
 		return(
 			<div>
-				<ul className="hList">
-				<li>
-						<a href="#click" className="menu">
-							<h2 className="menu-title menu-title_1nd">HOME</h2>
-							<ul className="menu-dropdown" >
-								<li>
-									<Link to={'/?merchantCode='+localStorage.getItem('merchantCode')}>
-						            	系统首页
-						          	</Link>
-						        </li>
-							</ul>
-						</a>
-					</li>
-				
+				<ul className="hList">				
 					<li>
 						<a href="#click" className="menu">
 							<h2 className="menu-title">首页设置</h2>
@@ -126,8 +113,8 @@ class Menu extends React.Component {
 								</Link>
 							</li>
 							<li>
-								<Link to={'/shake-monitor?merchantCode='+localStorage.getItem('merchantCode')}>
-								    现场抽奖活动
+								<Link to={'/product-voucher-list?merchantCode='+localStorage.getItem('merchantCode')}>
+								    指定产品送券
 								</Link>
 							</li>
 							<li>

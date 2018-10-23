@@ -74,6 +74,7 @@ import com.uclee.fundation.data.web.dto.MobileItem;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.data.web.dto.ProductVoucherPost;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.hongshi.service.HongShiVipServiceI;
@@ -150,7 +151,8 @@ public class UserServiceImpl implements UserServiceI {
 	private BalanceMapper balanceMapper;
 	@Autowired
 	private BalanceLogMapper balanceLogMapper;
-	
+	@Autowired
+	private ProductVoucherMapper productVoucherMapper;
 	@Autowired
 	private HongShiMapper hongShiMapper;
 	@Autowired
@@ -1802,6 +1804,31 @@ public class UserServiceImpl implements UserServiceI {
 			//更新支付单状态
 			paymentOrder.setIsSync(true);
 			this.updatePaymentOrder(paymentOrder);
+			//判断是否有设置购买赠送优惠券
+			List<OrderItem> items = orderItemMapper.selectByOrderId(order.getOrderId());
+			for(OrderItem item:items) {
+				List<ProductVoucher> productVoucher = productVoucherMapper.getProductCoupons(item.getProductId());
+				for(ProductVoucher pv:productVoucher) {
+					//赠送数量循环执行
+					for(int i=0; i<pv.getAmount(); i++) {
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(pv.getVoucher());
+						//判断可用优惠券，是否已经发光了
+						if(coupon!=null && !coupon.isEmpty()) {
+							if(coupon != null && coupon.size()>0) {
+								int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), pv.getVoucher(), "购指定产品赠送礼券");
+								if(a>0){
+									System.out.println("发送成功");
+								}else{
+									System.out.println("发送失败");
+								}
+							}
+						}else {
+							System.out.println("券被抢光了");
+						}
+					}
+				}
+				
+			}
 			//发送购买成功短信
 			String[] key = {"keyword1","keyword2","keyword3","keyword4"};
 			Payment payment = paymentMapper.selectByPrimaryKey(paymentOrder.getPaymentId());
@@ -2080,7 +2107,21 @@ public class UserServiceImpl implements UserServiceI {
 			salesInfo.add(tmp);
 		}
 		productDto.setSalesInfo(salesInfo);
-		System.out.println(JSON.toJSONString(salesInfo));
+		List<String> getGiftCouponsInfo = new ArrayList<String>();
+		List<ProductVoucher> productCouponsText = productVoucherMapper.getProductCoupons(productId);
+		count = 1;
+		for(ProductVoucher item:productCouponsText){
+			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(item.getVoucher());
+			//判断可用优惠券，是否已经发光了
+			if(coupon!=null && !coupon.isEmpty()) {
+				String tmp = "";
+				tmp = count + ". 购买送"+item.getName();
+				count++;
+				getGiftCouponsInfo.add(tmp);
+			}
+		}
+		productDto.setGiftCouponsInfo(getGiftCouponsInfo);
+		System.out.println(JSON.toJSONString(getGiftCouponsInfo));
 		return productDto;
 	}
 
@@ -2341,7 +2382,6 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		//创建订单和支付单
 		Order order = new Order();
-		System.out.println("订单号1============="+OrderSerialNum);
 		order.setOrderSerialNum(OrderSerialNum);
 		if(orderPost.getIsSelfPick().equals("true")){
 			order.setIsSelfPick(true);
@@ -2958,7 +2998,7 @@ public class UserServiceImpl implements UserServiceI {
 					}
 				}
 			}
-			//获取goods表名称---skx
+			//获取goods表名称
 			if(coupon!=null){
 				HongShiCoupon couponName = hongShiMapper.getCouponName(coupon.getProductNumber());
 				if(couponName!=null){
@@ -3305,6 +3345,29 @@ public class UserServiceImpl implements UserServiceI {
 
 				order.setSyncStatus(hongShiResult);
 				orderMapper.updateByPrimaryKeySelective(order);
+				//判断是否有设置购买赠送优惠券
+				List<OrderItem> items = orderItemMapper.selectByOrderId(order.getOrderId());
+				for(OrderItem item:items) {
+					List<ProductVoucher> productVoucher = productVoucherMapper.getProductCoupons(item.getProductId());
+					if(productVoucher != null) {
+						for(ProductVoucher pv:productVoucher) {
+							//赠送数量循环执行
+							for(int i=0; i<pv.getAmount(); i++) {
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(pv.getVoucher());
+								//判断可用优惠券，是否已经发光了
+								if(coupon!=null && !coupon.isEmpty()) {
+									if(coupon != null && coupon.size()>0) {
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), pv.getVoucher(), "购指定产品赠送礼券");
+										System.out.println("发送成功");
+									}
+								}else {
+									System.out.println("券被抢光了");
+								}
+							}
+						}
+						
+					}
+				}
 				//发送购买成功短信
 				String[] key = {"keyword1","keyword2","keyword3","keyword4"};
 				Payment payment = paymentMapper.selectByPrimaryKey(paymentOrder.getPaymentId());

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ProductVoucherMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ProductVoucher" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="voucher" property="voucher" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ProductVoucherPost" type="com.uclee.fundation.data.web.dto.ProductVoucherPost" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="vid" property="vid" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, voucher, amount, name
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_product_voucher_setting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllProductVoucher" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_product_voucher_setting
+  </select>
+  <select id="selectInspectionAlreadyExists" resultMap="ProductVoucherPost" parameterType="java.lang.Integer" >
+    select * from web_coupons_products_links where vid = #{vid,jdbcType=INTEGER} and pid = #{pid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectSelectedProducts" resultMap="ProductVoucherPost" parameterType="java.lang.Integer">
+  	select vid, pid, title from  web_coupons_products_links as a left join web_products as b on a.pid=b.product_id  where vid = #{vid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getProductCoupons" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select * from  web_coupons_products_links as a left join web_product_voucher_setting as b on a.vid=b.id  where a.pid = #{pid,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_product_voucher_setting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByLinks" parameterType="java.lang.Integer" >
+    delete from web_coupons_products_links
+    where vid = #{vid,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="delCouponsProductsLinks" parameterType="java.lang.Integer" >
+    delete from web_coupons_products_links
+    where vid = #{vid,jdbcType=INTEGER} and pid = #{pid,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.ProductVoucher">
+    insert into web_product_voucher_setting (voucher, amount, name)
+    values (#{voucher, jdbcType=VARCHAR}, #{amount, jdbcType=INTEGER}, #{name, jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertCouponsProductsLinks" parameterType="com.uclee.fundation.data.web.dto.ProductVoucherPost">
+    insert into web_coupons_products_links (vid, pid)
+    values (#{vid, jdbcType=INTEGER}, #{pid, jdbcType=INTEGER})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.ProductVoucher" >
+    update web_product_voucher_setting
+    set voucher = #{voucher,jdbcType=VARCHAR},
+      	amount = #{amount,jdbcType=INTEGER},
+      	name = #{name, jdbcType=VARCHAR} 
+    where 
+    	id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
