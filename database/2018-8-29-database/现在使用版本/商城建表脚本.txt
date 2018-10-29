@@ -55,6 +55,14 @@ create table web_coupons_products_links(
 	pid int not null
 )
 
+--满额送礼券
+CREATE TABLE [dbo].[web_full_send_coupon](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[voucher] [varchar](50) NOT NULL,
+	[amount] [int] NOT NULL,
+	[money] [decimal](20, 2) NULL
+) 
+
 --生日信息推送新增表
 create table web_birthdayInformation_push(
 	id int primary key not null,
