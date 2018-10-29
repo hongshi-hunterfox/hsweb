@@ -373,10 +373,25 @@ public class BackendController {
 		map.put("quickNavi", quickNavi);
 		return map;
 	}
+
 	@RequestMapping("/commentList")
-	public @ResponseBody Map<String,Object> commentList(HttpServletRequest request) {
+	public @ResponseBody Map<String,Object> commentList(HttpServletRequest request, Integer pn) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		List<Comment> comment = backendService.getCommentList();
+		List<Comment> comment;
+		if(pn == null) {
+			comment = backendService.getCommentList(0);
+			map.put("pagenum",1);
+		}else{
+			map.put("pagenum",pn);
+			pn = pn-1;
+			comment = backendService.getCommentList(pn*15);
+		}
+		Double pagenums = backendService.selectPageNum();
+		Double pagesize = (pagenums/15);
+		//小数点后值不为0进1
+		int size = (int)Math.ceil(pagesize);
+		map.put("size", size);
+		map.put("pagenums", pagenums);
 		map.put("comment", comment);
 		return map;
 	}
@@ -387,7 +402,6 @@ public class BackendController {
 		String notice = config.getNotice();
 		map.put("notice", notice.length());
 		map.put("qq", config.getQq());
-		System.out.println("getVoucherSendInformation===="+config.getVoucherSendInformation());
 		map.put("config", config);
 		return map;
 	}
@@ -722,6 +736,37 @@ public class BackendController {
 		ProductVoucher productVoucherId = backendService.selectByPrimaryKey(vid);
 		map.put("name",productVoucherId.getName());		
 		return map;	
+	}
+	/**
+	 * @author 孙俊霞
+	 * 满额赠送优惠券
+	 * @param Request
+	 * @return
+	 */
+	@RequestMapping("/fullDiscount ")
+	public @ResponseBody Map<String,Object> fullDiscount(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<SendCoupon> sendCouponss = backendService.selectAllSendCoupon();
+		int i = 0;
+		if(sendCouponss.size()==0){
+			SendCoupon sendCoupon = new SendCoupon();
+			sendCoupon.setMoney(new BigDecimal(0));
+			sendCoupon.setVoucher("");
+			sendCoupon.setAmount(0);
+			
+			sendCouponss.add(sendCoupon);
+		}
+		for(SendCoupon item : sendCouponss){
+			map.put("myKey[" + i + "]", item.getMoney());
+			map.put("myValue[" + i + "]", item.getVoucher());
+			map.put("myValue1[" + i + "]", item.getAmount());
+			
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
 	}
 	
 }

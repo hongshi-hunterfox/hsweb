@@ -42,6 +42,7 @@ import ShakeMonitor from './containers/ShakeMonitor'
 import EditCategory from './containers/EditCategory'
 import BirthVoucher from './containers/BirthVoucher'
 import FullCut from './containers/FullCut'
+import FullSendCoupon from './containers/FullSendCoupon'
 import BindMemberSetting from './containers/BindMemberSetting'
 import EvaluationConfiguration from './containers/EvaluationConfiguration'
 import IntegralInConfiguration from './containers/IntegralInConfiguration'
@@ -87,6 +88,7 @@ ReactDOM.render(
       <Route path="evaluationConfiguration" component={EvaluationConfiguration} />
       <Route path="integralinConfiguration" component={IntegralInConfiguration} />
       <Route path="FullCut" component={FullCut} />
+      <Route path="FullSendCoupon" component={FullSendCoupon} />
       <Route path="user-unbuy-list" component={UserUnBuyList} />
       <Route path="user-birth-list" component={UserBirthList} />
       <Route path="quick-navi-product" component={QuickNaviProduct} />
@@ -113,13 +115,13 @@ ReactDOM.render(
       <Route path="auditRefundOrderDetail" component={AuditRefundOrderDetail} />
       <Route path="auditRefundOrderDetail/:id" component={AuditRefundOrderDetail} />
       <Route path="vip-list" component={VipList} />
-      <Route path= "voucher-delivery" component={VoucherDelivery} />
-      <Route path= "bargain-setting" component={BargainSetting} />
-      <Route path= "bargain-setting/:id" component={BargainSetting} />
-      <Route path= "bargain-list" component={BargainList} />
-      <Route path= "product-voucher-setting" component={ProductVoucherSetting} />
-      <Route path= "product-voucher-list" component={ProductVoucherList} />
-      <Route path= "edit-product-voucher-links" component={EditProductVoucherLinks} />
+      <Route path="voucher-delivery" component={VoucherDelivery} />
+      <Route path="bargain-setting" component={BargainSetting} />
+      <Route path="bargain-setting/:id" component={BargainSetting} />
+      <Route path="bargain-list" component={BargainList} />
+      <Route path="product-voucher-setting" component={ProductVoucherSetting} />
+      <Route path="product-voucher-list" component={ProductVoucherList} />
+      <Route path="edit-product-voucher-links" component={EditProductVoucherLinks} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

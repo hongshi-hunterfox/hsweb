@@ -21,18 +21,29 @@ class CommentList extends React.Component {
       isOpen:false,
       comment:{},
       commentId:0,
-      backTitle:''
+      backTitle:'',
+      pn: this.props.location.query.pn,
+      pagenum: 0,
+      pagenums: 0
     }
   }
 
   componentDidMount() {
-    req.get('/uclee-backend-web/commentList').end((err, res) => {
+    req
+    .get('/uclee-backend-web/commentList')
+    .query({
+        pn: this.state.pn
+      })
+    .end((err, res) => {
       if (err) {
         return err
       }
       var data = JSON.parse(res.text)
       this.setState({
-        comments: data.comment
+        comments: data.comment,
+        pagenum: data.pagenum,
+        size: data.size,
+        pagenums: data.pagenums
       })
     })
   }
@@ -146,6 +157,39 @@ class CommentList extends React.Component {
                 {list}
               </tbody>
             </table>
+            当前{this.state.pagenum}页,总{this.state.size}页,总{this.state.pagenums}条记录
+            
+            <span style={{float:'right'}}>
+            	<span onClick={()=>{window.location='/comment-list?pn='+1}}>
+								<button class="btn btn-default" type="submit">首页</button>
+							</span>
+		            <span>
+		            	{this.state.pagenum === 1
+		            		?
+		            		<button class="btn btn-default" type="submit" onClick={()=>{alert("已经是第一页了~~")}}>
+											上一页
+										</button>
+		            		:
+										<button class="btn btn-default" type="submit" onClick={()=>{window.location='/comment-list?pn='+(this.state.pagenum-1)}}>
+											上一页
+										</button>
+									}
+								</span>
+								<span>
+									{this.state.pagenum === this.state.size 
+									?
+									<button class="btn btn-default" type="submit" onClick={()=>{alert("已经到最后一页了~~")}}>下一页</button>
+									:
+									<button class="btn btn-default" type="submit" onClick={()=>{window.location='/comment-list?pn='+(this.state.pagenum+1)}}>
+										下一页
+									</button>
+									}
+								</span>
+								<span onClick={()=>{window.location='/comment-list?pn='+this.state.size}}>
+									<button class="btn btn-default" type="submit" >末页</button>
+								</span>
+						</span>
+            
             <Modal isOpen={this.state.isOpen} onRequestHide={this.hideModal}>
               <ModalHeader>
                 <ModalClose onClick={this.hideModal}/>

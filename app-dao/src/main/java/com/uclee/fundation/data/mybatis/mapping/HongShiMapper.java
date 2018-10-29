@@ -47,4 +47,5 @@ public interface HongShiMapper {
 	HongShiCoupon getCouponName(String productNumber);
 	List<Map<String, Object>> getObjectName(@Param("objectName")String objectName);
 	List<CouponSales> CouponSales(String salesTime,String serialNumber);
+	CouponSales getCouponDenomination(String numbers);
 }

@@ -93,6 +93,8 @@ import com.uclee.user.util.UserUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 import com.uclee.weixin.util.EmojiFilter;
 
+import kafka.network.Send;
+
 
 public class UserServiceImpl implements UserServiceI {
 
@@ -163,7 +165,8 @@ public class UserServiceImpl implements UserServiceI {
 	private HongShiVipServiceI hongShiVipService;
 	@Autowired
 	private PaymentMapper paymentMapper;
-	
+	@Autowired
+	private SendCouponMapper sendCouponMapper;
 	@Autowired
 	private ProductStoreLinkMapper productStoreLinkMapper;
 	@Autowired
@@ -3257,6 +3260,32 @@ public class UserServiceImpl implements UserServiceI {
 						e.printStackTrace();
 					}
 					order.setStatus((short)2);
+					
+					//得到实际付款金额
+					BigDecimal paymentAmount = order.getVoucherPrice() != new BigDecimal(0) && order.getVoucherPrice() != null ? order.getTotalPrice().subtract(order.getVoucherPrice().add(order.getCut())) : order.getTotalPrice().subtract(order.getCut()) ;
+					List<SendCoupon> sc = sendCouponMapper.selectOne();
+					for(SendCoupon item:sc) {
+						if(paymentAmount.compareTo(item.getMoney()) >= 0){
+							//判断赠送数量
+							for(int i=0;i<item.getAmount();i++){
+								List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(item.getVoucher());
+								if(coupon!=null && !coupon.isEmpty()){
+									if(coupon != null && coupon.size()>0){
+										coupon.get(0);                       
+										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),item.getVoucher(),"满额赠送礼券");
+										System.out.println("发送成功");
+									}
+								}else{
+									System.out.println("券被抢光了");
+								}
+							}
+							break;
+						}
+							
+					}
+						
+					
+					
 					//调用存储过程插入订单明细
 					List<OrderItem> items = orderItemMapper.selectByOrderId(order.getOrderId());
 					for(OrderItem item:items){

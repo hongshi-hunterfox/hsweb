@@ -54,6 +54,15 @@ public class ConfigPost {
 	private String voucherSendInformation;
 	private String notice;
 	private String perfectBirthText;
+	private String whetherEnableAlipay;
+	
+	public String getWhetherEnableAlipay() {
+		return whetherEnableAlipay;
+	}
+	
+	public void setWhetherEnableAlipay(String whetherEnableAlipay) {
+		this.whetherEnableAlipay = whetherEnableAlipay;
+	}
 	
 	public String getPerfectBirthText() {
 		return perfectBirthText;

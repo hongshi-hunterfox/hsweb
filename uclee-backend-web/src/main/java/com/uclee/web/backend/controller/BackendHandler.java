@@ -92,6 +92,10 @@ public class BackendHandler {
 	public @ResponseBody boolean integralinConfigurationHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateIntegralInGifts(freightPost);
 	}
+	@RequestMapping("/fullDiscountHandler")
+	public @ResponseBody boolean fullDiscountHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
+		return backendService.updateSendCoupon(freightPost);
+	}
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		System.out.println("day=============="+birthVoucherPost.getDay());

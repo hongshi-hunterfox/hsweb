@@ -87,8 +87,8 @@ class UserList extends React.Component {
             	当前{this.state.pagenum}页,总{this.state.size}页,总{this.state.pagenums}条记录
             	<span style={{float:'right'}}>
 	            	<span onClick={()=>{window.location='/user-list?pn='+1}}>
-						<button class="btn btn-default" type="submit">首页</button>
-					</span>
+									<button class="btn btn-default" type="submit">首页</button>
+								</span>
 	            	<span>
 	            		{this.state.pagenum === 1
 	            			?

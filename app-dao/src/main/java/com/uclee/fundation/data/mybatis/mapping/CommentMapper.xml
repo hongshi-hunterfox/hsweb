@@ -28,10 +28,19 @@
     from web_comment
     where order_serial_num = #{orderSerialNum,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectPageNum" resultType="java.lang.Double">
+  	select
+    count(*)
+    FROM web_comment
+  </select>
+  
   <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
+    <!--  select
     <include refid="Base_Column_List" />
     from web_comment order by time desc
+    -->
+    select top 15 * from web_comment where id not in ( select top ${pn} id from web_comment order by time desc) order by time desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_comment

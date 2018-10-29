@@ -4,6 +4,8 @@ import com.uclee.fundation.data.mybatis.model.Comment;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface CommentMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -19,5 +21,7 @@ public interface CommentMapper {
 
     Comment selectByOrderId(String orderSerialNum);
 
-    List<Comment> selectAll();
+    List<Comment> selectAll(@Param("pn") Integer pn);
+    
+    Double selectPageNum();
 }

@@ -24,4 +24,16 @@ module.exports = {
 				cb(JSON.parse(res.text));
 			});
 	},
+	getConfig: function(query, cb) {
+		request
+			.get('/uclee-backend-web/config')
+			.query(query)
+			.end(function(err, res) {
+				if (err) {
+					return err;
+				}
+
+				cb(JSON.parse(res.text));
+			});
+	},
 };

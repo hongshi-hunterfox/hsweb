@@ -65,9 +65,9 @@ class Order extends React.Component {
       riqi:''
     }
     
-    this.lat = 21.908
+    this.lat = 23
     
-    this.lng = 110.85
+    this.lng = 113
   }
 
   componentDidMount() {
@@ -286,8 +286,6 @@ class Order extends React.Component {
 	                              this.state.defaultAddr.city +
 	                              this.state.defaultAddr.region +
 	                              this.state.defaultAddr.addrDetail
-	                            console.log('addr:' + addr)
-	                            console.log('this.state.isShippingfree:' + this.state.isShippingfree)
 	                            if(!this.state.isShippingfree){
 	                              geocoder.getLocation(addr,this.state.total)
 	                            }else{
@@ -539,28 +537,7 @@ salesInfoShowClick=()=>{
     sessionStorage.setItem('phone', e.target.value)
   }
 
-  /*_addrTabChange = a => {
-    sessionStorage.setItem('isSelfPick', a)
-    this.setState({
-      isSelfPick: a,
-      shippingFee: 0
-    })
-    if (
-      !a &&
-      localStorage.getItem('latitude') != null &&
-      localStorage.getItem('longitude') != null
-    ) {
-      if (this.state.defaultAddr) {
-        var addr =
-          this.state.defaultAddr.province +
-          this.state.defaultAddr.city +
-          this.state.defaultAddr.region +
-          this.state.defaultAddr.addrDetail
-        console.log('addr:' + addr)
-        geocoder.getLocation(addr)
-      }
-    }
-  }*/
+
   _init = () => {
     //调用地址解析类
     geocoder = new qq.maps.Geocoder({
@@ -568,21 +545,13 @@ salesInfoShowClick=()=>{
         console.log('result:' + result)
         this.lat = result.detail.location.lat
         this.lng = result.detail.location.lng
-        console.log('latlng:' + this.lat + ' ' + this.lng)
-        console.log(
-          Number(localStorage.getItem('latitude')) +
-            '  ff  ' +
-            Number(localStorage.getItem('longitude'))
-        )
-				
-			
+       
         var distances = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
             new qq.maps.LatLng( 
               Number(localStorage.getItem('latitude')),
               Number(localStorage.getItem('longitude'))
-            
             )
           ) / 100
           )/10
@@ -615,14 +584,21 @@ salesInfoShowClick=()=>{
     }
     e.preventDefault()
     var data = fto(e.target)
-    console.log("isSelfPick"+data.isSelfPick)
     if (!data.isSelfPick) {
       this.setState({
         error: errMap['isSelfPick_error']
       })
       return false
     }
-          var distance = Math.round(
+
+//调用地址解析类
+    geocoder = new qq.maps.Geocoder({
+      complete: (result) => {
+        console.log('result:' + result)
+        this.lat = result.detail.location.lat
+        this.lng = result.detail.location.lng
+       
+        var distances = Math.round(
           qq.maps.geometry.spherical.computeDistanceBetween(
             new qq.maps.LatLng(this.lat, this.lng),
             new qq.maps.LatLng( 
@@ -631,12 +607,21 @@ salesInfoShowClick=()=>{
             )
           ) / 100
           )/10
-    if (data.isSelfPick === 'false' && this.state.config.restrictedDistance<distance) {
+          if(distances < 1){
+          	var distance = 1
+          }else{
+          	var distance = distances
+          }
+				if (data.isSelfPick === 'false' && this.state.config.restrictedDistance < distance) {
       this.setState({
         error: errMap['Distribution_error']
       })
       return false
     }
+      }
+    })
+
+    
     console.log("addrId"+data.addrId)
     if (data.isSelfPick === 'false' && !data.addrId) {
       this.setState({

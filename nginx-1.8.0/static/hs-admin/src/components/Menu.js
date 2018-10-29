@@ -78,6 +78,11 @@ class Menu extends React.Component {
 								</Link>
 							</li>
 							<li>
+								<Link to={'/fullSendCoupon?merchantCode='+localStorage.getItem('merchantCode')}>
+								    满额送优惠券
+								</Link>
+							</li>
+							<li>
 								<Link to={'/lottery?merchantCode='+localStorage.getItem('merchantCode')}>
 								    积分抽奖配置
 								</Link>

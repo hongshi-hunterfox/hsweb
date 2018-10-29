@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.SendCouponMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.SendCoupon" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="voucher" property="voucher" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, voucher, amount, money
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_full_send_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectOne" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select TOP 5
+    <include refid="Base_Column_List" />
+    from web_full_send_coupon order by money desc
+  </select>
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete web_full_send_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteAll" parameterType="java.lang.Integer" >
+   truncate table  web_full_send_coupon
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.SendCoupon" >
+    insert into web_full_send_coupon (id, voucher, amount, money  
+      )
+    values (#{id,jdbcType=INTEGER}, #{voucher,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.SendCoupon" >
+    insert into web_full_send_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="voucher != null" >
+        voucher,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="voucher != null" >
+        #{voucher,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.SendCoupon" >
+    update web_full_send_coupon
+    <set >
+      <if test="voucher != null" >
+        voucher = #{voucher,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.SendCoupon" >
+    update web_full_send_coupon
+    set voucher = #{voucher,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

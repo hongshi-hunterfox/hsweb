@@ -97,7 +97,7 @@ public interface BackendServiceI {
 
 	Category getCategoryById(Integer categoryId);
 
-    List<Comment> getCommentList();
+    List<Comment> getCommentList(Integer pn);
 
 	Map<String,Object> commentBackHandler(Comment comment);
 
@@ -125,10 +125,13 @@ public interface BackendServiceI {
 
 	List<BindingRewards> selectAllBindingRewards();
 	
+	List<SendCoupon> selectAllSendCoupon();
+	
 	List<EvaluationGifts> selectAllEvaluationGifts();
 	List<IntegralInGifts> selectAllIntegralInGifts();
 
 	boolean updateBindingRewards(FreightPost freightPost);
+	boolean updateSendCoupon(FreightPost freightPost);
 
 	NapaStore getHongShiStore(String hsCode);
 
@@ -211,4 +214,6 @@ public interface BackendServiceI {
 	List<ProductVoucherPost> selectSelectedProducts(Integer vid);
 	
 	int delCouponsProductsLinks(Integer vid, Integer pid);
+	
+	Double selectPageNum();
 }

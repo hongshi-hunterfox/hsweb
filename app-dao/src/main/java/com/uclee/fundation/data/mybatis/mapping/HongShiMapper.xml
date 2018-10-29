@@ -94,7 +94,7 @@
 	</resultMap>
 	<resultMap id="CouponSales" type="com.uclee.fundation.data.mybatis.model.CouponSales">
 		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="编号" property="numbers" jdbcType="INTEGER" />
+		<result column="编号" property="numbers" jdbcType="VARCHAR" />
 		<result column="面额" property="denomination" jdbcType="DECIMAL" />
 		<result column="日期" property="day" jdbcType="TIMESTAMP" />
 		<result column="部门编号" property="departmentNumber" jdbcType="INTEGER" />
@@ -107,6 +107,10 @@
 	<select id="CouponSales" resultMap="CouponSales">
 		<bind name="salesTime" value="'%' + salesTime + '%'" />
 		select * from 礼券销售表 where 销售时间 like #{salesTime, jdbcType=VARCHAR} and 销售类型 = '生日祝福赠送礼券' and 往来编号 = #{serialNumber, jdbcType=VARCHAR}
+	</select>
+	<select id="getCouponDenomination" resultMap="CouponSales">
+		
+		select 面额 from 礼券销售表 where 编号=#{编号, jdbcType=VARCHAR}
 	</select>
 	<select id="getHongShiOrder" resultMap="HongShiOrder">
 		exec WSC_GetOrdersList '','','',#{cWeiXinCode,jdbcType=VARCHAR},null,#{isEnd,jdbcType=BIT}

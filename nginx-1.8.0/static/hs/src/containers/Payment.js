@@ -32,46 +32,93 @@ class PaymentMethod extends React.Component {
 		}
 	}
 	render() {
-		var items = this.props.data.payment.map((item, index) => {
-			return (
-				<div
-					className={
-						"payment-info-method " +
-							(this.props.data.paymentId === item.paymentId ? "active" : "")
-					}
-					key={index}
-					onClick={this._paymentOnChange.bind(this, item.paymentId)}
-				>
-					{item.strategyClassName === "WCJSAPIPaymentStrategy"
-						? <img
-								src="/images/payment/WC.png"
-								className="payment-info-method-image"
-								alt=""
-							/>
-						: item.strategyClassName === "AlipayPaymentStrategy"
-								? <img
-										src="/images/payment/alipay.jpg"
-										className="payment-info-method-image"
-										alt=""
-									/>
-								: item.strategyClassName === "MemberCardPaymentStrategy"
-										? <img
-												src="/images/payment/balance.jpg"
-												className="payment-info-method-image"
-												alt=""
-											/>
-										: null}
-					<span className="payment-info-method-text">{item.paymentName}</span>
-
-					{item.strategyClassName === "MemberCardPaymentStrategy"
-						? <span>
-								（余额：<span className="red">{this.props.data.balance}</span>)
-							</span>
-						: null}
-					<span className="fa fa-check icon-check" />
-				</div>
-			)
-		})
+		var items;
+		
+		//判断是否启用支付宝
+			this.props.data.config.whetherEnableAlipay === 'yes'
+			?
+			items = this.props.data.payment.map((item, index) => {
+				return (
+					<div
+						className={
+							"payment-info-method " +
+								(this.props.data.paymentId === item.paymentId ? "active" : "")
+						}
+						key={index}
+						onClick={this._paymentOnChange.bind(this, item.paymentId)}
+					>
+						{item.strategyClassName === "WCJSAPIPaymentStrategy"
+							? <img
+									src="/images/payment/WC.png"
+									className="payment-info-method-image"
+									alt=""
+								/>
+							: item.strategyClassName === "AlipayPaymentStrategy"
+									? <img
+											src="/images/payment/alipay.jpg"
+											className="payment-info-method-image"
+											alt=""
+										/>
+									: item.strategyClassName === "MemberCardPaymentStrategy"
+											? <img
+													src="/images/payment/balance.jpg"
+													className="payment-info-method-image"
+													alt=""
+												/>
+											: null}
+						<span className="payment-info-method-text">{item.paymentName}</span>
+	
+						{item.strategyClassName === "MemberCardPaymentStrategy"
+							? <span>
+									（余额：<span className="red">{this.props.data.balance}</span>)
+								</span>
+							: null}
+						<span className="fa fa-check icon-check" />
+					</div>
+				)
+			})
+			:
+			items = this.props.data.payment.map((item, index) => {
+				return (
+					<div>
+						{item.paymentName !== '支付宝支付' 
+							?
+							<div
+								className={
+									"payment-info-method " +
+										(this.props.data.paymentId === item.paymentId ? "active" : "")
+								}
+								key={index}
+								onClick={this._paymentOnChange.bind(this, item.paymentId)}
+							>
+								{item.strategyClassName === "WCJSAPIPaymentStrategy"
+									? <img
+											src="/images/payment/WC.png"
+											className="payment-info-method-image"
+											alt=""
+										/>
+									: item.strategyClassName === "MemberCardPaymentStrategy"
+													? <img
+															src="/images/payment/balance.jpg"
+															className="payment-info-method-image"
+															alt=""
+														/>
+													: null}
+								<span className="payment-info-method-text">{item.paymentName}</span>
+			
+								{item.strategyClassName === "MemberCardPaymentStrategy"
+									? <span>
+											（余额：<span className="red">{this.props.data.balance}</span>)
+										</span>
+									: null}
+								<span className="fa fa-check icon-check" />
+							</div>
+							:null}
+						</div>
+				)
+			})
+			
+			
 		return (
 			<div className="payment-info">
 				{items}
@@ -105,7 +152,8 @@ class Payment extends React.Component {
 			isWCCancel:false,
 			cVipCode:null,
 			cardStatus:'',
-			allowPayment:true
+			allowPayment:true,
+			config:{}
 		}
 	}
 
@@ -120,7 +168,14 @@ class Payment extends React.Component {
 				})
 
 			}.bind(this)
-		)
+		);
+		
+		PaymentUtil.getConfig(this.props.location.query, function(res) {
+			this.setState({
+				config: res.config
+			});
+		}.bind(this));
+		
 		req
 		  .get('/uclee-user-web/getVipInfo')
 		  .end((err, res) => {
@@ -221,7 +276,7 @@ class Payment extends React.Component {
 			return
 		}
 		if (
-			this.state.paymentId === 2 && this.state.cVipCode==null
+			this.state.paymentId === 2 && this.state.cVipCode==undefined
 		) {
 			alert("请先绑定会员卡")
 			window.location='/member-setting'

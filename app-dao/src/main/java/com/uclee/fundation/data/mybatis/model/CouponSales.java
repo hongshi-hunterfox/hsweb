@@ -6,7 +6,7 @@ import java.util.Date;
 public class CouponSales {
 
 	private int id;
-	private int numbers;
+	private String numbers;
 	private BigDecimal denomination;
 	private Date day;
 	private int departmentNumber;
@@ -20,10 +20,10 @@ public class CouponSales {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getNumbers() {
+	public String getNumbers() {
 		return numbers;
 	}
-	public void setNumbers(int numbers) {
+	public void setNumbers(String numbers) {
 		this.numbers = numbers;
 	}
 	public BigDecimal getDenomination() {

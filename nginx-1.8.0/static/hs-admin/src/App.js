@@ -58,18 +58,18 @@ class App extends Component {
     return (
     	<div>
     		<div style={{background:'#4D4D4D', height:'55px', width:'100%'}}>
-    			<span className="pull-left" style={{padding:'10px 0PX 0px 30px', color:'white'}}>
+    			<div className="pull-left" style={{padding:'10px 0PX 0px 100px', color:'white'}}>
     				<Link to={'/?merchantCode='+localStorage.getItem('merchantCode')}>
 	    				<font size="5" style={{color:'white'}}>{this.state.config.brand}</font>
 	    				<font size="3" style={{color:'white'}}>洪石微商店</font>
 	    			</Link>
-    		  </span>
+    		  </div>
     		  <div style={{padding:'0px 0PX 0px 330px'}}>
     				<Menu />
     			</div>
-    			<span className="pull-right" style={{padding:'20px 60PX 0px 30px' ,color:'white'}}>欢迎您,管理员~~</span>
+    			<div className="pull-right" style={{padding:'20px 60PX 0px 30px' ,color:'white'}}>欢迎您,管理员~~</div>
     		</div>
-    		<div className="pull-right" style={{padding:'0px 10PX 0px 0px'}}>
+    		<div className="pull-right" style={{padding:'0px 1PX 0px 0px'}}>
     			<input type="button" name="Submit" onClick={() => {javascript:history.back(-1)}} value="回到上一页" />
     		</div>
     		<div style={{paddingTop:'30px'}} />

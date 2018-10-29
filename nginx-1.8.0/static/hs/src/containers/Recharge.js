@@ -15,22 +15,48 @@ class PaymentMethod  extends React.Component {
 	}
 
 	render(){
-		var items = this.props.data.payment.map((item, index) => {
-				return (
-					<div className={'payment-info-method ' + (this.state.type===item.paymentId?'active':'')} key={index} onClick={this._paymentOnChange.bind(this,item.paymentId)}>
-						{
-							 item.strategyClassName==='WCJSAPIPaymentStrategy'?
-							 	<img src="/images/payment/WC.png" className='payment-info-method-image' alt=""/>
-							 	:
-							 	item.strategyClassName==='AlipayPaymentStrategy'?
-							 		<img src="/images/payment/alipay.jpg" className='payment-info-method-image' alt=""/>
-							 		:null
-						}
-						<span className='payment-info-method-text'>{item.paymentName}</span>
-						<span className="fa fa-check icon-check"></span>
-					</div>
-				);
-		});
+		    var items;
+		    //判断是否启用支付宝
+			this.props.data.configs.whetherEnableAlipay === 'yes'
+				?
+				items = this.props.data.payment.map((item, index) => {
+						return (
+							<div className={'payment-info-method ' + (this.state.type===item.paymentId?'active':'')} key={index} onClick={this._paymentOnChange.bind(this,item.paymentId)}>
+								{
+									 item.strategyClassName==='WCJSAPIPaymentStrategy'?
+									 	<img src="/images/payment/WC.png" className='payment-info-method-image' alt=""/>
+									 	:
+									 	item.strategyClassName==='AlipayPaymentStrategy'?
+									 		<img src="/images/payment/alipay.jpg" className='payment-info-method-image' alt=""/>
+									 		:null
+								}
+								<span className='payment-info-method-text'>{item.paymentName}</span>
+								<span className="fa fa-check icon-check"></span>
+							</div>
+						);
+				})
+				:
+				items = this.props.data.payment.map((item, index) => {
+						return (
+							<div>
+							{item.paymentName !== '支付宝支付' ?
+								<div className={'payment-info-method ' + (this.state.type===item.paymentId?'active':'')} key={index} onClick={this._paymentOnChange.bind(this,item.paymentId)}>
+									{
+										 item.strategyClassName==='WCJSAPIPaymentStrategy'?
+										 	<img src="/images/payment/WC.png" className='payment-info-method-image' alt=""/>
+										 	:
+										 	item.strategyClassName==='AlipayPaymentStrategy'?
+										 		<img src="/images/payment/alipay.jpg" className='payment-info-method-image' alt=""/>
+										 		:null
+									}
+									<span className='payment-info-method-text'>{item.paymentName}</span>
+									<span className="fa fa-check icon-check"></span>
+								</div>
+							:null}
+							</div>
+						);
+				})
+
 		return (
 			<div className='payment-info'>
 				{items}
@@ -62,7 +88,8 @@ class Recharge extends React.Component {
 			type:1,
 			voucherText:'',
 			extraData:{},
-			inTime:true
+			inTime:true,
+			configs:{}
 	    }
 	  }
 
@@ -76,6 +103,11 @@ class Recharge extends React.Component {
 				extraData:res.extraData
 			});
 		}.bind(this));
+		RechargeUtil.getConfig(this.props.location.query, function(res) {
+			this.setState({
+				configs: res.config
+			});
+		}.bind(this));
 	}
 
 	render() {
@@ -84,9 +116,6 @@ class Recharge extends React.Component {
 					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money && this.state.rewards === item.rewards ?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
 				);
 		});
-		console.log(this.state.extraData);
-		console.log(this.state.rechargeMoney);
-		console.log(this.state.extraData[this.state.rechargeMoney]);
 		return (
 			<DocumentTitle title="充值">
 				<div className='payment'>

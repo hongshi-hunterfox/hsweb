@@ -102,7 +102,13 @@ class ActivityConfig extends React.Component {
                 <textarea rows="3" cols="20" value={this.state.config.birthText} name="birthText" className="form-control" onChange={this._change}>
                 </textarea>
               </div> */}
-             
+             	<label className="control-label col-md-3" style={{marginTop:'10px'}}>是否启用支付宝：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="whetherEnableAlipay" value={this.state.config.whetherEnableAlipay} style={{padding:'5px'}} onChange={this._change}>
+                  <option value="yes">启用</option>
+                  <option value="no">停用</option>
+                </select>
+              </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费短信内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 {/*<input type="text" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}/>*/}
@@ -418,42 +424,6 @@ _onChooseUcenterImage = fe => {
     if (!data.secondDis) {
       return this.setState({
         err: '请填写 二级分销获利比例'
-      })
-    }
-    
-    if (!data.firstPrize) {
-      return this.setState({
-        err: '请填写一等奖奖池数'
-      })
-    }
-    if (!data.secondPrize) {
-      return this.setState({
-        err: '请填写二等奖奖池数'
-      })
-    }
-    if (!data.thirdPrize) {
-      return this.setState({
-        err: '请填写三等奖奖池数'
-      })
-    }
-    if (!data.firstCount) {
-      return this.setState({
-        err: '请填写一等奖单次抽奖数'
-      })
-    }
-    if (!data.secondCount) {
-      return this.setState({
-        err: '请填写二等奖单次抽奖数'
-      })
-    }
-    if (!data.thirdCount) {
-      return this.setState({
-        err: '请填写三等奖单次抽奖数'
-      })
-    }
-    if (Number(data.thirdCount)>Number(data.thirdPrize)||Number(data.secondCount)>Number(data.secondPrize)||Number(data.firstCount>data.firstPrize)) {
-      return this.setState({
-        err: '抽奖数不能大于奖池数'
       })
     }
     if(!data.restrictedDistance) {
