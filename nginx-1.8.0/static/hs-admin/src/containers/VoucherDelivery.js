@@ -58,24 +58,13 @@ class VoucherDelivery extends React.Component {
   
   render() {
     return (
-      <DocumentTitle title="优惠券派送设置">
+      <DocumentTitle title="链接领取礼券设置">
         <div className="freight">
           {/* 类名加上页面前缀防止冲突 */}
           <form onSubmit={this._submit} className="form-horizontal">
             <div className="form-group ">
               <label className="control-label col-md-3">优惠券派送设置：</label>
               <div className="col-md-9">
-
-                {/*
-                  如果 initValue 的值来自 api
-                  等拿到值再渲染
-                  {
-                    this.state.initValue ?
-                    <ValueGroup initValue={xxx}/>
-                    :
-                    null
-                  }                  
-                */}
 
                 {this.state.initValue
                   ? <ValueGroup

@@ -127,11 +127,16 @@ public interface BackendServiceI {
 	
 	List<SendCoupon> selectAllSendCoupon();
 	
+	List<LinkCoupon> selectAllLinkCoupon();
+	
 	List<EvaluationGifts> selectAllEvaluationGifts();
 	List<IntegralInGifts> selectAllIntegralInGifts();
 
 	boolean updateBindingRewards(FreightPost freightPost);
+	
 	boolean updateSendCoupon(FreightPost freightPost);
+	
+	boolean updateLinkCoupon(VipVoucherPost vipVoucherPost);
 
 	NapaStore getHongShiStore(String hsCode);
 

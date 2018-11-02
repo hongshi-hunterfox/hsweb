@@ -1,0 +1,40 @@
+.link-coupon {
+  background-color: white;
+}
+.link-coupon-logo {
+  text-align: center;
+}
+.link-coupon-logo-image {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  padding: 15px;
+}
+.link-coupon-select {
+  margin-top: 5px;
+  background-color: white;
+  padding: 10px 15px;
+  color: #a7a7a7;
+  margin-bottom: 5px;
+}
+
+.tail {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+  color: #afafaf;
+  margin-bottom: 15px;
+}
+
+.check-table-on {
+  margin-top: 30px;
+  padding: 5px 5px;
+  width: 350px;
+  height: 165px;
+  font-size: 15px;
+}
+
+.check-table-dui {
+  padding: 8px;
+  color: #6E6E6E;
+}

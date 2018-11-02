@@ -23,8 +23,28 @@ public class CartDto extends Cart{
 	
 	private int appointedTime;
 	
+	private String pickUpTimes;
+	
+	private String pickEndTimes;
+	
 	private Integer activityMarkers;
 	
+	public String getPickUpTimes() {
+		return pickUpTimes;
+	}
+
+	public void setPickUpTimes(String pickUpTimes) {
+		this.pickUpTimes = pickUpTimes;
+	}
+
+	public String getPickEndTimes() {
+		return pickEndTimes;
+	}
+
+	public void setPickEndTimes(String pickEndTimes) {
+		this.pickEndTimes = pickEndTimes;
+	}
+
 	public Integer getActivityMarkers() {
 		return activityMarkers;
 	}

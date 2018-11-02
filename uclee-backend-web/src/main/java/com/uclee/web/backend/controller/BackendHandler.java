@@ -96,6 +96,10 @@ public class BackendHandler {
 	public @ResponseBody boolean fullDiscountHandler(HttpServletRequest request,@RequestBody FreightPost freightPost) {
 		return backendService.updateSendCoupon(freightPost);
 	}
+	@RequestMapping("/linkCouponHandler")
+	public @ResponseBody boolean linkCouponHandler(HttpServletRequest request,@RequestBody VipVoucherPost vipVoucherPost) {
+		return backendService.updateLinkCoupon(vipVoucherPost);
+	}
 	@RequestMapping("/birthVoucherHandler")
 	public @ResponseBody boolean birthVoucherHandler(HttpServletRequest request,@RequestBody BirthVoucherPost birthVoucherPost) {
 		System.out.println("day=============="+birthVoucherPost.getDay());

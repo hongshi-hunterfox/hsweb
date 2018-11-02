@@ -74,7 +74,6 @@ public class ProductManagerHandler {
 	
 	@RequestMapping(value = "/doUpdateProductHandler", method = RequestMethod.POST)
 	public @ResponseBody Boolean doUpdateProductHandler(@RequestBody ProductForm productForm,HttpSession session) throws Exception {
-		System.out.println("productfrom============"+JSON.toJSONString(productForm));
 		return productManageService.updateProduct(productForm);
 		
 	}

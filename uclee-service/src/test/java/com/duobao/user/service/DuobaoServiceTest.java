@@ -558,5 +558,44 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 		}
 	}
 	
-	
+	//卡包测试
+		@Test
+		public void testPostCard() {
+			dataSource.switchDataSource("hs");
+//			try {
+//		        Var var = varMapper.selectByPrimaryKey(new Integer(1));
+//		        URL urlPost = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + var.getValue());// 创建连接  
+//		        HttpURLConnection connection = (HttpURLConnection) urlPost  
+//		                .openConnection();  
+//		        connection.setDoOutput(true);  
+//		        connection.setDoInput(true);  
+//		        connection.setUseCaches(false);  
+//		        connection.setInstanceFollowRedirects(true);  
+//		        connection.setRequestMethod("POST"); // 设置请求方式  
+//		        connection.setRequestProperty("Accept", "application/json"); // 设置接收数据的格式  
+//		        connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式  
+//		        connection.connect();  
+//		        OutputStreamWriter out = new OutputStreamWriter(  
+//		                connection.getOutputStream(), "UTF-8"); // utf-8编码  
+//		        out.append(JSON.toJSONString(sendData));  
+//		        out.flush();  
+//		        out.close();
+//		        
+//		        BufferedReader reader = new BufferedReader(new InputStreamReader(
+//		                connection.getInputStream()));
+//		        String lines;
+//		        StringBuffer sb = new StringBuffer("");
+//		        while ((lines = reader.readLine()) != null) {
+//		            lines = new String(lines.getBytes(), "utf-8");
+//		            sb.append(lines);
+//		        }
+//		        System.err.println(sb);
+//		        reader.close();
+//		        // 断开连接
+//		        connection.disconnect();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+		}
 }

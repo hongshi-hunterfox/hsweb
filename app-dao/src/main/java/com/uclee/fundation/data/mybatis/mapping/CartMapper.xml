@@ -22,6 +22,8 @@
     <result column="paramete" property="paramete" jdbcType="VARCHAR" />
     <result column="canshu_value_id" property="canshuValueId" jdbcType="INTEGER" />  
     <result column="activity_markers" property="activityMarkers" jdbcType="INTEGER" />
+    <result column="pick_up_times" property="PickUpTimes" jdbcType="VARCHAR" />  
+    <result column="pick_end_times" property="PickEndTimes" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     cart_id, user_id, product_id, specification_value_id, amount ,create_time, paramete, canshu_value_id, activity_markers
@@ -34,9 +36,9 @@
   </select>
   <select id="selectByUserIdAndCartId" resultMap="CartDto" parameterType="java.lang.Integer" >
     select 
-    <include refid="Base_Column_List" />
-    from web_cart
-    where cart_id = #{cartId,jdbcType=INTEGER} and user_id = #{userId,jdbcType=INTEGER}
+    A.*,b.*
+    from web_cart as A left join web_products as B on A.product_id=B.product_id
+    where A.cart_id = #{cartId,jdbcType=INTEGER} and A.user_id = #{userId,jdbcType=INTEGER}
   </select>
   <select id="selectUserCart" resultMap="CartDto" parameterType="java.lang.Integer" >
     select 

@@ -25,6 +25,7 @@ import com.uclee.fundation.data.mybatis.model.HongShiStore;
 import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
+import com.uclee.fundation.data.mybatis.model.Var;
 import com.uclee.fundation.data.web.dto.ValuePost;
 
 public class BackendServiceTest  extends AbstractServiceTests{
@@ -41,7 +42,7 @@ public class BackendServiceTest  extends AbstractServiceTests{
 	private ConfigMapper configMapper;
 	@Autowired
 	private BackendServiceI backendService;
-	
+
 	@Test
 	public void testCat(){
 		logger.info(JSON.toJSONString(categoryMapper.selectByParentId(2)));
@@ -111,16 +112,16 @@ public class BackendServiceTest  extends AbstractServiceTests{
 	}
 	
 	@Test
-	public void testAddProduct(){
+	public void testAddProduct() {
 		ProductForm product = generateProductForm();
 		productManageService.addProduct(product);
 	}
 	@Test
-	public void testUpdateProductData(){
+	public void testUpdateProductData() {
 		System.out.println(JSON.toJSONString(backendService.getProductForm(1)));
 	}
 	@Test
-	public void testLottery(){
+	public void testLottery() {
 		Map<String,Object> result = new TreeMap<String,Object>();
 		Map<String,Object> map = new TreeMap<String,Object>();
 		List<LotteryDrawConfig> configs = backendService.selectAllLotteryDrawConfig();
@@ -136,7 +137,7 @@ public class BackendServiceTest  extends AbstractServiceTests{
 	}
 	
 	@Test
-	public void testUpdateProduct(){
+	public void testUpdateProduct() {
 		Map<String,Object> map = new HashMap<String,Object>();
 		ProductForm productForm = backendService.getProductForm(1);
 		map.put("productForm", productForm);

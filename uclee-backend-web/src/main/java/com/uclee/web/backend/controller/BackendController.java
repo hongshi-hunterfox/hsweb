@@ -769,4 +769,28 @@ public class BackendController {
 		return result;
 	}
 	
+	@RequestMapping("/LinkCoupons")
+	public @ResponseBody Map<String,Object> LinkCoupons(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<LinkCoupon> linkCouponss = backendService.selectAllLinkCoupon();
+		int i = 0;
+		if(linkCouponss.size()==0){
+			LinkCoupon linkCoupon = new LinkCoupon();
+			linkCoupon.setVoucher("");
+			linkCoupon.setAmount(0);
+			linkCoupon.setName("");
+			linkCouponss.add(linkCoupon);
+		}
+		for(LinkCoupon item : linkCouponss){
+			map.put("myKey[" + i + "]", item.getVoucher());
+			map.put("myValue[" + i + "]", item.getAmount());
+			map.put("myValue1[" + i + "]", item.getName());
+	
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+	}
 }

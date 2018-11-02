@@ -220,7 +220,7 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private DataSourceFacade datasource;
 	@Autowired
-	private CategoryMapper categoryMapper;
+	private LinkCouponMapper linkCouponMapper;
 	@Autowired
 	private RefundOrderMapper refundOrderMapper;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
@@ -2795,7 +2795,6 @@ public class UserServiceImpl implements UserServiceI {
 		List<CartDto> result = new ArrayList<CartDto>();
 		for(CartDto item:cart){			
 			CartDto tmp = cartMapper.selectByUserIdAndCartId(userId, item.getCartId());
-			System.out.println("tmp==========="+tmp);
 			if(tmp!=null){
 				String specifcationStr = "款式：";
 				SpecificationValue specificationValue = specificationValueMapper.selectByPrimaryKey(tmp.getSpecificationValueId());
@@ -2813,17 +2812,21 @@ public class UserServiceImpl implements UserServiceI {
 					tmp.setCsshuxing(csshuxing.getSname());
 				}
 				List<ProductDto> products  = productMapper.selectOneImage(tmp.getProductId());
-				if(products.size()>0){
-					tmp.setTitle(products.get(0).getTitle());
-					if(products.get(0).getAppointedTime()!=null){
-						tmp.setAppointedTime(products.get(0).getAppointedTime());
+				for(ProductDto product:products){
+					tmp.setTitle(product.getTitle());
+					if(product.getAppointedTime()!=null){
+						tmp.setAppointedTime(product.getAppointedTime());
 					}
-					tmp.setImage(products.get(0).getImage());
+					tmp.setImage(product.getImage());
+					if(product.getPickUpTimes()!=null && product.getPickEndTimes() != null) {
+						tmp.setPickUpTimes(product.getPickUpTimes().substring(0, 10));
+						tmp.setPickEndTimes(product.getPickEndTimes().substring(0, 10));
+					}
+					
 				}
 				result.add(tmp);
 			}
 		}
-		
 		return result;
 	}
 
@@ -4592,6 +4595,21 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public int updateByInvalid(String orderSerialNum) {
 		return orderMapper.updateByInvalid(orderSerialNum);
+	}
+
+	@Override
+	public List<LinkCoupon> selectByPrimaryKey() {
+		return linkCouponMapper.selectByPrimaryKey();
+	}
+
+	@Override
+	public int insertLinkCouponLog(LinkCouponLogs record) {
+		return linkCouponMapper.insertLinkCouponLog(record);
+	}
+
+	@Override
+	public List<LinkCouponLogs> selectLinkCoponLog(String name, String oauthId) {
+		return linkCouponMapper.selectLinkCoponLog(name, oauthId);
 	}
 
 }

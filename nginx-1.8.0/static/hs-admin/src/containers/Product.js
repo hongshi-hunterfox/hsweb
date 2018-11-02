@@ -32,6 +32,8 @@ class Product extends React.Component {
       title: '',
       explain: '',
       appointedTime: 0,
+      pickUpTime:'',
+      pickEndTime:'',
       parameter: '',
       categoryId: '',
       images: [],
@@ -121,6 +123,30 @@ class Product extends React.Component {
                   name="appointedTime"
                   className="form-control"
                   value={this.state.appointedTime}
+                  onChange={this._simpleInputChange}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">取货起始时间：</label>
+              <div className="col-md-3">
+                <input
+                  type="date"
+                  name="pickUpTimes"
+                  className="form-control"
+                  value={this.state.pickUpTimes}
+                  onChange={this._simpleInputChange}
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">取货结束时间：</label>
+              <div className="col-md-3">
+                <input
+                  type="date"
+                  name="pickEndTimes"
+                  className="form-control"
+                  value={this.state.pickEndTimes}
                   onChange={this._simpleInputChange}
                 />
               </div>
@@ -567,6 +593,8 @@ class Product extends React.Component {
           title: res.body.productForm.title,
           explain: res.body.productForm.explain,
           appointedTime: res.body.productForm.appointedTime,
+          pickUpTimes: res.body.productForm.pickUpTimes,
+          pickEndTimes: res.body.productForm.pickEndTimes,
           parameter: res.body.productForm.parameter,
           categoryId: res.body.productForm.categoryId,
           //images: res.body.productForm.images,

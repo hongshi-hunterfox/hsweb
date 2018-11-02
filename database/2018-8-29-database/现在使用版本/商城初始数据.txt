@@ -178,8 +178,6 @@ insert into web_config (tag,value) values ('startUp','1');
 
 insert into web_config(tag,value) values('commentText','评论有惊喜哦~~');
 
-insert into web_config(tag,value) values('VoucherSendInformation','..')
-
 insert into web_config (tag,value) values('ACardMoreMembers',1);--是否开启多个微信可绑定一张卡(默认开启)
 
 insert into web_config(tag,value) values('bargainText','1.我是测试数据1. 2.我是测试数二 3.我是测试数据三')
@@ -203,6 +201,10 @@ insert into web_config(tag,value) values('signText','...')
 insert into web_config (tag,value) values ('zhengshu','D:\zhengshu\hs\apiclient_cert.p12'); --证书路径
 
 insert into web_config (tag,value) values ('zhengshuPassword','to119,0002'); --证书的密码(一般是web_config表中的merchantcode值,如果不是的话也需要写入到数据库中)
+
+ insert into web_config(tag, value) values('linkCouponText','1.没有绑定电子会员卡用户请先绑定电子会员卡。')
+--更新时修改config字段
+insert into web_config(tag,value) values('voucherSendInformation','.');
 
 /*province初始数据*/
 

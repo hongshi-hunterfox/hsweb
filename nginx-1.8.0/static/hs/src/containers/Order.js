@@ -62,6 +62,7 @@ class Order extends React.Component {
       businessEndTime:'',
       hsgooscode: [],
       appointedTime:'',
+      
       riqi:''
     }
     
@@ -727,7 +728,30 @@ salesInfoShowClick=()=>{
       })
       return false;
     }
-    req.get('/uclee-user-web/status')
+    
+    var pickUpGoods = this.state.cartItems.map((item, index) => {
+
+			var date0 = data.pickDateStr+' 00:00:00.0';
+			var date = item.pickUpTimes+' 00:00:00.0';
+			var date1 = item.pickEndTimes+' 00:00:00.0';
+			date0 = date0.substring(0,19);    
+			date0 = date0.replace(/-/g,'/'); 
+			date = date.substring(0,19);    
+			date = date.replace(/-/g,'/'); 
+			date1 = date1.substring(0,19);    
+			date1 = date1.replace(/-/g,'/'); 
+			var timestamp0 = new Date(date0).getTime();
+			var timestamp = new Date(date).getTime();
+			var timestamp1 = new Date(date1).getTime();
+    	if(timestamp0<timestamp || timestamp0>timestamp1){	
+      	return -1;
+    	}
+
+    })
+	if(pickUpGoods.indexOf(-1) !== -1 ) {
+		alert("订单包含不在取货时间范围的产品!")
+	}else{
+		req.get('/uclee-user-web/status')
     .end((err, res) => {
       if (err) {
         return err
@@ -764,6 +788,7 @@ salesInfoShowClick=()=>{
           'seller/payment?paymentSerialNum=' + resJson.paymentSerialNum
       }
     })
+	}
     return false
   }
 }
@@ -868,6 +893,10 @@ class OrderItem extends React.Component {
            {item.appointedTime!==0&&item.appointedTime!==null ?
           	"提前"+item.appointedTime+"小时预定"
           	:null
+           }
+           {item.pickUpTimes !== null && item.pickEndTimes !== null ?
+          	"取货时间:"+item.pickUpTimes+"至"+item.pickEndTimes
+  					:null
            }
             <span className="price pull-right">数量：x {item.amount}</span>
           </div>

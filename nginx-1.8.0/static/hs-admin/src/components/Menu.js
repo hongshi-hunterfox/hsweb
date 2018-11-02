@@ -123,6 +123,11 @@ class Menu extends React.Component {
 								</Link>
 							</li>
 							<li>
+								<Link to={'/linkCoupon?merchantCode='+localStorage.getItem('merchantCode')}>
+								    指定链接送券
+								</Link>
+							</li>
+							<li>
 								<Link to={'/bargain-list?merchantCode='+localStorage.getItem('merchantCode')}>
 								    砍价活动
 								</Link>

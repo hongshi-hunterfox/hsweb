@@ -29,7 +29,47 @@ public class Product {
     private String parameter;
     
     private Integer appointedTime;
+    
+    private Date pickUpTime;
+    
+    private Date pickEndTime;
+       
+    private String PickUpTimes;
+    
+    private String PickEndTimes;
+    
+    public String getPickUpTimes() {
+		return PickUpTimes;
+	}
 
+	public void setPickUpTimes(String pickUpTimes) {
+		PickUpTimes = pickUpTimes;
+	}
+
+	public String getPickEndTimes() {
+		return PickEndTimes;
+	}
+
+	public void setPickEndTimes(String pickEndTimes) {
+		PickEndTimes = pickEndTimes;
+	}
+
+	public Date getPickUpTime() {
+		return pickUpTime;
+	}
+
+    public void setPickUpTime(Date pickUpTime) {
+		this.pickUpTime = pickUpTime;
+	}
+    
+    public Date getPickEndTime() {
+		return pickEndTime;
+	}
+    
+    public void setPickEndTime(Date pickEndTime) {
+		this.pickEndTime = pickEndTime;
+	}
+    
 	public Boolean getIsShippingFree() {
 		return isShippingFree;
 	}

@@ -306,6 +306,8 @@ class Detail extends React.Component {
       parameters:[],
       title: null,
       numbers: '',
+      pickUpTime: '',
+      pickEndTime:'',
       parameter: '',
       explain: null,
       appointedTime: 0,

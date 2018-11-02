@@ -55,6 +55,26 @@ create table web_coupons_products_links(
 	pid int not null
 )
 
+--链接领券表
+create table web_link_coupon(
+id int IDENTITY(1,1) NOT NULL,
+voucher varchar(255) NOT NULL,
+amount int NOT NULL,
+name name varchar(255),
+)
+
+--领取记录
+ create table web_link_coupon_logs(
+	id int IDENTITY(1,1) NOT NULL,
+	oauth_id varchar(255) not null,
+	name varchar(255) not null,
+	day  datetime not null,
+ )
+
+
+
+
+
 --满额送礼券
 CREATE TABLE [dbo].[web_full_send_coupon](
 	[id] [int] IDENTITY(1,1) NOT NULL,

@@ -55,6 +55,15 @@ public class ConfigPost {
 	private String notice;
 	private String perfectBirthText;
 	private String whetherEnableAlipay;
+	private String linkCouponText;
+	
+	public String getLinkCouponText() {
+		return linkCouponText;
+	}
+	
+	public void setLinkCouponText(String linkCouponText) {
+		this.linkCouponText = linkCouponText;
+	}
 	
 	public String getWhetherEnableAlipay() {
 		return whetherEnableAlipay;

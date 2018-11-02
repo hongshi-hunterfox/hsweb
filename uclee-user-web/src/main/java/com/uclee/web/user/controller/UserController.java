@@ -576,10 +576,9 @@ public class UserController extends CommonUserHandler{
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
 		Date date = new Date();
-		//拼接预定小时时间--kx
+		//拼接预定小时时间
 		String appointedTime= "";
 		for(CartDto item:carts){			
-			System.out.println("item.getAppointedTime() = "+item.getAppointedTime());
 			date.setHours(new Date().getHours()+item.getAppointedTime());
 			appointedTime=appointedTime+date.getHours()+",";
 		}
@@ -603,7 +602,7 @@ public class UserController extends CommonUserHandler{
 		map.put("appointedTime",time.format(date.getTime()));
 		map.put("riqi",riqi.format(date));
 		System.out.println("Hours"+time.format(date.getTime()));
-		
+
 		for(CartDto item:carts){
 			long value = date.getTime();
 			long value1 = 0;
@@ -614,10 +613,8 @@ public class UserController extends CommonUserHandler{
 			if(item.getEndTime()!=null){
 			value2 = item.getEndTime().getTime();
 			}
-			
-			System.out.println("cartid============"+item.getCartId());
 			BargainSetting price = userService.getPrice(item.getCartId());//获取砍价购买金额
-			//判断提交订单商品是否有促销价--skx
+			//判断提交订单商品是否有促销价
 			if(value1!=0||value2!=0){
 				if(item.getPromotion()!=null && value>value1 && value<value2){
 					total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
@@ -653,19 +650,13 @@ public class UserController extends CommonUserHandler{
 				item.setMoney(price.getPrice());
 			}
 		}
-		logger.info("carts.size============="+carts.size());
 		//把goodscode以字符串拼接在一起
 		String a="";
 		for(int i=0;i<carts.size();i++){
-			logger.info("item.getCartId()============="+carts.get(i).getCartId());
 			Cart valueid=userService.selectValueId(userId, carts.get(i).getCartId());
 			SpecificationValue hsgooscode = userService.selectGoods(valueid.getSpecificationValueId());
 			a=a+hsgooscode.getHsGoodsCode()+",";
-			logger.info("item.getCartId()============="+hsgooscode.getHsGoodsCode());
 		}
-
-		logger.info("hsgooscode="+JSON.toJSONString(a)); 
-		
 		map.put("hsgooscode",JSON.toJSONString(a));
 		map.put("cartItems", carts);
 		map.put("isShippingFree", isShippingFree);
@@ -1605,8 +1596,7 @@ public class UserController extends CommonUserHandler{
 		for(int i=0;i<evaluationGifts.get(0).getAmount();i++){
 		List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGifts.get(0).getVoucherCode());
 		if(coupon!=null && !coupon.isEmpty()){
-			if(coupon != null && coupon.size()>0){
-				coupon.get(0);                       
+			if(coupon != null && coupon.size()>0){                      
 				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode(),"评价赠送礼券");
 				if(a>0){
 					System.out.println("发送成功");
@@ -2021,6 +2011,63 @@ public class UserController extends CommonUserHandler{
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
 		return backendService.sendSucessMsg(userId);
+	}
+	
+	/**
+	 * @Description:可领取礼券
+	 */
+	@RequestMapping("/linkCouponList")
+	public @ResponseBody Map<String,Object> linkCouponList(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<LinkCoupon> couponList = userService.selectByPrimaryKey();
+		for(LinkCoupon item:couponList){
+			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(item.getVoucher());
+			if(coupon==null || coupon.size()==0){
+				item.setName("已抢光！");
+			}
+			map.put("couponList", couponList);
+		}
+		
+		return map;
+	}
+	
+
+	/**
+	 * @Description:领取礼券
+	 */
+	@RequestMapping("/receiveCoupon")
+	public @ResponseBody Map<String,Object> receiveCoupon(HttpServletRequest request, String voucher, String name) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		vipIdentity vip = userService.selectVipIdentity(oauthLogin.getOauthId());
+		List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(voucher);
+		List<LinkCouponLogs> log = userService.selectLinkCoponLog(name, oauthLogin.getOauthId());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String d1 = sdf.format(log.get(0).getDay());//上次领取时间
+		String d2 = sdf.format(new Date());//当前时间
+		System.out.println(d1.equals(d2));//判断是否是同一天
+		//不是同一天才能继续领取
+		if(!d1.equals(d2)){
+			if(vip != null){
+				if(coupon!=null || coupon.size()>0){ 
+					hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),voucher,"会员领礼券");
+					LinkCouponLogs linkCouponLogs = new LinkCouponLogs();
+					linkCouponLogs.setName(name);
+					linkCouponLogs.setOauthId(oauthLogin.getOauthId());
+					linkCouponLogs.setDay(new Date());
+					userService.insertLinkCouponLog(linkCouponLogs);
+					map.put("success", true);
+				}
+			}else{
+				map.put("vip", false);
+			}
+		}else{
+			map.put("log", false);
+		}
+		return map;
 	}
 	
  }

@@ -49,6 +49,7 @@ import SwitchShop from './containers/SwitchShop.js'
 import bargain from './containers/bargain.js'
 import LaunchBargain from './containers/LaunchBargain.js'
 import difference from './containers/Difference.js'
+import LinkCoupon from './containers/LinkCoupon.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -99,6 +100,7 @@ ReactDOM.render(
       <Route path="bargain" component={bargain}/>
       <Route path="launch-bargain/:valueId" component={LaunchBargain}/>
       <Route path="difference" component={difference}/>
+      <Route path="link-coupon" component={LinkCoupon}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

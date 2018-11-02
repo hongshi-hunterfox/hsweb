@@ -53,6 +53,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private SendCouponMapper sendCouponMapper;
 	@Autowired
+	private LinkCouponMapper linkCouponMapper;
+	@Autowired
 	private EvaluationGiftsMapper evaluationGiftsMapper;
 	@Autowired
 	private IntegralInGiftsMapper integralinGiftsMapper;
@@ -277,6 +279,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, configPost.getWhetherEnableAlipay());
 		}else{
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, "");
+		}if(configPost.getVoucherSendInformation()!=null){
+			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
+		}else{
+			configMapper.updateByTag(WebConfig.linkCouponText, "");
 		}
 		
 		return true;
@@ -438,7 +444,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getWhetherEnableAlipay()!=null) {
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, configPost.getWhetherEnableAlipay());
 		}
-		
+		if (configPost.getLinkCouponText()!=null) {
+			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
+		}
 		return true;
 	}
 	@Override
@@ -595,7 +603,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getWhetherEnableAlipay()!=null) {
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, configPost.getWhetherEnableAlipay());
 		}
-		
+		if (configPost.getLinkCouponText()!=null) {
+			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
+		}
 		return true;
 	}
 	@Override
@@ -875,6 +885,11 @@ public class BackendServiceImpl implements BackendServiceI {
 			productForm.setAppointedTime(product.getAppointedTime());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if(product.getPickUpTime() != null && product.getPickEndTime() != null){
+				productForm.setPickUpTimes(sdf.format(product.getPickUpTime()));
+				productForm.setPickEndTimes(sdf.format(product.getPickEndTime()));
+			}
 			productForm.setDescription(FileUtil.UrlRequest(product.getDescription()));
 		}
 		ProductCategoryLinkKey link = productCategoryLinkMapper.selectByProductId(productId);
@@ -1121,6 +1136,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setPerfectBirthText(config.getValue());
 			}else if(config.getTag().equals(WebConfig.whetherEnableAlipay)){
 				configPost.setWhetherEnableAlipay(config.getValue());
+			}else if(config.getTag().equals(WebConfig.linkCouponText)){
+				configPost.setLinkCouponText(config.getValue());
 			}
 		}
 		return configPost;
@@ -2036,6 +2053,32 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return true;
 	}
-	
-	
+	@Override
+	public boolean updateLinkCoupon(VipVoucherPost vipVoucherPost) {
+		linkCouponMapper.deleteAll();
+		System.out.println("wdew=========="+JSON.toJSONString(vipVoucherPost));
+		if(vipVoucherPost.getMyKey()==null||vipVoucherPost.getMyValue()==null||vipVoucherPost.getMyKey().size()==0||vipVoucherPost.getMyValue().size()==0||vipVoucherPost.getMyValue1()==null||vipVoucherPost.getMyValue1().size()==0){
+			return false;
+			
+		}
+		
+		for(Map.Entry<Integer, String> entry : vipVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||vipVoucherPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, String> entry : vipVoucherPost.getMyKey().entrySet()){
+			LinkCoupon linkCoupon = new LinkCoupon();
+			linkCoupon.setVoucher(entry.getValue().toString());
+			linkCoupon.setAmount(Integer.parseInt(vipVoucherPost.getMyValue().get(entry.getKey())));
+			linkCoupon.setName(vipVoucherPost.getMyValue1().get(entry.getKey()));
+			linkCouponMapper.insertSelective(linkCoupon);
+		}
+		return true;
+	}
+	@Override
+	public List<LinkCoupon> selectAllLinkCoupon() {
+		
+		return linkCouponMapper.selectOne();
+	}
 }

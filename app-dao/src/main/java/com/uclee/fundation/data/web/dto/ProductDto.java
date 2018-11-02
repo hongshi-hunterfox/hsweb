@@ -41,6 +41,46 @@ public class ProductDto extends Product{
 	
 	private String endTimeStr;
 	
+	private Date pickUpTime;
+	
+	private Date pickEndTime;	
+    
+    private String PickUpTimes;
+    
+    private String PickEndTimes;
+	
+	public String getPickEndTimes() {
+		return PickEndTimes;
+	}
+
+	public void setPickEndTimes(String pickEndTimes) {
+		PickEndTimes = pickEndTimes;
+	}
+
+	public String getPickUpTimes() {
+		return PickUpTimes;
+	}
+
+	public void setPickUpTimes(String pickUpTimes) {
+		PickUpTimes = pickUpTimes;
+	}
+
+	public Date getPickUpTime() {
+		return pickUpTime;
+	}
+
+	public void setPickUpTime(Date pickUpTime) {
+		this.pickUpTime = pickUpTime;
+	}
+
+	public Date getPickEndTime() {
+		return pickEndTime;
+	}
+
+	public void setPickEndTime(Date pickEndTime) {
+		this.pickEndTime = pickEndTime;
+	}
+
 	public List<String> getGiftCouponsInfo() {
 		return giftCouponsInfo;
 	}

@@ -15,6 +15,10 @@
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
     <result column="parameter" property="parameter" jdbcType="VARCHAR" />
     <result column="appointed_time" property="appointedTime" jdbcType="INTEGER"/>
+    <result column="pick_up_time" property="pickUpTime" jdbcType="TIMESTAMP"/>
+    <result column="pick_end_time" property="pickEndTime" jdbcType="TIMESTAMP"/>
+    <result column="pick_up_time" property="pickUpTimes" jdbcType="VARCHAR"/>
+    <result column="pick_end_time" property="pickEndTimes" jdbcType="VARCHAR"/>
   </resultMap>
    <resultMap id="ProductGe" type="com.uclee.fundation.data.mybatis.model.ProductGe" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -35,6 +39,10 @@
     <result column="is_show" property="isShow" jdbcType="BIT" />
     <result column="sort_value" property="sortValue" jdbcType="INTEGER"/>
     <result column="appointed_time" property="appointedTime" jdbcType="INTEGER"/>
+    <result column="pick_up_time" property="pickUpTime" jdbcType="TIMESTAMP"/>
+    <result column="pick_end_time" property="pickEndTime" jdbcType="TIMESTAMP"/>
+    <result column="pick_up_time" property="pickUpTimes" jdbcType="VARCHAR"/>
+    <result column="pick_end_time" property="pickEndTimes" jdbcType="VARCHAR"/>
   </resultMap>
   <resultMap id="ProductParameters" type="com.uclee.fundation.data.mybatis.model.ProductParameters" >
     <id column="id" property="id" jdbcType="INTEGER" />
@@ -43,7 +51,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value,parameter,
-    appointed_time
+    appointed_time, pick_up_time, pick_end_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -141,11 +149,11 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
-      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,parameter,appointed_time
+      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,parameter,appointed_time,pick_up_time,pick_end_time
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT},
-      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR},#{appointedTime,jdbcType=INTEGER}
+      #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR},#{appointedTime,jdbcType=INTEGER},#{pickUpTimes,jdbcType=VARCHAR},#{pickEndTimes,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
@@ -189,6 +197,12 @@
       <if test="appointedTime !=null">
       	appointed_time,
       </if>
+      <if test="pickUpTimes !=null">
+      	pick_up_time,
+      </if>
+      <if test="pickEndTimes !=null">
+      	pick_end_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -227,6 +241,12 @@
       	 #{parameter,jdbcType=VARCHAR},
       <if test="appointedTime !=null">
       	 #{appointedTime,jdbcType=INTEGER},
+      </if>
+      <if test="pickUpTimes !=null">
+      	 #{pickUpTimes,jdbcType=VARCHAR},
+      </if>
+      <if test="pickEndTimes !=null">
+      	 #{pickEndTimes,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -267,6 +287,8 @@
       <if test="appointedTime !=null">
       	appointed_time = #{appointedTime,jdbcType=INTEGER},
       </if>
+      	pick_up_time = #{pickUpTimes,jdbcType=VARCHAR},
+      	pick_end_time = #{pickEndTimes,jdbcType=VARCHAR},
     </set>
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
@@ -283,7 +305,9 @@
       is_show = #{isShow,jdbcType=BIT},
       sort_value = #{sortValue,jdbcType=INTEGER},
       parameter = #{parameter,jdbcType=VARCHAR},
-      appointed_time = #{appointedTime,jdbcType=INTEGER}
+      appointed_time = #{appointedTime,jdbcType=INTEGER},
+      pick_end_time = #{pickEndTimes,jdbcType=VARCHAR},
+      pick_up_time = #{pickUpTimes,jdbcType=VARCHAR}
     where product_id = #{appointedTime,jdbcType=INTEGER}
   </update>
 

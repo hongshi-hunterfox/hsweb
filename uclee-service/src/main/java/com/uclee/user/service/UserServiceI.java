@@ -367,4 +367,10 @@ public interface UserServiceI {
 	Order selectBySerialNum(String orderSerialNum);
 	
 	int updateByInvalid(String orderSerialNum);
+	
+	List<LinkCoupon> selectByPrimaryKey();
+	
+	int insertLinkCouponLog(LinkCouponLogs record);
+	
+	List<LinkCouponLogs> selectLinkCoponLog(@Param("name") String name, @Param("oauthId") String oauthId);
 }

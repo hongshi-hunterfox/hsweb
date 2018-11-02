@@ -43,6 +43,7 @@ import EditCategory from './containers/EditCategory'
 import BirthVoucher from './containers/BirthVoucher'
 import FullCut from './containers/FullCut'
 import FullSendCoupon from './containers/FullSendCoupon'
+import LinkCoupon from './containers/LinkCoupon'
 import BindMemberSetting from './containers/BindMemberSetting'
 import EvaluationConfiguration from './containers/EvaluationConfiguration'
 import IntegralInConfiguration from './containers/IntegralInConfiguration'
@@ -89,6 +90,7 @@ ReactDOM.render(
       <Route path="integralinConfiguration" component={IntegralInConfiguration} />
       <Route path="FullCut" component={FullCut} />
       <Route path="FullSendCoupon" component={FullSendCoupon} />
+      <Route path="LinkCoupon" component={LinkCoupon} />
       <Route path="user-unbuy-list" component={UserUnBuyList} />
       <Route path="user-birth-list" component={UserBirthList} />
       <Route path="quick-navi-product" component={QuickNaviProduct} />
