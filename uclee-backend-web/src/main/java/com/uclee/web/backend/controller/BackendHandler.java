@@ -57,8 +57,8 @@ public class BackendHandler {
 		return backendService.isCouponAmount(amount);
 	}
 	@RequestMapping("/sendUnbuyMsg")
-	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId) {
-		return backendService.sendUnbuyMsg(userId);
+	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
+		return backendService.sendUnbuyMsg(userId,sendVoucher);
 	}
 	@RequestMapping("/delCategory")
 	public @ResponseBody Map<String,Object> delCategory(HttpServletRequest request,Integer categoryId) {
@@ -108,6 +108,14 @@ public class BackendHandler {
 	@RequestMapping("/truncateBirthVoucherHandler")
 	public @ResponseBody boolean truncateBirthVoucherHandler(HttpServletRequest request) {
 		return backendService.truncateBirthVoucherHandler();
+	}
+	@RequestMapping("/consumerVoucherHandler")
+	public @ResponseBody boolean consumerVoucherHandler(HttpServletRequest request,@RequestBody ConsumerVoucherPost consumerVoucherPost) {
+		return backendService.updateConsumerVoucher(consumerVoucherPost);
+	}
+	@RequestMapping("/truncateConsumerVoucherHandler")
+	public @ResponseBody boolean truncateConsumerVoucherHandler(HttpServletRequest request) {
+		return backendService.truncateConsumerVoucherHandler();
 	}
 	@RequestMapping("/vipVoucherHandler")
 	public @ResponseBody boolean vipVoucherHandler(HttpServletRequest request,@RequestBody VipVoucherPost vipVoucherPost) {

@@ -252,6 +252,23 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
+	
+	@RequestMapping("/consumerVoucher")
+	public @ResponseBody Map<String,Object> consumerVoucher(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new LinkedMap();
+		List<ConsumerVoucher> consumerVoucher = backendService.selectAllConsumerVoucher();
+		int i=0;
+		for(ConsumerVoucher item : consumerVoucher){
+			map.put("myKey["+ i + "]",item.getVoucherCode());
+			map.put("myValue[" + i + "]",item.getAmount());
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+		
+	}
 	@RequestMapping("/vipVoucher")
 	public @ResponseBody Map<String,Object> vipVoucher(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();

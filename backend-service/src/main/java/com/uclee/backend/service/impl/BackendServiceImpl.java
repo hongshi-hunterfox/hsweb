@@ -75,6 +75,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private BirthVoucherMapper birthVoucherMapper;
 	@Autowired
+	private ConsumerVoucherMapper consumerVoucherMapper;
+	@Autowired
 	private OauthLoginMapper oauthLoginMapper;
 	@Autowired
 	private ProductGroupMapper productGroupMapper;
@@ -1301,7 +1303,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		return false;
 	}
 	@Override
-	public boolean sendUnbuyMsg(Integer userId) {
+	public boolean sendUnbuyMsg(Integer userId,boolean sendVoucher) {
 		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
 		if(login!=null){
 			String nickName="";
@@ -1311,7 +1313,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"消费提醒"};
-			Config config = configMapper.getByTag("buyTmpId");
+			Config config = configMapper.getByTag("birthTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
 			Config config3 = configMapper.getByTag(WebConfig.salesText);
@@ -1322,6 +1324,26 @@ public class BackendServiceImpl implements BackendServiceI {
 				msgRecord.setType(2);
 				msgRecord.setUserId(userId);
 				msgRecordMapper.insertSelective(msgRecord);
+			}
+			//联动送礼券
+			if(sendVoucher) {
+				try {
+					List<ConsumerVoucher> consumerVouchers = consumerVoucherMapper.selectAll();
+					for(ConsumerVoucher consumerVoucher:consumerVouchers) {
+						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(consumerVoucher.getVoucherCode());
+						if (coupon != null && coupon.size() > 0) {
+							try {
+								for(int i=0;i<consumerVoucher.getAmount();i++) {
+									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), consumerVoucher.getVoucherCode(),"定向发券");
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 			return true;
 		}
@@ -2053,6 +2075,34 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		return true;
 	}
+	@Override
+	public List<ConsumerVoucher> selectAllConsumerVoucher() {
+		return consumerVoucherMapper.selectAll();
+	}
+		@Override
+	public boolean updateConsumerVoucher(ConsumerVoucherPost consumerVoucherPost) {
+		int delAll  = consumerVoucherMapper.deleteAll();
+		if(consumerVoucherPost.getMyKey()==null||consumerVoucherPost.getMyValue()==null||consumerVoucherPost.getMyKey().size()==0||consumerVoucherPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, String> entry : consumerVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||consumerVoucherPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, String> entry : consumerVoucherPost.getMyKey().entrySet()){
+			ConsumerVoucher tmp = new ConsumerVoucher();
+			tmp.setAmount(Integer.parseInt(consumerVoucherPost.getMyValue().get(entry.getKey())));
+			tmp.setVoucherCode(entry.getValue().toString());
+			consumerVoucherMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+	@Override
+	public boolean truncateConsumerVoucherHandler() {
+		int delAll = consumerVoucherMapper.deleteAll();	
+		return true;
+	}	
 	@Override
 	public boolean updateLinkCoupon(VipVoucherPost vipVoucherPost) {
 		linkCouponMapper.deleteAll();

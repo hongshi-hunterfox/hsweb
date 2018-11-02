@@ -109,12 +109,7 @@ class ActivityConfig extends React.Component {
                   <option value="no">停用</option>
                 </select>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>消费短信内容：</label>
-              <div className="col-md-9" style={{marginTop:'10px'}}>
-                {/*<input type="text" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}/>*/}
-                <textarea rows="3" cols="20" value={this.state.config.salesText} name="salesText" className="form-control" onChange={this._change}>
-                </textarea>
-              </div>
+              
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>通知消息内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
               {/*<input type="text" value={this.state.config.notice} name="notice" className="form-control" onChange={this._change}/>*/}

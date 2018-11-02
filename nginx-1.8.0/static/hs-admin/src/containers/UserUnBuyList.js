@@ -32,6 +32,40 @@ class UserUnBuyList extends React.Component {
       })
   }
   _send = userId => {
+  	var conf = confirm('是否要联动送礼券？');
+    var url='';
+    if(conf){
+      url='/uclee-backend-web/sendUnbuyMsg?userId=' + userId+'&sendVoucher=1';
+      req
+      .get('/uclee-backend-web/isVoucherLimit?amount=1')
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+        if (!res.body.result) {
+          if(res.body.text){
+            alert(res.body.text);
+          }else{
+            alert('礼券数量不符，数量不足');
+          }
+        }  else {
+          req
+            .get(url)
+            .end((err, res) => {
+              if (err) {
+                return err
+              }
+              if (res.body) {
+                alert('发送成功')
+                window.location =
+                  '/user-unbuy-list?day=' + this.props.location.query.day
+              } else {
+                alert('网络繁忙，请稍后重试')
+              }
+            })
+        }
+      })
+    }else{
     req
       .get('/uclee-backend-web/sendUnbuyMsg?userId=' + userId)
       .end((err, res) => {
@@ -46,6 +80,7 @@ class UserUnBuyList extends React.Component {
           alert('网络繁忙，请稍后重试')
         }
       })
+    }
   }
   _change = e => {
     this.setState({
@@ -123,6 +158,9 @@ class UserUnBuyList extends React.Component {
             </div>
           </div>
           <button className="btn btn-primary pull-left" onClick={this._sendAll}>批量发送</button>
+          <button className="btn btn-danger" onClick={()=>{window.location='/consumer-voucher?merchantCode='+localStorage.getItem('merchantCode')}}>
+              	 礼券赠送设置
+          </button>
           <table className="table table-bordered table-striped">
             <thead>
               <tr>

@@ -1129,6 +1129,14 @@ CREATE TABLE web_users (
 
  );
 
+If Object_ID('web_consumer_voucher','U') Is Null
+
+CREATE TABLE web_consumer_voucher(
+	id int IDENTITY(1,1) not null,
+	voucher_code varchar(255) not null,
+	amount int not null
+);
+
 If Object_id('web_user_list','U') Is Null
 Begin
 	CREATE TABLE web_user_list(

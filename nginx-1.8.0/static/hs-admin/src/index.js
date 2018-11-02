@@ -41,6 +41,7 @@ import EditModuleSetting from './containers/EditModuleSetting'
 import ShakeMonitor from './containers/ShakeMonitor'
 import EditCategory from './containers/EditCategory'
 import BirthVoucher from './containers/BirthVoucher'
+import ConsumerVoucher from './containers/ConsumerVoucher'
 import FullCut from './containers/FullCut'
 import FullSendCoupon from './containers/FullSendCoupon'
 import LinkCoupon from './containers/LinkCoupon'
@@ -82,6 +83,7 @@ ReactDOM.render(
       <Route path="store-intro" component={StoreIntro} />
       <Route path="lottery" component={Lottery} />
       <Route path="birth-voucher" component={BirthVoucher} />
+      <Route path="consumer-voucher" component={ConsumerVoucher} />
       <Route path="user-list" component={UserList} />
       <Route path="comment-list" component={CommentList} />
       <Route path="fullCutShipping" component={FullCutShipping} />

@@ -67,7 +67,7 @@ public interface BackendServiceI {
 
 	List<UserProfile> getUserListForUnBuy(Integer day);
 
-	boolean sendUnbuyMsg(Integer userId);
+	boolean sendUnbuyMsg(Integer userId, boolean sendVoucher);
 
 	boolean delStore(Integer storeId);
 	
@@ -109,9 +109,13 @@ public interface BackendServiceI {
 
 	List<BirthVoucher> selectAllBirthVoucher();
 	
+	List<ConsumerVoucher> selectAllConsumerVoucher();
+	
 	List<VipVoucher> selectAllVipVoucher();
 
 	boolean updateBirthVoucher(BirthVoucherPost birthVoucherPost);
+	
+	boolean updateConsumerVoucher(ConsumerVoucherPost consumerVoucherPost);
 	
 	boolean updateVipVoucher(VipVoucherPost vipVoucherPost);
 
@@ -147,6 +151,8 @@ public interface BackendServiceI {
 	boolean delComment(Integer id);
 
 	boolean truncateBirthVoucherHandler();
+	
+	boolean truncateConsumerVoucherHandler();
 
 	boolean truncateVipVoucherHandler();
 	
