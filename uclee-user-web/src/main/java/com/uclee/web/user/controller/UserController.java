@@ -3,15 +3,75 @@ package com.uclee.web.user.controller;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.backend.service.BackendServiceI;
-import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
+import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
 import com.uclee.fundation.config.links.TermGroupTag;
 import com.uclee.fundation.config.links.WebConfig;
-import com.uclee.fundation.data.mybatis.mapping.*;
-import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.mybatis.mapping.BindingRewardsMapper;
+import com.uclee.fundation.data.mybatis.mapping.CommentMapper;
+import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
+import com.uclee.fundation.data.mybatis.mapping.EvaluationGiftsMapper;
+import com.uclee.fundation.data.mybatis.mapping.FullCutMapper;
+import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
+import com.uclee.fundation.data.mybatis.mapping.IntegralInGiftsMapper;
+import com.uclee.fundation.data.mybatis.mapping.ProductMapper;
+import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
+import com.uclee.fundation.data.mybatis.mapping.RechargeRewardsRecordMapper;
+import com.uclee.fundation.data.mybatis.mapping.ShippingFullCutMapper;
+import com.uclee.fundation.data.mybatis.mapping.SignRecordMapper;
+import com.uclee.fundation.data.mybatis.model.Balance;
+import com.uclee.fundation.data.mybatis.model.Banner;
+import com.uclee.fundation.data.mybatis.model.BargainLog;
+import com.uclee.fundation.data.mybatis.model.BargainSetting;
+import com.uclee.fundation.data.mybatis.model.BindingRewards;
+import com.uclee.fundation.data.mybatis.model.Cart;
+import com.uclee.fundation.data.mybatis.model.Category;
+import com.uclee.fundation.data.mybatis.model.City;
+import com.uclee.fundation.data.mybatis.model.Comment;
+import com.uclee.fundation.data.mybatis.model.Config;
+import com.uclee.fundation.data.mybatis.model.DataSourceInfo;
+import com.uclee.fundation.data.mybatis.model.DeliverAddr;
+import com.uclee.fundation.data.mybatis.model.EvaluationGifts;
+import com.uclee.fundation.data.mybatis.model.Freight;
+import com.uclee.fundation.data.mybatis.model.FullCut;
+import com.uclee.fundation.data.mybatis.model.HomeQuickNavi;
+import com.uclee.fundation.data.mybatis.model.HongShiCommonResult;
+import com.uclee.fundation.data.mybatis.model.HongShiCoupon;
+import com.uclee.fundation.data.mybatis.model.HongShiOrder;
+import com.uclee.fundation.data.mybatis.model.HongShiRecharge;
+import com.uclee.fundation.data.mybatis.model.HongShiVip;
+import com.uclee.fundation.data.mybatis.model.HsVip;
+import com.uclee.fundation.data.mybatis.model.LaunchBargain;
+import com.uclee.fundation.data.mybatis.model.LinkCoupon;
+import com.uclee.fundation.data.mybatis.model.LinkCouponLogs;
+import com.uclee.fundation.data.mybatis.model.IntegralInGifts;
+import com.uclee.fundation.data.mybatis.model.Lnsurance;
+import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
+import com.uclee.fundation.data.mybatis.model.LotteryRecord;
+import com.uclee.fundation.data.mybatis.model.NapaStore;
+import com.uclee.fundation.data.mybatis.model.OauthLogin;
+import com.uclee.fundation.data.mybatis.model.Order;
+import com.uclee.fundation.data.mybatis.model.Payment;
+import com.uclee.fundation.data.mybatis.model.PaymentOrder;
+import com.uclee.fundation.data.mybatis.model.Product;
+import com.uclee.fundation.data.mybatis.model.ProductGroup;
+import com.uclee.fundation.data.mybatis.model.ProductParameters;
+import com.uclee.fundation.data.mybatis.model.Province;
+import com.uclee.fundation.data.mybatis.model.RechargeConfig;
+import com.uclee.fundation.data.mybatis.model.RechargeRewardsRecord;
+import com.uclee.fundation.data.mybatis.model.RefundOrder;
+import com.uclee.fundation.data.mybatis.model.Region;
+import com.uclee.fundation.data.mybatis.model.ShippingFullCut;
+import com.uclee.fundation.data.mybatis.model.SignRecord;
+import com.uclee.fundation.data.mybatis.model.SpecificationValue;
+import com.uclee.fundation.data.mybatis.model.User;
+import com.uclee.fundation.data.mybatis.model.UserInvitedLink;
+import com.uclee.fundation.data.mybatis.model.UserProfile;
+import com.uclee.fundation.data.mybatis.model.WxUser;
+import com.uclee.fundation.data.mybatis.model.vipIdentity;
 import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
@@ -21,7 +81,6 @@ import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import com.uclee.user.util.JwtUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
-
 import joptsimple.internal.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,11 +93,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -97,7 +163,7 @@ public class UserController extends CommonUserHandler{
 	
 	@RequestMapping("/getShakePageData")
 	public @ResponseBody Map<String,Object> getShakePageData(HttpServletRequest request) {
-		
+
 		return userService.getShakePageData();
 	}
 	/** 
@@ -216,15 +282,15 @@ public class UserController extends CommonUserHandler{
 		
 		return false;
 	}
-	
-	/** 
-	* @Title: verifyCode 
-	* @Description: 老板助手验证码发送类 
+
+	/**
+	* @Title: verifyCode
+	* @Description: 老板助手验证码发送类
 	* @param @param phone 目标手机
 	* @param @param request
-	* @param @return    设定文件 
-	* @return Boolean    返回类型 
-	* @throws 
+	* @param @return    设定文件
+	* @return Boolean    返回类型
+	* @throws
 	*/
 	@RequestMapping("/bossVerifyCode")
 	public @ResponseBody Boolean bossVerifyCode(String phone,HttpServletRequest request) {
@@ -244,8 +310,7 @@ public class UserController extends CommonUserHandler{
 		List<UserProfile> numbers = userService.selectAllProfileLists(userId);
 		if(numbers.get(0).getPhone()!=null && numbers.size()>0){
 			if(numbers.get(0).getPhone().equals(phone)){
-				System.out.println("没有修改手机号");	
-	
+				System.out.println("没有修改手机号");
 			}else{
 				return true;
 			}
@@ -511,7 +576,6 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		
 
 		if(userId!=null){
 			//根据会员表有没有此手机号来决定跳转--外键获取的手机号有可能不是你本次输入的手机号，也不会跳转
@@ -529,7 +593,7 @@ public class UserController extends CommonUserHandler{
 		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 		if(bindingRewards!=null&&bindingRewards.size()>=1){
 			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
-			if(coupon.size()<bindingRewards.get(0).getAmount()||coupon.size()==0){
+			if(coupon.size()<bindingRewards.get(0).getAmount() || coupon.size()==0 || bindingRewards.get(0).getAmount() == 0){
 				map.put("result",false);
 				return map;
 			}
@@ -569,9 +633,12 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		
 		DeliverAddr defaultAddr = userService.getDefaultAddrByUserId(userId);
 		map.put("defaultAddr", defaultAddr);
 		List<CartDto> carts = userService.selectCartByIds(userId,cart);
+		List<HongShiVip> vip = hongShiVipService.getVipInfo(oauthLogin.getOauthId());
 		logger.info("cart post====="+JSON.toJSONString(carts));
 		BigDecimal total = new BigDecimal(0);
 		boolean isShippingFree=true;
@@ -603,7 +670,11 @@ public class UserController extends CommonUserHandler{
 		map.put("riqi",riqi.format(date));
 		System.out.println("Hours"+time.format(date.getTime()));
 
-		for(CartDto item:carts){
+		for(CartDto item:carts) {
+			if(vip!=null && vip.size()>0) {
+				item.setHsVipCode(vip.get(0).getcVipCode());
+			}
+			System.out.println("hsvipcode====="+item.getHsVipCode());
 			long value = date.getTime();
 			long value1 = 0;
             if(item.getStartTime()!=null){
@@ -617,21 +688,44 @@ public class UserController extends CommonUserHandler{
 			//判断提交订单商品是否有促销价
 			if(value1!=0||value2!=0){
 				if(item.getPromotion()!=null && value>value1 && value<value2){
-					total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
+						
+						if(vip.size()>0 && item.getVip()!=null){
+							//判断是会员，并且会员价不为null
+							if(item.getPromotion().compareTo(item.getVip()) == 1){
+								total = total.add(item.getVip().multiply(new BigDecimal(item.getAmount())));
+							
+							}else{
+							  total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
+							}
+						
+						} else{
+							total = total.add(item.getPromotion().multiply(new BigDecimal(item.getAmount())));
+						}		
+					
 				}else{
 					//判断是否是砍价商品
 					if(price==null){
-						total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+						if(vip.size()>0 && item.getVip()!=null){
+							total = total.add(item.getVip().multiply(new BigDecimal(item.getAmount())));	
+						}else{
+							total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+						}
+						
 					}else{
-						total = total.add(price.getPrice().multiply(new BigDecimal(item.getAmount())));
-					}	
+						total = total.add(price.getPrice().multiply(new BigDecimal(item.getAmount())));			
+					}
 				}
 			}else{
 				//判断是否是砍价商品
 				if(price==null){
-					total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
-				}else{
-					total = total.add(price.getPrice().multiply(new BigDecimal(item.getAmount())));
+					if(vip.size()>0 && item.getVip()!=null){
+						total = total.add(item.getVip().multiply(new BigDecimal(item.getAmount())));
+					}else{
+						total = total.add(item.getMoney().multiply(new BigDecimal(item.getAmount())));
+					}
+					
+				}else{				
+						total = total.add(price.getPrice().multiply(new BigDecimal(item.getAmount())));					
 				}	
 			}
 
@@ -2048,7 +2142,6 @@ public class UserController extends CommonUserHandler{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String d1 = sdf.format(log.get(0).getDay());//上次领取时间
 		String d2 = sdf.format(new Date());//当前时间
-		System.out.println(d1.equals(d2));//判断是否是同一天
 		//不是同一天才能继续领取
 		if(!d1.equals(d2)){
 			if(vip != null){
@@ -2070,4 +2163,27 @@ public class UserController extends CommonUserHandler{
 		return map;
 	}
 	
+	/**
+	 * 验证是否是会员用户
+	 */
+	@RequestMapping("/verificationVip")	
+	public @ResponseBody Map<String,Object> verificationVip(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		//得到会员信息
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(userId);
+		
+		if(oauthLogin!=null) {
+			List<HongShiVip> vip = hongShiVipService.getVipInfo(oauthLogin.getOauthId());
+			if(vip.size()>0){
+				map.put("result", true);
+			}else {
+				map.put("result", false);
+			}
+		}else{
+			map.put("result", false);
+		}
+		return map;
+	}
  }

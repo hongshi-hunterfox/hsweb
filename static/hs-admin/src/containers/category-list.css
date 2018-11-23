@@ -1,0 +1,23 @@
+.category-list {
+  text-align: center;
+}
+.category-list-operation {
+  padding-bottom: 15px;
+}
+.category-list-operation-item {
+  padding: 5px 10px;
+  color: white;
+  background-color: red;
+  border-radius: 10px;
+  margin-left: 5px;
+  text-align: center;
+}
+.category-list-operation-item .icon {
+  padding-right: 5px;
+}
+.category-list .edit-button {
+  margin-left: 10px;
+}
+tr {
+  vertical-align: middle;
+}

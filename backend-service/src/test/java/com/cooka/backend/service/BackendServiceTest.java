@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.http.entity.ContentType;
+
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.mybatis.model.Var;
 import com.uclee.fundation.data.web.dto.ValuePost;
+import com.youzan.open.sdk.util.http.DefaultHttpClient;
+import com.youzan.open.sdk.util.http.HttpClient;
 
 public class BackendServiceTest  extends AbstractServiceTests{
 	
@@ -142,5 +146,23 @@ public class BackendServiceTest  extends AbstractServiceTests{
 		ProductForm productForm = backendService.getProductForm(1);
 		map.put("productForm", productForm);
 		System.out.println(JSON.toJSONString(productForm));
+	}
+
+	/**
+	 * 获取有赞token
+	 */
+	@Test
+	public void testYouZan() {
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpClient.Params params = HttpClient.Params.custom()
+
+				.add("client_id", "01e3d14da80e4e77e6") //填写您的client_id
+				.add("client_secret", "bbb8efa2c6f017c3e9edee2ca74f2d21") //填写您的client_secret
+				.add("grant_type", "authorization_code") //默认值请勿修改
+				.add("code","141d248320ed3ed989ce17766a0aa871")
+				.add("redirect_uri","http://admin7.in80s.com/uclee-backend-web/test?merchantCode=hs")
+				.setContentType(ContentType.APPLICATION_FORM_URLENCODED).build();
+		String resp = httpClient.post("https://open.youzan.com/oauth/token", params);
+		System.out.println(resp);
 	}
 }

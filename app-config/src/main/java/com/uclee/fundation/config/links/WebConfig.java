@@ -57,4 +57,17 @@ public interface WebConfig {
 	String perfectBirthText = "perfectBirthText";
 	String whetherEnableAlipay = "whetherEnableAlipay";
 	String linkCouponText = "linkCouponText";
+	String CartLogo = "CartLogo";
+	String CartBgUrl = "CartBgUrl";
+	String CartBrandName = "CartBrandName";
+	String CartTitle = "CartTitle";
+	String CartNotice = "CartNotice";
+	String CartServicePhone = "CartServicePhone";
+	String CartDescription = "CartDescription";
+	String CartCustomUrl = "CartCustomUrl";
+	String CartPromotionUrl = "CartPromotionUrl";
+	String CartCenterUrl = "CartCenterUrl";
+	String CartBonusUrl = "CartBonusUrl";
+	String CartCustomField1Url = "CartCustomField1Url";
+	String CartPrerogative = "CartPrerogative";
 }                      

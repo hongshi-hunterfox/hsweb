@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.ExternalOrderMapper" >
+    <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.ExternalOrder" >
+        <result column="OrderCode" property="orderCode" jdbcType="VARCHAR" />
+        <result column="DepartName" property="departName" jdbcType="VARCHAR" />
+        <result column="WSC_TardNo" property="tardNo" jdbcType="VARCHAR" />
+        <result column="PickUpTime" property="pickUpTime" jdbcType="TIMESTAMP" />
+        <result column="VipCode" property="vipCode" jdbcType="VARCHAR" />
+        <result column="CallNumber" property="callNumber" jdbcType="VARCHAR" />
+        <result column="Remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="Destination" property="destination" jdbcType="VARCHAR" />
+        <result column="TotalAmount" property="totalAmount" jdbcType="DECIMAL" />
+        <result column="Deducted" property="deducted" jdbcType="DECIMAL" />
+        <result column="ShippingCost" property="shippingCost" jdbcType="DECIMAL" />
+        <result column="Department_Web" property="departmentWeb" jdbcType="VARCHAR" />
+        <result column="oauth_id" property="oauthId" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ExternalOrderItem" type="com.uclee.fundation.data.mybatis.model.ExternalOrderItem" >
+        <result column="Pid" property="pid" jdbcType="INTEGER" />
+        <result column="GoodsName" property="goodsName" jdbcType="VARCHAR" />
+        <result column="GoodsCount" property="goodsCount" jdbcType="INTEGER" />
+        <result column="TotalAmount" property="totalAmountMoney" jdbcType="DECIMAL" />
+        <result column="ExtendPrice" property="extendPriceMoney" jdbcType="DECIMAL" />
+        <result column="Memo" property="memo" jdbcType="VARCHAR" />
+    </resultMap>
+  <sql id="Base_Column_List" >
+        OrderCode, DepartName, WSC_TardNo, PickUpTime, VipCode, CallNumber, Remarks, Destination, TotalAmount, Deducted, ShippingCost, Department_Web, oauth_id
+  </sql>
+    <select id="CreateOutOrder" resultMap="BaseResultMap">
+        exec CreateOutOrder '',#{departName}, #{tardNo}, #{pickUpTime},
+        '', #{callNumber}, #{remarks}, #{destination}, #{totalAmount},
+         #{deducted}, #{shippingCost}, #{departmentWeb}, ''
+	</select>
+    <select id="AddOutOrderItem" resultMap="BaseResultMap">
+        exec AddOutOrderItem #{pid}, #{goodsName}, #{goodsCount},
+        #{totalAmountMoney}, #{extendPriceMoney}, #{memo}
+	</select>
+</mapper>

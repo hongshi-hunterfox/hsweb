@@ -34,8 +34,16 @@ public class Orders {
 	private BigDecimal jine;
 	
 	private BigDecimal huijine;
-	
-	
+
+	private String merchantOrderNumber;
+
+	public String getMerchantOrderNumber() {
+		return merchantOrderNumber;
+	}
+
+	public void setMerchantOrderNumber(String merchantOrderNumber) {
+		this.merchantOrderNumber = merchantOrderNumber;
+	}
 
 	public BigDecimal getHuijine() {
 		return huijine;

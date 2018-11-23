@@ -56,6 +56,6 @@ public interface HongShiVipMapper {
 	int insertVipLog(VipLog record);
 	
 	List<IntegralRecharge> selectIntegralRecharge(String danhao);
-	
-	
+
+	List<Orders> selectRecord(String merchantOrderNumber);
 }

@@ -1,0 +1,45 @@
+@import "../public.less";
+.distribution{
+	&-user{
+		&-item{
+			margin-top: 5px;
+			padding: 10px;
+			background-color: white;
+			.clearfix();
+			.left{
+				float: left;
+				.top{
+					.image{
+						width: 40px;
+						height: 40px;
+						border-radius : 50%;
+					}
+					.name{
+						margin-left: 5px;
+					}
+				}
+				.bottom{
+					padding: 5px;
+				}
+			}
+			.right{
+				font-size: 14px;
+				float: right;
+				background-color: white;
+				color: rgb(241, 95, 64);
+				padding: 4px 10px;
+				border-radius:15%;	
+				border: 1px solid rgb(241, 95, 64);
+				margin-right: 10px;
+				margin-top: 15px;
+			}
+			border-bottom: 1px solid #d0d0d0;
+		}
+		.bottom-text{
+			margin-top: 15px;
+			text-align: center;
+			font-size: 12px;
+			color: #afafaf;
+		}
+	}
+}

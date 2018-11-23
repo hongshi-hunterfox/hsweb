@@ -33,6 +33,8 @@ public class ProductDto extends Product{
 	
 	private BigDecimal promotionPrice;
 	
+	private BigDecimal vipPrice;
+	
 	private Date startTime;
 	
 	private Date endTime;
@@ -49,6 +51,14 @@ public class ProductDto extends Product{
     
     private String PickEndTimes;
 	
+    public BigDecimal getVipPrice() {
+		return vipPrice;
+	}
+    
+    public void setVipPrice(BigDecimal vipPrice) {
+		this.vipPrice = vipPrice;
+	}
+    
 	public String getPickEndTimes() {
 		return PickEndTimes;
 	}

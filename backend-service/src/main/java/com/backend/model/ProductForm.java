@@ -1,10 +1,7 @@
 package com.backend.model;
 
 import com.uclee.fundation.data.mybatis.model.Product;
-import com.uclee.fundation.data.mybatis.model.ProductImageLink;
 import com.uclee.fundation.data.web.dto.ValuePost;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,6 +27,46 @@ public class ProductForm extends Product {
     
     private String attribute6;
     
+    private String shelfDate;
+    
+    private String shelfTimes;
+    
+    private String downDate;
+    
+    private String downTimes;
+    
+	public String getShelfDate() {
+		return shelfDate;
+	}
+
+	public void setShelfDate(String shelfDate) {
+		this.shelfDate = shelfDate;
+	}
+
+	public String getShelfTimes() {
+		return shelfTimes;
+	}
+
+	public void setShelfTimes(String shelfTimes) {
+		this.shelfTimes = shelfTimes;
+	}
+
+	public String getDownDate() {
+		return downDate;
+	}
+
+	public void setDownDate(String downDate) {
+		this.downDate = downDate;
+	}
+
+	public String getDownTimes() {
+		return downTimes;
+	}
+
+	public void setDownTimes(String downTimes) {
+		this.downTimes = downTimes;
+	}
+
 	public String getAttribute2() {
 		return attribute2;
 	}

@@ -1,0 +1,137 @@
+@import "../public.less";
+.store{
+    background-color: white;
+	&-logo{
+		text-align: center;
+		&-image{
+			width: 90px;
+			height: 90px;
+			border-radius: 50%;
+			padding: 15px;
+		}
+		&-text{
+		}
+	}
+	&-select{
+		margin-top: 5px;
+		background-color: white;
+		padding: 10px 15px;
+		color: #a7a7a7;
+		margin-bottom: 5px;
+	}
+	&-list{
+		.clearfix();
+		border-top: 1px solid #dedede;
+		background-color: white;
+		&-item{
+			&-top{
+				.clearfix();
+				.name{
+					font-weight: bold;
+					float: left;
+					padding: 10px 15px;
+				}
+				.distance{
+					float: right;
+					padding: 10px 15px;
+				}
+			}
+			&-bottom{
+				.clearfix();
+				.addr{
+					float: left;
+					padding: 5px 15px;
+				}
+				.right{
+					float: right;
+					padding: 5px 15px;
+				}			
+			}
+		}
+
+		&-item{
+			&-info{
+				background-color: #f9f9f9;
+				margin-top: 8px;
+				margin-right: 10px;
+				margin-left: 10px;
+				.clearfix(); 
+				.image{
+					width: 80px;
+					height: 80px;
+					margin: 0px 10px  0px 10px;
+					float: left; 
+				}
+
+				.title{
+					margin-top: 5px;
+					font-size: 15px;
+				}
+
+				
+				.price{
+					font-size: 14px;
+					color: #afafaf;
+				}
+
+				.sku-info{
+					.sku{
+						color: #afafaf;
+						margin-top: 5px;
+						font-size: 12px;
+					}
+					.count{
+
+					}
+					margin-bottom: 8px;
+				}
+
+				.tag{
+					color: white;
+					padding: 2px 5px;
+					font-size: 12px;
+					background-color: rgb(241, 95, 64);
+					border-radius: 10%;		
+				}
+			}
+		}
+
+		&-bottom{
+
+			margin: 5px 0;
+			background-color: white;
+			.clearfix();
+			.total{
+				margin-right: 18px;
+			}
+		}
+		&-button{
+			background-color: white;
+			.clearfix();
+			.text{
+				color: rgb(241, 95, 64);
+				padding: 4px 10px;
+				border-radius: 10%;	
+				border: 1px solid rgb(241, 95, 64);
+				margin-right: 8px;
+			}
+			margin: 5px 0;
+		}
+	}
+	.bottom-text{
+		margin-top: 15px;
+		text-align: center;
+		font-size: 12px;
+		color: #afafaf;
+		margin-bottom: 18px;
+	}
+	
+}
+
+.tail{
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
+    color: #afafaf;
+    margin-bottom: 15px;
+}

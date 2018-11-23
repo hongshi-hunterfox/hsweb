@@ -36,6 +36,8 @@ public interface UserProfileMapper {
 	
 	List<UserProfile> selectAllVipList();
 
+    List<UserProfile> selectAllVipLists();
+
 	List<UserProfile> getUserListForBirth(@Param("start") String start, @Param("end")String end,@Param("year")String year);
 
 	List<UserProfile> getUserListForUnBuy(Integer day);

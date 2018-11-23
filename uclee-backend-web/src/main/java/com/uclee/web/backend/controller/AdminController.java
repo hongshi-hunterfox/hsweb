@@ -1,9 +1,12 @@
 package com.uclee.web.backend.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.backend.service.BackendServiceI;
 import com.uclee.fundation.data.mybatis.model.*;
+import com.uclee.fundation.data.web.dto.ConfigPost;
 import com.uclee.hongshi.service.HongShiServiceI;
 import com.uclee.hongshi.service.StoreServiceI;
+import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
 import com.uclee.web.backend.vo.UserVo;
 import org.apache.log4j.Logger;
@@ -40,7 +43,8 @@ public class AdminController {
     @Autowired
     private HongShiServiceI hongShiService;
 
-
+    @Autowired
+    private BackendServiceI backendService;
 
 
     @RequestMapping("phoneUserList")
@@ -98,5 +102,16 @@ public class AdminController {
     public @ResponseBody
     List<NapaStore> napaStoreList(HttpServletRequest request){
         return storeService.selectAllNapaStore();
+    }
+
+
+    @RequestMapping("getYouZanToken")
+    public @ResponseBody
+    String getYouZanToken(HttpServletRequest request,String code, String state, String merchantCode){
+        ConfigPost config = backendService.getConfig();
+        System.out.println("回调域名===="+config.getDomain());
+        String url = "http://"+config.getDomain()+"/uclee-backend-web/getYouZanToken?merchantCode="+merchantCode;
+        System.out.println("回调地址===="+url);
+        return backendService.yzPost(code,url);
     }
 }

@@ -19,6 +19,10 @@
     <result column="pick_end_time" property="pickEndTime" jdbcType="TIMESTAMP"/>
     <result column="pick_up_time" property="pickUpTimes" jdbcType="VARCHAR"/>
     <result column="pick_end_time" property="pickEndTimes" jdbcType="VARCHAR"/>
+    <result column="frequency" property="frequency" jdbcType="INTEGER"/>
+    <result column="shelf_time" property="shelfTime" jdbcType="TIMESTAMP"/>
+    <result column="down_time" property="downTime" jdbcType="TIMESTAMP"/>
+     <result column="vip_price" property="vipPrice" jdbcType="DECIMAL"/>
   </resultMap>
    <resultMap id="ProductGe" type="com.uclee.fundation.data.mybatis.model.ProductGe" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -43,15 +47,25 @@
     <result column="pick_end_time" property="pickEndTime" jdbcType="TIMESTAMP"/>
     <result column="pick_up_time" property="pickUpTimes" jdbcType="VARCHAR"/>
     <result column="pick_end_time" property="pickEndTimes" jdbcType="VARCHAR"/>
+    <result column="frequency" property="frequency" jdbcType="INTEGER"/>
+    <result column="shelf_time" property="shelfTime" jdbcType="TIMESTAMP"/>
+    <result column="down_time" property="downTime" jdbcType="TIMESTAMP"/>
+    <result column="vip_price" property="vipPrice" jdbcType="DECIMAL"/>
   </resultMap>
   <resultMap id="ProductParameters" type="com.uclee.fundation.data.mybatis.model.ProductParameters" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
     <result column="sname" property="sname" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="UserLimit" type="com.uclee.fundation.data.mybatis.model.UserLimit" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+  </resultMap>
   <sql id="Base_Column_List" >
     product_id, title, description, create_time, last_modify, is_active ,price,is_shipping_free,Explain,is_show,sort_value,parameter,
-    appointed_time, pick_up_time, pick_end_time
+    appointed_time, pick_up_time, pick_end_time, frequency, shelf_time, down_time, vip_price
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -149,11 +163,12 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
-      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,parameter,appointed_time,pick_up_time,pick_end_time
+      create_time, last_modify, is_active , price, is_shipping_free, Explain,is_show,sort_value,parameter,appointed_time,pick_up_time,pick_end_time,frequency,shelf_time, down_time,vip_price
       )
     values (#{productId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{lastModify,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, #{price,jdbcType=DECIMAL}, #{isShippingFree,jdbcType=BIT},
       #{explain,jdbcType=VARCHAR},#{isShow,jdbcType=BIT},#{sortValue,jdbcType=INTEGER},#{parameter,jdbcType=VARCHAR},#{appointedTime,jdbcType=INTEGER},#{pickUpTimes,jdbcType=VARCHAR},#{pickEndTimes,jdbcType=VARCHAR}
+      #{frequency，jdbcType=INTEGER},#{shelfTime,jdbcType=TIMESTAMP},#{downTime,jdbcType=TIMESTAMP}, #{vipPrice,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
@@ -203,6 +218,18 @@
       <if test="pickEndTimes !=null">
       	pick_end_time,
       </if>
+      <if test="frequency !=null">
+        frequency,
+      </if>
+       <if test="shelfTime !=null">
+        shelf_time,
+      </if>
+      <if test="downTime !=null">
+        down_time,
+      </if>
+      <if test="vipPrice != null" >
+        vip_price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -248,6 +275,18 @@
       <if test="pickEndTimes !=null">
       	 #{pickEndTimes,jdbcType=VARCHAR},
       </if>
+      <if test="frequency !=null">
+        #{frequency,jdbcType=INTEGER},
+      </if>
+      <if test="shelfTime !=null">
+        #{shelfTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="downTime !=null">
+        #{downTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="vipPrice != null" >
+        #{vipPrice,jdbcType=DECIMAL},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" >
@@ -289,6 +328,13 @@
       </if>
       	pick_up_time = #{pickUpTimes,jdbcType=VARCHAR},
       	pick_end_time = #{pickEndTimes,jdbcType=VARCHAR},
+        frequency = #{frequency,jdbcType=INTEGER},
+        shelf_time = #{shelfTimes,jdbcType=TIMESTAMP},
+        down_time = #{downTime,jdbcType=TIMESTAMP},      
+        
+        <if test="vipPrice != null" >
+        vip_price = #{vipPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     where product_id = #{productId,jdbcType=INTEGER}
   </update>
@@ -307,7 +353,11 @@
       parameter = #{parameter,jdbcType=VARCHAR},
       appointed_time = #{appointedTime,jdbcType=INTEGER},
       pick_end_time = #{pickEndTimes,jdbcType=VARCHAR},
-      pick_up_time = #{pickUpTimes,jdbcType=VARCHAR}
+      pick_up_time = #{pickUpTimes,jdbcType=VARCHAR},
+      frequency = #{frequency,jdbcType=INTEGER},
+      shelf_time = #{shelfTime,jdbcType=TIMESTAMP},
+      down_time = #{downTime,jdbcType=TIMESTAMP},
+      vip_price = #{vipPrice,jdbcType=DECIMAL},
     where product_id = #{appointedTime,jdbcType=INTEGER}
   </update>
 
@@ -357,4 +407,15 @@
     update web_product_parameters  set sname = #{sname,jdbcType=VARCHAR}
     where product_id = #{productId,jdbcType=INTEGER} and id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <insert id="insertUserLimit" parameterType="com.uclee.fundation.data.mybatis.model.UserLimit">
+    insert into web_usre_limit(user_id, time, product_id)
+	values(#{userId, jdbcType=INTEGER}, #{time, jdbcType=TIMESTAMP}, #{productId, jdbcType=INTEGER})    
+  </insert>
+  <select id="selectByLimit" resultMap="UserLimit" >
+    select
+    *
+    from web_usre_limit
+    where user_id = #{userId,jdbcType=INTEGER} and product_id = #{productId,jdbcType=INTEGER}
+  </select>
 </mapper>

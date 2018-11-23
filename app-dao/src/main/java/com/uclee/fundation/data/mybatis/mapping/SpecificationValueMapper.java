@@ -35,5 +35,6 @@ public interface SpecificationValueMapper {
     List<String> selectHsCodeByProductId(Integer productId);
     
     List<SpecificationValue> selectByHsGoods(Integer valueId);
+    
     SpecificationValue selectGoods(Integer valueId);
 }

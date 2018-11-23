@@ -109,14 +109,6 @@ public class BackendHandler {
 	public @ResponseBody boolean truncateBirthVoucherHandler(HttpServletRequest request) {
 		return backendService.truncateBirthVoucherHandler();
 	}
-	@RequestMapping("/consumerVoucherHandler")
-	public @ResponseBody boolean consumerVoucherHandler(HttpServletRequest request,@RequestBody ConsumerVoucherPost consumerVoucherPost) {
-		return backendService.updateConsumerVoucher(consumerVoucherPost);
-	}
-	@RequestMapping("/truncateConsumerVoucherHandler")
-	public @ResponseBody boolean truncateConsumerVoucherHandler(HttpServletRequest request) {
-		return backendService.truncateConsumerVoucherHandler();
-	}
 	@RequestMapping("/vipVoucherHandler")
 	public @ResponseBody boolean vipVoucherHandler(HttpServletRequest request,@RequestBody VipVoucherPost vipVoucherPost) {
 		return backendService.updateVipVoucher(vipVoucherPost);
@@ -302,6 +294,15 @@ public class BackendHandler {
 	@RequestMapping("/delCouponsProductsLinks")
 	public @ResponseBody int delCouponsProductsLinks(HttpServletRequest request,Integer vid, Integer pid) {
 		return backendService.delCouponsProductsLinks(vid, pid);
+	}
+	
+	@RequestMapping("/consumerVoucherHandler")
+	public @ResponseBody boolean consumerVoucherHandler(HttpServletRequest request,@RequestBody ConsumerVoucherPost consumerVoucherPost) {
+		return backendService.updateConsumerVoucher(consumerVoucherPost);
+	}
+	@RequestMapping("/truncateConsumerVoucherHandler")
+	public @ResponseBody boolean truncateConsumerVoucherHandler(HttpServletRequest request) {
+		return backendService.truncateConsumerVoucherHandler();
 	}
 
 }

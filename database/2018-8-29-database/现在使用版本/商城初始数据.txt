@@ -1,8 +1,6 @@
 use 数据库名
 go
 
-insert into web_birthdayInformation_push(id,day,time) values(1,1,'8:00')
-insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！')
 --web_account_information
 insert into web_account_information(account,password) values('hongshi','nicaicai');
 --web_napa_store_user_link
@@ -164,6 +162,8 @@ insert into web_config (tag,value) values ('domain','');
 
 insert into web_config (tag,value) values ('hsMerchantCode','');
 
+insert into web_config (tag,value) values ('force','微商城');
+
 insert into web_config (tag,value) values ('logoUrl','http://wsc.in80s.com/file/file1507708577132837.jpg');
 
 insert into web_config (tag,value) values ('ucenterImg','http://wsc.in80s.com/file/file1507708606025464.jpg');
@@ -180,7 +180,7 @@ insert into web_config(tag,value) values('commentText','评论有惊喜哦~~');
 
 insert into web_config (tag,value) values('ACardMoreMembers',1);--是否开启多个微信可绑定一张卡(默认开启)
 
-insert into web_config(tag,value) values('bargainText','1.我是测试数据1. 2.我是测试数二 3.我是测试数据三')
+insert into web_config(tag,value) values('bargainText','1.我是测试数据1. 2.我是测试数二 3.我是测试数据三');
 
 insert into web_config (tag,value) values('full',0);
 
@@ -190,19 +190,52 @@ insert into web_config(tag,value) values('brand','洪石软件');--设置品牌名
 
 insert into web_config(tag,value) values('qq','2217904463');--设置kefu
 
-insert into web_config(tag,value) values('loss','0')
+insert into web_config(tag,value) values('loss','0')；
 
-insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！')
+insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！');
 
-insert into web_config(tag,value) values('notice','特大消息，周日全场八折！')
+insert into web_config(tag,value) values('notice','特大消息，周日全场八折！')；
 
-insert into web_config(tag,value) values('signText','...')
+insert into web_config(tag,value) values('signText','...')；
 
 insert into web_config (tag,value) values ('zhengshu','D:\zhengshu\hs\apiclient_cert.p12'); --证书路径
 
 insert into web_config (tag,value) values ('zhengshuPassword','to119,0002'); --证书的密码(一般是web_config表中的merchantcode值,如果不是的话也需要写入到数据库中)
 
- insert into web_config(tag, value) values('linkCouponText','1.没有绑定电子会员卡用户请先绑定电子会员卡。')
+ insert into web_config(tag, value) values('linkCouponText','1.没有绑定电子会员卡用户请先绑定电子会员卡。');
+ insert into web_config(tag, value) values('whetherEnableAlipay', 'yes');--是否启用支付宝
+insert into web_config(tag, value) values('CartLogo','');
+  
+insert into web_config(tag, value) values('CartBgUrl','');
+  
+insert into web_config(tag, value) values('CartBrandName','');
+  
+insert into web_config(tag, value) values('CartTitle','');
+  --卡券使用提醒16字
+  
+insert into web_config(tag, value) values('CartNotice','');
+  
+insert into web_config(tag, value) values('CartServicePhone','');
+  --使用须知
+  
+insert into web_config(tag, value) values('CartDescription','');
+  --消费记录url
+  
+insert into web_config(tag, value) values('CartCustomUrl','');
+  --商城url
+  
+insert into web_config(tag, value) values('CartPromotionUrl','');
+  --出示付款吗url
+  
+insert into web_config(tag, value) values('CartCenterUrl','');
+  --J积分跳转url
+  
+insert into web_config(tag, value) values('CartBonusUrl','');
+  --余额跳转url
+  
+insert into web_config(tag, value) values('CartCustomField1Url','');
+insert into web_config(tag, value) values('CartPrerogative','');
+
 --更新时修改config字段
 insert into web_config(tag,value) values('voucherSendInformation','.');
 

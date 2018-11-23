@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.YouZanVarMapper" >
+  <resultMap id="YouZanVar" type="com.uclee.fundation.data.mybatis.model.YouZanVar" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="platform" property="platform" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="storage_time" property="storageTime" jdbcType="TIMESTAMP" />
+    <result column="expires_in" property="expiresIn" jdbcType="INTEGER" />
+    <result column="refresh_token" property="refreshToken" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, platform, name,value, storage_time, expires_in, refresh_token
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="YouZanVar" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_youzan_vars
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from web_youzan_vars
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.YouZanVar" >
+    insert into web_youzan_vars (platform, name, value,storage_time, expires_in, refresh_token)
+    values (#{platform,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},  #{value,jdbcType=VARCHAR},
+      #{storageTime,jdbcType=TIMESTAMP}, #{expiresIn,jdbcType=INTEGER}, #{refreshToken,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.YouZanVar" >
+    update web_youzan_vars
+    set platform = #{platform,jdbcType=VARCHAR},
+      name= #{name,jdbcType=VARCHAR},
+      value= #{value,jdbcType=VARCHAR},
+      storage_time = #{storageTime,jdbcType=TIMESTAMP},
+      expires_in = #{expiresIn,jdbcType=INTEGER},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

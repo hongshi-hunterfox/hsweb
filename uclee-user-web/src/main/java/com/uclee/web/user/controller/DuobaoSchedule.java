@@ -1,52 +1,37 @@
 package com.uclee.web.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.dynamicDatasource.DataSourceFacade;
 import com.uclee.fundation.config.links.WebConfig;
-import com.uclee.fundation.data.mybatis.mapping.ConfigMapper;
-import com.uclee.fundation.data.mybatis.mapping.MessageMapper;
-import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
-import com.uclee.fundation.data.mybatis.mapping.BirthVoucherMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
-import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
-import com.uclee.fundation.data.mybatis.mapping.OrderItemMapper;
-import com.uclee.fundation.data.mybatis.mapping.VarMapper;
-import com.uclee.fundation.data.mybatis.model.BirthPush;
-import com.uclee.fundation.data.mybatis.model.BirthVoucher;
-import com.uclee.fundation.data.mybatis.model.Config;
-import com.uclee.fundation.data.mybatis.model.DataSourceInfo;
-import com.uclee.fundation.data.mybatis.model.HongShiCoupon;
-import com.uclee.fundation.data.mybatis.model.HsVip;
-import com.uclee.fundation.data.mybatis.model.Message;
-import com.uclee.fundation.data.mybatis.model.MsgRecord;
-import com.uclee.fundation.data.mybatis.model.OauthLogin;
-import com.uclee.fundation.data.mybatis.model.Order;
-import com.uclee.fundation.data.mybatis.model.OrderItem;
-import com.uclee.fundation.data.mybatis.model.PaymentOrder;
-import com.uclee.fundation.data.mybatis.model.SpecificationValue;
-import com.uclee.fundation.data.mybatis.model.UserProfile;
-import com.uclee.fundation.data.mybatis.model.Var;
-import com.uclee.fundation.data.mybatis.model.vipIdentity;
+import com.uclee.fundation.data.mybatis.mapping.*;
+import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.user.service.DuobaoServiceI;
 import com.uclee.user.service.UserServiceI;
+import com.youzan.open.sdk.client.auth.Token;
+import com.youzan.open.sdk.client.core.DefaultYZClient;
+import com.youzan.open.sdk.client.core.YZClient;
+import com.youzan.open.sdk.gen.v4_0_0.api.YouzanTradesSoldGet;
+import com.youzan.open.sdk.gen.v4_0_0.model.YouzanTradesSoldGetParams;
+import com.youzan.open.sdk.gen.v4_0_0.model.YouzanTradesSoldGetResult;
+
+import kafka.utils.Json;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.uclee.fundation.data.mybatis.mapping.PaymentOrderMapper;
-import com.uclee.fundation.data.mybatis.mapping.SpecificationValueMapper;
-import com.uclee.fundation.data.mybatis.mapping.MsgRecordMapper;
-import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
-import com.uclee.fundation.data.mybatis.mapping.HsVipMapper;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -72,6 +57,8 @@ public class DuobaoSchedule {
 	@Autowired
 	private VarMapper varMapper;
 	@Autowired
+	private YouZanVarMapper youZanVarMapper;
+	@Autowired
 	private DataSourceFacade dataSource;
 	@Autowired
 	private MessageMapper messageMapper;
@@ -94,11 +81,15 @@ public class DuobaoSchedule {
 	@Autowired
 	private HongShiMapper hongShiMapper;
 	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
+	@Autowired
 	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private HsVipMapper hsVipMapper;
 	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
+	@Autowired
+	private ExternalOrderMapper externalOrderMapper;
 
 	/*@Scheduled(cron="0 0 0 * * *")
 	private void updateWXInfo(){
@@ -116,6 +107,24 @@ public class DuobaoSchedule {
 				if (DateUtils.addSecond(var.getStorageTime(), 7200).before(new Date())) {
 					logger.info("更新微信Token");
 					duobaoService.getGolbalAccessToken();
+				}
+			}
+		}
+	}
+	
+	@Scheduled(fixedRate = 1000 * 11)
+	private void refreshYZToken(){
+		dataSource.switchDataSource("master");
+		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
+		for(DataSourceInfo info:t) {
+			if(!info.getMerchantCode().equals("master")) {
+				dataSource.switchDataSource(info.getMerchantCode());
+				YouZanVar youZanVar = youZanVarMapper.selectByPrimaryKey(new Integer(1));
+				if(youZanVar!=null){
+					if (DateUtils.addSecond(youZanVar.getStorageTime(), 604800).before(new Date())) {
+						System.out.println("更新有赞Token");
+						duobaoService.getYouZanAccessToken();
+					}
 				}
 			}
 		}
@@ -393,5 +402,154 @@ public class DuobaoSchedule {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * 定时检查有赞待发货订单
+	 */
+	@Scheduled(fixedRate = 1000 * 300, initialDelay=9000)
+	private void YouZanOrder() {
+		dataSource.switchDataSource("master");
+		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
+		for(DataSourceInfo info:t) {
+			if(!info.getMerchantCode().equals("master")) {
+				try{
+					dataSource.switchDataSource(info.getMerchantCode());
+					YouZanVar youZanVar = youZanVarMapper.selectByPrimaryKey(1);
+					if(youZanVar!=null){
+						//是否返回订单详情
+						Boolean need_order_url = true;
+
+						YZClient client = new DefaultYZClient(new Token(youZanVar.getValue())); //new Sign(appKey, appSecret)
+						YouzanTradesSoldGetParams youzanTradesSoldGetParams = new YouzanTradesSoldGetParams();
+
+						youzanTradesSoldGetParams.setNeedOrderUrl(need_order_url);
+						//代发货：WAIT_SELLER_SEND_GOODS
+						youzanTradesSoldGetParams.setStatus("WAIT_SELLER_SEND_GOODS");
+
+						YouzanTradesSoldGet youzanTradesSoldGet = new YouzanTradesSoldGet();
+						youzanTradesSoldGet.setAPIParams(youzanTradesSoldGetParams);
+						YouzanTradesSoldGetResult result = client.invoke(youzanTradesSoldGet);
+						if(result!=null){
+                            JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(result));
+							 String fullOrderInfoList = jsonObject.getString("fullOrderInfoList");
+							 JSONArray orderlistArray = JSONArray.parseArray(fullOrderInfoList);
+							 if(orderlistArray.size()>0) {
+								 for(int i=0; i<jsonObject.size();i++){
+									 JSONObject fullOrderInfo = orderlistArray.getJSONObject(i);
+									 String order = fullOrderInfo.getString("fullOrderInfo");
+									 JSONObject orderInfo = JSONObject.parseObject(order);
+									 String address = orderInfo.getString("addressInfo");
+									 JSONObject addr = JSONObject.parseObject(address);
+									 //自提信息
+									 String selfFetchInfo = addr.getString("selfFetchInfo");
+									 JSONObject selfFetch = JSONObject.parseObject(selfFetchInfo);
+									 //门店name
+									 String store="";
+									 String userTime="0";
+									 if(selfFetch!=null){
+										 store = selfFetch.getString("name");
+										 userTime = selfFetch.getString("user_time");
+									 }else{
+										 store = "公众号";
+									 }
+									 //自提取货时间
+									 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+									 Date utilDate=sdf.parse("2018");
+									 if(!userTime.equals("0")){
+										 userTime = sdf.format(new Date())+"年"+userTime;
+										 SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日 HH:ss");
+										 utilDate = sdf.parse(userTime);
+									 }else{
+										 utilDate = new Date();
+									 }
+
+									 //收获地址信息
+									 String receivingAddress = "";
+									 if(selfFetch  == null){
+										 receivingAddress = addr.getString("deliveryProvince")+addr.getString("deliveryCity")+addr.getString("deliveryDistrict")+addr.getString("deliveryAddress");
+									 }else{
+										 receivingAddress = "门店自提";
+									 }
+
+									 //收货人联系方式
+									 String receiverTel = addr.getString("receiverTel");
+
+									 String orderitem = orderInfo.getString("orderInfo");
+									 JSONObject orderItem = JSONObject.parseObject(orderitem);
+									 //订单信息
+									 String tid = orderItem.getString("tid");//有赞单号
+
+									 String remarkInfo = orderInfo.getString("remarkInfo");
+									 JSONObject Remark = JSONObject.parseObject(remarkInfo);
+									 //备注
+									 String remark = orderInfo.getString("remark");
+
+									 String payInfo = orderInfo.getString("payInfo");
+									 JSONObject Pay = JSONObject.parseObject(payInfo);
+									 //付款
+									 String payment = Pay.getString("payment");//实际付款
+									 BigDecimal realPayment = new BigDecimal(payment);
+									 String postFee = Pay.getString("postFee");//运费
+									 BigDecimal Fee = new BigDecimal(postFee);
+									 String totalFee = Pay.getString("totalFee");//优惠前总金额
+									 BigDecimal total = new BigDecimal(totalFee);
+									 BigDecimal discount = (total.add(Fee)).subtract(realPayment);//优惠金额
+									 ExternalOrder externalOrder = new ExternalOrder();
+									 externalOrder.setDepartName(store);
+									 externalOrder.setTardNo(tid);
+									 externalOrder.setPickUpTime(utilDate);
+									 externalOrder.setCallNumber(receiverTel);
+									 externalOrder.setRemarks(remark);
+									 externalOrder.setDestination(receivingAddress);
+									 externalOrder.setTotalAmount(realPayment);
+									 externalOrder.setDeducted(discount);
+									 externalOrder.setShippingCost(Fee);
+									 externalOrder.setDepartmentWeb("有赞商城");
+									 List<Orders> record = hongShiVipMapper.selectRecord(tid);
+									 if(record.size()<1){
+										 externalOrderMapper.CreateOutOrder(externalOrder);//插入洪石订单
+										 List<Orders> record1 = hongShiVipMapper.selectRecord(tid);
+										 //插入订单明细
+										 String Orders = orderInfo.getString("orders");
+										 JSONArray orderArray = JSONArray.parseArray(Orders);
+										 if(orderArray!=null) {
+											 for(int j=0; j<orderArray.size(); j++) {
+												 JSONObject prductinfo = orderArray.getJSONObject(j);
+												 String title = prductinfo.getString("title");//商品名称
+												 String num = prductinfo.getString("num");//数量
+												 String danjia = prductinfo.getString("payment");//单价
+												 String totalFees = prductinfo.getString("totalFee");//合计
+												 String skuPropertiesName = prductinfo.getString("skuPropertiesName");//规格参数信息
+												 JSONArray skuPropertiesNameArray = JSONArray.parseArray(skuPropertiesName);
+												 for(int c=0; c<skuPropertiesNameArray.size(); c++) {
+													 JSONObject skuPropertiesNameInfo = skuPropertiesNameArray.getJSONObject(c);
+													 String guige = skuPropertiesNameInfo.getString("v")+"~~";//规格
+
+													 ExternalOrderItem externalOrderItem = new ExternalOrderItem();
+													 externalOrderItem.setPid(record1.get(0).getId());
+													 externalOrderItem.setGoodsName(title);
+													 externalOrderItem.setGoodsCount(Integer.parseInt(num));
+													 BigDecimal bd=new BigDecimal(totalFees);//类型转换
+													 externalOrderItem.setTotalAmountMoney(bd);
+													 BigDecimal bd1=new BigDecimal(danjia);//类型转换
+													 externalOrderItem.setExtendPriceMoney(bd1);
+													 externalOrderItem.setMemo(guige);
+													 externalOrderMapper.AddOutOrderItem(externalOrderItem);
+												 }
+											 }
+										 }
+									 }
+								 }
+							 }
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 	}
 }

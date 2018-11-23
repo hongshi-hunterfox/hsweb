@@ -1,0 +1,87 @@
+.comment {
+  background: white;
+}
+.comment-button {
+  position: fixed;
+  padding: 10px;
+  background-color: #FF3300;
+  color: white;
+  text-align: center;
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  z-index: 999;
+  bottom: 60px;
+  border-radius: 15px;
+  margin: auto;
+}
+.comment-textarea {
+  width: 96%;
+  margin-left: 2%;
+}
+.comment-form {
+  background-color: white;
+}
+.comment-form-control-select {
+  width: 33.33333333%;
+  float: left;
+}
+.comment-star {
+  padding: 10px;
+}
+.comment-star:before,
+.comment-star:after {
+  content: "";
+  display: table;
+}
+.comment-star:after {
+  clear: both;
+}
+.comment-star .lable {
+  float: left;
+  line-height: 30px;
+  font-size: 15px;
+}
+.comment-star .starList {
+  float: left;
+}
+.comment-star .starList:before,
+.comment-star .starList:after {
+  content: "";
+  display: table;
+}
+.comment-star .starList:after {
+  clear: both;
+}
+.comment-star .starList .item {
+  width: 30px;
+  height: 30px;
+  line-height: 5px;
+  background: url(/images/icon_evaluation_nor@2x.png) no-repeat;
+  background-size: 100% auto;
+  float: left;
+}
+.comment-star .starList .on {
+  background: url(/images/icon_evaluation_sel@2x.png) no-repeat;
+  background-size: 100% auto;
+}
+.comment-star .word {
+  float: left;
+  color: #A2A7BA;
+}
+.comment-star ul {
+  list-style: none;
+}
+.comment .form-control {
+  border-radius: 15px;
+  height: 50px;
+}
+.comment .form-horizontal .form-group {
+  margin-right: 5px;
+  margin-left: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.comment .form-group {
+  margin-bottom: 15px;
+}

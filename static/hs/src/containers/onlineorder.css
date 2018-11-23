@@ -1,0 +1,13 @@
+.order-stores {
+  margin: 10px;
+  padding: 10px;
+  padding-top: 20px;
+  border-bottom: 1px solid #ececec;
+}
+.order-storeing {
+  padding-left: 5px;
+}
+.order-list-top-item .statuss {
+  font-size: 13px;
+  margin: 10px 10px;
+}

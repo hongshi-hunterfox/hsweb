@@ -1,0 +1,38 @@
+.edit-address-button {
+  position: fixed;
+  padding: 10px;
+  background-color: #FF3300;
+  color: white;
+  text-align: center;
+  left: 5%;
+  right: 0;
+  width: 90%;
+  z-index: 999;
+  bottom: 60px;
+  border-radius: 15px;
+  margin: auto;
+}
+.edit-address-form {
+  background-color: white;
+}
+.edit-address-form-control-select {
+  width: 33.33333333%;
+  float: left;
+}
+.edit-address .form-control {
+  border-radius: 15px;
+  height: 50px;
+}
+.edit-address .form-horizontal .form-group {
+  margin-right: 5px;
+  margin-left: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.edit-address .map-container {
+  _height: 400px;
+  min-height: 400px;
+}
+.edit-address .form-group {
+  margin-bottom: 15px;
+}

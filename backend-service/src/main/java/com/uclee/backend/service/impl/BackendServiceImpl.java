@@ -1,10 +1,16 @@
 package com.uclee.backend.service.impl;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,6 +21,8 @@ import java.util.*;
 import com.uclee.fundation.data.mybatis.mapping.*;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.*;
+
+import org.apache.http.entity.ContentType;
 import org.apache.poi.hssf.record.formula.functions.Na;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +31,28 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
 import com.github.pagehelper.PageHelper;
 import com.uclee.date.util.DateUtils;
+import com.uclee.file.util.DownloadPicFromURL;
 import com.uclee.file.util.FileUtil;
 import com.uclee.fundation.config.links.WebConfig;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.number.util.NumberUtil;
+import com.youzan.open.sdk.util.http.DefaultHttpClient;
+import com.youzan.open.sdk.util.http.HttpClient;
 
 
 public class BackendServiceImpl implements BackendServiceI {
 	@Autowired
 	private CommentMapper commentMapper;
+	@Autowired
+	private YouZanVarMapper youZanVarMapper;
 	@Autowired
 	private AccountMapper accountMapper;
 	@Autowired
@@ -277,7 +292,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.voucherSendInformation, configPost.getVoucherSendInformation());
 		}else{
 			configMapper.updateByTag(WebConfig.voucherSendInformation, "");
-		}if(configPost.getVoucherSendInformation()!=null){
+		}if(configPost.getWhetherEnableAlipay()!=null){
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, configPost.getWhetherEnableAlipay());
 		}else{
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, "");
@@ -285,6 +300,58 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
 		}else{
 			configMapper.updateByTag(WebConfig.linkCouponText, "");
+		}if(configPost.getCartLogo()!=null){
+			configMapper.updateByTag(WebConfig.CartLogo, configPost.getCartLogo());
+		}else{
+			configMapper.updateByTag(WebConfig.CartLogo, "");
+		}if(configPost.getCartBgUrl()!=null){
+			configMapper.updateByTag(WebConfig.CartBgUrl, configPost.getCartBgUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.CartBgUrl, "");
+		}if(configPost.getCartBrandName()!=null){
+			configMapper.updateByTag(WebConfig.CartBrandName, configPost.getCartBrandName());
+		}else{
+			configMapper.updateByTag(WebConfig.CartBrandName, "");
+		}if(configPost.getCartTitle()!=null){
+			configMapper.updateByTag(WebConfig.CartTitle, configPost.getCartTitle());
+		}else{
+			configMapper.updateByTag(WebConfig.CartTitle, "");
+		}if(configPost.getCartNotice()!=null){
+			configMapper.updateByTag(WebConfig.CartNotice, configPost.getCartNotice());
+		}else{
+			configMapper.updateByTag(WebConfig.CartNotice, "");
+		}if(configPost.getCartServicePhone()!=null){
+			configMapper.updateByTag(WebConfig.CartServicePhone, configPost.getCartServicePhone());
+		}else{
+			configMapper.updateByTag(WebConfig.CartServicePhone, "");
+		}if(configPost.getCartDescription()!=null){
+			configMapper.updateByTag(WebConfig.CartDescription, configPost.getCartDescription());
+		}else{
+			configMapper.updateByTag(WebConfig.CartDescription, "");
+		}if(configPost.getCartCustomUrl()!=null){
+			configMapper.updateByTag(WebConfig.CartCustomUrl, configPost.getCartCustomUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.CartCustomUrl, "");
+		}if(configPost.getCartPromotionUrl()!=null){
+			configMapper.updateByTag(WebConfig.CartPromotionUrl, configPost.getCartPromotionUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.CartPromotionUrl, "");
+		}if(configPost.getCartCenterUrl()!=null){
+			configMapper.updateByTag(WebConfig.CartCenterUrl, configPost.getCartCenterUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.CartCenterUrl, "");
+		}if(configPost.getCartBonusUrl()!=null){
+			configMapper.updateByTag(WebConfig.CartBonusUrl, configPost.getCartBonusUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.CartBonusUrl, "");
+		}if(configPost.getCartCustomField1Url()!=null){
+			configMapper.updateByTag(WebConfig.CartCustomField1Url, configPost.getCartCustomField1Url());
+		}else{
+			configMapper.updateByTag(WebConfig.CartCustomField1Url, "");
+		}if(configPost.getCartPrerogative()!=null){
+			configMapper.updateByTag(WebConfig.CartPrerogative, configPost.getCartPrerogative());
+		}else{
+			configMapper.updateByTag(WebConfig.CartPrerogative, "");
 		}
 		
 		return true;
@@ -446,8 +513,44 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getWhetherEnableAlipay()!=null) {
 			configMapper.updateByTag(WebConfig.whetherEnableAlipay, configPost.getWhetherEnableAlipay());
 		}
-		if (configPost.getLinkCouponText()!=null) {
-			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
+		if (configPost.getCartLogo()!=null) {
+			configMapper.updateByTag(WebConfig.CartLogo, configPost.getCartLogo());
+		}
+		if (configPost.getCartBgUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartBgUrl, configPost.getCartBgUrl());
+		}
+		if (configPost.getCartBrandName()!=null) {
+			configMapper.updateByTag(WebConfig.CartBrandName, configPost.getCartBrandName());
+		}
+		if (configPost.getCartTitle()!=null) {
+			configMapper.updateByTag(WebConfig.CartTitle, configPost.getCartTitle());
+		}
+		if (configPost.getCartNotice()!=null) {
+			configMapper.updateByTag(WebConfig.CartNotice, configPost.getCartNotice());
+		}
+		if (configPost.getCartServicePhone()!=null) {
+			configMapper.updateByTag(WebConfig.CartServicePhone, configPost.getCartServicePhone());
+		}
+		if (configPost.getCartDescription()!=null) {
+			configMapper.updateByTag(WebConfig.CartDescription, configPost.getCartDescription());
+		}
+		if (configPost.getCartCustomUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartCustomUrl, configPost.getCartCustomUrl());
+		}
+		if (configPost.getCartPromotionUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartPromotionUrl, configPost.getCartPromotionUrl());
+		}
+		if (configPost.getCartCenterUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartCenterUrl, configPost.getCartCenterUrl());
+		}
+		if (configPost.getCartBonusUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartBonusUrl, configPost.getCartBonusUrl());
+		}
+		if (configPost.getCartCustomField1Url()!=null) {
+			configMapper.updateByTag(WebConfig.CartCustomField1Url, configPost.getCartCustomField1Url());
+		}
+		if (configPost.getCartPrerogative()!=null) {
+			configMapper.updateByTag(WebConfig.CartPrerogative, configPost.getCartPrerogative());
 		}
 		return true;
 	}
@@ -607,6 +710,45 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getLinkCouponText()!=null) {
 			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
+		}
+		if (configPost.getCartLogo()!=null) {
+			configMapper.updateByTag(WebConfig.CartLogo, configPost.getCartLogo());
+		}
+		if (configPost.getCartBgUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartBgUrl, configPost.getCartBgUrl());
+		}
+		if (configPost.getCartBrandName()!=null) {
+			configMapper.updateByTag(WebConfig.CartBrandName, configPost.getCartBrandName());
+		}
+		if (configPost.getCartTitle()!=null) {
+			configMapper.updateByTag(WebConfig.CartTitle, configPost.getCartTitle());
+		}
+		if (configPost.getCartNotice()!=null) {
+			configMapper.updateByTag(WebConfig.CartNotice, configPost.getCartNotice());
+		}
+		if (configPost.getCartServicePhone()!=null) {
+			configMapper.updateByTag(WebConfig.CartServicePhone, configPost.getCartServicePhone());
+		}
+		if (configPost.getCartDescription()!=null) {
+			configMapper.updateByTag(WebConfig.CartDescription, configPost.getCartDescription());
+		}
+		if (configPost.getCartCustomUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartCustomUrl, configPost.getCartCustomUrl());
+		}
+		if (configPost.getCartPromotionUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartPromotionUrl, configPost.getCartPromotionUrl());
+		}
+		if (configPost.getCartCenterUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartCenterUrl, configPost.getCartCenterUrl());
+		}
+		if (configPost.getCartBonusUrl()!=null) {
+			configMapper.updateByTag(WebConfig.CartBonusUrl, configPost.getCartBonusUrl());
+		}
+		if (configPost.getCartCustomField1Url()!=null) {
+			configMapper.updateByTag(WebConfig.CartCustomField1Url, configPost.getCartCustomField1Url());
+		}
+		if (configPost.getCartPrerogative()!=null) {
+			configMapper.updateByTag(WebConfig.CartPrerogative, configPost.getCartPrerogative());
 		}
 		return true;
 	}
@@ -884,10 +1026,21 @@ public class BackendServiceImpl implements BackendServiceI {
 			productForm.setIsShow(product.getIsShow());
 			productForm.setParameter(product.getParameter());
 			productForm.setExplain(product.getExplain());
+			productForm.setFrequency(product.getFrequency());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm");
+			if(product.getShelfTime()!=null && product.getDownTime()!=null){
+				productForm.setShelfDate(sdf.format(product.getShelfTime()));
+				productForm.setShelfTimes(sdf1.format(product.getShelfTime()));
+				productForm.setDownDate(sdf.format(product.getDownTime()));
+				productForm.setDownTimes(sdf1.format(product.getDownTime()));
+			}			
+			
 			productForm.setAppointedTime(product.getAppointedTime());
 			productForm.setShippingFree(product.getShippingFree());
 			productForm.setTitle(product.getTitle());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
 			if(product.getPickUpTime() != null && product.getPickEndTime() != null){
 				productForm.setPickUpTimes(sdf.format(product.getPickUpTime()));
 				productForm.setPickEndTimes(sdf.format(product.getPickEndTime()));
@@ -913,6 +1066,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			tmp.setCode(value.getHsGoodsCode());
 			tmp.setHsStock(value.getHsStock());
 			tmp.setHsPrice(value.getHsGoodsPrice());
+			tmp.setVipPrice(value.getVipPrice());
 			tmp.setName(value.getValue());
 			tmp.setPrePrice(value.getPrePrice());
 			tmp.setPromotionPrice(value.getPromotionPrice());
@@ -1005,6 +1159,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		List<UserProfile> viplist = userProfileMapper.selectCardPhoneVips(cartphone);
 		for(UserProfile item:viplist){
 			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+			item.setLastBuyStr(DateUtils.format(item.getLastBuy(), DateUtils.FORMAT_LONG));
 		}
 		return viplist;
 	}
@@ -1140,7 +1295,34 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setWhetherEnableAlipay(config.getValue());
 			}else if(config.getTag().equals(WebConfig.linkCouponText)){
 				configPost.setLinkCouponText(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartLogo)){
+				configPost.setCartLogo(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartBgUrl)){
+				configPost.setCartBgUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartBrandName)){
+				configPost.setCartBrandName(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartTitle)){
+				configPost.setCartTitle(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartNotice)){
+				configPost.setCartNotice(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartServicePhone)){
+				configPost.setCartServicePhone(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartDescription)){
+				configPost.setCartDescription(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartCustomUrl)){
+				configPost.setCartCustomUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartPromotionUrl)){
+				configPost.setCartPromotionUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartCenterUrl)){
+				configPost.setCartCenterUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartBonusUrl)){
+				configPost.setCartBonusUrl(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartCustomField1Url)){
+				configPost.setCartCustomField1Url(config.getValue());
+			}else if(config.getTag().equals(WebConfig.CartPrerogative)){
+				configPost.setCartPrerogative(config.getValue());
 			}
+			
 		}
 		return configPost;
 	}
@@ -1303,7 +1485,7 @@ public class BackendServiceImpl implements BackendServiceI {
 		return false;
 	}
 	@Override
-	public boolean sendUnbuyMsg(Integer userId,boolean sendVoucher) {
+	public boolean sendUnbuyMsg(Integer userId, boolean sendVoucher) {
 		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
 		if(login!=null){
 			String nickName="";
@@ -1313,7 +1495,7 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
 			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"消费提醒"};
-			Config config = configMapper.getByTag("birthTmpId");
+			Config config = configMapper.getByTag("buyTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);
 			Config config3 = configMapper.getByTag(WebConfig.salesText);
@@ -1753,11 +1935,8 @@ public class BackendServiceImpl implements BackendServiceI {
 					SpecificationValue Value = specificationValueMapper.selectByPrimaryKey(productguige.get(i).getValueId());
 				    System.out.println("在售价============"+ Value.getHsGoodsPrice());
 				    BigDecimal prePrice = Value.getHsGoodsPrice().multiply(category.getBatchDiscount());	
-				    System.out.println("折扣价============"+ prePrice);
 					Value.setPromotionPrice(prePrice);
-					System.out.println("开始时间============"+ category.getStartTimeStrs());
 					Value.setStartTimeStr(category.getStartTimeStrs());
-					System.out.println("结束时间============"+ category.getEndTimeStrs());
 					Value.setEndTimeStr(category.getEndTimeStrs());
 					
 					specificationValueMapper.updateGuiGe(Value);
@@ -2076,34 +2255,6 @@ public class BackendServiceImpl implements BackendServiceI {
 		return true;
 	}
 	@Override
-	public List<ConsumerVoucher> selectAllConsumerVoucher() {
-		return consumerVoucherMapper.selectAll();
-	}
-		@Override
-	public boolean updateConsumerVoucher(ConsumerVoucherPost consumerVoucherPost) {
-		int delAll  = consumerVoucherMapper.deleteAll();
-		if(consumerVoucherPost.getMyKey()==null||consumerVoucherPost.getMyValue()==null||consumerVoucherPost.getMyKey().size()==0||consumerVoucherPost.getMyValue().size()==0){
-			return false;
-		}
-		for(Map.Entry<Integer, String> entry : consumerVoucherPost.getMyKey().entrySet()){
-			if(entry.getValue()==null||consumerVoucherPost.getMyValue().get(entry.getKey())==null){
-				return false;
-			}
-		}
-		for(Map.Entry<Integer, String> entry : consumerVoucherPost.getMyKey().entrySet()){
-			ConsumerVoucher tmp = new ConsumerVoucher();
-			tmp.setAmount(Integer.parseInt(consumerVoucherPost.getMyValue().get(entry.getKey())));
-			tmp.setVoucherCode(entry.getValue().toString());
-			consumerVoucherMapper.insertSelective(tmp);
-		}
-		return true;
-	}
-	@Override
-	public boolean truncateConsumerVoucherHandler() {
-		int delAll = consumerVoucherMapper.deleteAll();	
-		return true;
-	}	
-	@Override
 	public boolean updateLinkCoupon(VipVoucherPost vipVoucherPost) {
 		linkCouponMapper.deleteAll();
 		System.out.println("wdew=========="+JSON.toJSONString(vipVoucherPost));
@@ -2128,7 +2279,336 @@ public class BackendServiceImpl implements BackendServiceI {
 	}
 	@Override
 	public List<LinkCoupon> selectAllLinkCoupon() {
-		
 		return linkCouponMapper.selectOne();
 	}
+	
+	@Override
+	public List<ConsumerVoucher> selectAllConsumerVoucher() {
+		return consumerVoucherMapper.selectAll();
+	}
+
+    @Override
+	public boolean updateConsumerVoucher(ConsumerVoucherPost consumerVoucherPost) {
+		int delAll  = consumerVoucherMapper.deleteAll();
+		if(consumerVoucherPost.getMyKey()==null||consumerVoucherPost.getMyValue()==null||consumerVoucherPost.getMyKey().size()==0||consumerVoucherPost.getMyValue().size()==0){
+			return false;
+		}
+		for(Map.Entry<Integer, String> entry : consumerVoucherPost.getMyKey().entrySet()){
+			if(entry.getValue()==null||consumerVoucherPost.getMyValue().get(entry.getKey())==null){
+				return false;
+			}
+		}
+		for(Map.Entry<Integer, String> entry : consumerVoucherPost.getMyKey().entrySet()){
+			ConsumerVoucher tmp = new ConsumerVoucher();
+			tmp.setAmount(Integer.parseInt(consumerVoucherPost.getMyValue().get(entry.getKey())));
+			tmp.setVoucherCode(entry.getValue().toString());
+			consumerVoucherMapper.insertSelective(tmp);
+		}
+		return true;
+	}
+	@Override
+	public boolean truncateConsumerVoucherHandler() {
+		int delAll = consumerVoucherMapper.deleteAll();	
+		return true;
+	}
+	@Override
+	public String CreatWxVip() throws IOException {
+		Var var = varMapper.selectByPrimaryKey(new Integer(1));
+		int count = 2;
+		String result = "";
+		String result1 = "";
+		String filepath = "";
+		for(int i=1; i<=count; i++){
+			if(i==1){
+				//图片路径
+				filepath = getConfig().getCartLogo();
+			}else{
+				//图片路径
+				filepath = getConfig().getCartBgUrl();
+			}
+			
+			String path = filepath.substring(filepath.lastIndexOf("/")+1);
+			path = "d:/hs/img/"+path;
+			DownloadPicFromURL.downloadPicture(filepath, path);
+			// 上传文件请求路径
+	         String action = "http://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token="
+	                + var.getValue() + "&type=path";
+
+			 URL url = new URL(action);
+		     File file = new File(path);
+		     if (!file.exists() || !file.isFile()) {
+		         throw new IOException("上传的文件不存在");
+		     }
+		     HttpURLConnection con = (HttpURLConnection) url.openConnection();
+		       con.setRequestMethod("POST"); // 以Post方式提交表单，默认get方式
+		       con.setDoInput(true);
+		       con.setDoOutput(true);
+		       con.setUseCaches(false); // post方式不能使用缓存
+		
+		       // 设置请求头信息
+		       con.setRequestProperty("Connection", "Keep-Alive");
+		       con.setRequestProperty("Charset", "UTF-8");
+		       // 设置边界
+		       String BOUNDARY = "----------" + System.currentTimeMillis();
+		       con.setRequestProperty("Content-Type", "multipart/form-data; boundary="
+		               + BOUNDARY);
+		
+		       // 请求正文信息
+		       // 第一部分：
+		       StringBuilder sb = new StringBuilder();
+		       sb.append("--"); // 必须多两道线
+		       sb.append(BOUNDARY);
+		       sb.append("\r\n");
+		       sb.append("Content-Disposition: form-data;name=\"file\";filename=\""
+		               + file.getName() + "\"\r\n");
+		       sb.append("Content-Type:application/octet-stream\r\n\r\n");
+		       byte[] head = null;
+			try {
+				head = sb.toString().getBytes("utf-8");
+			} catch (UnsupportedEncodingException e6) {
+				// TODO Auto-generated catch block
+				e6.printStackTrace();
+			}
+		       // 获得输出流
+		       OutputStream out = null;
+			try {
+				out = new DataOutputStream(con.getOutputStream());
+			} catch (IOException e6) {
+				// TODO Auto-generated catch block
+				e6.printStackTrace();
+			}
+		
+		       // 输出表头
+		       try {
+				out.write(head);
+			} catch (IOException e6) {
+				// TODO Auto-generated catch block
+				e6.printStackTrace();
+			}
+		       // 文件正文部分
+		       // 把文件已流文件的方式 推入到url中
+		       DataInputStream in = null;
+			try {
+				in = new DataInputStream(new FileInputStream(file));
+			} catch (FileNotFoundException e5) {
+				// TODO Auto-generated catch block
+				e5.printStackTrace();
+			}
+		       int bytes = 0;
+		       byte[] bufferOut = new byte[1024];
+		       try {
+				while ((bytes = in.read(bufferOut)) != -1) {
+				       try {
+						out.write(bufferOut, 0, bytes);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				   }
+			} catch (IOException e4) {
+				// TODO Auto-generated catch block
+				e4.printStackTrace();
+			}
+		       try {
+				in.close();
+			} catch (IOException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
+		
+		       // 结尾部分
+		       byte[] foot = null;
+			try {
+				foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");
+			} catch (UnsupportedEncodingException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}// 定义最后数据分隔线
+		       try {
+				out.write(foot);
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		       try {
+				out.flush();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		       out.close();
+		       StringBuffer buffer = new StringBuffer();
+		       BufferedReader reader = null;
+		
+		       try {
+		           // 定义BufferedReader输入流来读取URL的响应
+		           reader = new BufferedReader(new InputStreamReader(con
+		                   .getInputStream()));
+		           String line = null;
+		           while ((line = reader.readLine()) != null) {
+		               buffer.append(line);
+		           }
+		           result = buffer.toString();
+		           System.out.println(result.toString()+"----SKX");
+		       } catch (IOException e) {
+		           System.out.println("发送POST请求出现异常！" + e);
+		           e.printStackTrace();
+		           try {
+					throw new IOException("数据读取异常");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		       } finally {
+		           if (reader != null) {
+		               try {
+						reader.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		    }
+		    if(i==2){
+		    	result1 = result.substring(result.indexOf(":")+1,result.indexOf("}")).trim();
+		    }
+		}
+		result = result.substring(result.indexOf(":")+1,result.indexOf("}")).trim();
+		String jsonc = "{\"card\": {"
+    			+ "\"card_type\": \"MEMBER_CARD\","
+    			+ "\"member_card\": {"
+    			+ "\"background_pic_url\": "+result1+","
+    					+ "\"base_info\": {"
+    					+ "\"logo_url\": "+result+","
+    					+ "\"brand_name\":\""+getConfig().getCartBrandName()+"\","
+    					//code_type卡二维码
+    					+ "\"code_type\": \"CODE_TYPE_NONE\","
+    					+ "\"title\":\""+getConfig().getCartTitle()+"\","
+    					//背景色
+    					+ "\"color\":"+"\"Color010\""+","
+    					+ "\"notice\":\""+getConfig().getCartNotice()+"\","
+    					+ "\"service_phone\":\""+getConfig().getCartServicePhone()+"\","
+    					+"\"description\":\""+getConfig().getCartDescription()+"\","
+    					+ "\"date_info\": {"
+    					//有效日期
+    					+ "\"type\": "+"\"DATE_TYPE_PERMANENT\""
+    					+ "},"
+    					+ "\"sku\": {"
+    					+ "\"quantity\": "+50000000
+    					+"},"
+    					//会员卡每人限一张
+    					+ "\"get_limit\":"+ 1 +","
+    					+ "\"use_custom_code\":"+ false+","
+    					+ "\"can_give_friend\":"+ true +","
+    					+ "\"location_id_list\": ["
+    					+ 123+","
+    					+ 12321+"],"
+    					+ "\"custom_url_name\": "+"\"消费记录\""+","
+    					+ "\"custom_url\": \""+getConfig().getCartCustomUrl()+"\","
+    					+ "\"custom_url_sub_title\": "+"\"查看消费记录\""+","
+    					+ "\"promotion_url_name\": "+"\"微商城\""+","
+    					+ "\"promotion_url\": \""+getConfig().getCartPromotionUrl()+"\","
+    					+ "\"need_push_on_view\": "+true+","
+    					+ "\"center_title\": "+"\"出示付款码\""+","
+//    					+ "\"center_sub_title\": "+"\"查看付款码\""+","
+    					+ "\"center_url\": \""+getConfig().getCartCenterUrl()
+    					+"\"},"
+    					//设置积分
+    					+ "\"supply_bonus\": "+true+","
+    					//设置跳转外链查看积分详情
+    					+ "\"bonus_url\": \""+getConfig().getCartBonusUrl()+"\","
+    					+ "\"supply_balance\":"+ false+","
+    					+ "\"prerogative\": \""+getConfig().getCartPrerogative()+"\","
+    					//会员卡是否自动激活
+    					+ "\"auto_activate\": "+true+","
+//    					+ "\"custom_field1\": {"
+//    					+ "\"name\": "+"\"余额\""+","
+//    					+ "\"url\": "+"\"http://www.qq.com\""
+//    					+ "},"
+    					+ "\"custom_field1\": {"
+    					+ "\"name\": "+"\"余额\""+","
+    					+ "\"url\": \""+getConfig().getCartCustomField1Url()
+    					+ "\"}"
+    					+ "}}}";
+	       
+		System.out.println(jsonc.toString());
+		String lines = null;
+		try {
+		URL urlPost = new URL("https://api.weixin.qq.com/card/create?access_token=" + var.getValue());// 创建连接  
+        HttpURLConnection connection = (HttpURLConnection) urlPost  
+                .openConnection();  
+        connection.setDoOutput(true);  
+        connection.setDoInput(true);  
+        connection.setUseCaches(false);  
+        connection.setInstanceFollowRedirects(true);  
+        connection.setRequestMethod("POST"); // 设置请求方式  
+        connection.setRequestProperty("Accept", "application/json"); // 设置接收数据的格式  
+        connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式  
+        connection.connect();  
+        OutputStreamWriter out1 = new OutputStreamWriter(  
+                connection.getOutputStream(), "UTF-8"); // utf-8编码  
+        out1.append(jsonc);  
+        out1.flush();  
+        out1.close();
+        
+        BufferedReader reader1 = new BufferedReader(new InputStreamReader(
+                connection.getInputStream()));
+        
+        StringBuffer res1 = new StringBuffer("");
+        while ((lines = reader1.readLine()) != null) {
+            lines = new String(lines.getBytes(), "utf-8");
+            res1.append(lines);
+        }
+        System.err.println(res1);
+        reader1.close();
+        // 断开连接
+        connection.disconnect();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lines;
+	}	
+	
+	@Override
+	public String yzPost(String code, String redirect_uri) {
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpClient.Params params = HttpClient.Params.custom()
+				.add("client_id", "01e3d14da80e4e77e6") //填写您的client_id
+				.add("client_secret", "bbb8efa2c6f017c3e9edee2ca74f2d21") //填写您的client_secret
+				.add("grant_type", "authorization_code") //默认值请勿修改
+				.add("code",code)
+				.add("redirect_uri",redirect_uri)
+				.setContentType(ContentType.APPLICATION_FORM_URLENCODED).build();
+		String resp = httpClient.post("https://open.youzan.com/oauth/token", params);
+		JSONObject jsonObject = JSONObject.parseObject(resp);
+		String access_token = jsonObject.getString("access_token");
+		Integer expires_in = Integer.parseInt(jsonObject.getString("expires_in"));
+		String refresh_token = jsonObject.getString("refresh_token");
+		if(access_token!=null){
+			YouZanVar youZanVar = new YouZanVar();
+			youZanVar.setName("access_token");
+			youZanVar.setPlatform("YZ");
+			youZanVar.setStorageTime(new Date());
+			youZanVar.setValue(access_token);
+			youZanVar.setExpiresIn(expires_in);
+			youZanVar.setRefreshToken(refresh_token);
+			//判断是否已有授权记录
+			YouZanVar record = youZanVarMapper.selectByPrimaryKey(new Integer(1));
+			if(record!=null){
+				youZanVar.setId(new Integer(1));
+				youZanVarMapper.updateByPrimaryKey(youZanVar);
+			}else{
+				youZanVarMapper.insert(youZanVar);
+			}
+			return "authorize_ok： "+access_token;
+		}
+		return  "authorize_err";
+	}
+
+	@Override
+	public List<UserProfile> selectAllVipLists() {
+		return userProfileMapper.selectAllVipLists();
+	}
+
 }

@@ -295,26 +295,26 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 		users.add(user1);
 		System.err.println(JSON.toJSONString(users));
 	}
-	@Test
-	public void test() throws Exception{
-		DynamicDataSourceManager.init();
-        //获取数据源连接池
-        System.out.println("------------------->数据源1");
-        //
-        JdbcTemplate jdbcTemplatefwefewf = DynamicDataSourceManager.getDataSourcePoolBySourceID(1);
-        //
-        String sql = "show tables;";
-        List<Map<String, Object>> retList2 = jdbcTemplatefwefewf.queryForList(sql);
-        for(Map<String, Object> entityMap : retList2) {
-            System.out.println("-------查询结果:"+entityMap);
-        }
-        System.out.println("------------------->数据源2");
-        JdbcTemplate jdbcTemplatefwefwef = DynamicDataSourceManager.getDataSourcePoolBySourceID(2);
-        //
-        sql="CREATE TABLE web_role_permission_link(   role_id int  NOT NULL,   permission_id int NOT NULL);";
-        jdbcTemplatefwefwef.execute(sql);
-
-	}
+//	@Test
+//	public void test() throws Exception{
+//		DynamicDataSourceManager.init();
+//        //获取数据源连接池
+//        System.out.println("------------------->数据源1");
+//        //
+//        JdbcTemplate jdbcTemplatefwefewf = DynamicDataSourceManager.getDataSourcePoolBySourceID(1);
+//        //
+//        String sql = "show tables;";
+//        List<Map<String, Object>> retList2 = jdbcTemplatefwefewf.queryForList(sql);
+//        for(Map<String, Object> entityMap : retList2) {
+//            System.out.println("-------查询结果:"+entityMap);
+//        }
+//        System.out.println("------------------->数据源2");
+//        JdbcTemplate jdbcTemplatefwefwef = DynamicDataSourceManager.getDataSourcePoolBySourceID(2);
+//        //
+//        sql="CREATE TABLE web_role_permission_link(   role_id int  NOT NULL,   permission_id int NOT NULL);";
+//        jdbcTemplatefwefwef.execute(sql);
+//
+//	}
 	private Balance getBalance(Integer userId) {
 		Balance balance = balanceMapper.selectByUserId(userId);
 		if(balance==null) {

@@ -1,5 +1,6 @@
 package com.uclee.web.backend.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -252,23 +253,6 @@ public class BackendController {
 		result.put("size", i++);
 		return result;
 	}
-	
-	@RequestMapping("/consumerVoucher")
-	public @ResponseBody Map<String,Object> consumerVoucher(HttpServletRequest request) {
-		Map<String,Object> result = new TreeMap<String,Object>();
-		Map<String,Object> map = new LinkedMap();
-		List<ConsumerVoucher> consumerVoucher = backendService.selectAllConsumerVoucher();
-		int i=0;
-		for(ConsumerVoucher item : consumerVoucher){
-			map.put("myKey["+ i + "]",item.getVoucherCode());
-			map.put("myValue[" + i + "]",item.getAmount());
-			i++;
-		}
-		result.put("data", map);
-		result.put("size", i++);
-		return result;
-		
-	}
 	@RequestMapping("/vipVoucher")
 	public @ResponseBody Map<String,Object> vipVoucher(HttpServletRequest request) {
 		Map<String,Object> result = new TreeMap<String,Object>();
@@ -463,6 +447,7 @@ public class BackendController {
 				for(UserProfile item:vips){
 					//用于转换会员注册日期数据类型
 					item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+					item.setLastBuyStr(DateUtils.format(item.getLastBuy(), DateUtils.FORMAT_LONG));
 				}
 				map.put("start", DateUtils.format(new Date(),DateUtils.FORMAT_SHORT));
 				map.put("end", DateUtils.format(DateUtils.addDay(new Date(),30),DateUtils.FORMAT_SHORT));
@@ -488,14 +473,20 @@ public class BackendController {
 	 * 取所有会员信息
 	 */
 	@RequestMapping("/getAllvip")
-	public @ResponseBody Map<String,Object> getAllvip(HttpServletRequest request) {
+	public @ResponseBody Map<String,Object> getAllvip(HttpServletRequest request, Integer sort) {
 		Map<String,Object> map = new TreeMap<String,Object>();
-		List<UserProfile> vips = backendService.selectAllVipList();
-		for(UserProfile item:vips){
-			//用于转换会员注册日期数据类型
-			item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
-			 System.out.println(item);
-		}
+		List<UserProfile> vips;
+		sort = sort == null ? 0 : sort;
+			if(sort==0){
+				vips = backendService.selectAllVipList();
+			}else{
+				vips = backendService.selectAllVipLists();
+			}
+			for(UserProfile item:vips){
+				//用于转换会员注册日期数据类型
+				item.setRegistTimeStr(DateUtils.format(item.getRegistTime(), DateUtils.FORMAT_LONG));
+				item.setLastBuyStr(DateUtils.format(item.getLastBuy(), DateUtils.FORMAT_LONG));
+			}
 		map.put("vips", vips);
 		map.put("size", vips.size());
 		return map;
@@ -757,7 +748,6 @@ public class BackendController {
 	/**
 	 * @author 孙俊霞
 	 * 满额赠送优惠券
-	 * @param Request
 	 * @return
 	 */
 	@RequestMapping("/fullDiscount ")
@@ -809,5 +799,32 @@ public class BackendController {
 		result.put("data", map);
 		result.put("size", i++);
 		return result;
+	}
+	
+	@RequestMapping("/consumerVoucher")
+	public @ResponseBody Map<String,Object> consumerVoucher(HttpServletRequest request) {
+		Map<String,Object> result = new TreeMap<String,Object>();
+		Map<String,Object> map = new LinkedMap();
+		List<ConsumerVoucher> consumerVoucher = backendService.selectAllConsumerVoucher();
+		int i=0;
+		for(ConsumerVoucher item : consumerVoucher){
+			map.put("myKey["+ i + "]",item.getVoucherCode());
+			map.put("myValue[" + i + "]",item.getAmount());
+			i++;
+		}
+		result.put("data", map);
+		result.put("size", i++);
+		return result;
+		
+	}
+	
+	/**
+	 * 创建微信会员卡
+	 * @throws IOException 
+	 */
+	@RequestMapping("/CreatWxVip")
+	public @ResponseBody String CreatWxVip(HttpServletRequest request) throws IOException {
+		return backendService.CreatWxVip();
+		
 	}
 }

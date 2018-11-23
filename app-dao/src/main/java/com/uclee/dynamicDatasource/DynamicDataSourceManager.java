@@ -25,6 +25,7 @@ public class DynamicDataSourceManager {
      */
     public static void init() {
         logger.info("-------------->开始初始化加载创建动态数据源...");
+        System.out.println("-------------->开始初始化加载创建动态数据源...");
         //获取所有数据源配置信息
         List<AdminDataSource> dataSourceList = new ArrayList<>();
         AdminDataSource dd=new AdminDataSource()
@@ -49,6 +50,7 @@ public class DynamicDataSourceManager {
             createDataSourcePool(adminDataSource);
         }
         logger.info("-------------->初始化加载创建动态数据源完毕，加载数："+dataSourceList.size());
+        System.out.println("-------------->初始化加载创建动态数据源完毕，加载数："+dataSourceList.size());
     }
                                                     
     /**
@@ -103,6 +105,7 @@ public class DynamicDataSourceManager {
         } else {
         }*/
         logger.info(String.format("已找到[SourceID=%d]对应的数据源!", source_id));
+        System.out.println(String.format("已找到[SourceID=%d]对应的数据源!", source_id));
         //
         JdbcTemplate jdbcTempleDynamic = new JdbcTemplate(comboPooledDataSource);
         //
@@ -120,6 +123,7 @@ public class DynamicDataSourceManager {
                 comboPooledDataSource.close();
             } catch (Exception e) {
                 logger.error("关闭连接池异常：comboPooledDataSource="+ToStringBuilder.reflectionToString(comboPooledDataSource));
+                System.out.println("关闭连接池异常：comboPooledDataSource="+ToStringBuilder.reflectionToString(comboPooledDataSource));
                 e.printStackTrace();
             }
         }

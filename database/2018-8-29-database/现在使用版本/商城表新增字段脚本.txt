@@ -8,10 +8,6 @@ Begin
  alter table web_orders add cut decimal(15,2) not null default 0;
 End
 
-If Not Exists(Select * From syscolumns where name='invalid' And id=Object_id('web_orders add','U'))
-Begin
-ALTER TABLE web_orders ADD invalid int NOT NULL DEFAULT 1
-End
 If Not Exists(Select * From syscolumns where name='pick_up_image' And id=Object_id('web_orders add','U'))
 Begin
  alter table web_orders add pick_up_image varchar(255) not null default '';
@@ -153,19 +149,62 @@ End
 
 ---2018/10/10更新
 -----新增字段
+If Not Exists(Select * From syscolumns where name='appointed_time' And id=Object_id('web_products','U'))
+Begin
+alter table web_products add appointed_time int;
+End
 
-alter table web_products add appointed_time int
-  alter table web_product_groups add image_url varchar; 
+If Not Exists(Select * From syscolumns where name='image_url' And id=Object_id('web_product_groups','U'))
+Begin
+alter table web_product_groups add image_url varchar; 
+End
+
+If Not Exists(Select * From syscolumns where name='invalid' And id=Object_id('web_orders','U'))
+Begin
 alter table web_orders add invalid int;
- alter table web_cart add activity_markers int;
+End
 
+If Not Exists(Select * From syscolumns where name='activity_markers' And id=Object_id('web_cart','U'))
+Begin
+alter table web_cart add activity_markers int;
+End
 
-insert into web_config(tag,value) values('loss','0')
+If Not Exists(Select * From syscolumns where name='pick_up_time And id=Object_id('web_products','U'))
+Begin
+ alter table web_products add pick_up_time datetime;
+End
 
-insert into web_config(tag,value) values('perfectBirthText','检测到你还没有填写生日信息，完善生日信息会有惊喜礼品赠送哦！')
+If Not Exists(Select * From syscolumns where name='pick_end_time' And id=Object_id('web_products','U'))
+Begin
+alter table web_products add pick_end_time datetime;
+End
 
-insert into web_config(tag,value) values('notice','欢迎光临！')
+If Not Exists(Select * From syscolumns where name='frequency' And id=Object_id('web_products','U'))
+Begin
+alter table web_products add frequency int
+End
 
-insert into web_config(tag,value) values('bargainText','...')
+If Not Exists(Select * From syscolumns where name='shelf_time' And id=Object_id('web_products','U'))
+Begin
+alter table web_products add shelf_time datetime
+End
 
-insert into web_config(tag,value) values('signText','...')
+If Not Exists(Select * From syscolumns where name='down_time' And id=Object_id('web_products','U'))
+Begin
+alter table web_products add down_time datetime
+End
+
+go
+update web_products set shelf_time='2018-11-06 02:54:00.000' ;
+update web_products set down_time='2019-12-07 02:55:00.000';
+go
+
+If Not Exists(Select * From syscolumns where name='vip_price' And id=Object_id('web_products','U'))
+Begin
+alter table web_products add vip_price decimal(20,2)
+End
+
+If Not Exists(Select * From syscolumns where name='vip_price' And id=Object_id('web_specification_values','U'))
+Begin
+alter table web_specification_values add vip_price decimal(20,2)
+End

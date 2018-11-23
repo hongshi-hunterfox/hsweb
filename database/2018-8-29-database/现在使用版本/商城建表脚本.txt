@@ -2,94 +2,211 @@ use 数据库名
 
 go
 
-If Object_id('web_evaluation_config','U') Is Null
+If Object_id('ReportColumn,'U') Is Null
+
 Begin
+
 create table ReportColumn(
-Id int IDENTITY(1,1) NOT NULL ,
-EngName Varchar(20),
-CnName Varchar(20),
-Sort int,
+
+	Id int IDENTITY(1,1) NOT NULL ,
+
+	EngName Varchar(20),
+
+	CnName Varchar(20),
+
+	Sort int,
+	
 ObjectName varchar(50),
-Remarks varchar(20)
+
+	Remarks varchar(20)
+
 )
+;
 end 
-go
-delete from ReportColumn
-insert into ReportColumn(EngName,CnName,Sort,ObjectName,Remarks)
-select '日期','日期',1,'SumBusinessClass','营业分类汇总' union
-select '零售','零售',2,'SumBusinessClass','营业分类汇总' union
-select '订单','订单',3,'SumBusinessClass','营业分类汇总' union
-select '充值','充值',4,'SumBusinessClass','营业分类汇总' union
-select '收入方式','收入方式',1,'SalesRevenue','销售收入' union
-select '昨天','昨天',2,'SalesRevenue','销售收入'  union
-select '近七天','近七天',3,'SalesRevenue','销售收入'  union
-select '近三十天','近三十天',4,'SalesRevenue','销售收入'union
-select '日期','日期',1,'BusinessError','营业差额'  union
-select '店铺名','店铺名',2,'BusinessError','营业差额'  union
-select '应缴','应缴',3,'BusinessError','营业差额'  union
-select '实缴','实缴',4,'BusinessError','营业差额'  union
-select '差额','差额',5,'BusinessError','营业差额'  union
-select '类别','类别',1,'SalesRanking','分类单品销售排行' union
-select '产品','产品',2,'SalesRanking','分类单品销售排行'union
-select '销售','销售',3,'SalesRanking','分类单品销售排行'union
-select '日期','日期',1,'VIPAnalysis','会员分析'union
-select '充值','充值',2,'VIPAnalysis','会员分析'union
-select '刷卡','刷卡',3,'VIPAnalysis','会员分析'union
-select '类别','类别',1,'ClassSaleType','大类销售排行'union
-select '昨天','昨天',2,'ClassSaleType','大类销售排行'union
-select '近七天','近七天',3,'ClassSaleType','大类销售排行'union
-select '近三十天','近三十天',4,'ClassSaleType','大类销售排行'
+
 go
 
---买产品增礼券
+delete from ReportColumn 
+
+insert into ReportColumn(EngName,CnName,Sort,ObjectName,Remarks)
+select '日期','日期',
+1,'SumBusinessClass','营业分类汇总' union
+select '零售','零售',
+2,'SumBusinessClass','营业分类汇总' union
+select '订单','订单',
+3,'SumBusinessClass','营业分类汇总' union
+select '充值','充值',
+4,'SumBusinessClass','营业分类汇总' union
+select '收入方式','收入方式',
+1,'SalesRevenue','销售收入' union
+select '昨天','昨天',
+2,'SalesRevenue','销售收入'  union
+select '近七天','近七天',
+3,'SalesRevenue','销售收入'  union
+select '近三十天','近三十天',
+4,'SalesRevenue','销售收入'union
+select '日期','日期',
+1,'BusinessError','营业差额'  union
+select '店铺名','店铺名',
+2,'BusinessError','营业差额'  union
+select '应缴','应缴',
+3,'BusinessError','营业差额'  union
+select '实缴','实缴',
+4,'BusinessError','营业差额'  union
+select '差额','差额',
+5,'BusinessError','营业差额'  union
+select '类别','类别',
+1,'SalesRanking','分类单品销售排行' union
+select '产品','产品',
+2,'SalesRanking','分类单品销售排行'union
+select '销售','销售',
+3,'SalesRanking','分类单品销售排行'union
+select '日期','日期',
+1,'VIPAnalysis','会员分析'union
+select '充值','充值',
+2,'VIPAnalysis','会员分析'union
+select '刷卡','刷卡',
+3,'VIPAnalysis','会员分析'union
+select '类别','类别',
+1,'ClassSaleType','大类销售排行'union
+select '昨天','昨天',
+2,'ClassSaleType','大类销售排行'union
+select '近七天','近七天',
+3,'ClassSaleType','大类销售排行'union
+select '近三十天','近三十天',
+4,'ClassSaleType','大类销售排行'
+
+go
+
+If Object_ID('web_consumer_voucher','U') Is Null
+Begin
+CREATE TABLE web_consumer_voucher(
+	id int IDENTITY(1,1) not null,
+	voucher_code varchar(255) not null,
+	amount int not null
+);
+go
+
+If Object_ID('web_youzan_vars','U') Is Null
+Begin
+CREATE TABLE web_youzan_vars(
+	id int identity(1,1) not null,
+  	platform varchar(10) not null,
+  	name varchar(50) not null,
+  	storage_time datetime not null,
+  	value varchar(255) not null, 
+  	expires_in int not null,
+  	refresh_token varchar(255) not null,
+);
+go
+
+If Object_ID('web_youzan_vars','U') Is Null
+Begin
+
+
+create table web_youzan_vars(
+  id int identity(1,1) not null,
+  platform varchar(10) not null,
+  name varchar(50) not null,
+  storage_time datetime not null,
+  value varchar(255) not null, 
+  expires_in int not null,
+  refresh_token varchar(255) not null,
+  );
+End
+go
+
+If Object_ID('web_usre_limit','U') Is Null
+Begin
+
+
+CREATE TABLE [web_usre_limit](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[user_id] [int] NULL,
+	[time] [datetime] NULL,
+	[product_id] [int] NULL
+)
+End
+go
+
+--买产品送礼券
+If Object_ID('web_product_voucher_setting','U') Is Null
+Begin
+
+
 create table web_product_voucher_setting(
 	id int  identity (1,   1) NOT NULL,
 	voucher varchar(50) not null,
 	amount int not null,
 	name varchar(50) not null
-)
---关联产品表
+);
+go
+--关联产品
+If Object_ID('web_coupons_products_links','U') Is Null
+Begin
 create table web_coupons_products_links(
 	id int identity(1,1) primary key not null,
 	vid int not null,
 	pid int not null
-)
-
+);
+go
 --链接领券表
+If Object_ID('web_link_coupon','U') Is Null
+Begin
 create table web_link_coupon(
 id int IDENTITY(1,1) NOT NULL,
 voucher varchar(255) NOT NULL,
 amount int NOT NULL,
 name name varchar(255),
-)
+);
+go
 
 --领取记录
+If Object_ID('web_link_coupon_logs','U') Is Null
+Begin
  create table web_link_coupon_logs(
 	id int IDENTITY(1,1) NOT NULL,
 	oauth_id varchar(255) not null,
 	name varchar(255) not null,
 	day  datetime not null,
- )
+ );
+go
 
-
-
-
+If Object_ID('web_list_voucher','U') Is Null
+Begin
+CREATE TABLE [web_list_voucher](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[voucher_code] [varchar](255) NOT NULL,
+	[amount] [int] NOT NULL,
+	[time] [datetime] NULL
+);
+End
+go
 
 --满额送礼券
-CREATE TABLE [dbo].[web_full_send_coupon](
+If Object_ID('web_full_send_coupon','U') Is Null
+Begin
+create table web_full_send_coupon(
+	
 	[id] [int] IDENTITY(1,1) NOT NULL,
+	
 	[voucher] [varchar](50) NOT NULL,
+	
 	[amount] [int] NOT NULL,
+	
 	[money] [decimal](20, 2) NULL
-) 
 
+);
+go
 --生日信息推送新增表
+If Object_ID('web_birthdayInformation_push','U') Is Null
+Begin
 create table web_birthdayInformation_push(
 	id int primary key not null,
 	day int not null,
 	time varchar(50) not null
-)
-
+);
+go
 --砍价活动需要表
 If Object_id('web_bargain_log','U') Is Null
 Begin
@@ -101,8 +218,8 @@ CREATE TABLE [dbo].[web_bargain_log](
 	[random_amount] [decimal](20, 2) NULL,
 	[launch_time] [datetime] NULL,
 	[invitation_code] [varchar](50) NULL
-)
-End
+);
+go
 
 If Object_id('web_bargain_setting','U') Is Null
 Begin
@@ -116,8 +233,8 @@ CREATE TABLE [dbo].[web_bargain_setting](
 	[maxprice] [decimal](20, 2) NULL,
 	[product_name] [varchar](50) NULL,
 	[tries_limit] [int] NULL,
-)
-end
+);
+go
 
 If Object_id('web_launch_bargain','U') Is Null
 Begin
@@ -131,8 +248,8 @@ CREATE TABLE [dbo].[web_launch_bargain](
 	[launch_time] [datetime] NULL,
 	[status] [int] NULL,
 	[invitation_code] [varchar](50) NULL,
-)
-end
+);
+go
 
 --必需要插入用户密码
 If Object_id('web_account_information','U') Is Null
@@ -140,8 +257,8 @@ Begin
 CREATE TABLE [dbo].[web_account_information](
 	[account] [varchar](25) NULL,
 	[password] [varchar](30) NULL
-)
-End
+)；
+go
 
 If Object_ID('web_balance','U') Is Null
 
@@ -154,6 +271,7 @@ create table web_balance(
   balance decimal(20,2) NOT NULL,
 
 );
+go
 
 If Object_ID('web_balance_log','U') Is Null
 
@@ -170,6 +288,7 @@ create table web_balance_log(
   create_time DATETIME DEFAULT(GETDATE())
 
 );
+go
 
 If Object_ID('web_banner','U') Is Null
 
@@ -182,6 +301,7 @@ create table web_banner(
   link varchar(255) not null default ''
 
 );
+go
 
 If Object_ID('web_binding_rewards  ','U') Is Null
 
@@ -198,6 +318,7 @@ CREATE TABLE web_binding_rewards (
   time DATETIME DEFAULT(GETDATE())
 
 );
+go
 
 If Object_ID('web_birth_voucher  ','U') Is Null
 
@@ -212,6 +333,7 @@ CREATE TABLE web_birth_voucher (
   time DATETIME DEFAULT(GETDATE())
 
 );
+go
 
 If Object_ID('web_cart','U') Is Null
 
@@ -233,7 +355,7 @@ create table web_cart(
 
 );
 
-end
+go
 
 CREATE NONCLUSTERED INDEX userIdx ON web_cart(user_id);
 
@@ -248,6 +370,7 @@ CREATE TABLE web_categories(
    parent_id int NOT NULL
 
 );
+go
 
 If Object_ID('web_cities','U') Is Null
 
@@ -260,6 +383,7 @@ CREATE TABLE web_cities(
    city varchar(255) NOT NULL 
 
 );
+go
 
 If Object_ID('web_comment  ','U') Is Null
 
@@ -286,6 +410,7 @@ CREATE TABLE web_comment (
   back_time DATETIME DEFAULT null
 
 );
+go
 
 If Object_ID('web_config','U') Is Null
 
@@ -298,6 +423,7 @@ create table web_config(
   value varchar(255) not null
 
 );
+go
 
 If Object_ID('web_deliver_addrs','U') Is Null
 
@@ -331,7 +457,7 @@ CREATE TABLE web_deliver_addrs(
 
 );
 
-end
+go
 
 CREATE NONCLUSTERED INDEX userIdx ON web_deliver_addrs(user_id);
 
@@ -351,6 +477,7 @@ amount int NOT NULL,
 	
 time datetime NULL
 );
+go
 
 If Object_ID('web_freight','U') Is Null
 
@@ -363,6 +490,7 @@ create table web_freight(
   money decimal(20,2) NOT NULL
 
 );
+go
 
 If Object_ID('web_full_cut ','U') Is Null
 
@@ -381,6 +509,7 @@ CREATE TABLE web_full_cut (
   end_time DATETIME DEFAULT null
 
 );
+go
 
 If Object_ID('web_home_quick_navi ','U') Is Null
 
@@ -393,6 +522,7 @@ CREATE TABLE web_home_quick_navi (
   image_url varchar(255) NOT NULL DEFAULT ''
 
 );
+go
 
 If Object_id('web_integralin_config','U') Is Null
 BEGIN
@@ -402,8 +532,8 @@ CREATE TABLE [dbo].[web_integralin_config](
 	[money] [decimal](20, 2) NULL,
 	[voucher_code] [varchar](255) NULL,
 	[amount] [int] NULL
-)
-END
+)；
+go
 
 If Object_ID('web_lottery_draw_config','U') Is Null
 
@@ -432,6 +562,7 @@ create table web_lottery_draw_config(
   end_time DATETIME DEFAULT(GETDATE())
 
 );
+go
 
 If Object_ID('web_lottery_record','U') Is Null
 
@@ -444,6 +575,7 @@ create table web_lottery_record(
   time DATETIME DEFAULT(GETDATE())
 
 );
+go
 
 If Object_ID('web_message  ','U') Is Null
 
@@ -464,6 +596,7 @@ CREATE TABLE web_message (
   is_send bit NOT NULL DEFAULT 0
 
 );
+go
 
 If Object_ID('web_msg_record','U') Is Null
 
@@ -478,6 +611,7 @@ create table web_msg_record(
   time DATETIME DEFAULT(GETDATE()),
 
 );
+go
 
 If Object_ID('web_napa_store_user_link','U') Is Null
 
@@ -490,6 +624,7 @@ create table web_napa_store_user_link(
   store_id int not null 
 
 );
+go
 
 If Object_ID('web_napa_stores','U') Is Null
 
@@ -518,6 +653,7 @@ If Object_ID('web_napa_stores','U') Is Null
    supportDeliver varchar(10) not null
 
 );
+go
 
 If Object_ID('web_oauth_login','U') Is Null
 
@@ -545,7 +681,7 @@ CREATE TABLE web_oauth_login (
 
  );
 
-end
+go
 
 CREATE NONCLUSTERED INDEX oauthIdx ON web_oauth_login(oauth_id);
 
@@ -576,8 +712,7 @@ CREATE TABLE web_order_items(
    price decimal(20,2) NOT NULL
 
 );
-
-end
+go
 
 CREATE NONCLUSTERED INDEX orderIdx ON web_order_items(order_id)
 
@@ -642,8 +777,7 @@ CREATE TABLE web_orders(
    sync_status smallint NOT NULL DEFAULT '100',
 
 );
-
-end
+go
 
 CREATE NONCLUSTERED INDEX orderSerialNumIdx ON web_orders(order_serial_num)
 
@@ -655,8 +789,8 @@ closeStartDate datetime,
 closeEndDate datetime,
 businessStartTime varchar(50),
 businessEndTime varchar(50)
-)
-END
+)；
+go
 
 If Object_id('web_payment_callback_data','U') Is Null
 Begin
@@ -666,7 +800,7 @@ CREATE TABLE web_payment_callback_data (
   payment_serial_num varchar(255) NOT NULL,
   create_time DATETIME DEFAULT(GETDATE())
 ) ;
-End
+go
 
 If Object_ID('web_payment_orders','U') Is Null
 
@@ -698,7 +832,7 @@ CREATE TABLE web_payment_orders(
 
 );
 
-end
+go
 
 CREATE NONCLUSTERED INDEX uidIdx ON web_payment_orders(user_id)
 
@@ -719,6 +853,7 @@ CREATE TABLE web_payments(
    strategy_class_name varchar(255) not  NULL
 
 );
+go
 
 If Object_ID('web_permissions','U') Is Null
 
@@ -735,6 +870,7 @@ CREATE TABLE web_permissions(
    is_active bit NOT NULL DEFAULT '1'
 
 );
+go
 
 If Object_ID('web_product_group_links','U') Is Null
 
@@ -747,6 +883,7 @@ CREATE TABLE web_product_group_links (
   position int  NOT NULL default 0
 
 );
+go
 
 If Object_ID('web_product_groups','U') Is Null
 
@@ -763,6 +900,7 @@ If Object_ID('web_product_groups','U') Is Null
   is_active bit NOT NULL DEFAULT '0'
 
 );
+go
 
 If Object_ID('web_product_images_link','U') Is Null
 
@@ -775,6 +913,7 @@ If Object_ID('web_product_images_link','U') Is Null
    image_url varchar(255) NOT NULL DEFAULT ''
 
 );
+go
 
 If Object_ID('web_product_sale','U') Is Null
 
@@ -787,6 +926,7 @@ create table web_product_sale(
   count int not null default 0,
 
 );
+go
 
 If Object_ID('web_products','U') Is Null
 
@@ -807,6 +947,7 @@ CREATE TABLE web_products (
    price decimal(20,2) NOT NULL DEFAULT '0.00',
 
  );
+go
 
 If Object_ID('web_products_categories_link','U') Is Null
 
@@ -817,6 +958,7 @@ CREATE TABLE web_products_categories_link(
    category_id int NOT NULL
 
 );
+go
 
 If Object_ID('web_products_specifications_values_link','U') Is Null
 
@@ -829,6 +971,7 @@ If Object_ID('web_products_specifications_values_link','U') Is Null
    product_id int not null
 
 );
+go
 
 If Object_id('web_product_parameters','U') Is Null
 Begin
@@ -836,8 +979,8 @@ Begin
 	id int IDENTITY(1,1) primary key NOT NULL,
 	product_id int NULL,
 	sname varchar(50) NULL,
-	)
-End
+	)；
+go
 
 If Object_ID('web_province','U') Is Null
 
@@ -848,6 +991,7 @@ If Object_ID('web_province','U') Is Null
    province varchar(255) NOT NULL ,
 
 );
+go
 
 If Object_ID('web_quick_navi_product_link  ','U') Is Null
 
@@ -860,6 +1004,7 @@ CREATE TABLE web_quick_navi_product_link (
   product_id int  NOT NULL, 
 
 );
+go
 
 If Object_id('web_vip_voucher','U') Is Null
 BEGIN
@@ -867,9 +1012,8 @@ CREATE TABLE [dbo].[web_vip_voucher](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[voucher] [varchar](255) NOT NULL,
 	[amount] [int] NOT NULL,
-)
-
-END
+)；
+go
 
 If Object_ID('web_recharge_config','U') Is Null
 
@@ -902,6 +1046,7 @@ create table web_recharge_config(
   limit int
 
 );
+go
 
 If Object_ID('web_recharge_rewards_record  ','U') Is Null
 
@@ -916,6 +1061,7 @@ CREATE TABLE web_recharge_rewards_record (
   count int not null default 0
 
 );
+go
 
 If Object_ID('web_regions','U') Is Null
 
@@ -928,6 +1074,7 @@ CREATE TABLE web_regions(
    region varchar(255) NOT NULL 
 
 );
+go
 
 If Object_ID('web_role_permission_link','U') Is Null
 
@@ -938,6 +1085,7 @@ CREATE TABLE web_role_permission_link(
    permission_id int NOT NULL
 
 );
+go
 
 If Object_ID('web_roles','U') Is Null
 
@@ -954,6 +1102,7 @@ CREATE TABLE web_roles(
    is_in_list bit not null default '1'
 
 );
+go
 
 If Object_ID('web_shake_record','U') Is Null
 
@@ -968,6 +1117,7 @@ create table web_shake_record(
   is_show bit not null default 0
 
 );
+go
 
 If Object_ID('web_shipping_full_cut  ','U') Is Null
 
@@ -988,6 +1138,7 @@ CREATE TABLE web_shipping_full_cut (
   end_time DATETIME DEFAULT null
 
 );
+go
 
 If Object_ID('web_sign_record','U') Is Null
 
@@ -1002,6 +1153,7 @@ create table web_sign_record(
   point int not null default 0
 
 );
+go
 
 If Object_ID('web_specification_value_store_link','U') Is Null
 
@@ -1012,6 +1164,7 @@ CREATE TABLE web_specification_value_store_link (
    store_id int not null
 
  );
+go
 
 If Object_ID('web_specification_values','U') Is Null
 
@@ -1032,6 +1185,7 @@ CREATE TABLE web_specification_values(
    pre_price decimal(20,2) NOT NULL DEFAULT '0.00'
 
 );
+go
 
 If Object_ID('web_specifications','U') Is Null
 
@@ -1042,6 +1196,7 @@ If Object_ID('web_specifications','U') Is Null
    specification varchar(255) NOT NULL DEFAULT ''
 
 );
+go
 
 If Object_ID('web_store_info','U') Is Null
 
@@ -1052,6 +1207,7 @@ create table web_store_info(
   description varchar(255) not null default '',
 
 );
+go
 
 If Object_ID('web_user_invited_link','U') Is Null
 
@@ -1064,6 +1220,7 @@ CREATE TABLE web_user_invited_link (
   invite_time DATETIME DEFAULT(GETDATE()) --邀请时间
 
 );
+go
 
 If Object_ID('web_user_profiles','U') Is Null
 
@@ -1100,8 +1257,7 @@ CREATE TABLE web_user_profiles(
    last_buy DATETIME DEFAULT null, --最后一次购买时间
 
 );
-
-end
+go
 
 CREATE NONCLUSTERED INDEX uidIdx ON web_oauth_login(user_id)
 
@@ -1114,6 +1270,7 @@ CREATE TABLE web_user_role_link(
    role_id int NOT NULL
 
 );
+go
 
 If Object_ID('web_users','U') Is Null
 
@@ -1128,14 +1285,7 @@ CREATE TABLE web_users (
    serial_num varchar(255) not null --用户序列号
 
  );
-
-If Object_ID('web_consumer_voucher','U') Is Null
-
-CREATE TABLE web_consumer_voucher(
-	id int IDENTITY(1,1) not null,
-	voucher_code varchar(255) not null,
-	amount int not null
-);
+go
 
 If Object_id('web_user_list','U') Is Null
 Begin
@@ -1145,8 +1295,8 @@ Begin
 	oauth_id varchar(255),
 	create_time datetime,
 	phone varchar(25)
-	)
-End
+	);
+go
 
 If Object_ID('web_vars','U') Is Null
 
@@ -1163,6 +1313,7 @@ CREATE TABLE web_vars (
   value varchar(1024) NOT NULL DEFAULT '',
 
 );
+go
 
 If Object_id('web_viplog','U') Is Null
 Begin
@@ -1172,10 +1323,11 @@ CREATE TABLE [dbo].[web_viplog](
 	[foreign_key] [varchar](255) NULL,
 	[recording_time] [datetime] NULL,
 	[timestamp] [timestamp] NULL
-)
+);
+go
 
 ALTER TABLE [dbo].[web_viplog] ADD  CONSTRAINT [DF_web_viplog_recording_time]  DEFAULT (getdate()) FOR [recording_time]
-End
+
 
 If Object_ID('web_winning_record','U') Is Null
 
@@ -1190,8 +1342,10 @@ create table web_winning_record(
   time DATETIME DEFAULT(GETDATE()) 
 
 );
+go
 
 --退款
+/*
 declare @def varchar(100),@SQL Nvarchar(100)
 if exists(select [name]
 	from sysobjects t
@@ -1277,3 +1431,4 @@ if not EXISTS (select * from sysObjects where  id=object_id (N'[dbo].[WSC_insert
 							end
 						END
 	END
+*/

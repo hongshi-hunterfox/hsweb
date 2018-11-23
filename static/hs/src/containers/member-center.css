@@ -1,0 +1,95 @@
+.member-center {
+  padding-bottom: 70px;
+}
+
+.member-center-check-in {
+  display: block;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #F1C40F;
+  padding: 4px 10px;
+  color: white;
+  border-radius: 15px;
+  border: 2px solid #F39C12;
+  box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5);
+}
+
+.member-center-hero {
+  position: relative;
+}
+
+.member-center-hero img {
+  width: 100%;
+}
+
+.member-center-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(0,0,0,0.7);
+  color: white;
+  padding: 5px;
+}
+
+
+.member-center-orders {
+  background-color: white;
+  padding: 10px 0;
+}
+
+.member-center-order {
+  float: left;
+  display: block;
+  width: 33.3%;
+  text-align: center;
+  position: relative;
+}
+
+.member-center-order > a {
+  display: inline-block;
+  color: #333;
+}
+.member-center-order-count {
+    float: right;
+    background: red;
+    color: white;
+    border-radius: 10px;
+    padding: 0px 5px;
+    font-size: 10px;
+    right: 30%;
+    position: absolute;
+}
+
+.member-center-order-icon {
+  display: block;
+  font-size: 24px;
+}
+
+.member-center-status {
+  background-color: white;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+.member-center-status-item {
+  float: left;
+  display: block;
+  width: 33.3%; 
+  text-align: center;
+}
+
+.member-center-status-item > a {
+  display: inline-block;
+  color: #333;
+}
+
+.member-center-status-title {
+  display: block;
+}
+
+.member-center-status-icon {
+  font-size: 16px;
+  margin-right: 5px;
+}

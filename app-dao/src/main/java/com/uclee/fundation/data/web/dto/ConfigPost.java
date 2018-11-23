@@ -56,7 +56,124 @@ public class ConfigPost {
 	private String perfectBirthText;
 	private String whetherEnableAlipay;
 	private String linkCouponText;
+	private String CartLogo;
+	private String CartBgUrl;
+	private String CartBrandName;
+	private String CartTitle;
+	private String CartNotice;
+	private String CartServicePhone;
+	private String CartDescription;
+	private String CartCustomUrl;
+	private String CartPromotionUrl;
+	private String CartCenterUrl;
+	private String CartBonusUrl;
+	private String CartCustomField1Url;
+	private String CartPrerogative;
 	
+	public String getCartPrerogative() {
+		return CartPrerogative;
+	}
+	
+	public void setCartPrerogative(String cartPrerogative) {
+		CartPrerogative = cartPrerogative;
+	}
+	
+	public String getCartLogo() {
+		return CartLogo;
+	}
+
+	public void setCartLogo(String cartLogo) {
+		CartLogo = cartLogo;
+	}
+
+	public String getCartBgUrl() {
+		return CartBgUrl;
+	}
+
+	public void setCartBgUrl(String cartBgUrl) {
+		CartBgUrl = cartBgUrl;
+	}
+
+	public String getCartBrandName() {
+		return CartBrandName;
+	}
+
+	public void setCartBrandName(String cartBrandName) {
+		CartBrandName = cartBrandName;
+	}
+
+	public String getCartTitle() {
+		return CartTitle;
+	}
+
+	public void setCartTitle(String cartTitle) {
+		CartTitle = cartTitle;
+	}
+
+	public String getCartNotice() {
+		return CartNotice;
+	}
+
+	public void setCartNotice(String cartNotice) {
+		CartNotice = cartNotice;
+	}
+
+	public String getCartServicePhone() {
+		return CartServicePhone;
+	}
+
+	public void setCartServicePhone(String cartServicePhone) {
+		CartServicePhone = cartServicePhone;
+	}
+
+	public String getCartDescription() {
+		return CartDescription;
+	}
+
+	public void setCartDescription(String cartDescription) {
+		CartDescription = cartDescription;
+	}
+
+	public String getCartCustomUrl() {
+		return CartCustomUrl;
+	}
+
+	public void setCartCustomUrl(String cartCustomUrl) {
+		CartCustomUrl = cartCustomUrl;
+	}
+
+	public String getCartPromotionUrl() {
+		return CartPromotionUrl;
+	}
+
+	public void setCartPromotionUrl(String cartPromotionUrl) {
+		CartPromotionUrl = cartPromotionUrl;
+	}
+
+	public String getCartCenterUrl() {
+		return CartCenterUrl;
+	}
+
+	public void setCartCenterUrl(String cartCenterUrl) {
+		CartCenterUrl = cartCenterUrl;
+	}
+
+	public String getCartBonusUrl() {
+		return CartBonusUrl;
+	}
+
+	public void setCartBonusUrl(String cartBonusUrl) {
+		CartBonusUrl = cartBonusUrl;
+	}
+
+	public String getCartCustomField1Url() {
+		return CartCustomField1Url;
+	}
+
+	public void setCartCustomField1Url(String cartCustomField1Url) {
+		CartCustomField1Url = cartCustomField1Url;
+	}
+
 	public String getLinkCouponText() {
 		return linkCouponText;
 	}

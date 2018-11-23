@@ -1,0 +1,38 @@
+[
+    {
+        "amount": 200,
+        "cartId": 1,
+        "createTime": 1494491840903,
+        "image": "http://m.uclee.com/images/hongshi/11-2.jpg",
+        "money": 10.2,
+        "productId": 1,
+        "specification": "款式：一大半面包",
+        "specificationValueId": 1,
+        "title": "测试面包超豪华套餐",
+        "userId": 7
+    },
+    {
+        "amount": 200,
+        "cartId": 2,
+        "createTime": 1494491840917,
+        "image": "http://m.uclee.com/images/hongshi/11-2.jpg",
+        "money": 11.2,
+        "productId": 1,
+        "specification": "款式：两大半面包",
+        "specificationValueId": 2,
+        "title": "测试面包超豪华套餐",
+        "userId": 7
+    },
+    {
+        "amount": 200,
+        "cartId": 3,
+        "createTime": 1494491840950,
+        "image": "http://m.uclee.com/images/hongshi/11-2.jpg",
+        "money": 12.2,
+        "productId": 1,
+        "specification": "款式：三大半面包",
+        "specificationValueId": 3,
+        "title": "测试面包超豪华套餐",
+        "userId": 7
+    }
+]

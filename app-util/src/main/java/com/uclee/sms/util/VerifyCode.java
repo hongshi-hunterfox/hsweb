@@ -1,12 +1,10 @@
 package com.uclee.sms.util;
 
 import com.taobao.api.ApiException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Random;
 
 public class VerifyCode {

@@ -14,9 +14,10 @@
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="start_time" property="startTimeStr" jdbcType="VARCHAR" />
     <result column="end_time" property="endTimeStr" jdbcType="VARCHAR" />
+    <result column="vip_price" property="vipPrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    value_id, specification_id, value, hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time
+    value_id, specification_id, value, hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time,vip_price
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -74,9 +75,18 @@
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" useGeneratedKeys="true"
     keyProperty="valueId">
     insert into web_specification_values (value_id, specification_id, value, 
-      hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time)
-    values (#{valueId,jdbcType=INTEGER}, #{specificationId,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, 
-      #{hsGoodsCode,jdbcType=VARCHAR}, #{hsGoodsPrice,jdbcType=DECIMAL},#{hsStock,jdbcType=INTEGER}, #{prePrice,jdbcType=DECIMAL},#{promotionPrice,jdbcType=DECIMAL},#{startTime,jdbcType=TIMESTAMP},#{endTime,jdbcType=TIMESTAMP})
+      hs_goods_code, hs_goods_price,hs_stock,pre_price,promotion_price,start_time,end_time,vip_price)
+    	values (#{valueId,jdbcType=INTEGER}, 
+    		#{specificationId,jdbcType=INTEGER}, 
+    		#{value,jdbcType=VARCHAR}, 
+      		#{hsGoodsCode,jdbcType=VARCHAR}, 
+      		#{hsGoodsPrice,jdbcType=DECIMAL},
+      		#{hsStock,jdbcType=INTEGER}, 
+      		#{prePrice,jdbcType=DECIMAL},
+      		#{promotionPrice,jdbcType=DECIMAL},
+      		#{startTime,jdbcType=TIMESTAMP},
+      		#{endTime,jdbcType=TIMESTAMP},
+      		#{vipPrice,jdbcType=DECIMAL},)
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" useGeneratedKeys="true"
     keyProperty="valueId">
@@ -112,6 +122,9 @@
       <if test="endTime != null" >
         end_time,
       </if>
+      <if test="vipPrice != null" >
+        vip_price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="valueId != null" >
@@ -143,6 +156,9 @@
       </if>
       <if test="endTime != null" >
         #{endTime,jdbcType=INTEGER},
+      </if>
+      <if test="vipPrice != null" >
+        #{vipPrice,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -176,6 +192,9 @@
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=INTEGER},
       </if>
+      <if test="vipPrice != null" >
+        vip_price = #{vipPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     where value_id = #{valueId,jdbcType=INTEGER}
   </update>
@@ -189,7 +208,8 @@
         promotion_price = #{promotionPrice,jdbcType=DECIMAL},
         start_time = #{startTime,jdbcType=INTEGER},
         end_time = #{endTime,jdbcType=INTEGER},
-        hs_stock = #{hsStock,jdbcType=INTEGER}
+        hs_stock = #{hsStock,jdbcType=INTEGER},
+        vip_price = #{vipPrice,jdbcType=DECIMAL},
     where value_id = #{valueId,jdbcType=INTEGER}
   </update>
   <update id="updateGuiGe" parameterType="com.uclee.fundation.data.mybatis.model.SpecificationValue" >

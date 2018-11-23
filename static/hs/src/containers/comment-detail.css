@@ -1,0 +1,94 @@
+.comment-detail {
+  background: white;
+}
+.comment-detail-button {
+  position: fixed;
+  padding: 10px;
+  background-color: #FF3300;
+  color: white;
+  text-align: center;
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  z-index: 999;
+  bottom: 60px;
+  border-radius: 15px;
+  margin: auto;
+}
+.comment-detail-textarea {
+  width: 96%;
+  margin-left: 2%;
+}
+.comment-detail-form {
+  background-color: white;
+}
+.comment-detail-form-control-select {
+  width: 33.33333333%;
+  float: left;
+}
+.comment-detail-star {
+  padding: 10px;
+}
+.comment-detail-star:before,
+.comment-detail-star:after {
+  content: "";
+  display: table;
+}
+.comment-detail-star:after {
+  clear: both;
+}
+.comment-detail-star .lable {
+  float: left;
+  line-height: 30px;
+  font-size: 15px;
+}
+.comment-detail-star .starList {
+  float: left;
+}
+.comment-detail-star .starList:before,
+.comment-detail-star .starList:after {
+  content: "";
+  display: table;
+}
+.comment-detail-star .starList:after {
+  clear: both;
+}
+.comment-detail-star .starList .item {
+  width: 30px;
+  height: 30px;
+  line-height: 5px;
+  background: url(/images/icon_evaluation_nor@2x.png) no-repeat;
+  background-size: 100% auto;
+  float: left;
+}
+.comment-detail-star .starList .on {
+  background: url(/images/icon_evaluation_sel@2x.png) no-repeat;
+  background-size: 100% auto;
+}
+.comment-detail-star .word {
+  float: left;
+  color: #A2A7BA;
+}
+.comment-detail-star ul {
+  list-style: none;
+}
+.comment-detail-content {
+  padding: 10px;
+  font-size: 15px;
+  border-bottom: 1px solid #C7C7C7;
+  margin-top: 5px;
+  word-wrap: break-word;
+}
+.comment-detail .form-control {
+  border-radius: 15px;
+  height: 50px;
+}
+.comment-detail .form-horizontal .form-group {
+  margin-right: 5px;
+  margin-left: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.comment-detail .form-group {
+  margin-bottom: 15px;
+}

@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
@@ -131,14 +132,7 @@ public class WeiXinLogin extends CommonUserHandler{
        return source;  
     }
 
-	
-	/**
-	 *return
-	 *	key:result
-	 *		firstLoginSuccess    第一次登陆成功，跳转到绑定手机页面,没有手机号
-	 *		success				   登陆成功 
-	 *		fail  			                登陆失败
-	 */
+
 	/** 
 	* @Title: facebooklogin 
 	* @Description: 发起微信登陆请求
@@ -205,7 +199,7 @@ public class WeiXinLogin extends CommonUserHandler{
 		logger.info("b-a: " + (b-a));
 		//通过 openId  检查是否是第一次使用 微信登陆
 		OauthLogin oauthLogin = userService.getOauthLoginInfoByOauthId(openid);
-		
+		System.out.println("通过 openId  检查是否是第一次使用 微信登陆"+JSON.toJSON(oauthLogin));
 		if(oauthLogin != null ){
 			UserProfile userProfile = userProfileServiceI.getUserProfileByUserId(oauthLogin.getUserId());
 			User user = userService.getUserById(oauthLogin.getUserId());

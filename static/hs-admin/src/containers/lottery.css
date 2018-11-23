@@ -1,0 +1,28 @@
+.lottery:before,
+.lottery:after {
+  content: "";
+  display: table;
+}
+.lottery:after {
+  clear: both;
+}
+.lottery-line {
+  margin-top: 20px;
+}
+.lottery-line:before,
+.lottery-line:after {
+  content: "";
+  display: table;
+}
+.lottery-line:after {
+  clear: both;
+}
+.lottery-line-info {
+  float: left;
+  width: 25%;
+}
+.lottery-line-item {
+  float: left;
+  margin-right: 25px;
+  width: 20%;
+}

@@ -27,6 +27,16 @@ public class SpecificationValue {
     private Date endTime;
     
     private String endTimeStr;
+    
+    private BigDecimal vipPrice;
+    
+    public BigDecimal getVipPrice() {
+		return vipPrice;
+	}
+    
+    public void setVipPrice(BigDecimal vipPrice) {
+		this.vipPrice = vipPrice;
+	}
 
 	public String getStartTimeStr() {
 		return startTimeStr;

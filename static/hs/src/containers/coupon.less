@@ -1,0 +1,63 @@
+@import '../public.less';
+.coupon{
+	background-color: white;
+	padding-bottom: 110px;
+	&-item{
+		margin: 10px;
+		background: url(/images/coupon/coupon.png) no-repeat;
+    	background-size: 100% 100%;
+		.clearfix();
+		.top-line{
+			.clearfix();
+			.title{
+				float: left;
+				padding: 15px 10px;
+			}
+			.condition{
+				float: right;
+				padding: 15px 10px;
+			}
+		}
+		.center-line{
+			.money{
+				color: #ee0a3b;
+				text-align: center;
+				.number{
+					font-size: 50px;
+				}
+			}
+		}
+		.bottom-line{	
+			text-align: center;
+			.date{
+
+			}
+		}
+
+		.tag {
+			display: block;
+			float: right;
+			padding: 5px;
+			color: #0cd60c;
+			font-size: 15px;
+		}
+	}
+	&-bottom{
+		position: fixed;
+		background-color: white;
+		left: 0;
+		right: 0;
+		width: 100%;
+		bottom: 55px;
+		border-top: 1px solid #ddd;
+		&-button{
+			float: left;
+			width: 40%;
+			color: white;
+			padding: 10px 20px;
+			background-color: #049204;
+			border-radius : 15px;
+			margin-left: 6.5%;	
+		}
+	}
+}

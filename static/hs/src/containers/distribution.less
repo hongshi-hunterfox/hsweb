@@ -1,0 +1,100 @@
+@import "../public.less";
+.distribution{
+	padding-bottom: 100px;
+	&-hidden{
+		position: fixed;
+			top:0%;
+			left:0%;
+			z-index: 1002;
+			margin-top: 5px;
+			background-color: rgba(153, 153, 153, 0.6);
+			width: 100%;
+			height: 100%;
+			&-image{
+				position: fixed;
+				top:10%;
+				left:22%;
+				width: 70%
+			}
+	}
+	&-top{
+		background-color: white;
+		padding: 10px;
+		.clearfix();
+		.left{
+			padding: 10px 0 0 10px;
+			.money{
+
+			}
+			.number{
+				font-size: 35px;
+				color: rgb(241, 95, 64); 
+				text-align: center;
+			}
+		}
+		
+		.transfer{
+			font-size: 18px;
+			float: right;
+			background-color: white;
+			color: rgb(241, 95, 64);
+			padding: 4px 10px;
+			border-radius: 15px;	
+			border: 1px solid rgb(241, 95, 64);
+			margin-right: 10px;
+			margin-top: 20px;
+		}
+		
+	}
+	&-text{
+		background-color: white;
+		text-align: center;
+		.top{
+			color:#f15f40;
+			padding: 10px 0 0 0;
+    		font-size: 30px;
+    		font-weight: bold;
+		}
+		.bottom{
+			color:#f15f40;
+			font-size: 20px;
+			padding-bottom: 10px;
+			font-weight: bold;
+		}	
+	}
+	&-content{
+		.item{
+			margin-top: 5px;
+			background-color: white;
+			border-bottom: 2px solid #d0d0d0;
+			padding: 15px;
+		}
+		.right{
+			display: block;
+			float: right;
+		}
+	}
+	&-intro{
+		margin-top: 20px;
+		padding: 15px;
+		.title{
+			font-weight: bold;
+		}
+		.content{
+			padding: 10px;
+		}
+	}
+	.button{
+		border-radius : 15px;
+		padding: 15px;
+		background-color: #d62f0b;
+		text-align: center;
+		color: white;
+		margin: 10px;
+		position: fixed;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		bottom: 50px;
+	}
+}

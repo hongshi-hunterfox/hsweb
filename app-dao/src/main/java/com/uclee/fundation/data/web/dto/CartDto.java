@@ -2,8 +2,10 @@ package com.uclee.fundation.data.web.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.uclee.fundation.data.mybatis.model.Cart;
+import com.uclee.fundation.data.mybatis.model.HongShiVip;
 
 public class CartDto extends Cart{
 	
@@ -17,6 +19,8 @@ public class CartDto extends Cart{
 	
 	private BigDecimal promotion;
 	
+	private BigDecimal vip;
+	
 	private Date startTime;
 	
 	private Date endTime;
@@ -28,6 +32,23 @@ public class CartDto extends Cart{
 	private String pickEndTimes;
 	
 	private Integer activityMarkers;
+	
+	private String hsVipCode;
+	
+	public String getHsVipCode() {
+		return hsVipCode;
+	}
+	
+	public void setHsVipCode(String hsVipCode) {
+		this.hsVipCode = hsVipCode;
+	}
+	
+	public BigDecimal getVip() {
+		return vip;
+	}
+	public void setVip(BigDecimal vip) {
+		this.vip = vip;
+	}
 	
 	public String getPickUpTimes() {
 		return pickUpTimes;
@@ -112,6 +133,7 @@ public class CartDto extends Cart{
 	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
+
 
 	public String getTitle() {
 		return title;

@@ -1,0 +1,34 @@
+.product-list:before,
+.product-list:after {
+  content: "";
+  display: table;
+}
+.product-list:after {
+  clear: both;
+}
+.product-list-add {
+  float: right;
+  margin: 30px 0;
+}
+.product-list-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #dadada;
+}
+.product-list-item:before,
+.product-list-item:after {
+  content: "";
+  display: table;
+}
+.product-list-item:after {
+  clear: both;
+}
+.product-list-item .image {
+  width: 80px;
+  text-align: center;
+}
+.product-list-item .title {
+  text-align: center;
+}
+.product-list-item .edit {
+  text-align: center;
+}

@@ -1,0 +1,107 @@
+.lottery {
+  padding: 15px;
+}
+.lottery-items {
+  background-color: #E74C3C;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+  text-align: center;
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 40px;
+  border: 3px solid #C0392B;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+}
+.lottery-info {
+  background-color: white;
+  padding: 10px;
+}
+.lottery-info:before,
+.lottery-info:after {
+  content: "";
+  display: table;
+}
+.lottery-info:after {
+  clear: both;
+}
+.lottery-info .point {
+  padding: 10px;
+  width: 50%;
+  float: left;
+  text-align: center;
+}
+.lottery-info .red {
+  color: red;
+  font-size: 14px;
+}
+.lottery-time {
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+}
+.lottery-time:before,
+.lottery-time:after {
+  content: "";
+  display: table;
+}
+.lottery-time:after {
+  clear: both;
+}
+.lottery-limits {
+  background-color: white;
+  padding: 10px;
+  text-align: center;
+}
+.lottery-limits:before,
+.lottery-limits:after {
+  content: "";
+  display: table;
+}
+.lottery-limits:after {
+  clear: both;
+}
+.lottery-btn {
+  margin: auto;
+  display: block;
+  width: 4em;
+  height: 4em;
+  border: none;
+  background-color: #F1C40F;
+  color: white;
+  font-size: 20px;
+  border-radius: 50%;
+  padding: 10px;
+  position: relative;
+  outline: 0;
+}
+.lottery-btn:active {
+  top: 5px;
+}
+.lottery-btn:active:after {
+  top: 0;
+}
+.lottery-btn[disabled] {
+  opacity: 0.5;
+}
+.lottery-btn:after {
+  content: "";
+  width: 4em;
+  height: 4em;
+  display: block;
+  background-color: #F39C12;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  border-radius: 50%;
+  z-index: -1;
+}
+.lottery-btn > span {
+  display: block;
+}
+.lottery-btn-wrap {
+  margin-top: 30px;
+  padding: 15px;
+  text-align: center;
+}

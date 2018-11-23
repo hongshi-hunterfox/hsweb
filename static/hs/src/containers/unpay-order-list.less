@@ -1,0 +1,100 @@
+@import "../public.less";
+.order{
+	&-list{
+		.clearfix();
+		margin-top: 10px;
+		&-top{
+			&-item{
+				.clearfix();
+				.store{
+					font-size: 14px;
+					margin: 10px 10px;
+				}
+				.status{
+					color: #f95b0d;
+					font-size: 13px;
+					margin: 10px 10px;
+				}
+			}
+			.number{
+				font-size: 13px;
+				color: #afafaf;
+				margin: 0px 10px 10px 10px;
+			}
+		}
+
+		&-item{
+			&-info{
+				background-color: #f9f9f9;
+				margin-top: 8px;
+				.clearfix(); 
+				.image{
+					width: 80px;
+					height: 80px;
+					margin: 0px 10px  0px 10px;
+					float: left; 
+				}
+
+				.title{
+					margin-top: 5px;
+					font-size: 15px;
+				}
+
+				
+				.price{
+					margin-right: 10px;
+					font-size: 14px;
+					color: #afafaf;
+				}
+
+				.sku-info{
+					.sku{
+						color: #afafaf;
+						margin-top: 5px;
+						font-size: 12px;
+					}
+					.count{
+
+						margin-right: 10px;
+					}
+					margin-bottom: 8px;
+				}
+
+				.tag{
+					color: white;
+					padding: 2px 5px;
+					font-size: 12px;
+					background-color: rgb(241, 95, 64);
+					border-radius: 10%;		
+				}
+			}
+		}
+
+		&-bottom{
+			margin: 5px 0;
+			background-color: white;
+			.clearfix();
+			.total{
+				margin-right: 8px;
+			}
+		}
+		&-button{
+			background-color: white;
+			.clearfix();
+			.text{
+				color: rgb(241, 95, 64);
+				padding: 4px 10px;
+				border-radius: 10%;	
+				border: 1px solid rgb(241, 95, 64);
+				margin-right: 8px;
+			}
+			margin: 5px 0;
+		}
+	}
+	.bottom-text{
+		margin-top: 15px;
+		text-align: center;
+		font-size: 12px;
+		color: #afafaf;
+	}
+}

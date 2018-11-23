@@ -1,6 +1,11 @@
 package com.uclee.backend.service.impl;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -50,16 +55,45 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 	@Autowired
 	private ProductSaleMapper productSaleMapper;
 	@Override
-	public boolean addProduct(ProductForm product) {	
+	public boolean addProduct(ProductForm product) {		
 		//description 
+		String shelfTime = product.getShelfDate()+" "+product.getShelfTimes()+":00";
+		String downTime = product.getDownDate()+" "+product.getDownTimes()+":00";
+		SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		Date shelf = null;
+		try {
+			shelf = sdf.parse(shelfTime.toString());
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		};
+		
+		Date down = null;
+		try {
+			down = sdf.parse(downTime.toString());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+		product.setShelfTime(shelf);
+		product.setDownTime(down);
+		
 		product.setIsActive(true);
 		//取sortValue的最大值，然后加1
-		int maxSortValue=productMapper.getMaxSortValue();
+		Integer maxSortValue=productMapper.getMaxSortValue() > 0 ? productMapper.getMaxSortValue() : 0;
 		maxSortValue+=1;
 		//将sortValue的值设定到产品里面
 		product.setSortValue(maxSortValue);
+		BigDecimal param = product.getValuePost().get(0).getVipPrice();
+		for(int i=1; i<product.getValuePost().size(); i++) {
+			if(product.getValuePost().get(i).getVipPrice()!=null) {
+				if(param.compareTo(product.getValuePost().get(i).getVipPrice()) >=0){
+					
+					param = product.getValuePost().get(i).getVipPrice();
+				}
+			}
+		}
+
+		product.setVipPrice(param);
 		descriptionHandler(product);
-		System.out.println("产品=="+product.getPrice());
 		if(productMapper.insertSelective(product)>0){
 			if(product.getSale()!=null){
 				ProductSale productSale = productSaleMapper.selectByProductId(product.getProductId());
@@ -107,6 +141,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsStock(item.getHsStock());
 			value.setPrePrice(item.getPrePrice());
 			value.setPromotionPrice(item.getPromotionPrice());
+			value.setVipPrice(item.getVipPrice());
 			value.setStartTime(item.getStartTime());
 			value.setEndTime(item.getEndTime());
 			value.setStartTimeStr(DateUtils.format(item.getStartTime(), DateUtils.FORMAT_LONG));
@@ -144,6 +179,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsStock(item.getHsStock());
 			value.setPrePrice(item.getPrePrice());
 			value.setPromotionPrice(item.getPromotionPrice());
+			value.setVipPrice(item.getVipPrice());
 			//提交时转换类型
 			if(item.getStartTimeStr()!=null && item.getStartTimeStr().length()>0){
 				value.setStartTime(DateUtils.parse(item.getStartTimeStr()));
@@ -174,6 +210,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void SpdatespecificationHandler(ProductForm product) {
 		delPreStoreValueLink(product.getProductId());
 		delPreSpecificationValue(product.getProductId());
@@ -185,6 +222,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 			value.setHsStock(item.getHsStock());
 			value.setSpecificationId(1);
 			value.setValue(item.getName());
+			value.setVipPrice(item.getVipPrice());
 			if(specificationValueMapper.insertSelective(value)>0){
 				ProductsSpecificationsValuesLink link = new ProductsSpecificationsValuesLink();
 				link.setProductId(product.getProductId());
@@ -303,7 +341,36 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 	@Override
 	public boolean updateProduct(ProductForm product) {	
 		//description 
+		String shelfTime = product.getShelfDate()+" "+product.getShelfTimes()+":00";
+		String downTime = product.getDownDate()+" "+product.getDownTimes()+":00";
+		SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		Date shelf = null;
+		try {
+			shelf = sdf.parse(shelfTime.toString());
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		};
+		
+		Date down = null;
+		try {
+			down = sdf.parse(downTime.toString());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+		product.setShelfTime(shelf);
+		product.setDownTime(down);
 		product.setIsActive(true);
+		
+		BigDecimal param = product.getValuePost().get(0).getVipPrice();
+		for(int i=1; i<product.getValuePost().size(); i++) {
+			if(product.getValuePost().get(i).getVipPrice()!=null) {
+				if(param.compareTo(product.getValuePost().get(i).getVipPrice()) >=0){
+					
+					param = product.getValuePost().get(i).getVipPrice();
+				}
+			}
+		}
+		product.setVipPrice(param);
 		descriptionHandler(product);
 		if(productMapper.updateByPrimaryKeySelective(product)>0){
 			if(product.getSale()!=null){

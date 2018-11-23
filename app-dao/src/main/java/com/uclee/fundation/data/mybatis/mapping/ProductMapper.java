@@ -6,6 +6,7 @@ import com.uclee.fundation.data.mybatis.model.Product;
 import com.uclee.fundation.data.mybatis.model.ProductParameters;
 import com.uclee.fundation.data.mybatis.model.ProductGe;
 import com.uclee.fundation.data.mybatis.model.SpecificationValue;
+import com.uclee.fundation.data.mybatis.model.UserLimit;
 //import com.uclee.fundation.data.mybatis.model.ProductSale;
 import com.uclee.fundation.data.web.dto.ProductDto;
 
@@ -51,4 +52,8 @@ public interface ProductMapper {
     ProductParameters obtainParameters(Integer id);
     
     List<ProductParameters> obtainParameter(Integer id);
+    
+    int insertUserLimit(UserLimit userLimit);
+    
+    List<UserLimit> selectByLimit(@Param("userId")Integer userId, @Param("productId")Integer productId);
 }

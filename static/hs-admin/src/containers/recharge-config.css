@@ -1,0 +1,18 @@
+.recharge-config:before,
+.recharge-config:after {
+  content: "";
+  display: table;
+}
+.recharge-config:after {
+  clear: both;
+}
+.recharge-config-float {
+  float: left;
+  text-align: center;
+}
+.recharge-config-button {
+  padding: 10px 5px;
+  background-color: #337ab7;
+  color: white;
+  border-color: #337ab7;
+}

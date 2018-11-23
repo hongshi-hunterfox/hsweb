@@ -15,6 +15,7 @@
 	    <result column="promotion_price" property="promotionPrice" jdbcType="DECIMAL" />
 	    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
 	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="vip_price" property="vipPrice" jdbcType="DECIMAL" />
     </collection>
   </resultMap>
   <sql id="Base_Column_List" >

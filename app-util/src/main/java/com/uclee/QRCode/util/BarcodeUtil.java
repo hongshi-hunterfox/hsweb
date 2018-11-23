@@ -1,18 +1,14 @@
 package com.uclee.QRCode.util;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
- 
 import org.apache.commons.lang.StringUtils;
-//import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
+
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+//import org.krysalis.barcode4j.impl.code39.Code39Bean;
  
 /**
  * 条形码工具类

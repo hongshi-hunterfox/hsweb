@@ -43,14 +43,15 @@
    	    <result column="备注" property="beizhu" jdbcType="VARCHAR" />
    	    <result column="编号" property="bianhao" jdbcType="VARCHAR" />
    	    <result column="金额合计" property="jine" jdbcType="DECIMAL" />
-   	     <result column="让利" property="huijine" jdbcType="DECIMAL" />
-   	     <result column="金额" property="danjia" jdbcType="DECIMAL" />
+		<result column="让利" property="huijine" jdbcType="DECIMAL" />
+   	    <result column="金额" property="danjia" jdbcType="DECIMAL" />
    	    <result column="建立日期" property="riqi" jdbcType="VARCHAR" />
    	    <result column="数量" property="shuliang" jdbcType="INTEGER" />
-   	     <result column="部门编号" property="bumen" jdbcType="VARCHAR" />
-   	      <result column="送货地址" property="songhuo" jdbcType="VARCHAR" />
-   	     <result column="hs_code" property="hsCode" jdbcType="VARCHAR" />
-   	     <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+   	    <result column="部门编号" property="bumen" jdbcType="VARCHAR" />
+   	    <result column="送货地址" property="songhuo" jdbcType="VARCHAR" />
+   	    <result column="hs_code" property="hsCode" jdbcType="VARCHAR" />
+   	    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+		<result column="商户订单号" property="merchantOrderNumber" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="UnderlineOrders"  type="com.uclee.fundation.data.mybatis.model.UnderlineOrders">
    	    <result column="订单ID" property="ordersId" jdbcType="INTEGER" />
@@ -149,9 +150,9 @@
 		CALL WSC_GetVipInfo(#{cWeiXinCode})
 	</select>
 	<select id="selectAll" resultMap="VipVoucher" parameterType="java.lang.Integer" >
-    select
-    id,voucher,amount
-    from web_vip_voucher
+		select
+		id,voucher,amount
+		from web_vip_voucher
   	</select>
 	<select id="getCodeSwitching" resultType="Integer" 
 		statementType="CALLABLE">
@@ -163,9 +164,12 @@
 		CALL GetVipLog_ID(#{iVipID})
 	</select>
 	<select id="selectOrders" resultMap="Orders">
-    select orders_detail.名称,orders.备注,orders.送货地址,orders_detail.金额,orders_detail.数量,orders.让利,web_napa_stores. store_name,orders.金额合计,orders.建立日期,orders.单号 from orders 
-     left join orders_detail on orders.ID=orders_detail.订单ID 
-     left join web_napa_stores on orders.部门编号= web_napa_stores.hs_code where 单号=#{danhao,jdbcType=VARCHAR}
+		select orders_detail.名称,orders.备注,orders.送货地址,orders_detail.金额,orders_detail.数量,orders.让利,web_napa_stores. store_name,orders.金额合计,orders.建立日期,orders.单号 from orders
+		 left join orders_detail on orders.ID=orders_detail.订单ID
+		 left join web_napa_stores on orders.部门编号= web_napa_stores.hs_code where 单号=#{danhao,jdbcType=VARCHAR}
+    </select>
+	<select id="selectRecord" resultMap="Orders">
+		select * from orders where 商户订单号 = #{merchantOrderNumber，jdbcType="VARCHAR"}
     </select>
     <select id="selectUnderlineOrders" resultMap="UnderlineOrders">
      select goods.名称,goods.规格,orders_detail.单价,orders.送货地址,orders.备注,orders_detail.金额,orders.让利,orders_detail.数量,orders.建立日期,orders.单号 ,web_napa_stores. store_name from orders left join orders_detail on orders.ID=orders_detail.订单ID

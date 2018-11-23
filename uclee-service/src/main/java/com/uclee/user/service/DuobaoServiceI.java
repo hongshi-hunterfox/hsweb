@@ -12,8 +12,8 @@ public interface DuobaoServiceI {
 	String sendWXMessageSuccess(Integer userId,Integer successCount,String orderSerialNum);
 
 	String getGolbalAccessToken();
+	
+	String getYouZanAccessToken();
 
 	List<ProductDto> getAllProduct(Integer categoryId, Boolean isSaleDesc, Boolean isPriceDesc, String keyWord, Integer naviId);
-
-	
 }

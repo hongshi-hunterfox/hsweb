@@ -37,7 +37,47 @@ public class Product {
     private String PickUpTimes;
     
     private String PickEndTimes;
+
+    private Integer frequency;
     
+    private Date shelfTime;
+    
+    private Date downTime;
+    
+    private BigDecimal vipPrice;
+    
+    public BigDecimal getVipPrice() {
+		return vipPrice;
+	}
+    
+    public void setVipPrice(BigDecimal vipPrice) {
+		this.vipPrice = vipPrice;
+	}
+
+    public Date getShelfTime() {
+		return shelfTime;
+	}
+
+	public void setShelfTime(Date shelfTime) {
+		this.shelfTime = shelfTime;
+	}
+
+	public Date getDownTime() {
+		return downTime;
+	}
+
+	public void setDownTime(Date downTime) {
+		this.downTime = downTime;
+	}
+
+	public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
     public String getPickUpTimes() {
 		return PickUpTimes;
 	}
