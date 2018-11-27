@@ -64,7 +64,7 @@ class ProductVoucherSetting extends React.Component {
              <label className="control-label col-md-3 col-md-offset-2"  style={{fontSize:'22px',color:'red'}}>买指定产品送：</label>
             </div>
 		        <div className="form-group">
-		          <label className="control-label col-md-3 col-md-offset-3">优惠券赠送标题：</label>
+		          <label className="control-label col-md-3 col-md-offset-3">活动名称：</label>
 		          <input type='text' name='name' value={this.state.name} onChange={this._onChange}/>
             </div>
             <div className="form-group">

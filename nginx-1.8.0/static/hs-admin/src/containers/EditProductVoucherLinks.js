@@ -83,7 +83,7 @@ class EditProductVoucherLinks extends React.Component {
         <div className="product">
           <form onSubmit={this._submit} className="form-horizontal">
             <div className="form-group">
-             <label className="control-label col-md-3">已关联套餐：</label>
+             <label className="control-label col-md-3">关联活动：</label>
              <div type="button" className="col-md-9">
              		<span className="btn btn-default dropdown-toggle">{this.state.name}</span>
              </div>

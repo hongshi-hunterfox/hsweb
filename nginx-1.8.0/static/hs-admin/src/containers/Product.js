@@ -11,6 +11,7 @@ import 'react-quill/dist/quill.snow.css'
 import './input-moment/input-moment.less'
 import InputMoment from 'input-moment'
 import moment from 'moment';
+var myDate = new Date();
 class Product extends React.Component {
   constructor(props) {
     super(props)
@@ -44,10 +45,10 @@ class Product extends React.Component {
       attribute5:'',
       attribute6:'',
       frequency:-1,
-      shelfDate:'',
-      shelfTimes:'HH:ss',
-      downDate:'',
-      downTimes:'HH:ss',
+      shelfDate:(myDate.getFullYear())+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate(),
+      shelfTimes:myDate.getHours()+":"+myDate.getMinutes(),
+      downDate:(myDate.getFullYear()+10)+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate(),
+      downTimes:myDate.getHours()+":"+myDate.getMinutes(),
     }
 
     this.hongShiProductById = {}
@@ -70,6 +71,8 @@ class Product extends React.Component {
     var end = this.state.currentSpec.endTimeStr
     var date1 = new Date(begin).getTime()
     var date2 = new Date(end).getTime()
+    console.log(this.state.shelfTimes)
+    console.log(this.state.downTimes)
     return (
       <DocumentTitle title={id ? '编辑产品' : '新增产品'}>
         <div className="product">
@@ -982,7 +985,7 @@ class Product extends React.Component {
       return this.setState({
         err: '请填写商品下架时间'
       })
-    }
+		}
     
     var params=data.title+'';
     if(this.props.params.id){
@@ -1049,7 +1052,6 @@ class Product extends React.Component {
     this.setState({
       err: ''
     })
-
     var url = '/uclee-product-web/doAddProductHandler'
     if (this.props.params.id) {
       url = '/uclee-product-web/doUpdateProductHandler'

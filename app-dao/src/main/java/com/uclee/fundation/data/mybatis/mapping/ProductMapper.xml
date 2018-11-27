@@ -22,7 +22,7 @@
     <result column="frequency" property="frequency" jdbcType="INTEGER"/>
     <result column="shelf_time" property="shelfTime" jdbcType="TIMESTAMP"/>
     <result column="down_time" property="downTime" jdbcType="TIMESTAMP"/>
-     <result column="vip_price" property="vipPrice" jdbcType="DECIMAL"/>
+    <result column="vip_price" property="vipPrice" jdbcType="DECIMAL"/>
   </resultMap>
    <resultMap id="ProductGe" type="com.uclee.fundation.data.mybatis.model.ProductGe" >
     <id column="product_id" property="productId" jdbcType="INTEGER" />
@@ -172,7 +172,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
-    keyProperty="productId">
+          keyProperty="productId">
     insert into web_products
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="productId != null" >
@@ -208,20 +208,20 @@
       <if test="sortValue !=null">
         sort_value,
       </if>
-      	parameter,
+      parameter,
       <if test="appointedTime !=null">
-      	appointed_time,
+        appointed_time,
       </if>
       <if test="pickUpTimes !=null">
-      	pick_up_time,
+        pick_up_time,
       </if>
       <if test="pickEndTimes !=null">
-      	pick_end_time,
+        pick_end_time,
       </if>
       <if test="frequency !=null">
         frequency,
       </if>
-       <if test="shelfTime !=null">
+      <if test="shelfTime !=null">
         shelf_time,
       </if>
       <if test="downTime !=null">
@@ -265,15 +265,15 @@
       <if test="sortValue !=null">
         #{sortValue,jdbcType=INTEGER},
       </if>
-      	 #{parameter,jdbcType=VARCHAR},
+      #{parameter,jdbcType=VARCHAR},
       <if test="appointedTime !=null">
-      	 #{appointedTime,jdbcType=INTEGER},
+        #{appointedTime,jdbcType=INTEGER},
       </if>
       <if test="pickUpTimes !=null">
-      	 #{pickUpTimes,jdbcType=VARCHAR},
+        #{pickUpTimes,jdbcType=VARCHAR},
       </if>
       <if test="pickEndTimes !=null">
-      	 #{pickEndTimes,jdbcType=VARCHAR},
+        #{pickEndTimes,jdbcType=VARCHAR},
       </if>
       <if test="frequency !=null">
         #{frequency,jdbcType=INTEGER},
@@ -284,7 +284,7 @@
       <if test="downTime !=null">
         #{downTime,jdbcType=TIMESTAMP},
       </if>
-       <if test="vipPrice != null" >
+      <if test="vipPrice != null" >
         #{vipPrice,jdbcType=DECIMAL},
       </if>
     </trim>
@@ -329,7 +329,7 @@
       	pick_up_time = #{pickUpTimes,jdbcType=VARCHAR},
       	pick_end_time = #{pickEndTimes,jdbcType=VARCHAR},
         frequency = #{frequency,jdbcType=INTEGER},
-        shelf_time = #{shelfTimes,jdbcType=TIMESTAMP},
+        shelf_time = #{shelfTime,jdbcType=TIMESTAMP},
         down_time = #{downTime,jdbcType=TIMESTAMP},      
         
         <if test="vipPrice != null" >

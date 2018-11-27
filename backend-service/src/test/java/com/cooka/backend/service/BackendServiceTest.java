@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import org.apache.http.entity.ContentType;
 
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,10 @@ import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.mybatis.model.Var;
 import com.uclee.fundation.data.web.dto.ValuePost;
-import com.youzan.open.sdk.util.http.DefaultHttpClient;
-import com.youzan.open.sdk.util.http.HttpClient;
 
-public class BackendServiceTest  extends AbstractServiceTests{
-	
+
+public class BackendServiceTest  extends AbstractServiceTests {
+
 	private static final Logger logger = Logger.getLogger(BackendServiceTest.class);
 
 	@Autowired
@@ -48,29 +48,33 @@ public class BackendServiceTest  extends AbstractServiceTests{
 	private BackendServiceI backendService;
 
 	@Test
-	public void testCat(){
+	public void testCat() {
 		logger.info(JSON.toJSONString(categoryMapper.selectByParentId(2)));
 	}
+
 	@Test
-	public void testbirth(){
+	public void testbirth() {
 		logger.info(JSON.toJSONString(backendService.getUserListForUnBuy(1)));
 	}
+
 	@Test
-	public void testUserList(){
+	public void testUserList() {
 		logger.info(JSON.toJSONString(backendService.getUserList(1)));
 	}
-	
+
 	@Test
-	public void testHongShiProduct(){
+	public void testHongShiProduct() {
 		logger.info(JSON.toJSONString(hongShiMapper.getHongShiProduct()));
 	}
+
 	@Test
-	public void testHongShiStore(){
+	public void testHongShiStore() {
 		logger.info(JSON.toJSONString(hongShiMapper.getHongShiStore()));
 	}
+
 	@Test
-	public void testGetAddProductDataController(){
-		Map<String,Object> result = new HashMap<String,Object>();
+	public void testGetAddProductDataController() {
+		Map<String, Object> result = new HashMap<String, Object>();
 		List<Category> cat = categoryMapper.selectByParentId(0);
 		result.put("cat", cat);
 		List<HongShiProduct> proudctList = hongShiMapper.getHongShiProduct();
@@ -79,18 +83,17 @@ public class BackendServiceTest  extends AbstractServiceTests{
 		result.put("storeList", storeList);
 		logger.info(JSON.toJSONString(result));
 	}
+
 	@Test
-	public void testGenProductForm(){
+	public void testGenProductForm() {
 		generateProductForm();
 	}
-	public ProductForm generateProductForm(){
+
+	public ProductForm generateProductForm() {
 		ProductForm product = new ProductForm();
 		product.setCategoryId(1);
 		product.setDescription("hsdaslkgjaslkg");
-		String[] images = {
-				"http://120.25.193.220/group1/M00/2C/AE/eBnB3FhKpfSAEgYRAACTnTHS0sE83.file"
-				,"http://120.25.193.220/group1/M00/2C/AE/eBnB3FhKpfmAGkGmAAB3G4LPDvY38.file"
-				,"http://120.25.193.220/group1/M00/2D/0E/eBnB3FhL_TWAM97FAAClmKmbu8s17.file"};
+		String[] images = {"http://120.25.193.220/group1/M00/2C/AE/eBnB3FhKpfSAEgYRAACTnTHS0sE83.file", "http://120.25.193.220/group1/M00/2C/AE/eBnB3FhKpfmAGkGmAAB3G4LPDvY38.file", "http://120.25.193.220/group1/M00/2D/0E/eBnB3FhL_TWAM97FAAClmKmbu8s17.file"};
 		product.setImages(images);
 		product.setTitle("测试产品");
 		List<ValuePost> valuePost = new ArrayList<ValuePost>();
@@ -98,7 +101,8 @@ public class BackendServiceTest  extends AbstractServiceTests{
 		item1.setCode("111");
 		item1.setHsStock(10);
 		item1.setHsPrice(new BigDecimal(10));
-		List<Integer> storeIds =new ArrayList<>();storeIds.add(1);
+		List<Integer> storeIds = new ArrayList<>();
+		storeIds.add(1);
 		item1.setStoreIds(storeIds);
 		item1.setName("测试规格");
 		valuePost.add(item1);
@@ -106,7 +110,8 @@ public class BackendServiceTest  extends AbstractServiceTests{
 		item2.setCode("111");
 		item2.setHsStock(20);
 		item2.setHsPrice(new BigDecimal(20));
-		List<Integer> storeIds2 =new ArrayList<>();storeIds.add(4);
+		List<Integer> storeIds2 = new ArrayList<>();
+		storeIds.add(4);
 		item2.setStoreIds(storeIds2);
 		item2.setName("测试规格");
 		valuePost.add(item2);
@@ -114,23 +119,25 @@ public class BackendServiceTest  extends AbstractServiceTests{
 		logger.info(JSON.toJSONString(product));
 		return product;
 	}
-	
+
 	@Test
 	public void testAddProduct() {
 		ProductForm product = generateProductForm();
 		productManageService.addProduct(product);
 	}
+
 	@Test
 	public void testUpdateProductData() {
 		System.out.println(JSON.toJSONString(backendService.getProductForm(1)));
 	}
+
 	@Test
 	public void testLottery() {
-		Map<String,Object> result = new TreeMap<String,Object>();
-		Map<String,Object> map = new TreeMap<String,Object>();
+		Map<String, Object> result = new TreeMap<String, Object>();
+		Map<String, Object> map = new TreeMap<String, Object>();
 		List<LotteryDrawConfig> configs = backendService.selectAllLotteryDrawConfig();
 		int i = 0;
-		for(LotteryDrawConfig item : configs){
+		for (LotteryDrawConfig item : configs) {
 			map.put("myKey[" + i + "]", item.getVoucherCode());
 			map.put("myValue[" + i + "]", item.getMoney());
 			i++;
@@ -139,30 +146,12 @@ public class BackendServiceTest  extends AbstractServiceTests{
 		result.put("size", i++);
 		System.out.println(JSON.toJSONString(result));
 	}
-	
+
 	@Test
 	public void testUpdateProduct() {
-		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		ProductForm productForm = backendService.getProductForm(1);
 		map.put("productForm", productForm);
 		System.out.println(JSON.toJSONString(productForm));
-	}
-
-	/**
-	 * 获取有赞token
-	 */
-	@Test
-	public void testYouZan() {
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpClient.Params params = HttpClient.Params.custom()
-
-				.add("client_id", "01e3d14da80e4e77e6") //填写您的client_id
-				.add("client_secret", "bbb8efa2c6f017c3e9edee2ca74f2d21") //填写您的client_secret
-				.add("grant_type", "authorization_code") //默认值请勿修改
-				.add("code","141d248320ed3ed989ce17766a0aa871")
-				.add("redirect_uri","http://admin7.in80s.com/uclee-backend-web/test?merchantCode=hs")
-				.setContentType(ContentType.APPLICATION_FORM_URLENCODED).build();
-		String resp = httpClient.post("https://open.youzan.com/oauth/token", params);
-		System.out.println(resp);
 	}
 }

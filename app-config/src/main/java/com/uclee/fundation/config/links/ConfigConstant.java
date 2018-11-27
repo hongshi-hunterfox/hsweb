@@ -26,8 +26,7 @@ public interface ConfigConstant {
 	
 	int STOCK_TIGHT_LEVEL = 500;
 	BigDecimal STORE_WITHDRAW_CHARGE=new BigDecimal(2);
-	
-	
+
 	Integer COOKA_STORE1 = 1;
 	Integer COOKA_STORE2 = 130;
 	

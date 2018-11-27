@@ -64,7 +64,7 @@ class CreateWxVip extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" value={this.state.config.cartNotice} name="cartNotice" className="form-control" onChange={this._change}/>
               </div>
-              <label className="control-label col-md-3" style={{marginTop:'10px'}}>电话：</label>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>联系电话：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="number" value={this.state.config.cartServicePhone} name="cartServicePhone" className="form-control" onChange={this._change}/>
               </div>

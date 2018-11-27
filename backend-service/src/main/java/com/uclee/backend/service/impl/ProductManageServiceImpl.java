@@ -56,7 +56,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 	private ProductSaleMapper productSaleMapper;
 	@Override
 	public boolean addProduct(ProductForm product) {		
-		//description 
+		//description
 		String shelfTime = product.getShelfDate()+" "+product.getShelfTimes()+":00";
 		String downTime = product.getDownDate()+" "+product.getDownTimes()+":00";
 		SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
@@ -75,7 +75,6 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		} 
 		product.setShelfTime(shelf);
 		product.setDownTime(down);
-		
 		product.setIsActive(true);
 		//取sortValue的最大值，然后加1
 		Integer maxSortValue=productMapper.getMaxSortValue() > 0 ? productMapper.getMaxSortValue() : 0;
@@ -86,7 +85,6 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		for(int i=1; i<product.getValuePost().size(); i++) {
 			if(product.getValuePost().get(i).getVipPrice()!=null) {
 				if(param.compareTo(product.getValuePost().get(i).getVipPrice()) >=0){
-					
 					param = product.getValuePost().get(i).getVipPrice();
 				}
 			}
@@ -94,6 +92,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 
 		product.setVipPrice(param);
 		descriptionHandler(product);
+		System.out.println(JSON.toJSON(product));
 		if(productMapper.insertSelective(product)>0){
 			if(product.getSale()!=null){
 				ProductSale productSale = productSaleMapper.selectByProductId(product.getProductId());
