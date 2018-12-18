@@ -26,7 +26,8 @@ class LaunchBargain extends React.Component {
 			record:'',
 			isTrue:false,
 			config:{},
-			result:0
+			result:0,
+			priceCuttingPoster:''
 		}
 	}
 	componentDidMount() {
@@ -59,6 +60,7 @@ class LaunchBargain extends React.Component {
 					window.location='/bargain';
 					return;
 				}
+
 			})
 		var str=this.state.valueId;
 		var num = str.indexOf("&")
@@ -134,6 +136,7 @@ class LaunchBargain extends React.Component {
       			var data = JSON.parse(res.text)
       			this.setState({
         			config: data.config,
+        			priceCuttingPoster: data.config.priceCuttingPoster
      			})
       		console.log(this.state.config)
     		})
@@ -164,7 +167,7 @@ class LaunchBargain extends React.Component {
 				</div>
 			)
 		})
-		
+
 		var str=this.state.valueId;
 		var num = str.indexOf("&")
 		var valueid=str.substr(0,num);
@@ -173,9 +176,22 @@ class LaunchBargain extends React.Component {
 		var pri = this.state.values.hsGoodsPrice - this.state.values.price;
 		var value = this.state.sunMoney/pri;
 		var bfb = value*100;
+		var price =this.state.values.price;
+		var hsGoodsPrice = this.state.values.hsGoodsPrice;
+		var sunMoney = this.state.sunMoney;
+		var sum = hsGoodsPrice-sunMoney
+		
+		if(this.state.status === false && price == sum){
+			window.location='/bargain';
+			return(
+				alert("砍价已完成，将跳转的活动列表页面!")
+			)
+			
+		}
+
 		return(
 			<DocumentTitle title="发起砍价">
-				<div className="launch-bargain">
+				<div className="launch-bargain">					
         			<div className="launch-bargain-items">
         			{
             			this.state.isTrue === true 
@@ -211,6 +227,7 @@ class LaunchBargain extends React.Component {
 							</div>
 							:
 							<div className="launch-bargain">
+								<div><img src={this.state.priceCuttingPoster} width="100%"/></div>
 								<label className="control-label col-md-3" style={{marginTop:'10px'}} />
 								<div className="launch-bargain-item">
           							<div className='launch-bargain-item-cardstyle'>
@@ -291,13 +308,13 @@ class LaunchBargain extends React.Component {
                             									alert("恭喜你砍掉"+this.state.result+"元")
                             									window.location.reload();
                             								}
+                            								return;
         												})
-                            					
-                            							
+
                             				
-                            							}}>
-															砍一刀
-            											</button>
+                            						}}>
+														砍一刀
+            										</button>
             									}
             									</div>
             									<label className="control-label col-md-3" style={{marginTop:'10px'}}>
@@ -322,12 +339,13 @@ class LaunchBargain extends React.Component {
           									<label className="control-label col-md-3" style={{marginTop:'10px'}} />
           									<div className='launch-bargain-item-button'>
           									{
-          									this.state.status === true&&this.state.values.price === (this.state.values.hsGoodsPrice - this.state.sunMoney)
+          									this.state.status === true&&price == sum.toFixed(1)
           									?
 												<button type="button" className="btn btn-success" 
 													onClick={this._clickNext.bind(
 															this,
 															this.state.values.price,
+															this.state.values.productId,
 													)}>
 														砍价成功,点击购买
             									</button>
@@ -368,7 +386,7 @@ class LaunchBargain extends React.Component {
 		)
 	}
 	
-_clickNext = (bargainPrice) => {
+_clickNext = (bargainPrice,productId) => {
 	req
 	.get('/uclee-user-web/status')
 	.end((err, res) => {
@@ -381,7 +399,7 @@ _clickNext = (bargainPrice) => {
 			record:c.record
 		})
 		if(this.state.record === undefined){
-			window.location = '/cart'
+			window.location = '/cart?merchantCode='+localStorage.getItem('merchantCode')
 			return;
 		}else{
 			  // 加入购物车
@@ -389,6 +407,16 @@ _clickNext = (bargainPrice) => {
 			var num = str.indexOf("&")
 			var valueid=str.substr(0,num);
 			localStorage.setItem('bargainPrice', this.state.values.price),
+			req
+			.get('/uclee-user-web/insertUserlimit?productId='+productId)
+			.end((err, res) => {
+				if(err) {
+					return err	
+				}
+				if(!res.body){
+					alert("网络繁忙")
+				}
+			})
     		req
       		.post('/uclee-user-web/cartHandler')
       		.send({
@@ -403,7 +431,7 @@ _clickNext = (bargainPrice) => {
         		}
         		var result = JSON.parse(res.text);
         		if(result.result){
-         			 window.location = '/cart'
+         			 window.location = '/cart?merchantCode='+localStorage.getItem('merchantCode')
         		}else{
           			alert(result.reason);
         		}

@@ -22,6 +22,7 @@ import com.uclee.fundation.data.mybatis.mapping.RechargeConfigMapper;
 import com.uclee.fundation.data.mybatis.mapping.RechargeRewardsRecordMapper;
 import com.uclee.fundation.data.mybatis.mapping.ShippingFullCutMapper;
 import com.uclee.fundation.data.mybatis.mapping.SignRecordMapper;
+import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import com.uclee.fundation.data.mybatis.model.Balance;
 import com.uclee.fundation.data.mybatis.model.Banner;
 import com.uclee.fundation.data.mybatis.model.BargainLog;
@@ -51,6 +52,7 @@ import com.uclee.fundation.data.mybatis.model.IntegralInGifts;
 import com.uclee.fundation.data.mybatis.model.Lnsurance;
 import com.uclee.fundation.data.mybatis.model.LotteryDrawConfig;
 import com.uclee.fundation.data.mybatis.model.LotteryRecord;
+import com.uclee.fundation.data.mybatis.model.MarketingEntrance;
 import com.uclee.fundation.data.mybatis.model.NapaStore;
 import com.uclee.fundation.data.mybatis.model.OauthLogin;
 import com.uclee.fundation.data.mybatis.model.Order;
@@ -69,6 +71,7 @@ import com.uclee.fundation.data.mybatis.model.SignRecord;
 import com.uclee.fundation.data.mybatis.model.SpecificationValue;
 import com.uclee.fundation.data.mybatis.model.User;
 import com.uclee.fundation.data.mybatis.model.UserInvitedLink;
+import com.uclee.fundation.data.mybatis.model.UserLimit;
 import com.uclee.fundation.data.mybatis.model.UserProfile;
 import com.uclee.fundation.data.mybatis.model.WxUser;
 import com.uclee.fundation.data.mybatis.model.vipIdentity;
@@ -137,6 +140,8 @@ public class UserController extends CommonUserHandler{
 	private ProductMapper productMapper;
 	@Autowired
 	private FullCutMapper fullCutMapper;
+	@Autowired
+	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private ShippingFullCutMapper shippingFullCutMapper;
 	@Autowired
@@ -592,11 +597,11 @@ public class UserController extends CommonUserHandler{
 		}
 		List<BindingRewards> bindingRewards = bindingRewardsMapper.selectOne();
 		if(bindingRewards!=null&&bindingRewards.size()>=1){
-			List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
-			if(coupon.size()<bindingRewards.get(0).getAmount() || coupon.size()==0 || bindingRewards.get(0).getAmount() == 0){
-				map.put("result",false);
-				return map;
-			}
+				List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(bindingRewards.get(0).getVoucherCode());
+				if(coupon.size()<bindingRewards.get(0).getAmount() || coupon.size()==0 || bindingRewards.get(0).getAmount() == 0){
+					map.put("result",false);
+					return map;
+				}
 		}
 
 		map.put("result",true);
@@ -1942,44 +1947,61 @@ public class UserController extends CommonUserHandler{
 	 * 记录插入到砍价记录表
 	 */
 	@RequestMapping("/LaunchBargain")
-	public @ResponseBody Map<String,Object> LaunchBargain(HttpServletRequest request, String name, BigDecimal hsGoodsPrice, String codes) {
+	public @ResponseBody Map<String,Object> LaunchBargain(HttpServletRequest request, String name, BigDecimal hsGoodsPrice, String codes, Integer pid,String productName) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
-		BargainSetting bargain = userService.selectName(name);
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
-		//得到外键和会员id
-		vipIdentity vip = userService.selectVipIdentity(oauth.getOauthId());
-		LaunchBargain launchBargain = new LaunchBargain();
-		if(vip!=null){
-			launchBargain.setUid(userId);
-			launchBargain.setOpenId(oauth.getOauthId());
-			launchBargain.setPid(bargain.getId());
-			launchBargain.setInitialAmount(hsGoodsPrice);
-			//以设置的随机金额最大值来给发起砍价的人砍掉相应的金额--kx
-			launchBargain.setCurrentAmount(bargain.getMaxprice());
-			launchBargain.setLaunchTime(new Date());
-			//状态1为发起状态，2为结束
-			launchBargain.setStatus(1);
-			System.out.println("code123=========="+codes);
-			launchBargain.setInvitationCode(codes);
-			System.out.println("插入到发起砍价表的信息"+JSON.toJSONString(launchBargain));
-			LaunchBargain record = userService.getbargainRecord(userId);
-			//判断是否有正在进行中的砍价活动
-			if(record==null){
-				userService.insertLaunchBargain(launchBargain);
-				//把发起人的砍价记录插入到砍价记录表
-				BargainLog log = new BargainLog();
-				log.setPid(launchBargain.getId());
-				log.setUid(launchBargain.getUid());
-				log.setOpenId(launchBargain.getOpenId());
-				//发起人砍掉的金额
-				log.setRandomAmount(bargain.getMaxprice());
-				log.setLaunchTime(new Date());
-				//关联邀请码
-				log.setInvitationCode(launchBargain.getInvitationCode());
-				userService.insertBargainLog(log);
+		BargainSetting bargain = userService.selectName(name);
+		//根据当前库存减去砍价发起记录锁定剩余库存
+		BargainPost  detail = bargainSettingMapper.getStock(productName);
+		System.out.println(JSON.toJSON(detail));
+		Integer stock =  detail.getHsStock();
+		List<LaunchBargain> jilu = bargainSettingMapper.getbargainSize(pid);
+		Integer dd= stock - jilu.size();
+		List<UserLimit> limit = productMapper.selectByLimit(userId, detail.getProductId());
+		if(limit.size() >= detail.getFrequency()){
+			System.out.println("进来了detail.getFrequency()=========="+detail.getFrequency());
+			map.put("limit", "本活动每人仅限参与"+detail.getFrequency()+"次");
+			return map;
+		}
+		if(stock - jilu.size() !=0 ){
+			
+			OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
+			//得到外键和会员id
+			vipIdentity vip = userService.selectVipIdentity(oauth.getOauthId());
+			LaunchBargain launchBargain = new LaunchBargain();
+			if(vip!=null){
+				launchBargain.setUid(userId);
+				launchBargain.setOpenId(oauth.getOauthId());
+				launchBargain.setPid(bargain.getId());
+				launchBargain.setInitialAmount(hsGoodsPrice);
+				//以设置的随机金额最大值来给发起砍价的人砍掉相应的金额--kx
+				launchBargain.setCurrentAmount(bargain.getMaxprice());
+				launchBargain.setLaunchTime(new Date());
+				//状态1为发起状态，2为结束
+				launchBargain.setStatus(1);
+				System.out.println("code123=========="+codes);
+				launchBargain.setInvitationCode(codes);
+				System.out.println("插入到发起砍价表的信息"+JSON.toJSONString(launchBargain));
+				LaunchBargain record = userService.getbargainRecord(userId);
+				//判断是否有正在进行中的砍价活动
+				if(record==null){
+					userService.insertLaunchBargain(launchBargain);
+					//把发起人的砍价记录插入到砍价记录表
+					BargainLog log = new BargainLog();
+					log.setPid(launchBargain.getId());
+					log.setUid(launchBargain.getUid());
+					log.setOpenId(launchBargain.getOpenId());
+					//发起人砍掉的金额
+					log.setRandomAmount(bargain.getMaxprice());
+					log.setLaunchTime(new Date());
+					//关联邀请码
+					log.setInvitationCode(launchBargain.getInvitationCode());
+					userService.insertBargainLog(log);
+				}
 			}
+		}else{
+			map.put("stock", "商品已被抢完了");
 		}
 		return map;
 	}
@@ -1998,11 +2020,12 @@ public class UserController extends CommonUserHandler{
 		BargainSetting bargain = userService.selectName(productName);
 		Random random = new Random();
 		//根据活动设置生成砍价金额随机数
-		Double min=bargain.getMinprice();
-		Double max=bargain.getMaxprice();
+		double min=bargain.getMinprice();
+		double max=bargain.getMaxprice();
 		System.out.println("min======="+min);
 		System.out.println("max======="+max);
-		Double result = min + (Math.random() * ((max - min)));
+		double res = min + (Math.random() * ((max-min)));
+		BigDecimal result = new BigDecimal(res);
 		DecimalFormat df = new DecimalFormat("0.0");
 		System.out.println("result======="+result);
 			BargainLog log = new BargainLog();
@@ -2012,14 +2035,18 @@ public class UserController extends CommonUserHandler{
 			BigDecimal sumMoney = userService.selectSumMoney(codes);
 			//保证最后砍价金额等于最大能砍掉的金额
 			BargainPost value = userService.getValue(valueId);
-			double sum = sumMoney.intValue() + result;
-			double price = value.getHsGoodsPrice().intValue() - value.getPrice().intValue();
-			if(sum>price){				
-				result = price - sumMoney.intValue();
+			BigDecimal sum = sumMoney.add(result); 
+			
+			BigDecimal price = value.getHsGoodsPrice().subtract(value.getPrice());
+			System.out.println("sun=========="+sum+"price==========="+price);
+			if(sum.compareTo(price) == 1){	
+				System.out.println("j进来了");
+				result = price.subtract(sumMoney);
+				System.out.println("result=========="+result);
 			}
-			result = new Double(df.format(result));
+			result = new BigDecimal(df.format(result));
 			map.put("result", result);
-			log.setRandomAmount(result);
+			log.setRandomAmount(result.doubleValue());
 			log.setLaunchTime(new Date());
 			//关联邀请码			
 			log.setInvitationCode(codes);
@@ -2083,6 +2110,7 @@ public class UserController extends CommonUserHandler{
 		if(status1 == null){
 			map.put("status1", "活动已过期");
 		}
+
 		map.put("values", value);
 		return map;
 	}
@@ -2184,6 +2212,30 @@ public class UserController extends CommonUserHandler{
 		}else{
 			map.put("result", false);
 		}
+		return map;
+	}
+	
+	/**
+	 * 取会员卡营销活动入口列
+	 */
+	@RequestMapping("/selectAllMarketingEntrance")	
+	public @ResponseBody Map<String,Object> selectAllMarketingEntrance(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<MarketingEntrance> list = userService.selectAllMarketingEntrance();
+		map.put("list", list);
+		return map;
+	}
+	
+	@RequestMapping("/insertUserlimit")	
+	public @ResponseBody Map<String,Object> insertUserlimit(HttpServletRequest request, Integer productId) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		UserLimit userLimit = new UserLimit();
+		userLimit.setUserId(userId);
+		userLimit.setTime(new Date());
+		userLimit.setProductId(productId);
+		productMapper.insertUserLimit(userLimit);
 		return map;
 	}
  }

@@ -71,6 +71,7 @@ class Product extends React.Component {
     var end = this.state.currentSpec.endTimeStr
     var date1 = new Date(begin).getTime()
     var date2 = new Date(end).getTime()
+
     console.log(this.state.shelfTimes)
     console.log(this.state.downTimes)
     return (

@@ -11,8 +11,12 @@ class BargainList extends React.Component {
     this.state = {
       bargainList:[],
       productId:0,
-      config:{}
+      config:{},
+      priceCuttingPoster:'',
+      uploading:false,
     }
+    this.imgFile = null
+    this.imgFile1 = null
   }
 
   componentDidMount() {
@@ -33,7 +37,8 @@ class BargainList extends React.Component {
       }
       var data = JSON.parse(res.text)
       this.setState({
-        config: data.config
+        config: data.config,
+        priceCuttingPoster:data.config?data.config.priceCuttingPoster:'',
       })
     })
   }
@@ -105,10 +110,64 @@ class BargainList extends React.Component {
             <font color="#FF0000">推送活动url:  {this.state.config.domain}/bargain?merchantCode={localStorage.getItem('merchantCode')}</font>
             <form onSubmit={this._submit} className="form-horizontal">
             	<label style={{marginTop:'10px'}}>活动规则设置：</label>
-					      <div style={{marginTop:'10px'}}>
+					    <div style={{marginTop:'10px'}}>
 					        <textarea rows="3" cols="20" value={this.state.config.bargainText} name="bargainText" className="form-control" onChange={this._change}>
 					        </textarea>
 					    </div>
+					    <label style={{marginTop:'10px'}}>砍价活动海报图片：</label>
+					    <div className="form-group">
+              <div style={{marginTop:'10px'}}>
+                <div className="row">
+                  {
+                    this.state.uploading ?
+                    <div className="product-uploading">
+                      <span>上传中...</span>
+                    </div>
+                    :
+                    null
+                  }
+                  <div className="col-md-4 col-md-offset-2" >
+                    <div className="panel panel-default">
+                      <div className="panel-body">
+                        <div style={{ marginBottom: 10 }}>
+                          <img
+                            src={this.state.priceCuttingPoster}
+                            alt=""
+                            className="img-responsive"
+                          />
+                        </div>
+                        {/*<button
+                          type="button"
+                          className="btn btn-danger btn-block"
+                          onClick={this._deleteLogoImg}
+                        >
+                          更换图片
+                        </button>*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-default col-md-offset-2"
+                  type="button"
+                  onClick={() => {
+                    this.imgFile.click()
+                  }}
+                >
+                  <span className="glyphicon glyphicon-plus" />
+                  更换图片
+                  {this.state.priceCuttingPoster}
+                </button>
+                <input
+                  type="file"
+                  onChange={this._onChooseLogoImage}
+                  className="hidden"
+                  ref={c => {
+                    this.imgFile = c
+                  }}
+                />
+              </div>
+            </div>
 	            <div className="form-group" style={{marginTop:'10px'}}>
 	              <div className="col-md-9 col-md-offset-5">
 	                <button type="submit" className="btn btn-primary">提交</button>
@@ -118,6 +177,34 @@ class BargainList extends React.Component {
         </div>
       </DocumentTitle>
     )
+  }
+  
+  _onChooseLogoImage = fe => {
+    console.log("进入_onChooseLogoImage")
+    if (fe.target.files && fe.target.files[0]) {
+      var f = fe.target.files[0]
+
+      this.setState({
+        uploading: true
+      })
+
+      var fd = new FormData()
+      fd.append('file', f)
+      req
+        .post('/uclee-product-web/doUploadImage')
+        .send(fd)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          console.log(this.state);
+          this.setState({
+              priceCuttingPoster: res.text,
+              uploading:false
+          })
+          console.log(this.state);
+        })
+    }
   }
   
   _change = (e) => {
@@ -136,8 +223,7 @@ class BargainList extends React.Component {
     this.setState({
       err: null
     })
-    data.logoUrl = this.state.logoUrl;
-    data.ucenterImg = this.state.ucenterImg;
+    data.priceCuttingPoster = this.state.priceCuttingPoster;
     req
       .post('/uclee-backend-web/activityConfigHandler')
       .send(data)

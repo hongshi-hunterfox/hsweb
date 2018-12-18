@@ -35,4 +35,6 @@ public interface BargainSettingMapper {
 	BargainSetting getPrice(Integer cartId);
 	BargainLog getValueId(@Param("id")Integer id, @Param("uid")Integer uid);
 	BargainPost getBargainOver(Integer id);
+	List<LaunchBargain> getbargainSize(Integer pid);
+	BargainPost getStock(String productName);
 }

@@ -46,6 +46,16 @@ public class BargainPost {
 	private Date end;
 	
 	private Integer hsStock;
+	
+	private Integer frequency;
+		
+	public Integer getFrequency() {
+		return frequency;
+	}
+	
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
+	}
 
 	public Integer getHsStock() {
 		return hsStock;

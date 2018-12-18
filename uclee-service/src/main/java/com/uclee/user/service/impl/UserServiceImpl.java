@@ -217,6 +217,8 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private ShippingFullCutMapper shippingFullCutMapper;
 	@Autowired
+	private MarketingEntranceMapper marketingEntranceMapper;
+	@Autowired
 	private ProductsSpecificationsValuesLinkMapper productsSpecificationsValuesLinkMapper;
 	@Autowired
 	private DataSourceFacade datasource;
@@ -2445,16 +2447,18 @@ public class UserServiceImpl implements UserServiceI {
 				return map;
 			}
 			Product product = productMapper.selectByPrimaryKey(cart.getProductId());
-			if(product.getFrequency()!=null && product.getFrequency()!=-1) {
-				List<UserLimit> limit = productMapper.selectByLimit(userId, product.getProductId());
-				if(limit.size() >= product.getFrequency()) {
-					map.put("result", false);
-					map.put("reason", product.getTitle()+"仅限购买"+product.getFrequency()+"次，请返回购物车重新提交");
-					return map;
+			BargainSetting price = bargainSettingMapper.getPrice(cart.getCartId());
+			if(price == null){
+				if(product.getFrequency()!=null && product.getFrequency()!=-1) {
+					List<UserLimit> limit = productMapper.selectByLimit(userId, product.getProductId());
+					if(limit.size() >= product.getFrequency()) {
+						map.put("result", false);
+						map.put("reason", product.getTitle()+"仅限购买"+product.getFrequency()+"次，请返回购物车重新提交");
+						return map;
+					}
 				}
 			}
 			SpecificationValue value = specificationValueMapper.selectByPrimaryKey(cart.getSpecificationValueId());
-			BargainSetting price = bargainSettingMapper.getPrice(cart.getCartId());
 			ProductParameters csshuxing1 = productMapper.obtainParameters(cart.getCanshuValueId());
 			if(value==null){
 				map.put("result", false);
@@ -3261,6 +3265,7 @@ public class UserServiceImpl implements UserServiceI {
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(paymentOrder.getUserId());
 			//更新订单状态
 			List<Order> orders = this.selectOrderByPaymentSerialNum(paymentOrder.getUserId(), paymentOrder.getPaymentSerialNum());
+			System.out.println("orders9999========="+orders.size());
 			for(Order order:orders){
 
 				//调用存储过程插入洪石订单
@@ -4669,6 +4674,11 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public List<LinkCouponLogs> selectLinkCoponLog(String name, String oauthId) {
 		return linkCouponMapper.selectLinkCoponLog(name, oauthId);
+	}
+
+	@Override
+	public List<MarketingEntrance> selectAllMarketingEntrance() {
+		return marketingEntranceMapper.selectAllMarketingEntrance();
 	}
 
 }

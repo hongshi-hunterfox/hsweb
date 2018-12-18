@@ -246,15 +246,15 @@ class Order extends React.Component {
     }
     var Total = (this.state.total -
                 this.state.voucherText +
-                (this.state.isShippingfree ? 0 : this.state.shippingFee) -
+                (this.state.isShippingfree === false ? this.state.shippingFee : 0) -
                 this.state.cut >
                 0
                 ? (this.state.total -
                     this.state.voucherText +
-                  (this.state.isShippingfree ? 0 : this.state.shippingFee)-
+                  (this.state.isShippingfree === false ? this.state.shippingFee : 0)-
                     this.state.cut).toFixed(2)
                 : 0)
-   var Difference = this.state.config.full - this.state.total
+   var Difference = this.state.config.full - this.state.total;
     return (
       <DocumentTitle title="提交订单">
       	<div>
@@ -276,7 +276,6 @@ class Order extends React.Component {
 	                    	}, () => {
 	                      console.log(this.state)
 	                       if (
-	                          this.state.isSelfPick &&
 	                          this.state.isSelfPick === 'false' &&
 	                          localStorage.getItem('latitude') != null &&
 	                          localStorage.getItem('longitude') != null
@@ -287,16 +286,15 @@ class Order extends React.Component {
 	                              this.state.defaultAddr.city +
 	                              this.state.defaultAddr.region +
 	                              this.state.defaultAddr.addrDetail
-	                            if(!this.state.isShippingfree){
-	                              geocoder.getLocation(addr,this.state.total)
-	                            }else{
-	                            	geocoder.getLocation(addr,this.state.total)
-	                            }
+	                              if(this.state.isShippingfree === false){
+	                              	geocoder.getLocation(addr,this.state.total)
+	                              }
 	                          }
 	                        }
 	                    })
 	                    sessionStorage.setItem('isSelfPick', e.target.value)
 	                    console.log(this.state.isSelfPick);
+
 	                   
 	                  }}/><label htmlFor="no">配送</label></span>
 	                
@@ -440,9 +438,9 @@ class Order extends React.Component {
 	              <input
 	                type="hidden"
 	                name="shippingFee"
-	                value={this.state.isShippingfree ? 0 : this.state.shippingFee}
+	                value={this.state.isShippingfree === false ? this.state.shippingFee : 0}
 	              />
-	              运费：<span className="money">￥{this.state.isShippingfree ? 0 : this.state.shippingFee}</span>
+	              运费：<span className="money">￥{this.state.isShippingfree === false ? this.state.shippingFee : 0}</span>
 	            </div>
 	            <div
 	              className="order-coupon"
@@ -797,20 +795,6 @@ class Addr extends React.Component {
   render() {
     return (
       <div className="order-addr">
-        {/*<div className="tab">
-          <div
-            className={'deli ' + (this.props.isSelfPick!=null&&this.props.isSelfPick ? '' : 'select')}
-            onClick={this.props._addrTabChange.bind(this, false)}
-          >
-            配送
-          </div>
-          <div
-            className={'self ' + (this.props.isSelfPick!=null&&this.props.isSelfPick ? 'select' : '')}
-            onClick={this.props._addrTabChange.bind(this, true)}
-          >
-            自提
-          </div>
-        </div>*/}
         <div className="detail">
           {!this.props.isSelfPick || this.props.isSelfPick === 'false'
             ? <div

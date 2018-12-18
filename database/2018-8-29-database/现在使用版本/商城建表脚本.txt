@@ -2,6 +2,17 @@ use Êý¾Ý¿âÃû
 
 go
 
+If Object_id('web_marketing_entrance,'U') Is Null
+
+Begin
+create table web_marketing_entrance(
+	id int IDENTITY(1,1) NOT NULL,
+	name varchar(8) not null,
+	url varchar(255) not null,
+	imgurl varchar(255) not null,
+)
+go
+
 If Object_id('ReportColumn,'U') Is Null
 
 Begin

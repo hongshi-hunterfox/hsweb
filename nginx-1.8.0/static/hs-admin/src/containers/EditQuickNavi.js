@@ -111,7 +111,6 @@ class EditQuickNavi extends React.Component {
   _onChooseImage = fe => {
     if (fe.target.files && fe.target.files[0]) {
       var f = fe.target.files[0]
-
       this.setState({
         uploading: true
       })

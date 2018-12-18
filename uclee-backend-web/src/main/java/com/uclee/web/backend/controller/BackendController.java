@@ -824,7 +824,30 @@ public class BackendController {
 	 */
 	@RequestMapping("/CreatWxVip")
 	public @ResponseBody String CreatWxVip(HttpServletRequest request) throws IOException {
-		return backendService.CreatWxVip();
+		String msg = backendService.CreatWxVip();
+		System.out.println("jjjjkkkkk======="+msg);
+		return msg;
 		
+	}
+	
+	@RequestMapping("/MarketingEntranceList")
+	public @ResponseBody Map<String,Object> MarketingEntranceList(HttpServletRequest request){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<MarketingEntrance> list = backendService.selectAllMarketingEntrance();
+		map.put("list", list);
+		return map;
+	}
+	
+	@RequestMapping("/getMarketingEntrance")
+	public @ResponseBody Map<String,Object> getMarketingEntrance(HttpServletRequest request, Integer id){
+		
+		Map<String,Object> map = new TreeMap<String,Object>();
+		
+		if(id != null) {
+			MarketingEntrance detail = backendService.getMarketingEntrance(id);
+			map.put("detail", detail);
+		}
+		
+		return map;
 	}
 }

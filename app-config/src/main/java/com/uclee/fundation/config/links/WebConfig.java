@@ -70,4 +70,5 @@ public interface WebConfig {
 	String CartBonusUrl = "CartBonusUrl";
 	String CartCustomField1Url = "CartCustomField1Url";
 	String CartPrerogative = "CartPrerogative";
+	String priceCuttingPoster = "priceCuttingPoster";
 }                      

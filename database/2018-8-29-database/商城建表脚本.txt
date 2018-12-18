@@ -11,6 +11,192 @@ CREATE TABLE [dbo].[web_account_information](
 )
 End
 
+If Object_id('web_launch_bargain','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_launch_bargain](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[pid] [int] NULL,
+	[uid] [int] NULL,
+	[open_id] [varchar](255) NULL,
+	[initial_amount] [decimal](20, 2) NULL,
+	[current_amount] [decimal](20, 2) NULL,
+	[launch_time] [datetime] NULL,
+	[status] [int] NULL,
+	[invitation_code] [varchar](50) NULL,
+);
+End
+go
+
+--满额送礼券
+If Object_ID('web_full_send_coupon','U') Is Null
+Begin
+create table web_full_send_coupon(
+	
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	
+	[voucher] [varchar](50) NOT NULL,
+	
+	[amount] [int] NOT NULL,
+	
+	[money] [decimal](20, 2) NULL
+
+); 
+End
+go
+
+
+--关联产品
+If Object_ID('web_coupons_products_links','U') Is Null
+Begin
+create table web_coupons_products_links(
+	id int identity(1,1) primary key not null,
+	vid int not null,
+	pid int not null
+);
+End
+go
+
+If Object_ID('web_consumer_voucher','U') Is Null
+Begin
+CREATE TABLE web_consumer_voucher(
+	id int IDENTITY(1,1) not null,
+	voucher_code varchar(255) not null,
+	amount int not null
+);
+End
+go
+
+--生日信息推送新增表
+If Object_ID('web_birthdayInformation_push','U') Is Null
+Begin
+create table web_birthdayInformation_push(
+	id int primary key not null,
+	day int not null,
+	time varchar(50) not null
+);
+End
+go
+
+If Object_id('web_bargain_setting','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_bargain_setting](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name] [varchar](255) NULL,
+	[start] [datetime] NULL,
+	[closure] [datetime] NULL,
+	[price] [decimal](20, 2) NULL,
+	[minprice] [decimal](20, 2) NULL,
+	[maxprice] [decimal](20, 2) NULL,
+	[product_name] [varchar](50) NULL,
+	[tries_limit] [int] NULL,
+);
+End
+go
+
+If Object_id('web_bargain_log','U') Is Null
+Begin
+CREATE TABLE [dbo].[web_bargain_log](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[pid] [int] NULL,
+	[uid] [int] NULL,
+	[open_id] [varchar](255) NULL,
+	[random_amount] [decimal](20, 2) NULL,
+	[launch_time] [datetime] NULL,
+	[invitation_code] [varchar](50) NULL
+);
+End
+go
+
+If Object_ID('web_usre_limit','U') Is Null
+Begin
+
+
+CREATE TABLE [web_usre_limit](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[user_id] [int] NULL,
+	[time] [datetime] NULL,
+	[product_id] [int] NULL
+);
+End
+go
+
+If Object_ID('web_youzan_vars','U') Is Null
+Begin
+
+
+create table web_youzan_vars(
+  id int identity(1,1) not null,
+  platform varchar(10) not null,
+  name varchar(50) not null,
+  storage_time datetime not null,
+  value varchar(255) not null, 
+  expires_in int not null,
+  refresh_token varchar(255) not null,
+  );
+End
+go
+
+
+If Object_ID('web_sign_amount','U') Is Null
+Begin
+
+
+CREATE TABLE [web_sign_amount](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[user_id] [int] NOT NULL,
+	[count] [int] NOT NULL
+);
+End
+go
+
+--买产品送礼券
+If Object_ID('web_product_voucher_setting','U') Is Null
+Begin
+
+
+create table web_product_voucher_setting(
+	id int  identity (1,   1) NOT NULL,
+	voucher varchar(50) not null,
+	amount int not null,
+	name varchar(50) not null
+);
+End
+go
+
+If Object_id('web_marketing_entrance','U') Is Null
+Begin
+create table web_marketing_entrance(
+	id int IDENTITY(1,1) NOT NULL,
+	name varchar(8) not null,
+	url varchar(255) not null,
+	imgurl varchar(255) not null,
+)
+End
+go
+
+If Object_ID('web_list_voucher','U') Is Null
+Begin
+CREATE TABLE [web_list_voucher](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[voucher_code] [varchar](255) NOT NULL,
+	[amount] [int] NOT NULL,
+	[time] [datetime] NULL
+);
+End
+go
+
+--领取记录
+If Object_ID('web_link_coupon_logs','U') Is Null
+Begin
+ create table web_link_coupon_logs(
+	id int IDENTITY(1,1) NOT NULL,
+	oauth_id varchar(255) not null,
+	name varchar(255) not null,
+	day  datetime not null,
+ );
+End
+go
+
 If Object_ID('web_balance','U') Is Null
 
 create table web_balance(
@@ -38,6 +224,7 @@ create table web_balance_log(
   create_time DATETIME DEFAULT(GETDATE())
 
 );
+end
 
 If Object_ID('web_banner','U') Is Null
 
@@ -50,6 +237,7 @@ create table web_banner(
   link varchar(255) not null default ''
 
 );
+end
 
 If Object_ID('web_binding_rewards  ','U') Is Null
 
@@ -66,7 +254,7 @@ CREATE TABLE web_binding_rewards (
   time DATETIME DEFAULT(GETDATE())
 
 );
-
+end
 If Object_ID('web_birth_voucher  ','U') Is Null
 
 CREATE TABLE web_birth_voucher (
@@ -80,6 +268,7 @@ CREATE TABLE web_birth_voucher (
   time DATETIME DEFAULT(GETDATE())
 
 );
+end
 
 If Object_ID('web_cart','U') Is Null
 
@@ -116,6 +305,7 @@ CREATE TABLE web_categories(
    parent_id int NOT NULL
 
 );
+end
 
 If Object_ID('web_cities','U') Is Null
 
@@ -128,6 +318,7 @@ CREATE TABLE web_cities(
    city varchar(255) NOT NULL 
 
 );
+end
 
 If Object_ID('web_comment  ','U') Is Null
 
@@ -154,6 +345,7 @@ CREATE TABLE web_comment (
   back_time DATETIME DEFAULT null
 
 );
+end
 
 If Object_ID('web_config','U') Is Null
 
@@ -166,6 +358,7 @@ create table web_config(
   value varchar(255) not null
 
 );
+end
 
 If Object_ID('web_deliver_addrs','U') Is Null
 
@@ -198,7 +391,6 @@ CREATE TABLE web_deliver_addrs(
  latitude varchar(255) not null default ''
 
 );
-
 end
 
 CREATE NONCLUSTERED INDEX userIdx ON web_deliver_addrs(user_id);
@@ -219,6 +411,7 @@ amount int NOT NULL,
 	
 time datetime NULL
 );
+end
 
 If Object_ID('web_freight','U') Is Null
 
@@ -231,6 +424,7 @@ create table web_freight(
   money decimal(20,2) NOT NULL
 
 );
+end
 
 If Object_ID('web_full_cut ','U') Is Null
 
@@ -249,6 +443,7 @@ CREATE TABLE web_full_cut (
   end_time DATETIME DEFAULT null
 
 );
+end
 
 If Object_ID('web_home_quick_navi ','U') Is Null
 
@@ -261,6 +456,7 @@ CREATE TABLE web_home_quick_navi (
   image_url varchar(255) NOT NULL DEFAULT ''
 
 );
+end
 
 If Object_id('web_integralin_config','U') Is Null
 BEGIN
@@ -300,6 +496,7 @@ create table web_lottery_draw_config(
   end_time DATETIME DEFAULT(GETDATE())
 
 );
+end
 
 If Object_ID('web_lottery_record','U') Is Null
 
@@ -312,6 +509,7 @@ create table web_lottery_record(
   time DATETIME DEFAULT(GETDATE())
 
 );
+end
 
 If Object_ID('web_message  ','U') Is Null
 
@@ -332,6 +530,7 @@ CREATE TABLE web_message (
   is_send bit NOT NULL DEFAULT 0
 
 );
+end
 
 If Object_ID('web_msg_record','U') Is Null
 
@@ -346,6 +545,19 @@ create table web_msg_record(
   time DATETIME DEFAULT(GETDATE()),
 
 );
+end
+
+--链接领券表
+If Object_id('web_link_coupon','U') Is Null
+Begin
+create table web_link_coupon(
+id int IDENTITY(1,1) NOT NULL,
+voucher varchar(255) NOT NULL,
+amount int NOT NULL,
+name varchar(255),
+)
+End
+go
 
 If Object_ID('web_napa_store_user_link','U') Is Null
 
@@ -358,6 +570,7 @@ create table web_napa_store_user_link(
   store_id int not null 
 
 );
+end
 
 If Object_ID('web_napa_stores','U') Is Null
 
@@ -384,6 +597,7 @@ If Object_ID('web_napa_stores','U') Is Null
    hs_code varchar(255) not null
 
 );
+end
 
 If Object_ID('web_oauth_login','U') Is Null
 
@@ -585,6 +799,7 @@ CREATE TABLE web_payments(
    strategy_class_name varchar(255) not  NULL
 
 );
+end
 
 If Object_ID('web_permissions','U') Is Null
 
@@ -601,6 +816,7 @@ CREATE TABLE web_permissions(
    is_active bit NOT NULL DEFAULT '1'
 
 );
+end
 
 If Object_ID('web_product_group_links','U') Is Null
 
@@ -613,6 +829,7 @@ CREATE TABLE web_product_group_links (
   position int  NOT NULL default 0
 
 );
+end
 
 If Object_ID('web_product_groups','U') Is Null
 
@@ -629,6 +846,7 @@ If Object_ID('web_product_groups','U') Is Null
   is_active bit NOT NULL DEFAULT '0'
 
 );
+end
 
 If Object_ID('web_product_images_link','U') Is Null
 
@@ -641,6 +859,7 @@ If Object_ID('web_product_images_link','U') Is Null
    image_url varchar(255) NOT NULL DEFAULT ''
 
 );
+end
 
 If Object_ID('web_product_sale','U') Is Null
 
@@ -653,6 +872,7 @@ create table web_product_sale(
   count int not null default 0,
 
 );
+end
 
 If Object_ID('web_products','U') Is Null
 
@@ -673,6 +893,7 @@ CREATE TABLE web_products (
    price decimal(20,2) NOT NULL DEFAULT '0.00',
 
  );
+end
 
 If Object_ID('web_products_categories_link','U') Is Null
 
@@ -683,6 +904,7 @@ CREATE TABLE web_products_categories_link(
    category_id int NOT NULL
 
 );
+end
 
 If Object_ID('web_products_specifications_values_link','U') Is Null
 
@@ -695,6 +917,7 @@ If Object_ID('web_products_specifications_values_link','U') Is Null
    product_id int not null
 
 );
+end
 
 If Object_id('web_product_parameters','U') Is Null
 Begin
@@ -714,6 +937,7 @@ If Object_ID('web_province','U') Is Null
    province varchar(255) NOT NULL ,
 
 );
+end
 
 If Object_ID('web_quick_navi_product_link  ','U') Is Null
 
@@ -726,6 +950,7 @@ CREATE TABLE web_quick_navi_product_link (
   product_id int  NOT NULL, 
 
 );
+end
 
 If Object_id('web_vip_voucher','U') Is Null
 BEGIN
@@ -768,6 +993,7 @@ create table web_recharge_config(
   limit int
 
 );
+end
 
 If Object_ID('web_recharge_rewards_record  ','U') Is Null
 
@@ -782,6 +1008,7 @@ CREATE TABLE web_recharge_rewards_record (
   count int not null default 0
 
 );
+end
 
 If Object_ID('web_regions','U') Is Null
 
@@ -794,6 +1021,7 @@ CREATE TABLE web_regions(
    region varchar(255) NOT NULL 
 
 );
+end
 
 If Object_ID('web_role_permission_link','U') Is Null
 
@@ -804,6 +1032,7 @@ CREATE TABLE web_role_permission_link(
    permission_id int NOT NULL
 
 );
+end
 
 If Object_ID('web_roles','U') Is Null
 
@@ -820,6 +1049,7 @@ CREATE TABLE web_roles(
    is_in_list bit not null default '1'
 
 );
+end
 
 If Object_ID('web_shake_record','U') Is Null
 
@@ -834,6 +1064,7 @@ create table web_shake_record(
   is_show bit not null default 0
 
 );
+end
 
 If Object_ID('web_shipping_full_cut  ','U') Is Null
 
@@ -854,6 +1085,7 @@ CREATE TABLE web_shipping_full_cut (
   end_time DATETIME DEFAULT null
 
 );
+end
 
 If Object_ID('web_sign_record','U') Is Null
 
@@ -868,6 +1100,7 @@ create table web_sign_record(
   point int not null default 0
 
 );
+end
 
 If Object_ID('web_specification_value_store_link','U') Is Null
 
@@ -878,6 +1111,7 @@ CREATE TABLE web_specification_value_store_link (
    store_id int not null
 
  );
+end
 
 If Object_ID('web_specification_values','U') Is Null
 
@@ -898,6 +1132,7 @@ CREATE TABLE web_specification_values(
    pre_price decimal(20,2) NOT NULL DEFAULT '0.00'
 
 );
+end
 
 If Object_ID('web_specifications','U') Is Null
 
@@ -908,6 +1143,7 @@ If Object_ID('web_specifications','U') Is Null
    specification varchar(255) NOT NULL DEFAULT ''
 
 );
+end
 
 If Object_ID('web_store_info','U') Is Null
 
@@ -918,6 +1154,7 @@ create table web_store_info(
   description varchar(255) not null default '',
 
 );
+end
 
 If Object_ID('web_user_invited_link','U') Is Null
 
@@ -930,6 +1167,7 @@ CREATE TABLE web_user_invited_link (
   invite_time DATETIME DEFAULT(GETDATE()) --邀请时间
 
 );
+end
 
 If Object_ID('web_user_profiles','U') Is Null
 
@@ -980,6 +1218,7 @@ CREATE TABLE web_user_role_link(
    role_id int NOT NULL
 
 );
+end
 
 If Object_ID('web_users','U') Is Null
 
@@ -994,6 +1233,7 @@ CREATE TABLE web_users (
    serial_num varchar(255) not null --用户序列号
 
  );
+end
 
 If Object_id('web_user_list','U') Is Null
 Begin
@@ -1060,7 +1300,8 @@ CREATE TABLE web_vars (
   value varchar(1024) NOT NULL DEFAULT '',
 
 );
-
+end
+go
 If Object_id('web_viplog','U') Is Null
 Begin
 CREATE TABLE [dbo].[web_viplog](
@@ -1087,6 +1328,7 @@ create table web_winning_record(
   time DATETIME DEFAULT(GETDATE()) 
 
 );
+end
 
 --退款
 declare @def varchar(100),@SQL Nvarchar(100)

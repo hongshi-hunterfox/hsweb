@@ -131,7 +131,9 @@ public class BackendServiceImpl implements BackendServiceI {
 	private RefundOrderMapper refundOrderMapper;
 	@Autowired
 	private ProductVoucherMapper productVoucherMapper;
-
+	@Autowired
+	private MarketingEntranceMapper marketingEntranceMapper;
+	
 	@SuppressWarnings("unused")
 	@Override
 	public boolean updateConfig(ConfigPost configPost) { 
@@ -352,6 +354,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.CartPrerogative, configPost.getCartPrerogative());
 		}else{
 			configMapper.updateByTag(WebConfig.CartPrerogative, "");
+		}if(configPost.getPriceCuttingPoster()!=null){
+			configMapper.updateByTag(WebConfig.priceCuttingPoster, configPost.getPriceCuttingPoster());
+		}else{
+			configMapper.updateByTag(WebConfig.priceCuttingPoster, "");
 		}
 		
 		return true;
@@ -552,6 +558,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getCartPrerogative()!=null) {
 			configMapper.updateByTag(WebConfig.CartPrerogative, configPost.getCartPrerogative());
 		}
+		if (configPost.getPriceCuttingPoster()!=null) {
+			configMapper.updateByTag(WebConfig.priceCuttingPoster, configPost.getPriceCuttingPoster());
+		}
 		return true;
 	}
 	@Override
@@ -749,6 +758,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getCartPrerogative()!=null) {
 			configMapper.updateByTag(WebConfig.CartPrerogative, configPost.getCartPrerogative());
+		}
+		if (configPost.getPriceCuttingPoster()!=null) {
+			configMapper.updateByTag(WebConfig.priceCuttingPoster, configPost.getPriceCuttingPoster());
 		}
 		return true;
 	}
@@ -1321,6 +1333,8 @@ public class BackendServiceImpl implements BackendServiceI {
 				configPost.setCartCustomField1Url(config.getValue());
 			}else if(config.getTag().equals(WebConfig.CartPrerogative)){
 				configPost.setCartPrerogative(config.getValue());
+			}else if(config.getTag().equals(WebConfig.priceCuttingPoster)){
+				configPost.setPriceCuttingPoster(config.getValue());
 			}
 			
 		}
@@ -1972,7 +1986,8 @@ public class BackendServiceImpl implements BackendServiceI {
 					ret.put("reason","该类别已经存在，不可重复添加");
 					return ret;
 				}
-				if(categoryMapper.insertSelective(category)>0){
+				System.out.println("9999===="+JSON.toJSONString(category));
+				if(categoryMapper.insert(category)>0){
 					ret.put("result",true);
 				}else{
 					ret.put("result",false);
@@ -2609,6 +2624,28 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public List<UserProfile> selectAllVipLists() {
 		return userProfileMapper.selectAllVipLists();
+	}
+	@Override
+	public int insert(MarketingEntrance marketingEntrance) {
+		
+		return marketingEntranceMapper.insert(marketingEntrance);
+	}
+	@Override
+	public List<MarketingEntrance> selectAllMarketingEntrance() {
+		return marketingEntranceMapper.selectAllMarketingEntrance();
+	}
+	@Override
+	public MarketingEntrance getMarketingEntrance(Integer id) {
+		return marketingEntranceMapper.getMarketingEntrance(id);
+	}
+	@Override
+	public int deleteMarketingEntrance(Integer id) {
+		return marketingEntranceMapper.deleteMarketingEntrance(id);
+	}
+	@Override
+	public int updateMarketingEntrance(MarketingEntrance marketingEntrance) {
+		System.out.println(JSON.toJSON(marketingEntrance));
+		return marketingEntranceMapper.updateMarketingEntrance(marketingEntrance);
 	}
 
 }

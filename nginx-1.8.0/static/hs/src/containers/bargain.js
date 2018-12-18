@@ -29,7 +29,8 @@ class bargain extends React.Component {
       record:'',
       vipFail:'',
       valueId:0,
-      invitationcode:''
+      invitationcode:'',
+      limit: 'true'
 
     }
   }
@@ -94,40 +95,71 @@ class bargain extends React.Component {
                             	</div>
                           	</div>
                           	<div className="bargain-item-button">
-                            		<button type="button" className="btn btn-danger" onClick={()=>{
-                            			req
-                            				.get('/uclee-user-web/LaunchBargain?name='+item.name+'&hsGoodsPrice='+item.hsGoodsPrice+'&codes='+codes)
-                            				.end((err, res) => {
-        															if (err) {
-          															return err
-        															}
-        														})
-                            				if(this.state.vipFail==null){
-                            					if(this.state.record==null){
-                            						req
-                            						.get('/uclee-user-web/bargainMsg')
-                            						.end((err, res) => {
-        																	if (err) {
-          																	return err
-        																	}
-        																})
-                            						window.location="/launch-bargain/"+item.valueId+"&"+codes+"?merchantCode="+localStorage.getItem('merchantCode')
-                            					}else{
-                            						alert(this.state.record);
-                            						window.location="/launch-bargain/"+this.state.valueId+"&"+this.state.invitationcode+"?merchantCode="+localStorage.getItem('merchantCode')
-                            					}
-                            				}else{
-                            					alert(this.state.vipFail);
-                            					window.location='/member-card'
-                            				}
+                          		{item.hsStock <= 0 
+                          			? 
+                          			<button type="button" className="btn btn-danger btn-lg btn-block" disabled="disabled">
+                          				已抢完
+                          			</button>
+                          			:
+                            		<button type="button" className="btn btn-danger btn-lg btn-block" onClick={()=>{
+	                            				if(this.state.vipFail==null){
+	                            					
+	                            					req
+		                            				.get('/uclee-user-web/LaunchBargain?name='+item.name+'&hsGoodsPrice='+item.hsGoodsPrice+'&codes='+codes+'&pid='+item.id+'&productName='+item.productName)
+		                            				.end((err, res) => {
+		        															if (err) {
+		          															return err
+		        															}
+		        															this.setState({
+																	          stock: res.body.stock,
+																	          limit: res.body.limit
+																	        })
+		        															if(this.state.limit != 'true'&& this.state.limit != undefined){
+			                         							alert(this.state.limit)
+			                         							window.location.reload()
+			                         							return
+																					}
+		        															if(this.state.stock != undefined){
+	        																	alert(this.state.stock)
+			                         							window.location.reload()
+			                         							return
+	    																		}
+		        															if(this.state.record==null){
+		                            						req
+		                            						.get('/uclee-user-web/bargainMsg')
+		                            						.end((err, res) => {
+		        																	if (err) {
+		          																	return err
+		        																	}
+		        																})
+		                            							window.location="/launch-bargain/"+item.valueId+"&"+codes+"?merchantCode="+localStorage.getItem('merchantCode')
+		                            					}else{
+		                            						alert(this.state.record);
+		                            						window.location="/launch-bargain/"+this.state.valueId+"&"+this.state.invitationcode+"?merchantCode="+localStorage.getItem('merchantCode')
+		                            					}
+		        														})
+	                            				
+	        															if(this.state.stock == undefined){
+	        																console.log(this.state.stock)
+	        																return
+	    																	}
+		                            				if(this.state.limit == 'true'){
+		                         							console.log(this.state.limit)
+		                         							return
+																				}
+	                            					
+	                            				}else{
+	                            					alert(this.state.vipFail);
+	                            					window.location='/member-card'
+	                            				}
                             		}}>
                             			<font color="white">邀请朋友帮忙砍价{item.price}元拿</font>
-                            		</button>
+                            		</button>}
                             	</div>
                           	</div>
                         	)
                       	})}
-                      {this.state.record !==null
+                      {this.state.record !== undefined
                 				?
                 				<div className="bargain-item-btn">
 	                      	<button className="btn btn-info" onClick={()=>{window.location="/launch-bargain/"+this.state.valueId+"&"+this.state.invitationcode+"?merchantCode="+localStorage.getItem('merchantCode')}}>

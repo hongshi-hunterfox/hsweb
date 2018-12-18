@@ -69,6 +69,15 @@ public class ConfigPost {
 	private String CartBonusUrl;
 	private String CartCustomField1Url;
 	private String CartPrerogative;
+	private String priceCuttingPoster;
+	
+	public String getPriceCuttingPoster() {
+		return priceCuttingPoster;
+	}
+	
+	public void setPriceCuttingPoster(String priceCuttingPoster) {
+		this.priceCuttingPoster = priceCuttingPoster;
+	}
 	
 	public String getCartPrerogative() {
 		return CartPrerogative;

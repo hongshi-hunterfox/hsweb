@@ -72,22 +72,24 @@ class BargainSetting extends React.Component {
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>最低购买价：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
-                <input type="text" name="price" value={this.state.bargain.price} className="form-control" onChange={this._Change}/>
+                <input type="number" name="price" value={this.state.bargain.price} className="form-control" onChange={this._Change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>单次最低砍价金额：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
-                <input type="text" name="minprice" value={this.state.bargain.minprice} className="form-control" onChange={this._Change}/>
+                <input type="number" name="minprice" value={this.state.bargain.minprice} className="form-control" onChange={this._Change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>单次最大砍价金额：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
-                <input type="text" name="maxprice" value={this.state.bargain.maxprice} className="form-control" onChange={this._Change}/>
+                <input type="number" name="maxprice" value={this.state.bargain.maxprice} className="form-control" onChange={this._Change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>关联产品：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
                 <input type="text" name="productName" value={this.state.bargain.productName} className="form-control" onChange={this._Change}/>
               </div>
-              <div className="col-md-9" style={{marginTop:'10px'}}>
+              <div className="col-md-9 col-md-offset-2" style={{marginTop:'10px'}}>
               <input type="hidden" name="triesLimit" value={this.state.bargain.triesLimit} className="form-control" onChange={this._Change}/>
+              <h6><small>活动设置须知一:<strong>参与砍价商品请设置是否显示为否,且不包含在任意产品模块下.</strong></small></h6>
+            	<h6><small>活动设置须知二:<strong>参与砍价商品不能带有促销价及会员价设置.</strong></small></h6>
               </div>
             </div>
             <ErrorMsg msg={this.state.err} />
@@ -113,6 +115,48 @@ class BargainSetting extends React.Component {
   _submit = (e) => {
     e.preventDefault()
     var data = fto(e.target)
+    if(!data.name){
+    	return this.setState({
+        err: '请填写活动名称!'
+      })
+    }
+    
+    if(!data.starts||!data.startTime){
+    	return this.setState({
+        err: '活动开始时间填写不完整!'
+      })
+    }
+    
+    if(!data.ends||!data.endTime){
+    	return this.setState({
+        err: '活动结束时间填写不完整!'
+      })
+    }
+    
+    if(!data.price){
+    	return this.setState({
+        err: '请填写最低购买金额!'
+      })
+    }
+    
+    if(!data.minprice){
+    	return this.setState({
+        err: '请填写单次最低砍价金额!'
+      })
+    }
+    
+    if(!data.maxprice){
+    	return this.setState({
+        err: '请填写单次最大砍价金额!'
+      })
+    }
+    
+    if(!data.productName){
+    	return this.setState({
+        err: '请填写活动关联产品名称!'
+      })
+    }
+    
     console.log(data)
     var url = '/uclee-backend-web/insertBargainSetting'
     if (this.props.params.id) {

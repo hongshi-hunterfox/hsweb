@@ -18,7 +18,7 @@
 
 .member-card-setting .media-body {
   position: relative;
-  padding-top: 10px;
+  padding-top: 8px;
 }
 
 .member-card-avatar {
@@ -37,25 +37,25 @@
 
 .member-card-image{
   text-align: center;
-   padding: 5px;
+  padding: 3px;
 }
 
 .member-card-image-item{
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
 }
 .member-card-image-barcode{
 
-  width: 100%;
-  height: 100px;
+  width: 85%;
+  height: 85px;
 }
 .member-card-list {
-  padding: 10px;
+  padding: 5px;
 }
 
 .member-card-item {
   background-color: white;
-  padding: 10px;
+  padding: 2px;
   border-radius: 5px;
   border: 1px solid #e5e5e5;
   box-shadow: 0 5px 10px -5px rgba(0,0,0,0.5)
@@ -63,21 +63,29 @@
 
 .member-card-item-code {
   border-bottom: 1px dashed #ccc;
-  padding-bottom: 9px;
+  padding-bottom: 3px;
   font-size: 15px;
 }
 
 .member-card-item-balance {
-  padding: 15px;
+  padding: 5px;
+  font-size: 15px;
+  float: left;
   text-align: center;
-  font-size: 24px;
+  font-weight:bold;
+  color: #7C7C7C;
+}
+
+.member-card-item-points {
+  padding: 5px;
+  font-size: 15px;
   float: left;
 }
 
 .member-card-item-recharge {
   text-align: center;
   float: right;
-  padding: 15px;
+  padding: 10px;
 }
 
 .member-card-item-loss {
@@ -103,4 +111,40 @@
 .member-card-item-Unbundling {
 	text-align: center;
   float: right;
+}
+
+.card-nav {
+  background-color: white;
+  margin-top: 5px;
+  padding-bottom: 5px;
+}
+.card-nav:before,
+.card-nav:after {
+  content: "";
+  display: table;
+}
+.card-nav:after {
+  clear: both;
+}
+.card-nav-item {
+  float: left;
+  width: 25%;
+  padding: 5px;
+}
+.card-nav-item-text {
+  display: block;
+  color: #555;
+  padding-top: 5px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.card-nav-item-image {
+  vertical-align: middle;
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+  max-width: 80%;
+  display: block;
+  margin: 0 auto;
 }

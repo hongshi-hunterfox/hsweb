@@ -37,6 +37,7 @@
     <result column="value" property="value" jdbcType="DECIMAL" />
     <result column="closure" property="end" jdbcType="TIMESTAMP" />
     <result column="hs_stock" property="hsStock" jdbcType="INTEGER" />
+    <result column="frequency" property="frequency" jdbcType="INTEGER" />
   </resultMap>
   
    <resultMap id="launchbargain" type="com.uclee.fundation.data.mybatis.model.LaunchBargain" >
@@ -97,6 +98,12 @@
   <select id="getbargainRecord" resultMap="launchbargain">
     select * from web_launch_bargain where status=1 and uid = #{uid, jdbcType=INTEGER}
   </select>
+  <select id="getbargainStatus" resultMap="launchbargain">
+    select * from web_launch_bargain where status=2 and uid = #{uid, jdbcType=INTEGER}
+  </select>
+  <select id="getbargainSize" resultMap="launchbargain">
+    select * from web_launch_bargain where pid = #{pid, jdbcType=INTEGER}
+  </select>
    <select id="selectBargainId" resultMap="BargainSetting" >
     select 
      *
@@ -140,6 +147,13 @@
   		left join web_launch_bargain as d
   		on a.id = d.pid
   		where a.id=#{id, jdbcType=INTEGER} and d.uid=#{uid, jdbcType=INTEGER} and d.status=1
+  </select>
+  
+  <select id="getStock" resultMap="BaseResultMap">
+  	  select * from web_bargain_setting as a left join web_products as b on  a.product_name=b.title
+  	 left join web_products_specifications_values_link as c  on b.product_id=c.product_id
+  	 left join web_specification_values as d on c.value_id=d.value_id
+  	 left join web_product_images_link as e on b.product_id=e.product_id where a.product_name = #{productName, jdbcType=VARCHAR}
   </select>
   
   <select id="selectWxUser" resultMap="getWxUser">

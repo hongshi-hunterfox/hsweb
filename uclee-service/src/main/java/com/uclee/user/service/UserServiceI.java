@@ -373,4 +373,6 @@ public interface UserServiceI {
 	int insertLinkCouponLog(LinkCouponLogs record);
 	
 	List<LinkCouponLogs> selectLinkCoponLog(@Param("name") String name, @Param("oauthId") String oauthId);
+	
+	List<MarketingEntrance> selectAllMarketingEntrance();
 }

@@ -689,7 +689,7 @@ class Detail extends React.Component {
         }
         var result = JSON.parse(res.text);
         if(result.result){
-          window.location = '/cart'
+          window.location = '/cart?merchantCode='+localStorage.getItem('merchantCode')
         }else{
           alert(result.reason);
         }

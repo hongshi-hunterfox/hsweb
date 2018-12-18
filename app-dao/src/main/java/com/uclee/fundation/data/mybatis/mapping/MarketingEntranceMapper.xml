@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.MarketingEntranceMapper" >
+  <resultMap id="BaseResultMap" type="com.uclee.fundation.data.mybatis.model.MarketingEntrance" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="imgurl" property="imgUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, url, imgurl
+  </sql>
+  
+  <select id="selectAllMarketingEntrance" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_marketing_entrance
+  </select>
+  
+   <select id="getMarketingEntrance" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from web_marketing_entrance where id = #{id, jdbcType=INTEGER}
+  </select>
+  
+   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.MarketingEntrance" >
+    insert into web_marketing_entrance (name, url, imgurl
+      )
+    values (#{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <delete id="deleteMarketingEntrance" parameterType="java.lang.Integer" >
+    delete from web_marketing_entrance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <update id="updateMarketingEntrance" parameterType="com.uclee.fundation.data.mybatis.model.MarketingEntrance" >
+    update web_marketing_entrance
+    set name = #{name,jdbcType=VARCHAR},
+      	url = #{url,jdbcType=VARCHAR},
+      	imgurl = #{imgUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--  
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.City" >
+    insert into web_cities (city_id, province_id, city
+      )
+    values (#{cityId,jdbcType=INTEGER}, #{provinceId,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.City" >
+    insert into web_cities
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="stateId != null" >
+        province_id,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="stateId != null" >
+        #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.uclee.fundation.data.mybatis.model.City" >
+    update web_cities
+    set province_id = #{provinceId,jdbcType=INTEGER},
+      city = #{city,jdbcType=VARCHAR}
+    where city_id = #{cityId,jdbcType=INTEGER}
+  </update>-->
+</mapper>

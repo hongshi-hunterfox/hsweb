@@ -32,7 +32,7 @@
   <select id="selectAll" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
-    from web_lottery_draw_config
+    from web_lottery_draw_config where rate>0;
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from web_lottery_draw_config

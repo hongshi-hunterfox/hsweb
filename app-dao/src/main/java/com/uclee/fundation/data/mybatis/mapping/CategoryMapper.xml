@@ -54,17 +54,14 @@
     where category_id = #{categoryId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Category" >
-    insert into web_categories (category_id, category, parent_id, batchDiscount, startTimeStrs,endTimeStrs 
+    insert into web_categories ( category, parent_id, batchDiscount, startTimeStrs,endTimeStrs 
       )
-    values (#{categoryId,jdbcType=INTEGER}, #{category,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{batchDiscount,jdbcType=DECIMAL}, #{startTimeStrs,jdbcType=VARCHAR}, #{endTimeStrs,jdbcType=VARCHAR}
+    values (#{category,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{batchDiscount,jdbcType=DECIMAL}, #{startTimeStrs,jdbcType=VARCHAR}, #{endTimeStrs,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.Category" >
     insert into web_categories
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="categoryId != null" >
-        category_id,
-      </if>
       <if test="category != null" >
         category,
       </if>
@@ -83,9 +80,6 @@
      
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="categoryId != null" >
-        #{categoryId,jdbcType=INTEGER},
-      </if>
       <if test="category != null" >
         #{category,jdbcType=VARCHAR},
       </if>

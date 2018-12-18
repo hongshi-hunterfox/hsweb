@@ -235,4 +235,14 @@ public interface BackendServiceI {
 	String yzPost(@Param("code")String code, @Param("redirect_uri")String redirect_uri);
 
 	List<UserProfile> selectAllVipLists();
+	
+	int insert(MarketingEntrance marketingEntrance);
+	
+	List<MarketingEntrance> selectAllMarketingEntrance();
+	
+	MarketingEntrance getMarketingEntrance(Integer id);
+	
+	int deleteMarketingEntrance(Integer id);
+	
+	int updateMarketingEntrance(MarketingEntrance marketingEntrance);
 }

@@ -112,7 +112,7 @@ public class DuobaoSchedule {
 		}
 	}
 	
-	@Scheduled(fixedRate = 1000 * 11)
+	@Scheduled(fixedRate = 1000 * 11 ,initialDelay=40000)
 	private void refreshYZToken(){
 		dataSource.switchDataSource("master");
 		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
@@ -130,7 +130,7 @@ public class DuobaoSchedule {
 		}
 	}
 	
-	@Scheduled(fixedRate = 1000 * 2, initialDelay=8000)
+	@Scheduled(fixedRate = 1000 * 2, initialDelay=45000)
 	private void InitiativeCheck(){
 		String[] datasourceStr = {"fcx","hs"};
 		for(String tmp:datasourceStr){
@@ -151,7 +151,7 @@ public class DuobaoSchedule {
 		}
 	}
 	
-	@Scheduled(fixedRate = 1000 * 3, initialDelay=12000)
+	@Scheduled(fixedRate = 1000 * 3, initialDelay=46000)
 	private void sendMessage(){
 		dataSource.switchDataSource("master");
 		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
@@ -254,7 +254,7 @@ public class DuobaoSchedule {
 	/**
 	 * 定时检查未支付订单是否超过失效 时间
 	 */
-	@Scheduled(fixedRate = 1000 * 60)
+	@Scheduled(fixedRate = 1000 * 60, initialDelay=50000)
 	private void orderStatus() {
 		dataSource.switchDataSource("master");
 		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();
@@ -407,7 +407,7 @@ public class DuobaoSchedule {
 	/**
 	 * 定时检查有赞待发货订单
 	 */
-	@Scheduled(fixedRate = 1000 * 300, initialDelay=9000)
+	@Scheduled(fixedRate = 1000 * 300, initialDelay=48000)
 	private void YouZanOrder() {
 		dataSource.switchDataSource("master");
 		List<DataSourceInfo> t = dataSourceInfoService.getAllDataSourceInfo();

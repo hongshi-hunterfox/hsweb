@@ -24,7 +24,8 @@ class CreateWxVip extends React.Component {
       err: null,
       uploading:false,
       cartLogo:'',
-      cartBgUrl:''
+      cartBgUrl:'',
+      isClickable: true
     }
     this.imgFile = null
     this.imgFile1 = null
@@ -202,13 +203,52 @@ class CreateWxVip extends React.Component {
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
               <div className="col-md-9 col-md-offset-3">
-                <button type="submit" className="btn btn-primary">创建会员卡</button>
+                <button type="submit" className="btn btn-primary" onClick={this.handleButtonClickTest} disabled={!this.state.isClickable}>{this.state.isClickable ? '创建会员卡' : '正在处理中...'}</button>
               </div>
             </div>
           </form>
         </div>
       </DocumentTitle>
       )
+  }
+  
+  handleButtonClickTest = (e) => {
+    this.setState({ isClickable: false })
+
+    const promise = new Promise((resolve, reject) => {
+      setTimeout(resolve, 3000)
+    })
+
+    promise.then(() => {
+      this.setState({ isClickable: true })
+    })
+  }
+  
+  handleButtonClick = (e) => {
+    // 按钮为不可点按状态
+    this.setState({ isClickable: false })
+
+    fetch('http://localhost:8888/items', {
+      method: 'GET'
+    })
+    .then((response) => {
+      // ok 代表状态码在 200-299
+      if (!response.ok) throw new Error(response.statusText)
+      return response.json()
+    })
+    .then((items) => {
+      // 载入数据
+      // this.setState({items})
+
+      // 回复按钮可被点按状态
+      this.setState({ isClickable: true })
+    })
+    .catch((error) => {
+      // 回复按钮可被点按状态
+      this.setState({ isClickable: true })
+      // 异常处理
+      console.error(error)
+    })
   }
 
   _change = (e) => {
@@ -356,6 +396,10 @@ _onChooseUcenterImage = fe => {
         if (err) {
           return err
         }
+        this.setState({
+          disabled:false
+        })
+        
         if(!res.body){
           alert('网络繁忙，请稍后重试');
         }
@@ -367,7 +411,10 @@ _onChooseUcenterImage = fe => {
         if (err) {
           return err
         }
-        window.location='create-wx-vip';
+        if(res.body == null) {
+        	alert('创建成功,请到微信公众平台选择投放方式投放!');
+        	window.location='create-wx-vip';
+        }    
       })
     
   }

@@ -103,8 +103,7 @@ class App extends Component {
 
       // 没有登录
       if (!res.body.nickName) {
-        window.location = authURL(window.location.href, appId)
-        return
+        return window.location = authURL(window.location.href, appId);
       }
 
       cb && cb(true)
@@ -153,18 +152,27 @@ class App extends Component {
       pathname.indexOf('/detail/') !== -1 ||
       pathname === '/cart'
     /*|| pathname === '/order'*/
-
+         /*可以设置lodding
+      {this.state.loading
+        ?	<div className="center">
+        	</div>
+        : <div className="main">
+            {showStoreBar ? <StoreBar /> : null}
+            {this.props.children}
+          </div>}*/
     return (
       <div className="app">
-        {this.state.loading
-          ?	<div className="center">
-
-          	</div>
-          : <div className="main">
-              {showStoreBar ? <StoreBar /> : null}
-
-              {this.props.children}
-            </div>}
+				<div className="main">
+          {showStoreBar ? <StoreBar /> : null}
+          {this.state.loading
+	        	?	<div className="center">
+	        			loading...
+	        		</div>
+	        	:
+		        this.props.children
+          }
+					
+        </div>
       </div>
     )
   }

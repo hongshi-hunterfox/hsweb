@@ -62,6 +62,8 @@ import ProductVoucherList from './containers/ProductVoucherList'
 import EditProductVoucherLinks from './containers/EditProductVoucherLinks'
 import ConsumerVoucher from './containers/ConsumerVoucher'
 import CreateWxVip from './containers/CreateWxVip'
+import MarketingEntranceDetail from './containers/MarketingEntranceDetail'
+import MarketingEntranceList from './containers/MarketingEntranceList'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -128,6 +130,8 @@ ReactDOM.render(
       <Route path="edit-product-voucher-links" component={EditProductVoucherLinks} />
       <Route path="consumer-voucher" component={ConsumerVoucher} />
       <Route path="create-wx-vip" component={CreateWxVip} />
+      <Route path="marketing-entranceDetail" component={MarketingEntranceDetail} />
+      <Route path="marketing-entranceList" component={MarketingEntranceList} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

@@ -66,6 +66,7 @@ public class BackendHandler {
 	}
 	@RequestMapping("/editCategory")
 	public @ResponseBody Map<String,Object> editCategory(HttpServletRequest request,@RequestBody Category category) {
+		System.out.println("666666==========="+JSON.toJSONString(category));
 		return backendService.editCategory(category);
 	}
 	@RequestMapping("/freightHandler")
@@ -304,5 +305,25 @@ public class BackendHandler {
 	public @ResponseBody boolean truncateConsumerVoucherHandler(HttpServletRequest request) {
 		return backendService.truncateConsumerVoucherHandler();
 	}
+	
+	/**
+	 * @author Administrator
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/insertMarketingEntrance")
+	public @ResponseBody int insertMarketingEntrance(HttpServletRequest request, @RequestBody MarketingEntrance marketingEntrance) {
+		System.out.println(JSON.toJSON(marketingEntrance));
+		return backendService.insert(marketingEntrance);
+	}
+	
+	@RequestMapping("/deleteMarketingEntrance")
+	public @ResponseBody int deleteMarketingEntrance(HttpServletRequest request, Integer id) {
+		return backendService.deleteMarketingEntrance(id);
+	}
 
+	@RequestMapping("/updateMarketingEntrance")
+	public @ResponseBody int updateMarketingEntrance(HttpServletRequest request, @RequestBody MarketingEntrance marketingEntrance) {
+		return backendService.updateMarketingEntrance(marketingEntrance);
+	}
 }
