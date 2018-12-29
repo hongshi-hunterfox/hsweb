@@ -300,3 +300,8 @@
   color: #afafaf;
   margin-bottom: 15px;
 }
+.pre {
+  color: #b5b5b5;
+  font-size: 15px;
+  text-decoration: line-through;
+}

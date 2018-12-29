@@ -35,7 +35,7 @@ public class WeixinApi extends DefaultApi20 {
 	 */
 	private static final String AUTHORIZE_URL = 
 			 "https://open.weixin.qq.com/connect/oauth2/authorize?"
-			 + "appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+			 + "appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect";
 	//   snsapi_userinfo
 	private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?grant_type=authorization_code";
 
@@ -82,20 +82,20 @@ public class WeixinApi extends DefaultApi20 {
 	      request.addQuerystringParameter("appid", map.get(WechatMerchantInfo.APPID_CONFIG));
 	      request.addQuerystringParameter("secret", map.get(WechatMerchantInfo.AppSecret_CONFIG));
 	      request.addQuerystringParameter(OAuthConstants.CODE, verifier.getValue());
+	      System.out.println("config.hasScope()==="+config.hasScope());
 	      if(config.hasScope()) 
 	    	  request.addQuerystringParameter(OAuthConstants.SCOPE, config.getScope());
 	      Response response = request.send();
 	      String responceBody = response.getBody();
-	      logger.info("获取的来自微信的responceBody"+responceBody);
 	      System.out.println("获取的来自微信的responceBody"+responceBody);
 	      Object result = JSON.parse(responceBody);
+	      System.out.println("dhsvdgsdv====="+result);
 	      String access_token = JSONPath.eval(result, "$.access_token").toString();
 	      if(Strings.isNullOrEmpty(access_token)){
 	    	    throw new OAuthException(
                         "请求 body  中没有 access_token ,回掉失败"
                                 + response + "'", null);
 	      }
-	      logger.info("--响应对象是"+JSON.toJSONString(result)+" access_token 是"+ access_token);
 	      System.out.println("--响应对象是"+JSON.toJSONString(result)+" access_token 是"+ access_token);
 	      //System.out.printf("-------------"+JSON.toJSONString(result));
 	      // return api.getAccessTokenExtractor().extract(responceBody);

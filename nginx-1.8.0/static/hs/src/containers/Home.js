@@ -205,7 +205,7 @@ const DetailPicker = (props) => {
 	              		在售价：¥{props.totalPrice} {props.prePirce>0 ? <span className='pre'>原价：¥{props.prePirce}</span> : null}
 	              	</div> :
 	              	<div>
-	              		促销价：¥{props.promotionPrice} {props.prePirce>0 ? <span className='pre'>原价：¥{props.prePirce} 在售价：¥{props.totalPrice}</span> : null}
+	              		促销价：¥{props.promotionPrice}{props.prePirce>0 ? <span className='pre'>原价：¥{props.prePirce} 在售价：¥{props.totalPrice}</span> : null}
 	              	</div>
               	}
               </div>
@@ -637,12 +637,6 @@ class Home extends React.Component {
 	                            alt=""
 	                          />
                           </LazyLoad>
-                          {
-	                        	item1.vipPrice !== null 
-	                        	?
-	                        	<span style={{position:"absolute",left:"5px",top:"49%",color:"white"}} className="abel label-danger">会员价:¥ {item1.vipPrice}</span>
-	                        	: null 
-                            }
                         </div>
 
                         {item1.tag
@@ -656,7 +650,9 @@ class Home extends React.Component {
                             {item1.title}
                           </div>
                           <div className="product-item-price">
-                            <div className="left">¥{item1.price}                           
+                            <div className="left">
+                            	¥{item1.vipPrice != null && item1.vipPrice < item1.price ? item1.vipPrice : item1.price}
+                            	<span className="pre"> ¥ {item1.prePrice}</span>
                             </div>
                             <div className='right' onClick={()=>{
                               this.setState({

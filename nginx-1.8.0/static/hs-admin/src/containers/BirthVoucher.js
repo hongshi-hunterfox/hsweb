@@ -108,6 +108,13 @@ class BirthVoucher extends React.Component {
 	              	<textarea rows="3" cols="20" value={this.state.config.perfectBirthText} name="perfectBirthText" className="form-control" onChange={this._handleChange}>
 	                </textarea>
 	            </div>
+	            <label className="control-label col-md-3">是否开启无生日信息推送:</label>
+	            <div className="col-md-9" style={{marginTop:'10px'}}>
+                <select name="noBirthdayMessagePush" value={this.state.config.noBirthdayMessagePush} style={{padding:'5px'}} onChange={this._handleChange}>
+                  <option value="yes">启用</option>
+                  <option value="no">停用</option>
+                </select>
+              </div>
 	            <label className="control-label col-md-3">自动推送提前天数:</label>
 	            <div className="col-md-9" >
 	            	<div className="row">

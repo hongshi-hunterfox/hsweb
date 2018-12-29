@@ -70,6 +70,15 @@ public class ConfigPost {
 	private String CartCustomField1Url;
 	private String CartPrerogative;
 	private String priceCuttingPoster;
+	private String noBirthdayMessagePush;
+	
+	public String getNoBirthdayMessagePush() {
+		return noBirthdayMessagePush;
+	}
+	
+	public void setNoBirthdayMessagePush(String noBirthdayMessagePush) {
+		this.noBirthdayMessagePush = noBirthdayMessagePush;
+	}
 	
 	public String getPriceCuttingPoster() {
 		return priceCuttingPoster;

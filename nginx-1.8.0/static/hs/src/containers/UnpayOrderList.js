@@ -66,25 +66,12 @@ class UnpayOrderList extends React.Component {
 						{item.invalid !== -1 
 							?
 							<span className="pull-right text" onClick={() => {
-								req
-								.get('/uclee-user-web/unpayOrderList')
-								.end((err, res) => {
-								      if (err) {
-								        return err
-								      }
-									this.setState({
-										order:res.body.orders
-									});
-									console.log("order============="+this.state.order)
-									this.state.order.map((item, index) => {
 										if(item.invalid === -1){
-											alert("订单已失效")
+											alert("订单已失效"+item.invalid)
 											window.location.reload();
 										}else{
 											window.location='/seller/payment?paymentSerialNum=' + item.paymentSerialNum
 										}
-									})
-								});
                       		}}>立即支付</span>
                       		:null
                         }

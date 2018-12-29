@@ -39,6 +39,7 @@ import com.uclee.fundation.data.web.dto.ConfigPost;
 import com.uclee.fundation.data.web.dto.FreightPost;
 import com.uclee.fundation.data.web.dto.MySelect;
 import com.uclee.fundation.data.web.dto.ProductVoucherPost;
+import com.uclee.user.service.UserServiceI;
 import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import scala.collection.immutable.HashMap;
 
@@ -48,6 +49,8 @@ import scala.collection.immutable.HashMap;
 public class BackendController {
 	@Autowired
 	private BackendServiceI backendService;
+	@Autowired
+	private UserServiceI userService;
 	@Autowired
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
@@ -825,7 +828,6 @@ public class BackendController {
 	@RequestMapping("/CreatWxVip")
 	public @ResponseBody String CreatWxVip(HttpServletRequest request) throws IOException {
 		String msg = backendService.CreatWxVip();
-		System.out.println("jjjjkkkkk======="+msg);
 		return msg;
 		
 	}
@@ -850,4 +852,14 @@ public class BackendController {
 		
 		return map;
 	}
+	
+	@RequestMapping("/getBargainLog")
+	public @ResponseBody Map<String,Object> getBargainLog(HttpServletRequest request, Integer id){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		System.out.println("id====="+id);
+		List<BargainStatistics> record = userService.getBargainLog(id);
+		map.put("record",record);
+		return map;
+	}
+	
 }

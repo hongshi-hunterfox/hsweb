@@ -358,6 +358,10 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.priceCuttingPoster, configPost.getPriceCuttingPoster());
 		}else{
 			configMapper.updateByTag(WebConfig.priceCuttingPoster, "");
+		}if(configPost.getNoBirthdayMessagePush()!=null){
+			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, configPost.getNoBirthdayMessagePush());
+		}else{
+			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, "");
 		}
 		
 		return true;
@@ -561,6 +565,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getPriceCuttingPoster()!=null) {
 			configMapper.updateByTag(WebConfig.priceCuttingPoster, configPost.getPriceCuttingPoster());
 		}
+		if (configPost.getNoBirthdayMessagePush()!=null) {
+			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, configPost.getNoBirthdayMessagePush());
+		}
 		return true;
 	}
 	@Override
@@ -761,6 +768,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getPriceCuttingPoster()!=null) {
 			configMapper.updateByTag(WebConfig.priceCuttingPoster, configPost.getPriceCuttingPoster());
+		}
+		if (configPost.getNoBirthdayMessagePush()!=null) {
+			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, configPost.getNoBirthdayMessagePush());
 		}
 		return true;
 	}
@@ -1336,6 +1346,9 @@ public class BackendServiceImpl implements BackendServiceI {
 			}else if(config.getTag().equals(WebConfig.priceCuttingPoster)){
 				configPost.setPriceCuttingPoster(config.getValue());
 			}
+			else if(config.getTag().equals(WebConfig.noBirthdayMessagePush)){
+				configPost.setNoBirthdayMessagePush(config.getValue());
+			}
 			
 		}
 		return configPost;
@@ -1660,7 +1673,7 @@ public class BackendServiceImpl implements BackendServiceI {
 				nickName = profile.getNickName();
 			}
 			String[] key = {"keyword1","keyword2","keyword3"};
-			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"砍价活动--砍价成功通知"};
+			String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"砍价成功通知"};
 			Config config = configMapper.getByTag("birthTmpId");
 			Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
 			Config config2 = configMapper.getByTag(WebConfig.domain);

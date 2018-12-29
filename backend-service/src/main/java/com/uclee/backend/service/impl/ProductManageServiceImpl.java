@@ -76,9 +76,8 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 		product.setShelfTime(shelf);
 		product.setDownTime(down);
 		product.setIsActive(true);
-		//取sortValue的最大值，然后加1
-		Integer maxSortValue=productMapper.getMaxSortValue() > 0 ? productMapper.getMaxSortValue() : 0;
-		maxSortValue+=1;
+		//取sortValue的最大值，然后加1productMapper.getMaxSortValue()
+		Integer maxSortValue=1;
 		//将sortValue的值设定到产品里面
 		product.setSortValue(maxSortValue);
 		BigDecimal param = product.getValuePost().get(0).getVipPrice();

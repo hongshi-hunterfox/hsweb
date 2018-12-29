@@ -55,26 +55,35 @@ class BargainList extends React.Component {
       })
     }
   }
+  
+  _link=(id)=>{
+        window.location='/BargainDetail?id='+id
+  }
 
   render(){
     var list = this.state.bargainList.map((item, index) => {
       return (
         <tr key={index}>
-          <td width="18%">{item.name}</td>
+          <td width="17%">{item.name}</td>
           <td width="15%">{item.starts}</td>
           <td width="15%">{item.ends}</td>
           <td width="6%">{item.price}</td>
           <td width="6%">{item.minprice}</td>
           <td width="6%">{item.maxprice}</td>
-          <td width="18%">{item.productName}</td>
-          <td width="8%">
+          <td width="17%">{item.productName}</td>
+          <td width="6%">
             <Link to={'/bargain-setting/' + item.id} className="btn btn-primary">
             编辑
             </Link>
           </td>
-          <td width="8%">
-          	<button className="btn btn-danger button-right" onClick={this._del.bind(this,item.id)}>
+          <td width="6%">
+            <button className="btn btn-danger button-right" onClick={this._del.bind(this,item.id)}>
             删除
+            </button>
+          </td>
+          <td width="6%">
+          	<button className="btn btn-primary" onClick={this._link.bind(this,item.id)}>
+            	明细
             </button>
           </td>  
         </tr>
@@ -101,6 +110,7 @@ class BargainList extends React.Component {
                   <th>
                     <a href=""></a>编辑</th>
                   <th>删除</th>
+                  <th>明细</th>
                 </tr>
               </thead>
               <tbody>

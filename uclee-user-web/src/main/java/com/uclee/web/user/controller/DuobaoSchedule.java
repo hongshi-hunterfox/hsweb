@@ -323,28 +323,32 @@ public class DuobaoSchedule {
 					String day = formatter.format(time);
 					System.out.println("增加天数后的时间============"+day);
 					//如果没有填写生日执行
-					List<UserProfile> userList = userProfileMapper.getBirthIsNull();
-					for(UserProfile item:userList){
-						OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(item.getUserId());
-						if(login!=null){
-							String nickName="";
-							UserProfile profile = userProfileMapper.selectByUserId(item.getUserId());
-							if(profile!=null){
-								nickName = profile.getNickName();
-							}
-							String[] key = {"keyword1","keyword2","keyword3"};
-							String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日祝福"};
-							Config config = configMapper.getByTag("birthTmpId");
-							Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
-							Config config2 = configMapper.getByTag(WebConfig.domain);
-							Config config3 = configMapper.getByTag(WebConfig.perfectBirthText);
-							if(config!=null){
-								//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
-								sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
-								MsgRecord msgRecord = new MsgRecord();
-								msgRecord.setType(1);
-								msgRecord.setUserId(item.getUserId());
-								msgRecordMapper.insertSelective(msgRecord);
+					Config noBirthdayMessagePush = configMapper.getByTag("noBirthdayMessagePush");
+					//判断是否启用无生日信息推送
+					if(noBirthdayMessagePush.getValue() == "yes") {
+						List<UserProfile> userList = userProfileMapper.getBirthIsNull();
+						for(UserProfile item:userList){
+							OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(item.getUserId());
+							if(login!=null){
+								String nickName="";
+								UserProfile profile = userProfileMapper.selectByUserId(item.getUserId());
+								if(profile!=null){
+									nickName = profile.getNickName();
+								}
+								String[] key = {"keyword1","keyword2","keyword3"};
+								String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"生日祝福"};
+								Config config = configMapper.getByTag("birthTmpId");
+								Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+								Config config2 = configMapper.getByTag(WebConfig.domain);
+								Config config3 = configMapper.getByTag(WebConfig.perfectBirthText);
+								if(config!=null){
+									//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+									sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/information?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
+									MsgRecord msgRecord = new MsgRecord();
+									msgRecord.setType(1);
+									msgRecord.setUserId(item.getUserId());
+									msgRecordMapper.insertSelective(msgRecord);
+								}
 							}
 						}
 					}

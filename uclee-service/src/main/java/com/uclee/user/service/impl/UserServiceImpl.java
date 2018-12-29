@@ -76,6 +76,7 @@ import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.data.web.dto.ProductVoucherPost;
+import com.uclee.fundation.data.web.dto.Stock;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.hongshi.service.HongShiVipServiceI;
@@ -2506,7 +2507,7 @@ public class UserServiceImpl implements UserServiceI {
 				long value1=value.getStartTime().getTime();
 				long value2=value.getEndTime().getTime();
 				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
-					if(ret.size()>0 && value.getVipPrice()!=null){
+					if(ret.size()>0 && value.getVipPrice()!=null && value.getVipPrice().compareTo(value.getPromotionPrice()) == -1){
 						item.setPrice(value.getVipPrice());
 					}else{
 						item.setPrice(value.getPromotionPrice());
@@ -2522,7 +2523,7 @@ public class UserServiceImpl implements UserServiceI {
 				}
 				//产品有促销价修改产品单价
 				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
-					if(ret.size()>0 && value.getVipPrice()!=null){
+					if(ret.size()>0 && value.getVipPrice()!=null && value.getVipPrice().compareTo(value.getPromotionPrice()) == -1){
 						item.setPrice(value.getVipPrice());
 					}else{
 						item.setPrice(value.getPromotionPrice());
@@ -2536,6 +2537,7 @@ public class UserServiceImpl implements UserServiceI {
 							item.setPrice(value.getHsGoodsPrice());
 						}
 					}else{
+
 						item.setPrice(price.getPrice());	
 					}
 				}
@@ -2562,7 +2564,7 @@ public class UserServiceImpl implements UserServiceI {
 				long value2=value.getEndTime().getTime();
 				//判断是否是带促销价的商品总价
 				if(value.getPromotionPrice()!=null&&value0>value1&&value0<value2){
-					if(ret.size()>0 && value.getVipPrice()!=null){
+					if(ret.size()>0 && value.getVipPrice()!=null && value.getVipPrice().compareTo(value.getPromotionPrice()) == -1){
 						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getVipPrice()));
 					}else{
 						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getPromotionPrice()));
@@ -2570,7 +2572,7 @@ public class UserServiceImpl implements UserServiceI {
 				}else{
 					//判断产品是否参与了砍价
 					if(price==null){
-						if(ret.size()>0 && value.getVipPrice()!=null){
+						if(ret.size()>0 && value.getVipPrice()!=null && value.getVipPrice().compareTo(value.getPromotionPrice()) == -1){
 							totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getVipPrice()));
 						}else{
 							totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
@@ -2583,7 +2585,13 @@ public class UserServiceImpl implements UserServiceI {
 				if(ret.size()>0 && value.getVipPrice()!=null){
 					totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getVipPrice()));
 				}else{
-					totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+					if(price==null){
+						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
+					}else{
+						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(price.getPrice()));
+						System.out.println("我是4==="+totalMoney);
+					}
+					
 				}	
 			}
 			//记录销量
@@ -2622,6 +2630,7 @@ public class UserServiceImpl implements UserServiceI {
 		if(orderPost.getIsSelfPick()!=null&&orderPost.getIsSelfPick().equals("false")){
 			order.setShippingCost(orderPost.getShippingFee());
 			totalMoney = totalMoney.add(orderPost.getShippingFee());
+			System.out.println("我是3==="+totalMoney);
 		}
 		//洪石礼券减免
 		if(orderPost.getVoucherCode()!=null){
@@ -2635,6 +2644,7 @@ public class UserServiceImpl implements UserServiceI {
 					}
 					order.setVoucherCode(orderPost.getVoucherCode());
 					totalMoney = totalMoney.subtract(coupon.get(0).getPayQuota());
+					System.out.println("我是2==="+totalMoney);
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -2647,6 +2657,7 @@ public class UserServiceImpl implements UserServiceI {
 		//创建支付单
 		PaymentOrder paymentOrder = new PaymentOrder();
 		if(totalMoney.compareTo(new BigDecimal(0))>0){
+			System.out.println("我是1==="+totalMoney);
 			paymentOrder.setMoney(totalMoney);
 		}else{
 			paymentOrder.setMoney(new BigDecimal(0));
@@ -2800,6 +2811,7 @@ public class UserServiceImpl implements UserServiceI {
 						if(value!=null){
 							productDto.setPrice(value.getHsGoodsPrice());
 							productDto.setVipPrice(value.getVipPrice());
+							productDto.setPrePrice(value.getPrePrice());
 						}
 						List<ProductImageLink> images = productImageLinkMapper.selectByProductId(productDto.getProductId());
 						productDto.setImages(images);
@@ -4679,6 +4691,26 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public List<MarketingEntrance> selectAllMarketingEntrance() {
 		return marketingEntranceMapper.selectAllMarketingEntrance();
+	}
+
+	@Override
+	public LaunchBargain getLaunchUser(String invitationCode) {
+		return bargainSettingMapper.getLaunchUser(invitationCode);
+	}
+
+	@Override
+	public int removeStock(Stock stock) {
+		return bargainSettingMapper.removeStock(stock);
+	}
+
+	@Override
+	public Stock selectStock(Integer valueId) {
+		return bargainSettingMapper.selectStock(valueId);
+	}
+
+	@Override
+	public List<BargainStatistics> getBargainLog(Integer id) {
+		return bargainSettingMapper.getBargainLog(id);
 	}
 
 }

@@ -53,7 +53,16 @@ const DetailInfo = (props) => {
       </div>
       <div className="detail-info-price-rprice">
         {
-         	<span>¥ {(Date1>props.endtime) ? props.minPrice : props.proMinPrice < props.minPrice ? props.proMinPrice : props.minPrice} - {props.maxPrice}</span>
+         	<span>¥ {(Date1>props.endtime) ? 
+         		props.minPrice 
+         		: 
+         		props.proMinPrice < props.minPrice ? 
+         		(props.proMinVipPriceprops < props.proMinPrice ? 
+         			props.proMinVipPriceprops :props.proMinPrice) 
+         			: props.proMinVipPriceprops < props.minPrice ?
+         				props.proMinVipPriceprops 
+         				: props.minPrice} - {props.maxPrice}
+         	</span>
         }         
       </div>
       </div>
@@ -182,7 +191,7 @@ const DetailPicker = (props) => {
               {
               	((Date1)<(props.startTime)||(Date1)>(props.endTime)) ?
               <div>
-              在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
+             		 在售价：¥{props.totalPrice} {props.prePirce>0?<span className='pre'>原价：¥{props.prePirce}</span>:null}
               </div>	
               	: 
               <div>
@@ -347,6 +356,9 @@ class Detail extends React.Component {
     this.preMaxPrice = 0
     this.proMinPrice = 0
     this.proMaxPrice = 0
+    this.proMaxVipPrice = 0
+    this.proMinVipPrice = 0
+    this.starttime = 0
     this.endtime = 0
   }
 
@@ -478,9 +490,10 @@ class Detail extends React.Component {
         this.preMaxPrice = Math.max.apply(null, prePrices)
         this.proMinPrice = Math.min.apply(null, promotionPrice)
         this.proMaxPrice = Math.max.apply(null, promotionPrice)
-        this.proMinPrice = Math.min.apply(null, vipPrice)
-        this.proMaxPrice = Math.max.apply(null, vipPrice)
+        this.proMinVipPrice = Math.min.apply(null, vipPrice)
+        this.proMaxVipPrice = Math.max.apply(null, vipPrice)
         this.endtime = endTime
+        this.starttime = startTime
         console.log(prePrices)
     }
 
@@ -529,6 +542,9 @@ class Detail extends React.Component {
               preMaxPrice={this.preMaxPrice}
               proMinPrice={this.proMinPrice}
               proMaxPrice={this.proMaxPrice}
+              proMinVipPrice={this.proMinVipPrice}
+              proMaxVipPrice={this.proMaxVipPrice}
+              starttime={this.starttime}
               endtime={this.endtime}/>
               {
                 this.state.salesInfo.length>=1?

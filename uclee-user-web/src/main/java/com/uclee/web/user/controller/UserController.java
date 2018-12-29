@@ -78,6 +78,7 @@ import com.uclee.fundation.data.mybatis.model.vipIdentity;
 import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.data.web.dto.Stock;
 import com.uclee.hongshi.service.HongShiVipServiceI;
 import com.uclee.sms.util.VerifyCode;
 import com.uclee.user.service.DuobaoServiceI;
@@ -396,6 +397,7 @@ public class UserController extends CommonUserHandler{
 		List<ProductGroup> groups = userService.getTermGroups(tags);
 		List<HomeQuickNavi> quickNavis = userService.getQuickNavis();
 		List<Banner> banner = userService.selectAllBanner();
+		System.out.println("DDDD======="+groups.get(0).getProducts().get(0).getPrePrice());
 		map.put("groups", groups);
 		map.put("banner", banner);
 		map.put("quickNavis", quickNavis);
@@ -1960,11 +1962,10 @@ public class UserController extends CommonUserHandler{
 		Integer dd= stock - jilu.size();
 		List<UserLimit> limit = productMapper.selectByLimit(userId, detail.getProductId());
 		if(limit.size() >= detail.getFrequency()){
-			System.out.println("进来了detail.getFrequency()=========="+detail.getFrequency());
 			map.put("limit", "本活动每人仅限参与"+detail.getFrequency()+"次");
 			return map;
 		}
-		if(stock - jilu.size() !=0 ){
+		if(stock - jilu.size() > 0 ){
 			
 			OauthLogin oauth = userService.getOauthLoginInfoByUserId(userId);
 			//得到外键和会员id
@@ -1980,7 +1981,6 @@ public class UserController extends CommonUserHandler{
 				launchBargain.setLaunchTime(new Date());
 				//状态1为发起状态，2为结束
 				launchBargain.setStatus(1);
-				System.out.println("code123=========="+codes);
 				launchBargain.setInvitationCode(codes);
 				System.out.println("插入到发起砍价表的信息"+JSON.toJSONString(launchBargain));
 				LaunchBargain record = userService.getbargainRecord(userId);
@@ -2040,9 +2040,12 @@ public class UserController extends CommonUserHandler{
 			BigDecimal price = value.getHsGoodsPrice().subtract(value.getPrice());
 			System.out.println("sun=========="+sum+"price==========="+price);
 			if(sum.compareTo(price) == 1){	
-				System.out.println("j进来了");
 				result = price.subtract(sumMoney);
-				System.out.println("result=========="+result);
+				LaunchBargain user = userService.getLaunchUser(codes);
+				if(user != null){
+					System.out.println("发送砍价成功信息");
+					backendService.sendSucessMsg(user.getUid());
+				}
 			}
 			result = new BigDecimal(df.format(result));
 			map.put("result", result);
@@ -2227,15 +2230,22 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	@RequestMapping("/insertUserlimit")	
-	public @ResponseBody Map<String,Object> insertUserlimit(HttpServletRequest request, Integer productId) {
+	public @ResponseBody Map<String,Object> insertUserlimit(HttpServletRequest request, Integer productId, Integer valueId) {
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
+		System.out.println("valueId==="+valueId);
 		UserLimit userLimit = new UserLimit();
 		userLimit.setUserId(userId);
 		userLimit.setTime(new Date());
 		userLimit.setProductId(productId);
 		productMapper.insertUserLimit(userLimit);
+		Stock hsStock = userService.selectStock(valueId);
+		Integer num = hsStock.getHsStock() - 1;
+		Stock stock = new Stock();
+		stock.setHsStock(num);
+		stock.setValueId(valueId);
+		userService.removeStock(stock);
 		return map;
 	}
  }

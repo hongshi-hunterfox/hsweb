@@ -6,6 +6,7 @@ import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.CartDto;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
+import com.uclee.fundation.data.web.dto.Stock;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.payment.exception.PaymentHandlerException;
 import com.uclee.payment.exception.RefundHandlerException;
@@ -375,4 +376,12 @@ public interface UserServiceI {
 	List<LinkCouponLogs> selectLinkCoponLog(@Param("name") String name, @Param("oauthId") String oauthId);
 	
 	List<MarketingEntrance> selectAllMarketingEntrance();
+	
+	LaunchBargain getLaunchUser(String invitationCode);
+	
+	List<BargainStatistics> getBargainLog(Integer id);
+	
+	int removeStock(Stock stock);
+	
+	Stock selectStock(Integer valueId);
 }

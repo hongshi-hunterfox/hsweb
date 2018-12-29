@@ -408,7 +408,7 @@ _clickNext = (bargainPrice,productId) => {
 			var valueid=str.substr(0,num);
 			localStorage.setItem('bargainPrice', this.state.values.price),
 			req
-			.get('/uclee-user-web/insertUserlimit?productId='+productId)
+			.get('/uclee-user-web/insertUserlimit?productId='+productId+'&valueId='+this.state.valueId)
 			.end((err, res) => {
 				if(err) {
 					return err	

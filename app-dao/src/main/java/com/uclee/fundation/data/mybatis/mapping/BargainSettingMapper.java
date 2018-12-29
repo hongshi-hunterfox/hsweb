@@ -7,10 +7,12 @@ import org.apache.ibatis.annotations.Param;
 
 import com.uclee.fundation.data.mybatis.model.BargainLog;
 import com.uclee.fundation.data.mybatis.model.BargainSetting;
+import com.uclee.fundation.data.mybatis.model.BargainStatistics;
 import com.uclee.fundation.data.mybatis.model.LaunchBargain;
 import com.uclee.fundation.data.mybatis.model.WxUser;
 import com.uclee.fundation.data.mybatis.model.vipIdentity;
 import com.uclee.fundation.data.web.dto.BargainPost;
+import com.uclee.fundation.data.web.dto.Stock;
 
 public interface BargainSettingMapper {
 	int insert(BargainPost record);
@@ -37,4 +39,8 @@ public interface BargainSettingMapper {
 	BargainPost getBargainOver(Integer id);
 	List<LaunchBargain> getbargainSize(Integer pid);
 	BargainPost getStock(String productName);
+	LaunchBargain getLaunchUser(String invitationCode);
+	List<BargainStatistics> getBargainLog(Integer id);//砍价统计记录
+	int removeStock(Stock stock);
+	Stock selectStock(Integer valueId);
 }

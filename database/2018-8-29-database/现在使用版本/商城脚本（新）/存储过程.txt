@@ -507,7 +507,6 @@ Begin
   Set @ParaInfo = dbo.NameValue('C','@cVipCode',@cVipCode)           Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@cIdNumber',@cIdNumber)         Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@cCompany',@cCompany)           Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('C','@cSex',@cSex)                   Exec Loger @LogID,@Parameters=@ParaInfo
   Declare @iVipID int    --会员表ID
   Declare @VipState int  --10表示停用,表示有效
   Declare @IsLose bit    --1表示挂失,0表示未挂失
@@ -969,7 +968,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='获取出库到指定部门,并且尚未销售的,指定产品编号的礼券'
       Select A.产品编号,A.编号,A.面额,'已出库' As 状态
             ,Case When IsNull(A.往来编号,'0')='0' Then '' Else A.往来编号 End As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As A
       Left Join 礼券出库表 As B On A.编号=B.编号
       Where A.状态=1 And B.往来编号=@DepartmentCode
@@ -982,7 +981,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='获取出库到指定部门并且尚未销售的礼券'
       Select A.产品编号,A.编号,A.面额,'已出库' As 状态
             ,Case When IsNull(A.往来编号,'0')='0' Then '' Else A.往来编号 End As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As A
       Left Join 礼券出库表 As B On A.编号=B.编号
       Where A.状态=1 And B.往来编号=@DepartmentCode
@@ -994,7 +993,7 @@ Begin
       Exec Loger @LogID,@ExtendInfo='获取指定会员持有的未过期礼券'
       Select A.产品编号,A.编号,A.面额,'已销售' As 状态
             ,@VipCode As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As a
       Inner Join 礼券销售表 As b On a.编号=b.编号
       Where b.往来编号=@VipCode
@@ -1017,7 +1016,7 @@ Begin
                   Then IsNull(C.往来编号,'') 
                   Else A.往来编号 
              End As 会员编号
-            ,A.截止日期,A.条码
+            ,A.截止日期,A.条码,A.可兑产品,A.使用满额,A.备注,A.产品编号
       From 礼券表 As A
       Left Join 礼券出库表 As B On A.编号=B.编号
       Left Join 礼券销售表 As C On A.编号=C.编号
@@ -1026,7 +1025,7 @@ Begin
   Else
     Begin
       Exec Loger @LogID,@ExtendInfo='获取一个空结果集',@Result=-1
-      Select Top 0 产品编号,编号,面额,'' As 状态,往来编号 As 会员编号,截止日期,条码 From 礼券表
+      Select Top 0 产品编号,编号,面额,'' As 状态,往来编号 As 会员编号,截止日期,条码,可兑产品,使用满额,备注,产品编号 From 礼券表
       Return -1 --无参数
     End
   Return 0
@@ -1339,12 +1338,11 @@ Begin
   If @单号 Is Null Or @单号=''
   Begin
     Declare @刷卡日期 varchar(10),@礼券日期 varchar(10)
-
+    If IsNull(@刷卡金额, 0) <> 0 Set @刷卡日期 = Convert(varchar(10), GetDate(), 120)
+    If IsNull(@礼券    , 0) <> 0 Set @礼券日期 = Convert(varchar(10), GetDate(), 120)
     Exec Loger @LogID,@ExtendInfo='新建订单'
     If @日期 Is Null
       Set @日期 = Convert(varchar(10), GetDate(), 120)
-      set @刷卡日期 = @日期
-      set @礼券日期 = @日期
     Declare @BillMax int,@SalesID int
     Exec getbillmax '订单', @日期, @BillMax Output
     Set @单号 = Convert(varchar(6),Convert(datetime, @日期), 12) 
@@ -2171,19 +2169,8 @@ Begin
   Drop Table #tmp_WSC_GetVipInfo
 End
 
---------------------------------------------------------------------------------
---添加会员
---  @cWeiXinCode外键
---  @cMobileNumber手机号
---  @cName姓名,可选
---  @cBirthday生日,可选
---  @bIsLuna,是农历,可选
---WSC_AddVip状态集:
--- 0   :成功
--- -1  :已绑定到其它会员
--- -2  :无此会员
--- -3  :会员已停用
--- -201:手机号重复(有多张卡)
+go
+
 If Object_id('[WSC_AddVip]','P') Is Not Null
   Drop Procedure [WSC_AddVip]
 Go
@@ -2349,7 +2336,7 @@ Begin
         (GoodsCode varchar(10)
         ,VouchersCode varchar(20),PayQuota money,State varchar(10)
         ,VipCode varchar(20),EndTime datetime
-        ,BarCode varchar(30))
+        ,BarCode varchar(30),ConvertibleGoods varchar(2000),FullAmount Money,Remarks varchar(255),ProductNumber varchar(255))
   --查找相应的会员编号
   Declare @cDepart varchar(20)
   If IsNull(@WeiXinCode, '') <> ''
@@ -2584,7 +2571,7 @@ Begin
   Select @Return As retcode, @msg As Msg
 End
 
-  
+go 
   
 --------------------------------------------------------------------------------
 --获取订单列表
@@ -2971,6 +2958,168 @@ Begin
   Drop Table #tmp_WSC_GetBossTotal
 End
 Go
+
+/*
+同步有赞订单
+*/
+If Object_id('[CreateOutOrder]','P') Is Not Null 
+  Drop Procedure [CreateOutOrder]
+Go
+Create Procedure [dbo].[CreateOutOrder]
+       @OrderCode       varchar(20)=NULL  OUTPUT,--为空则新建单,不为空则修改已有单
+       @DepartName      varchar(50)       ,--销售部门
+       @WSC_TardNo      varchar(32)=''    ,--外部转入的订单,对应的外部订单号  商户订单号
+       @PickUpTime      datetime   =Null  ,--预约取货时间
+       @VipCode         varchar(20)=''    ,--会员卡编号
+       @CallNumber      varchar(50)=Null  ,--联系方式
+       @Remarks         varchar(100)=Null ,--备注
+       @Destination     varchar(100)=Null ,--送货地址,如果为自提则地址就是“自提”
+       @TotalAmount     money      =0     ,--总支付金额
+       @Deducted        money      =0     ,--整单免除部分(抹零让利)
+	   @ShippingCost    money = 0         ,--运费
+       @Department_Web  varchar(50)=''    ,--外接商城名称,订单来源，如有赞商城
+	   @oauth_id        varchar(100)=''     --记录客户微信Open_Id
+As
+Begin
+  Declare @LogID int,@ErrorID int,@ParaInfo varchar(128),@应收金额 money,@欠款 money
+  Declare @OrderID int--成功返回订单ID,失败返回0或负值
+  declare @UserCode varchar(10),@cDate varchar(10),@Department varchar(10)
+  Exec @LogID=Loger null,'CreateOutOrder'
+  Select @UserCode=编号 From pub_user Where 姓名='公众号'
+  Set @ShippingCost = IsNull(@ShippingCost, 0)
+  if @Department_Web ='' set @Department_Web='公众号'
+  Select @cDate=Max(日期) From stock_end Where 部门编号=@Department and 状态=1
+  If Exists(Select * From stock_end Where 部门编号=@Department and 状态=0 And 日期>@cDate)
+    Select @cDate=Min(日期) From stock_end Where 部门编号=@Department and 状态=0 And 日期>@cDate
+  Else
+    Set @cDate = convert(varchar(10) ,convert(datetime,@cDate)+1,120)
+  Select @Department = 编号 from department where 简称= @DepartName
+  If @DepartName is null select  @Department=编号 from department where 简称= '公众号'
+  If @PickUpTime = isnull(@PickUpTime ,GetDate())
+  if @VipCode = isnull(@VipCode, '')
+  Set @应收金额=@TotalAmount+@Deducted
+  Set @欠款 = IsNull(@欠款, 0)
+  If @OrderCode Is Null Or @OrderCode=''
+  Begin
+    Exec Loger @LogID,@ExtendInfo='新建订单'
+    If @cDate Is Null
+      Set @cDate = Convert(varchar(10), GetDate(), 120)
+    Declare @BillMax int,@SalesID int
+    Exec getbillmax '订单', @cDate, @BillMax Output
+    Set @OrderCode = Convert(varchar(6),Convert(datetime, @cDate), 12) 
+              + '-' + Right('0000' + Convert(varchar(10), @BillMax), 5)
+    Exec Loger @LogID,@Key=@OrderCode,@ExtendInfo='建立订单(orders)记录'
+    Insert orders(单号,日期,部门编号,制单人,生产单位,取货部门,取货时间,商户订单号
+                 ,往来编号,联系方式,备注,送货地址
+                 ,金额合计,优惠合计,应收金额,让利,订金,刷卡金额,刷卡日期,礼券,礼券日期,欠款
+                 ,结单,是否废止,销售类别,客户编号)
+           Values(@OrderCode,@cDate,@Department,@UserCode,@Department,@Department,@PickUpTime,@WSC_TardNo
+                 ,@VipCode,@CallNumber,@Remarks,@Destination
+                 ,@应收金额,0,@应收金额,@Deducted,@TotalAmount,0,'',0,'',@欠款
+                 ,0,0,@Department_Web,@oauth_id)
+    Set @ErrorID=@@Error
+    Select @OrderID=SCOPE_IDENTITY()
+    If @ErrorID <> 0
+      Begin
+        If @ErrorID > 0 Set @ErrorID = 0 - @ErrorID
+        Exec Loger @LogID,@ExtendInfo='失败',@Result=@ErrorID
+        Return @ErrorID
+      End
+	--添加支付记录,外接商城叫什么名字，就在后面加“支付”二字，如有赞商城：有赞商城支付
+	declare @PayID int
+	if exists(select * from 结算方式表 where 名称 = @Department_Web+'支付')
+	  begin  
+	    insert into 结算方式表(名称, 结算类型,  结算折扣率, 建立日期, 建立人, 第三方支付, 是否启用)
+		                values(@Department_Web+'支付','现金',1,getdate(),@UserCode,1,1)
+        Select @PayID=SCOPE_IDENTITY()
+		insert into 结算明细表(业务ID, 结算ID, 结算金额, 来源, 备注, 部门编号, 日期, 建立时间, 第三方支付, 是否启用)
+		                values(@OrderID,@PayID,@TotalAmount,1,'',@Department,@cDate,getdate(),1,1)
+	  end
+	else
+	  begin
+	    select @PayID = id from 结算方式表 where 名称= @Department_Web+'支付'
+	    insert into 结算明细表(业务ID, 结算ID, 结算金额, 来源, 备注, 部门编号, 日期, 建立时间, 第三方支付, 是否启用)
+		                values(@OrderID,@PayID,@TotalAmount,1,'',@Department,@cDate,getdate(),1,1)
+	  end
+    --更新记录中相关会员当前余额与积分信息
+    If @VipCode <> ''
+    Begin
+	  Declare @当前余额 money,@当前积分 money
+      Exec Loger @LogID,@ExtendInfo='更新订单中相关会员当前余额与积分'
+      Select @当前余额=卡余额, @当前积分=积分 From 会员 Where 编号=@VipCode
+      Update orders Set 当前余额=@当前余额,当前积分=@当前积分 Where ID=@OrderID
+    End
+
+  End
+ 
+  --如果运费不为零,生成明细中的运费项
+  If @ShippingCost > 0
+  Begin
+    Set @ParaInfo='生成明细中的运费项:@运费='+Convert(varchar(20),@ShippingCost)
+    Exec Loger @LogID,@ExtendInfo=@ParaInfo
+    Delete From orders_detail Where 订单ID=@OrderID And 编号='SYS_001'
+    Exec AddOrderItem @OrderID,'SYS_001',@ShippingCost,1,@ShippingCost,0,0
+    --如果有必要,在此加入相应的入库动作
+  End
+  Exec Loger @LogID,@Result=@OrderID
+  Return @OrderID
+End
+GO
+
+/*
+同步有赞订单明细
+*/
+If Object_id('[AddOutOrderItem]','P') Is Not Null 
+  Drop Procedure [AddOutOrderItem]
+Go
+create Procedure [dbo].[AddOutOrderItem]
+       @PID         int        ,--订单ID
+       @GoodsName   varchar(100),--商品名称
+       @GoodsCount  int      ,--商品数量
+       @TotalAmount money      ,--金额,折扣后总金额(单品总金额)
+       @ExtendPrice money=0    , --线上单价
+	   @Memo  varchar(100)       --单品备注（规格）
+As       
+Begin
+  Declare @LogID int,@ParaInfo varchar(128)
+  Exec @LogID=Loger null,'AddOrderItem'
+  Set @ParaInfo = dbo.NameValue('N','@PID',@PID)                 Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('C','@GoodsName',@GoodsName)     Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('N','@GoodsCount',@GoodsCount)   Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@TotalAmount',@TotalAmount) Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('Y','@ExtendPrice',@ExtendPrice) Exec Loger @LogID,@Parameters=@ParaInfo
+  Set @ParaInfo = dbo.NameValue('N','@Memo',@Memo)               Exec Loger @LogID,@Parameters=@ParaInfo
+
+  Declare @Return int,@DetailID int,@GoodsCode varchar(20)
+  Declare @规格 varchar(20),@折扣 numeric(12,2),@优惠金额 money,@销售主价 money
+  if @GoodsName = 'SYS_001' 
+    Select @GoodsName=名称,@规格=规格,@销售主价=销售主价 From goods Where 是否销售=1 And 编号=@GoodsName
+  else
+    Select @GoodsCode=编号,@规格=规格,@销售主价=销售主价 From goods Where 是否销售=1 And 名称=@GoodsName
+  Set @折扣 = @TotalAmount * 100 / @销售主价 / @GoodsCount
+  Set @优惠金额 = @销售主价 * @GoodsCount - @TotalAmount
+  set @Memo= isnull(@Memo,'')
+  Insert Into orders_detail(订单ID,编号,名称,规格,单价,折扣,数量,金额,优惠金额,结单,备注)
+         Values(@PID,@GoodsCode,@GoodsName,@规格,@销售主价,@折扣,@GoodsCount,@TotalAmount,@优惠金额,0,@Memo)
+  Set @DetailID = Scope_Identity()
+  If IsNull(@ExtendPrice, 0)<>0
+    Insert Into orders_detail_extend(link_id,web_price)Values(@DetailID,@ExtendPrice)
+  If @@Error<>0 Set @Return = -1 Else Set @Return = 0
+  --返回去修改订单金额合计
+  declare @金额合计 money
+  select @金额合计= sum(单价*数量) from orders_detail where 订单id = @PID
+  update orders set 金额合计=@金额合计 where id = @PID
+
+  Exec Loger @LogID,@Key=@DetailID,@Result=@Return
+  Return @Return
+End
+GO
+
+
+
+
+
+
 --------------------------------------------------------------------------------
 --得到指定网上订单对应的提货码
 --参数

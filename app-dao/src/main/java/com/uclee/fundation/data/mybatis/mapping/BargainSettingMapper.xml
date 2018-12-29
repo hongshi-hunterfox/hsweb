@@ -73,6 +73,21 @@
     <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
     <result column="random_amount" property="randomAmount" jdbcType="DECIMAL" />
   </resultMap>
+  
+  <resultMap id="BargainStatistics" type="com.uclee.fundation.data.mybatis.model.BargainStatistics" >
+    <id column="活动名称" property="name" jdbcType="VARCHAR" />
+    <result column="砍前金额" property="price" jdbcType="DECIMAL" />
+    <result column="最低金额" property="minPrice" jdbcType="DECIMAL" />
+    <result column="发起人" property="user" jdbcType="VARCHAR" />
+    <result column="已砍金额" property="bargainPrice" jdbcType="DECIMAL" />
+    <result column="剩余金额" property="surplusAmount" jdbcType="DECIMAL" />
+    <result column="砍价人数" property="Number" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="Stock" type="com.uclee.fundation.data.web.dto.Stock" >
+    <id column="hs_stock" property="hsStock" jdbcType="INTEGER" />
+    <result column="value_id" property="valueId" jdbcType="INTEGER" />
+  </resultMap>
 
   <select id="selectBargain" resultMap="BargainSetting" >
     select 
@@ -104,10 +119,25 @@
   <select id="getbargainSize" resultMap="launchbargain">
     select * from web_launch_bargain where pid = #{pid, jdbcType=INTEGER}
   </select>
+  <select id="getLaunchUser" resultMap="launchbargain">
+    select * from web_launch_bargain where invitation_code = #{invitationCode, jdbcType=VARCHAR}
+  </select>
    <select id="selectBargainId" resultMap="BargainSetting" >
     select 
      *
     from web_bargain_setting where id = #{id jdbcType=INTEGER}
+  </select>
+  <select id="getBargainLog" resultMap="BargainStatistics">
+    select a.name as 活动名称,b.[initial_amount] as 砍前金额,a.price as 最低金额
+		,y.编号 as 发起人,sum(c.random_amount) as 已砍金额,b.[initial_amount]-a.price-sum(c.random_amount) as 剩余金额
+		,count(*) as 砍价人数 
+  from [web_bargain_setting]  as a 
+  left join [web_launch_bargain] as b on a.id = b.pid
+  left join 会员身份 as x on b.open_id = x.外键
+  left join 会员 as y on x.会员ID = y.id
+  left join [web_bargain_log] as c on b.invitation_code=c.invitation_code
+  where a.id = #{id, jdbcType=INTEGER}
+   group by a.name,y.编号,b.[initial_amount],a.price order by 已砍金额 desc
   </select>
   <select id="getBargain" resultMap="BaseResultMap" >
      select * from web_bargain_setting as a left join web_products as b on  a.product_name=b.title
@@ -166,6 +196,10 @@
   <select id="selectLaunchLog" resultMap="launchbargain">
   	select * from web_launch_bargain where uid = #{uid, jdbcType=INTEGER} and invitation_code = #{invitationCode, jdbcType=VARCHAR}
   </select>
+  <select id="selectStock" resultMap="Stock">
+  	select hs_stock from web_specification_values where value_id=#{valueId, jdbcType=INTEGER}
+  </select>
+    
    <delete id="deleteBargainId" parameterType="java.lang.Integer" >
    delete  web_bargain_setting where id = #{id jdbcType=INTEGER}
   </delete>
@@ -205,5 +239,8 @@
       tries_limit = 1
     where id = #{id, jdbcType=INTEGER}
   </update>
-
+  
+  <update id="removeStock" parameterType="com.uclee.fundation.data.web.dto.Stock" > 
+    update web_specification_values set hs_stock = #{hsStock, jdbcType=INTEGER} where value_id=#{valueId, jdbcType=INTEGER}
+  </update>
 </mapper>

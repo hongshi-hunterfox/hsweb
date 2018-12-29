@@ -97,11 +97,10 @@ class Cart extends React.Component {
         		)
         	:
         	(
-        		this.state.result === true && item.vip !== null ?
+        		this.state.result === true && item.vip !== null && item.vip < item.promotion ?
         			totalPrice.add(Big(item.vip).times(Big(item.amount)))
         		:
         			totalPrice.add(Big(item.promotion).times(Big(item.amount)))
-        		
         	)
         	)
       }
