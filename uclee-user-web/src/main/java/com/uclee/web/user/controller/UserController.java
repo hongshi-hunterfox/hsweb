@@ -1698,7 +1698,7 @@ public class UserController extends CommonUserHandler{
 		List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(evaluationGifts.get(0).getVoucherCode());
 		if(coupon!=null && !coupon.isEmpty()){
 			if(coupon != null && coupon.size()>0){                      
-				int a= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),evaluationGifts.get(0).getVoucherCode(),"评价赠送礼券");
+				int a= hongShiMapper.saleVoucher(evaluationGifts.get(0).getVoucherCode(),coupon.get(0).getVouchersCode(),oauthLogin.getOauthId(),"评价赠送礼券");
 				if(a>0){
 					System.out.println("发送成功");
 				}else{
@@ -1741,7 +1741,7 @@ public class UserController extends CommonUserHandler{
 							if(coupon!=null && !coupon.isEmpty()){
 								if(coupon != null && coupon.size()>0){
 					
-									int s= hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(i).getVouchersCode(),integralinGifts.get(i).getVoucherCode(),"签到赠送礼券");
+									int s= hongShiMapper.saleVoucher(integralinGifts.get(i).getVoucherCode(), coupon.get(i).getVouchersCode(),oauthLogin.getOauthId(),"签到赠送礼券");
 									if(s>0){
 										System.out.println("发送成功");
 									}else{
@@ -2169,9 +2169,27 @@ public class UserController extends CommonUserHandler{
 		vipIdentity vip = userService.selectVipIdentity(oauthLogin.getOauthId());
 		List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(voucher);
 		List<LinkCouponLogs> log = userService.selectLinkCoponLog(name, oauthLogin.getOauthId());
-		
+		String d1 = "";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String d1 = sdf.format(log.get(0).getDay());//上次领取时间
+		if(log!=null && log.size()>0) {
+			d1 = sdf.format(log.get(0).getDay());//上次领取时间
+		}else{
+			if(vip != null && !vip.equals("")){
+				if(coupon!=null || coupon.size()>0){ 
+					hongShiMapper.saleVoucher(voucher,coupon.get(0).getVouchersCode(),oauthLogin.getOauthId(),"会员领礼券");
+					LinkCouponLogs linkCouponLogs = new LinkCouponLogs();
+					linkCouponLogs.setName(name);
+					linkCouponLogs.setOauthId(oauthLogin.getOauthId());
+					linkCouponLogs.setDay(new Date());
+					userService.insertLinkCouponLog(linkCouponLogs);
+					map.put("success", true);
+					return map;
+				}
+			}else{
+				map.put("vip", false);
+				return map;
+			}
+		}
 		String d2 = sdf.format(new Date());//当前时间
 		//不是同一天才能继续领取
 		if(!d1.equals(d2)){
@@ -2184,9 +2202,11 @@ public class UserController extends CommonUserHandler{
 					linkCouponLogs.setDay(new Date());
 					userService.insertLinkCouponLog(linkCouponLogs);
 					map.put("success", true);
+					return map;
 				}
 			}else{
 				map.put("vip", false);
+				return map;
 			}
 		}else{
 			map.put("log", false);

@@ -24,6 +24,7 @@ import com.uclee.fundation.data.web.dto.*;
 
 import org.apache.http.entity.ContentType;
 import org.apache.poi.hssf.record.formula.functions.Na;
+import org.apache.poi.util.SystemOutLogger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -1487,26 +1488,6 @@ public class BackendServiceImpl implements BackendServiceI {
 				msgRecord.setUserId(userId);
 				msgRecordMapper.insertSelective(msgRecord);
 			}
-			//联动送礼券
-			if(sendVoucher) {
-				try {
-					List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();
-					for(BirthVoucher birthVoucher:birthVouchers) {
-						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(birthVoucher.getVoucherCode());
-						if (coupon != null && coupon.size() > 0) {
-							try {
-								for(int i=0;i<birthVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), birthVoucher.getVoucherCode(),"生日祝福赠送礼券");
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}catch (Exception e){
-					e.printStackTrace();
-				}
-			}
 			return true;
 		}
 		return false;
@@ -1534,32 +1515,14 @@ public class BackendServiceImpl implements BackendServiceI {
 				msgRecord.setUserId(userId);
 				msgRecordMapper.insertSelective(msgRecord);
 			}
-			//联动送礼券
-			if(sendVoucher) {
-				try {
-					List<ConsumerVoucher> consumerVouchers = consumerVoucherMapper.selectAll();
-					for(ConsumerVoucher consumerVoucher:consumerVouchers) {
-						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(consumerVoucher.getVoucherCode());
-						if (coupon != null && coupon.size() > 0) {
-							try {
-								for(int i=0;i<consumerVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), consumerVoucher.getVoucherCode(),"定向发券");
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}catch (Exception e){
-					e.printStackTrace();
-				}
-			}
+		
 			return true;
 		}
 		return false;
 	}
 	@Override
-	public boolean sendViphMsg(Integer userId,boolean sendVoucher) {
+	public boolean sendViphMsg(Integer userId, boolean sendVoucher) {
+		
 		OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
 		if(login!=null){
 			String nickName="";
@@ -1575,36 +1538,21 @@ public class BackendServiceImpl implements BackendServiceI {
 			Config config2 = configMapper.getByTag(WebConfig.domain);
 			Config config3 = configMapper.getByTag(WebConfig.voucherSendInformation);
 			if(config!=null){
-				//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
 				sendWXMessage(login.getOauthId(), config.getValue(), config2.getValue()+"/coupon?merchantCode="+config1.getValue(), config3.getValue(), key,value, "");
 				MsgRecord msgRecord = new MsgRecord();
 				msgRecord.setType(1);
 				msgRecord.setUserId(userId);
 				msgRecordMapper.insertSelective(msgRecord);
 			}
-			//联动送礼券
-			if(sendVoucher) {
-				try {
-					List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();
-					for(VipVoucher vipVoucher:vipVouchers) {
-						List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(vipVoucher.getVoucher());
-						if (coupon != null && coupon.size() > 0) {
-							try {
-								for(int i=0;i<vipVoucher.getAmount();i++) {
-									hongShiMapper.saleVoucher(login.getOauthId(), coupon.get(i).getVouchersCode(), vipVoucher.getVoucher(),"定向发券");
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}catch (Exception e){
-					e.printStackTrace();
-				}
-			}
 			return true;
 		}
+	
 		return false;
+	}
+	
+	public boolean sendCoupon(String vouchersCode,String GoodsCode,String oauthId, String typeText) {
+			int n=hongShiMapper.saleVoucher(vouchersCode,GoodsCode, oauthId, typeText);
+			return true;
 	}
 	
 	@Override
@@ -2285,7 +2233,6 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public boolean updateLinkCoupon(VipVoucherPost vipVoucherPost) {
 		linkCouponMapper.deleteAll();
-		System.out.println("wdew=========="+JSON.toJSONString(vipVoucherPost));
 		if(vipVoucherPost.getMyKey()==null||vipVoucherPost.getMyValue()==null||vipVoucherPost.getMyKey().size()==0||vipVoucherPost.getMyValue().size()==0||vipVoucherPost.getMyValue1()==null||vipVoucherPost.getMyValue1().size()==0){
 			return false;
 			
@@ -2343,8 +2290,9 @@ public class BackendServiceImpl implements BackendServiceI {
 	public String CreatWxVip() throws IOException {
 		Var var = varMapper.selectByPrimaryKey(new Integer(1));
 		int count = 2;
-		String result = "";
-		String result1 = "";
+		String res = "";
+		String ress = "";
+		String res2 = "";
 		String filepath = "";
 		for(int i=1; i<=count; i++){
 			if(i==1){
@@ -2476,8 +2424,8 @@ public class BackendServiceImpl implements BackendServiceI {
 		           while ((line = reader.readLine()) != null) {
 		               buffer.append(line);
 		           }
-		           result = buffer.toString();
-		           System.out.println(result.toString()+"----SKX");
+		           res = buffer.toString();
+		           System.out.println(res.toString()+"----SKX");
 		       } catch (IOException e) {
 		           System.out.println("发送POST请求出现异常！" + e);
 		           e.printStackTrace();
@@ -2497,11 +2445,17 @@ public class BackendServiceImpl implements BackendServiceI {
 					}
 		        }
 		    }
-		    if(i==2){
-		    	result1 = result.substring(result.indexOf(":")+1,result.indexOf("}")).trim();
-		    }
+	       if(i == 1){
+	    	   ress = res.substring(res.indexOf(":")+1,res.indexOf("}")).trim(); 
+	    	   
+	       }else if(i == 2) {
+	    	   res2 = res.substring(res.indexOf(":")+1,res.indexOf("}")).trim();
+	       }
 		}
-		result = result.substring(result.indexOf(":")+1,result.indexOf("}")).trim();
+		final String result = ress;
+		final String result1 = res2;
+		System.out.println("sds==="+result);
+		System.out.println("sds==="+result1);
 		String jsonc = "{\"card\": {"
     			+ "\"card_type\": \"MEMBER_CARD\","
     			+ "\"member_card\": {"

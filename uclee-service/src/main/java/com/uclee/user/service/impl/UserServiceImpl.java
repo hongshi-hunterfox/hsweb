@@ -1831,7 +1831,7 @@ public class UserServiceImpl implements UserServiceI {
 						//判断可用优惠券，是否已经发光了
 						if(coupon!=null && !coupon.isEmpty()) {
 							if(coupon != null && coupon.size()>0) {
-								hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), pv.getVoucher(), "购指定产品赠送礼券");
+								hongShiMapper.saleVoucher(pv.getVoucher(), coupon.get(0).getVouchersCode(),oauthLogin.getOauthId(), "购指定产品赠送礼券");
 							}
 						}else {
 							System.out.println("券被抢光了");
@@ -1911,7 +1911,7 @@ public class UserServiceImpl implements UserServiceI {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCode());
 							if (coupon != null && coupon.size() > 0) {
 								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCode(),"充值赠送礼券");
+									hongShiMapper.saleVoucher(rechargeConfig.getVoucherCode(), coupon.get(0).getVouchersCode(), oauthLogin.getOauthId(), "充值赠送礼券");
 									isSend=true;
 								} catch (Exception e) {
 
@@ -1922,7 +1922,7 @@ public class UserServiceImpl implements UserServiceI {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeSecond());
 							if (coupon != null && coupon.size() > 0) {
 								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeSecond(),"充值赠送礼券");
+									hongShiMapper.saleVoucher(rechargeConfig.getVoucherCodeSecond(), coupon.get(0).getVouchersCode(), oauthLogin.getOauthId(), "充值赠送礼券");
 									isSend=true;
 								} catch (Exception e) {
 
@@ -1933,7 +1933,7 @@ public class UserServiceImpl implements UserServiceI {
 							List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(rechargeConfig.getVoucherCodeThird());
 							if (coupon != null && coupon.size() > 0) {
 								try {
-									hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), rechargeConfig.getVoucherCodeThird(),"充值赠送礼券");
+									hongShiMapper.saleVoucher(rechargeConfig.getVoucherCodeThird(),  coupon.get(0).getVouchersCode(), oauthLogin.getOauthId(), "充值赠送礼券");
 									isSend=true;
 								} catch (Exception e) {
 
@@ -3130,7 +3130,6 @@ public class UserServiceImpl implements UserServiceI {
 			map.put("result", false);
 			return map;
 		}
-		logger.info("record22============="+JSON.toJSONString(record));
 		if(signRecordMapper.insertSelective(record)>0){
 			//同步积分到洪石系统
 			OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(userId);
@@ -3342,7 +3341,7 @@ public class UserServiceImpl implements UserServiceI {
 								if(coupon!=null && !coupon.isEmpty()){
 									if(coupon != null && coupon.size()>0){
 										coupon.get(0);                       
-										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),item.getVoucher(),"满额赠送礼券");
+										hongShiMapper.saleVoucher(coupon.get(0).getVouchersCode(),item.getVoucher(),oauthLogin.getOauthId(),"满额赠送礼券");
 										System.out.println("发送成功");
 									}
 								}else{
@@ -3465,7 +3464,7 @@ public class UserServiceImpl implements UserServiceI {
 								//判断可用优惠券，是否已经发光了
 								if(coupon!=null && !coupon.isEmpty()) {
 									if(coupon != null && coupon.size()>0) {
-										hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(), pv.getVoucher(), "购指定产品赠送礼券");
+										hongShiMapper.saleVoucher(pv.getVoucher(), coupon.get(0).getVouchersCode(),  oauthLogin.getOauthId(), "购指定产品赠送礼券");
 										System.out.println("发送成功");
 									}
 								}else {
@@ -3588,8 +3587,8 @@ public class UserServiceImpl implements UserServiceI {
 					List<HongShiCoupon> coupon = hongShiMapper.getHongShiCouponByGoodsCode(config.getVoucherCode());
 					if (coupon != null && coupon.size() > 0) {
 						try {
-							hongShiMapper.saleVoucher(oauthLogin.getOauthId(), coupon.get(0).getVouchersCode(),
-									config.getVoucherCode(),"抽奖赠送礼券");
+							hongShiMapper.saleVoucher(config.getVoucherCode(), coupon.get(0).getVouchersCode(), oauthLogin.getOauthId(), 
+									"抽奖赠送礼券");
 							map.put("result", true);
 							map.put("text", "恭喜抽中" + coupon.get(0).getPayQuota().setScale(2, BigDecimal.ROUND_HALF_UP)
 									+ "现金优惠券，奖品已放入账户中，请注意查看");

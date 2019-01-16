@@ -245,4 +245,6 @@ public interface BackendServiceI {
 	int deleteMarketingEntrance(Integer id);
 	
 	int updateMarketingEntrance(MarketingEntrance marketingEntrance);
+
+	boolean sendCoupon(String vouchersCode, String goodsCode, String oauthId,String typeText);
 }

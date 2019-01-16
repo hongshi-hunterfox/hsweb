@@ -256,7 +256,7 @@ _selectCat=(e)=>{
     var conf = confirm('确定要联动派送礼券吗？');
     var url='';
     if(conf){
-      url='/uclee-backend-web/sendVipMsg?userId=' + userId+'&sendVoucher=1';
+      url='/uclee-backend-web/sendVipMsg?userList=' + userId+'&sendVoucher=1';
       req
       .get('/uclee-backend-web/isCouponAmount?amount=1')
       .end((err, res) => {
@@ -311,14 +311,14 @@ _selectCat=(e)=>{
           }
         } else {
           var ret = true;
-          for (var i in this.state.checked)
-          {
-            console.log(this.state.checked[i]);
+          {/*for (var i in this.state.checked)
+          {*/}
+            console.log(this.state.checked);
             var url='';
             if(conf){
-              url='/uclee-backend-web/sendVipMsg?userId=' + this.state.checked[i]+'&sendVoucher=1';
+              url='/uclee-backend-web/sendVipMsg?userList=' + this.state.checked+'&sendVoucher=1';
             }else{
-              url='/vip-list';
+            	url='/uclee-backend-web/sendVipMsg?userList=' + this.state.checked;
             }
             req
             .get(url)
@@ -328,7 +328,7 @@ _selectCat=(e)=>{
               }
               ret = ret && res.body;
             })
-          }
+          {/*}*/}
           if (ret) {
                 alert('发送成功')
                 window.location =

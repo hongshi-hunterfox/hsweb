@@ -43,7 +43,7 @@ class UserBirthList extends React.Component {
     var conf = confirm('是否要联动送礼券？');
     var url='';
     if(conf){
-      url='/uclee-backend-web/sendBirthMsg?userId=' + userId+'&sendVoucher=1';
+      url='/uclee-backend-web/sendBirthMsg?userList=' + userId+'&sendVoucher=1';
       req
       .get('/uclee-backend-web/isVoucherLimit?amount=1')
       .end((err, res) => {
@@ -74,7 +74,7 @@ class UserBirthList extends React.Component {
         }
       })
     }else{
-      url='/uclee-backend-web/sendBirthMsg?userId=' + userId;
+      url='/uclee-backend-web/sendBirthMsg?userList=' + userId;
       req
       .get(url)
       .end((err, res) => {
@@ -128,12 +128,12 @@ class UserBirthList extends React.Component {
           var ret = true;
           for (var i in this.state.checked)
           {
-            console.log(this.state.checked[i]);
+            console.log(this.state.checked);
             var url='';
             if(conf){
-              url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i]+'&sendVoucher=1';
+              url='/uclee-backend-web/sendBirthMsg?userList=' + this.state.checked+'&sendVoucher=1';
             }else{
-              url='/uclee-backend-web/sendBirthMsg?userId=' + this.state.checked[i];
+              url='/uclee-backend-web/sendBirthMsg?userList=' + this.state.checked;
             }
             req
             .get(url)

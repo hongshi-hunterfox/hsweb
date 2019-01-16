@@ -35,7 +35,7 @@ class UserUnBuyList extends React.Component {
   	var conf = confirm('是否要联动送礼券？');
     var url='';
     if(conf){
-      url='/uclee-backend-web/sendUnbuyMsg?userId=' + userId+'&sendVoucher=1';
+      url='/uclee-backend-web/sendUnbuyMsg?userList=' + userId+'&sendVoucher=1';
       req
       .get('/uclee-backend-web/isVoucherLimit?amount=1')
       .end((err, res) => {
@@ -67,7 +67,7 @@ class UserUnBuyList extends React.Component {
       })
     }else{
 	   req
-	      .get('/uclee-backend-web/sendUnbuyMsg?userId=' + userId)
+	      .get('/uclee-backend-web/sendUnbuyMsg?userList=' + userId)
 	      .end((err, res) => {
 	        if (err) {
 	          return err
@@ -96,19 +96,23 @@ class UserUnBuyList extends React.Component {
       alert("请选择要批量发送的用户");
       return;
     }
-    var ret = true;
-    for (var i in this.state.checked)
-    {
-      console.log(this.state.checked[i]);
+    var ret = true;   		
+      console.log(this.state.checked);
+      var conf = confirm('确定要派送礼券吗？');
+      var url='';
+	    if(conf){
+	      url='/uclee-backend-web/sendUnbuyMsg?userList=' + this.state.checked+'&sendVoucher=1';
+	    }else{
+	    	url='/uclee-backend-web/sendUnbuyMsg?userList=' + this.state.checked;
+	    }
       req
-      .get('/uclee-backend-web/sendUnbuyMsg?userId=' + this.state.checked[i])
+      .get(url)
       .end((err, res) => {
         if (err) {
           return err
         }
         ret = ret && res.body;
       })
-    }
     if (ret) {
           alert('发送成功')
           window.location =

@@ -204,7 +204,7 @@ class AddStore extends React.Component {
     console.log(fto(this.refs.f))
     var t=fto(this.refs.f)
 
-    var addr=t.province +t.city +t.region + (t.addrDetail || '')
+    var addr="中国," + t.province+"," + t.city+"," + t.region+"," + (t.addrDetail || '')
     console.log(addr)
     console.log(this.lat,this.lng)
     geocoder.getLocation(addr)

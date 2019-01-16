@@ -140,7 +140,7 @@
 		exec WSC_GetVouchers '', '',#{goodsCode,jdbcType=VARCHAR}
 	</select>
 	<select id="saleVoucher" resultType="java.lang.Integer">
-		exec WSC_SaleVoucher #{goodsCode,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR},0,0,#{SaleType,jdbcType=VARCHAR}
+		exec WSC_SaleVoucher #{voucherCode,jdbcType=VARCHAR},#{goodsCode,jdbcType=VARCHAR},#{oauthId,jdbcType=VARCHAR},0,0,#{SaleType,jdbcType=VARCHAR}
 	</select>
 	<select id="recoverVoucher" resultType="java.lang.Integer">
 		exec WSC_RecoverVoucher #{orderId,jdbcType=VARCHAR}, #{voucherCode,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},#{remark,jdbcType=VARCHAR}

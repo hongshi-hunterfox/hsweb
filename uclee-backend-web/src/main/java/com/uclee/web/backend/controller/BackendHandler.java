@@ -1,8 +1,12 @@
 package com.uclee.web.backend.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import com.uclee.fundation.data.mybatis.model.*;
@@ -12,6 +16,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
+import com.uclee.fundation.data.mybatis.mapping.BirthVoucherMapper;
+import com.uclee.fundation.data.mybatis.mapping.ConsumerVoucherMapper;
+import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
+import com.uclee.fundation.data.mybatis.mapping.HongShiVipMapper;
+import com.uclee.fundation.data.mybatis.mapping.OauthLoginMapper;
 import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
@@ -25,7 +34,19 @@ public class BackendHandler {
 	private BackendServiceI backendService;
 	@Autowired
 	private BargainSettingMapper bargainSettingMapper;
+	@Autowired
+	private OauthLoginMapper oauthLoginMapper;
+	@Autowired
+	private HongShiVipMapper hongShiVipMapper;
+	@Autowired
+	private HongShiMapper hongShiMapper;
+	@Autowired
+	private BirthVoucherMapper birthVoucherMapper;
+	@Autowired
+	private ConsumerVoucherMapper consumerVoucherMapper;
+	
 	private BargainSetting bargaintinting;
+
 	
 	@RequestMapping("/configHandler")
 	public @ResponseBody boolean configHandler(HttpServletRequest request,@RequestBody ConfigPost configPost) {
@@ -41,12 +62,58 @@ public class BackendHandler {
 		return backendService.systemConfigHandler(configPost);
 	}
 	@RequestMapping("/sendBirthMsg")
-	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
-		return backendService.sendBirthMsg(userId,sendVoucher);
+	public @ResponseBody boolean sendBirthMsg(HttpServletRequest request,String userList,boolean sendVoucher) {
+		System.out.println("userlist====="+userList);
+		String[] userarr = userList.split(","); // 用,分割
+		boolean ret=true;
+		for(String item:userarr) {
+			Integer userId = Integer.parseInt(item);
+			if(!sendVoucher) {
+				return ret = backendService.sendBirthMsg(userId,sendVoucher);
+			}
+			OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+			if(login!=null && !login.equals("")) {
+				ret = backendService.sendBirthMsg(userId,sendVoucher);
+				List<BirthVoucher> birthVouchers = birthVoucherMapper.selectAll();//获取礼券赠送配置
+				for(int j=0; j<birthVouchers.size();j++) {
+					List<HongShiCoupon> cp= hongShiMapper.getHongShiCouponByGoodsCode(birthVouchers.get(j).getVoucherCode());
+					for(int i=0; i<birthVouchers.get(j).getAmount();i++) {
+						System.out.println("ooo=="+cp.get(i).getVouchersCode()+"ooo=="+cp.get(i).getGoodsCode());
+						ret = backendService.sendCoupon(cp.get(i).getGoodsCode(),cp.get(i).getVouchersCode(),login.getOauthId(),"生日祝福送券");
+					}
+				}
+			}else{
+				return false;
+			}
+		}
+		return ret;
 	}
 	@RequestMapping("/sendVipMsg")
-	public @ResponseBody boolean sendViphMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
-		return backendService.sendViphMsg(userId,sendVoucher);
+	public @ResponseBody boolean sendViphMsg(HttpServletRequest request,String userList,boolean sendVoucher) {
+		System.out.println("userlist====="+userList);
+		String[] userarr = userList.split(","); // 用,分割
+		boolean ret=true;
+		for(String item:userarr) {
+			Integer userId = Integer.parseInt(item);
+			if(!sendVoucher) {
+				return ret = backendService.sendViphMsg(userId,sendVoucher);
+			}
+			OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+			if(login!=null && !login.equals("")) {
+				ret = backendService.sendViphMsg(userId,sendVoucher);
+				List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();//获取礼券赠送配置
+				for(int j=0; j<vipVouchers.size();j++) {
+					List<HongShiCoupon> cp= hongShiMapper.getHongShiCouponByGoodsCode(vipVouchers.get(j).getVoucher());
+					for(int i=0; i<vipVouchers.get(j).getAmount();i++) {
+						System.out.println("ooo=="+cp.get(i).getVouchersCode()+"ooo=="+cp.get(i).getGoodsCode());
+						ret = backendService.sendCoupon(cp.get(i).getVouchersCode(),cp.get(i).getGoodsCode(),login.getOauthId(),"定向送券");
+					}
+				}
+			}else{
+				return false;
+			}
+		}		
+		return ret;
 	}
 	@RequestMapping("/isVoucherLimit")
 	public @ResponseBody Map<String,Object> isVoucherLimit(HttpServletRequest request,Integer amount) {
@@ -57,8 +124,32 @@ public class BackendHandler {
 		return backendService.isCouponAmount(amount);
 	}
 	@RequestMapping("/sendUnbuyMsg")
-	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,Integer userId,boolean sendVoucher) {
-		return backendService.sendUnbuyMsg(userId,sendVoucher);
+	public @ResponseBody boolean sendUnbuyMsg(HttpServletRequest request,String userList,boolean sendVoucher) {
+		System.out.println("userlist====="+userList);
+		String[] userarr = userList.split(","); // 用,分割
+		boolean ret=true;
+		for(String item:userarr) {
+			Integer userId = Integer.parseInt(item);
+			if(!sendVoucher) {
+				return ret = backendService.sendUnbuyMsg(userId,sendVoucher);
+			}
+			OauthLogin login = oauthLoginMapper.getOauthLoginInfoByUserId(userId);
+			if(login!=null && !login.equals("")) {
+				ret = backendService.sendUnbuyMsg(userId,sendVoucher);
+				List<ConsumerVoucher> consumerVouchers = consumerVoucherMapper.selectAll();//获取礼券赠送配置
+				for(int j=0; j<consumerVouchers.size();j++) {
+					List<HongShiCoupon> cp= hongShiMapper.getHongShiCouponByGoodsCode(consumerVouchers.get(j).getVoucherCode());
+					for(int i=0; i<consumerVouchers.get(j).getAmount();i++) {
+						System.out.println("ooo=="+cp.get(i).getVouchersCode()+"ooo=="+cp.get(i).getGoodsCode());
+						ret = backendService.sendCoupon(cp.get(i).getGoodsCode(),cp.get(i).getVouchersCode(),login.getOauthId(),"消费信息送券");
+					}
+				}
+			}else{
+				return false;
+			}
+			
+		}		
+		return ret;
 	}
 	@RequestMapping("/delCategory")
 	public @ResponseBody Map<String,Object> delCategory(HttpServletRequest request,Integer categoryId) {

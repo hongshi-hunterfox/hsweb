@@ -39,7 +39,7 @@ public interface HongShiMapper {
 	HongShiCommonResult signInAddPoint(@Param("oauthId")String oauthId, @Param("point")Integer point,@Param("tag") String tag);
 	HongShiCommonResult lotteryPoint(@Param("oauthId")String oauthId, @Param("point")Integer point);
 	int recoverVoucher(@Param("goodsCode")String goodsCode,@Param("orderId")Integer orderId,@Param("voucherCode")String voucherCode,@Param("remark")String remark,@Param("amount") BigDecimal amount);
-	int saleVoucher(@Param("oauthId")String oauthId,@Param("voucherCode")String voucherCode,@Param("goodsCode")String goodsCode,@Param("SaleType")String SaleType);
+	int saleVoucher(@Param("voucherCode")String voucherCode,@Param("goodsCode")String goodsCode,@Param("oauthId")String oauthId,@Param("SaleType")String SaleType);
 	List<HongShiCoupon> getHongShiCouponByGoodsCode(@Param("goodsCode")String goodsCode);
 	List<BossCenterItem> selectBossCenter(@Param("hsCode")String hsCode,@Param("userId")Integer userId);
 	List<MobileItem>selectMobile(@Param("hsCode")String hsCode,@Param("userId")Integer userId);

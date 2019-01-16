@@ -247,7 +247,7 @@ class EditAddr extends React.Component {
 		var index2=myselect2.selectedIndex ;
 		console.log("aaa===="+myselect.options[index].text + myselect1.options[index1].text + myselect2.options[index2].text)
 		console.log("aaa===="+deliverAddr.addrDetail)
-		var addr=myselect.options[index].text + myselect1.options[index1].text + myselect2.options[index2].text + (deliverAddr.addrDetail || '')
+		var addr="中国," + myselect.options[index].text+","  + myselect1.options[index1].text+","  + myselect2.options[index2].text+","  + (deliverAddr.addrDetail || '')
 		geocoder.getLocation(addr)
 	}
 	_setCity = e => {
