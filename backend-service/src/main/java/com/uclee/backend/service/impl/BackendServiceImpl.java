@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -88,6 +89,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private FDFSFileUpload fDFSFileUpload;
 	@Autowired
 	private ProductGroupLinkMapper productGroupLinkMapper;
+	@Autowired
+	private UrlVoucherCollectionMapper urlVoucherCollectionMapper;
 	@Autowired
 	private BirthVoucherMapper birthVoucherMapper;
 	@Autowired
@@ -2613,6 +2616,32 @@ public class BackendServiceImpl implements BackendServiceI {
 	public int updateMarketingEntrance(MarketingEntrance marketingEntrance) {
 		System.out.println(JSON.toJSON(marketingEntrance));
 		return marketingEntranceMapper.updateMarketingEntrance(marketingEntrance);
+	}
+	@Override
+	public int insertSelective(UrlVoucherCollection urlVoucherCollection) {
+		return urlVoucherCollectionMapper.insertSelective(urlVoucherCollection);
+	}
+	@Override
+	public List<UrlVoucherCollection> selectAllUrlVoucherCollection() {
+		return urlVoucherCollectionMapper.selectAll();
+	}
+	@Override
+	public int deleteById(Integer id) {
+		return urlVoucherCollectionMapper.deleteById(id);
+	}
+	@Override
+	public UrlVoucherCollection selectById(Integer id) {
+		UrlVoucherCollection uvc = urlVoucherCollectionMapper.selectById(id);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String start = format.format(uvc.getStarttime());
+		String end = format.format(uvc.getEndtime());
+		uvc.setStart(start);
+		uvc.setEnd(end);
+		return uvc;
+	}
+	@Override
+	public int updateById(UrlVoucherCollection urlVoucherCollection) {
+		return urlVoucherCollectionMapper.updateById(urlVoucherCollection);
 	}
 
 }

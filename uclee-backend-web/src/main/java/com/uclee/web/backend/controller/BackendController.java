@@ -862,4 +862,48 @@ public class BackendController {
 		return map;
 	}
 	
+	/**
+	 * 链接送券活动设置controller
+	 */
+	@RequestMapping("/insertUrlVoucherCollection")
+	public @ResponseBody int insertUrlVoucherCollection(HttpServletRequest request,@RequestBody UrlVoucherCollection urlVoucherCollection){
+			return backendService.insertSelective(urlVoucherCollection);
+	}
+	
+	/**
+	 * 链接送券活动列表
+	 */
+	@RequestMapping("/selectAllUrlVoucherCollection")
+	public @ResponseBody Map<String,Object> selectAllUrlVoucherCollection(HttpServletRequest request){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<UrlVoucherCollection> usv = backendService.selectAllUrlVoucherCollection();
+		map.put("usv", usv);
+		return map;
+	}
+	/**
+	 * del链接送券活动
+	 */
+	@RequestMapping("/removeUrlVoucherCollection")
+	public @ResponseBody int removeUrlVoucherCollection(HttpServletRequest request, Integer id){
+		return backendService.deleteById(id);
+	}
+	/**
+	 * id链接送券活动详情
+	 */
+	@RequestMapping("/getUrlVoucherCollection")
+	public @ResponseBody Map<String,Object> getUrlVoucherCollection(HttpServletRequest request, Integer id){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		UrlVoucherCollection uvc = backendService.selectById(id);
+		map.put("uvc", uvc);
+		return map;
+	}
+	/**
+	 * update链接送券活动
+	 */
+	@RequestMapping("/updateUrlVoucherCollection")
+	public @ResponseBody Integer updateUrlVoucherCollection(HttpServletRequest request,@RequestBody UrlVoucherCollection urlVoucherCollection){
+			return backendService.updateById(urlVoucherCollection);
+	}
+		
+
 }

@@ -106,7 +106,7 @@ public class BackendHandler {
 					List<HongShiCoupon> cp= hongShiMapper.getHongShiCouponByGoodsCode(vipVouchers.get(j).getVoucher());
 					for(int i=0; i<vipVouchers.get(j).getAmount();i++) {
 						System.out.println("ooo=="+cp.get(i).getVouchersCode()+"ooo=="+cp.get(i).getGoodsCode());
-						ret = backendService.sendCoupon(cp.get(i).getVouchersCode(),cp.get(i).getGoodsCode(),login.getOauthId(),"定向送券");
+						ret = backendService.sendCoupon(cp.get(i).getGoodsCode(),cp.get(i).getVouchersCode(),login.getOauthId(),"定向送券");
 					}
 				}
 			}else{

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.UrlVoucherCollectionMapper" >
+  <select id="selectAll" resultType="com.uclee.fundation.data.mybatis.model.UrlVoucherCollection">
+    select 
+    *
+    from web_urlvouchercollection
+  </select>
+  
+  <select id="selectById" resultType="com.uclee.fundation.data.mybatis.model.UrlVoucherCollection">
+    select 
+    *
+    from web_urlvouchercollection where id = #{id, jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete web_urlvouchercollection
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.UrlVoucherCollection" >
+    insert into web_urlvouchercollection (activityname, dailylimit, frequencylimit, starttime, endtime, ruletext
+      )
+    values (#{activityname,jdbcType=VARCHAR}, 
+      #{dailylimit,jdbcType=INTEGER}, #{frequencylimit,jdbcType=INTEGER},
+      #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{ruletext,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateById" parameterType="com.uclee.fundation.data.mybatis.model.UrlVoucherCollection" >
+    update web_urlvouchercollection
+    <set >
+      <if test="activityname != null" >
+        activityname = #{activityname,jdbcType=VARCHAR},
+      </if>
+      <if test="dailylimit != null" >
+        dailylimit = #{dailylimit,jdbcType=INTEGER},
+      </if>
+      <if test="frequencylimit != null" >
+        frequencylimit = #{frequencylimit,jdbcType=INTEGER},
+      </if>
+      <if test="starttime != null" >
+        starttime = #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null" >
+        endtime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruletext != null" >
+        ruletext = #{ruletext,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

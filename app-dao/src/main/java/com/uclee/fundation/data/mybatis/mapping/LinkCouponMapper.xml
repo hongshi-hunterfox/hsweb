@@ -24,7 +24,7 @@
     from web_link_coupon
   </select>
   <select id="selectOne" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select TOP 5
+    select TOP 10
     <include refid="Base_Column_List" />
     from web_link_coupon 
   </select>

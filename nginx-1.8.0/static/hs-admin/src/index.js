@@ -65,6 +65,8 @@ import CreateWxVip from './containers/CreateWxVip'
 import MarketingEntranceDetail from './containers/MarketingEntranceDetail'
 import MarketingEntranceList from './containers/MarketingEntranceList'
 import BargainDetail from './containers/BargainDetail'
+import UrlVoucherCollection from './containers/UrlVoucherCollection'
+import UrlVoucherCollectionList from './containers/UrlVoucherCollectionList'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -134,6 +136,8 @@ ReactDOM.render(
       <Route path="marketing-entranceDetail" component={MarketingEntranceDetail} />
       <Route path="marketing-entranceList" component={MarketingEntranceList} />
       <Route path="BargainDetail" component={BargainDetail} />
+      <Route path="UrlVoucherCollection" component={UrlVoucherCollection} />
+      <Route path="UrlVoucherCollectionList" component={UrlVoucherCollectionList} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

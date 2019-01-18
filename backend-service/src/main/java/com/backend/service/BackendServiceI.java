@@ -247,4 +247,14 @@ public interface BackendServiceI {
 	int updateMarketingEntrance(MarketingEntrance marketingEntrance);
 
 	boolean sendCoupon(String vouchersCode, String goodsCode, String oauthId,String typeText);
+	
+	int insertSelective(UrlVoucherCollection urlVoucherCollection);
+	
+	List<UrlVoucherCollection> selectAllUrlVoucherCollection();
+	
+	int deleteById(Integer id);
+	
+	UrlVoucherCollection selectById(Integer id);
+	
+	int updateById(UrlVoucherCollection urlVoucherCollection);
 }
