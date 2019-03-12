@@ -3,6 +3,7 @@ package com.uclee.web.user.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.backend.service.BackendServiceI;
 import com.uclee.datasource.service.DataSourceInfoServiceI;
 import com.uclee.date.util.DateUtils;
 import com.uclee.dynamicDatasource.DataSourceFacade;
@@ -90,6 +91,8 @@ public class DuobaoSchedule {
 	private SpecificationValueMapper specificationValueMapper;
 	@Autowired
 	private ExternalOrderMapper externalOrderMapper;
+	@Autowired
+	private BackendServiceI backendServiceI;
 
 	/*@Scheduled(cron="0 0 0 * * *")
 	private void updateWXInfo(){
@@ -166,10 +169,37 @@ public class DuobaoSchedule {
 						if(item.getPayType()==null){
 							item.setPayType("线下门店支付");
 						}
-						String[] value = {item.getOrderNum(),DateUtils.format(item.getTime(), DateUtils.FORMAT_LONG).toString(),item.getMoney()+"元".toString(),item.getPayType()};
-						if(userService.sendWXMessage(item.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临")){
-							item.setIsSend(true);
-							messageMapper.updateByPrimaryKeySelective(item);
+						if(!item.getPayType().equals("已接单") && !item.getPayType().equals("需配送")) {
+							String[] value = {item.getOrderNum(),DateUtils.format(item.getTime(), DateUtils.FORMAT_LONG).toString(),item.getMoney()+"元".toString(),item.getPayType()};
+							if(userService.sendWXMessage(item.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临")){
+								item.setIsSend(true);
+								messageMapper.updateByPrimaryKeySelective(item);
+							}
+						}else {
+							OauthLogin oauthLogin = userService.getOauthLoginInfoByOauthId(item.getOauthId());
+							String nickName="";
+							UserProfile profile = userProfileMapper.selectByUserId(oauthLogin.getUserId());
+							if(profile!=null){
+								nickName = profile.getNickName();
+							}
+							String[]key1 = {"keyword1","keyword2","keyword3"};
+							String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),item.getPayType()};
+							Config config0 = configMapper.getByTag("birthTmpId");
+							Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+							Config config2 = configMapper.getByTag(WebConfig.domain);
+							MsgText msgText = backendServiceI.selectByPayType(item.getPayType());
+							if(config0!=null){
+								//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+								sendWXMessage(item.getOauthId(), config0.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), ""
+										+ "订单:"+item.getOrderNum()+","+msgText.getMsg(), key1,value, "");
+								MsgRecord msgRecord = new MsgRecord();
+								msgRecord.setType(1);
+								msgRecord.setUserId(oauthLogin.getUserId());
+								msgRecordMapper.insertSelective(msgRecord);
+								item.setIsSend(true);
+								messageMapper.updateByPrimaryKeySelective(item);
+							}
+							
 						}
 					}
 				}catch (Exception e){

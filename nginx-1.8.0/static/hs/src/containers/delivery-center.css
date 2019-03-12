@@ -1,0 +1,12 @@
+.order-list {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #dedede;
+  background-color: white;
+}
+
+.order-list-top .number {
+  font-size: 13px;
+  color: #afafaf;
+  margin: 0px 10px 10px 10px;
+}

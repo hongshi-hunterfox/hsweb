@@ -137,6 +137,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private ProductVoucherMapper productVoucherMapper;
 	@Autowired
 	private MarketingEntranceMapper marketingEntranceMapper;
+	@Autowired
+	private MsgTextMapper msgTextMapper;
 	
 	@SuppressWarnings("unused")
 	@Override
@@ -571,6 +573,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getNoBirthdayMessagePush()!=null) {
 			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, configPost.getNoBirthdayMessagePush());
+		}
+		if (configPost.getLinkCouponText()!=null) {
+			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
 		}
 		return true;
 	}
@@ -2639,9 +2644,40 @@ public class BackendServiceImpl implements BackendServiceI {
 		uvc.setEnd(end);
 		return uvc;
 	}
+	
 	@Override
 	public int updateById(UrlVoucherCollection urlVoucherCollection) {
 		return urlVoucherCollectionMapper.updateById(urlVoucherCollection);
 	}
-
+	
+	@Override
+	public List<MsgText> selectAllMsgText() {
+		return msgTextMapper.selectAll();
+	}
+	
+	@Override
+	public int updateBymsg(MsgTextDto msgtextdto) {
+		MsgText msg = new MsgText();
+		msg.setPayType("已接单");
+		msg.setMsg(msgtextdto.getReceivedorders());
+		msgTextMapper.updateBymsg(msg);
+		
+		msg.setPayType("需配送");
+		msg.setMsg(msgtextdto.getNeeddeliver());
+		msgTextMapper.updateBymsg(msg);
+	
+		msg.setPayType("配送中");
+		msg.setMsg(msgtextdto.getDistribution());
+		msgTextMapper.updateBymsg(msg);
+	
+		msg.setPayType("已完成");
+		msg.setMsg(msgtextdto.getCompleted());
+		
+		return msgTextMapper.updateBymsg(msg);
+	}
+	@Override
+	public MsgText selectByPayType(String payType) {
+		return msgTextMapper.selectByPayType(payType);
+	}
+	
 }

@@ -67,6 +67,10 @@ import MarketingEntranceList from './containers/MarketingEntranceList'
 import BargainDetail from './containers/BargainDetail'
 import UrlVoucherCollection from './containers/UrlVoucherCollection'
 import UrlVoucherCollectionList from './containers/UrlVoucherCollectionList'
+import messageText from './containers/messageText'
+import AddDriver from './containers/AddDriver'
+import PhoneDriverList from './containers/PhoneDriverList'
+import EditPhoneDriver from './containers/EditPhoneDriver'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -138,6 +142,10 @@ ReactDOM.render(
       <Route path="BargainDetail" component={BargainDetail} />
       <Route path="UrlVoucherCollection" component={UrlVoucherCollection} />
       <Route path="UrlVoucherCollectionList" component={UrlVoucherCollectionList} />
+      <Route path="message-text" component={messageText} />
+      <Route path="addDriver" component={AddDriver} />
+      <Route path="phoneDriverList" component={PhoneDriverList} />
+      <Route path="editPhoneDriver" component={EditPhoneDriver} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

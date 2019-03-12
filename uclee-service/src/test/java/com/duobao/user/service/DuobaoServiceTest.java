@@ -154,13 +154,23 @@ public class DuobaoServiceTest extends AbstractServiceTests {
 
 	@Test
 	public void PaymentSuccess(){
-		dataSource.switchDataSource("ycgxy");
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15321559195849346");
+		dataSource.switchDataSource("stswx");
+		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15513608761848120");
 		paymentOrder.setIsCompleted(true);
 		paymentOrder.setCompleteTime(new Date());
-		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(635);
-		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(1682);
+		userService.rechargeSuccessHandler(paymentOrder,oauthLogin);
 	}
+	
+//	@Test
+//	public void PaymentSuccess(){
+//		dataSource.switchDataSource("stswx");
+//		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum("15513608761848120");
+//		paymentOrder.setIsCompleted(true);
+//		paymentOrder.setCompleteTime(new Date());
+//		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(1682);
+//		userService.paymentSuccessHandler(paymentOrder,oauthLogin);
+//	}
 
 	@Test
 	public void wxInitiativeCheck(){

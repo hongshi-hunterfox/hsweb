@@ -91,6 +91,40 @@ public class AdminHandler {
 
         return map;
     }
+    
+    /**
+     * 添加配送司机
+     * @param user
+     * @param request
+     * @return
+     */
+    @RequestMapping("doAddPhoneDriver")
+    public @ResponseBody
+    Map<String,Object> doAddPhoneDriver(@RequestBody UserVo user, HttpServletRequest request){
+
+        Map<String,Object> map = new TreeMap<String,Object>();
+        HttpSession session = request.getSession();
+        logger.info("user:"+JSON.toJSONString(user));
+
+        map.put("result","fail");
+        if(user!=null){
+            UserProfile userProfile = userProfileMapper.selectByName(user.getName());
+            if(userProfile!=null){
+                map.put("reason","该名称已注册，请重新填写");
+                return map;
+            }
+            Integer b = userService.addPhoneDriver(user.getName(), user.getPhone());
+            if(b!=null) {
+                storeService.updateLink(b,user.getStoreIds());
+                map.put("result", "success");
+            }else{
+                map.put("reason","添加失败！手机已存在");
+            }
+        }
+
+        return map;
+    }
+    
     @RequestMapping("doUpdatePhoneUser")
     public @ResponseBody
     Map<String,Object> doUpdatePhoneUser(@RequestBody UserVo user, HttpServletRequest request){

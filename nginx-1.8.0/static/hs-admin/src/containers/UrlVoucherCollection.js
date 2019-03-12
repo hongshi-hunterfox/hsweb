@@ -15,6 +15,7 @@ import req from 'superagent'
 
 // ErrorMsg 显示表单错误
 import ErrorMsg from '../components/ErrorMsg'
+import ValueGroup from '../components/ValueGroup'
 
 class UrlVoucherCollection extends React.Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class UrlVoucherCollection extends React.Component {
       id:this.props.location.query.id,
       uvc:[],
       start:'yyyy-mm-dd',
-      end:'yyyy-mm-dd'
+      end:'yyyy-mm-dd',
     }
   }
   componentDidMount() {
@@ -44,6 +45,9 @@ class UrlVoucherCollection extends React.Component {
 	        endtime:data.uvc.end,
 	        dailylimit:data.uvc.dailylimit,
 	        ruletext:data.uvc.ruletext,
+	        code:data.uvc.code,
+	        code1:data.uvc.code1,
+	        code2:data.uvc.code2,
 	      })
 	    })
   	}   
@@ -80,6 +84,16 @@ class UrlVoucherCollection extends React.Component {
                   <option value="1">启用</option>
                   <option value="0">停用</option>
                 </select>
+              </div>
+	           	<label className="control-label col-md-3" style={{marginTop:'10px'}}>关联券：</label>
+              <div className="col-md-3" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.code} name="code" className="form-control" onChange={this._change}/>
+              </div>
+              <div className="col-md-3" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.code1} name="code1" className="form-control" onChange={this._change}/>
+              </div>
+              <div className="col-md-3" style={{marginTop:'10px'}}>
+                <input type="text" value={this.state.code2} name="code2" className="form-control" onChange={this._change}/>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>活动规则内容：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>

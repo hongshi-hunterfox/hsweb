@@ -42,9 +42,9 @@ public class OssUtil {
     @Value(value = "${oss.backetName:wschs}")
     public String bucketName;
     
-    @Value(value = "${oss.url.prefix:http://wsc.in80s.com/file/}")
-    public String ossUrlPrefix;
-  
+//    @Value(value = "${oss.url.prefix:http://wsc.in80s.com/file/}")lebei-management.com
+//    public String ossUrlPrefix;
+	public String ossUrlPrefix = "http://lebei-management.com/";
   
     // 单例，只需要建立一次链接  
     private OSSClient client = null;  
@@ -111,7 +111,7 @@ public class OssUtil {
         OSSClient client = client();  
         PutObjectRequest putObjectRequest = new PutObjectRequest(  
                 bucketName, key, is);  
-        client.putObject(putObjectRequest);  
+        client.putObject(putObjectRequest);
         return ossUrlPrefix+key;
     }  
   
@@ -125,8 +125,9 @@ public class OssUtil {
         OSSClient client = client();  
         PutObjectRequest putObjectRequest = new PutObjectRequest(  
                 bucketName, key, file);  
-        client.putObject(putObjectRequest);  
-        return ossUrlPrefix+key;
+        client.putObject(putObjectRequest);
+        System.out.println("---------"+key);
+        return "http://lebei-management.com/"+key;
     }  
   
     /**

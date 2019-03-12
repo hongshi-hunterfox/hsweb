@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.uclee.fundation.data.mybatis.mapping.UrlVoucherCollectionMapper" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.UrlVoucherCollectionMapper">    
   <select id="selectAll" resultType="com.uclee.fundation.data.mybatis.model.UrlVoucherCollection">
     select 
     *
@@ -19,11 +19,12 @@
   </delete>
   
   <insert id="insertSelective" parameterType="com.uclee.fundation.data.mybatis.model.UrlVoucherCollection" >
-    insert into web_urlvouchercollection (activityname, dailylimit, frequencylimit, starttime, endtime, ruletext
+    insert into web_urlvouchercollection (activityname, dailylimit, frequencylimit, starttime, endtime, ruletext,code,code1,code2
       )
     values (#{activityname,jdbcType=VARCHAR}, 
       #{dailylimit,jdbcType=INTEGER}, #{frequencylimit,jdbcType=INTEGER},
-      #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{ruletext,jdbcType=VARCHAR}
+      #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{ruletext,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},#{code1,jdbcType=VARCHAR},
+      #{code2,jdbcType=VARCHAR}
       )
   </insert>
   
@@ -47,6 +48,15 @@
       </if>
       <if test="ruletext != null" >
         ruletext = #{ruletext,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="code1 != null" >
+        code1 = #{code1,jdbcType=VARCHAR},
+      </if>
+      <if test="code2 != null" >
+        code2 = #{code2,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

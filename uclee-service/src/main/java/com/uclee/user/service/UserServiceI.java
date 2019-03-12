@@ -51,8 +51,12 @@ public interface UserServiceI {
 	boolean addChiledUser(UserForm userForm);
 
 	Integer addPhoneUser(String name,String phone);
+	
+	Integer addPhoneDriver(String name,String phone);
 
 	List<UserProfile> phoneUserList();
+	
+	List<UserProfile> phoneDriverList();
 	
 	List<UserProfile> getSubUserList(Integer parentInd);
 	
@@ -230,6 +234,8 @@ public interface UserServiceI {
 	int delOrder(String orderSerialNum);
 
 	Boolean getNapaStoreByPhone(String phone);
+	
+	Boolean getNapaStoreByDriverPhone(String phone);
 
 	Map<String,String> getWeixinConfig();
 	
@@ -384,4 +390,14 @@ public interface UserServiceI {
 	int removeStock(Stock stock);
 	
 	Stock selectStock(Integer valueId);
+	
+	List<UrlVoucherCollection> selectAll();
+
+	boolean rechargeSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin);
+	
+	Map<String, Object> getDerverCenter(String phone, String hsCode, Integer type);
+	
+	Integer updateDetaileStart(Integer orderID);
+	int updateDetaileEnd(Integer orderID);
+	
 }

@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 //import java.util.Calendar;
@@ -104,6 +105,8 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
 	@Autowired
+	private UrlVoucherCollectionMapper urlVoucherCollectionMapper;
+	@Autowired
 	private BargainSettingMapper bargainSettingMapper;
 	@Autowired
 	private FreightMapper freightMapper;
@@ -146,6 +149,8 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private VarMapper varMapper;
 	@Autowired
+	private MsgTextMapper msgTextMapper;
+	@Autowired
 	private FinancialAccountMapper financialAccountMapper;
 	@Autowired
 	private UserInvitedLinkMapper userInvitedLinkMapper;
@@ -153,6 +158,8 @@ public class UserServiceImpl implements UserServiceI {
 	private NapaStoreMapper napaStoreMapper;
 	@Autowired
 	private BalanceMapper balanceMapper;
+	@Autowired
+	private MsgRecordMapper msgRecordMapper;
 	@Autowired
 	private BalanceLogMapper balanceLogMapper;
 	@Autowired
@@ -225,6 +232,8 @@ public class UserServiceImpl implements UserServiceI {
 	private DataSourceFacade datasource;
 	@Autowired
 	private LinkCouponMapper linkCouponMapper;
+	@Autowired
+	private DriverOrderMapper driverOrderMapper;
 	@Autowired
 	private RefundOrderMapper refundOrderMapper;
 	private String alipay_notify_url = "http://hs.uclee.com/uclee-user-web/alipayNotifyHandler";
@@ -576,6 +585,58 @@ public class UserServiceImpl implements UserServiceI {
 
         return null;
     }
+    
+    /** 
+     * @Title: addPhoneDriver 
+     * @Description: 添加手机登陆用户，微商城没用到
+     * @param @param name
+     * @param @param phone
+     * @param @return    设定文件  
+     * @throws 
+     */
+     @Override
+     public Integer addPhoneDriver(String name, String phone) {
+ 		try {
+ 			UserProfile search=new UserProfile();
+ 			search.setPhone(phone);
+ 			UserProfile check = userProfileMapper.selectByUserProfile(search);
+ 			if(check==null) {
+ 				User user = new User();
+ 				String pswd = "no password";
+ 				user.setPassword(pswd);
+ 				int max = 11;
+ 				int min = 1;
+ 				Random random = new Random();
+ 				int randomNumber = random.nextInt(max) % (max - min + 1) + min;
+ 				user.setSerialNum(NumberUtil.generateSerialNum(randomNumber));
+ 				user.setParentId(0);
+ 				userMapper.insertSelective(user);
+
+ 				Integer userId = user.getUserId();
+
+ 				// 为用户添加角色
+ 				UserRoleLinkKey userRoleLinkKey = new UserRoleLinkKey();
+ 				userRoleLinkKey.setRoleId(DuobaoRoleConstant.driver);
+ 				userRoleLinkKey.setUserId(userId);
+ 				userRoleLinkMapper.insert(userRoleLinkKey);
+
+ 				UserProfile userProfile = new UserProfile();
+ 				userProfile.setUserId(user.getUserId());
+ 				userProfile.setPhone(phone);
+ 				userProfile.setName(name);
+
+ 				userProfileMapper.insertSelective(userProfile);
+ 				return userId;
+ 			}else{
+ 				logger.info("already had phone:"+phone);
+ 			}
+ 		}catch(Exception e){
+ 			logger.error("add user error",e);
+ 			return null;
+ 		}
+
+         return null;
+     }
 
 	/** 
 	* @Title: phoneUserList 
@@ -587,7 +648,14 @@ public class UserServiceImpl implements UserServiceI {
 	public List<UserProfile> phoneUserList() {
 		return userProfileMapper.selectUserByRoleType(DuobaoRoleConstant.business);
 	}
-
+	
+	/**
+	 * 司机列表
+	 */
+	@Override
+	public List<UserProfile> phoneDriverList() {
+		return userProfileMapper.selectUserByRoleType(DuobaoRoleConstant.driver);
+	}
 
 	/** 
 	* @Title: addRolePermissions 
@@ -869,8 +937,6 @@ public class UserServiceImpl implements UserServiceI {
 	public UserProfile getBasicUserProfile(Integer userId) {
 		UserProfile search = new UserProfile();
 		search.setUserId(userId);
-		
-		logger.info("search=============="+JSON.toJSONString(search));
 		UserProfile userProfile = userProfileMapper.selectByUserProfile(search);
 		return userProfile;
 	}
@@ -1253,11 +1319,6 @@ public class UserServiceImpl implements UserServiceI {
 
 			seller_id = new String(request.getParameter("seller_id").getBytes("ISO-8859-1"), "UTF-8");
 
-//			notify_type=new String(request.getParameter("notify_type").getBytes("ISO-8859-1"),"UTF-8");
-//
-//			success_num=new String(request.getParameter("success_num").getBytes("ISO-8859-1"),"UTF-8");
-//
-//			result_details=new String(request.getParameter("result_details").getBytes("ISO-8859-1"),"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1621,6 +1682,7 @@ public class UserServiceImpl implements UserServiceI {
 	public boolean WechatNotifyHandle(String out_trade_no, String transaction_id,String attach) {
 		datasource.switchDataSource(attach);
 		logger.info("微信回调datasource: " + attach);
+		System.out.println("微信回调datasource: " + attach);
 		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum(out_trade_no);
 		if(paymentOrder!=null&&!paymentOrder.getIsCompleted()){
 			paymentOrder.setTransactionId(transaction_id);
@@ -1896,7 +1958,7 @@ public class UserServiceImpl implements UserServiceI {
 	* @return boolean    返回类型 
 	* @throws 
 	*/
-	private boolean rechargeSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
+	public boolean rechargeSuccessHandler(PaymentOrder paymentOrder, OauthLogin oauthLogin) {
 		RechargeConfig rechargeConfig = rechargeConfigMapper.getByMoney(paymentOrder.getMoney());
 		
 		BigDecimal realMoney = paymentOrder.getMoney();
@@ -1964,6 +2026,8 @@ public class UserServiceImpl implements UserServiceI {
 		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId())
 				.setcWeiXinOrderCode(paymentOrder.getPaymentSerialNum())
 				.setnAddMoney(realMoney);
+		System.out.println("sss====================ssss======ssss");
+		System.out.println("sss====================ssss======ssss=="+dd);
 		Integer res=hongShiVipService.hongShiRecharge(dd);
 		//发送充值成功微信通知
 		if(res==0){
@@ -3060,8 +3124,6 @@ public class UserServiceImpl implements UserServiceI {
 		List<HongShiCoupon> coupons = hongShiMapper.getHongShiCoupon(login.getOauthId());
 		List<HongShiCoupon> couponsRet = new ArrayList<HongShiCoupon>();
 		for(HongShiCoupon coupon:coupons){
-			logger.info(JSON.toJSONString(orderMapper));
-			logger.info(JSON.toJSONString(coupon));
 			if (coupon!=null) {
 				List<Order> order = orderMapper.selectByVoucherCode(coupon.getVouchersCode());
 				if (order == null || order.size() == 0) {
@@ -3765,6 +3827,14 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public Boolean getNapaStoreByPhone(String phone) {
 		List<NapaStore> napaStore = napaStoreMapper.selectByPhone(phone);
+		if (napaStore!=null&&napaStore.size()>0) {
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public Boolean getNapaStoreByDriverPhone(String phone) {
+		List<NapaStore> napaStore = napaStoreMapper.selectByDriverPhone(phone);
 		if (napaStore!=null&&napaStore.size()>0) {
 			return true;
 		}
@@ -4712,5 +4782,209 @@ public class UserServiceImpl implements UserServiceI {
 		return bargainSettingMapper.getBargainLog(id);
 	}
 
+	@Override
+	public List<UrlVoucherCollection> selectAll() {
+		return urlVoucherCollectionMapper.selectAll();
+	}
+
+	
+	@Override
+	public Map<String, Object> getDerverCenter(String phone, String hsCode, Integer type) {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		List<NapaStore> napaStores = napaStoreMapper.selectByDriverPhone(phone);
+		if (napaStores!=null&&napaStores.size()>0) {
+			ret.put("napaStores", napaStores);
+			List<DriverOrder> items = null;
+			if(type==null || type==0) {
+				//已接单
+				if(hsCode!=null && !hsCode.equals("")) {
+					//取单个部门
+						items = driverOrderMapper.selectByDepartment(hsCode);
+						for(DriverOrder item:items) {
+							NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+							item.setDepartment(stores.getStoreName());
+							item.setType("已接单");
+							String formatStr2 =formatter2.format(item.getPickingTime());
+							item.setTime(formatStr2);
+						}
+						ret.put("items", items);
+				}else {
+					//取所有关联部门
+					ArrayList list =new ArrayList();  
+					for(NapaStore k:napaStores) {
+						list.add(k.getHsCode());
+					}
+					items = driverOrderMapper.selectAll(list);
+					for(DriverOrder item:items) {
+						NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+						item.setDepartment(stores.getStoreName());
+						item.setType("已接单");
+						String formatStr2 =formatter2.format(item.getPickingTime());
+						item.setTime(formatStr2);
+					}
+					ret.put("items", items);
+				}
+			}else if(type==1) {
+				//需配送
+				if(hsCode!=null && !hsCode.equals("")) {
+					//取单个部门
+						items = driverOrderMapper.selectByDepartmentOne(hsCode);
+						for(DriverOrder item:items) {
+							NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+							item.setDepartment(stores.getStoreName());
+							item.setType("需配送");
+							String formatStr2 =formatter2.format(item.getPickingTime());
+							item.setTime(formatStr2);
+						}
+						ret.put("items", items);
+				}else {
+					//取所有关联部门
+					ArrayList list =new ArrayList();  
+					for(NapaStore k:napaStores) {
+						list.add(k.getHsCode());
+					}
+					items = driverOrderMapper.selectAllOne(list);
+					for(DriverOrder item:items) {
+						NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+						item.setDepartment(stores.getStoreName());
+						item.setType("需配送");
+						String formatStr2 =formatter2.format(item.getPickingTime());
+						item.setTime(formatStr2);
+					}
+					ret.put("items", items);
+				}
+			}else if(type==2) {
+				//配送中
+				if(hsCode!=null && !hsCode.equals("")) {
+					//取单个部门
+						items = driverOrderMapper.selectByDepartmentTwo(hsCode);
+						for(DriverOrder item:items) {
+							NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+							item.setDepartment(stores.getStoreName());
+							item.setType("配送中");
+							String formatStr2 =formatter2.format(item.getPickingTime());
+							item.setTime(formatStr2);
+						}
+						ret.put("items", items);
+				}else {
+					//取所有关联部门
+					ArrayList list =new ArrayList();  
+					for(NapaStore k:napaStores) {
+						list.add(k.getHsCode());
+					}
+					items = driverOrderMapper.selectAllTwo(list);
+					for(DriverOrder item:items) {
+						NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+						item.setDepartment(stores.getStoreName());
+						item.setType("配送中");
+						String formatStr2 =formatter2.format(item.getPickingTime());
+						item.setTime(formatStr2);
+					}
+					ret.put("items", items);
+				}
+			}else if(type==3) {
+				//配送完成
+				if(hsCode!=null && !hsCode.equals("")) {
+					//取单个部门
+						items = driverOrderMapper.selectByDepartmentThree(hsCode);
+						for(DriverOrder item:items) {
+							NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+							item.setDepartment(stores.getStoreName());
+							item.setType("配送完成");
+							String formatStr2 =formatter2.format(item.getPickingTime());
+							item.setTime(formatStr2);
+						}
+						ret.put("items", items);
+				}else {
+					//取所有关联部门
+					ArrayList list =new ArrayList();  
+					for(NapaStore k:napaStores) {
+						list.add(k.getHsCode());
+					}
+					items = driverOrderMapper.selectAllThree(list);
+					for(DriverOrder item:items) {
+						NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
+						item.setDepartment(stores.getStoreName());
+						item.setType("配送完成");
+						String formatStr2 =formatter2.format(item.getPickingTime());
+						item.setTime(formatStr2);
+					}
+					ret.put("items", items);
+				}
+			}
+			
+		} else {
+			ret.put("reason", "no_department");
+			return ret;
+		}
+		return ret;
+	}
+
+	@Override
+	public Integer updateDetaileStart(Integer orderID) {
+		DriverOrder order = driverOrderMapper.getMerchantOrderNumber(orderID);
+		if(order == null) {
+			return 0;
+		}
+		Order users = driverOrderMapper.getUserId(order.getOuterOrderCode());
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(users.getUserId());
+		String nickName="";
+		UserProfile profile = userProfileMapper.selectByUserId(oauthLogin.getUserId());
+		if(profile!=null){
+			nickName = profile.getNickName();
+		}
+		String[]key1 = {"keyword1","keyword2","keyword3"};
+		String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"配送中"};
+		Config config0 = configMapper.getByTag("birthTmpId");
+		Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+		Config config2 = configMapper.getByTag(WebConfig.domain);
+		MsgText msgText =  msgTextMapper.selectByPayType("配送中");
+		if(config0!=null){
+			//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+			sendWXMessage(oauthLogin.getOauthId(), config0.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), ""
+					+ "订单:"+order.getOuterOrderCode()+","+msgText.getMsg(), key1,value, "");
+			MsgRecord msgRecord = new MsgRecord();
+			msgRecord.setType(1);
+			msgRecord.setUserId(oauthLogin.getUserId());
+			msgRecordMapper.insertSelective(msgRecord);
+//			item.setIsSend(true);
+//			messageMapper.updateByPrimaryKeySelective(item);
+		}
+		return driverOrderMapper.updateDetaileStart(orderID);
+	}
+
+	@Override
+	public int updateDetaileEnd(Integer orderID) {
+		DriverOrder order = driverOrderMapper.getMerchantOrderNumber(orderID);
+		if(order == null) {
+			return 0;
+		}
+		Order users = driverOrderMapper.getUserId(order.getOuterOrderCode());
+		OauthLogin oauthLogin = oauthLoginMapper.selectByUserId(users.getUserId());
+		String nickName="";
+		UserProfile profile = userProfileMapper.selectByUserId(oauthLogin.getUserId());
+		if(profile!=null){
+			nickName = profile.getNickName();
+		}
+		String[]key1 = {"keyword1","keyword2","keyword3"};
+		String[] value = {nickName,DateUtils.format(new Date(), DateUtils.FORMAT_LONG).toString(),"已完成"};
+		Config config0 = configMapper.getByTag("birthTmpId");
+		Config config1 = configMapper.getByTag(WebConfig.hsMerchatCode);
+		Config config2 = configMapper.getByTag(WebConfig.domain);
+		MsgText msgText =  msgTextMapper.selectByPayType("已完成");
+		if(config0!=null){
+			//EMzRY8T0fa90sGTBYZkINvxTGn_nvwKjHZUxtpTmVew
+			sendWXMessage(oauthLogin.getOauthId(), config0.getValue(), config2.getValue()+"/order-list?merchantCode="+config1.getValue(), ""
+					+ "订单:"+order.getOuterOrderCode()+","+msgText.getMsg(), key1,value, "");
+			MsgRecord msgRecord = new MsgRecord();
+			msgRecord.setType(1);
+			msgRecord.setUserId(oauthLogin.getUserId());
+			msgRecordMapper.insertSelective(msgRecord);
+//			item.setIsSend(true);
+//			messageMapper.updateByPrimaryKeySelective(item);
+		}	
+		return driverOrderMapper.updateDetaileEnd(orderID);
+	}
 }
 

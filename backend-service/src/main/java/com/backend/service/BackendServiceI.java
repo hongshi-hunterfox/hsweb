@@ -257,4 +257,10 @@ public interface BackendServiceI {
 	UrlVoucherCollection selectById(Integer id);
 	
 	int updateById(UrlVoucherCollection urlVoucherCollection);
+	
+	List<MsgText> selectAllMsgText();
+	
+	int updateBymsg(MsgTextDto msgtextdto);
+	
+	MsgText selectByPayType(String payType);
 }

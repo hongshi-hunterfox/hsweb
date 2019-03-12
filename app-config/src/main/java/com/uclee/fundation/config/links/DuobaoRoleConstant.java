@@ -7,5 +7,7 @@ public interface DuobaoRoleConstant {
 	Integer user = 2;
 
 	Integer business=3;
+	
+	Integer driver = 4;
 
 }

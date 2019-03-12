@@ -56,6 +56,15 @@ public class AdminController {
         return userService.phoneUserList();
 
     }
+    
+    @RequestMapping("phoneDriverList")
+    public @ResponseBody List<UserProfile>
+    phoneDriverList(HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        return userService.phoneDriverList();
+
+    }
 
     @RequestMapping("getPhoneUser")
     public @ResponseBody UserVo getPhoneUser(Integer userId, HttpServletRequest request){
@@ -77,6 +86,28 @@ public class AdminController {
         }
         return ret;
     }
+    
+    @RequestMapping("getPhoneDriver")
+    public @ResponseBody UserVo getPhoneDriver(Integer userId, HttpServletRequest request){
+        UserVo ret=new UserVo();
+        UserProfile u = userService.getBasicUserProfile(userId);
+        logger.info(JSON.toJSONString(u));
+        if(u!=null){
+            List<Integer> links = storeService.getStoreLinkByUserId(u.getUserId());
+            Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+            for(Integer item:links){
+                map.put(item,item);
+            }
+            ret.setIds(map);
+            ret.setStoreIds(links);
+            ret.setUserId(u.getUserId());
+            ret.setName(u.getName());
+            ret.setPhone(u.getPhone());
+            ret.setStores(storeService.selectAllNapaStore());
+        }
+        return ret;
+    }
+    
     @RequestMapping("getStore")
     public @ResponseBody UserVo getStore(HttpServletRequest request){
         UserVo ret=new UserVo();

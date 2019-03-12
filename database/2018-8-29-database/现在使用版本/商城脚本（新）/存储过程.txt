@@ -1084,7 +1084,7 @@ Begin
   --在事务中添加记录
   Declare @销售类别 varchar(20),@原价 money,@当前余额 money,@当前积分 money
   Set @销售类别=Case When @VipCode='' Or @VipCode Is Null Then '正常零销' Else '会员销售' End
-  Select @原价=销售主价 From goods Where 编号=@GoodsCode And 是否销售=1
+  Select @原价=销售主价 From goods Where 编号=@GoodsCode
   Begin Transaction tran_Saleing
     Insert Into sales(单号,部门编号,制单人,日期,销售类别,结单,往来编号,当前余额,当前积分
                      ,数量合计,金额合计,折扣合计
@@ -1281,7 +1281,6 @@ Create Procedure [dbo].[CreateOrder]
        @订金       money      =0     ,--下单时用现金支付的
        @刷卡金额   money      =0     ,--下单时用会员卡支付的
        @礼券       money      =0     ,--下单时用礼券抵扣的
-	   @运费       money      =0     ,--下单时用礼券
        @结单       bit        =Null  ,--是否结单
        @废止       bit        =Null  ,--如果废止,@结单将变为0
        @销售类别   varchar(50)=''    ,--网上商城生成的订单为'公众号',不可修改
@@ -1309,14 +1308,16 @@ Begin
   Set @ParaInfo = dbo.NameValue('Y','@订金',@订金)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@刷卡金额',@刷卡金额)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('Y','@礼券',@礼券)             Exec Loger @LogID,@Parameters=@ParaInfo
-  Set @ParaInfo = dbo.NameValue('Y','@运费',@运费)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@结单',@结单)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('L','@废止',@废止)             Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@销售类别',@销售类别)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@销售类别',@销售类别)     Exec Loger @LogID,@Parameters=@ParaInfo
   Set @ParaInfo = dbo.NameValue('C','@客户编号',@客户编号)    Exec Loger @LogID,@Parameters=@ParaInfo
-
+  Declare @运费 money --运费从微商城相应订单记录中提取
+  If IsNull(@商户订单号,'')<>''
+    Select @运费=shipping_cost from web_orders where order_serial_num = @商户订单号
   Set @运费 = IsNull(@运费, 0)
+  
   Declare @OrderID int--成功返回订单ID,失败返回0或负值
   Declare @单位名称 varchar(50),@当前余额 money,@当前积分 money,@应收金额 money,@欠款 money,@交货日期 varchar(10)
   Declare @第三方支付 money,@ErrorID int
@@ -1329,20 +1330,28 @@ Begin
     Set @单位名称=''
   Else
     Select @单位名称=名称 From 会员 Where 编号=@往来编号
-  Set @金额合计=@金额合计+@优惠合计
-  Set @应收金额=@金额合计
-  set @订金 = @应收金额-@让利-@刷卡金额-@礼券
+  -------------2018-01-15  邓彪--当金额合计不等于产品金额+运费时，重新赋值，处理欠款为运费的问题 --------------- 
+  declare @合计金额 money
+  If @金额合计 Is Null Set @金额合计=0.00
+  Select @合计金额 = shipping_cost + total_price from web_orders where order_serial_num = @商户订单号
+  if @合计金额 <> @金额合计
+  begin
+    Exec Loger @LogID,@Key=@单号,@ExtendInfo='金额合计和合计金额不等'
+    set @金额合计 =@合计金额
+  end
+  --------------------------------------------------------------------------------------------------------------
+  Set @应收金额=@金额合计-@优惠合计
   Set @欠款 = Case When @结单=1 Then 0 Else @应收金额-@让利-@订金-@刷卡金额-@礼券 End
   Set @欠款 = IsNull(@欠款, 0)
   Set @交货日期=Case When @结单=1 Or @废止=1 Then Convert(varchar(10),GetDate(),120) Else Null End
   If @单号 Is Null Or @单号=''
   Begin
     Declare @刷卡日期 varchar(10),@礼券日期 varchar(10)
-    If IsNull(@刷卡金额, 0) <> 0 Set @刷卡日期 = Convert(varchar(10), GetDate(), 120)
-    If IsNull(@礼券    , 0) <> 0 Set @礼券日期 = Convert(varchar(10), GetDate(), 120)
     Exec Loger @LogID,@ExtendInfo='新建订单'
     If @日期 Is Null
       Set @日期 = Convert(varchar(10), GetDate(), 120)
+	set @刷卡日期 = @日期
+    set @礼券日期 = @日期
     Declare @BillMax int,@SalesID int
     Exec getbillmax '订单', @日期, @BillMax Output
     Set @单号 = Convert(varchar(6),Convert(datetime, @日期), 12) 
@@ -1371,17 +1380,28 @@ Begin
       Select @当前余额=卡余额, @当前积分=积分 From 会员 Where 编号=@往来编号
       Update orders Set 当前余额=@当前余额,当前积分=@当前积分 Where ID=@OrderID
     End
-    ----添加礼券回收表记录,更新礼券表状态
-    --If IsNull(@礼券列表,'')<>''
-    --Begin
-    --  Declare @SPT_UpdateVochers varchar(3000)
-    --  Set @SPT_UpdateVochers = 'Update '
-    --  execute 
-    --End
     --更新从微商城产生的第三方支付金额
     Exec Loger @LogID,@ExtendInfo='同步从微商城产生的第三方支付金额'
     Exec AddWebPay 1,@OrderID
-
+    --重算并更新欠款
+    Exec Loger @LogID,@ExtendInfo='重算并更新欠款'
+    Select @第三方支付 = Sum(结算金额) 
+    From 结算明细表 
+    Where 业务ID=@OrderID 
+      and 来源=1 
+      And 结算ID In (Select ID 
+                     From 结算方式表 
+                     Where 第三方支付=1)
+    Set @欠款= Case When @结单=1 
+                    Then 0 
+                    Else @应收金额-@让利-@订金-@刷卡金额-@礼券-@第三方支付 
+               End
+    if @销售类别 = '公众号'
+	begin
+	  Set @欠款 = 0
+	end
+    Set @欠款 = IsNull(@欠款, 0)
+    Update orders Set 欠款=@欠款 Where ID=@OrderID
   End
   Else
   Begin
@@ -1407,9 +1427,10 @@ Begin
     Set @ParaInfo='生成明细中的运费项:@运费='+Convert(varchar(20),@运费)
     Exec Loger @LogID,@ExtendInfo=@ParaInfo
     Delete From orders_detail Where 订单ID=@OrderID And 编号='SYS_001'
-    Exec AddOrderItem @OrderID,'SYS_001',@运费,1,@运费,0,0
+    Exec AddOrderItem @OrderID,'SYS_001',@运费,1,@运费
     --如果有必要,在此加入相应的入库动作
   End
+  
   Exec Loger @LogID,@Result=@OrderID
   Return @OrderID
 End

@@ -56,8 +56,18 @@ class Menu extends React.Component {
 								    </Link>
 								</li>
 								<li>
+									<Link to={'/phoneDriverList?merchantCode='+localStorage.getItem('merchantCode')}>
+								        司机管理
+								    </Link>
+								</li>
+								<li>
 									<Link to={'/freight?merchantCode='+localStorage.getItem('merchantCode')}>
 								        运费设置
+								    </Link>
+								</li>
+								<li>
+									<Link to={'/message-text?merchantCode='+localStorage.getItem('merchantCode')}>
+								        配送信息设置
 								    </Link>
 								</li>
 							</ul>

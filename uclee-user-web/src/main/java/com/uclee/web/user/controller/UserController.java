@@ -365,6 +365,20 @@ public class UserController extends CommonUserHandler{
 	}
 	
 	/** 
+	* @Title: checkNapaStorePhone 
+	* @Description: 司机登陆，验证用户输入的登陆手机号是否已非配到对应的司机 
+	* @param @param phone
+	* @param @param request
+	* @param @return    设定文件 
+	* @return Boolean    返回类型 
+	* @throws 
+	*/
+	@RequestMapping("/checkNapaStoreDriverPhone")
+	public @ResponseBody Boolean checkNapaStoreDriverPhone(String phone,HttpServletRequest request) {
+		return userService.getNapaStoreByDriverPhone(phone);
+	}
+	
+	/** 
 	* @Title: choujiang 
 	* @Description: 轮盘抽奖类，暂时废弃，改用下面的lotteryConfig
 	* @param @param request
@@ -397,7 +411,6 @@ public class UserController extends CommonUserHandler{
 		List<ProductGroup> groups = userService.getTermGroups(tags);
 		List<HomeQuickNavi> quickNavis = userService.getQuickNavis();
 		List<Banner> banner = userService.selectAllBanner();
-		System.out.println("DDDD======="+groups.get(0).getProducts().get(0).getPrePrice());
 		map.put("groups", groups);
 		map.put("banner", banner);
 		map.put("quickNavis", quickNavis);
@@ -2254,7 +2267,6 @@ public class UserController extends CommonUserHandler{
 		Map<String,Object> map = new TreeMap<String,Object>();
 		HttpSession session = request.getSession();
 		Integer userId = (Integer)session.getAttribute(GlobalSessionConstant.USER_ID);
-		System.out.println("valueId==="+valueId);
 		UserLimit userLimit = new UserLimit();
 		userLimit.setUserId(userId);
 		userLimit.setTime(new Date());
@@ -2268,4 +2280,22 @@ public class UserController extends CommonUserHandler{
 		userService.removeStock(stock);
 		return map;
 	}
+	
+	@RequestMapping("/DeliveryCenter")
+	public @ResponseBody Map<String, Object> DeliveryCenter(HttpServletRequest request,String phone,String hsCode,Integer type){
+		//type状态 0为已接单,1为需配送,2为配送中,3为配送完成
+		return userService.getDerverCenter(phone,hsCode,type);
+		
+	}
+	
+	@RequestMapping("/updateDetaileStart")
+	public @ResponseBody Integer updateDetaileStart(HttpServletRequest request,Integer orderID){
+		return userService.updateDetaileStart(orderID);
+	}
+	
+	@RequestMapping("/updateDetaileEnd")
+	public @ResponseBody Integer updateDetaileEnd(HttpServletRequest request,Integer orderID){
+		return userService.updateDetaileEnd(orderID);
+	}
+	
  }

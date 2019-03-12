@@ -24,6 +24,8 @@ public class AlipayNotifyHandler {
 	@RequestMapping(value = "/alipayNotifyHandler")
 	@ResponseBody
 	public String alipayNotifyHandler(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("zhifubao huidiao---------request=="+request);
+		System.out.println("支付宝回调======"+request);
 		return userService.alipayNotifyHandle(request);
 	}
 }

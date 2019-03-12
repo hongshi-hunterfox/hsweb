@@ -417,4 +417,9 @@ public class BackendHandler {
 	public @ResponseBody int updateMarketingEntrance(HttpServletRequest request, @RequestBody MarketingEntrance marketingEntrance) {
 		return backendService.updateMarketingEntrance(marketingEntrance);
 	}
+	
+	@RequestMapping("/updateMsgText")
+	public @ResponseBody int updateMsgText(HttpServletRequest request, @RequestBody MsgTextDto msgTextDto) {
+		return backendService.updateBymsg(msgTextDto);
+	}
 }

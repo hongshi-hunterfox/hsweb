@@ -51,6 +51,8 @@ import LaunchBargain from './containers/LaunchBargain.js'
 import difference from './containers/Difference.js'
 import LinkCoupon from './containers/LinkCoupon.js'
 import YouZanAuthorize from './containers/YouZanAuthorize'
+import DriverLogin from './containers/DriverLogin.js'
+import DeliveryCenter from './containers/DeliveryCenter.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -103,6 +105,8 @@ ReactDOM.render(
       <Route path="launch-bargain/:valueId" component={LaunchBargain}/>
       <Route path="difference" component={difference}/>
       <Route path="link-coupon" component={LinkCoupon}/>
+      <Route path="driver_login" component={DriverLogin}/>
+      <Route path="delivery-center" component={DeliveryCenter}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

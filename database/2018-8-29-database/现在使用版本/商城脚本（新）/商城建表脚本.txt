@@ -195,7 +195,7 @@ CREATE TABLE [web_list_voucher](
 go
 
 --满额送礼券
-If Object_ID('web_full_s_coupon','U') Is Null
+If Object_ID('web_full_send_coupon','U') Is Null
 
 create table web_full_s_coupon(
 	
@@ -517,7 +517,7 @@ CREATE TABLE web_full_cut (
 
   start_time DATETIME DEFAULT null,
 
-  _time DATETIME DEFAULT null
+  end_time DATETIME DEFAULT null
 
 );
 go
@@ -688,7 +688,7 @@ CREATE TABLE web_oauth_login (
 
    is_subscribe_show bit not null default 1, --微商城未使用
 
-   is_point_s bit not null default 0, --微商城未使用
+   is_point_send bit not null default 0, --微商城未使用
 
  );
 
@@ -797,9 +797,9 @@ If Object_id('web_orders_setting_picktime','U') Is Null
 create table web_orders_setting_picktime(
 id int identity (1,1) primary key,
 closeStartDate datetime,
-closeDate datetime,
+closeEndDate datetime,
 businessStartTime varchar(50),
-businessTime varchar(50)
+businessEndTime varchar(50)
 );
 go
 
@@ -1042,7 +1042,7 @@ create table web_recharge_config(
 
   start_time DATETIME DEFAULT(GETDATE()),
 
-  _time DATETIME DEFAULT(GETDATE()),
+  end_time DATETIME DEFAULT(GETDATE()),
 
   amount int,
 
@@ -1146,7 +1146,7 @@ CREATE TABLE web_shipping_full_cut (
 
   start_time DATETIME DEFAULT null,
 
-  _time DATETIME DEFAULT null
+  end_time DATETIME DEFAULT null
 
 );
 go

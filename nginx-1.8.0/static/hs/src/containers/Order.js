@@ -5,6 +5,7 @@ import './order.css'
 import req from 'superagent'
 var Link = require('react-router').Link
 var geocoder = null
+var distance = null
 var qq = window.qq
 import Icon from '../components/Icon'
 import validator from 'validator'
@@ -274,7 +275,6 @@ class Order extends React.Component {
 	                      	isSelfPick: e.target.value,
 	                      	shippingFee: 0
 	                    	}, () => {
-	                      console.log(this.state)
 	                       if (
 	                          this.state.isSelfPick === 'false' &&
 	                          localStorage.getItem('latitude') != null &&
@@ -286,9 +286,7 @@ class Order extends React.Component {
 	                              this.state.defaultAddr.city +
 	                              this.state.defaultAddr.region +
 	                              this.state.defaultAddr.addrDetail
-	                              if(this.state.isShippingfree === false){
-	                              	geocoder.getLocation(addr,this.state.total)
-	                              }
+	                              geocoder.getLocation(addr,this.state.total)
 	                          }
 	                        }
 	                    })
@@ -555,9 +553,9 @@ salesInfoShowClick=()=>{
           ) / 100
           )/10
           if(distances < 1){
-          	var distance = 1
+          	distance = 1
           }else{
-          	var distance = distances
+          	 distance = distances
           }
         req
           .get('/uclee-user-web/getShippingFee?distance=' + distance + '&total=' + (sessionStorage.getItem('total')?sessionStorage.getItem('total'):0))
@@ -590,37 +588,12 @@ salesInfoShowClick=()=>{
       return false
     }
 
-//调用地址解析类
-    geocoder = new qq.maps.Geocoder({
-      complete: (result) => {
-        console.log('result:' + result)
-        this.lat = result.detail.location.lat
-        this.lng = result.detail.location.lng
-       
-        var distances = Math.round(
-          qq.maps.geometry.spherical.computeDistanceBetween(
-            new qq.maps.LatLng(this.lat, this.lng),
-            new qq.maps.LatLng( 
-              Number(localStorage.getItem('latitude')),
-              Number(localStorage.getItem('longitude'))
-            )
-          ) / 100
-          )/10
-          if(distances < 1){
-          	var distance = 1
-          }else{
-          	var distance = distances
-          }
-				if (data.isSelfPick === 'false' && this.state.config.restrictedDistance < distance) {
-      this.setState({
-        error: errMap['Distribution_error']
-      })
-      return false
-    }
-      }
-    })
-
-    
+    if (data.isSelfPick === 'false' && this.state.config.restrictedDistance < distance) {
+	      this.setState({
+	        error: errMap['Distribution_error']
+	      })
+	      return false
+		}
     console.log("addrId"+data.addrId)
     if (data.isSelfPick === 'false' && !data.addrId) {
       this.setState({

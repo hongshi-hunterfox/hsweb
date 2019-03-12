@@ -70,8 +70,8 @@ class LinkCoupon extends React.Component {
                   ? <ValueGroup
                       condition={'领取'}
                       keyText={'优惠券对应商品号'}
-                      valueText={'数量'}
-                      value1Text={'名称'}
+                      valueText={'单次领取数量'}
+                      value1Text={'优惠券名称'}
                       keyName={'myKey'}
                       valueName={'myValue'}
                       value1Name={'myValue1'}

@@ -30,6 +30,12 @@
     from web_napa_stores as a left join web_napa_store_user_link d on a.store_id=d.store_id left join web_user_profiles as b on d.user_id=b.user_id left join web_user_role_link as c on b.user_id=c.user_id
     where b.phone=#{phone,jdbcType=VARCHAR} and c.role_id=3
   </select>
+  <select id="selectByDriverPhone" resultMap="NapaStore"  >
+    select 
+    a.*
+    from web_napa_stores as a left join web_napa_store_user_link d on a.store_id=d.store_id left join web_user_profiles as b on d.user_id=b.user_id left join web_user_role_link as c on b.user_id=c.user_id
+    where b.phone=#{phone,jdbcType=VARCHAR} and c.role_id=4
+  </select>
   <select id="selectByValueId" resultMap="NapaStore" parameterType="java.lang.Integer" >
     select 
     A.* 

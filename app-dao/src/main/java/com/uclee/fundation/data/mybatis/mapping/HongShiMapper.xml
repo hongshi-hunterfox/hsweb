@@ -103,7 +103,6 @@
 		<result column="单号" property="oddNumbers" jdbcType="VARCHAR" />
 		<result column="销售类型" property="salesType" jdbcType="VARCHAR" />
 	</resultMap>
-	
 	<select id="CouponSales" resultMap="CouponSales">
 		<bind name="salesTime" value="'%' + salesTime + '%'" />
 		select * from 礼券销售表 where 销售时间 like #{salesTime, jdbcType=VARCHAR} and 销售类型 = '生日祝福赠送礼券' and 往来编号 = #{serialNumber, jdbcType=VARCHAR}

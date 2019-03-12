@@ -39,6 +39,7 @@ import com.uclee.fundation.data.web.dto.ConfigPost;
 import com.uclee.fundation.data.web.dto.FreightPost;
 import com.uclee.fundation.data.web.dto.MySelect;
 import com.uclee.fundation.data.web.dto.ProductVoucherPost;
+import com.uclee.fundation.data.web.dto.VipVoucherPost;
 import com.uclee.user.service.UserServiceI;
 import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
 import scala.collection.immutable.HashMap;
@@ -904,6 +905,26 @@ public class BackendController {
 	public @ResponseBody Integer updateUrlVoucherCollection(HttpServletRequest request,@RequestBody UrlVoucherCollection urlVoucherCollection){
 			return backendService.updateById(urlVoucherCollection);
 	}
-		
+	
+	/**
+	 * 获取配送状态信息数据
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getmsgtext")
+	@ResponseBody
+	public Map<String,Object> getMsgText(HttpServletRequest request) {
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<MsgText> msgList = backendService.selectAllMsgText();
+		String receivedorders = msgList.get(0).getMsg();//已接单
+		String needdeliver = msgList.get(1).getMsg();//需配送
+		String distribution = msgList.get(2).getMsg();//配送中
+		String completed = msgList.get(3).getMsg();//已完成
+		map.put("receivedorders", receivedorders);
+		map.put("needdeliver", needdeliver);
+		map.put("distribution", distribution);
+		map.put("completed", completed);
+		return map;
+	}
 
 }

@@ -4,12 +4,13 @@ import { Link } from 'react-router'
 import './add-store.css'
 import req from 'superagent'
 
+
 class UrlVoucherCollectionList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       err: null,
-      list:[]
+      list:[],
     }
 
   }
@@ -57,10 +58,8 @@ class UrlVoucherCollectionList extends React.Component {
                     )
                 })
               }
-              
             </tbody>
-          </table>
-
+           </table>
         </div>
       </DocumentTitle>
       )
