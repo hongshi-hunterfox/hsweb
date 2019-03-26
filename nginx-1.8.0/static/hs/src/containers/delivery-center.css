@@ -4,7 +4,35 @@
   border-bottom: 2px solid #dedede;
   background-color: white;
 }
-
+.order-top {
+  width: 100%;
+}
+.order-top:before,
+.order-top:after {
+  content: "";
+  display: table;
+}
+.order-top:after {
+  clear: both;
+}
+.order-top-item {
+  color: black;
+  width: 25%;
+  padding: 5px;
+  text-align: center;
+  display: block;
+  float: left;
+  border-right: 1px solid #C9C9C9;
+  border-bottom: 1px solid #C9C9C9;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.order-top .active {
+  color: #f15f40;
+  font-weight: bold;
+  border-bottom: 1px solid #f15f40;
+}
 .order-list-top .number {
   font-size: 13px;
   color: #afafaf;

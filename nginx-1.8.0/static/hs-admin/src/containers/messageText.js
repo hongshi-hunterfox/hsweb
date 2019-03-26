@@ -39,6 +39,7 @@ class messageText extends React.Component {
         needdeliver: data.needdeliver,
         distribution: data.distribution,
         completed: data.completed,
+        needmention:	data.needmention
       })
     }) 
   }
@@ -58,6 +59,11 @@ class messageText extends React.Component {
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>需配送：</label>
               <div className="col-md-9" style={{marginTop:'10px'}}>
               	<textarea rows="3" cols="20" placeholder="此项必填" className="form-control" name="needdeliver" value={this.state.needdeliver} onChange={this._handleChange.bind(this)}>
+								</textarea>
+              </div>
+               <label className="control-label col-md-3" style={{marginTop:'10px'}}>需自提：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+              	<textarea rows="3" cols="20" placeholder="此项必填" className="form-control" name="needmention" value={this.state.needmention} onChange={this._handleChange.bind(this)}>
 								</textarea>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>配送中：</label>
@@ -99,6 +105,12 @@ class messageText extends React.Component {
     if(data.needdeliver == undefined){
       this.setState({
         err: "前填写需配送推送信息内容"
+      })
+      return;
+    }
+    if(data.needmention == undefined){
+      this.setState({
+        err: "前填写需自提推送信息内容"
       })
       return;
     }

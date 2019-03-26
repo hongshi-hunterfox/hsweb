@@ -33,8 +33,9 @@ class EditAddr extends React.Component {
 			regionId: 0,
 			name: ''
 		}
-		this.lat=23.12463
-    	this.lng=113.36199
+		this.lat = 22.5425
+    
+    	this.lng = 114.04985
 	}
 
 	componentDidMount() {
@@ -185,10 +186,8 @@ class EditAddr extends React.Component {
 								onBlur={this._b}
 							/>
 						</div>
-						<div className="col-md-9 col-md-offset-3 map-container" id="container">
-                
-              			</div>
 						<ErrorMessage error={this.state.error} />
+						<div className="col-md-9 col-md-offset-3 map-container" id="container" />
 						<button
 							type="submit"
 							className="btn btn-primary btn-block edit-address-button"
@@ -211,7 +210,6 @@ class EditAddr extends React.Component {
     //调用地址解析类
     geocoder = new qq.maps.Geocoder({
       complete : (result) => {
-        console.log(result)
         this.lat=result.detail.location.lat
         this.lng=result.detail.location.lng
         map.setCenter(result.detail.location);

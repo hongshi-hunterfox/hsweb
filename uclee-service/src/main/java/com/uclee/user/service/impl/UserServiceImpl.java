@@ -4797,14 +4797,27 @@ public class UserServiceImpl implements UserServiceI {
 			ret.put("napaStores", napaStores);
 			List<DriverOrder> items = null;
 			if(type==null || type==0) {
-				//已接单
+				//已接单菜单
 				if(hsCode!=null && !hsCode.equals("")) {
 					//取单个部门
 						items = driverOrderMapper.selectByDepartment(hsCode);
 						for(DriverOrder item:items) {
 							NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
 							item.setDepartment(stores.getStoreName());
-							item.setType("已接单");
+							if(item.getIsSelfPick() == 0 && item.getProcessingState() == 1) {
+								item.setType("需配送");
+							}else if(item.getIsSelfPick() == 1 && item.getProcessingState() == 1) {
+								item.setType("需自提");
+							}else if(item.getProcessingState() == 0) {
+								item.setType("已接单");
+							}else if(item.getProcessingState() == null) {
+								item.setType("已下单");
+							}else if(item.getProcessingState() == 2) {
+								item.setType("配送中");
+							}else if(item.getProcessingState() == 3) {
+								item.setType("配送完成");
+							}
+							
 							String formatStr2 =formatter2.format(item.getPickingTime());
 							item.setTime(formatStr2);
 						}
@@ -4819,7 +4832,19 @@ public class UserServiceImpl implements UserServiceI {
 					for(DriverOrder item:items) {
 						NapaStore stores = napaStoreMapper.selectNapaStoreByCode(item.getDepartmentNumber());
 						item.setDepartment(stores.getStoreName());
-						item.setType("已接单");
+						if(item.getIsSelfPick() == 0 && item.getProcessingState() == 1) {
+							item.setType("需配送");
+						}else if(item.getIsSelfPick() == 1 && item.getProcessingState() == 1) {
+							item.setType("需自提");
+						}else if(item.getProcessingState() == 0) {
+							item.setType("已接单");
+						}else if(item.getProcessingState() == null) {
+							item.setType("已下单");
+						}else if(item.getProcessingState() == 2) {
+							item.setType("配送中");
+						}else if(item.getProcessingState() == 3) {
+							item.setType("配送完成");
+						}
 						String formatStr2 =formatter2.format(item.getPickingTime());
 						item.setTime(formatStr2);
 					}

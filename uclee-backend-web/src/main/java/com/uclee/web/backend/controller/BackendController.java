@@ -920,10 +920,12 @@ public class BackendController {
 		String needdeliver = msgList.get(1).getMsg();//需配送
 		String distribution = msgList.get(2).getMsg();//配送中
 		String completed = msgList.get(3).getMsg();//已完成
+		String needmention = msgList.get(4).getMsg();//需自提
 		map.put("receivedorders", receivedorders);
 		map.put("needdeliver", needdeliver);
 		map.put("distribution", distribution);
 		map.put("completed", completed);
+		map.put("needmention", needmention);
 		return map;
 	}
 

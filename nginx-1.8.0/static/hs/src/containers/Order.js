@@ -67,9 +67,9 @@ class Order extends React.Component {
       result:false
     }
     
-    this.lat = 23
+    this.lat = 22.5425
     
-    this.lng = 113
+    this.lng = 114.04985
   }
 
   componentDidMount() {
@@ -539,7 +539,6 @@ salesInfoShowClick=()=>{
     //调用地址解析类
     geocoder = new qq.maps.Geocoder({
       complete: (result) => {
-        console.log('result:' + result)
         this.lat = result.detail.location.lat
         this.lng = result.detail.location.lng
        

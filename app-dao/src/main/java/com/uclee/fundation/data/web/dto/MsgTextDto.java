@@ -5,6 +5,14 @@ public class MsgTextDto {
  private String needdeliver;
  private String distribution;
  private String completed;
+ private String needmention;
+ 
+public String getNeedmention() {
+	return needmention;
+}
+public void setNeedmention(String needmention) {
+	this.needmention = needmention;
+}
 public String getReceivedorders() {
 	return receivedorders;
 }

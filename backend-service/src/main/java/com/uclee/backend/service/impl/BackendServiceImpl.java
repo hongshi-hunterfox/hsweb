@@ -2673,6 +2673,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		msg.setPayType("已完成");
 		msg.setMsg(msgtextdto.getCompleted());
 		
+		msg.setPayType("需自提");
+		msg.setMsg(msgtextdto.getNeedmention());
+		
 		return msgTextMapper.updateBymsg(msg);
 	}
 	@Override

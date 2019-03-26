@@ -169,7 +169,7 @@ public class DuobaoSchedule {
 						if(item.getPayType()==null){
 							item.setPayType("线下门店支付");
 						}
-						if(!item.getPayType().equals("已接单") && !item.getPayType().equals("需配送")) {
+						if(!item.getPayType().equals("已接单") && !item.getPayType().equals("需配送") && !item.getPayType().equals("需自提")) {
 							String[] value = {item.getOrderNum(),DateUtils.format(item.getTime(), DateUtils.FORMAT_LONG).toString(),item.getMoney()+"元".toString(),item.getPayType()};
 							if(userService.sendWXMessage(item.getOauthId(),config.getValue(),null,"尊敬的顾客，感谢您对本店的支持，您有一笔消费交易成功",key,value,"感谢您的惠顾，欢迎再次光临")){
 								item.setIsSend(true);

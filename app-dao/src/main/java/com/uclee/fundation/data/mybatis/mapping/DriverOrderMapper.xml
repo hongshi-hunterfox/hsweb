@@ -9,72 +9,76 @@
     <result column="送货地址" property="address" jdbcType="VARCHAR" />
     <result column="取货部门" property="departmentNumber" jdbcType="VARCHAR" />
     <result column="商户订单号" property="outerOrderCode" jdbcType="VARCHAR" />
+    <result column="加工状态" property="processingState" jdbcType="INTEGER" />
+    <result column="is_self_pick" property="isSelfPick" jdbcType="INTEGER" />
   </resultMap>
     <resultMap id="Order" type="com.uclee.fundation.data.mybatis.model.Order" >
   	<result column="user_id" property="userId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, 单号, 取货时间, 联系方式, 送货地址, 取货部门, 商户订单号
+    ID, 单号, 取货时间, 联系方式, 送货地址, 取货部门, 商户订单号, 加工状态
   </sql>
   <select id="selectByDepartment" resultMap="DriverOrder">
-    select 
-    *
-	   from orders where id in(select distinct 订单id from orders_detail where 结单= 0) and
-		取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
-		and 是否废止= 0 and len(客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by 取货时间 
+    select a.*,b.is_self_pick from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where a.取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and a.是否废止= 0 and len(a.客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by 取货时间 
  </select>
  <select id="selectAll" resultMap="DriverOrder">
-    select 
-    *
-	   from orders where id in(select distinct 订单id from orders_detail where 结单= 0) and
-		取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
-		and 是否废止= 0 and len(客户编号)>0 and 取货部门 in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
+    select a.*,b.is_self_pick from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where a.取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and a.是否废止= 0 and len(a.客户编号)>0 and 取货部门 in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
             #{item}
         </foreach>
 		order by 取货时间 
  </select>
  <!-- 单个门店需配送 -->
  <select id="selectByDepartmentOne" resultMap="DriverOrder">
-    select * from orders where id in(select distinct 订单id from orders_detail where 结单= 1)
-	and 取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
-	and 是否废止= 0 and len(客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by 取货时间
+ 	select a.* from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where a.加工状态= 1 and b.is_self_pick = 0
+	and a.取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and a.是否废止= 0 and len(a.客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by 取货时间
  </select>
   <!-- 所有关联门店需配送 -->
  <select id="selectAllOne" resultMap="DriverOrder">
-    select * from orders where id in(select distinct 订单id from orders_detail where 结单= 1)
-	and 取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
-	and 是否废止= 0 and len(客户编号)>0 and 取货部门 in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
+ 	select a.* from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where a.加工状态= 1 and b.is_self_pick = 0
+	and a.取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and a.是否废止= 0 and len(a.客户编号)>0 and 取货部门  in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
             #{item}
         </foreach>
-	 order by 取货时间
+        order by 取货时间
  </select>
   <!-- 单个门店配送中 -->
  <select id="selectByDepartmentTwo" resultMap="DriverOrder">
-    select * from orders where id in(select distinct 订单id from orders_detail where 结单= 2)
-	and 取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
-	and 是否废止= 0 and len(客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by 取货时间
+ 	select a.* from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where 加工状态= 2 and b.is_self_pick = 0
+	and a.取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and a.是否废止= 0 and len(a.客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by a.取货时间
  </select>
   <!-- 所有关联门店配送中 -->
  <select id="selectAllTwo" resultMap="DriverOrder">
-     select * from orders where id in(select distinct 订单id from orders_detail where 结单= 2)
-	and 取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
-	and 是否废止= 0 and len(客户编号)>0 and 取货部门 in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
+ 	select a.* from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where 加工状态= 2 and b.is_self_pick = 0
+	and a.取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and a.是否废止= 0 and len(a.客户编号)>0 and 取货部门  in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
             #{item}
-        </foreach>
-	 order by 取货时间
+        </foreach> order by a.取货时间
  </select>
   <!-- 单个门店配送完成 -->
  <select id="selectByDepartmentThree" resultMap="DriverOrder">
-   select * from orders where id in(select distinct 订单id from orders_detail where 结单= 3)
+ 	select a.* from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where 加工状态= 3 and b.is_self_pick = 0
+	and 取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
 	and 是否废止= 0 and len(客户编号)>0 and 取货部门= #{departmentNumber,jdbcType=VARCHAR} order by 取货时间 desc
  </select>
   <!-- 所有关联门店配送完成 -->
  <select id="selectAllThree" resultMap="DriverOrder">
-    select * from orders where id in(select distinct 订单id from orders_detail where 结单= 3)
-	and 是否废止= 0 and len(客户编号)>0 and 取货部门 in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
+ 	 	select a.* from orders as a left join web_orders as b on a.商户订单号= b.order_serial_num
+	where 加工状态= 3 and b.is_self_pick = 0
+	and 取货时间 >cast(convert(varchar(10),getdate()-1,120)+' 00:00:00' as datetime)
+	and 是否废止= 0 and len(客户编号)>0 and 取货部门  in <foreach item="item" index="index" open="(" separator="," close=")" collection="departmentlist">
             #{item}
-        </foreach>
-	 order by 取货时间 desc
+        </foreach> order by 取货时间 desc
  </select>
  
   <select id="getMerchantOrderNumber" resultMap="DriverOrder">
@@ -86,9 +90,9 @@
  </select>
  
  <update id="updateDetaileStart">
-  	update orders_detail set 结单= 2 where 订单id = #{orderId, jdbcType=VARCHAR}
+  	update orders set 加工状态= 2 where ID = #{orderId, jdbcType=VARCHAR}
   </update>
   <update id="updateDetaileEnd">
-  	 update orders_detail set 结单= 3 where 订单id = #{orderId, jdbcType=VARCHAR}
+  	 update orders set 加工状态= 3 where ID = #{orderId, jdbcType=VARCHAR}
   </update>
 </mapper>

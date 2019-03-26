@@ -35,7 +35,7 @@ class DeliveryCenter extends React.Component {
         if(!res.body.result){
           if(res.body.reason==='no_department'){
             alert("当前司机尚未关联门店");
-            window.location="phone-login";
+            window.location="driver_login";
           }
         }
         this.setState({
@@ -77,7 +77,7 @@ class DeliveryCenter extends React.Component {
 								</div>
 							</div>
 							<div>
-								{item.type == "需配送"?
+								{item.type == "需配送"? (this.state.type === '0' || this.state.type === 'undefined' ? '':
 									<button className='btn btn-default' onClick={()=>{
 											req
 			                 .get('/uclee-user-web/updateDetaileStart?orderID='+item.id)
@@ -93,8 +93,8 @@ class DeliveryCenter extends React.Component {
 										}} 
 										style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} >
 										开始配送
-									</button>:null}
-								{item.type == "配送中"?
+									</button>:null):null}
+								{item.type == "配送中"? (this.state.type === '0' || this.state.type === 'undefined' ? '':
 									<button className='btn btn-default' onClick={()=>{
 										req
 		                 .get('/uclee-user-web/updateDetaileEnd?orderID='+item.id)
@@ -110,7 +110,7 @@ class DeliveryCenter extends React.Component {
 										}} 
 										style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}}>
 										配送完成
-									</button>:null}
+									</button>:null):null}
 							</div>
 						
 	          	<div>
@@ -122,7 +122,7 @@ class DeliveryCenter extends React.Component {
     return (
       <DocumentTitle title="配送中心">
         <div className="boss-center">
-            <img src='/images/data.png' alt=""/>
+            <img src='/images/logistics.png' alt=""/>
             <div className='boss-center-select'>
               请选择门店：
               <select name='hsCode' onChange={this._setHsCode}>
@@ -130,15 +130,13 @@ class DeliveryCenter extends React.Component {
                 {option}
               </select>
             </div>
-	            <ul className="nav nav-tabs">
-							  <li role="presentation" className="active"><button onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=0"}} className="btn btn-default">已下单</button></li>
-							  <li role="presentation" className="active"><button onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=1"}} className="btn btn-default">需配送</button></li>
-							  <li role="presentation" className="active"><button onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=2"}} className="btn btn-default">配送中</button></li>
-							  <li role="presentation" className="active"><button onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=3"}} className="btn btn-default">配送完成</button></li>
-							</ul>
-						<div>
-							{items}
+            <div className='order-top'>
+							<span onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=0"}} className={'order-top-item'+(this.state.type === '0' || this.state.type === 'undefined' ?' active':'')}>已下单</span>
+							<span onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=1"}} className={'order-top-item'+(this.state.type === '1' ?' active':'')}>需配送</span>
+							<span onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=2"}} className={'order-top-item'+(this.state.type === '2' ?' active':'')}>配送中</span>
+							<span onClick={()=>{window.location='/delivery-center?phone='+this.state.phone+"&type=3"}} className={'order-top-item'+(this.state.type === '3' ?' active':'')}>配送完成</span>
 						</div>
+						{items}
         </div>
       </DocumentTitle>
     )

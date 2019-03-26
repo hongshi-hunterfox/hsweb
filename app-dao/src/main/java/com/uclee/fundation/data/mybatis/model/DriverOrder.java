@@ -13,7 +13,21 @@ public class DriverOrder {
 	private String outerOrderCode;
 	private String type;
 	private String Time;
-	
+	private Integer processingState;
+	private Integer isSelfPick;
+		
+	public Integer getIsSelfPick() {
+		return isSelfPick;
+	}
+	public void setIsSelfPick(Integer isSelfPick) {
+		this.isSelfPick = isSelfPick;
+	}
+	public Integer getProcessingState() {
+		return processingState;
+	}
+	public void setProcessingState(Integer processingState) {
+		this.processingState = processingState;
+	}
 	public String getTime() {
 		return Time;
 	}

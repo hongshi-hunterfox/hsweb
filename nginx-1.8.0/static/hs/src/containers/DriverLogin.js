@@ -26,7 +26,7 @@ class DriverLogin extends React.Component {
       cVipCode: '',
 
       type: '1',
-      resultmsg: '保存成功',
+      resultmsg: '登录成功',
 
       time: 60,
       fetchingCode: false
