@@ -1,6 +1,6 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
-import './boss-center.css'
+import './delivery-center.css'
 import req from 'superagent'
 var Link = require("react-router").Link
 
@@ -77,7 +77,7 @@ class DeliveryCenter extends React.Component {
 								</div>
 							</div>
 							<div>
-								{item.type == "需配送"? (this.state.type === '0' || this.state.type === 'undefined' ? '':
+								{item.type == "需配送"? (this.state.type === '0' || this.state.type === undefined ? '':
 									<button className='btn btn-default' onClick={()=>{
 											req
 			                 .get('/uclee-user-web/updateDetaileStart?orderID='+item.id)
@@ -94,7 +94,7 @@ class DeliveryCenter extends React.Component {
 										style={{float:'right',padding:'5px 12px',margin:'6px 20px',backgroundColor:'#f15f40',color:'white'}} >
 										开始配送
 									</button>:null):null}
-								{item.type == "配送中"? (this.state.type === '0' || this.state.type === 'undefined' ? '':
+								{item.type == "配送中"? (this.state.type === '0' || this.state.type === undefined ? '':
 									<button className='btn btn-default' onClick={()=>{
 										req
 		                 .get('/uclee-user-web/updateDetaileEnd?orderID='+item.id)

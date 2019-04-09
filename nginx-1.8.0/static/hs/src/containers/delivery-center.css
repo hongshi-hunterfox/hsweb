@@ -28,10 +28,10 @@
   overflow: hidden;
   white-space: nowrap;
 }
-.order-top .active {
-  color: #f15f40;
+.order-top-item .active {
+  color: #FF2C29;
   font-weight: bold;
-  border-bottom: 1px solid #f15f40;
+  border-bottom: 1px solid FF2C29;
 }
 .order-list-top .number {
   font-size: 13px;

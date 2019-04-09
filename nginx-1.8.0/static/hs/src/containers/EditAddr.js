@@ -6,9 +6,11 @@ var EditAddrUtil = require('../utils/EditAddrUtil.js')
 //var fto = require('form_to_object')
 import fto from 'form_to_object'
 import ErrorMessage from './ErrorMessage'
+var DataViewUtil = require('../utils/DataViewUtil.js');
 var browserHistory = require('react-router').browserHistory
 var geocoder,map = null;
 var qq=window.qq;
+var dw;
 var errMap = {
 	empty_name: '请输入联系人姓名',
 	empty_phone: '请输入联系电话',
@@ -16,7 +18,7 @@ var errMap = {
 	empty_state: '请选择省份',
 	empty_city: '请选择城市',
 	empty_region: '请选择地区',
-	empty_addrDetail: '请输入详细地址'
+	empty_addrDetail: '请搜索地图选择详细地址'
 }
 
 class EditAddr extends React.Component {
@@ -31,24 +33,31 @@ class EditAddr extends React.Component {
 			provinceId: 0,
 			cityId: 0,
 			regionId: 0,
-			name: ''
+			name: '',
 		}
 		this.lat = 22.5425
     
     	this.lng = 114.04985
 	}
-
 	componentDidMount() {
-		this._init()
 		var q = this.props.location.query
 		EditAddrUtil.getData(
 			q,
 			function(res) {
 				this.setState(res)
 			}.bind(this)
-		)
+		);
+		window.addEventListener('message', function(event) {
+	        // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+	        var loc = event.data;
+	        if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+	          console.log('location'+JSON.stringify(loc.poiaddress));
+	          dw = JSON.stringify(loc.poiaddress).replace("\"","").replace("\"","");
+	       }
+	        return dw;
+	    }, false);  
 	}
-
+	
 	render() {
 		var province = this.state.province
 			? this.state.province.map(
@@ -107,38 +116,16 @@ class EditAddr extends React.Component {
 					}.bind(this)
 				)
 			: null
+			
 		return (
 			<DocumentTitle title="地址编辑">
+				
 				<div className="edit-address">
 					<form
 						className="form-horizontal edit-address-form"
 						onSubmit={this._handleSubmit}
 						ref="f"
 					>
-						<div className="form-group edit-address-form-group">
-							<input
-								className="form-control"
-								type="text"
-								name="name"
-								placeholder="收件人姓名"
-								value={this.state.deliverAddr.name}
-								onFocus={this._f}
-								onBlur={this._b}
-								onChange={this._handleChange.bind(this, 'name')}
-							/>
-						</div>
-						<div className="form-group edit-address-form-group">
-							<input
-								className="form-control"
-								type="text"
-								name="phone"
-								placeholder="手机号码"
-								value={this.state.deliverAddr.phone}
-								onFocus={this._f}
-								onBlur={this._b}
-								onChange={this._handleChange.bind(this, 'phone')}
-							/>
-						</div>
 						<div className="form-group edit-address-form-group">
 							<select
 								className="form-control edit-address-form-control-select"
@@ -175,19 +162,45 @@ class EditAddr extends React.Component {
 							</select>
 						</div>
 						<div className="form-group edit-address-form-group">
+							<iframe id="mapPage" width="100%" height="350px" frameborder='0'
+						    src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=YKKBZ-FVJWI-6SIGN-5QRD5-MV5DJ-PGFW2&referer=myapp">
+							</iframe>
 							<input
 								className="form-control"
-								type="text"
+								type="hidden"
 								name="addrDetail"
 								placeholder="详细地址"
-								value={this.state.deliverAddr.addrDetail}
+								value={dw}
 								onChange={this._handleChange.bind(this, 'addrDetail')}
 								onFocus={this._f}
 								onBlur={this._b}
 							/>
 						</div>
+						<div className="form-group edit-address-form-group">
+							<input
+								className="form-control"
+								type="text"
+								name="name"
+								placeholder="收件人姓名"
+								value={this.state.deliverAddr.name}
+								onFocus={this._f}
+								onBlur={this._b}
+								onChange={this._handleChange.bind(this, 'name')}
+							/>
+						</div>
+						<div className="form-group edit-address-form-group">
+							<input
+								className="form-control"
+								type="text"
+								name="phone"
+								placeholder="手机号码"
+								value={this.state.deliverAddr.phone}
+								onFocus={this._f}
+								onBlur={this._b}
+								onChange={this._handleChange.bind(this, 'phone')}
+							/>
+						</div>
 						<ErrorMessage error={this.state.error} />
-						<div className="col-md-9 col-md-offset-3 map-container" id="container" />
 						<button
 							type="submit"
 							className="btn btn-primary btn-block edit-address-button"
@@ -196,30 +209,10 @@ class EditAddr extends React.Component {
 							提交
 						</button>
 					</form>
-					<Navi query={this.props.location.query} />
 				</div>
 			</DocumentTitle>
 		)
 	}
- _init = () => {
-    var center = new qq.maps.LatLng(23.12463,113.36199);
-    map = new qq.maps.Map(document.getElementById('container'),{
-      center: center,
-      zoom: 15
-    });
-    //调用地址解析类
-    geocoder = new qq.maps.Geocoder({
-      complete : (result) => {
-        this.lat=result.detail.location.lat
-        this.lng=result.detail.location.lng
-        map.setCenter(result.detail.location);
-        new qq.maps.Marker({
-            map:map,
-            position: result.detail.location
-        });
-      }
-    });
-  }
 	_f = () => {
 		document.getElementById('hs-navi').style.display = 'none'
 		document.getElementById('hs-submit-btn').style.position = 'static'
@@ -243,8 +236,6 @@ class EditAddr extends React.Component {
 		var index1=myselect1.selectedIndex ;
 		var  myselect2=document.getElementById("test2");
 		var index2=myselect2.selectedIndex ;
-		console.log("aaa===="+myselect.options[index].text + myselect1.options[index1].text + myselect2.options[index2].text)
-		console.log("aaa===="+deliverAddr.addrDetail)
 		var addr="中国," + myselect.options[index].text+","  + myselect1.options[index1].text+","  + myselect2.options[index2].text+","  + (deliverAddr.addrDetail || '')
 		geocoder.getLocation(addr)
 	}
@@ -320,6 +311,7 @@ class EditAddr extends React.Component {
 			})
 			return false
 		}
+		console.log(data.addrDetail)
 		if (!data.addrDetail) {
 			this.setState({
 				error: errMap['empty_addrDetail']

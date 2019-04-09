@@ -180,7 +180,6 @@ class Recharge extends React.Component {
 		if (typeof WeixinJSBridge === "undefined") {
 			alert('请用微信打开链接');
 		} else {
-			
 			WeixinJSBridge.invoke(
 				'getBrandWCPayRequest', data,
 				function(res) {
@@ -234,7 +233,6 @@ class Recharge extends React.Component {
 				data.paymentId=this.state.paymentId;
 				data.money=this.state.rechargeMoney;
 				RechargeUtil.submitHandler(data, function(res) {
-					console.log(res);
 					if(res.result===true){
 						if (res.type === 'WC') {
 							if(res.result==='failed'){
@@ -271,7 +269,6 @@ class Recharge extends React.Component {
 				data.paymentId=this.state.paymentId;
 				data.money=this.state.rechargeMoney;
 				RechargeUtil.submitHandler(data, function(res) {
-					console.log(res);
 					if(res.result===true){
 						if (res.type === 'WC') {
 							if(res.result==='failed'){

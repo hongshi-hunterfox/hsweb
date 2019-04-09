@@ -5,10 +5,10 @@
   color: white;
   text-align: center;
   left: 5%;
-  right: 0;
+  right: 5%;
   width: 90%;
   z-index: 999;
-  bottom: 60px;
+  bottom: 3px;
   border-radius: 15px;
   margin: auto;
 }
@@ -21,18 +21,18 @@
 }
 .edit-address .form-control {
   border-radius: 15px;
-  height: 50px;
+  height: 32px;
 }
 .edit-address .form-horizontal .form-group {
   margin-right: 5px;
   margin-left: 5px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 0px;
 }
 .edit-address .map-container {
   _height: 400px;
   min-height: 400px;
 }
 .edit-address .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 3px;
 }
