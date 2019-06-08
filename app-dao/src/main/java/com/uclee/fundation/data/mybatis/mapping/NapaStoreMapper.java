@@ -33,4 +33,6 @@ public interface NapaStoreMapper {
 	NapaStore selectNapaStoreByCode(@Param("hsCode")String hsCode);
 
     List<NapaStore> selectByHsCode(String hsCode);
+    
+    List<NapaStore> selectBySpecId(Integer id);
 }

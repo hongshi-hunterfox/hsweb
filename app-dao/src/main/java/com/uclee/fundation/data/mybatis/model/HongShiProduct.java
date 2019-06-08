@@ -15,6 +15,16 @@ public class HongShiProduct {
 	private String unit;
 	
 	private BigDecimal hsPrice;
+	
+	private int specPack;
+	
+	public int getSpecPack() {
+		return specPack;
+	}
+	
+	public void setSpecPack(int specPack) {
+		this.specPack = specPack;
+	}
 
 	public Integer getId() {
 		return id;

@@ -2,7 +2,6 @@ package com.uclee.web.backend.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,30 +18,18 @@ import org.apache.commons.collections.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.uclee.date.util.DateUtils;
-import com.uclee.fundation.config.links.GlobalSessionConstant;
-import com.uclee.fundation.data.mybatis.mapping.CategoryMapper;
-import com.uclee.fundation.data.mybatis.mapping.FreightMapper;
-import com.uclee.fundation.data.mybatis.mapping.HongShiMapper;
-import com.uclee.fundation.data.mybatis.mapping.UserProfileMapper;
-import com.uclee.fundation.data.web.dto.BannerPost;
 import com.uclee.fundation.data.web.dto.ConfigPost;
-import com.uclee.fundation.data.web.dto.FreightPost;
 import com.uclee.fundation.data.web.dto.MySelect;
 import com.uclee.fundation.data.web.dto.ProductVoucherPost;
-import com.uclee.fundation.data.web.dto.VipVoucherPost;
 import com.uclee.user.service.UserServiceI;
-import com.uclee.fundation.data.mybatis.mapping.BargainSettingMapper;
-import scala.collection.immutable.HashMap;
 
 @Controller
 @EnableAutoConfiguration
@@ -56,8 +43,6 @@ public class BackendController {
 	private RechargeConfigMapper rechargeConfigMapper;
 	@Autowired
 	private ProductGroupMapper productGroupMapper;
-	@Autowired
-	private BargainSettingMapper bargainSettingMapper;
 	
 	@RequestMapping("/freight")
 	public @ResponseBody Map<String,Object> freight(HttpServletRequest request) {
@@ -857,7 +842,6 @@ public class BackendController {
 	@RequestMapping("/getBargainLog")
 	public @ResponseBody Map<String,Object> getBargainLog(HttpServletRequest request, Integer id){
 		Map<String,Object> map = new TreeMap<String,Object>();
-		System.out.println("id====="+id);
 		List<BargainStatistics> record = userService.getBargainLog(id);
 		map.put("record",record);
 		return map;
@@ -928,5 +912,67 @@ public class BackendController {
 		map.put("needmention", needmention);
 		return map;
 	}
+	
+	@RequestMapping("/getalldisparity")
+	@ResponseBody
+	public Map<String, Object> getAllDisparity(){
+		Map<String,Object> map = new TreeMap<String,Object>();
+		List<Disparity> list = backendService.selectAllDisparity();
+		map.put("disparitys", list);
+		return map;
+	}
+	
+	@RequestMapping("/removedisparity")
+	@ResponseBody
+	public int removeDisparity(HttpServletRequest request, Integer id){
+		return backendService.deleteDisparity(id);
+	}
+	
+	@RequestMapping("/adddisparity")
+	@ResponseBody
+	public int addDisparity(HttpServletRequest request,@RequestBody Disparity disparit){
+		return backendService.insertDisparity(disparit);
+	}
+	
+	@RequestMapping("/getAddData")
+	@ResponseBody
+	public Map<String, Object> getAddData(HttpServletRequest request){
+		return backendService.addGoods();
+	}
+	
+	@RequestMapping(value="/addGoods", method=RequestMethod.POST)
+	@ResponseBody
+	public int addGoods(HttpServletRequest request,@RequestBody Goods goods){
+		return backendService.insertGoods(goods);
+	}
+	
+	@RequestMapping("/getGoods")
+	@ResponseBody
+	public Map<String, Object> getGoods(){
+		Map<String, Object> map = new TreeMap<String, Object>();
+		List<Goods> list = backendService.selectGoods();
+		map.put("goods", list);
+		return map;
+	}
+	
+	@RequestMapping(value="updateProduct")
+	public @ResponseBody Map<String,Object> updateProduct(HttpSession session,Integer productId){
+		return backendService.getGoodsByProductId(productId);
+	}
+	
+	@RequestMapping(value="/upGoods", method=RequestMethod.POST)
+	@ResponseBody
+	public int upGoods(HttpServletRequest request,@RequestBody Goods goods){
+		System.out.println(JSON.toJSON(goods));
+		return backendService.updateGoods(goods);
+	}
+	
+	@RequestMapping("/delGoods")
+	@ResponseBody
+	public int delGoods(HttpServletRequest request,Integer id){
+		System.out.println(id);
+		return backendService.deleteGoods(id);
+	}
+	
 
 }

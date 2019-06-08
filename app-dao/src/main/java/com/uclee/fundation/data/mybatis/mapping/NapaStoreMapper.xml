@@ -42,6 +42,12 @@
     from web_napa_stores as A left join web_specification_value_store_link As B on a.store_id=b.store_id
     where B.value_id = #{valueId,jdbcType=INTEGER}
   </select>
+  <select id="selectBySpecId" resultMap="NapaStore" parameterType="java.lang.Integer" >
+   select 
+    A.* 
+    from web_napa_stores as A left join web_goods_specifications_store_link As B on A.store_id=B.storeId
+    where B.specId = #{Id,jdbcType=INTEGER}
+  </select>
   <select id="selectNapaStoreByCode" resultMap="NapaStore"  >
     select 
     * 

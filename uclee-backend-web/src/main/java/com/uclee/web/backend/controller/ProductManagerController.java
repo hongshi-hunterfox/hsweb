@@ -1,5 +1,6 @@
 package com.uclee.web.backend.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.backend.model.ProductForm;
 import com.backend.service.BackendServiceI;
 import com.uclee.fundation.data.mybatis.mapping.*;
@@ -115,13 +116,15 @@ public class ProductManagerController {
 		return map;
 	}
 
-	@RequestMapping(value="getCategory")
-	public @ResponseBody List<Category>  getCategory(ModelMap model,HttpSession session,Integer parentId){
+	@RequestMapping("/getCategory")
+	public @ResponseBody Map<String,Object>  getCategory(ModelMap model,HttpSession session,Integer parentId){
 		if(parentId==null){
 			parentId = 0;
 		}
+		Map<String,Object> map = new HashMap<String,Object>();
 		List<Category> cat = categoryMapper.selectByParentId(parentId);
-		return cat;
+		map.put("cat", cat);
+		return map;
 	}
 	
 	@RequestMapping(value="getAddProductData")

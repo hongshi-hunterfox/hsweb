@@ -263,4 +263,24 @@ public interface BackendServiceI {
 	int updateBymsg(MsgTextDto msgtextdto);
 	
 	MsgText selectByPayType(String payType);
+	
+	List<Disparity> selectAllDisparity();
+	
+	int deleteDisparity(Integer id);
+	
+	int insertDisparity(Disparity disparit);
+	
+	int insertGoods(Goods goods);
+	
+	List<Goods> selectGoods();
+	
+	Map<String,Object> addGoods();
+	
+	Map<String,Object> getGoodsByProductId(Integer productId);
+	
+	Goods getGoods(Integer id);
+	
+	int updateGoods(Goods goods);
+	
+	int deleteGoods(Integer id);
 }

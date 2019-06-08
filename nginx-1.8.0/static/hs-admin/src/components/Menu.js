@@ -66,8 +66,18 @@ class Menu extends React.Component {
 								    </Link>
 								</li>
 								<li>
+									<Link to={'/DisparitysList?merchantCode='+localStorage.getItem('merchantCode')}>
+								        差额设置
+								    </Link>
+								</li>
+								<li>
 									<Link to={'/message-text?merchantCode='+localStorage.getItem('merchantCode')}>
 								        配送信息设置
+								    </Link>
+								</li>
+								<li>
+									<Link to={'/goodslist?merchantCode='+localStorage.getItem('merchantCode')}>
+								        点餐产品设置
 								    </Link>
 								</li>
 							</ul>

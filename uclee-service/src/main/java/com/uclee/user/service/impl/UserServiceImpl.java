@@ -96,8 +96,6 @@ import com.uclee.user.util.UserUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 import com.uclee.weixin.util.EmojiFilter;
 
-import kafka.network.Send;
-
 
 public class UserServiceImpl implements UserServiceI {
 
@@ -118,6 +116,8 @@ public class UserServiceImpl implements UserServiceI {
 	private FDFSFileUpload fDFSFileUpload;
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private GoodsMapper goodsMapper;
 	@Autowired
 	private UserProfileMapper userProfileMapper;
 	@Autowired
@@ -1815,15 +1815,6 @@ public class UserServiceImpl implements UserServiceI {
 					createOrderItem.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getAmount())));
 					System.out.println("订单明细： " + JSON.toJSONString(createOrderItem));
 					hongShiMapper.createOrderItem(createOrderItem);
-					//记录限购产品购买次数
-					Product product= productMapper.selectByPrimaryKey(item.getProductId());
-					if(product.getFrequency()!=null && product.getFrequency()!=-1){
-						UserLimit userLimit = new UserLimit();
-						userLimit.setUserId(order.getUserId());
-						userLimit.setTime(new Date());
-						userLimit.setProductId(item.getProductId());
-						productMapper.insertUserLimit(userLimit);
-					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -2026,8 +2017,6 @@ public class UserServiceImpl implements UserServiceI {
 		HongShiRecharge dd=new HongShiRecharge().setcWeiXinCode(oauthLogin.getOauthId())
 				.setcWeiXinOrderCode(paymentOrder.getPaymentSerialNum())
 				.setnAddMoney(realMoney);
-		System.out.println("sss====================ssss======ssss");
-		System.out.println("sss====================ssss======ssss=="+dd);
 		Integer res=hongShiVipService.hongShiRecharge(dd);
 		//发送充值成功微信通知
 		if(res==0){
@@ -2196,7 +2185,6 @@ public class UserServiceImpl implements UserServiceI {
 			}
 		}
 		productDto.setGiftCouponsInfo(getGiftCouponsInfo);
-		System.out.println(JSON.toJSONString(getGiftCouponsInfo));
 		return productDto;
 	}
 
@@ -2516,10 +2504,22 @@ public class UserServiceImpl implements UserServiceI {
 			if(price == null){
 				if(product.getFrequency()!=null && product.getFrequency()!=-1) {
 					List<UserLimit> limit = productMapper.selectByLimit(userId, product.getProductId());
-					if(limit.size() >= product.getFrequency()) {
+					Integer count = limit.size() + cart.getAmount();
+					if(count > product.getFrequency() ) {
 						map.put("result", false);
-						map.put("reason", product.getTitle()+"仅限购买"+product.getFrequency()+"次，请返回购物车重新提交");
+						map.put("reason", product.getTitle()+"仅限购买"+product.getFrequency()+"个，请返回购物车重新提交");
 						return map;
+					}
+					//记录限购产品购买次数
+					if(product.getFrequency()!=null && product.getFrequency()!=-1){
+						for(int i=0; i<cart.getAmount(); i++) {
+							UserLimit userLimit = new UserLimit();
+							userLimit.setUserId(order.getUserId());
+							userLimit.setTime(new Date());
+							userLimit.setProductId(cart.getProductId());
+							productMapper.insertUserLimit(userLimit);
+							
+						}
 					}
 				}
 			}
@@ -2653,7 +2653,6 @@ public class UserServiceImpl implements UserServiceI {
 						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(value.getHsGoodsPrice()));
 					}else{
 						totalMoney = totalMoney.add(new BigDecimal(cart.getAmount()).multiply(price.getPrice()));
-						System.out.println("我是4==="+totalMoney);
 					}
 					
 				}	
@@ -3433,14 +3432,14 @@ public class UserServiceImpl implements UserServiceI {
 						System.out.println(JSON.toJSONString(createOrderItem));
 						hongShiMapper.createOrderItem(createOrderItem);
 						//记录限购产品购买次数
-						Product product= productMapper.selectByPrimaryKey(item.getProductId());
-						if(product.getFrequency()!=null && product.getFrequency()!=-1){
-							UserLimit userLimit = new UserLimit();
-							userLimit.setUserId(order.getUserId());
-							userLimit.setTime(new Date());
-							userLimit.setProductId(item.getProductId());
-							productMapper.insertUserLimit(userLimit);
-						}
+//						Product product= productMapper.selectByPrimaryKey(item.getProductId());
+//						if(product.getFrequency()!=null && product.getFrequency()!=-1){
+//							UserLimit userLimit = new UserLimit();
+//							userLimit.setUserId(order.getUserId());
+//							userLimit.setTime(new Date());
+//							userLimit.setProductId(item.getProductId());
+//							productMapper.insertUserLimit(userLimit);
+//						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -4693,7 +4692,6 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public List<BargainLog> selectbargainLog(Integer uid, String invitationCode) {
 		System.out.println("invitationCode========uid"+uid);
-		System.out.println("invitationCode========skx"+invitationCode);
 		return bargainSettingMapper.selectbargainLog(uid, invitationCode);
 	}
 
@@ -5010,6 +5008,50 @@ public class UserServiceImpl implements UserServiceI {
 //			messageMapper.updateByPrimaryKeySelective(item);
 		}	
 		return driverOrderMapper.updateDetaileEnd(orderID);
+	}
+
+	@Override
+	public List<Goods> selectGoodsList() {
+		return goodsMapper.selectGoodsList();
+	}
+
+	@Override
+	public Map<String, Object> selectGoodsAndSpecification(Integer id){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Goods>  goods = goodsMapper.selectGoodsAndSpecification(id);
+		if(goods != null){
+			Goods gd = new Goods();
+			gd.setId(id);
+			gd.setGoodsname(goods.get(0).getGoodsname());
+			gd.setGoodsimg(goods.get(0).getGoodsimg());
+			map.put("goods", gd);
+			List<GoodsSpecifications> spec = goodsMapper.selectByGoodsSpecifications(id);
+			
+			map.put("spec", spec);
+			map.put("specid", spec.get(0).getId());			
+		}
+		
+		
+		return map;
+	}
+
+	@Override
+	public int insertGoodsCart(GoodsCart goodsCart) {
+		return goodsMapper.insertGoodsCart(goodsCart);
+	}
+
+	@Override
+	public BigDecimal selectGoodsCart(Integer userId) {
+		BigDecimal total = new BigDecimal(0);
+		List<GoodsCart> cart =  goodsMapper.selectGoodsCart(userId);
+		//判断是否是会员
+		int record = goodsMapper.selectIsVip(userId);
+		if(record>0 && cart.size()>0){
+			System.out.println(JSON.toJSON(cart));
+		}else if(cart.size()>0){
+			
+		}
+		return total;
 	}
 }
 

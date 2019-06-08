@@ -64,7 +64,8 @@ class Order extends React.Component {
       hsgooscode: [],
       appointedTime:'',
       riqi:'',
-      result:false
+      result:false,
+      list: []
     }
     
     this.lat = 22.5425
@@ -233,9 +234,37 @@ class Order extends React.Component {
         	businessEndTime:data.data.businessEndTime
       	})
     	})
+    	req
+      .get('/uclee-user-web/cart')
+      .query({
+        storeId: localStorage.getItem('storeId'),
+        t: new Date().getTime()
+      })
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+
+        this.setState({
+          loading: false,
+          list: res.body.map(item => {
+            return {
+              ...item,
+              checked: false
+            }
+          })
+        })
+      })
   }
 
   render() {
+//	var dList = this.state.list.filter(item => {
+//    return item.isDisabled
+//  })
+//	if(!dList){
+//		alert("当前门店有不支持的产品");
+//		return window.location = '/cart';
+//	}
     if (this.state.isDataError) {
       if (sessionStorage.getItem('isFromCart') === 1) {
         alert('非法数据，请返回购物车')

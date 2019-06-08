@@ -71,6 +71,9 @@ import messageText from './containers/messageText'
 import AddDriver from './containers/AddDriver'
 import PhoneDriverList from './containers/PhoneDriverList'
 import EditPhoneDriver from './containers/EditPhoneDriver'
+import DisparitysList from './containers/DisparitysList'
+import OperationGood from './containers/OperationGood'
+import goodslist from './containers/goodslist'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -146,6 +149,10 @@ ReactDOM.render(
       <Route path="addDriver" component={AddDriver} />
       <Route path="phoneDriverList" component={PhoneDriverList} />
       <Route path="editPhoneDriver" component={EditPhoneDriver} />
+      <Route path="DisparitysList" component={DisparitysList} />
+      <Route path="OperationGood" component={OperationGood} />
+      <Route path="OperationGood/:id" component={OperationGood} />
+      <Route path="goodslist" component={goodslist} />
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.DisparityMapper" >
+  <select id="selectAll" resultType="com.uclee.fundation.data.mybatis.model.Disparity">
+	select
+	*
+	from web_disparity
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  	delete from web_disparity where id=#{id}
+  </delete>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Disparity">
+  	insert into web_disparity(paramname,disparity) values(#{paramname}, #{disparity})
+  </insert>
+</mapper>

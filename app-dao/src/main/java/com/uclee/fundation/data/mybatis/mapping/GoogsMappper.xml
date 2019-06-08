@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.uclee.fundation.data.mybatis.mapping.GoodsMapper" >
+  <select id="selectAll" resultType="com.uclee.fundation.data.mybatis.model.Goods">
+  	select * from web_goods
+  </select>
+  <select id="selectByPrimaryKey" resultType="com.uclee.fundation.data.mybatis.model.Goods" parameterType="java.lang.Integer" >
+    select 
+     *
+    from web_goods
+    where id = #{id}
+  </select>
+  <select id="selectByGoodsId" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications"> 
+  	select
+		code
+	    from web_goods_specifications
+	    where goodsId = #{goodsId}
+  </select>
+  <select id="selectByGoodsAndCategories" resultType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink" parameterType="java.lang.Integer" >
+    select 
+    *
+    from  web_goods_categories_link
+    where goodsId = #{goodsId}
+  </select>
+  <select id="selectGoodsList" resultType="com.uclee.fundation.data.mybatis.model.Goods">
+  	  select  a.goodsimg,a.goodsname,a.goodscategory, a.id, min(b.hsPrice) as hsPrice 
+		from  web_goods as a, web_goods_specifications as b, web_goods_categories_link as c 
+		where  a.id=b.goodsId and c.goodsId=a.id 
+		group by a.goodsname,a.goodscategory,a.id,a.goodsimg
+  </select>
+  <select id="selectByGoodsSpecifications" resultType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications" parameterType="java.lang.Integer" >
+    select  
+    *
+    from web_goods_specifications
+    where goodsId = #{goodsId}
+  </select>
+  <select id="selectGoodsAndSpecification" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.Goods">
+  	select * from web_goods as a where a.id=#{id}
+  </select>
+  <select id="selectGoodsCart" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.GoodsCart">
+  	select * from web_goods_cart as a , web_goods_specifications as b where a.goodsId=b.goodsId and a.specId=b.id and a.userId=#{userId}
+  </select>
+  <select id="selectIsVip" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select COUNT(*) as record from web_oauth_login as a , 会员身份 as b where a.oauth_id = b.外键 and a.user_id=#{userId}
+  </select>
+  <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Goods" useGeneratedKeys="true" keyProperty="id">
+    insert into web_goods (goodsname, goodsimg, goodscategory) values (#{goodsname}, #{goodsimg}, #{goodscategory})
+  </insert>
+  <insert id="insertGoodsAndCategories" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink">
+  	insert into web_goods_categories_link(goodsId, categoryId) values(#{goodsId}, #{categoryId})
+  </insert>
+  <insert id="insertGoodsSpecifications" parameterType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications" useGeneratedKeys="true" keyProperty="id">
+	insert into web_goods_specifications(goodsId, name, code, hsPrice, vipPrice, specPack)  values(#{goodsId}, #{name}, #{code}, #{hsPrice}, #{vipPrice}, #{specPack})
+  </insert>
+  <insert id="insertGoodsSpecificationsStoreLink" parameterType="com.uclee.fundation.data.mybatis.model.GoodsSpecificationsStoreLink">
+  	insert into web_goods_specifications_store_link(storeId, specId) values(#{storeId}, #{specId})
+  </insert>
+  <insert id="insertGoodsCart" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCart">
+	insert into web_goods_cart(goodsId, specId ,userId, amount) values(#{goodsId}, #{specId}, #{userId}, #{amount})
+  </insert>
+  <update id="updateGoodsById" parameterType="com.uclee.fundation.data.mybatis.model.Goods">
+	update web_goods set goodsname = #{goodsname}, goodsimg=#{goodsimg}, goodscategory=#{goodscategory} WHERE id = #{id}  
+  </update>
+  <update id="updateGoodsAndCategories" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink">
+	update web_goods_categories_link set categoryId= #{categoryId} where goodsId=#{goodsId}  
+  </update>
+  <delete id="deleteBylink" parameterType="java.lang.Integer">
+	delete web_goods_specifications where id=#{id};delete web_goods_specifications_store_link where specId=#{id}
+  </delete>
+  <delete id="deleteGoods" parameterType="java.lang.Integer">
+  	 delete web_goods  where id=#{id};delete web_goods_categories_link where goodsId = #{id}
+  </delete>
+</mapper>

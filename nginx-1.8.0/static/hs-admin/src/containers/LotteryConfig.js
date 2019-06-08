@@ -168,7 +168,7 @@ class LotteryConfig extends React.Component {
               <input className="lottery-line-item"  name="rate[7]" ploceHolder="请输入概率" type="text" value={this.state.rate.length>7?this.state.rate[7]:null} onChange={this._rateChange.bind(this,'rate',7)}/> 
             </div>
             <div>
-              每人每天限抽次数：<input type='text' name='limits' value={this.state.limits} onChange={this._limitsChange.bind(this)} />
+              每人每天限抽个数：<input type='text' name='limits' value={this.state.limits} onChange={this._limitsChange.bind(this)} />
             </div>
              <div>
               起始时间：<input type='date' name='dateStart' value={this.state.dateStart} onChange={this._dateStartChange.bind(this)}/>

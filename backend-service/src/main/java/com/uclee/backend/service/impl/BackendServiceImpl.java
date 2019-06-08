@@ -25,7 +25,6 @@ import com.uclee.fundation.data.web.dto.*;
 
 import org.apache.http.entity.ContentType;
 import org.apache.poi.hssf.record.formula.functions.Na;
-import org.apache.poi.util.SystemOutLogger;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -33,6 +32,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alibaba.fastjson.JSON;
@@ -48,9 +48,10 @@ import com.uclee.fundation.dfs.fastdfs.FDFSFileUpload;
 import com.uclee.number.util.NumberUtil;
 import com.youzan.open.sdk.util.http.DefaultHttpClient;
 import com.youzan.open.sdk.util.http.HttpClient;
-
+import org.apache.log4j.Logger;
 
 public class BackendServiceImpl implements BackendServiceI {
+	private static final Logger logger = Logger.getLogger(BackendServiceImpl.class);
 	@Autowired
 	private CommentMapper commentMapper;
 	@Autowired
@@ -83,6 +84,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private QuickNaviProductLinkMapper quickNaviProductLinkMapper;
 	@Autowired
 	private BannerMapper bannerMapper;
+	@Autowired
+	private DisparityMapper disparityMapper;
 	@Autowired
 	private MsgRecordMapper msgRecordMapper;
 	@Autowired
@@ -139,6 +142,8 @@ public class BackendServiceImpl implements BackendServiceI {
 	private MarketingEntranceMapper marketingEntranceMapper;
 	@Autowired
 	private MsgTextMapper msgTextMapper;
+	@Autowired
+	private GoodsMapper goodsMapper;
 	
 	@SuppressWarnings("unused")
 	@Override
@@ -1116,6 +1121,47 @@ public class BackendServiceImpl implements BackendServiceI {
 		productForm.setValuePost(valuePost);
 		return productForm;
 	}
+	
+	@Override
+	public Goods getGoods(Integer id) {
+		Goods good= new Goods();
+		Goods goods = goodsMapper.selectByPrimaryKey(id);	
+		if(goods!=null){
+			good.setGoodsname(goods.getGoodsname());
+
+		}
+		GoodsCategoriesLink link = goodsMapper.selectByGoodsAndCategories(id);
+		if(link!=null){
+			good.setGoodscategory(link.getCategoryId());
+		}
+		String images[] = new String[1];
+		if(goods != null) {
+			images[0] = goods.getGoodsimg();
+		}
+		good.setImages(images);
+		good.setId(id);
+		List<ValuePost> valuePost = new ArrayList<ValuePost>();
+		List<GoodsSpecifications> values = goodsMapper.selectByGoodsSpecifications(id);
+		for(GoodsSpecifications value:values){
+			ValuePost tmp = new ValuePost();
+			tmp.setValueId(value.getId());
+			tmp.setCode(value.getCode());
+			tmp.setHsPrice(value.getHsPrice());
+			tmp.setVipPrice(value.getVipPrice());
+			tmp.setName(value.getName());	
+			tmp.setSpecPack(value.getSpecPack());
+			List<Integer> storeIds = new ArrayList<Integer>();
+			List<NapaStore> stores = napaStoreMapper.selectBySpecId(value.getId());
+			for(NapaStore store:stores){
+				storeIds.add(store.getStoreId());
+			}
+			tmp.setStoreIds(storeIds);
+			valuePost.add(tmp);
+		}
+		good.setValuePost(valuePost);
+		return good;
+	}
+
 
 	@Override
 	public List<RechargeConfig> selectAllRechargeConfig() {
@@ -2433,7 +2479,6 @@ public class BackendServiceImpl implements BackendServiceI {
 		               buffer.append(line);
 		           }
 		           res = buffer.toString();
-		           System.out.println(res.toString()+"----SKX");
 		       } catch (IOException e) {
 		           System.out.println("发送POST请求出现异常！" + e);
 		           e.printStackTrace();
@@ -2681,6 +2726,164 @@ public class BackendServiceImpl implements BackendServiceI {
 	@Override
 	public MsgText selectByPayType(String payType) {
 		return msgTextMapper.selectByPayType(payType);
+	}
+	@Override
+	public List<Disparity> selectAllDisparity() {
+		return disparityMapper.selectAll();
+	}
+	@Override
+	public int deleteDisparity(Integer id) {
+		return disparityMapper.deleteByPrimaryKey(id);
+	}
+	@Override
+	public int insertDisparity(Disparity disparit) {
+		return disparityMapper.insert(disparit);
+	}
+	@Override
+	@Transactional
+	public int insertGoods(Goods goods) {
+		int result = 0;
+		int record = goodsMapper.insert(goods);
+		if(record>0) {
+			GoodsCategoriesLink goodsCategoriesLink= new GoodsCategoriesLink();
+			logger.info("goodsId:" + goods.getId());
+			goodsCategoriesLink.setGoodsId(goods.getId());
+			goodsCategoriesLink.setCategoryId(goods.getGoodscategory());
+			goodsMapper.insertGoodsAndCategories(goodsCategoriesLink);
+			GoodsSpecifications goodsSpecifications = new GoodsSpecifications();
+			for(int i=0; i<goods.getGoodsSpecifications().size();i++){
+				
+				goodsSpecifications.setGoodsId(goods.getId());
+				goodsSpecifications.setName(goods.getGoodsSpecifications().get(i).getName());
+				goodsSpecifications.setCode(goods.getGoodsSpecifications().get(i).getCode());
+				goodsSpecifications.setHsPrice(goods.getGoodsSpecifications().get(i).getHsPrice());
+				goodsSpecifications.setVipPrice(goods.getGoodsSpecifications().get(i).getVipPrice());
+				goodsSpecifications.setSpecPack(goods.getGoodsSpecifications().get(i).getSpecPack());
+				goodsMapper.insertGoodsSpecifications(goodsSpecifications);
+				GoodsSpecificationsStoreLink gssl = new GoodsSpecificationsStoreLink();
+
+				for(int j=0; j<goods.getGoodsSpecifications().get(i).getStoreIds().size(); j++){
+					logger.info("goodsSpecificationsId:" + goodsSpecifications.getId());
+					gssl.setSpecId(goodsSpecifications.getId());
+					gssl.setStoreId(goods.getGoodsSpecifications().get(i).getStoreIds().get(j));
+					goodsMapper.insertGoodsSpecificationsStoreLink(gssl);
+				}			
+				result = 1;
+			}
+			
+			result = 1;
+		}
+		return result;
+	}
+	@Override
+	public List<Goods> selectGoods() {
+		return goodsMapper.selectAll();
+	}
+	
+	@Override
+	public Map<String, Object> addGoods() {
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Category> cat = categoryMapper.selectAll();
+		map.put("cat", cat);
+		List<Disparity> disparity = disparityMapper.selectAll();
+		map.put("disparity", disparity);
+		List<HongShiProduct> hongShiProduct = hongShiMapper.getHongShiProduct();
+		map.put("hongShiProduct", hongShiProduct);
+		List<NapaStore> tmp = napaStoreMapper.selectAllNapaStore();
+    	HashSet<String> hsCode = new HashSet<String>();
+    	List<NapaStore> ret = new ArrayList<NapaStore>();
+    	for(NapaStore item : tmp){
+    		if(!hsCode.contains(item.getHsCode())){
+    			ret.add(item);
+    			hsCode.add(item.getHsCode());
+    		}
+    	}
+		map.put("store", ret);
+		return map;
+	}
+	@Override
+	public Map<String,Object> getGoodsByProductId(Integer productId) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Category> cat = categoryMapper.selectAll();
+		map.put("cat", cat);
+		List<Disparity> disparity = disparityMapper.selectAll();
+		map.put("disparity", disparity);
+		List<HongShiProduct> hongShiProducts = hongShiMapper.getHongShiProduct();
+        List<String> hsCodes = goodsMapper.selectByGoodsId(productId);
+        List<HongShiProduct> notSelected = new ArrayList<HongShiProduct>();
+        LinkedList<HongShiProduct> ret = new LinkedList<HongShiProduct>();
+        for(HongShiProduct item : hongShiProducts){
+            if(hsCodes.contains(item.getCode())){
+                ret.add(item);
+            }else{
+                notSelected.add(item);
+            }
+        }
+        for(HongShiProduct item : notSelected){
+            ret.add(item);
+        }
+
+		map.put("hongShiProduct", hongShiProducts);
+		List<NapaStore> tmp = napaStoreMapper.selectAllNapaStore();
+    	HashSet<String> hsCode = new HashSet<String>();
+    	List<NapaStore> retStore = new ArrayList<NapaStore>();
+    	for(NapaStore item : tmp){
+    		if(!hsCode.contains(item.getHsCode())){
+    			retStore.add(item);
+    			hsCode.add(item.getHsCode());
+    		}
+    	}
+		map.put("store", retStore);
+		Goods goods = getGoods(productId);
+		map.put("goods", goods);
+		return map;
+	}
+	@Override
+	public int updateGoods(Goods goods) {
+		goodsMapper.updateGoodsById(goods);
+		GoodsCategoriesLink goodsCategoriesLink = new GoodsCategoriesLink();
+		goodsCategoriesLink.setCategoryId(goods.getGoodscategory());
+		goodsCategoriesLink.setGoodsId(goods.getId());
+		goodsMapper.updateGoodsAndCategories(goodsCategoriesLink);
+		
+		//清除门店规格关联
+		List<GoodsSpecifications> specifications = goodsMapper.selectByGoodsSpecifications(goods.getId());
+		for(int i=0; i<specifications.size(); i++){
+			goodsMapper.deleteBylink(specifications.get(i).getId());
+		}
+		//绑定门店规格关联
+		int result =0;
+		GoodsSpecifications goodsSpecifications = new GoodsSpecifications();
+		for(int i=0; i<goods.getGoodsSpecifications().size();i++){
+			goodsSpecifications.setGoodsId(goods.getId());
+			goodsSpecifications.setName(goods.getGoodsSpecifications().get(i).getName());
+			goodsSpecifications.setCode(goods.getGoodsSpecifications().get(i).getCode());
+			goodsSpecifications.setHsPrice(goods.getGoodsSpecifications().get(i).getHsPrice());
+			goodsSpecifications.setVipPrice(goods.getGoodsSpecifications().get(i).getVipPrice());
+			goodsSpecifications.setSpecPack(goods.getGoodsSpecifications().get(i).getSpecPack());
+			goodsMapper.insertGoodsSpecifications(goodsSpecifications);
+			GoodsSpecificationsStoreLink gssl = new GoodsSpecificationsStoreLink();
+
+			for(int j=0; j<goods.getGoodsSpecifications().get(i).getStoreIds().size(); j++){
+				logger.info("goodsSpecificationsId:" + goodsSpecifications.getId());
+				gssl.setSpecId(goodsSpecifications.getId());
+				gssl.setStoreId(goods.getGoodsSpecifications().get(i).getStoreIds().get(j));
+				goodsMapper.insertGoodsSpecificationsStoreLink(gssl);
+			}			
+			result = 1;
+		}
+		
+		return result;
+	}
+	@Override
+	public int deleteGoods(Integer id) {
+		//清除门店规格关联
+		List<GoodsSpecifications> specifications = goodsMapper.selectByGoodsSpecifications(id);
+		for(int i=0; i<specifications.size(); i++){
+			goodsMapper.deleteBylink(specifications.get(i).getId());
+		}
+		goodsMapper.deleteGoods(id);
+		return 0;
 	}
 	
 }

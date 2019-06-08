@@ -16,10 +16,11 @@
     login_id, oauth_id, user_id, oauth_name, oauth_access_token, oauth_expires,is_subcribe,is_subscribe_show,is_point_send
   </sql>
   <select id="selectByPrimaryKey" resultMap="OauthLogin" parameterType="java.lang.Integer" >
-    select 
+    select top 1
     <include refid="Base_Column_List" />
     from web_oauth_login
     where login_id = #{loginId,jdbcType=INTEGER}
+    order by user_id desc
   </select>
   <select id="selectForSchedule" resultMap="OauthLogin" >
     select 

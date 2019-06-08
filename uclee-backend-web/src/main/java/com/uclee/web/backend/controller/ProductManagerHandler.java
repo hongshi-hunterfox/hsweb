@@ -83,7 +83,6 @@ public class ProductManagerHandler {
 		String url=null;
 		if(fileVo.getFile() != null){
 			url = productManageService.uploadImage(fileVo.getFile());
-			logger.info(url);
     	}
 		return url;
 	}

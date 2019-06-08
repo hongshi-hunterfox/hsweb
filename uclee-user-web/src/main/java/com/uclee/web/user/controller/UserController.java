@@ -38,6 +38,8 @@ import com.uclee.fundation.data.mybatis.model.DeliverAddr;
 import com.uclee.fundation.data.mybatis.model.EvaluationGifts;
 import com.uclee.fundation.data.mybatis.model.Freight;
 import com.uclee.fundation.data.mybatis.model.FullCut;
+import com.uclee.fundation.data.mybatis.model.Goods;
+import com.uclee.fundation.data.mybatis.model.GoodsCart;
 import com.uclee.fundation.data.mybatis.model.HomeQuickNavi;
 import com.uclee.fundation.data.mybatis.model.HongShiCommonResult;
 import com.uclee.fundation.data.mybatis.model.HongShiCoupon;
@@ -1939,7 +1941,6 @@ public class UserController extends CommonUserHandler {
 	@RequestMapping("/getBargainUser")
 	public @ResponseBody Map<String, Object> getBargainUser(HttpServletRequest request, String codes) {
 		Map<String, Object> map = new TreeMap<String, Object>();
-		System.out.println("codesskx======" + codes);
 		// 取得砍价记录
 		List<WxUser> users = userService.selectWxUser(codes);
 		BigDecimal sumMoney = userService.selectSumMoney(codes);
@@ -2154,6 +2155,36 @@ public class UserController extends CommonUserHandler {
 	@RequestMapping("/updateDetaileEnd")
 	public @ResponseBody Integer updateDetaileEnd(HttpServletRequest request, Integer orderID) {
 		return userService.updateDetaileEnd(orderID);
+	}
+	
+	@RequestMapping("/getgoodslist")
+	@ResponseBody
+	public Map<String, Object> getGoodsList(HttpServletRequest request){
+		Map<String, Object> map = new TreeMap<String, Object>();
+		List<Goods> result = userService.selectGoodsList();
+		map.put("goodslist", result);
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		BigDecimal total =  userService.selectGoodsCart(userId);
+		System.out.println(total+"===============");
+		map.put("total", total);
+		return map;
+	}
+	
+	@RequestMapping("/getgoodsdetail")
+	@ResponseBody
+	public Map<String, Object> getGoodsDetail(HttpServletRequest request, Integer id){
+		return userService.selectGoodsAndSpecification(id);
+	}
+	
+	@RequestMapping("/addGoodsCart")
+	@ResponseBody
+	public int addGoodsCart(HttpServletRequest request, @RequestBody GoodsCart goodsCart){
+		// 取userid
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		goodsCart.setUserId(userId);
+		return userService.insertGoodsCart(goodsCart);		
 	}
 
 }

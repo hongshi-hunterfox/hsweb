@@ -32,6 +32,16 @@ public class ValuePost {
 	
 	private BigDecimal vipPrice;
 	
+	private int specPack;
+	
+	public int getSpecPack() {
+		return specPack;
+	}
+	
+	public void setSpecPack(int specPack) {
+		this.specPack = specPack;
+	}
+	
 	public BigDecimal getVipPrice() {
 		return vipPrice;
 	}
