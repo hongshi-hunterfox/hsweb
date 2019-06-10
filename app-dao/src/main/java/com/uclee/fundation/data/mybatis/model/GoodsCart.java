@@ -14,4 +14,6 @@ public class GoodsCart {
 	public int amount;
 	public BigDecimal hsPrice;
 	public BigDecimal vipPrice;
+	public String goodsImg;
+	public String name;
 }

@@ -400,12 +400,16 @@ public interface UserServiceI {
 	Integer updateDetaileStart(Integer orderID);
 	int updateDetaileEnd(Integer orderID);
 	
-	List<Goods> selectGoodsList();
+	List<Goods> selectGoodsList(Integer goodscategory);
 	
 	Map<String, Object> selectGoodsAndSpecification(Integer id);
 	
 	int insertGoodsCart(GoodsCart goodsCart);
 	
 	BigDecimal selectGoodsCart(Integer userId);
+	
+	List<GoodsCart> selectGoodsCarts(Integer userId);
+	
+	int deleteGoodsCart(Integer id);
 	
 }

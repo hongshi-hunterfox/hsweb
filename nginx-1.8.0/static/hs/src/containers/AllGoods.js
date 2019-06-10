@@ -9,6 +9,7 @@ import Icon from '../components/Icon'
 import Scrollbar from 'react-smooth-scrollbar'
 import 'smooth-scrollbar/dist/smooth-scrollbar.css'
 import Big from 'big.js'
+import Counter from '../components/Counter'
 
 
 const DetailPicker = (props) => {
@@ -114,6 +115,64 @@ return null
 }
 
 
+const CartDetail = (props) => {
+  if (props.showCart) {
+      return (
+        <div className="detail-picker-overlay" onClick={props.closeCart}>
+          <div className="detail-picker" onClick={(e) => {e.stopPropagation()}}>
+          	<span className="detail-picker-close" onClick={props.closeCart}><Icon name="times-circle"/></span>
+          	<div className="goodscart-items">
+                      {props.list.map((item, index) => {
+                        return (
+                          <div className="goods-item clearfix" key={index}>
+                            <div className="goods-item-img"> 
+                                <img
+                                  src={item.goodsImg}
+                                  alt={item.name}
+                                  width="80"
+                                  height="80"
+                                />
+                            </div>
+                            <div className="goods-item-info">
+                            		<div className="goods-item-title">
+                          					&nbsp;&nbsp;{item.name}  
+                        				</div>
+                            		&nbsp;&nbsp;&nbsp;数量 x{item.amount}<br/>
+                              	<div className="goods-item-price"> 
+                              		¥{item.hsPrice}<br/>
+                    							{item.vipPrice !== null ? '会员价¥ '+item.vipPrice : null}
+                              	</div>
+                            </div>
+													  <button className="btn btn-danger" style={{float:'right'}} onClick={()=>{
+													  	req
+								      				.get('/uclee-user-web/removeCart?cartId='+item.id)
+												      .end((err, res) => {
+												        if (err) {
+												          return err
+												        }
+												        var result = JSON.parse(res.text);
+												        if(result>0){
+												        	alert("删除购物车成功!")
+												        	window.location.reload();
+												        }else{
+												        	alert("删除购物车失败,请刷新重试!")
+												        }
+													  })}}
+													  >
+													  	删除<
+													  /button>
+                          </div>
+                        )
+                      })}
+                    </div>
+          </div>
+        </div>
+    )
+}
+return null
+}
+
+
 class AllGoods extends React.Component {
   constructor(props) {
     super(props)
@@ -124,11 +183,14 @@ class AllGoods extends React.Component {
 			goodslist: [],
 			total:null,
 			showPick: false,
+			showCart: false,
 			goods:[],
 			spec:[],
 			specid:null,
 			currentAmount: 1,
 			pickType: 'add_to_cart', // 'add_to_cart' || 'buy_now'
+			list:[],
+			catName:'',
     }
     this.specPriceMap = {}
     this.specValueMap = {}
@@ -144,6 +206,7 @@ class AllGoods extends React.Component {
       var data = JSON.parse(res.text)
       this.setState({
         cat: data.cat,
+        catName:'默认',
       })
     })
 		req.get('/uclee-user-web/storeList').end((err, res) => {
@@ -158,7 +221,7 @@ class AllGoods extends React.Component {
 				isshow: this.props.isshow,
 			})
 		})
-		req.get('/uclee-user-web/getgoodslist').end((err, res) => {
+	req.get('/uclee-user-web/getgoodslist').end((err, res) => {
       if (err) {
         return err
       }
@@ -168,10 +231,44 @@ class AllGoods extends React.Component {
         total: data.total
       })
     })
+	req
+      .get('/uclee-user-web/getCartList')
+      .end((err, res) => {
+        if (err) {
+          return err
+        }
+        this.setState({
+          list: res.body.list
+        })
+      })	
   }
   
   _setGoodsList=(e)=>{
-  	alert(e+"----")
+  	
+  	req.get('/uclee-user-web/getgoodslist?goodscategory='+e.categoryId).end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        goodslist: data.goodslist,
+        total: data.total,
+        catName: e.category,
+      })
+    })
+  }
+  
+  
+  _showCart = () => {
+  	this.setState({
+  		showCart: true,
+  	})
+  }
+  
+  _closeCart = () => {
+    this.setState({
+      showCart: false
+    })
   }
   
   _showPick = (id) => {
@@ -191,7 +288,7 @@ class AllGoods extends React.Component {
       })
   }
   
- 	_closePick = () => {
+ _closePick = () => {
     this.setState({
       showPick: false
     })
@@ -235,6 +332,13 @@ class AllGoods extends React.Component {
     })
     this._showPick()
   }
+  
+  _change = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
    	
   render() {
   	if (this.state.spec.length) {
@@ -262,7 +366,7 @@ class AllGoods extends React.Component {
   	//类别列表
     var list = this.state.cat.map((item,index)=>{
         return(
-         	<li className="list-group-item" onClick={this._setGoodsList.bind(this,item.categoryId)}>
+         	<li className="list-group-item" onClick={this._setGoodsList.bind(this,item)}>
          		{item.category}
          	</li>
         );  
@@ -278,9 +382,12 @@ class AllGoods extends React.Component {
 						</div>
       		</div>
       		<div  style={{width:'356px'}}>
-      			<h4>类别:</h4>
+      			<h4>类别:{this.state.catName}</h4>
 		        <div className="cat" style={{float:'left'}}>
 						  <ul className="list-group">
+						  	<li className="list-group-item" onClick={() => {window.location.reload()}}>
+	        				全部商品
+	        			</li>
 						  	{list}
 						  </ul>
 		        </div>
@@ -313,15 +420,17 @@ class AllGoods extends React.Component {
 		        </div>
 	        </div>
           <div className="goods-settle">
+          	<div onClick={this._showCart}>
               <div className="goods-settle-price">  
               {'合计：¥'+this.state.total}
               </div>
               <div className="goods-settle-info">不含外带费用</div>
+            </div>
               <div className="goods-settle-go" onClick={this._go}>
                 <span>立即结算</span>
               </div>
           </div>
-	        <DetailPicker
+	      <DetailPicker
               showPick={this.state.showPick}
               closePick={this._closePick}
               image={this.state.goodsimg}
@@ -335,8 +444,14 @@ class AllGoods extends React.Component {
               currentAmount={this.state.currentAmount}
               pickType={this.state.pickType}
               onClickNext={this._clickNext}
-							goodsId={this.state.goodsId}
+			  goodsId={this.state.goodsId}
             />
+	      <CartDetail
+	      	showCart={this.state.showCart}
+	      	closeCart={this._closeCart}
+	      	list={this.state.list}
+	      	change={this._change}
+	      />
         </div>  
       </DocumentTitle>
     )

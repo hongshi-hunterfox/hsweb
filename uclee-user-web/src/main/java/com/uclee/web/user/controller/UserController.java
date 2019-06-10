@@ -2159,14 +2159,13 @@ public class UserController extends CommonUserHandler {
 	
 	@RequestMapping("/getgoodslist")
 	@ResponseBody
-	public Map<String, Object> getGoodsList(HttpServletRequest request){
+	public Map<String, Object> getGoodsList(HttpServletRequest request,Integer goodscategory){
 		Map<String, Object> map = new TreeMap<String, Object>();
-		List<Goods> result = userService.selectGoodsList();
+		List<Goods> result = userService.selectGoodsList(goodscategory);
 		map.put("goodslist", result);
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		BigDecimal total =  userService.selectGoodsCart(userId);
-		System.out.println(total+"===============");
 		map.put("total", total);
 		return map;
 	}
@@ -2185,6 +2184,25 @@ public class UserController extends CommonUserHandler {
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		goodsCart.setUserId(userId);
 		return userService.insertGoodsCart(goodsCart);		
+	}
+	
+	@RequestMapping("/getCartList")
+	@ResponseBody
+	public Map<String, Object> getCartList(HttpServletRequest request){
+		// 取userid
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<GoodsCart> list = userService.selectGoodsCarts(userId);
+		Map<String, Object> map = new TreeMap<String, Object>();
+		System.out.println(JSON.toJSON(list));
+		map.put("list", list);
+		return map;
+	}
+	
+	@RequestMapping("/removeCart")
+	@ResponseBody
+	public int removeCart(HttpServletRequest request, Integer cartId){
+		return userService.deleteGoodsCart(cartId);
 	}
 
 }

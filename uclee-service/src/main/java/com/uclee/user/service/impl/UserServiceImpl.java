@@ -5011,7 +5011,10 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	@Override
-	public List<Goods> selectGoodsList() {
+	public List<Goods> selectGoodsList(Integer goodscategory) {
+		if(goodscategory != null){
+			return goodsMapper.selectGoodsAndCatList(goodscategory);
+		}
 		return goodsMapper.selectGoodsList();
 	}
 
@@ -5037,21 +5040,49 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public int insertGoodsCart(GoodsCart goodsCart) {
+		GoodsCart cart = goodsMapper.selectIsCart(goodsCart.getUserId(),goodsCart.getSpecId());
+		if(cart!=null) {
+			int amount = cart.getAmount() + goodsCart.getAmount();
+			return goodsMapper.updateGoodsCart(amount, cart.getId());
+		}
 		return goodsMapper.insertGoodsCart(goodsCart);
 	}
 
 	@Override
 	public BigDecimal selectGoodsCart(Integer userId) {
 		BigDecimal total = new BigDecimal(0);
+		BigDecimal temp = new BigDecimal(0);
+		
 		List<GoodsCart> cart =  goodsMapper.selectGoodsCart(userId);
 		//判断是否是会员
 		int record = goodsMapper.selectIsVip(userId);
 		if(record>0 && cart.size()>0){
-			System.out.println(JSON.toJSON(cart));
+			for(GoodsCart item:cart){
+				if(item.getVipPrice() != null){
+					temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
+				}else{
+					temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+				}
+				total = temp.add(total);
+			}
 		}else if(cart.size()>0){
-			
+			for(GoodsCart item:cart){
+				temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+				total = temp.add(total);
+			}
 		}
 		return total;
+	}
+
+	@Override
+	public List<GoodsCart> selectGoodsCarts(Integer userId) {
+		List<GoodsCart> list = goodsMapper.selectGoodsCart(userId);
+		return list;
+	}
+
+	@Override
+	public int deleteGoodsCart(Integer id) {
+		return goodsMapper.deleteGoodsCart(id);
 	}
 }
 

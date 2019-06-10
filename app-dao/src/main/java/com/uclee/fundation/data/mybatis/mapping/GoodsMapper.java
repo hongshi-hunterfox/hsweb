@@ -3,6 +3,8 @@ package com.uclee.fundation.data.mybatis.mapping;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.uclee.fundation.data.mybatis.model.Goods;
 import com.uclee.fundation.data.mybatis.model.GoodsCart;
 import com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink;
@@ -24,8 +26,12 @@ public interface GoodsMapper {
 	int deleteBylink(Integer id);
 	int deleteGoods(Integer id);
 	List<Goods> selectGoodsList();
+	List<Goods> selectGoodsAndCatList(Integer goodscategory);
 	List<Goods> selectGoodsAndSpecification(Integer id);
 	int insertGoodsCart(GoodsCart goodsCart);
 	List<GoodsCart> selectGoodsCart(Integer userId);
 	int selectIsVip(Integer userId);
+	int deleteGoodsCart(Integer id);
+	GoodsCart selectIsCart(@Param("userId")Integer userId,@Param("specId")Integer specId);
+	int updateGoodsCart(@Param("amount")Integer amount,@Param("id")Integer id);
 }
