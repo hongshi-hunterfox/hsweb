@@ -8,8 +8,7 @@
     <script src="http://map.qq.com/api/js?v=2.exp&libraries=geometry"></script>
     <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&key=YKKBZ-FVJWI-6SIGN-5QRD5-MV5DJ-PGFW2"></script>
     <script src="/jweixin-1.0.0.js"></script>
-    <script src="js/jquery-1.10.1.min.js"></script>
-  	<script src="js/vue.min.js"></script
+    <script src="/jquery-1.10.1.min.js"></script>
     <script>
       window.onpageshow = function(e) {
         if (e.persisted) {
@@ -17,6 +16,51 @@
         }
       }
     </script>
+    <script type="text/javascript">
+	  $(function(){
+	    $('.content').css('height',$('.goodsright').height());
+	    $('.goodsleft ul li').eq(0).addClass('activee');
+	    $(window).scroll(function(){
+	      if($(window).scrollTop() >= 150){
+	        $('.swiper-container-ul').css('position','fixed');
+	        $('.goodsleft').css('position','fixed');
+	        $('.goodsright').css('margin-left',$('.goodsleft').width());
+	      }else {
+	        $('.swiper-container-ul').css('position','');
+	        $('.goodsleft').css('position','');
+	        $('.goodsright').css('margin-left','');
+	      };
+	      //滚动到标杆位置,左侧导航加active
+	      $('.goodsright ul li').each(function(){
+	        var target = parseInt($(this).offset().top-$(window).scrollTop()-150);
+	        var i = $(this).index();
+	        if (target<=0) {
+	          $('.goodsleft ul li').removeClass('activee');
+	          $('.goodsleft ul li').eq(i).addClass('activee');
+	        }
+	      });
+	    });
+	    $(document).on('click','.goodsleft ul li',function(){
+	      var i = $(this).index('.goodsleft ul li');
+	      $('body, html').animate({scrollTop:$('.goodsright ul li').eq(i).offset().top-40},500);
+	    });
+
+	    $(document).on('click','.swiper-container-ul-li',function(){
+	      var index = $(this).index();
+	      if(index == 0){
+	        $('.swiper-slide').eq(0).show();
+	        $('.swiper-container-ul-li').eq(0).addClass('activess');
+	        $('.swiper-slide').eq(1).hide();
+	        $('.swiper-container-ul-li').eq(1).removeClass('activess');
+	      }else {
+	        $('.swiper-slide').eq(0).hide();
+	        $('.swiper-container-ul-li').eq(0).removeClass('activess');
+	        $('.swiper-slide').eq(1).show();
+	        $('.swiper-container-ul-li').eq(1).addClass('activess');
+	      }
+	    });
+	  });
+  </script>
   </head>
   <body>
     <div id="root"></div>

@@ -16,26 +16,28 @@
   border-radius: 50%;
   padding: 15px;
 }
-.goods-item-img {
-  float: left;
-}
 .goods-item-info {
   overflow: hidden;
   padding-left: 10px;
   padding-bottom: 30px;
 }
 .goods-item-title {
-  font-size: 16px;
+  width: 200px;
+  padding-left: 10px;
+  font-size: 13px;
+  word-wrap:break-word
 }
 .goods-item-spec {
-  float: right;
+  display:inline;
+  margin-top: 10px;
   color: #ff6600;
 }
 .goods-item-price {
   float: left;
   padding-left: 10px;
+  width: 120px;
   color: #ff6600;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: bold;
 }
 
@@ -43,6 +45,10 @@
   width: 99.8%;
   background-color: #F2F2F2;
   margin: 5px;
+}
+
+.goods-buttom {
+	padding-bottom: 35px;
 }
 
 .detail-picker {
@@ -175,4 +181,110 @@
 }
 .goods-item-title {
   font-size: 16px;
+}
+
+
+.goods-item-img {
+  float: left;
+}
+
+*{
+  padding: 0;
+  margin-bottom: 0;
+}
+.header{
+  width: 100%;
+  height: 150px;
+  background: #555;
+}
+.swiper-container-ul{
+  list-style: none;
+  overflow: hidden;
+  width: 100%;
+  background: #fff;
+  top: 0;
+}
+.swiper-container-ul-li{
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+  text-align: center;
+}
+.activess{
+  border-bottom: 1px solid #3190e8;
+  color: #eee;
+}
+.content{
+  width: 100%;
+  overflow: hidden;
+}
+.goodsleft{
+  top: 41px;
+  float: left;
+  width: 25%;
+  height: 100%;
+  background: #eee;
+}
+.goodsleft ul{
+  list-style: none;
+}
+.goodsleft ul li{
+  padding: 15px 5px;
+  text-align: center;
+}
+.activee{
+  background: #fff;
+  border-left: 2px solid orangered;
+}
+.goodsright{
+  float: left;
+  width: 75%;
+  height: 100%;
+}
+.goodsright ul{
+  list-style: none;
+}
+.class-title{
+  padding: 7px 10px;
+  background: #eee;
+}
+.item{
+  overflow: hidden;
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+.item-left{
+  float: left;
+}
+.item-right{
+  float: left;
+  padding: 0 10px;
+}
+.goods-item-img{
+  width: 100px;
+  height: 100px;
+  background: #eee;
+}
+.goods-item-title{
+  width: 120px;
+  height: 20px;
+  margin-top: 10px;
+/*  background: #eee;*/
+}
+.goods-item-subtitle{
+  width: 90px;
+  height: 20px;
+  margin-top: 10px;
+/*  background: #eee;*/
+}
+.goods-item-price{
+  width: 70px;
+  height: 20px;
+  margin-top: 10px;
+  color: orangered;
+  font-weight: bold;
+/*  background: #eee;*/
 }

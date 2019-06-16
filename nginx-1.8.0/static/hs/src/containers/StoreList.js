@@ -137,12 +137,12 @@ class StoreList extends React.Component {
 						</div>
 						<div className="store-list-item-bottom">
 							<div className="addr">
-								<font color="#808080">{item.province}{item.city}{item.region}{item.addrDetail}</font>
-							</div>
-							<div>
 								<font color="#808080">
-									<span className="fa fa-chevron-right right"/>
+								 <span>{item.province}{item.city}{item.region}{item.addrDetail}</span>
 								</font>
+							</div>
+							<div className="rights">
+								<li className="fa fa-chevron-right"/>
 							</div>
 						</div>
 					</div>

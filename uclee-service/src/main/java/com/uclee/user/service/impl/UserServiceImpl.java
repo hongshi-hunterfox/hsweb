@@ -12,17 +12,21 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.Principal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 //import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -31,8 +35,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
+import javax.servlet.http.Part;
 
 import com.uclee.payment.exception.RefundHandlerException;
 import com.uclee.user.model.*;
@@ -74,6 +90,7 @@ import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.BossCenterItem;
 import com.uclee.fundation.data.web.dto.MobileItem;
 import com.uclee.fundation.data.web.dto.CartDto;
+import com.uclee.fundation.data.web.dto.GoodsOrder;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.data.web.dto.ProductVoucherPost;
@@ -103,6 +120,8 @@ public class UserServiceImpl implements UserServiceI {
 	@Autowired
 	private SpecificationValueMapper specificationValueMapper;
 	@Autowired
+	private CategoryMapper categoryMapper;
+	@Autowired
 	private UrlVoucherCollectionMapper urlVoucherCollectionMapper;
 	@Autowired
 	private BargainSettingMapper bargainSettingMapper;
@@ -128,6 +147,8 @@ public class UserServiceImpl implements UserServiceI {
 	private WinningRecordMapper winningRecordMapper;
 	@Autowired
 	private RoleMapper roleMapper;
+	@Autowired
+	private DisparityMapper disparityMapper;
 	@Autowired
 	private PermissionMapper permissionMapper;
 	@Autowired
@@ -1682,20 +1703,24 @@ public class UserServiceImpl implements UserServiceI {
 	public boolean WechatNotifyHandle(String out_trade_no, String transaction_id,String attach) {
 		datasource.switchDataSource(attach);
 		logger.info("微信回调datasource: " + attach);
-		System.out.println("微信回调datasource: " + attach);
-		PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum(out_trade_no);
-		if(paymentOrder!=null&&!paymentOrder.getIsCompleted()){
-			paymentOrder.setTransactionId(transaction_id);
-			paymentOrder.setIsCompleted(true);
-			paymentOrder.setCompleteTime(new Date());
-			if(paymentOrderMapper.updatePaymentResult(paymentOrder)>0){
-				//TODO 调用存储过程
-				OauthLogin oauthLogin = getOauthLoginInfoByUserId(paymentOrder.getUserId());
-				if(oauthLogin!=null){
-					if(paymentOrder.getTransactionType()==1){
-						return paymentSuccessHandler(paymentOrder, oauthLogin);
-					}else{
-						return rechargeSuccessHandler(paymentOrder, oauthLogin);
+		logger.info("单号============: " + out_trade_no);
+		if(out_trade_no.indexOf("WXDC") != -1){
+			System.out.println("扫码点餐订单");
+		}else{
+			PaymentOrder paymentOrder = paymentOrderMapper.selectByPaymentSerialNum(out_trade_no);
+			if(paymentOrder!=null&&!paymentOrder.getIsCompleted()){
+				paymentOrder.setTransactionId(transaction_id);
+				paymentOrder.setIsCompleted(true);
+				paymentOrder.setCompleteTime(new Date());
+				if(paymentOrderMapper.updatePaymentResult(paymentOrder)>0){
+					//TODO 调用存储过程
+					OauthLogin oauthLogin = getOauthLoginInfoByUserId(paymentOrder.getUserId());
+					if(oauthLogin!=null){
+						if(paymentOrder.getTransactionType()==1){
+							return paymentSuccessHandler(paymentOrder, oauthLogin);
+						}else{
+							return rechargeSuccessHandler(paymentOrder, oauthLogin);
+						}
 					}
 				}
 			}
@@ -5011,11 +5036,22 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	@Override
-	public List<Goods> selectGoodsList(Integer goodscategory) {
-		if(goodscategory != null){
-			return goodsMapper.selectGoodsAndCatList(goodscategory);
+	public List<Object> selectGoodsList(Integer storeId) {
+		List<Category> cat = categoryMapper.selectByParentId(0);
+		List<Object> list = new ArrayList<>();
+		for(Category item:cat) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			String catName = item.getCategory();
+			map.put("catName", catName);
+			List<Object> goodslist = new ArrayList<>();
+			List<Goods> goods= goodsMapper.selectGoodsAndCatList(item.getCategoryId(),storeId);
+			for(Goods ite:goods){
+				goodslist.add(ite);
+			}
+			map.put("goodslist", goodslist);
+			list.add(map);
 		}
-		return goodsMapper.selectGoodsList();
+		return list;
 	}
 
 	@Override
@@ -5029,8 +5065,21 @@ public class UserServiceImpl implements UserServiceI {
 			gd.setGoodsimg(goods.get(0).getGoodsimg());
 			map.put("goods", gd);
 			List<GoodsSpecifications> spec = goodsMapper.selectByGoodsSpecifications(id);
-			
 			map.put("spec", spec);
+			List<String> flavor = new ArrayList<String>();
+			if(goods.get(0).getFlavorone()!=null){
+				flavor.add(goods.get(0).getFlavorone());
+			}
+			if(goods.get(0).getFlavortwo()!=null){
+				flavor.add(goods.get(0).getFlavortwo());
+			}
+			if(goods.get(0).getFlavorthree()!=null){
+				flavor.add(goods.get(0).getFlavorthree());
+			}
+			if(goods.get(0).getFlavorfour()!=null){
+				flavor.add(goods.get(0).getFlavorfour());
+			}
+			map.put("flavor", flavor);
 			map.put("specid", spec.get(0).getId());			
 		}
 		
@@ -5040,7 +5089,13 @@ public class UserServiceImpl implements UserServiceI {
 
 	@Override
 	public int insertGoodsCart(GoodsCart goodsCart) {
-		GoodsCart cart = goodsMapper.selectIsCart(goodsCart.getUserId(),goodsCart.getSpecId());
+		GoodsCart cart = null;
+		if(goodsCart.getFlavorname()!=null){
+			cart = goodsMapper.selectIsCart(goodsCart.getUserId(),goodsCart.getSpecId(),goodsCart.getFlavorname());
+		}
+		else{
+			cart = goodsMapper.selectIsCarts(goodsCart.getUserId(),goodsCart.getSpecId());
+		}
 		if(cart!=null) {
 			int amount = cart.getAmount() + goodsCart.getAmount();
 			return goodsMapper.updateGoodsCart(amount, cart.getId());
@@ -5073,6 +5128,90 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return total;
 	}
+	
+	@Override
+	public Map<String, Object>  selectGoodsCartTotal(Integer userId,Integer type) {
+		BigDecimal total = new BigDecimal(0);//实付金额
+		BigDecimal temp = new BigDecimal(0);//计算订单实付金额
+		BigDecimal goodstotal = new BigDecimal(0);//商品总额
+		BigDecimal tmp = new BigDecimal(0);//计算商品合计金额临时值
+		BigDecimal disparityTotal = new BigDecimal(0);//打包费用总额
+		BigDecimal temps = new BigDecimal(0);//打包费用临时值
+		final int x = 1;
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<GoodsCart> cart =  goodsMapper.selectGoodsCart(userId);
+		//判断是否是会员
+		int record = goodsMapper.selectIsVip(userId);
+		if(record>0 && cart.size()>0){
+			//判断是否堂食
+			if(type == x){
+				for(GoodsCart item:cart){
+					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					if(item.getVipPrice() != null){
+						temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
+					}else{
+						temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					}
+					total = temp.add(total);
+					goodstotal = tmp.add(goodstotal);
+				}
+			}else{
+				//打包
+				for(GoodsCart item:cart){
+					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					if(item.getVipPrice() != null){
+						temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
+						Disparity disparity = disparityMapper.selectByDisParity(item.getSpecId(),item.getGoodsId(),userId);
+						temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));	
+					}else{
+						temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+						Disparity disparity = disparityMapper.selectByDisParity(item.getSpecId(),item.getGoodsId(),userId);
+						temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));	
+					}
+					total = temp.add(total);
+					goodstotal = tmp.add(goodstotal);
+					disparityTotal = temps.add(disparityTotal);
+				}
+			}
+
+		}else if(cart.size()>0){
+			//判断是否堂食
+			if(type == x){
+				for(GoodsCart item:cart){
+					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					total = temp.add(total);
+					goodstotal = tmp.add(goodstotal);
+				}
+			}
+			else{
+				//打包
+				for(GoodsCart item:cart){
+					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
+					Disparity disparity = disparityMapper.selectByDisParity(item.getSpecId(),item.getGoodsId(),userId);
+					temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));	
+				}
+				System.out.println(total+"============="+disparityTotal+"=========999");
+				total = temp.add(total);
+				goodstotal = tmp.add(goodstotal);
+				disparityTotal = temps.add(disparityTotal);
+			}
+
+		}
+		String remarks = "";
+		for(GoodsCart item:cart){
+			remarks = remarks + item.getName()+"("+item.getFlavorname()+" x"+item.getAmount()+");";
+		}
+		System.out.println(remarks);
+		map.put("remarks", remarks);
+		map.put("disparityTotal", disparityTotal);
+		map.put("goodstotal", goodstotal);
+		map.put("detailedamount",goodstotal.subtract(total));
+		total = total.add(disparityTotal);
+		map.put("total",total);
+		return map;
+	}
 
 	@Override
 	public List<GoodsCart> selectGoodsCarts(Integer userId) {
@@ -5083,6 +5222,67 @@ public class UserServiceImpl implements UserServiceI {
 	@Override
 	public int deleteGoodsCart(Integer id) {
 		return goodsMapper.deleteGoodsCart(id);
+	}
+
+	@Override
+	public Map<String, Object> vipPay(GoodsOrder goodsOrder, Integer userId) {
+		//取外键
+		HsVip vip = goodsMapper.selectVipInfo(userId);
+		//单号
+		String ordercode = "WXDC"+System.currentTimeMillis();
+		//总数量
+		int sum = goodsMapper.selectSumCart(userId);
+		goodsOrder.setWeixincode(vip.getOauthId());
+		
+		Map<String,Object> map = new HashMap<String, Object>();		
+		//如果单号字段已有值证明是微信支付
+		String paymentMethod="微信支付";
+		if(goodsOrder.getTardno() != null && goodsOrder.getTardno().length() != 0){
+		}else{
+			goodsOrder.setTardno(ordercode);
+		}
+		System.out.println("单号==="+goodsOrder.getTardno());
+		map.put("wxdcCode", goodsOrder.getTardno());
+		goodsOrder.setTotalnum(sum);
+		System.out.println(goodsOrder.getRemarks()+"===========备注");
+		CreateOrderResult order = goodsMapper.createGoodsOrder(goodsOrder);
+		if(order!=null){
+			//插入订单明细
+			BigDecimal temp = new BigDecimal(0); 
+			//订单id
+			Integer orderId= order.getOrderID();
+			List<GoodsCart> cart =  goodsMapper.selectGoodsCart(userId);
+			//判断是否是会员
+			int record = goodsMapper.selectIsVip(userId);
+			GoodsOrderItem goi = new GoodsOrderItem();
+			goi.setOrderId(orderId);
+			if(record>0 && cart.size()>0){
+				for(GoodsCart item:cart){
+					goi.setGoodCode(item.getCode());
+					goi.setAmount(item.getAmount());
+					if(item.getVipPrice() != null){
+						temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
+					}else{
+						temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					}
+					goi.setTotal(temp);
+					goi.setGoodsId(item.getGoodsId());
+					goodsMapper.createGoodsOrderItem(goi);
+				}
+			}else{
+				for(GoodsCart item:cart){
+					goi.setGoodCode(item.getCode());
+					goi.setAmount(item.getAmount());
+					temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
+					goi.setTotal(temp);
+					goi.setGoodsId(item.getGoodsId());
+					goodsMapper.createGoodsOrderItem(goi);
+				}
+			}	
+			//删除购物车
+			goodsMapper.deleteUserGoodsCart(userId);
+		}		
+		return map;
 	}
 }
 

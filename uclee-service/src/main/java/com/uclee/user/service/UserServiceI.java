@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.CartDto;
+import com.uclee.fundation.data.web.dto.GoodsOrder;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.data.web.dto.Stock;
@@ -17,6 +18,7 @@ import com.uclee.user.model.UserForm;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.annotations.Param;
+import org.json.JSONException;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -400,7 +402,7 @@ public interface UserServiceI {
 	Integer updateDetaileStart(Integer orderID);
 	int updateDetaileEnd(Integer orderID);
 	
-	List<Goods> selectGoodsList(Integer goodscategory);
+	List<Object>  selectGoodsList(Integer storeId);
 	
 	Map<String, Object> selectGoodsAndSpecification(Integer id);
 	
@@ -408,8 +410,12 @@ public interface UserServiceI {
 	
 	BigDecimal selectGoodsCart(Integer userId);
 	
+	Map<String, Object> selectGoodsCartTotal(Integer userId,Integer type);
+	
 	List<GoodsCart> selectGoodsCarts(Integer userId);
 	
 	int deleteGoodsCart(Integer id);
+	
+	Map<String, Object> vipPay(GoodsOrder goodsOrder,Integer userId);
 	
 }

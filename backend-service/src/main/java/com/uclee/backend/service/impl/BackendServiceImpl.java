@@ -1128,7 +1128,18 @@ public class BackendServiceImpl implements BackendServiceI {
 		Goods goods = goodsMapper.selectByPrimaryKey(id);	
 		if(goods!=null){
 			good.setGoodsname(goods.getGoodsname());
-
+			if(goods.getFlavorone() != null){
+				good.setFlavorone(goods.getFlavorone());
+			}
+			if(goods.getFlavortwo()!=null){
+				good.setFlavortwo(goods.getFlavortwo());
+			}
+			if(goods.getFlavorthree() != null){
+				good.setFlavorthree(goods.getFlavorthree());
+			}
+			if(goods.getFlavorfour()!=null){
+				good.setFlavorfour(goods.getFlavorfour());
+			}
 		}
 		GoodsCategoriesLink link = goodsMapper.selectByGoodsAndCategories(id);
 		if(link!=null){

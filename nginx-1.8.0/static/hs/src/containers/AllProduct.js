@@ -98,11 +98,11 @@ class AllProductsTab extends React.Component{
 				<div className={'all-prod-tab-item'} onClick={this._toggleCat}>
 					<span className="fa fa-list-ul"/> 分类
 				</div>
-				<div className={'all-prod-tab-item' + (isSaleDesc==null&&isPriceDesc==null? ' active' : '')}
+				<div className={'all-prod-tab-item' + (isSaleDesc==null&&isPriceDesc==null? ' activea' : '')}
 					onClick={this._tap.bind(this, 0,null)}>
 						默认
 				</div>
-				<div className={'all-prod-tab-item' + (isSaleDesc!=null? ' active' : '')}
+				<div className={'all-prod-tab-item' + (isSaleDesc!=null? ' activea' : '')}
 					onClick={this._tap.bind(this, 1,!isSaleDesc)}>
 					<span className={'all-prod-tab-price' + 
 						(isSaleDesc!=null&&isSaleDesc? ' all-prod-tab-price-asc' : '') +
@@ -111,7 +111,7 @@ class AllProductsTab extends React.Component{
 						销量
 					</span>
 				</div>
-				<div className={'all-prod-tab-item' + (isPriceDesc!=null? ' active' : '')}
+				<div className={'all-prod-tab-item' + (isPriceDesc!=null? ' activea' : '')}
 					onClick={this._tap.bind(this,2, !isPriceDesc)}>
 					<span className={'all-prod-tab-price' + 
 						(isPriceDesc!=null&&isPriceDesc? ' all-prod-tab-price-asc' : '') +
@@ -159,16 +159,16 @@ class Item extends React.Component{
 	}
 	render(){
 		return (
-			<div className='all-prod-item'>
+			<div className='all-prod-itema'>
 				{this.props.product.image === null && this.props.product.salesAmount === null 
 					?
 					null
 					:
 					<div>
-						<div className='left' onClick={this._location.bind(this,'/detail/'+this.props.product.productId+"&merchantCode="+localStorage.getItem('merchantCode'))}>
+						<div className='itema-left' onClick={this._location.bind(this,'/detail/'+this.props.product.productId+"&merchantCode="+localStorage.getItem('merchantCode'))}>
 							<img className='image' src={this.props.product.image} alt=""/>
 						</div>
-						<div className='right' onClick={this._location.bind(this,'/detail/'+this.props.product.productId+"&merchantCode="+localStorage.getItem('merchantCode'))}>
+						<div className='itema-right' onClick={this._location.bind(this,'/detail/'+this.props.product.productId+"&merchantCode="+localStorage.getItem('merchantCode'))}>
 							<div className='title'>{this.props.product.title}
 							
 							</div>

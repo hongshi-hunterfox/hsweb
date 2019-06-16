@@ -54,6 +54,8 @@ import YouZanAuthorize from './containers/YouZanAuthorize'
 import DriverLogin from './containers/DriverLogin.js'
 import DeliveryCenter from './containers/DeliveryCenter.js'
 import AllGoods from './containers/AllGoods.js'
+import OrderingFoodPay from './containers/OrderingFoodPay.js'
+import PaySuccess from './containers/PaySuccess.js'
 import NotFound from './containers/NotFound'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 
@@ -109,6 +111,8 @@ ReactDOM.render(
       <Route path="driver_login" component={DriverLogin}/>
       <Route path="delivery-center" component={DeliveryCenter}/>
       <Route path="all-goods" component={AllGoods}/>
+      <Route path="seller/orderingfood-pay" component={OrderingFoodPay}/>
+      <Route path="pay-success" component={PaySuccess}/>
       <Route path="*" component={NotFound} />
     </Route>
   </Router>,

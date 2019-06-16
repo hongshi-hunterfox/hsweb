@@ -25,7 +25,7 @@
   color: #333;
   font-size: small;
 }
-.navi-item.active {
+.navi-item.activea {
   color: #ef473a !important;
 }
 .navi-item .fa {
@@ -35,7 +35,7 @@
 }
 .navi-item:hover,
 .navi-item:focus,
-.navi-item:active {
+.navi-item:activea {
   color: #333;
   text-decoration: none;
 }

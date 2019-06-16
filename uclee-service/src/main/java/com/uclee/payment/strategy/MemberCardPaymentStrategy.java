@@ -21,4 +21,10 @@ public class MemberCardPaymentStrategy implements PaymentHandlerStrategy {
 		return userService.memberCardPaymentHandler(paymentOrder);
 	}
 
+	@Override
+	public PaymentStrategyResult goodsPayHandler(PaymentOrder paymentOrder) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

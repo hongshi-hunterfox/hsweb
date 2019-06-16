@@ -29,10 +29,10 @@
 .distribution-top:after {
   clear: both;
 }
-.distribution-top .left {
+.distribution-top .lefts {
   padding: 10px 0 0 10px;
 }
-.distribution-top .left .number {
+.distribution-top .lefts .number {
   font-size: 35px;
   color: #f15f40;
   text-align: center;
@@ -70,7 +70,7 @@
   border-bottom: 2px solid #d0d0d0;
   padding: 15px;
 }
-.distribution-content .right {
+.distribution-content .rights {
   display: block;
   float: right;
 }

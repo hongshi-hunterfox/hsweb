@@ -24,52 +24,52 @@ const RechargeListItem = (props) => {
     props.source!=="绑卡送积分"&&props.source!=="签到送积分"&&props.source!=="抽奖扣积分" ?
     <div onClick={()=>{window.location='/OnlineOrder?billCode=' + props.billCode + ',' + props.source}}>
 			<div  className="top"> 
-            <span className="left">{props.source}：</span>
-            <span className="right">{props.billCode}</span>   
+            <span className="topleft">{props.source}：</span>
+            <span className="topright">{props.billCode}</span>   
       </div>
       <div className="bottom">
-      	<span className='left'>
+      	<span className='bottomleft'>
         	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
       	</span>
-      	<span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
+      	<span className='bottomright'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
     	</div>
     	<div className='bottom '>
-      	<span className='left'>变动积分:{props.bonusPoints}</span>
-      	<span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+      	<span className='bottomleft'>变动积分:{props.bonusPoints}</span>
+      	<span className="bottomright">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
     	</div>
     </div>
     :
     <div>
       <div className="top">
-          <span className="left">{props.source}：</span>
-          <span className="right">{props.billCode}</span>
+          <span className="topleft">{props.source}：</span>
+          <span className="topright">{props.billCode}</span>
       </div>
     	<div className="bottom">
-      	<span className='left'>
+      	<span className='bottomleft'>
         	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
       	</span>
-      	<span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
+      	<span className='bottomright'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
     	</div>
     	<div className='bottom '>
-      	<span className='left'>变动积分:{props.bonusPoints}</span>
-      	<span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+      	<span className='bottomleft'>变动积分:{props.bonusPoints}</span>
+      	<span className="bottomright">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
     	</div>
     </div>  
     :
     <div>
     	<div className="top">
-      	<span className="left">{props.source}：</span>
-      	<span className="right">{props.billCode}</span>
+      	<span className="topleft">{props.source}：</span>
+      	<span className="topright">{props.billCode}</span>
     	</div>
     	<div className="bottom">
-      	<span className='left'>
+      	<span className='bottomleft'>
         	变动金额:{props.source==="线上订单"||props.source==="线下订单"|| props.source==="零售"?  "-" + props.value : props.value }
       	</span>
-      	<span className='right'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
+      	<span className='bottomright'>余额：<span style={{color:'#27AE60'}}>{props.balance}</span></span>
     	</div>
     	<div className='bottom '>
-      	<span className='left'>变动积分:{props.bonusPoints}</span>
-      	<span className="right">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
+      	<span className='bottomleft'>变动积分:{props.bonusPoints}</span>
+      	<span className="bottomright">剩余积分：<span style={{color:'#27AE60'}}>{props.integral}</span></span>
     	</div>
     </div>
   }  

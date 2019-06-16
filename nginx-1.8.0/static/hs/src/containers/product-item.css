@@ -96,7 +96,7 @@
 .product-item-price:after {
   clear: both;
 }
-.product-item-price .left {
+.product-item-price .priceleft {
   float: left;
   font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif;
   font-weight: bold;
@@ -105,7 +105,7 @@
 .product-item-price .hidden {
   visibility: hidden;
 }
-.product-item-price .right {
+.product-item-price .priceright {
   float: right;
   padding: 0px 10px;
   background-color: #f55c39;

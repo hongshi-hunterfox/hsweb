@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.uclee.fundation.data.mybatis.mapping.CommentMapper;
+import com.uclee.fundation.data.mybatis.mapping.GoodsMapper;
 import com.uclee.fundation.data.mybatis.model.*;
 import com.uclee.payment.strategy.RefundHandlerStrategy;
 import com.uclee.user.model.RefundStrategyResult;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
+import com.uclee.fundation.data.web.dto.GoodsOrder;
 import com.uclee.fundation.data.web.dto.OrderPost;
 import com.uclee.fundation.data.web.dto.StockPost;
 import com.uclee.number.util.NumberUtil;
@@ -44,6 +46,8 @@ public class UserHandler {
 	private DuobaoServiceI duobaoService;
 	@Autowired
 	private CommentMapper commentMapper;
+	@Autowired
+	private GoodsMapper goodsMapper;
 
 	/** 
 	* @Title: invitation 
@@ -320,17 +324,17 @@ public class UserHandler {
 		
 		logger.info("hsVip:"+JSON.toJSONString(hsVip));
 		HsVip up=new HsVip();
-		up.setvName(hsVip.getvName());
-		up.setvNumber(hsVip.getvNumber());
-		up.setvBirthday(hsVip.getvBirthday());
-		up.setvIdNumber(hsVip.getvIdNumber());
-		up.setvCompany(hsVip.getvCompany());
-		up.setvCode(hsVip.getvCode());
-		up.setvSex(hsVip.getvSex());
-		List<HsVip> vip = userService.selectVips(hsVip.getvNumber());	
-			if(!VerifyCode.checkVerifyCode(session,hsVip.getvNumber(),hsVip.getCode())){
+		up.setVName(hsVip.getVName());
+		up.setVNumber(hsVip.getVNumber());
+		up.setVBirthday(hsVip.getVBirthday());
+		up.setVIdNumber(hsVip.getVIdNumber());
+		up.setVCompany(hsVip.getVCompany());
+		up.setVCode(hsVip.getVCode());
+		up.setVSex(hsVip.getVSex());
+		List<HsVip> vip = userService.selectVips(hsVip.getVNumber());	
+			if(!VerifyCode.checkVerifyCode(session,hsVip.getVNumber(),hsVip.getCode())){
 				map.put("result", "fail");	
-				if(hsVip.getvCode()!= vip.get(0).getvCode()){
+				if(hsVip.getVCode()!= vip.get(0).getVCode()){
 					if(hsVip.getCode()==null){
 						map.put("reason", "请输入验证码");					
 					}else{
@@ -341,14 +345,14 @@ public class UserHandler {
 			}
 			map.put("result", "success");
 			if(vip.size()==0){			
-				userService.updateVips(hsVip.getvCode(), up);			
+				userService.updateVips(hsVip.getVCode(), up);			
 				return map;
 			}					
-			String hVip = hsVip.getvCode();
-			String sVip = vip.get(0).getvCode();
+			String hVip = hsVip.getVCode();
+			String sVip = vip.get(0).getVCode();
 			map.put("result", "success");
 			if(vip.size()!=0&&hVip.equals(sVip)){						
-				userService.updateVips(hsVip.getvCode(), up);	
+				userService.updateVips(hsVip.getVCode(), up);	
 				map.put("result", "success");
 			}else{
 				map.put("reason","手机号已与其他会员卡绑定，不能修改！");
@@ -512,7 +516,6 @@ public class UserHandler {
 	@RequestMapping(value="/seller/paymentHandler",method = RequestMethod.POST)
 	public @ResponseBody PaymentStrategyResult paymentHandler(HttpServletRequest request,@RequestBody PaymentOrder paymentOrderPost) {
 		PaymentStrategyResult paymentStrategyResult = new PaymentStrategyResult();
-		logger.info(JSON.toJSONString(paymentOrderPost));
 		PaymentOrder paymentOrder = userService.selectPaymentOrderBySerialNum(paymentOrderPost.getPaymentSerialNum());
 		if(paymentOrder==null){
 			paymentStrategyResult.setReason("noSuchOrder");
@@ -698,5 +701,42 @@ public class UserHandler {
 			map.put("reson","notLogin");
 		}
 		return map;
+	}
+	
+	@RequestMapping(value="/seller/goodsPayHandler",method = RequestMethod.POST)
+	public @ResponseBody PaymentStrategyResult goodsPayHandler(HttpServletRequest request,@RequestBody GoodsOrder goodsOrder) {
+		PaymentStrategyResult paymentStrategyResult = new PaymentStrategyResult();
+		// 取userid
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		List<GoodsCart> cart =  goodsMapper.selectGoodsCart(userId);
+		if(cart==null || cart.size()==0){
+			paymentStrategyResult.setReason("noSuchOrder");
+			paymentStrategyResult.setResult(false);
+			return paymentStrategyResult;
+		}
+		Payment payment = userService.getPaymentMethodById(1);
+		//判断是否是微信浏览器
+		boolean isWC = userService.isWC(request);
+		paymentStrategyResult.setIsWC(isWC);
+		if(payment!=null){
+			PaymentOrder paymentOrder = new PaymentOrder();
+			paymentOrder.setUserId(userId);
+			paymentOrder.setPaymentSerialNum(goodsOrder.getTardno());
+			paymentOrder.setMoney(goodsOrder.getMoney());
+			
+			PaymentHandlerStrategy paymentHandlerStrategy;
+			try {
+				paymentHandlerStrategy = (PaymentHandlerStrategy) Class
+						.forName("com.uclee.payment.strategy." + payment.getStrategyClassName()).newInstance();
+				paymentStrategyResult = paymentHandlerStrategy.goodsPayHandler(paymentOrder);
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}else{
+			paymentStrategyResult.setReason("noPaymentMethod");
+			paymentStrategyResult.setResult(false);
+		}
+		return paymentStrategyResult;
 	}
 }

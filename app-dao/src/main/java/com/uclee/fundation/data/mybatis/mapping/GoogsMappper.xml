@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.uclee.fundation.data.mybatis.mapping.GoodsMapper" >
+	<resultMap id="HsVip"
+		type="com.uclee.fundation.data.mybatis.model.HsVip">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="编号" property="vCode" jdbcType="VARCHAR" />
+		<result column="名称" property="vName" jdbcType="VARCHAR" />
+		<result column="生日" property="vBirthday" jdbcType="VARCHAR" />
+		<result column="电话" property="vNumber" jdbcType="VARCHAR" />
+		<result column="身份证号" property="vIdNumber" jdbcType="VARCHAR" />
+		<result column="工作单位" property="vCompany" jdbcType="VARCHAR" />
+		<result column="状态" property="vState" jdbcType="INTEGER" />
+		<result column="性别" property="vSex" jdbcType="VARCHAR" />
+		<result column="是否充值" property="isLose" jdbcType="INTEGER" />
+		<result column="外键" property="oauthId" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CreateOrderResult" type="com.uclee.fundation.data.mybatis.model.CreateOrderResult">
+		<result column="OrderID" property="orderID" jdbcType="INTEGER" />
+		<result column="OrderCode" property="orderCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="CreateOrderItemResult" type="com.uclee.fundation.data.mybatis.model.CreateOrderItemResult">
+		<result column="retcode" property="retCode" jdbcType="INTEGER" />
+		<result column="Msg" property="msg" jdbcType="VARCHAR" />
+	</resultMap>
   <select id="selectAll" resultType="com.uclee.fundation.data.mybatis.model.Goods">
   	select * from web_goods
   </select>
@@ -30,8 +52,10 @@
   </select>
   <select id="selectGoodsAndCatList" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.Goods">
   	select  a.goodsimg,a.goodsname,a.goodscategory, a.id, min(b.hsPrice) as hsPrice 
-		from  web_goods as a, web_goods_specifications as b, web_goods_categories_link as c 
+		from  web_goods as a, web_goods_specifications as b, web_goods_categories_link as c,
+		web_goods_specifications_store_link as d
 		where  a.id=b.goodsId and c.goodsId=a.id and a.goodscategory=#{goodscategory}
+		and d.specId=b.id and d.storeId=#{storeId}
 		group by a.goodsname,a.goodscategory,a.id,a.goodsimg
   </select>
   <select id="selectByGoodsSpecifications" resultType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications" parameterType="java.lang.Integer" >
@@ -44,16 +68,35 @@
   	select * from web_goods as a where a.id=#{id}
   </select>
   <select id="selectGoodsCart" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.GoodsCart">
-  	select a.*,b.*,c.goodsimg from web_goods_cart as a , web_goods_specifications as b, web_goods as c where a.goodsId=b.goodsId and a.specId=b.id and a.goodsId=c.id and a.userId=#{userId}
+  	select a.*,b.*,c.* from web_goods_cart as a , web_goods_specifications as b, web_goods as c where a.goodsId=b.goodsId and a.specId=b.id and a.goodsId=c.id and a.userId=#{userId}
   </select>
   <select id="selectIsVip" parameterType="java.lang.Integer" resultType="java.lang.Integer">
   	select COUNT(*) as record from web_oauth_login as a , 会员身份 as b where a.oauth_id = b.外键 and a.user_id=#{userId}
   </select>
-  <select id="selectIsCart" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.GoodsCart">
+  <select id="selectVipInfo" parameterType="java.lang.Integer" resultMap="HsVip">
+  	select b.外键  from web_oauth_login as a , 会员身份 as b where a.oauth_id = b.外键 
+	and a.user_id=#{userId}
+  </select>
+  <select id="selectSumCart" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	select sum(amount) as amount from [web_goods_cart] where  userId=#{userId}
+  </select>
+  <select id="selectIsCart" resultType="com.uclee.fundation.data.mybatis.model.GoodsCart">
+  	  select top 1 * from [web_goods_cart] where  userId=#{userId} and specId =#{specId} and flavorname = #{flavorname}
+  </select>
+  <select id="selectIsCarts" resultType="com.uclee.fundation.data.mybatis.model.GoodsCart">
   	  select top 1 * from [web_goods_cart] where  userId=#{userId} and specId =#{specId}
   </select>
+  <select id="createGoodsOrder" resultMap="CreateOrderResult">
+  	exec WSC_CreateSales '', #{tardno,jdbcType=VARCHAR}, #{weixincode,jdbcType=VARCHAR}, null, #{remarks,jdbcType=VARCHAR},
+  	#{totalnum,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{singledisco,jdbcType=DECIMAL}, #{money,jdbcType=DECIMAL},0, 
+  	#{storeId,jdbcType=VARCHAR}, #{station,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{boxmoney,jdbcType=DECIMAL}
+  </select>
+  <select id="createGoodsOrderItem" resultMap="CreateOrderItemResult">
+  	exec WSC_AddSaleItem #{orderId},#{goodCode},#{amount},#{total},#{goodsId}
+  </select>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Goods" useGeneratedKeys="true" keyProperty="id">
-    insert into web_goods (goodsname, goodsimg, goodscategory) values (#{goodsname}, #{goodsimg}, #{goodscategory})
+    insert into web_goods (goodsname, goodsimg, goodscategory,flavorone,flavortwo,flavorthree,flavorfour) 
+    values (#{goodsname}, #{goodsimg}, #{goodscategory}, #{flavorone},#{flavortwo},#{flavorthree},#{flavorfour})
   </insert>
   <insert id="insertGoodsAndCategories" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink">
   	insert into web_goods_categories_link(goodsId, categoryId) values(#{goodsId}, #{categoryId})
@@ -65,10 +108,11 @@
   	insert into web_goods_specifications_store_link(storeId, specId) values(#{storeId}, #{specId})
   </insert>
   <insert id="insertGoodsCart" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCart">
-	insert into web_goods_cart(goodsId, specId ,userId, amount) values(#{goodsId}, #{specId}, #{userId}, #{amount})
+	insert into web_goods_cart(goodsId, specId ,userId, amount, flavorname) values(#{goodsId}, #{specId}, #{userId}, #{amount}, #{flavorname})
   </insert>
   <update id="updateGoodsById" parameterType="com.uclee.fundation.data.mybatis.model.Goods">
-	update web_goods set goodsname = #{goodsname}, goodsimg=#{goodsimg}, goodscategory=#{goodscategory} WHERE id = #{id}  
+	update web_goods set goodsname = #{goodsname}, goodsimg=#{goodsimg}, goodscategory=#{goodscategory},
+	 flavorone=#{flavorone},flavortwo=#{flavortwo},flavorthree=#{flavorthree},flavorfour=#{flavorfour} WHERE id = #{id}  
   </update>
   <update id="updateGoodsAndCategories" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink">
 	update web_goods_categories_link set categoryId= #{categoryId} where goodsId=#{goodsId}  
@@ -84,5 +128,8 @@
   </delete>
   <delete id="deleteGoodsCart" parameterType="java.lang.Integer">
   	delete web_goods_cart where id = #{id}
+  </delete>
+   <delete id="deleteUserGoodsCart" parameterType="java.lang.Integer">
+  	delete web_goods_cart where userId = #{userId}
   </delete>
 </mapper>

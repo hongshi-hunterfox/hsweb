@@ -113,7 +113,7 @@ class Recharge extends React.Component {
 	render() {
 		var money = this.state.config.map((item, index) => {
 				return (
-					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money && this.state.rewards === item.rewards ?' active':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
+					<div className={'payment-money-item' + (this.state.rechargeMoney===item.money && this.state.rewards === item.rewards ?' activea':'')} onClick={this._clickHandler.bind(this,item.money,item.rewards,item.voucherText,item.type,item.inTime)}>{item.money}</div>
 				);
 		});
 		return (

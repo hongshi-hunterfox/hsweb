@@ -10,10 +10,10 @@
 .distribution-order-top:after {
   clear: both;
 }
-.distribution-order-top .left {
+.distribution-order-top .lefts {
   padding: 10px 0 0 10px;
 }
-.distribution-order-top .left .number {
+.distribution-order-top .lefts .number {
   font-size: 35px;
   color: #f15f40;
   text-align: center;
@@ -48,28 +48,28 @@
 .distribution-order-item:after {
   clear: both;
 }
-.distribution-order-item .left {
+.distribution-order-item .lefts {
   float: left;
 }
-.distribution-order-item .left .top .image {
+.distribution-order-item .lefts .top .image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
 }
-.distribution-order-item .left .top .name {
+.distribution-order-item .lefts .top .name {
   margin-left: 5px;
 }
-.distribution-order-item .left .bottom {
+.distribution-order-item .lefts .bottom {
   padding: 10px 10px 10px 0px;
 }
-.distribution-order-item .right {
+.distribution-order-item .rights {
   padding: 10px;
   float: right;
 }
-.distribution-order-item .right .red {
+.distribution-order-item .rights .red {
   color: #f15f40;
 }
-.distribution-order-item .right .bottom {
+.distribution-order-item .rights .bottom {
   margin-top: 14px;
   padding: 5px;
 }

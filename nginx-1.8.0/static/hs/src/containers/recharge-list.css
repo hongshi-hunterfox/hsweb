@@ -15,12 +15,12 @@
 .recharge-list-item .top:after {
   clear: both;
 }
-.recharge-list-item .top .left {
+.recharge-list-item .top .topleft {
   float: left;
   color: #27AE60;
   font-size: 15px;
 }
-.recharge-list-item .top .right {
+.recharge-list-item .top .topright {
   font-size: 15px;
   color: #27AE60;
   float: right;
@@ -33,12 +33,12 @@
 .recharge-list-item .bottom:after {
   clear: both;
 }
-.recharge-list-item .bottom .left {
+.recharge-list-item .bottom .bottomleft {
   float: left;
   font-size: 15px;
   color: #8C8C8C;
 }
-.recharge-list-item .bottom .right {
+.recharge-list-item .bottom .bottomright {
   font-size: 15px;
   float: right;
 }

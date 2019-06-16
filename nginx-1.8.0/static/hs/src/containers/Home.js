@@ -650,11 +650,11 @@ class Home extends React.Component {
                             {item1.title}
                           </div>
                           <div className="product-item-price">
-                            <div className="left">
+                            <div className="priceleft">
                             	¥{item1.vipPrice != null && item1.vipPrice < item1.price ? item1.vipPrice : item1.price}
                             	<span className="pre"> ¥ {item1.prePrice}</span>
                             </div>
-                            <div className='right' onClick={()=>{
+                            <div className='priceright' onClick={()=>{
                               this.setState({
                                   showPick: true,
                                   specifications:item1.specifications,

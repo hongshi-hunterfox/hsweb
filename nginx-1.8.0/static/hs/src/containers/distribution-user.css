@@ -12,21 +12,21 @@
 .distribution-user-item:after {
   clear: both;
 }
-.distribution-user-item .left {
+.distribution-user-item .lefts {
   float: left;
 }
-.distribution-user-item .left .top .image {
+.distribution-user-item .lefts .top .image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
 }
-.distribution-user-item .left .top .name {
+.distribution-user-item .lefts .top .name {
   margin-left: 5px;
 }
-.distribution-user-item .left .bottom {
+.distribution-user-item .lefts .bottom {
   padding: 5px;
 }
-.distribution-user-item .right {
+.distribution-user-item .rights {
   font-size: 14px;
   float: right;
   background-color: white;

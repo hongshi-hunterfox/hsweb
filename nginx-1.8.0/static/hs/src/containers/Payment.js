@@ -304,7 +304,6 @@ class Payment extends React.Component {
 		PaymentUtil.submitHandler(
 			data,
 			function(res) {
-				console.log(res)
 				if (res.result === true) {
 					if (res.type === "WC") {
 						if (res.result === "failed") {

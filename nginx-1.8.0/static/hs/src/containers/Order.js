@@ -524,7 +524,8 @@ class Order extends React.Component {
 	            	(Difference>0?
 						  	<span className="button">还需：{Difference}元起送!</span>
 						  	:
-	            	<button type="submit" className="button">提交订单</button>)
+	            	<button type="
+	            	" className="button">提交订单</button>)
 	            	:<button type="submit" className="button">提交订单</button>}
 	            </div>
 	          </form>
@@ -804,7 +805,7 @@ class Addr extends React.Component {
                   window.location = 'address?isFromOrder=1'
                 }}
               >
-                <div className="left">
+                <div className="delileft">
                   <span className="icon fa fa-map-marker" />
                   <span className="name">
                     收货人：
@@ -833,10 +834,10 @@ class Addr extends React.Component {
                       : null}
                   </div>
                 </div>
-                <div className="right fa fa-chevron-right right" />
+                <div className="deliright fa fa-chevron-right right" />
               </div>
             : <div className="self">
-                <div className="left">
+                <div className="selfleft">
                   <span className="icon fa fa-map-marker" />
                   <span className="addrDetail">
                     取货地址：

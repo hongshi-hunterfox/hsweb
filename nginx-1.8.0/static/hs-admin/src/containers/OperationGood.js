@@ -34,6 +34,10 @@ class OperationGood extends React.Component {
       images: [],
       goodsname: '',
       goodscategory:'',
+      flavorone:'',
+      flavortwo:'',
+      flavorthree:'',
+      flavorfour:'',
     }
   }
   
@@ -249,7 +253,7 @@ class OperationGood extends React.Component {
                                       </div>
                                       <div className="input-group input-group-sm">
                                         <span className="input-group-addon">
-																					打包设置：
+																					餐盒费设置：
                                         </span>
                                         <select
 												                  className="form-control"
@@ -322,6 +326,23 @@ class OperationGood extends React.Component {
                   </div>
                 </div>
               </div>     
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">口味偏好设置：</label>
+              <div className="col-md-9">
+              	<span style={{padding:'10px'}}>
+               		设置一：<input type="text" name="flavorone" value={this.state.flavorone} onChange={this._simpleInputChange}/><br/>
+               	</span>
+               	<span style={{padding:'10px'}}>
+               		设置二：<input type="text" name="flavortwo" value={this.state.flavortwo} onChange={this._simpleInputChange}/><br/>
+               	</span>
+               	<span style={{padding:'10px'}}>
+               		设置三：<input type="text" name="flavorthree" value={this.state.flavorthree} onChange={this._simpleInputChange}/><br/>
+               	</span>
+               	<span style={{padding:'10px'}}>
+               		设置四：<input type="text" name="flavorfour" value={this.state.flavorfour} onChange={this._simpleInputChange}/>
+              	</span>
+              </div>
             </div>
             <ErrorMsg msg={this.state.err} />
             <div className="form-group">
@@ -422,6 +443,11 @@ class OperationGood extends React.Component {
           store: res.body.store,
           goodscategory: res.body.goods.goodscategory,
           disparity: res.body.disparity,
+          flavorone:res.body.goods.flavorone,
+      		flavortwo:res.body.goods.flavortwo,
+      		flavorthree:res.body.goods.flavorthree,
+      		flavorfour:res.body.goods.flavorfour,
+
         }) 
         hongShiProduct.forEach(item => {
           this.hongShiProductById[item.id] = item
@@ -644,7 +670,7 @@ class OperationGood extends React.Component {
     })
     if (foundWrongSpecPack) {
       return this.setState({
-        err: '请选择打包设置'
+        err: '请选择餐盒费设置'
       })
     }
 

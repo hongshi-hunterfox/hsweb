@@ -66,7 +66,7 @@
   width: 23%;
   text-align: center;
 }
-.payment-money .active {
+.payment-money .activea {
   color: white;
   background-color: #fc9005;
 }
@@ -123,12 +123,12 @@
   color: #fff;
   display: none;
 }
-.payment-info-method.active {
+.payment-info-method.activea {
   border: 1px solid #ffa530;
   border-color: #ffa530;
   position: relative;
 }
-.payment-info-method.active::after {
+.payment-info-method.activea::after {
   content: '';
   color: #fff;
   width: 0;
@@ -141,7 +141,7 @@
   bottom: 0;
   right: 0;
 }
-.payment-info-method.active .icon-check {
+.payment-info-method.activea .icon-check {
   display: block;
 }
 .payment-info-money {

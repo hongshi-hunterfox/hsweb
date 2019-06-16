@@ -8,10 +8,12 @@ import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSON;
 import com.uclee.fundation.config.links.GlobalSessionConstant;
+import com.uclee.fundation.data.mybatis.model.GoodsCart;
 import com.uclee.fundation.data.mybatis.model.OauthLogin;
 import com.uclee.fundation.data.mybatis.model.Order;
 import com.uclee.fundation.data.mybatis.model.OrderItem;
 import com.uclee.fundation.data.mybatis.model.PaymentOrder;
+import com.uclee.fundation.data.web.dto.GoodsOrder;
 import com.uclee.model.SpringContextUtil;
 import com.uclee.number.util.NumberUtil;
 import com.uclee.payment.exception.PaymentHandlerException;
@@ -70,6 +72,34 @@ public class WCJSAPIPaymentStrategy implements PaymentHandlerStrategy {
 			for(OrderItem orderItem:order.getItems()){
 				title = title + orderItem.getTitle() + "("+orderItem.getValue()+");";
 			}
+		}
+		PaymentStrategyResult result=null;
+		try {
+			result = userService.getWCPayment(openId,paymentOrder.getPaymentSerialNum(),paymentOrder.getMoney(),title);
+		} catch (PaymentHandlerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.setResult(false);
+		}
+		result.setType("WC");
+		System.out.println("result:" + JSON.toJSONString(result));
+		return result;
+	}
+	
+	@Override
+	public PaymentStrategyResult goodsPayHandler(PaymentOrder paymentOrder) {
+		UserServiceI userService = (UserServiceI)SpringContextUtil.getBean("userServiceImpl");
+		OauthLogin oauthLogin = userService.getOauthLoginInfoByUserId(paymentOrder.getUserId());
+		String openId = null;
+		if(oauthLogin!=null){
+			openId = oauthLogin.getOauthId();
+		}
+		List<GoodsCart> cart = userService.selectGoodsCarts(paymentOrder.getUserId());
+		userService.updatePaymentOrder(paymentOrder);
+		String title = "";
+		for(GoodsCart item : cart){
+			System.out.println(JSON.toJSON(item));
+				title = title + item.getGoodsName() + "("+item.getName()+");";
 		}
 		PaymentStrategyResult result=null;
 		try {

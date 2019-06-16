@@ -7,7 +7,7 @@ class Navi extends React.Component {
 	_allProductClass = () => {
 		var { filterType } = this.props.query
 		if (!filterType && window.location.pathname === '/all-product') {
-			return ' active'
+			return ' activea'
 		}
 		return ''
 	}
@@ -19,7 +19,7 @@ class Navi extends React.Component {
 			window.location.pathname === '/all-product' &&
 			filterType === 'process'
 		) {
-			return ' active'
+			return ' activea'
 		}
 		return ''
 	}
@@ -27,7 +27,7 @@ class Navi extends React.Component {
 	render() {
 		return (
 			<div className="navi" id="hs-navi">
-				<IndexLink to="/" className="navi-item" activeClassName="active">
+				<IndexLink to="/" className="navi-item" activeClassName="activea">
 					<i className="fa fa-home" />
 					主页
 				</IndexLink>
@@ -54,7 +54,7 @@ class Navi extends React.Component {
 						pathname: '/member-center'
 					}}
 					className="navi-item"
-					activeClassName="active"
+					activeClassName="activea"
 				>
 					<i className="fa fa-user" />
 					个人中心

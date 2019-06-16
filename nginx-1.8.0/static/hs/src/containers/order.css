@@ -102,54 +102,54 @@
 .order-addr .detail .deli:after {
   clear: both;
 }
-.order-addr .detail .deli .left {
+.order-addr .detail .deli .delileft {
   width: 90%;
   float: left;
 }
-.order-addr .detail .deli .left:before,
-.order-addr .detail .deli .left:after {
+.order-addr .detail .deli .delileft:before,
+.order-addr .detail .deli .delileft:after {
   content: "";
   display: table;
 }
-.order-addr .detail .deli .left:after {
+.order-addr .detail .deli .delileft:after {
   clear: both;
 }
-.order-addr .detail .deli .left .icon {
+.order-addr .detail .deli .delileft .icon {
   font-size: 20px;
   margin-right: 5px;
 }
-.order-addr .detail .deli .left .phone {
+.order-addr .detail .deli .delileft .phone {
   float: right;
   margin-right: 10px;
 }
-.order-addr .detail .deli .left .addrDetail {
+.order-addr .detail .deli .delileft .addrDetail {
   margin-left: 17px;
   margin-top: 5px;
   font-size: 12px;
   color: #afafaf;
 }
-.order-addr .detail .deli .right {
+.order-addr .detail .deli .deliright {
   width: 5%;
   margin-top: 10px;
   padding: 5px;
   float: right;
 }
-.order-addr .detail .self .left {
+.order-addr .detail .self .selfleft {
   width: 100%;
 }
-.order-addr .detail .self .left:before,
-.order-addr .detail .self .left:after {
+.order-addr .detail .self .selfleft:before,
+.order-addr .detail .self .selfleft:after {
   content: "";
   display: table;
 }
-.order-addr .detail .self .left:after {
+.order-addr .detail .self .selfleft:after {
   clear: both;
 }
-.order-addr .detail .self .left .icon {
+.order-addr .detail .self .selfleft .icon {
   font-size: 20px;
   margin-right: 5px;
 }
-.order-addr .detail .self .left .addrDetail {
+.order-addr .detail .self .selfleft .addrDetail {
   margin-top: 5px;
   font-size: 12px;
   color: #afafaf;

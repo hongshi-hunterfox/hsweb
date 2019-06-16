@@ -31,7 +31,7 @@ class DistributionUser extends React.Component{
 		var users = this.state.users.map((item, index) => {
 			return(
 				<div className="distribution-user-item" key={index}>
-					<div className="left">
+					<div className="lefts">
 						<div className="top">
 							<img className="image" src={item.userProfile.image} alt=""/>
 							<span className="name">{item.userProfile.name}</span>
@@ -40,7 +40,7 @@ class DistributionUser extends React.Component{
 					</div>
 					{
 						this.props.location.query.userId==null?
-						<div className="right">
+						<div className="rights">
 							<a href={"/distribution-user?userId="+item.invitedId}>查看下级</a>
 						</div>:null
 					}

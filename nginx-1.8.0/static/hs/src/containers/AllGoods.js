@@ -26,7 +26,7 @@ const DetailPicker = (props) => {
               <div className="detail-picker-header-title">{props.title}</div>
               <div className="detail-picker-header-price">
 	              <div>
-	              	{props.vipPrice !== '-' ? "会员价：¥"+props.vipPrice : null}
+	              	{props.vipPrice !== '-' ? "VIP¥"+props.vipPrice : null}
 	              </div>
 	              <div>
 	             		¥{props.hsPirce}
@@ -53,6 +53,21 @@ const DetailPicker = (props) => {
                 })
               }
             </div>
+            <div className="detail-picker-spec-name">偏好：</div>
+            <div className="detail-picker-spec-values clearfix">
+              {props.flavor.map((item)=>{
+       					return(	
+      			 				<div onClick={() => {
+                        props.pickflavor(item)
+
+                      }}
+                      className={'detail-picker-spec-value' + (item === props.flavorname ? ' active' : '')}>
+         							{item}
+        						</div>
+        					);  
+    						})}
+          	</div>
+
         	</div>
           <div className="detail-picker-amount clearfix">
             <div className="input-group">
@@ -80,7 +95,8 @@ const DetailPicker = (props) => {
 								      .send({
 								        amount: props.currentAmount,
 								        goodsId: props.goodsId,
-								        specId: props.specid,        
+								        specId: props.specid, 
+								        flavorname: props.flavorname
 								      }) 
 								      .end((err, res) => {
 								        if (err) {
@@ -129,18 +145,19 @@ const CartDetail = (props) => {
                                 <img
                                   src={item.goodsImg}
                                   alt={item.name}
-                                  width="80"
-                                  height="80"
+                                  width="100"
+                                  height="100"
                                 />
                             </div>
                             <div className="goods-item-info">
                             		<div className="goods-item-title">
-                          					&nbsp;&nbsp;{item.name}  
-                        				</div>
+                          					{item.name}
+                        				</div><br/>
+                        				&nbsp;&nbsp;&nbsp;偏好 {item.flavorname}<br/>
                             		&nbsp;&nbsp;&nbsp;数量 x{item.amount}<br/>
                               	<div className="goods-item-price"> 
                               		¥{item.hsPrice}<br/>
-                    							{item.vipPrice !== null ? '会员价¥ '+item.vipPrice : null}
+                              		{item.vipPrice !== null ? 'VIP¥'+ item.vipPrice : null}
                               	</div>
                             </div>
 													  <button className="btn btn-danger" style={{float:'right'}} onClick={()=>{
@@ -186,11 +203,17 @@ class AllGoods extends React.Component {
 			showCart: false,
 			goods:[],
 			spec:[],
+			flavor:[],
 			specid:null,
+			flavorname:'',
 			currentAmount: 1,
 			pickType: 'add_to_cart', // 'add_to_cart' || 'buy_now'
 			list:[],
 			catName:'',
+			goodsimg:'',
+			goodsname:'',
+			storeId:this.props.location.query.storeId,
+			station:this.props.location.query.station
     }
     this.specPriceMap = {}
     this.specValueMap = {}
@@ -221,7 +244,7 @@ class AllGoods extends React.Component {
 				isshow: this.props.isshow,
 			})
 		})
-	req.get('/uclee-user-web/getgoodslist').end((err, res) => {
+	req.get('/uclee-user-web/getgoodslist?storeId='+this.state.storeId).end((err, res) => {
       if (err) {
         return err
       }
@@ -242,23 +265,7 @@ class AllGoods extends React.Component {
         })
       })	
   }
-  
-  _setGoodsList=(e)=>{
-  	
-  	req.get('/uclee-user-web/getgoodslist?goodscategory='+e.categoryId).end((err, res) => {
-      if (err) {
-        return err
-      }
-      var data = JSON.parse(res.text)
-      this.setState({
-        goodslist: data.goodslist,
-        total: data.total,
-        catName: e.category,
-      })
-    })
-  }
-  
-  
+   
   _showCart = () => {
   	this.setState({
   		showCart: true,
@@ -283,6 +290,7 @@ class AllGoods extends React.Component {
           goodsId: id,
           goodsimg:res.body.goods.goodsimg,
           spec:res.body.spec,
+          flavor:res.body.flavor,
           specid:res.body.specid,
         })
       })
@@ -302,6 +310,14 @@ class AllGoods extends React.Component {
       }
     })
   }
+ 	
+ 	_pickflavor = (name) => {
+ 		this.setState((prevState) => {
+      return {
+        flavorname: name
+      }
+    })
+ 	}
  	
  	_addAmount = () => {
     this.setState((prevState, props) => {
@@ -338,8 +354,15 @@ class AllGoods extends React.Component {
       [e.target.name]: e.target.value
     })
   }
-
-   	
+  
+  _go = (e) => {
+  	if(e > 0){
+  		window.location = "seller/orderingfood-pay?storeId="+this.state.storeId+"&station="+this.state.station
+  	}else{
+  		alert("请先选择商品")
+  	}
+  }
+  
   render() {
   	if (this.state.spec.length) {
   		 var prices = this.state.spec.map((item) => {
@@ -363,14 +386,6 @@ class AllGoods extends React.Component {
     if (this.specVipPriceMap[`_${this.state.specid}`]) {
       vipPrice = new Big(this.specVipPriceMap[`_${this.state.specid}`]).toString()
     }
-  	//类别列表
-    var list = this.state.cat.map((item,index)=>{
-        return(
-         	<li className="list-group-item" onClick={this._setGoodsList.bind(this,item)}>
-         		{item.category}
-         	</li>
-        );  
-    })
 
     return (
       <DocumentTitle title="选择产品">
@@ -381,42 +396,58 @@ class AllGoods extends React.Component {
 							<div className="store-logo-text">{this.state.brand}</div>
 						</div>
       		</div>
-      		<div  style={{width:'356px'}}>
-      			<h4>类别:{this.state.catName}</h4>
-		        <div className="cat" style={{float:'left'}}>
-						  <ul className="list-group">
-						  	<li className="list-group-item" onClick={() => {window.location.reload()}}>
-	        				全部商品
-	        			</li>
-						  	{list}
-						  </ul>
-		        </div>
-		        <div style={{width:'70%',float:'left'}}>
-			        {this.state.goodslist.map((item, index) => {
-		                        return (
-		                          <div className="goods-item clearfix" key={index}>
-		                            <div className="goods-item-img"> 
-		                                <img
-		                                  src={item.goodsimg}
-		                                  alt={item.goodsname}
-		                                  width="90"
-		                                  height="90"
-		                                />
-		                            </div>
-		                            <div className="goods-item-info">
-		                              {item.goodsname}
-		                            </div>
-		                            <div style={{width:'100%'}}>
-				                            <div className="goods-item-price"> 
-				                    					¥{item.hsPrice} 起
-				                            </div>
-				                            <div className="goods-item-spec" onClick={this._showPick.bind(this,item.id)}> 
-																			<li className="glyphicon glyphicon-plus-sign btn-lg" aria-hidden="true"/>		 
-				                            </div>
-			                          </div>
-		                          </div>
-		                        )
-		                      })}
+      		<div style={{width:'360px',marginTop:'5px'}}>
+      			<div className="swiper-wrapper goods-buttom">
+				      <div className="swiper-slide">
+				        <div className="content">
+				          <div className="goodsleft" id="goodsleft">
+				            <ul>
+				              {this.state.cat.map((item,index)=>{
+								        return(
+								         	<li>
+								         		{item.category}
+								         	</li>
+								        )
+								    	})}
+				            </ul>
+				          </div>
+				          <div className="goodsright" id="goodsright">
+				            <ul>
+				            	{this.state.goodslist.map((item, index) => {
+		                    return (
+		                    		<li>
+							                <div className="class-title">{item.catName}</div>
+							                {item.goodslist.map((ite, index) => {
+							                	return (
+							                	<div className="item" onClick={this._showPick.bind(this,ite.id)}>
+							                    <div className="item-left">
+							                      <div className="goods-item-img">
+							                      	<img
+			                                  src={ite.goodsimg}
+			                                  alt={ite.goodsname}
+			                                  width="100%"
+			                                  height="100%"
+			                                />
+			                            
+							                      </div>
+							                    </div>
+							                    <div className="item-right">
+							                      <div className="goods-item-title">{ite.goodsname}</div>
+							                      <div className="goods-item-subtitle"></div>
+							                      <div className="goods-item-price">
+							                      	¥{ite.hsPrice} 起 
+							                      </div>
+							                    </div>
+							                  </div>	
+							                 )
+							                })}
+						              </li>
+		                    )
+		                  })}
+				            </ul>
+				          </div>
+				        </div>
+				      </div>
 		        </div>
 	        </div>
           <div className="goods-settle">
@@ -426,9 +457,9 @@ class AllGoods extends React.Component {
               </div>
               <div className="goods-settle-info">不含外带费用</div>
             </div>
-              <div className="goods-settle-go" onClick={this._go}>
-                <span>立即结算</span>
-              </div>
+	          <div className="goods-settle-go" onClick={this._go.bind(this,this.state.total)}>
+	            <span>立即结算</span>
+	          </div>
           </div>
 	      <DetailPicker
               showPick={this.state.showPick}
@@ -436,7 +467,9 @@ class AllGoods extends React.Component {
               image={this.state.goodsimg}
               spec={this.state.spec}
               specid={this.state.specid}
+              flavorname={this.state.flavorname}
               pickSpec={this._pickSpec}
+              pickflavor={this._pickflavor}
               hsPirce={hsPirce}
               vipPrice={vipPrice}
               subAmount={this._subAmount}
@@ -444,7 +477,8 @@ class AllGoods extends React.Component {
               currentAmount={this.state.currentAmount}
               pickType={this.state.pickType}
               onClickNext={this._clickNext}
-			  goodsId={this.state.goodsId}
+			  			goodsId={this.state.goodsId}
+			  			flavor={this.state.flavor}
             />
 	      <CartDetail
 	      	showCart={this.state.showCart}

@@ -392,7 +392,7 @@ public class DuobaoSchedule {
 							String salesTime = sdf.format(data);
 							vipIdentity vip = bargainSettingMapper.selectVipIdentity(login.getOauthId());
 							HsVip cartNumber = hsVipMapper.getVips(vip.getVid());
-							List<com.uclee.fundation.data.mybatis.model.CouponSales> record = hongShiMapper.CouponSales(salesTime, cartNumber.getvCode());
+							List<com.uclee.fundation.data.mybatis.model.CouponSales> record = hongShiMapper.CouponSales(salesTime, cartNumber.getVCode());
 							//如果今年没有生日推送记录执行
 							if(record == null){
 								String nickName="";

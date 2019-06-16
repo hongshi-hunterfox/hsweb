@@ -58,14 +58,14 @@ class DistributionOrder extends React.Component{
                     <div className="order-number">
                         订单编号：{item.orderSerialNum}
                     </div>
-                    <div className="left">
+                    <div className="lefts">
                         <div className="top">
                             <img className="image" src={item.userProfile.image} alt=""/>
                             <span className="name">{item.userProfile.name}</span>
                         </div>
                         <div className="bottom">消费时间：{item.createTimeStr}</div>
                     </div>
-                    <div className="right">
+                    <div className="rights">
                         <div className="top">
                             消费金额:<span className="red">￥{item.totalPrice}</span>
                         </div>
@@ -78,7 +78,7 @@ class DistributionOrder extends React.Component{
             <DocumentTitle title="分销订单">
                 <div className="distribution-order" >
                     <div className="distribution-order-top">
-                        <div className="left pull-left">
+                        <div className="lefts pull-left">
                             <div className="money">收益余额</div>
                             <div className='number'>{this.state.money}</div>
                         </div>

@@ -33,4 +33,10 @@ public class AlipayPaymentStrategy implements PaymentHandlerStrategy {
 		return paymentStrategyResult;
 	}
 
+	@Override
+	public PaymentStrategyResult goodsPayHandler(PaymentOrder paymentOrder) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

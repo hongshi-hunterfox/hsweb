@@ -79,6 +79,7 @@ import com.uclee.fundation.data.mybatis.model.WxUser;
 import com.uclee.fundation.data.mybatis.model.vipIdentity;
 import com.uclee.fundation.data.web.dto.BargainPost;
 import com.uclee.fundation.data.web.dto.CartDto;
+import com.uclee.fundation.data.web.dto.GoodsOrder;
 import com.uclee.fundation.data.web.dto.ProductDto;
 import com.uclee.fundation.data.web.dto.Stock;
 import com.uclee.hongshi.service.HongShiVipServiceI;
@@ -88,6 +89,8 @@ import com.uclee.user.service.UserServiceI;
 import com.uclee.user.util.JwtUtil;
 import com.uclee.userAgent.util.UserAgentUtils;
 import joptsimple.internal.Strings;
+
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
@@ -1715,20 +1718,20 @@ public class UserController extends CommonUserHandler {
 			List<HsVip> Vips = userService.selecthsVip(ret.get(0).getcVipCode());
 			Map<String, Object> map = new TreeMap<String, Object>();
 			for (HsVip item : Vips) {
-				String vName = item.getvName();
-				String Number = item.getvNumber();
-				String vBirthday = item.getvBirthday();
-				String vIdNumber = item.getvIdNumber();
-				String vCompany = item.getvCompany();
-				String vCode = item.getvCode();
-				String vSex = item.getvSex();
-				res.setvName(vName);
-				res.setvNumber(Number);
-				res.setvBirthday(vBirthday);
-				res.setvIdNumber(vIdNumber);
-				res.setvCompany(vCompany);
-				res.setvCode(vCode);
-				res.setvSex(vSex);
+				String vName = item.getVName();
+				String Number = item.getVNumber();
+				String vBirthday = item.getVBirthday();
+				String vIdNumber = item.getVIdNumber();
+				String vCompany = item.getVCompany();
+				String vCode = item.getVCode();
+				String vSex = item.getVSex();
+				res.setVName(vName);
+				res.setVNumber(Number);
+				res.setVBirthday(vBirthday);
+				res.setVIdNumber(vIdNumber);
+				res.setVCompany(vCompany);
+				res.setVCode(vCode);
+				res.setVSex(vSex);
 				map.put("item", item);
 			}
 
@@ -2159,16 +2162,32 @@ public class UserController extends CommonUserHandler {
 	
 	@RequestMapping("/getgoodslist")
 	@ResponseBody
-	public Map<String, Object> getGoodsList(HttpServletRequest request,Integer goodscategory){
+	public Map<String, Object> getGoodsList(HttpServletRequest request,Integer storeId) throws JSONException{
 		Map<String, Object> map = new TreeMap<String, Object>();
-		List<Goods> result = userService.selectGoodsList(goodscategory);
-		map.put("goodslist", result);
+		map.put("goodslist", userService.selectGoodsList(storeId));
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		BigDecimal total =  userService.selectGoodsCart(userId);
 		map.put("total", total);
 		return map;
 	}
+	
+	@RequestMapping("/getgoodsCartTotal")
+	@ResponseBody
+	public Map<String, Object> getGoodsCartTotal(HttpServletRequest request,Integer type){
+		Map<String, Object> map = new TreeMap<String, Object>();
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		Map<String, Object> result =  userService.selectGoodsCartTotal(userId,type);
+		System.out.println("备注========="+result.get("remarks"));
+		map.put("remarks", result.get("remarks"));
+		map.put("total", result.get("total"));
+		map.put("goodstotal", result.get("goodstotal"));
+		map.put("detailedamount", result.get("detailedamount"));
+		map.put("disparityTotal", result.get("disparityTotal"));
+		return map;
+	}
+	
 	
 	@RequestMapping("/getgoodsdetail")
 	@ResponseBody
@@ -2194,7 +2213,6 @@ public class UserController extends CommonUserHandler {
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		List<GoodsCart> list = userService.selectGoodsCarts(userId);
 		Map<String, Object> map = new TreeMap<String, Object>();
-		System.out.println(JSON.toJSON(list));
 		map.put("list", list);
 		return map;
 	}
@@ -2203,6 +2221,16 @@ public class UserController extends CommonUserHandler {
 	@ResponseBody
 	public int removeCart(HttpServletRequest request, Integer cartId){
 		return userService.deleteGoodsCart(cartId);
+	}
+	
+	@RequestMapping("/vippay")
+	@ResponseBody
+	public Map<String, Object> VipPay(HttpServletRequest request, @RequestBody GoodsOrder goodsOrder){
+		System.out.println(JSON.toJSON(goodsOrder));
+		//取userid
+		HttpSession session = request.getSession();
+		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
+		return userService.vipPay(goodsOrder, userId);
 	}
 
 }

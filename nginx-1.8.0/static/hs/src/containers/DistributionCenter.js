@@ -69,7 +69,7 @@ class DistributionCenter extends React.Component {
 			<DocumentTitle title="分销中心">
 				<div className="distribution">
 					<div className="distribution-top">
-						<div className="left pull-left">
+						<div className="lefts pull-left">
 							<div className="money">收益余额</div>
 							<div className="number">{this.state.money}</div>
 						</div>
@@ -95,13 +95,13 @@ class DistributionCenter extends React.Component {
 							className="item"
 							onClick={this._location.bind(this, '/distribution-user')}
 						>
-							分销团队列表<span className="fa fa-chevron-right right" />
+							分销团队列表<span className="fa fa-chevron-right rights" />
 						</div>
 						<div
 							className="item"
 							onClick={this._location.bind(this, '/distribution-order')}
 						>
-							分销订单列表<span className="fa fa-chevron-right right" />
+							分销订单列表<span className="fa fa-chevron-right rights" />
 						</div>
 					</div>
 					<div className="distribution-intro">

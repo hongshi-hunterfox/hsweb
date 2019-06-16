@@ -6,6 +6,10 @@
 	*
 	from web_disparity
   </select>
+  <select id="selectByDisParity" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.Disparity">
+  	select top 1 c.* from web_goods_cart as a left join web_goods_specifications as b on a.specId=b.id left join web_disparity as c on c.id=b.specPack
+  	 where a.specId=#{specId}  and a.goodsId=#{goodsId} and a.userId= #{userId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
   	delete from web_disparity where id=#{id}
   </delete>

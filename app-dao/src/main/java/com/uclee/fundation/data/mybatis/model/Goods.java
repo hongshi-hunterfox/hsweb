@@ -17,4 +17,8 @@ public class Goods {
 	public List<ValuePost> valuePost;
 	public String images[];
 	public BigDecimal hsPrice;
+	public String flavorone;
+	public String flavortwo;
+	public String flavorthree;
+	public String flavorfour;
 }

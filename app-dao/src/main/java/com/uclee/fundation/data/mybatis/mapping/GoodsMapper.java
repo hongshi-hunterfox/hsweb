@@ -5,11 +5,16 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.uclee.fundation.data.mybatis.model.CreateOrderItemResult;
+import com.uclee.fundation.data.mybatis.model.CreateOrderResult;
 import com.uclee.fundation.data.mybatis.model.Goods;
 import com.uclee.fundation.data.mybatis.model.GoodsCart;
 import com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink;
+import com.uclee.fundation.data.mybatis.model.GoodsOrderItem;
 import com.uclee.fundation.data.mybatis.model.GoodsSpecifications;
 import com.uclee.fundation.data.mybatis.model.GoodsSpecificationsStoreLink;
+import com.uclee.fundation.data.mybatis.model.HsVip;
+import com.uclee.fundation.data.web.dto.GoodsOrder;
 
 public interface GoodsMapper {
 	int insert(Goods goods);
@@ -26,12 +31,18 @@ public interface GoodsMapper {
 	int deleteBylink(Integer id);
 	int deleteGoods(Integer id);
 	List<Goods> selectGoodsList();
-	List<Goods> selectGoodsAndCatList(Integer goodscategory);
+	List<Goods> selectGoodsAndCatList(@Param("goodscategory") Integer goodscategory,@Param("storeId")Integer storeId);
 	List<Goods> selectGoodsAndSpecification(Integer id);
 	int insertGoodsCart(GoodsCart goodsCart);
 	List<GoodsCart> selectGoodsCart(Integer userId);
 	int selectIsVip(Integer userId);
 	int deleteGoodsCart(Integer id);
-	GoodsCart selectIsCart(@Param("userId")Integer userId,@Param("specId")Integer specId);
+	GoodsCart selectIsCart(@Param("userId")Integer userId,@Param("specId")Integer specId,@Param("flavorname") String flavorname);
+	GoodsCart selectIsCarts(@Param("userId")Integer userId,@Param("specId")Integer specId);
 	int updateGoodsCart(@Param("amount")Integer amount,@Param("id")Integer id);
+	HsVip selectVipInfo(Integer userId);
+	Integer selectSumCart(Integer userId);
+	CreateOrderResult createGoodsOrder(GoodsOrder goodsOrder);
+	int deleteUserGoodsCart(Integer userId);
+	CreateOrderItemResult createGoodsOrderItem(GoodsOrderItem goodsOrderItem);
 }
