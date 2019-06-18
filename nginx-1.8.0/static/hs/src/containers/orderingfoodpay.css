@@ -1,0 +1,77 @@
+.swiper-container-ul{
+  list-style: none;
+  overflow: hidden;
+  width: 100%;
+  background: #fff;
+  top: 0;
+}
+.swiper-container-ul-li{
+  list-style-type: none;
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+  text-align: center;
+}
+.activess{
+  border-bottom: 1px solid #3190e8;
+  color: #3190e8;
+}
+
+.payments {
+  background-color: white;
+}
+.payments .count-down {
+  text-align: left;
+  color: grey;
+  font-size: 15px;
+}
+.payment-countdowns {
+  width: 100%;
+  background-color: white;
+  padding-bottom: 50px;
+  /*border-bottom: 1px solid #ddd;*/
+}
+.payment-countdown-titles {
+  padding: 15px;
+  font-size: 16px;
+  width: 100%;
+  text-align: left;
+  color: #000000;
+}
+.payment-countdown-reminds {
+  color: #C2C2C2;
+  padding: 15px;
+  font-size: 15px;
+  width: 100%;
+  text-align: left;
+}
+
+.payment-countdown-moneys {
+  padding: 15px;
+  font-size: 15px;
+  width: 100%;
+  text-align: left;
+}
+
+.payment-infos {
+  width: 100%;
+  background-color: white;
+}
+
+.payment-info-methods {
+	padding: 10px;
+/*  border-bottom: 1px solid #ddd;*/
+}
+.payment-info-methods .red {
+  color: red;
+}
+.payment-info-method-texts {
+  font-size: 15px;
+  margin-left: 10px;
+}
+.payment-info-method-images {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}

@@ -16,7 +16,7 @@ const DetailPicker = (props) => {
   if (props.showPick) {
     return (
       <div className="detail-picker-overlay" onClick={props.closePick}>
-        <div className="detail-picker" onClick={(e) => {e.stopPropagation()}}>
+        <div className="detail-pickers" onClick={(e) => {e.stopPropagation()}}>
           <span className="detail-picker-close" onClick={props.closePick}><Icon name="times-circle"/></span>
           <div className="detail-picker-header clearfix">
             <div className="detail-picker-header-img">
@@ -26,7 +26,7 @@ const DetailPicker = (props) => {
               <div className="detail-picker-header-title">{props.title}</div>
               <div className="detail-picker-header-price">
 	              <div>
-	              	{props.vipPrice !== '-' ? "VIP¥"+props.vipPrice : null}
+	              	{props.vipPrice !== '-' ? "VIP:¥"+props.vipPrice : null}
 	              </div>
 	              <div>
 	             		¥{props.hsPirce}
@@ -53,10 +53,13 @@ const DetailPicker = (props) => {
                 })
               }
             </div>
-            <div className="detail-picker-spec-name">偏好：</div>
-            <div className="detail-picker-spec-values clearfix">
-              {props.flavor.map((item)=>{
-       					return(	
+            {props.flavors !== null ?
+            	<div className="detail-picker-spec-name">{props.flavors}</div>
+              :null}
+            {props.flavors !== null ?
+            	<div className="detail-picker-spec-values clearfix">
+              	{props.flavor.map((item)=>{
+       						return(	
       			 				<div onClick={() => {
                         props.pickflavor(item)
 
@@ -66,7 +69,8 @@ const DetailPicker = (props) => {
         						</div>
         					);  
     						})}
-          	</div>
+          		</div>
+          	: null}
 
         	</div>
           <div className="detail-picker-amount clearfix">
@@ -105,7 +109,6 @@ const DetailPicker = (props) => {
 								        var result = JSON.parse(res.text);
 								        if(result>0){
 								        	alert("加入购物车成功!")
-								        	window.location.reload();
 								        }else{
 								        	alert("加入购物车失败,请刷新重试!")
 								        }
@@ -117,7 +120,7 @@ const DetailPicker = (props) => {
 								    // 立即购买
 								                      }}
 								            >
-								              {'下一步'}
+								              {'加入购物车'}
 								            </div>
 								            :
 								            null
@@ -152,32 +155,32 @@ const CartDetail = (props) => {
                             <div className="goods-item-info">
                             		<div className="goods-item-title">
                           					{item.name}
-                        				</div><br/>
-                        				&nbsp;&nbsp;&nbsp;偏好 {item.flavorname}<br/>
-                            		&nbsp;&nbsp;&nbsp;数量 x{item.amount}<br/>
+                        				</div>
+                        				&nbsp;&nbsp;&nbsp;偏好:{item.flavorname}<br/>
+                            		&nbsp;&nbsp;&nbsp;数量x{item.amount}<br/>
                               	<div className="goods-item-price"> 
                               		¥{item.hsPrice}<br/>
-                              		{item.vipPrice !== null ? 'VIP¥'+ item.vipPrice : null}
+                              		{item.vipPrice !== null ? 'VIP:¥'+ item.vipPrice : null}
                               	</div>
+                              	<button className="btn btn-danger" style={{float:'right'}} onClick={()=>{
+																  	req
+											      				.get('/uclee-user-web/removeCart?cartId='+item.id)
+															      .end((err, res) => {
+															        if (err) {
+															          return err
+															        }
+															        var result = JSON.parse(res.text);
+															        if(result>0){
+															        	alert("删除购物车成功!")
+															        	window.location.reload();
+															        }else{
+															        	alert("删除购物车失败,请刷新重试!")
+															        }
+																  })}}
+																  >
+													  	 删除
+													  	</button>
                             </div>
-													  <button className="btn btn-danger" style={{float:'right'}} onClick={()=>{
-													  	req
-								      				.get('/uclee-user-web/removeCart?cartId='+item.id)
-												      .end((err, res) => {
-												        if (err) {
-												          return err
-												        }
-												        var result = JSON.parse(res.text);
-												        if(result>0){
-												        	alert("删除购物车成功!")
-												        	window.location.reload();
-												        }else{
-												        	alert("删除购物车失败,请刷新重试!")
-												        }
-													  })}}
-													  >
-													  	删除<
-													  /button>
                           </div>
                         )
                       })}
@@ -204,6 +207,7 @@ class AllGoods extends React.Component {
 			goods:[],
 			spec:[],
 			flavor:[],
+			flavors:'',
 			specid:null,
 			flavorname:'',
 			currentAmount: 1,
@@ -291,6 +295,7 @@ class AllGoods extends React.Component {
           goodsimg:res.body.goods.goodsimg,
           spec:res.body.spec,
           flavor:res.body.flavor,
+          flavors:res.body.flavors,
           specid:res.body.specid,
         })
       })
@@ -300,6 +305,7 @@ class AllGoods extends React.Component {
     this.setState({
       showPick: false
     })
+    window.location.reload();
   }
  	
  	_pickSpec = (id) => {
@@ -390,13 +396,13 @@ class AllGoods extends React.Component {
     return (
       <DocumentTitle title="选择产品">
       	<div>
-      		<div className="banner">
-      		 	<div className="store-logo">
-							<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
-							<div className="store-logo-text">{this.state.brand}</div>
-						</div>
+      		<div className="header swiper-container-ul">
+      				<div className="store-logo swiper-container-ul-li">
+      					<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
+								<div className="store-logo-text">{this.state.brand}</div>
+							</div>
       		</div>
-      		<div style={{width:'360px',marginTop:'5px'}}>
+      		<div style={{width:'100%',paddingTop:'10px'}}>
       			<div className="swiper-wrapper goods-buttom">
 				      <div className="swiper-slide">
 				        <div className="content">
@@ -416,7 +422,9 @@ class AllGoods extends React.Component {
 				            	{this.state.goodslist.map((item, index) => {
 		                    return (
 		                    		<li>
-							                <div className="class-title">{item.catName}</div>
+			                    		{item.goodslist.length >0 ?
+								                <div className="goods-class-title">{item.catName}</div>
+								              : null} 
 							                {item.goodslist.map((ite, index) => {
 							                	return (
 							                	<div className="item" onClick={this._showPick.bind(this,ite.id)}>
@@ -479,6 +487,8 @@ class AllGoods extends React.Component {
               onClickNext={this._clickNext}
 			  			goodsId={this.state.goodsId}
 			  			flavor={this.state.flavor}
+			  			flavors={this.state.flavors}
+			  			showPicks={this._showPick}
             />
 	      <CartDetail
 	      	showCart={this.state.showCart}

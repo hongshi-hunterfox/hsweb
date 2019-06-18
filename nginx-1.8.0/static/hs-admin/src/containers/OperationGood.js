@@ -34,6 +34,7 @@ class OperationGood extends React.Component {
       images: [],
       goodsname: '',
       goodscategory:'',
+      flavors:'',
       flavorone:'',
       flavortwo:'',
       flavorthree:'',
@@ -328,19 +329,27 @@ class OperationGood extends React.Component {
               </div>     
             </div>
             <div className="form-group">
-              <label className="control-label col-md-3">口味偏好设置：</label>
+            	<label className="control-label col-md-3">偏好名称设置：</label>
               <div className="col-md-9">
               	<span style={{padding:'10px'}}>
-               		设置一：<input type="text" name="flavorone" value={this.state.flavorone} onChange={this._simpleInputChange}/><br/>
+               		<input type="text" name="flavors" value={this.state.flavors} onChange={this._simpleInputChange}/>
+              	</span>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="control-label col-md-3">偏好属性设置：</label>
+              <div className="col-md-9">
+              	<span style={{padding:'10px'}}>
+               		<input type="text" name="flavorone" value={this.state.flavorone} onChange={this._simpleInputChange}/><br/>
                	</span>
                	<span style={{padding:'10px'}}>
-               		设置二：<input type="text" name="flavortwo" value={this.state.flavortwo} onChange={this._simpleInputChange}/><br/>
+               		<input type="text" name="flavortwo" value={this.state.flavortwo} onChange={this._simpleInputChange}/><br/>
                	</span>
                	<span style={{padding:'10px'}}>
-               		设置三：<input type="text" name="flavorthree" value={this.state.flavorthree} onChange={this._simpleInputChange}/><br/>
+               		<input type="text" name="flavorthree" value={this.state.flavorthree} onChange={this._simpleInputChange}/><br/>
                	</span>
                	<span style={{padding:'10px'}}>
-               		设置四：<input type="text" name="flavorfour" value={this.state.flavorfour} onChange={this._simpleInputChange}/>
+               		<input type="text" name="flavorfour" value={this.state.flavorfour} onChange={this._simpleInputChange}/>
               	</span>
               </div>
             </div>
@@ -443,6 +452,7 @@ class OperationGood extends React.Component {
           store: res.body.store,
           goodscategory: res.body.goods.goodscategory,
           disparity: res.body.disparity,
+          flavors:res.body.goods.flavors,
           flavorone:res.body.goods.flavorone,
       		flavortwo:res.body.goods.flavortwo,
       		flavorthree:res.body.goods.flavorthree,
@@ -673,7 +683,7 @@ class OperationGood extends React.Component {
         err: '请选择餐盒费设置'
       })
     }
-
+    
     this.setState({
       err: null
     })

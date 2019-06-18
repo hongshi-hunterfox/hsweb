@@ -1,12 +1,6 @@
 .cat {
 	width: 30%;
 }
-.banner {
-	background-color: #D9534F;
-	width: 100%;
-	height: 25%;
-}
-
 .store-logo {
   text-align: center;
 }
@@ -48,7 +42,7 @@
 }
 
 .goods-buttom {
-	padding-bottom: 35px;
+	padding-bottom: 50px;
 }
 
 .detail-picker {
@@ -61,7 +55,20 @@
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-name: detail-slideInUp;
-  min-height: 200px;
+  height: 400px;
+  overflow:auto;
+}
+
+.detail-pickers {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  padding-left: 10px;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-name: detail-slideInUp;
 }
 
 .detail-picker-close {
@@ -88,7 +95,7 @@
   overflow-y: scroll;
   overflow-x: scroll;
   width: 350px;
-  height: 280px;
+  height: 180px;
 }
 .detail-picker-spec-name {
   padding-top: 5px;
@@ -195,7 +202,7 @@
 .header{
   width: 100%;
   height: 150px;
-  background: #555;
+  background: #D9534F;
 }
 .swiper-container-ul{
   list-style: none;
@@ -287,4 +294,7 @@
   color: orangered;
   font-weight: bold;
 /*  background: #eee;*/
+}
+.goods-class-title{
+	text-align: center;
 }
