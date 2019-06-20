@@ -373,6 +373,18 @@ public class BackendServiceImpl implements BackendServiceI {
 			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, configPost.getNoBirthdayMessagePush());
 		}else{
 			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, "");
+		}if(configPost.getStoreOrderOne()!=null){
+			configMapper.updateByTag(WebConfig.storeOrderOne, configPost.getStoreOrderOne());
+		}else{
+			configMapper.updateByTag(WebConfig.storeOrderOne, "");
+		}if(configPost.getStoreOrderTwo()!=null){
+			configMapper.updateByTag(WebConfig.storeOrderTwo, configPost.getStoreOrderTwo());
+		}else{
+			configMapper.updateByTag(WebConfig.storeOrderTwo, "");
+		}if(configPost.getGoodsBarUrl()!=null){
+			configMapper.updateByTag(WebConfig.goodsBarUrl, configPost.getGoodsBarUrl());
+		}else{
+			configMapper.updateByTag(WebConfig.goodsBarUrl, "");
 		}
 		
 		return true;
@@ -582,6 +594,18 @@ public class BackendServiceImpl implements BackendServiceI {
 		if (configPost.getLinkCouponText()!=null) {
 			configMapper.updateByTag(WebConfig.linkCouponText, configPost.getLinkCouponText());
 		}
+		if (configPost.getStoreOrderOne()!=null) {
+			configMapper.updateByTag(WebConfig.storeOrderOne, configPost.getStoreOrderOne());
+		}
+		if (configPost.getStoreOrderTwo()!=null) {
+			configMapper.updateByTag(WebConfig.storeOrderTwo, configPost.getStoreOrderTwo());
+		}
+		if (configPost.getStoreOrderThree()!=null) {
+			configMapper.updateByTag(WebConfig.storeOrderThree, configPost.getStoreOrderThree());
+		}
+		if(configPost.getGoodsBarUrl()!=null){
+			configMapper.updateByTag(WebConfig.goodsBarUrl, configPost.getGoodsBarUrl());
+		}
 		return true;
 	}
 	@Override
@@ -785,6 +809,18 @@ public class BackendServiceImpl implements BackendServiceI {
 		}
 		if (configPost.getNoBirthdayMessagePush()!=null) {
 			configMapper.updateByTag(WebConfig.noBirthdayMessagePush, configPost.getNoBirthdayMessagePush());
+		}
+		if (configPost.getStoreOrderOne()!=null) {
+			configMapper.updateByTag(WebConfig.storeOrderOne, configPost.getStoreOrderOne());
+		}
+		if (configPost.getStoreOrderTwo()!=null) {
+			configMapper.updateByTag(WebConfig.storeOrderTwo, configPost.getStoreOrderTwo());
+		}
+		if (configPost.getStoreOrderThree()!=null) {
+			configMapper.updateByTag(WebConfig.storeOrderThree, configPost.getStoreOrderThree());
+		}
+		if(configPost.getGoodsBarUrl()!=null){
+			configMapper.updateByTag(WebConfig.goodsBarUrl, configPost.getGoodsBarUrl());
 		}
 		return true;
 	}
@@ -1128,6 +1164,9 @@ public class BackendServiceImpl implements BackendServiceI {
 		Goods goods = goodsMapper.selectByPrimaryKey(id);	
 		if(goods!=null){
 			good.setGoodsname(goods.getGoodsname());
+			if(goods.getFlavors() != null){
+				good.setFlavors(goods.getFlavors());
+			}
 			if(goods.getFlavorone() != null){
 				good.setFlavorone(goods.getFlavorone());
 			}
@@ -1414,8 +1453,15 @@ public class BackendServiceImpl implements BackendServiceI {
 			}
 			else if(config.getTag().equals(WebConfig.noBirthdayMessagePush)){
 				configPost.setNoBirthdayMessagePush(config.getValue());
-			}
-			
+			}else if(config.getTag().equals(WebConfig.storeOrderOne)){
+				configPost.setStoreOrderOne(config.getValue());
+			}else if(config.getTag().equals(WebConfig.storeOrderTwo)){
+				configPost.setStoreOrderTwo(config.getValue());
+			}else if(config.getTag().equals(WebConfig.storeOrderThree)){
+				configPost.setStoreOrderThree(config.getValue());
+			}else if(config.getTag().equals(WebConfig.goodsBarUrl)){
+				configPost.setGoodsBarUrl(config.getValue());
+			}		
 		}
 		return configPost;
 	}
@@ -2833,8 +2879,7 @@ public class BackendServiceImpl implements BackendServiceI {
         for(HongShiProduct item : notSelected){
             ret.add(item);
         }
-
-		map.put("hongShiProduct", hongShiProducts);
+		map.put("hongShiProduct", ret);
 		List<NapaStore> tmp = napaStoreMapper.selectAllNapaStore();
     	HashSet<String> hsCode = new HashSet<String>();
     	List<NapaStore> retStore = new ArrayList<NapaStore>();

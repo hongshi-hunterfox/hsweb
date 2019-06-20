@@ -1,98 +1,54 @@
-2019-06-16 12:47:41,383 - {dataSource-1} inited
- 2019-06-16 12:47:42,312 - no bean
- 2019-06-16 12:47:42,434 - {dataSource-2} inited
- 2019-06-16 12:47:43,646 - no bean
- 2019-06-16 12:47:43,742 - {dataSource-3} inited
- 2019-06-16 12:49:49,946 - merchantCode:null
- 2019-06-16 12:49:49,990 - merchantCode:null
- 2019-06-16 12:51:21,210 - merchantCode:null
- 2019-06-16 12:51:21,214 - merchantCode:null
- 2019-06-16 12:51:21,215 - merchantCode:null
- 2019-06-16 12:51:21,215 - merchantCode:hs
- 2019-06-16 12:51:21,222 - merchantCode:null
- 2019-06-16 12:51:30,653 - merchantCode:null
- 2019-06-16 12:51:30,658 - merchantCode:null
- 2019-06-16 12:51:30,661 - merchantCode:hs
- 2019-06-16 12:52:33,632 - merchantCode:null
- 2019-06-16 12:53:25,615 - merchantCode:hs
- 2019-06-16 12:53:25,621 - merchantCode:null
- 2019-06-16 12:53:25,625 - merchantCode:null
- 2019-06-16 12:56:40,052 - merchantCode:null
- 2019-06-16 12:56:40,055 - merchantCode:null
- 2019-06-16 12:56:40,058 - merchantCode:hs
- 2019-06-16 12:57:29,236 - merchantCode:null
- 2019-06-16 12:57:29,239 - merchantCode:null
- 2019-06-16 12:57:29,239 - merchantCode:hs
- 2019-06-16 12:58:36,211 - merchantCode:null
- 2019-06-16 12:58:36,212 - merchantCode:hs
- 2019-06-16 12:58:36,214 - merchantCode:null
- 2019-06-16 13:00:59,502 - merchantCode:hs
- 2019-06-16 13:00:59,502 - merchantCode:null
- 2019-06-16 13:00:59,504 - merchantCode:null
- 2019-06-16 13:01:46,510 - merchantCode:hs
- 2019-06-16 13:01:46,510 - merchantCode:null
- 2019-06-16 13:01:46,510 - merchantCode:null
- 2019-06-16 13:02:44,596 - merchantCode:null
- 2019-06-16 13:02:44,596 - merchantCode:hs
- 2019-06-16 13:02:44,598 - merchantCode:null
- 2019-06-16 13:04:14,095 - merchantCode:null
- 2019-06-16 13:04:14,095 - merchantCode:hs
- 2019-06-16 13:04:14,096 - merchantCode:null
- 2019-06-16 13:14:45,492 - {dataSource-1} inited
- 2019-06-16 13:14:45,695 - {dataSource-1} inited
- 2019-06-16 13:14:45,930 - {dataSource-1} closed
- 2019-06-16 13:14:46,522 - no bean
- 2019-06-16 13:14:46,622 - {dataSource-2} inited
- 2019-06-16 13:14:51,128 - no bean
- 2019-06-16 13:14:51,194 - {dataSource-3} inited
- 2019-06-16 13:15:38,408 - {dataSource-1} inited
- 2019-06-16 13:15:38,986 - no bean
- 2019-06-16 13:15:39,064 - {dataSource-2} inited
- 2019-06-16 13:15:40,267 - no bean
- 2019-06-16 13:15:40,332 - {dataSource-3} inited
- 2019-06-16 13:18:13,024 - merchantCode:null
- 2019-06-16 13:18:13,024 - merchantCode:null
- 2019-06-16 13:18:13,024 - merchantCode:hs
- 2019-06-16 13:18:23,749 - merchantCode:null
- 2019-06-16 13:18:23,749 - merchantCode:hs
- 2019-06-16 13:18:23,749 - merchantCode:null
- 2019-06-16 13:19:49,356 - {dataSource-1} inited
- 2019-06-16 13:19:49,966 - no bean
- 2019-06-16 13:19:50,059 - {dataSource-2} inited
- 2019-06-16 13:19:50,872 - no bean
- 2019-06-16 13:19:50,938 - {dataSource-3} inited
- 2019-06-16 13:20:47,172 - merchantCode:hs
- 2019-06-16 13:20:47,172 - merchantCode:null
- 2019-06-16 13:20:47,172 - merchantCode:null
- 2019-06-16 13:30:28,513 - {dataSource-1} inited
- 2019-06-16 13:30:29,153 - no bean
- 2019-06-16 13:30:29,247 - {dataSource-2} inited
- 2019-06-16 13:30:30,122 - no bean
- 2019-06-16 13:30:30,203 - {dataSource-3} inited
- 2019-06-16 13:31:06,648 - merchantCode:null
- 2019-06-16 13:31:06,648 - merchantCode:hs
- 2019-06-16 13:31:06,648 - merchantCode:null
- 2019-06-16 13:31:44,208 - merchantCode:null
- 2019-06-16 13:31:44,996 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,152 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,511 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,532 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,579 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,610 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,657 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,689 - goodsSpecificationsId:52
- 2019-06-16 13:31:45,829 - goodsSpecificationsId:53
- 2019-06-16 13:31:45,860 - goodsSpecificationsId:53
- 2019-06-16 13:31:45,907 - goodsSpecificationsId:53
- 2019-06-16 13:31:45,938 - goodsSpecificationsId:53
- 2019-06-16 13:31:45,985 - goodsSpecificationsId:53
- 2019-06-16 13:31:46,032 - goodsSpecificationsId:53
- 2019-06-16 13:31:46,079 - goodsSpecificationsId:53
- 2019-06-16 13:31:46,110 - goodsSpecificationsId:53
- 2019-06-16 13:31:48,358 - merchantCode:null
- 2019-06-16 13:31:48,359 - merchantCode:hs
- 2019-06-16 13:31:48,364 - merchantCode:null
- 2019-06-16 13:32:18,790 - merchantCode:null
- 2019-06-16 13:32:18,795 - merchantCode:null
- 2019-06-16 13:32:18,798 - merchantCode:hs
+2019-06-20 14:34:09,212 - {dataSource-1} inited
+ 2019-06-20 14:34:09,979 - no bean
+ 2019-06-20 14:34:10,064 - {dataSource-2} inited
+ 2019-06-20 14:34:11,143 - no bean
+ 2019-06-20 14:34:11,214 - {dataSource-3} inited
+ 2019-06-20 14:35:39,236 - merchantCode:null
+ 2019-06-20 14:35:39,236 - merchantCode:hs
+ 2019-06-20 14:35:39,301 - merchantCode:null
+ 2019-06-20 14:35:43,301 - merchantCode:null
+ 2019-06-20 14:36:23,603 - merchantCode:null
+ 2019-06-20 14:36:25,265 - merchantCode:null
+ 2019-06-20 14:36:25,265 - merchantCode:hs
+ 2019-06-20 14:36:25,394 - merchantCode:null
+ 2019-06-20 14:39:26,995 - merchantCode:null
+ 2019-06-20 14:39:26,995 - merchantCode:hs
+ 2019-06-20 14:39:27,071 - merchantCode:null
+ 2019-06-20 14:39:29,548 - merchantCode:hs
+ 2019-06-20 14:39:29,548 - merchantCode:null
+ 2019-06-20 14:39:29,639 - merchantCode:null
+ 2019-06-20 14:39:30,543 - merchantCode:null
+ 2019-06-20 14:39:30,543 - merchantCode:hs
+ 2019-06-20 14:39:30,620 - merchantCode:null
+ 2019-06-20 14:39:30,908 - merchantCode:hs
+ 2019-06-20 14:39:30,910 - merchantCode:null
+ 2019-06-20 14:39:30,989 - merchantCode:null
+ 2019-06-20 14:39:31,258 - merchantCode:null
+ 2019-06-20 14:39:31,258 - merchantCode:hs
+ 2019-06-20 14:39:31,346 - merchantCode:null
+ 2019-06-20 14:39:31,644 - merchantCode:hs
+ 2019-06-20 14:39:31,644 - merchantCode:null
+ 2019-06-20 14:39:31,715 - merchantCode:null
+ 2019-06-20 14:39:32,138 - merchantCode:hs
+ 2019-06-20 14:39:32,138 - merchantCode:null
+ 2019-06-20 14:39:32,226 - merchantCode:null
+ 2019-06-20 14:39:42,146 - merchantCode:null
+ 2019-06-20 14:39:42,147 - merchantCode:hs
+ 2019-06-20 14:39:42,240 - merchantCode:null
+ 2019-06-20 14:39:54,567 - merchantCode:null
+ 2019-06-20 14:39:55,891 - merchantCode:null
+ 2019-06-20 14:39:55,891 - merchantCode:hs
+ 2019-06-20 14:39:56,015 - merchantCode:null
+ 2019-06-20 14:45:09,070 - {dataSource-1} inited
+ 2019-06-20 14:45:09,774 - no bean
+ 2019-06-20 14:45:09,871 - {dataSource-2} inited
+ 2019-06-20 14:45:10,930 - no bean
+ 2019-06-20 14:45:11,001 - {dataSource-3} inited
+ 2019-06-20 14:46:26,663 - merchantCode:null
+ 2019-06-20 14:46:26,663 - merchantCode:hs
+ 2019-06-20 14:46:26,909 - merchantCode:null
+ 2019-06-20 14:46:42,067 - merchantCode:null
+ 2019-06-20 14:46:43,369 - merchantCode:null
+ 2019-06-20 14:46:43,370 - merchantCode:hs
+ 2019-06-20 14:46:43,486 - merchantCode:null
  

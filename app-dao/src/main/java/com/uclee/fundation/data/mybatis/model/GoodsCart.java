@@ -21,4 +21,5 @@ public class GoodsCart {
 	public List<Category> category;
 	public String code;
 	public String flavorname;
+	public String flavors;
 }

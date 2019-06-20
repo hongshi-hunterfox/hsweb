@@ -402,7 +402,7 @@ public interface UserServiceI {
 	Integer updateDetaileStart(Integer orderID);
 	int updateDetaileEnd(Integer orderID);
 	
-	List<Object>  selectGoodsList(Integer storeId);
+	List<Object>  selectGoodsList(String storeId);
 	
 	Map<String, Object> selectGoodsAndSpecification(Integer id);
 	
@@ -417,5 +417,7 @@ public interface UserServiceI {
 	int deleteGoodsCart(Integer id);
 	
 	Map<String, Object> vipPay(GoodsOrder goodsOrder,Integer userId);
+	
+	List<String> salesInfo();
 	
 }

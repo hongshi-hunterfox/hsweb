@@ -31,7 +31,7 @@ public interface GoodsMapper {
 	int deleteBylink(Integer id);
 	int deleteGoods(Integer id);
 	List<Goods> selectGoodsList();
-	List<Goods> selectGoodsAndCatList(@Param("goodscategory") Integer goodscategory,@Param("storeId")Integer storeId);
+	List<Goods> selectGoodsAndCatList(@Param("goodscategory") Integer goodscategory,@Param("storeId")String storeId);
 	List<Goods> selectGoodsAndSpecification(Integer id);
 	int insertGoodsCart(GoodsCart goodsCart);
 	List<GoodsCart> selectGoodsCart(Integer userId);
@@ -45,4 +45,5 @@ public interface GoodsMapper {
 	CreateOrderResult createGoodsOrder(GoodsOrder goodsOrder);
 	int deleteUserGoodsCart(Integer userId);
 	CreateOrderItemResult createGoodsOrderItem(GoodsOrderItem goodsOrderItem);
+	List<GoodsSpecifications> selectByStoreAndGoods();
 }

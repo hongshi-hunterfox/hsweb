@@ -32,7 +32,7 @@
     from web_goods
     where id = #{id}
   </select>
-  <select id="selectByGoodsId" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications"> 
+  <select id="selectByGoodsId" parameterType="java.lang.Integer" resultType="java.lang.String"> 
   	select
 		code
 	    from web_goods_specifications
@@ -44,18 +44,23 @@
     from  web_goods_categories_link
     where goodsId = #{goodsId}
   </select>
+  <select id="selectByStoreAndGoods" resultType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications">
+  	select
+		*
+	    from web_goods_specifications
+  </select>
   <select id="selectGoodsList" resultType="com.uclee.fundation.data.mybatis.model.Goods">
   	  select  a.goodsimg,a.goodsname,a.goodscategory, a.id, min(b.hsPrice) as hsPrice 
 		from  web_goods as a, web_goods_specifications as b, web_goods_categories_link as c 
 		where  a.id=b.goodsId and c.goodsId=a.id 
 		group by a.goodsname,a.goodscategory,a.id,a.goodsimg
   </select>
-  <select id="selectGoodsAndCatList" parameterType="java.lang.Integer" resultType="com.uclee.fundation.data.mybatis.model.Goods">
-  	select  a.goodsimg,a.goodsname,a.goodscategory, a.id, min(b.hsPrice) as hsPrice 
+  <select id="selectGoodsAndCatList" resultType="com.uclee.fundation.data.mybatis.model.Goods">
+  	select  a.goodsimg,a.goodsname,a.goodscategory, a.id, min(b.hsPrice) as hsPrice ,min(b.vipPrice) as vipPrice
 		from  web_goods as a, web_goods_specifications as b, web_goods_categories_link as c,
-		web_goods_specifications_store_link as d
+		web_goods_specifications_store_link as d, web_napa_stores as e
 		where  a.id=b.goodsId and c.goodsId=a.id and a.goodscategory=#{goodscategory}
-		and d.specId=b.id and d.storeId=#{storeId}
+		and d.specId=b.id and d.storeId=e.store_id and e.hs_code=#{storeId}
 		group by a.goodsname,a.goodscategory,a.id,a.goodsimg
   </select>
   <select id="selectByGoodsSpecifications" resultType="com.uclee.fundation.data.mybatis.model.GoodsSpecifications" parameterType="java.lang.Integer" >
@@ -95,8 +100,8 @@
   	exec WSC_AddSaleItem #{orderId},#{goodCode},#{amount},#{total},#{goodsId}
   </select>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Goods" useGeneratedKeys="true" keyProperty="id">
-    insert into web_goods (goodsname, goodsimg, goodscategory,flavorone,flavortwo,flavorthree,flavorfour) 
-    values (#{goodsname}, #{goodsimg}, #{goodscategory}, #{flavorone},#{flavortwo},#{flavorthree},#{flavorfour})
+    insert into web_goods (goodsname, goodsimg, goodscategory,flavorone,flavortwo,flavorthree,flavorfour,flavors) 
+    values (#{goodsname}, #{goodsimg}, #{goodscategory}, #{flavorone},#{flavortwo},#{flavorthree},#{flavorfour},#{flavors})
   </insert>
   <insert id="insertGoodsAndCategories" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink">
   	insert into web_goods_categories_link(goodsId, categoryId) values(#{goodsId}, #{categoryId})
@@ -112,7 +117,7 @@
   </insert>
   <update id="updateGoodsById" parameterType="com.uclee.fundation.data.mybatis.model.Goods">
 	update web_goods set goodsname = #{goodsname}, goodsimg=#{goodsimg}, goodscategory=#{goodscategory},
-	 flavorone=#{flavorone},flavortwo=#{flavortwo},flavorthree=#{flavorthree},flavorfour=#{flavorfour} WHERE id = #{id}  
+	 flavorone=#{flavorone},flavortwo=#{flavortwo},flavorthree=#{flavorthree},flavorfour=#{flavorfour},flavors=#{flavors} WHERE id = #{id}  
   </update>
   <update id="updateGoodsAndCategories" parameterType="com.uclee.fundation.data.mybatis.model.GoodsCategoriesLink">
 	update web_goods_categories_link set categoryId= #{categoryId} where goodsId=#{goodsId}  

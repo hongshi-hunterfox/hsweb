@@ -24,7 +24,8 @@ class ActivityConfig extends React.Component {
       err: null,
       uploading:false,
       logoUrl:'',
-      ucenterImg:''
+      ucenterImg:'',
+      goodsBarUrl:''
     }
     this.imgFile = null
     this.imgFile1 = null
@@ -38,7 +39,8 @@ class ActivityConfig extends React.Component {
       this.setState({
         config: data.config,
         logoUrl:data.config?data.config.logoUrl:'',
-        ucenterImg:data.config?data.config.ucenterImg:''
+        ucenterImg:data.config?data.config.ucenterImg:'',
+        goodsBarUrl:data.config?data.config.goodsBarUrl:''
       })
       console.log(this.state.config)
     })
@@ -113,6 +115,24 @@ class ActivityConfig extends React.Component {
               <div className="col-md-9" style={{marginTop:'10px'}}>
               {/*<input type="text" value={this.state.config.notice} name="notice" className="form-control" onChange={this._change}/>*/}
                 <textarea rows="3" cols="20" value={this.state.config.notice} name="notice" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>点餐信息一：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+              {/*<input type="text" value={this.state.config.storeOrderOne} name="storeOrderOne" className="form-control" onChange={this._change}/>*/}
+                <textarea rows="2" cols="20" value={this.state.config.storeOrderOne} name="storeOrderOne" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>点餐信息二：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+              {/*<input type="text" value={this.state.config.storeOrderTwo} name="storeOrderTwo" className="form-control" onChange={this._change}/>*/}
+                <textarea rows="2" cols="20" value={this.state.config.storeOrderTwo} name="storeOrderTwo" className="form-control" onChange={this._change}>
+                </textarea>
+              </div>
+              <label className="control-label col-md-3" style={{marginTop:'10px'}}>点餐信息三：</label>
+              <div className="col-md-9" style={{marginTop:'10px'}}>
+              {/*<input type="text" value={this.state.config.storeOrderThree} name="storeOrderThree" className="form-control" onChange={this._change}/>*/}
+                <textarea rows="2" cols="20" value={this.state.config.storeOrderThree} name="storeOrderThree" className="form-control" onChange={this._change}>
                 </textarea>
               </div>
               <label className="control-label col-md-3" style={{marginTop:'10px'}}>设置客服qq：</label>
@@ -239,6 +259,62 @@ class ActivityConfig extends React.Component {
                 />
               </div>
             </div>
+            
+            <div className="form-group">
+              <label className="control-label col-md-3">点餐banner图片：</label>
+              <div className="col-md-9">
+                <div className="row">
+                  {
+                    this.state.uploading ?
+                    <div className="product-uploading">
+                      <span>上传中...</span>
+                    </div>
+                    :
+                    null
+                  }
+                  <div className="col-md-4" >
+                    <div className="panel panel-default">
+                      <div className="panel-body">
+                        <div style={{ marginBottom: 10 }}>
+                          <img
+                            src={this.state.goodsBarUrl}
+                            alt=""
+                            className="img-responsive"
+                          />
+                        </div>
+                        {/*<button
+                          type="button"
+                          className="btn btn-danger btn-block"
+                          onClick={this._deleteGoodsBarUrl}
+                        >
+                          更换图片
+                        </button>*/}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="btn btn-default"
+                  type="button"
+                  onClick={() => {
+                    this.imgFile1.click()
+                  }}
+                >
+                  <span className="glyphicon glyphicon-plus" />
+                  更换图片
+                  {this.state.goodsBarUrl}
+                </button>
+                <input
+                  type="file"
+                  onChange={this._onChooseGoodsBarUrl}
+                  className="hidden"
+                  ref={c => {
+                    this.imgFile1 = c
+                  }}
+                />
+              </div>
+            </div>
+            
             <div className="form-group">
               <label className="control-label col-md-3">用户中心图片：</label>
               <div className="col-md-9">
@@ -353,6 +429,34 @@ class ActivityConfig extends React.Component {
         })
     }
   }
+  
+  _onChooseGoodsBarUrl = fe => {
+    console.log("进入_onChooseGoodsBarUrl")
+    if (fe.target.files && fe.target.files[0]) {
+      var f = fe.target.files[0]
+
+      this.setState({
+        uploading: true
+      })
+
+      var fd = new FormData()
+      fd.append('file', f)
+      req
+        .post('/uclee-product-web/doUploadImage')
+        .send(fd)
+        .end((err, res) => {
+          if (err) {
+            return err
+          }
+          console.log(this.state);
+          this.setState({
+              goodsBarUrl: res.text,
+              uploading:false
+          })
+          console.log(this.state);
+        })
+    }
+  }
 _onChooseUcenterImage = fe => {
   console.log("进入_onChooseUcenterImage")
     if (fe.target.files && fe.target.files[0]) {
@@ -384,6 +488,13 @@ _onChooseUcenterImage = fe => {
         logoUrl: ''
     })
   }
+  
+  _deleteGoodsBarUrl = index => {
+  	this.setState({
+  		goodsBarUrl:''
+  	})
+  }
+  
   _deleteUcenterImg = index => {
     this.setState({
         ucenterImg: ''
@@ -427,6 +538,7 @@ _onChooseUcenterImage = fe => {
     })
     data.logoUrl = this.state.logoUrl;
     data.ucenterImg = this.state.ucenterImg;
+    data.goodsBarUrl = this.state.goodsBarUrl;
     req
       .post('/uclee-backend-web/activityConfigHandler')
       .send(data)

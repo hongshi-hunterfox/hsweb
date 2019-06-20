@@ -26,6 +26,14 @@
     from web_categories
     where parent_id = #{parentId,jdbcType=INTEGER}
   </select>
+  <select id="selectByHsCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	select 
+     DISTINCT a.*
+    from web_categories as a, web_goods as b, web_goods_specifications as c,
+    web_goods_specifications_store_link as d, web_napa_stores as e
+    where parent_id =0 and a.category_id = b.goodscategory and b.id=c.goodsId and c.id=d.specId 
+    and d.storeId=e.store_id and e.hs_code=#{storeId}
+  </select>
   <select id="selectByPId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     A.*

@@ -26,4 +26,5 @@ public interface CategoryMapper {
 
     Category selectByName(String category);
     List<Category> selectBybatchDiscount(String category);
+    List<Category> selectByHsCode(String storeId);
 }

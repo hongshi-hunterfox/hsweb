@@ -71,7 +71,45 @@ public class ConfigPost {
 	private String CartPrerogative;
 	private String priceCuttingPoster;
 	private String noBirthdayMessagePush;
+	private String storeOrderOne;
+	private String storeOrderTwo;
+	private String storeOrderThree;
+	private String goodsBarUrl;
 	
+	
+	
+	public String getGoodsBarUrl() {
+		return goodsBarUrl;
+	}
+
+	public void setGoodsBarUrl(String goodsBarUrl) {
+		this.goodsBarUrl = goodsBarUrl;
+	}
+
+	public String getStoreOrderOne() {
+		return storeOrderOne;
+	}
+
+	public void setStoreOrderOne(String storeOrderOne) {
+		this.storeOrderOne = storeOrderOne;
+	}
+
+	public String getStoreOrderTwo() {
+		return storeOrderTwo;
+	}
+
+	public void setStoreOrderTwo(String storeOrderTwo) {
+		this.storeOrderTwo = storeOrderTwo;
+	}
+
+	public String getStoreOrderThree() {
+		return storeOrderThree;
+	}
+
+	public void setStoreOrderThree(String storeOrderThree) {
+		this.storeOrderThree = storeOrderThree;
+	}
+
 	public String getNoBirthdayMessagePush() {
 		return noBirthdayMessagePush;
 	}

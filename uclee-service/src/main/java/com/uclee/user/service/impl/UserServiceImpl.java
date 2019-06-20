@@ -5036,7 +5036,7 @@ public class UserServiceImpl implements UserServiceI {
 	}
 
 	@Override
-	public List<Object> selectGoodsList(Integer storeId) {
+	public List<Object> selectGoodsList(String storeId) {
 		List<Category> cat = categoryMapper.selectByParentId(0);
 		List<Object> list = new ArrayList<>();
 		for(Category item:cat) {
@@ -5045,6 +5045,7 @@ public class UserServiceImpl implements UserServiceI {
 			map.put("catName", catName);
 			List<Object> goodslist = new ArrayList<>();
 			List<Goods> goods= goodsMapper.selectGoodsAndCatList(item.getCategoryId(),storeId);
+			System.out.println(JSON.toJSON(goods));
 			for(Goods ite:goods){
 				goodslist.add(ite);
 			}
@@ -5053,7 +5054,7 @@ public class UserServiceImpl implements UserServiceI {
 		}
 		return list;
 	}
-
+	
 	@Override
 	public Map<String, Object> selectGoodsAndSpecification(Integer id){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5079,6 +5080,7 @@ public class UserServiceImpl implements UserServiceI {
 			if(goods.get(0).getFlavorfour()!=null){
 				flavor.add(goods.get(0).getFlavorfour());
 			}
+			map.put("flavors", goods.get(0).getFlavors());		
 			map.put("flavor", flavor);
 			map.put("specid", spec.get(0).getId());			
 		}
@@ -5134,7 +5136,6 @@ public class UserServiceImpl implements UserServiceI {
 		BigDecimal total = new BigDecimal(0);//实付金额
 		BigDecimal temp = new BigDecimal(0);//计算订单实付金额
 		BigDecimal goodstotal = new BigDecimal(0);//商品总额
-		BigDecimal tmp = new BigDecimal(0);//计算商品合计金额临时值
 		BigDecimal disparityTotal = new BigDecimal(0);//打包费用总额
 		BigDecimal temps = new BigDecimal(0);//打包费用临时值
 		final int x = 1;
@@ -5146,19 +5147,17 @@ public class UserServiceImpl implements UserServiceI {
 			//判断是否堂食
 			if(type == x){
 				for(GoodsCart item:cart){
-					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					if(item.getVipPrice() != null){
 						temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
 					}else{
 						temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					}
 					total = temp.add(total);
-					goodstotal = tmp.add(goodstotal);
+					goodstotal = temp.add(goodstotal);
 				}
 			}else{
 				//打包
 				for(GoodsCart item:cart){
-					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					if(item.getVipPrice() != null){
 						temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
 						Disparity disparity = disparityMapper.selectByDisParity(item.getSpecId(),item.getGoodsId(),userId);
@@ -5169,7 +5168,7 @@ public class UserServiceImpl implements UserServiceI {
 						temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));	
 					}
 					total = temp.add(total);
-					goodstotal = tmp.add(goodstotal);
+					goodstotal = temp.add(goodstotal);
 					disparityTotal = temps.add(disparityTotal);
 				}
 			}
@@ -5178,23 +5177,20 @@ public class UserServiceImpl implements UserServiceI {
 			//判断是否堂食
 			if(type == x){
 				for(GoodsCart item:cart){
-					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					total = temp.add(total);
-					goodstotal = tmp.add(goodstotal);
+					goodstotal = temp.add(goodstotal);
 				}
 			}
 			else{
 				//打包
 				for(GoodsCart item:cart){
-					tmp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
 					Disparity disparity = disparityMapper.selectByDisParity(item.getSpecId(),item.getGoodsId(),userId);
 					temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));	
 				}
-				System.out.println(total+"============="+disparityTotal+"=========999");
 				total = temp.add(total);
-				goodstotal = tmp.add(goodstotal);
+				goodstotal = temp.add(goodstotal);
 				disparityTotal = temps.add(disparityTotal);
 			}
 
@@ -5203,12 +5199,19 @@ public class UserServiceImpl implements UserServiceI {
 		for(GoodsCart item:cart){
 			remarks = remarks + item.getName()+"("+item.getFlavorname()+" x"+item.getAmount()+");";
 		}
-		System.out.println(remarks);
+		//优惠金额
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		BigDecimal detailedamount = new BigDecimal(0);
+		for(FullCut fullCut:fullCuts){
+			if(goodstotal.compareTo(fullCut.getCondition())>=0){
+				detailedamount = fullCut.getCut();
+			}
+		}	
 		map.put("remarks", remarks);
 		map.put("disparityTotal", disparityTotal);
 		map.put("goodstotal", goodstotal);
-		map.put("detailedamount",goodstotal.subtract(total));
-		total = total.add(disparityTotal);
+		map.put("detailedamount",detailedamount);
+		total = total.add(disparityTotal).subtract(detailedamount);
 		map.put("total",total);
 		return map;
 	}
@@ -5244,7 +5247,7 @@ public class UserServiceImpl implements UserServiceI {
 		System.out.println("单号==="+goodsOrder.getTardno());
 		map.put("wxdcCode", goodsOrder.getTardno());
 		goodsOrder.setTotalnum(sum);
-		System.out.println(goodsOrder.getRemarks()+"===========备注");
+		System.out.println(goodsOrder.getStoreId()+"===========店铺");
 		CreateOrderResult order = goodsMapper.createGoodsOrder(goodsOrder);
 		if(order!=null){
 			//插入订单明细
@@ -5283,6 +5286,25 @@ public class UserServiceImpl implements UserServiceI {
 			goodsMapper.deleteUserGoodsCart(userId);
 		}		
 		return map;
+	}
+
+	@Override
+	public List<String> salesInfo() {
+		List<String> salesInfo = new ArrayList<String>();
+		List<FullCut> fullCuts = fullCutMapper.selectAllActive(new Date());
+		Integer count = 1;
+		for(FullCut fullCut:fullCuts){
+			String tmp = "";
+			tmp = count + ". 整单满" + fullCut.getCondition()+"元减"+fullCut.getCut()+"元";
+			try {
+				tmp = new String(tmp.getBytes("UTF-8"),"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			count++;
+			salesInfo.add(tmp);
+		}
+		return salesInfo;
 	}
 }
 

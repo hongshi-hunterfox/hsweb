@@ -985,7 +985,6 @@ public class UserController extends CommonUserHandler {
 	@RequestMapping("/productDetail")
 	public @ResponseBody ProductDto productDetail(HttpServletRequest request, Integer productId, Integer tid) {
 		ProductDto productDto = userService.getProductDtoById(productId);
-		System.out.println(JSON.toJSONString(productDto));
 		return productDto;
 	}
 
@@ -2162,8 +2161,9 @@ public class UserController extends CommonUserHandler {
 	
 	@RequestMapping("/getgoodslist")
 	@ResponseBody
-	public Map<String, Object> getGoodsList(HttpServletRequest request,Integer storeId) throws JSONException{
+	public Map<String, Object> getGoodsList(HttpServletRequest request,	String storeId) throws JSONException{
 		Map<String, Object> map = new TreeMap<String, Object>();
+		System.out.println(userService.selectGoodsList(storeId));
 		map.put("goodslist", userService.selectGoodsList(storeId));
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
@@ -2179,12 +2179,13 @@ public class UserController extends CommonUserHandler {
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		Map<String, Object> result =  userService.selectGoodsCartTotal(userId,type);
-		System.out.println("备注========="+result.get("remarks"));
 		map.put("remarks", result.get("remarks"));
 		map.put("total", result.get("total"));
 		map.put("goodstotal", result.get("goodstotal"));
 		map.put("detailedamount", result.get("detailedamount"));
 		map.put("disparityTotal", result.get("disparityTotal"));
+		List<String> salesInfo = userService.salesInfo();
+		map.put("salesInfo",salesInfo);
 		return map;
 	}
 	
@@ -2200,6 +2201,12 @@ public class UserController extends CommonUserHandler {
 	public int addGoodsCart(HttpServletRequest request, @RequestBody GoodsCart goodsCart){
 		// 取userid
 		HttpSession session = request.getSession();
+		if(goodsCart.getFlavors()!=null || !("").equals(goodsCart.getFlavors())){
+			System.out.println(goodsCart.getFlavorname());
+			if(goodsCart.getFlavorname()==null||("").equals(goodsCart.getFlavorname())){
+				return 3;
+			}
+		}
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);
 		goodsCart.setUserId(userId);
 		return userService.insertGoodsCart(goodsCart);		

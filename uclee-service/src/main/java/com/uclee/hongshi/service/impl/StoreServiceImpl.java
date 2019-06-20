@@ -36,12 +36,21 @@ public class StoreServiceImpl implements StoreServiceI {
     private NapaStoreUserLinkMapper napaStoreUserLinkMapper;
     @Autowired
     private SpecificationValueMapper specificationValueMapper;
-
+    @Autowired
+    private GoodsMapper goodsMapper;
+    
     @Override
     public boolean addNapaStore(StoreDto store) {
         napaStoreMapper.insertSelective(store);
         if(store.getLink()!=null&&store.getLink().equals("true")){
             productStoreLinkMapper.insertAll(store.getStoreId());
+            List<GoodsSpecifications> gs = goodsMapper.selectByStoreAndGoods();
+            GoodsSpecificationsStoreLink gssl = new GoodsSpecificationsStoreLink();
+            for(GoodsSpecifications item:gs){
+            	gssl.setSpecId(item.getId());
+            	gssl.setStoreId(store.getStoreId());
+            	goodsMapper.insertGoodsSpecificationsStoreLink(gssl);
+            }
         }
         return true;
     }

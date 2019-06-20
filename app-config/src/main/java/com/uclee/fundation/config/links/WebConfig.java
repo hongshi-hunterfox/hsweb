@@ -72,4 +72,8 @@ public interface WebConfig {
 	String CartPrerogative = "CartPrerogative";
 	String priceCuttingPoster = "priceCuttingPoster";
 	String noBirthdayMessagePush = "noBirthdayMessagePush";
+	String storeOrderOne = "storeOrderOne";
+	String storeOrderTwo = "storeOrderTwo";
+	String storeOrderThree = "storeOrderThree";
+	String goodsBarUrl = "goodsBarUrl";
 }                      

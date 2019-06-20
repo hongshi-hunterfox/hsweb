@@ -127,6 +127,14 @@ public class ProductManagerController {
 		return map;
 	}
 	
+	@RequestMapping("/getCategoryStoreId")
+	public @ResponseBody Map<String,Object>  getCategoryStoreId(ModelMap model,HttpSession session,String storeId){
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Category> cat = categoryMapper.selectByHsCode(storeId);
+		map.put("cat", cat);
+		return map;
+	}
+	
 	@RequestMapping(value="getAddProductData")
 	public @ResponseBody Map<String,Object>  getAddProductData(ModelMap model,HttpSession session){
 		Map<String,Object> result = new HashMap<String,Object>();

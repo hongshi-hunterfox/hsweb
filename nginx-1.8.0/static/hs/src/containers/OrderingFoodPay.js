@@ -5,6 +5,7 @@ var browserHistory = require("react-router").browserHistory
 var PaymentUtil = require("../utils/PaymentUtil.js")
 import DocumentTitle from "react-document-title"
 import req from 'superagent'
+import Icon from '../components/Icon'
 class CountDownBlock extends React.Component {
 	render() {
 		return (
@@ -47,6 +48,8 @@ class OrderingFoodPay extends React.Component {
 			storeId:this.props.location.query.storeId,
 			station:this.props.location.query.station,	
 			remarks:'',
+			salesInfo:[],
+			salesInfoShow:false,
 		}
 	}
 
@@ -75,7 +78,8 @@ class OrderingFoodPay extends React.Component {
 	      	 goodstotal: res.body.goodstotal,
 	      	 detailedamount: res.body.detailedamount,
 	      	 disparityTotal:res.body.disparityTotal,
-	      	 remarks:res.body.remarks
+	      	 remarks:res.body.remarks,
+	      	 salesInfo:res.body.salesInfo
 	        })
 		  })
 	}
@@ -93,9 +97,16 @@ class OrderingFoodPay extends React.Component {
 	      	 detailedamount: res.body.detailedamount,
 	      	 disparityTotal:res.body.disparityTotal,
 	      	 type:e,
+	      	 salesInfo:res.body.salesInfo
 	        })
 		  })
 	}
+	
+  salesInfoShowClick=()=>{
+    this.setState({
+      salesInfoShow: !this.state.salesInfoShow
+    })
+  }
 	
 	_ispay = (e) => {
 		if(e === 'wx'){
@@ -204,6 +215,32 @@ class OrderingFoodPay extends React.Component {
 						disparityTotal={this.state.disparityTotal}
 						total={this.state.total}
 					/>
+					<div className="detail-sales">							
+				        {
+				          this.state.salesInfo.length>=1?
+				          <div onClick={this.salesInfoShowClick} className='detail-sales-top'>
+				            <span className='detail-sales-tag'>
+				              优惠
+				                
+				            </span>
+				            <span className='detail-sales-text'>
+				                  {!this.state.salesInfoShow?this.state.salesInfo[0]+'...':null}
+				              </span>
+				              <Icon className="detail-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
+				          </div>
+				          :null
+				        }							        
+				      <div className={'detail-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
+				        {this.state.salesInfo.map((item,index)=>{
+				          return(
+				            <div className='detail-sales-item' key={index}>
+				              {item}
+				            </div>
+				          )
+							})}
+						</div>
+							      
+					</div>
 					<div className="payment-infos">
 						<div className="payment-info-methods">
 							<button className="btn btn-default btn-lg btn-block" onClick={this._ispay.bind(this,'wx')} 
