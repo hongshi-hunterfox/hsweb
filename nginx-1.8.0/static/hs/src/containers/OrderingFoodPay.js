@@ -159,9 +159,17 @@ class OrderingFoodPay extends React.Component {
           	    return;
          	}else{
          		if (this.state.balance < this.state.total) {
-					alert("余额不足，请选择其他支付方式")
-					return
-				}
+					var conf1 = confirm('余额不足，是否立即充值！');
+					if(!conf1){
+          				this.setState({
+      						submitting:false
+    					})
+          	    		return;
+         			}else{
+         				window.location="/seller/recharge"
+						return
+					}
+         		}
 		    	var data = {}
 		    	data.money=this.state.total
 		    	data.storeId = this.state.storeId
@@ -252,7 +260,7 @@ class OrderingFoodPay extends React.Component {
 								/>
 								<span className="payment-info-method-texts">微信支付</span>
 							</button>
-							{this.props.data !== null 
+							{this.props.data !== null && this.state.balance !== null
 								?
 								<button className="btn btn-default btn-lg btn-block" onClick={this._ispay.bind(this,'vip')}
 								 disabled={this.state.submitting}>

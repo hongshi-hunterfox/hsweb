@@ -92,32 +92,7 @@ const DetailPicker = (props) => {
           {
             props.pickType && props.currentAmount > 0 ?
             <div className="detail-picker-next"
-                 onClick={() =>{
-                    // 加入购物车
-								    req
-								      .post('/uclee-user-web/addGoodsCart')
-								      .send({
-								        amount: props.currentAmount,
-								        goodsId: props.goodsId,
-								        specId: props.specid, 
-								        flavorname: props.flavorname,
-								        flavors:props.flavors
-								      }) 
-								      .end((err, res) => {
-								        if (err) {
-								          return err
-								        }
-								        var result = JSON.parse(res.text);
-								        if(result>0 && result!==3){
-								        	alert("加入购物车成功!")
-								        }else if(result===3){
-								        	alert("请选择"+props.flavors)
-								        }else{
-								        	alert("加入购物车失败,请刷新重试!")
-								        }
-								      });
-								 // 立即购买
-                 }}>
+                 onClick={() =>{props.addCart(props)}}>
 								    <span>{'加入购物车'}</span>
 								  </div>
 								:
@@ -154,8 +129,8 @@ const CartDetail = (props) => {
                             		<div className="goods-item-title">
                           					{item.name}
                         				</div>
-                        				&nbsp;&nbsp;&nbsp;偏好:{item.flavorname}<br/>
-                            		&nbsp;&nbsp;&nbsp;数量x{item.amount}<br/>
+                        				&nbsp;&nbsp;偏好:{item.flavorname}<br/>
+                            		&nbsp;&nbsp;数量x{item.amount}<br/>
                               	<div className="goods-item-price"> 
                               		¥{item.hsPrice}<br/>
                               		{item.vipPrice !== null ? 'VIP:¥'+ item.vipPrice : null}
@@ -217,6 +192,7 @@ class AllGoods extends React.Component {
 			goodsname:'',
 			storeId:this.props.location.query.storeId,
 			station:this.props.location.query.station,
+			balance:0
     }
     this.specPriceMap = {}
     this.specValueMap = {}
@@ -225,6 +201,17 @@ class AllGoods extends React.Component {
   }
 
   componentDidMount() {
+  	req
+		  .get('/uclee-user-web/getVipInfo')
+		  .end((err, res) => {
+		    if (err) {
+		      return err
+		    }
+
+		    if (res.text) {
+		      this.setState(res.body)
+		    }
+		  })
   	req.get('/uclee-product-web/getCategoryStoreId?storeId='+this.state.storeId).end((err, res) => {
       if (err) {
         return err
@@ -318,6 +305,44 @@ class AllGoods extends React.Component {
       })
   }
   
+  _addCart = (props) => {
+  	// 加入购物车
+		req
+			.post('/uclee-user-web/addGoodsCart')
+			.send({
+				amount: props.currentAmount,
+				goodsId: props.goodsId,
+				specId: props.specid, 
+				flavorname: props.flavorname,
+				flavors:props.flavors
+			}) 
+      .end((err, res) => {
+				if (err) {
+	        return err
+        }
+        var result = JSON.parse(res.text);
+	      if(result>0 && result!==3){
+//	       	alert("加入购物车成功!")
+				}else if(result===3){
+		     	alert("请选择"+props.flavors)
+        }else{
+        	alert("加入购物车失败,请刷新重试!")
+        }
+      });
+		 // 立即购买
+  	req.get('/uclee-user-web/getgoodslist?storeId='+this.state.storeId).end((err, res) => {
+      if (err) {
+        return err
+      }
+      var data = JSON.parse(res.text)
+      this.setState({
+        goodslist: data.goodslist,
+        total: data.total,
+        showPick: false
+      })
+    })
+  }
+  
  _closePick = () => {
  		req.get('/uclee-user-web/getgoodslist?storeId='+this.state.storeId).end((err, res) => {
       if (err) {
@@ -394,7 +419,7 @@ class AllGoods extends React.Component {
   }
   
   _memberCart = () => {
-  	window.location = "/member-card"
+  	window.location = "/member-center"
   }
   
   render() {
@@ -423,7 +448,8 @@ class AllGoods extends React.Component {
     return (
       <DocumentTitle title="选择产品">
       	<div>
-      		<div className="header" style={{background:'url('+this.state.config.goodsBarUrl+')'}}>
+      		<div className="swiper-container">
+      			<div className="header swiper-container-ul" style={{background:'url('+this.state.config.goodsBarUrl+')'}}>
       				<div className="store">
       				  <div className="store-logo">
       						<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
@@ -434,11 +460,12 @@ class AllGoods extends React.Component {
       						{this.state.config.storeOrderThree}
       					</div>
       					<div className="store-logo-button">
-      						<button type="button" className="btn btn-warning btn-sm" onClick={this._memberCart}>我的</button>
+      						<button type="button" className="btn btn-warning btn-sm" onClick={this._memberCart}>{this.state.balance === null ? '注册会员' : '我的会员'}</button>
       					</div>
 							</div>
       		</div>
-      		<div style={{width:'100%',paddingTop:'10px'}}>
+      		
+      		<div style={{width:'100%',paddingTop:'5px'}}>
       			<div className="swiper-wrapper goods-buttom">
 				      <div className="swiper-slide">
 				        <div className="content">
@@ -476,9 +503,9 @@ class AllGoods extends React.Component {
 							                      </div>
 							                    </div>
 							                    <div className="item-right">
-							                      <div className="goods-item-title">{ite.goodsname}</div>
+							                      <div className="list-item-title">{ite.goodsname}</div>
 							                      <div className="goods-item-subtitle">VIP ¥{ite.vipPrice} 起</div>
-							                      <div className="goods-item-price">
+							                      <div className="list-item-price">
 							                      	¥{ite.hsPrice} 起 
 							                      </div>
 							                    </div>
@@ -494,6 +521,7 @@ class AllGoods extends React.Component {
 				      </div>
 		        </div>
 	        </div>
+	        </div>
           <div className="goods-settle">
           	<div onClick={this._showCart}>
               <div className="goods-settle-price">  
@@ -508,6 +536,7 @@ class AllGoods extends React.Component {
 	      <DetailPicker
               showPick={this.state.showPick}
               closePick={this._closePick}
+              addCart={this._addCart}
               image={this.state.goodsimg}
               spec={this.state.spec}
               specid={this.state.specid}

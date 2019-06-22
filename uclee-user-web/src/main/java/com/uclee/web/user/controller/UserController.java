@@ -2201,7 +2201,8 @@ public class UserController extends CommonUserHandler {
 	public int addGoodsCart(HttpServletRequest request, @RequestBody GoodsCart goodsCart){
 		// 取userid
 		HttpSession session = request.getSession();
-		if(goodsCart.getFlavors()!=null || !("").equals(goodsCart.getFlavors())){
+		if(goodsCart.getFlavors()!=null && goodsCart.getFlavors().length()>0){
+			System.out.println(goodsCart.getFlavors());
 			System.out.println(goodsCart.getFlavorname());
 			if(goodsCart.getFlavorname()==null||("").equals(goodsCart.getFlavorname())){
 				return 3;

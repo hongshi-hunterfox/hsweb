@@ -5185,13 +5185,13 @@ public class UserServiceImpl implements UserServiceI {
 			else{
 				//打包
 				for(GoodsCart item:cart){
-					temp = item.getVipPrice().multiply(new BigDecimal(item.getAmount()));
+					temp = item.getHsPrice().multiply(new BigDecimal(item.getAmount()));
 					Disparity disparity = disparityMapper.selectByDisParity(item.getSpecId(),item.getGoodsId(),userId);
-					temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));	
+					temps = disparity.getDisparity().multiply(new BigDecimal(item.getAmount()));
+					total = temp.add(total);
+					goodstotal = temp.add(goodstotal);
+					disparityTotal = temps.add(disparityTotal);
 				}
-				total = temp.add(total);
-				goodstotal = temp.add(goodstotal);
-				disparityTotal = temps.add(disparityTotal);
 			}
 
 		}
