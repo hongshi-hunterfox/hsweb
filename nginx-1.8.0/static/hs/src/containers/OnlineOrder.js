@@ -14,11 +14,7 @@ class OnlineOrder extends React.Component {
            source:this.props.location.query.source,
            orders: [],
            logoUrl:'',
-		   signName:''
-		   
-       
-           
-           
+		   signName:''            
            
         }
     }
@@ -32,7 +28,7 @@ class OnlineOrder extends React.Component {
 			console.log(c.storeList)
 			this.setState({
 				logoUrl:c.logoUrl,
-				signName:c.signName
+				signName:c.brand
 			})
 		})
     req.get('/uclee-user-web/vipRecordDetail')
@@ -102,8 +98,7 @@ class OnlineOrder extends React.Component {
               }
             </div>
         );
-  	  })
-                        
+  	  })                        
         return (
                 <DocumentTitle title="会员交易明细">
                 <div>

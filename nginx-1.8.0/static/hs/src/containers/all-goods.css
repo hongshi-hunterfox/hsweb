@@ -1,19 +1,19 @@
 .cat {
 	width: 30%;
 }
-.store{
+.goods-store{
 	
 }
-.store-logo {
+.goods-store-logo {
 	float:left;
 }
-.store-logo-image {
+.goods-store-logo-image {
   width: 125px;
   height: 125px;
   border-radius: 25%;
   padding: 20px;
 }
-.store-logo-text {
+.goods-store-logo-text {
   padding-left: 3px;
   padding-top: 30px;
   float:left;
@@ -22,7 +22,7 @@
   color:white;
 }
 
-.store-logo-button {
+.goods-store-logo-button {
   padding-top: 35px;
   padding-right: 5px;
   float:right;
@@ -63,9 +63,35 @@
   padding-bottom: 50px;
 }
 
+.goods-detail-picker-header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.goods-detail-picker-header-img {
+  float: left;
+}
+.goods-detail-picker-header-info {
+  overflow: hidden;
+  padding-left: 10px;
+}
+.goods-detail-picker-header-title {
+  font-weight: bold;
+}
+.goods-detail-picker-header-price {
+  color: #ff6600;
+  font-size: 16px;
+  padding-top: 5px;
+  font-weight: bold;
+}
+.goods-detail-picker-header-price .pre {
+  color: #b5b5b5;
+  font-size: 14px;
+  text-decoration: line-through;
+  margin-left: 15px;
+}
 
-
-.detail-picker {
+.goods-detail-picker {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -79,7 +105,7 @@
   overflow:auto;
 }
 
-.detail-pickers {
+.goods-detail-pickers {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -91,7 +117,7 @@
   animation-name: detail-slideInUp;
 }
 
-.detail-picker-close {
+.goods-detail-picker-close {
   font-size: 24px;
   color: #bbb;
   position: absolute;
@@ -100,7 +126,7 @@
   right: 10px;
 }
 
-.detail-picker-overlay {
+.goods-detail-picker-overlay {
   overflow: hidden;
   position: fixed;
   z-index: 1001;
@@ -110,7 +136,7 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
-.detail-picker-spec {
+.goods-detail-picker-spec {
   /*margin-bottom: 5px;*/
   margin-bottom: 5px;
   overflow-y: scroll;
@@ -118,11 +144,11 @@
   width: 350px;
   height: 180px;
 }
-.detail-picker-spec-name {
+.goods-detail-picker-spec-name {
   padding-top: 5px;
   padding-bottom: 5px;
 }
-.detail-picker-spec-value {
+.goods-detail-picker-spec-value {
   border: 1px solid #959595;
   float: left;
   padding: 4px 10px;
@@ -130,36 +156,36 @@
   margin-bottom: 10px;
   border-radius: 4px;
 }
-.detail-picker-spec-value.active {
+.goods-detail-picker-spec-value.active {
   color: white;
   background-color: #eb544d;
   border-color: #eb544d;
 }
 
-.detail-picker-amount {
+.goods-detail-picker-amount {
   border-top: 1px solid #f2f2f2;
   padding: 10px;
 }
-.detail-picker-amount .input-group {
+.goods-detail-picker-amount .input-group {
   float: right;
   width: 50%;
 }
-.detail-picker-amount .input-group .btn {
+.goods-detail-picker-amount .input-group .btn {
   padding-left: 15px;
   padding-right: 15px;
   outline: 0;
 }
-.detail-picker-amount .input-group .form-control {
+.goods-detail-picker-amount .input-group .form-control {
   text-align: center;
 }
-.detail-picker-amount .input-group .form-control[readonly] {
+.goods-detail-picker-amount .input-group .form-control[readonly] {
   background-color: white;
 }
-.detail-picker-amount-key {
+.goods-detail-picker-amount-key {
   display: inline-block;
   padding-top: 5px;
 }
-.detail-picker-next {
+.goods-detail-picker-next {
   padding: 10px;
   text-align: center;
   color: white;
@@ -219,6 +245,8 @@
 .header{
   width: 100%;
   height: 120px;
+  position:fixed;
+  top: 0px;
 }
 .swiper-container-ul{
   list-style: none;
@@ -243,11 +271,10 @@
   overflow: hidden;
 }
 .goodsleft{
-  top: 125px;
+  padding-top: 125px;
   float: left;
   width: 25%;
   height: 100%;
-  background: #eee;
 }
 .goodsleft ul{
   list-style: none;
@@ -261,7 +288,7 @@
   border-left: 2px solid orangered;
 }
 .goodsright{
-  padding-top: 10px;
+  padding-top: 125px;
   float: left;
   width: 75%;
   height: 100%;

@@ -15,16 +15,16 @@ import Counter from '../components/Counter'
 const DetailPicker = (props) => {
   if (props.showPick) {
     return (
-      <div className="detail-picker-overlay" onClick={props.closePick}>
-        <div className="detail-pickers" onClick={(e) => {e.stopPropagation()}}>
-          <span className="detail-picker-close" onClick={props.closePick}><Icon name="times-circle"/></span>
-          <div className="detail-picker-header clearfix">
-            <div className="detail-picker-header-img">
-              <img src={props.image} width="50" height="50" alt=""/>
+      <div className="goods-detail-picker-overlay" onClick={props.closePick}>
+        <div className="goods-detail-pickers" onClick={(e) => {e.stopPropagation()}}>
+          <span className="goods-detail-picker-close" onClick={props.closePick}><Icon name="times-circle"/></span>
+          <div className="goods-detail-picker-header clearfix">
+            <div className="goods-detail-picker-header-img">
+              <img src={props.image} width="80" height="80" alt=""/>
             </div>
-            <div className="detail-picker-header-info">
-              <div className="detail-picker-header-title">{props.title}</div>
-              <div className="detail-picker-header-price">
+            <div className="goods-detail-picker-header-info">
+              <div className="goods-detail-picker-header-title">{props.title}</div>
+              <div className="goods-detail-picker-header-price">
 	              <div>
 	              	{props.vipPrice !== '-' ? "VIP:¥"+props.vipPrice : null}
 	              </div>
@@ -34,9 +34,9 @@ const DetailPicker = (props) => {
               </div>
           	</div>
         	</div>
-          <div className="detail-picker-spec">
-            <div className="detail-picker-spec-name">规格：</div>
-            <div className="detail-picker-spec-values clearfix">
+          <div className="goods-detail-picker-spec">
+            <div className="goods-detail-picker-spec-name">规格：</div>
+            <div className="goods-detail-picker-spec-values clearfix">
               {
                 props.spec.map((item) => {
                   return (
@@ -46,7 +46,7 @@ const DetailPicker = (props) => {
                         props.pickSpec(item.id)
 
                       }}
-                      className={'detail-picker-spec-value' + (item.id === props.specid ? ' active' : '')}>
+                      className={'goods-detail-picker-spec-value' + (item.id === props.specid ? ' active' : '')}>
                       {item.name}
                     </div>
                     )
@@ -54,17 +54,17 @@ const DetailPicker = (props) => {
               }
             </div>
             {props.flavors !== null ?
-            	<div className="detail-picker-spec-name">{props.flavors}</div>
+            	<div className="goods-detail-picker-spec-name">{props.flavors}</div>
               :null}
             {props.flavors !== null ?
-            	<div className="detail-picker-spec-values clearfix">
+            	<div className="goods-detail-picker-spec-values clearfix">
               	{props.flavor.map((item)=>{
        						return(	
       			 				<div onClick={() => {
                         props.pickflavor(item)
 
                       }}
-                      className={'detail-picker-spec-value' + (item === props.flavorname ? ' active' : '')}>
+                      className={'goods-detail-picker-spec-value' + (item === props.flavorname ? ' active' : '')}>
          							{item}
         						</div>
         					);  
@@ -73,7 +73,7 @@ const DetailPicker = (props) => {
           	: null}
 
         	</div>
-          <div className="detail-picker-amount clearfix">
+          <div className="goods-detail-picker-amount clearfix">
             <div className="input-group">
               <div className="input-group-btn">
                 <button className="btn btn-default" onClick={props.subAmount} disabled={props.currentAmount === 0}>
@@ -87,11 +87,11 @@ const DetailPicker = (props) => {
                 </button>
               </div>
             </div>
-            <span className="detail-picker-amount-key">购买数量：</span>
+            <span className="goods-detail-picker-amount-key">购买数量：</span>
           </div>
           {
             props.pickType && props.currentAmount > 0 ?
-            <div className="detail-picker-next"
+            <div className="goods-detail-picker-next"
                  onClick={() =>{props.addCart(props)}}>
 								    <span>{'加入购物车'}</span>
 								  </div>
@@ -110,9 +110,9 @@ return null
 const CartDetail = (props) => {
   if (props.showCart) {
       return (
-        <div className="detail-picker-overlay" onClick={props.closeCart}>
-          <div className="detail-picker" onClick={(e) => {e.stopPropagation()}}>
-          	<span className="detail-picker-close" onClick={props.closeCart}><Icon name="times-circle"/></span>
+        <div className="goods-detail-picker-overlay" onClick={props.closeCart}>
+          <div className="goods-detail-picker" onClick={(e) => {e.stopPropagation()}}>
+          	<span className="goods-detail-picker-close" onClick={props.closeCart}><Icon name="times-circle"/></span>
           	<div className="goodscart-items">
                       {props.list.map((item, index) => {
                         return (
@@ -449,17 +449,17 @@ class AllGoods extends React.Component {
       <DocumentTitle title="选择产品">
       	<div>
       		<div className="swiper-container">
-      			<div className="header swiper-container-ul" style={{background:'url('+this.state.config.goodsBarUrl+')'}}>
-      				<div className="store">
-      				  <div className="store-logo">
-      						<img src={this.state.logoUrl} className="store-logo-image" alt=""/>
+      			<div className="header" style={{background:'url('+this.state.config.goodsBarUrl+')'}}>
+      				<div className="goods-store">
+      				  <div className="goods-store-logo">
+      						<img src={this.state.logoUrl} className="goods-store-logo-image" alt=""/>
       					</div>
-      					<div className="store-logo-text">
+      					<div className="goods-store-logo-text">
       						{this.state.config.storeOrderOne}<br/>
       						{this.state.config.storeOrderTwo}<br/>
       						{this.state.config.storeOrderThree}
       					</div>
-      					<div className="store-logo-button">
+      					<div className="goods-store-logo-button">
       						<button type="button" className="btn btn-warning btn-sm" onClick={this._memberCart}>{this.state.balance === null ? '注册会员' : '我的会员'}</button>
       					</div>
 							</div>

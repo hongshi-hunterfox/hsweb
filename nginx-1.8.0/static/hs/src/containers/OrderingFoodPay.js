@@ -223,25 +223,25 @@ class OrderingFoodPay extends React.Component {
 						disparityTotal={this.state.disparityTotal}
 						total={this.state.total}
 					/>
-					<div className="detail-sales">							
+					<div className="foodpay-detail-sales">							
 				        {
 				          this.state.salesInfo.length>=1?
 				          <div onClick={this.salesInfoShowClick} className='detail-sales-top'>
-				            <span className='detail-sales-tag'>
+				            <span className='foodpay-detail-sales-tag'>
 				              优惠
 				                
 				            </span>
-				            <span className='detail-sales-text'>
+				            <span className='foodpay-detail-sales-text'>
 				                  {!this.state.salesInfoShow?this.state.salesInfo[0]+'...':null}
 				              </span>
-				              <Icon className="detail-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
+				              <Icon className="foodpay-detail-sales-icon" name={this.state.salesInfoShow?'chevron-down':'chevron-right'} />
 				          </div>
 				          :null
 				        }							        
-				      <div className={'detail-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
+				      <div className={'foodpay-detail-sales-info ' +(!this.state.salesInfoShow?'none':'')}>
 				        {this.state.salesInfo.map((item,index)=>{
 				          return(
-				            <div className='detail-sales-item' key={index}>
+				            <div className='foodpay-detail-sales-item' key={index}>
 				              {item}
 				            </div>
 				          )
