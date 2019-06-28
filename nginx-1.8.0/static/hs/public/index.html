@@ -20,16 +20,17 @@
 	  $(function(){
 	    $('.content').css('height',$('.goodsright').height());
 	    $('.goodsleft ul li').eq(0).addClass('activee');
+	    $('.goodsright').css('margin-left',$('.goodsleft').width());
 	    $(window).scroll(function(){
-	      if($(window).scrollTop() >= 125){
+//	      if($(window).scrollTop() >= 160){
 	        $('.swiper-container-ul').css('position','fixed');
 	        $('.goodsleft').css('position','fixed');
 	        $('.goodsright').css('margin-left',$('.goodsleft').width());
-	      }else {
-	        $('.swiper-container-ul').css('position','fixed');
-	        $('.goodsleft').css('position','fixed');
-	        $('.goodsright').css('margin-left',$('.goodsleft').width());
-	      };
+//	      }else {
+//	        $('.swiper-container-ul').css('position','fixed');
+//	        $('.goodsleft').css('position','fixed');
+//	        $('.goodsright').css('margin-left',$('.goodsleft').width());
+//	      };
 	      //滚动到标杆位置,左侧导航加active
 	      $('.goodsright ul li').each(function(){
 	        var target = parseInt($(this).offset().top-$(window).scrollTop()-125);
@@ -42,7 +43,7 @@
 	    });
 	    $(document).on('click','.goodsleft ul li',function(){
 	      var i = $(this).index('.goodsleft ul li');
-	      $('body, html').animate({scrollTop:$('.goodsright ul li').eq(i).offset().top-125},500);
+	      $('body, html').animate({scrollTop:$('.goodsright ul li').eq(i).offset().top-80},500);
 	    });
 
 	    $(document).on('click','.swiper-container-ul-li',function(){

@@ -473,7 +473,7 @@ class AllGoods extends React.Component {
 				            <ul>
 				              {this.state.cat.map((item,index)=>{
 								        return(
-								         	<li>
+								         	<li className={index===0 ? 'activee' : ''}>
 								         		{item.category}
 								         	</li>
 								        )

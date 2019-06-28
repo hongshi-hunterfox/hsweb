@@ -246,7 +246,7 @@
   width: 100%;
   height: 120px;
   position:fixed;
-  top: 0px;
+  padding-bottom: 0px;
 }
 .swiper-container-ul{
   list-style: none;
@@ -254,6 +254,7 @@
   width: 100%;
   background: #fff;
   top: 0px;
+  position: fixed;
 }
 .swiper-container-ul-li{
   width: 50%;
@@ -271,10 +272,12 @@
   overflow: hidden;
 }
 .goodsleft{
-  padding-top: 125px;
+  padding-top: 120px;
   float: left;
   width: 25%;
   height: 100%;
+  left: 1px;
+  position:fixed;
 }
 .goodsleft ul{
   list-style: none;
@@ -288,9 +291,10 @@
   border-left: 2px solid orangered;
 }
 .goodsright{
-  padding-top: 125px;
+  padding-top: 130px;
   float: left;
   width: 75%;
+  margin-left: 25%;
   height: 100%;
 }
 .goodsright ul{
