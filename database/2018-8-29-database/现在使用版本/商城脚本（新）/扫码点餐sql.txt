@@ -1,0 +1,62 @@
+--打包补差额表
+create table web_disparity(
+id int identity (1,1) primary key,
+paramname varchar(20) not null,
+disparity decimal(20,2)not null
+)
+
+--点餐商品表
+create table web_goods(
+id int identity (1,1) primary key,
+goodsname varchar(20) not null,
+goodsimg varchar(255)not null,
+goodscategory int not null
+)
+--商品类别关联表
+create table web_goods_categories_link(
+	id int identity (1,1) primary key,
+	[goods_id] [int] NOT NULL,
+	[category_id] [int] NOT NULL
+)
+
+--商品规格关联
+create table web_goods_specifications(
+id int identity (1,1) primary key,
+goodsId int not null,
+name varchar(255) not null,
+code varchar(255) not null,
+hsPrice decimal(20, 2) not null,
+vipPrice decimal(20, 2),
+specPack int not null
+)
+--购物车
+create table web_goods_cart(
+	id int identity (1,1) primary key,
+	goodsId int,
+	specId int,
+	userId int,
+	amount int
+)
+
+--规格店铺关联
+create table web_goods_specifications_store_link(
+id int identity (1,1) primary key,
+storeId int not null,
+specId int not null
+)
+
+--web_goods表新增字段
+alter table [web_goods] add flavors VARCHAR(50) ;
+alter table [web_goods] add flavorone VARCHAR(50) ;
+  alter table [web_goods] add flavortwo VARCHAR(50) ;
+  alter table [web_goods] add flavorthree VARCHAR(50) ;
+  alter table [web_goods] add flavorfour VARCHAR(50) ;
+
+--web_goods_cart新增
+ALTER TABLE [web_goods_cart] ADD flavorname varchar(255)
+
+--web_config
+insert into web_config(tag,value) values('storeOrderOne', '信息')
+insert into web_config(tag,value) values('storeOrderTwo', '信息')
+insert into web_config(tag,value) values('storeOrderThree', '信息')
+insert into web_config(tag,value) values('goodsBarUrl','http://lebei-management.com/file156103415017454.jpg');
