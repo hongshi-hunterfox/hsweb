@@ -988,21 +988,6 @@ class Product extends React.Component {
       })
 		}
     
-    var params=data.title+'';
-    if(this.props.params.id){
-        params=params+'&productId='+this.props.params.id;
-    }
-    req.get('/uclee-product-web/isTitleExisted?title='+params).end((err, res) => {
-      if (err) {
-        return err
-      }
-      var resJson = JSON.parse(res.text)
-      if(!resJson.result){
-        return this.setState({
-          err: '名称已存在'
-        });
-      }
-
     if (!data.images || !data.images.length) {
       return this.setState({
         err: '至少上传一张图片'
@@ -1057,20 +1042,51 @@ class Product extends React.Component {
     if (this.props.params.id) {
       url = '/uclee-product-web/doUpdateProductHandler'
     }
+    
+    if(url == '/uclee-product-web/doAddProductHandler'){
+    	var params=data.title+'';
+	    if(this.props.params.id){
+	        params=params+'&productId='+this.props.params.id;
+	    }
+	    req.get('/uclee-product-web/isTitleExisted?title='+params).end((err, res) => {
+	      if (err) {
+	        return err
+	      }
+	      var resJson = JSON.parse(res.text)
+	      if(!resJson.result){
+	        return this.setState({
+	          err: '名称已存在'
+	        });
+	      }else{
+	      	req.post(url).send(data).end((err, res) => {
+	      		if (err) {
+	        	return err
+	      		}
+	
+	      		console.log(res.body)
+	      		if(res.body){
+	        		window.location='/product-list';
+	      		}else{
+	        		alert("网络繁忙，请稍后重试");
+	      		}      
+    			})
+	      }
+    	})
 
-    req.post(url).send(data).end((err, res) => {
-      if (err) {
-        return err
-      }
-
-      console.log(res.body)
-      if(res.body){
-        window.location='/product-list';
-      }else{
-        alert("网络繁忙，请稍后重试");
-      }
-    })
-    })
+    }else{
+    	req.post(url).send(data).end((err, res) => {
+	      		if (err) {
+	        	return err
+	      		}
+	
+	      		console.log(res.body)
+	      		if(res.body){
+	        		window.location='/product-list';
+	      		}else{
+	        		alert("网络繁忙，请稍后重试");
+	      		}      
+    			})
+    }
 
   }
 }
