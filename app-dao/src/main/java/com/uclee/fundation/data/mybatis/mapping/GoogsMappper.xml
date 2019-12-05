@@ -14,6 +14,7 @@
 		<result column="性别" property="vSex" jdbcType="VARCHAR" />
 		<result column="是否充值" property="isLose" jdbcType="INTEGER" />
 		<result column="外键" property="oauthId" jdbcType="VARCHAR" />
+		<result column="oauth_id" property="oauthId" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="CreateOrderResult" type="com.uclee.fundation.data.mybatis.model.CreateOrderResult">
 		<result column="OrderID" property="orderID" jdbcType="INTEGER" />
@@ -79,8 +80,7 @@
   	select COUNT(*) as record from web_oauth_login as a , 会员身份 as b where a.oauth_id = b.外键 and a.user_id=#{userId}
   </select>
   <select id="selectVipInfo" parameterType="java.lang.Integer" resultMap="HsVip">
-  	select b.外键  from web_oauth_login as a , 会员身份 as b where a.oauth_id = b.外键 
-	and a.user_id=#{userId}
+  	select oauth_id  from web_oauth_login where user_id=#{userId}
   </select>
   <select id="selectSumCart" parameterType="java.lang.Integer" resultType="java.lang.Integer">
   	select sum(amount) as amount from [web_goods_cart] where  userId=#{userId}
@@ -94,7 +94,7 @@
   <select id="createGoodsOrder" resultMap="CreateOrderResult">
   	exec WSC_CreateSales '', #{tardno,jdbcType=VARCHAR}, #{weixincode,jdbcType=VARCHAR}, null, #{remarks,jdbcType=VARCHAR},
   	#{totalnum,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{singledisco,jdbcType=DECIMAL}, #{money,jdbcType=DECIMAL},0, 
-  	#{storeId,jdbcType=VARCHAR}, #{station,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{boxmoney,jdbcType=DECIMAL}
+  	#{storeId,jdbcType=VARCHAR}, #{station,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{boxmoney,jdbcType=DECIMAL}, #{paymentId, jdbcType=INTEGER}
   </select>
   <select id="createGoodsOrderItem" resultMap="CreateOrderItemResult">
   	exec WSC_AddSaleItem #{orderId},#{goodCode},#{amount},#{total},#{goodsId}

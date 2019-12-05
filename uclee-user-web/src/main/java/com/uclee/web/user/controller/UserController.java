@@ -97,11 +97,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -2234,7 +2238,6 @@ public class UserController extends CommonUserHandler {
 	@RequestMapping("/vippay")
 	@ResponseBody
 	public Map<String, Object> VipPay(HttpServletRequest request, @RequestBody GoodsOrder goodsOrder){
-		System.out.println(JSON.toJSON(goodsOrder));
 		//取userid
 		HttpSession session = request.getSession();
 		Integer userId = (Integer) session.getAttribute(GlobalSessionConstant.USER_ID);

@@ -109,7 +109,7 @@ class SignIn extends React.Component {
                       				point : Number(this.state.point) + Number(data.point),
                       				isSigned:true
                     			})
-                    			alert("签到成功，积分+" + data.point+"，连续签到次数:+"+1+"!")
+                    			alert("签到成功!")
                     			window.location="/SignIn"
                     			return;
                            	}
@@ -127,7 +127,7 @@ class SignIn extends React.Component {
           			</div>
           			<div className="check-table-vipcode">
           				<div className="check-limits">
-            				<span>连续签到第{(this.state.accumulation==0 ? this.state.accumulations : this.state.accumulation)}天</span>
+            				//<span>连续签到第{(this.state.accumulation==0 ? this.state.accumulations : this.state.accumulation)}天</span>
             			</div>
             		</div>
         			<div className="check-table-on">

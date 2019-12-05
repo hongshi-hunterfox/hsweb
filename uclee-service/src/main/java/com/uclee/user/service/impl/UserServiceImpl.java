@@ -5235,13 +5235,16 @@ public class UserServiceImpl implements UserServiceI {
 		String ordercode = "WXDC"+System.currentTimeMillis();
 		//总数量
 		int sum = goodsMapper.selectSumCart(userId);
+		System.out.println(JSON.toJSON(vip)+"ys===用户信息");
 		goodsOrder.setWeixincode(vip.getOauthId());
 		
 		Map<String,Object> map = new HashMap<String, Object>();		
 		//如果单号字段已有值证明是微信支付
 		String paymentMethod="微信支付";
 		if(goodsOrder.getTardno() != null && goodsOrder.getTardno().length() != 0){
+			goodsOrder.setPaymentId(1);
 		}else{
+			goodsOrder.setPaymentId(2);
 			goodsOrder.setTardno(ordercode);
 		}
 		System.out.println("单号==="+goodsOrder.getTardno());

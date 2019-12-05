@@ -1,11 +1,10 @@
 package com.uclee.fundation.data.web.dto;
-
 import java.math.BigDecimal;
 
 import lombok.Data;
 
 @Data
-public class GoodsOrder {
+public class GoodsOrder{
 	public int id;
 	//订单金额
 	public BigDecimal money;
@@ -27,4 +26,6 @@ public class GoodsOrder {
 	public BigDecimal singledisco;
 	//餐盒费
 	public BigDecimal boxmoney;
+	//支付方式 1微信支付 2会员卡支付
+	public int paymentId;
 }

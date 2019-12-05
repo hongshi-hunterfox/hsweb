@@ -504,9 +504,9 @@ class AllGoods extends React.Component {
 							                    </div>
 							                    <div className="item-right">
 							                      <div className="list-item-title">{ite.goodsname}</div>
-							                      <div className="goods-item-subtitle">VIP ¥{ite.vipPrice} 起</div>
+							                      <div className="goods-item-subtitle">VIP ¥{ite.vipPrice}</div>
 							                      <div className="list-item-price">
-							                      	¥{ite.hsPrice} 起 
+							                      	¥{ite.hsPrice}
 							                      </div>
 							                    </div>
 							                  </div>	
