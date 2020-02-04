@@ -33,7 +33,7 @@
 		<spring-version>4.2.0.RC1</spring-version>
 		<autoconfig-plugin-version>1.2</autoconfig-plugin-version>
 		<jetty-version>8.1.13.v20130916</jetty-version>
-		<shiro.version>1.2.3</shiro.version>
+		<shiro.version>1.5.0</shiro.version>
 		<project.build.sourceEncoding>${java.encoding}</project.build.sourceEncoding>
 		<productionMode>false</productionMode>
 		<flow.version>2.4.1.RELEASE</flow.version>
