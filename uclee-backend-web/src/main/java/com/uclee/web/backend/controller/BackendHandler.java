@@ -103,6 +103,7 @@ public class BackendHandler {
 				ret = backendService.sendViphMsg(userId,sendVoucher);
 				List<VipVoucher> vipVouchers = hongShiVipMapper.selectAll();//获取礼券赠送配置
 				for(int j=0; j<vipVouchers.size();j++) {
+					System.out.println("ooo=="+vipVouchers.get(j).getVoucher());
 					List<HongShiCoupon> cp= hongShiMapper.getHongShiCouponByGoodsCode(vipVouchers.get(j).getVoucher());
 					for(int i=0; i<vipVouchers.get(j).getAmount();i++) {
 						System.out.println("ooo=="+cp.get(i).getVouchersCode()+"ooo=="+cp.get(i).getGoodsCode());
@@ -157,7 +158,6 @@ public class BackendHandler {
 	}
 	@RequestMapping("/editCategory")
 	public @ResponseBody Map<String,Object> editCategory(HttpServletRequest request,@RequestBody Category category) {
-		System.out.println("666666==========="+JSON.toJSONString(category));
 		return backendService.editCategory(category);
 	}
 	@RequestMapping("/freightHandler")

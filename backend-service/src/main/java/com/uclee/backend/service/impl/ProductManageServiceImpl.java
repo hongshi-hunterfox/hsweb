@@ -453,6 +453,7 @@ public class ProductManageServiceImpl implements ProductManageServiceI{
 
 	@Override
 	public Boolean delProduct(Integer productId) {
+		productMapper.deleteByProductLink(productId);
 		return productMapper.deleteByPrimaryKey(productId)>0;
 	}
 

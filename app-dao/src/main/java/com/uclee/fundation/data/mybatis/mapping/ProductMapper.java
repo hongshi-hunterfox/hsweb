@@ -12,6 +12,8 @@ import com.uclee.fundation.data.web.dto.ProductDto;
 
 public interface ProductMapper {
     int deleteByPrimaryKey(Integer productId);
+    
+    int deleteByProductLink(Integer productId);
 
     int insert(Product record);
 

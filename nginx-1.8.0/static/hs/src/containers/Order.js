@@ -254,7 +254,7 @@ class Order extends React.Component {
             }
           })
         })
-      })
+      })  
   }
 
   render() {
@@ -274,6 +274,16 @@ class Order extends React.Component {
         window.location = '/unpay-order-list'
       }
     }
+    if (this.state.isSelfPick === 'false' && this.state.isShippingfree === false) {
+        if (this.state.defaultAddr) {
+          var addr =
+            this.state.defaultAddr.province +
+            this.state.defaultAddr.city +
+            this.state.defaultAddr.region +
+            this.state.defaultAddr.addrDetail
+            geocoder.getLocation(addr,this.state.total)
+        }
+		}
     var Total = (this.state.total -
                 this.state.voucherText +
                 (this.state.isShippingfree === false ? this.state.shippingFee : 0) -
@@ -363,7 +373,7 @@ class Order extends React.Component {
 	              <div className="detail">
 	              {this.state.isSelfPick == 'false' ? 
 	               <font size='2'>
-	               	<span className="fa fa-home fa-lg" /> 配送门店
+	               	<span className="fa fa-home fa-lg" /> 配送门店:
 	               	<font size='1' color='#B8B8B8'>配送({this.state.config.restrictedDistance}km内)</font>
 	               	{localStorage.getItem('id')==0 ? <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{localStorage.getItem('storeName')} ></a> : <a href="/switch-shop/0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击选择门店        ></a>}
 	               </font>
@@ -600,7 +610,7 @@ salesInfoShowClick=()=>{
     })
   }
 
-  _handleSubmit = e => {
+  _handleSubmit = e => {  	
   	console.log("cartItems"+this.state.cartItems)
     if (!this.state.cartItems || this.state.cartItems.length <= 0) {
       this.setState({
@@ -616,7 +626,6 @@ salesInfoShowClick=()=>{
       })
       return false
     }
-
     if (data.isSelfPick === 'false' && this.state.config.restrictedDistance < distance) {
 	      this.setState({
 	        error: errMap['Distribution_error']
@@ -664,16 +673,18 @@ salesInfoShowClick=()=>{
       })
       return false
     }
-    var myDate = Date.parse(new Date());
-		myDate = myDate / 1000;//获取系统当前时间戳
+    var myDate = new Date();
+//		myDate = myDate / 1000;//获取系统当前时间戳
  		var yuding = this.state.riqi +' '+this.state.appointedTime
-    var yudingtime = Date.parse(new Date(yuding));
-    yudingtime = yudingtime / 1000;
+ 		yuding = yuding.replace(/-/g,"/");//替换字符，变成标准格式  
+    var yudingtime = new Date(yuding);
+//  yudingtime = yudingtime / 1000;
     var stringTime  = data.pickDateStr +' '+ data.pickTimeStr
-    var timestamp2 = Date.parse(new Date(stringTime));
- 		timestamp2 = timestamp2 / 1000;	
+    stringTime = stringTime.replace(/-/g,"/");//替换字符，变成标准格式  
+    var timestamp2 = new Date(stringTime);
+// 		timestamp2 = timestamp2 / 1000;	
     //只有有预定时间时才执行
-  	if(myDate!=yudingtime){
+  	if(myDate!=yudingtime){  		
     	if(yudingtime>timestamp2){
     		this.setState({
         	error: errMap['times_error']+yuding
@@ -757,7 +768,6 @@ salesInfoShowClick=()=>{
         return err
       }
     })
-
     req.post('/uclee-user-web/orderHandler').send(data)
     .end((err, res) => {
       if (err) {

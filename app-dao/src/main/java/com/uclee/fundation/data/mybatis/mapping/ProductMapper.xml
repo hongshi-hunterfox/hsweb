@@ -160,6 +160,10 @@
     delete from web_products
     where product_id = #{productId,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByProductLink" parameterType="java.lang.Integer" >
+    delete from web_products_categories_link
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.uclee.fundation.data.mybatis.model.Product" useGeneratedKeys="true"
     keyProperty="productId">
     insert into web_products (product_id, title, description, 
