@@ -30,7 +30,7 @@
 		<java.encoding>UTF-8</java.encoding>
 		<webx-version>3.2.4</webx-version>
 		<springext-plugin-version>1.2</springext-plugin-version>
-		<spring-version>4.2.0.RC1</spring-version>
+		<spring-version>5.2.7.RELEASE</spring-version>
 		<autoconfig-plugin-version>1.2</autoconfig-plugin-version>
 		<jetty-version>8.1.13.v20130916</jetty-version>
 		<shiro.version>1.2.3</shiro.version>
